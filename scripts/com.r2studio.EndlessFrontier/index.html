@@ -1,0 +1,281 @@
+<html>
+    <head>
+        <style>
+            .navbar-custom {
+                border-radius: 0 !important;
+                background-color: #2196F3;
+                color: #FFFFFF;
+            }
+            .navbar-custom > a {
+                width: 100%;
+                color: #FFFFFF;
+                text-align: center;
+            }
+            .navbar-custom > a:hover {
+                color: #FFFFFF;
+            }
+
+            .list-group-item {
+                padding-bottom: 6px !important;
+                padding-top: 6px !important;
+            }
+
+            /* The switch - the box around the slider */
+            .switch {
+                position: relative; 
+                display: inline-block;
+                vertical-align: middle;
+                margin-bottom: 0px;
+                margin-top: -4px;
+                width: 52px;
+                height: 28px;
+            }
+
+            /* Hide default HTML checkbox */
+            .switch input {display:none;}
+
+            /* The slider */
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 24px;
+                width: 24px;
+                left: 2px;
+                bottom: 4px;
+                top: 2px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            input:checked + .slider {
+                background-color: #2196F3;
+            }
+
+            input:focus + .slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(24px);
+                -ms-transform: translateX(24px);
+                transform: translateX(24px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 28px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+
+            .btn-plus {
+                color:#FFFFFF;
+                background-color: #2196F3;
+                border-color: #2196F3;
+            }
+            .btn-plus:hover,
+            .btn-plus:focus,
+            .btn-plus:active,
+            .btn-plus.active {
+                color:#FFFFFF !important; 
+                background-color: #0d8aee;
+                border-color: #0c7cd5;
+            }
+            .btn-plus.disabled:hover,
+            .btn-plus.disabled:focus,
+            .btn-plus.disabled:active,
+            .btn-plus.disabled.active,
+            .btn-plus[disabled]:hover,
+            .btn-plus[disabled]:focus,
+            .btn-plus[disabled]:active,
+            .btn-plus[disabled].active,
+            fieldset[disabled] .btn-plus:hover,
+            fieldset[disabled] .btn-plus:focus,
+            fieldset[disabled] .btn-plus:active,
+            fieldset[disabled] .btn-plus.active {
+                color:#FFFFFF;
+                background-color: #2196F3;
+                border-color: #2196F3;
+            }
+            .btn-plus,
+            .btn-danger {
+                width: 35px;
+                padding: 3px 0px 3px 0px !important;
+            }
+        </style>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script>
+            $(function() {
+                $("#revolutionMinutesPlus").click(function() {
+                    if ($("#revolutionMinutes").val() >= 300) {
+                        return;
+                    }
+                    $("#revolutionMinutes").val(parseInt($("#revolutionMinutes").val()) + 10);
+                });
+                $("#revolutionMinutesMinus").click(function() {
+                    if ($("#revolutionMinutes").val() <= 0) {
+                        return;
+                    }
+                    $("#revolutionMinutes").val(parseInt($("#revolutionMinutes").val()) - 10);
+                });
+                $("#restartAppMinutesPlus").click(function() {
+                    if ($("#restartAppMinutes").val() >= 300) {
+                        return;
+                    }
+                    $("#restartAppMinutes").val(parseInt($("#restartAppMinutes").val()) + 10);
+                });
+                $("#restartAppMinutesMinus").click(function() {
+                    if ($("#restartAppMinutes").val() <= 0) {
+                        return;
+                    }
+                    $("#restartAppMinutes").val(parseInt($("#restartAppMinutes").val()) - 10);
+                });
+            });
+
+            function getCheckStatus(id) {
+                return $(id).is(':checked');
+            }
+            function onEvent(eventType) {
+                if (eventType == 'OnPlayClick') {
+                    var taskTreasure = getCheckStatus('#taskTreasure');
+                    var taskTask = getCheckStatus('#taskTask');
+                    var taskArmy = getCheckStatus('#taskArmy');
+                    var taskWar = getCheckStatus('#taskWar');
+                    var taskDoubleSpeed = getCheckStatus('#taskDoubleSpeed');
+                    var taskBattle = getCheckStatus('#taskBattle');
+                    var taskBuyArmy = getCheckStatus('#taskBuyArmy');
+                    var taskRevolution = getCheckStatus('#taskRevolution');
+                    var revolutionMinutes = $('#revolutionMinutes').val();
+                    var taskRestartApp = getCheckStatus('#taskRestartApp');
+                    var restartAppMinutes = $('#restartAppMinutes').val();
+                    var hasVirtualButtonBar = getCheckStatus('#virtualButtonBar');
+                    
+                    JavaScriptInterface.runScript(`start(${taskTreasure}, ${taskTask}, ${taskArmy}, ${taskWar}, ${taskDoubleSpeed}, ${taskBattle}, ${taskBuyArmy}, ${taskRevolution}, ${revolutionMinutes}, ${taskRestartApp}, ${restartAppMinutes}, ${hasVirtualButtonBar});`);
+                } else if (eventType == 'OnPauseClick') {
+                    JavaScriptInterface.runScript('stop();');
+                } else if (eventType == 'OnReloadClick') {
+                    JavaScriptInterface.runScript(script);
+                }
+            }
+            function onLog(message) {
+                console.log(message);
+            }
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-custom" role="navigation">
+            <a class="navbar-brand">無盡的邊疆 Endless Frontier v1</a>
+        </nav>
+        <div class="container">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    虛擬鍵盤
+                    <label class="switch pull-right">
+                        <input id="virtualButtonBar" type="checkbox" checked>
+                        <a class="slider round"></a>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動重啟遊戲
+                    <label class="switch pull-right">
+                        <input id="taskRestartApp" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動重啟遊戲(分鐘)
+                    <div class="pull-right" style="margin-top:-4px">
+                        <input id="restartAppMinutes" style="width: 40px; text-align: center;" min="0" type="number" value="60" readonly>
+                        <button id="restartAppMinutesMinus" type="button" class="btn btn-danger">-10</button>
+                        <button id="restartAppMinutesPlus" type="button" class="btn btn-plus">+10</button>
+                    </div>
+                </li>
+            </ul>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    自動開寶箱
+                    <label class="switch pull-right">
+                        <input id="taskTreasure" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動完成任務
+                    <label class="switch pull-right">
+                        <input id="taskTask" type="checkbox" checked>
+                        <a class="slider round"></a>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動完成士兵
+                    <label class="switch pull-right">
+                        <input id="taskArmy" type="checkbox"checked >
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動打素材
+                    <label class="switch pull-right">
+                        <input id="taskWar" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動兩倍遊戲加速
+                    <label class="switch pull-right">
+                        <input id="taskDoubleSpeed" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動對戰
+                    <label class="switch pull-right">
+                        <input id="taskBattle" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動買士兵
+                    <label class="switch pull-right">
+                        <input id="taskBuyArmy" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動定時轉世
+                    <label class="switch pull-right">
+                        <input id="taskRevolution" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動定時轉世(分鐘)
+                    <div class="pull-right" style="margin-top:-4px">
+                        <input id="revolutionMinutes" style="width: 40px; text-align: center;" min="0" type="number" value="60" readonly>
+                        <button id="revolutionMinutesMinus" type="button" class="btn btn-danger">-10</button>
+                        <button id="revolutionMinutesPlus" type="button" class="btn btn-plus">+10</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>
