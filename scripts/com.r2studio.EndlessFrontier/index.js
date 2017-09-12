@@ -307,7 +307,7 @@ EndlessFrontier.prototype.goToGame = function(during) {
       return;
     }
     this.goBack();
-    if (!isMenuEnable) {
+    if ((isMenu1 || isMenu2)) {
       this.tap(this.ButtonMenuTask);
     }
     sleep(3000);
