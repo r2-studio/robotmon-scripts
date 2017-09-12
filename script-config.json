@@ -1,9 +1,8 @@
 {
-  "scripts": [
-    {
-      "name": "EndlessFrontier",
+  "scripts": {
+    "com.r2studio.EndlessFrontier": {
       "versionCode": 1,
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/EndlessFrontier/EndlessFrontier.zip"
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip"
     }
-  ]
+  }
 }
