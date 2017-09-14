@@ -75,11 +75,10 @@ function EndlessFrontier() {
     menuHeight: 136,
     tableCellHeight: 186,
 
-    MenuColor: {r: 32, g:32, b: 32, a: 0},
-    ButtonEnableColor: {r: 1, g:1, b: 1, a: 0},
-    ButtonRedCancelColor: {r: 32, g:54, b: 179, a: 0},
+    MenuColor: {b: 11, g:18, r: 38, a: 0},
+    ButtonEnableColor: {b: 1, g:1, r: 1, a: 0},
 
-    InGameCheck: {x: 340, y: 820, color: {r: 1, g:1, b: 1, a: 0}},
+    InGameCheck: {x: 340, y: 820, color: {b: 1, g:1, r: 1, a: 0}},
     ButtonMenuArmyRevolution: {x: 725, y: 920},
     ButtonRevolutionTeam: {x: 500, y: 1180},
     ButtonMenuStoreProp: {x: 700, y: 750},
@@ -135,7 +134,7 @@ function EndlessFrontier() {
 
 EndlessFrontier.prototype.init = function() {
   if (Config.hasVirtualButtonBar) {
-    this.ScreenInfo.gameHeight = Config.virtualButtonHeight;
+    this.ScreenInfo.gameHeight = Config.screenHeight - Config.virtualButtonHeight;
   } else {
     this.ScreenInfo.gameHeight = Config.screenHeight;
   }
@@ -306,16 +305,17 @@ EndlessFrontier.prototype.goToGame = function(during) {
     if (Date.now() - start > during) {
       return;
     }
-    this.goBack();
     if ((isMenu1 || isMenu2)) {
       this.tap(this.ButtonMenuTask);
+    } else {
+      this.goBack();
     }
     sleep(3000);
   }
 }
 
 EndlessFrontier.prototype.screenshot = function() {
-  return getScreenshotModify(0, 0, 0, 0, Config.resizeWidth, Config.resizeHeight);
+  return getScreenshotModify(0, 0, 0, 0, Config.resizeWidth, Config.resizeHeight, 80);
 }
 
 EndlessFrontier.prototype.tapTableMaxValue = function(y, clickIcon) {
