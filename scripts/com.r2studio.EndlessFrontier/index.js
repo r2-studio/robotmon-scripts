@@ -295,8 +295,8 @@ EndlessFrontier.prototype.goToGame = function(during) {
     // log('檢查室是否在遊戲中');
     var img = this.screenshot();
     var color = getColor(img, this.InGameCheck);
-    var isMenu1 = isSameColor(this.Const.MenuColor, getColor(img, {x: this.menuW * 0.90, y: this.menuY }));
-    var isMenu2 = isSameColor(this.Const.MenuColor, getColor(img, {x: this.menuW * 2.90, y: this.menuY }));
+    var isMenu1 = isSameColor(this.Const.MenuColor, getColor(img, {x: this.menuW * 0.90, y: this.menuY }), 15);
+    var isMenu2 = isSameColor(this.Const.MenuColor, getColor(img, {x: this.menuW * 2.90, y: this.menuY }), 15);
     var isMenuEnable = isSameColor(this.Const.ButtonEnableColor, getColor(img, this.ButtonMenuTask));
     releaseImage(img);
     if ((isMenu1 || isMenu2) && isSameColor(this.Const.InGameCheck.color, color)) {
@@ -305,7 +305,8 @@ EndlessFrontier.prototype.goToGame = function(during) {
     if (Date.now() - start > during) {
       return;
     }
-    if ((isMenu1 || isMenu2)) {
+    if (isMenu1 && isMenu2) {
+      // may be in store
       this.tap(this.ButtonMenuTask);
     } else {
       this.goBack();
