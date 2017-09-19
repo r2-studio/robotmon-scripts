@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( TsumTest )
+find_package( OpenCV REQUIRED )
+add_executable( find_diff find_diff.cpp )
+target_link_libraries( find_diff ${OpenCV_LIBS} )
