@@ -99,13 +99,13 @@ MarvelFutureFight.prototype.screenshot = function() {
 }
 
 MarvelFutureFight.prototype.taskAttack = function() {
-  log('taskAttack');
+  log('普通攻擊');
   this.tap(this.Const.ButtonAttack);
 }
 
 MarvelFutureFight.prototype.taskPowerAttack = function() {
-  log('taskPowerAttack');
-  var during = 2000;
+  log('技能攻擊');
+  var during = 1000;
   this.tap(this.Const.ButtonAttack1, during);
   this.tap(this.Const.ButtonAttack2, during);
   this.tap(this.Const.ButtonAttack3, during);
@@ -130,7 +130,7 @@ function start(taskAttack, taskPowerAttack) {
   log(Config);
   gTaskController = new TaskController();
   if(taskAttack){gTaskController.newTask('taskAttack', mff.taskAttack.bind(mff), 300, 0);}
-  if(taskPowerAttack){gTaskController.newTask('taskPowerAttack', mff.taskPowerAttack.bind(mff), 15 * 1000, 0);}
+  if(taskPowerAttack){gTaskController.newTask('taskPowerAttack', mff.taskPowerAttack.bind(mff), 10 * 1000, 0);}
   sleep(1000);
   gTaskController.start();
 };
