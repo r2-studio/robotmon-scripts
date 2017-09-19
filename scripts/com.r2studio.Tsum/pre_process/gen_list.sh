@@ -1,0 +1,1 @@
+ls origin_images | xargs -I{} basename {} .png | awk 'BEGIN{str=""}{str=str"\""$0"\""", "}END{print str}'

@@ -1,6 +1,6 @@
 
-CROP_WIDTH=48
-RESIZE_WIDTH=16
+CROP_WIDTH=60
+RESIZE_WIDTH=15
 
 for FILENAME in `ls origin_images`
 do
