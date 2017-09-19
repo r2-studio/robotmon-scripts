@@ -6,6 +6,12 @@
 
 // usage: ./make_images filename cropX cropY cropW cropH resizeW resizeH
 
+/*
+  image mapping
+  (7.2) 1080 -> 108 -> 150 -> 200
+  (4.0) 60   -> 108 -> 15
+  (4.0) 48          -> 12  -> 16
+*/
 int main(int argc, char** argv) {
   std::string filename = std::string(argv[1]);
   int cropW = std::stoi(std::string(argv[2]));
