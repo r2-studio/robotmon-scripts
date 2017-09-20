@@ -134,8 +134,9 @@
                 if (eventType == 'OnPlayClick') {
                     var taskAttack = getCheckStatus('#taskAttack');
                     var taskPowerAttack = getCheckStatus('#taskPowerAttack');
-                    
-                    JavaScriptInterface.runScript(`start(${taskAttack}, ${taskPowerAttack});`);
+                    var autoNextWar = getCheckStatus('#autoNextWar');
+
+                    JavaScriptInterface.runScript(`start(${taskAttack}, ${taskPowerAttack}, ${autoNextWar});`);
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 } else if (eventType == 'OnReloadClick') {
@@ -164,6 +165,13 @@
                     技能攻擊
                     <label class="switch pull-right">
                         <input id="taskPowerAttack" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動接關
+                    <label class="switch pull-right">
+                        <input id="autoNextWar" type="checkbox" checked>
                         <span class="slider round"></span>
                     </label>
                 </li>

@@ -6,6 +6,7 @@ var Config = {
   resizeWidth: 0,
   resizeHeight: 0,
   isRunning: false,
+  autoNextWar: false,
 };
 
 function log() {
@@ -67,17 +68,27 @@ function MarvelFutureFight() {
     captureHeight: 1080,
     
     // buttons
-    ButtonWarEntry: {x: 1660, y: 1000},
+    ButtonLevelUp: {x: 1050, y: 890},
+    ButtonNextWar: {x: 1822, y: 1015},
+    ButtonNextWarGreen: {x: 1630, y: 1015},
+    ButtonSkip: {x: 1856, y: 88},
+    ButtonHeroLevelUp: {x: 1373, y: 963},
+    ButtonHeroLevelUpConfirm: {x: 1200, y: 817},
+    ButtonRate: {x: 756, y: 853},
 
     ButtonAttack: {x: 1760, y: 900},
     ButtonAttack1: {x: 1660, y: 670},
     ButtonAttack2: {x: 1530, y: 800},
     ButtonAttack3: {x: 1830, y: 670},
-    ButtonAttack4: {x: 1555, y: 900},
+    ButtonAttack4: {x: 1555, y: 980},
     ButtonAttack5: {x: 1380, y: 980},
-
+    ButtonAttack6: {x: 1200, y: 980},
     // config
     during: 300,
+
+    ButtonEnableColor: {a: 0, b: 145, g: 89, r: 64},
+    ButtonEnableGreenColor: {a: 0, b: 108, g: 150, r: 79},
+    ButtonRateColor: {a: 0, b: 0, g: 209, r: 248},
   };
   this.running = false;
 }
@@ -98,19 +109,62 @@ MarvelFutureFight.prototype.screenshot = function() {
   return getScreenshotModify(0, 0, 0, 0, Config.resizeWidth, Config.resizeHeight, 80);
 }
 
+MarvelFutureFight.prototype.pressSkipButton = function(img) {
+  if (isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonSkip))) {
+    log("跳過");
+    this.tap(this.Const.ButtonSkip);
+  }
+}
+
+MarvelFutureFight.prototype.checkButton = function() {
+  var img = this.screenshot();
+  if (Config.autoNextWar && isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonNextWar))) {
+    log("下一關(藍色按鈕)");
+    this.tap(this.Const.ButtonNextWar);
+    this.pressSkipButton(img);
+  }
+  if (Config.autoNextWar && isSameColor(this.Const.ButtonEnableGreenColor, getColor(img, this.Const.ButtonNextWarGreen))) {
+    log("下一關(綠色按鈕)");
+    this.tap(this.Const.ButtonNextWarGreen);
+    this.pressSkipButton(img);
+  }
+
+  this.pressSkipButton(img);
+
+  if (isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonLevelUp))) {
+    log("神盾局升級");
+    this.goBack();
+  }
+  if (isSameColor(this.Const.ButtonEnableGreenColor, getColor(img, this.Const.ButtonHeroLevelUp))) {
+    log("英雄進階");
+    this.tap(this.Const.ButtonHeroLevelUp);
+  }
+  if (isSameColor(this.Const.ButtonEnableGreenColor, getColor(img, this.Const.ButtonHeroLevelUpConfirm))) {
+    log("英雄進階確認");
+    this.tap(this.Const.ButtonHeroLevelUpConfirm);
+  }
+  if (isSameColor(this.Const.ButtonRateColor, getColor(img, this.Const.ButtonRate))) {
+    log("評分");
+    this.goBack();
+  }
+  releaseImage(img);
+}
+
 MarvelFutureFight.prototype.taskAttack = function() {
+  this.checkButton();
   log('普通攻擊');
   this.tap(this.Const.ButtonAttack);
 }
 
 MarvelFutureFight.prototype.taskPowerAttack = function() {
+  this.checkButton();
   log('技能攻擊');
-  var during = 1000;
-  this.tap(this.Const.ButtonAttack1, during);
-  this.tap(this.Const.ButtonAttack2, during);
-  this.tap(this.Const.ButtonAttack3, during);
-  this.tap(this.Const.ButtonAttack4, during);
-  this.tap(this.Const.ButtonAttack5, during);
+  this.tap(this.Const.ButtonAttack1);
+  this.tap(this.Const.ButtonAttack2);
+  this.tap(this.Const.ButtonAttack3);
+  this.tap(this.Const.ButtonAttack4);
+  this.tap(this.Const.ButtonAttack5);
+  this.tap(this.Const.ButtonAttack6);
 }
 
 // ===================================================================================
@@ -119,20 +173,22 @@ var mff;
 function stop() {
   log('[MARVEL 未來之戰] 停止');
   Config.isRunning = false;
+  Config.autoNextWar = false;
   sleep(1000);
   gTaskController.removeAllTasks();
 }
 
-function start(taskAttack, taskPowerAttack) {
+function start(taskAttack, taskPowerAttack, autoNextWar) {
   log('[MARVEL 未來之戰] 啟動');
   Config.isRunning = true;
+  Config.autoNextWar = autoNextWar;
   mff = new MarvelFutureFight();
   log(Config);
   gTaskController = new TaskController();
   if(taskAttack){gTaskController.newTask('taskAttack', mff.taskAttack.bind(mff), 300, 0);}
-  if(taskPowerAttack){gTaskController.newTask('taskPowerAttack', mff.taskPowerAttack.bind(mff), 10 * 1000, 0);}
+  if(taskPowerAttack){gTaskController.newTask('taskPowerAttack', mff.taskPowerAttack.bind(mff), 10 * 1000, 0, true);}
   sleep(1000);
   gTaskController.start();
 };
-// start(true, true);
+// start(true, true, true);
 // stop();
