@@ -1,9 +1,11 @@
 var IS_TSUM_LOAD;
 var IS_PREPARED_TSUMS;
+var runTimes = 0;
 
 var Config = {
   tsumCount: 5,
   tsumDir: 'tsums_12',
+  myTsum: 'block_plutoh2015_s',
 }; 
 
 function refreshCode() {
@@ -57,6 +59,9 @@ if (IS_TSUM_LOAD === true) {
       var xyScore = findImage(boardImg, tsumImage);
       xyScore.img = tsumImage; 
       xyScore.key = k;
+      if (k == Config.myTsum) {
+        xyScore.score = 1;
+      }
       tsumMaxScores.push(xyScore);
     }
     tsumMaxScores.sort(function(a, b){
@@ -151,8 +156,8 @@ if (IS_TSUM_LOAD === true) {
     for (var i = 0; i < Config.tsumCount && i < tsumMaxScores.length; i++) {
       for (var j = 0; j < rotations.length; j++) {
         var rotatedImage = tsumMaxScores[i].rotations[j];
-        var scoreLimit = tsumMaxScores[i].score * 0.65;
-        var results = findImages(boardImg, rotatedImage, scoreLimit, 13, true);
+        var scoreLimit = tsumMaxScores[i].score * 0.75;
+        var results = findImages(boardImg, rotatedImage, scoreLimit, 15, true);
         // console.log(JSON.stringify(results));
         for (var k in results) {
           var result = results[k];
@@ -190,11 +195,13 @@ if (IS_TSUM_LOAD === true) {
       var boardTsum = board[i];
       drawCircle(boardImg, boardTsum.x + tsumWidth/2, boardTsum.y + tsumWidth/2, 1, colors[boardTsum.tsumIdx][0], colors[boardTsum.tsumIdx][1], colors[boardTsum.tsumIdx][2], 0);
     }
-    saveImage(boardImg, getStoragePath() + "/tmp/boardImg2.jpg");
+    saveImage(boardImg, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
     releaseImage(boardImg);
 
     tap(552, 1330, 100);
     sleep(500);
+
+    runTimes++;
 
     return board;
   }
@@ -236,15 +243,14 @@ if (IS_TSUM_LOAD === true) {
 tap(552, 1330, 100);
 sleep(600);
 
-for (var k = 0; k < 15; k++) {
+for (var k = 0; k < 25; k++) {
   // prepareTsum();
   var board = run();
   var paths = calculatePaths(board);
   link(paths);
+  tap(920, 1550, 60);
+  sleep(1000);
   tap(160, 1550, 30);
-  tap(920, 1550, 60);
-  tap(920, 1550, 60);
-  sleep(900);
 }
 
 tap(920, 1550, 100);
@@ -258,10 +264,10 @@ function link(paths) {
       var x = Math.floor(cropX + (point.x + tsumWidth/2) * cropW / resizeW);
       var y = Math.floor(cropY + (point.y + tsumWidth/2) * cropH / resizeH);
       if (j == 0) {
-        tapDown(x, y, 60);
+        tapDown(x, y, 50);
       }
-      moveTo(x, y, 40);
-      moveTo(x, y, 40);
+      moveTo(x, y, 30);
+      moveTo(x, y, 30);
       if (j == path.length - 1) {
         tapUp(x, y, 60);
       }
@@ -339,7 +345,7 @@ function calculatePaths(board) {
         } else {
           centers[c.x] = c.y;
           paths.push(path);
-          // console.log(tsumIdx, path.length, c.x, c.y, JSON.stringify(path));
+          // console.log(runTimes, tsumIdx, path.length, c.x, c.y, JSON.stringify(path));
         }
       } else {
         tsums[tsumIdx].splice(i, 1);
