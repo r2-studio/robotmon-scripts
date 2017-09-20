@@ -52,14 +52,13 @@ function toResizeXY(x, y) {
   return {x: rx, y: ry};
 }
 
-// init
-(function(){
+function initScreenSize() {
   var size = getScreenSize();
   Config.screenHeight = size.height;
   Config.screenWidth = size.width;
   Config.resizeWidth = Math.floor(Config.screenWidth / 3);
   Config.resizeHeight = Math.floor(Config.screenHeight / 3);
-})();
+}
 
 function MarvelFutureFight() {
   this.Const = {
@@ -180,6 +179,7 @@ function stop() {
 
 function start(taskAttack, taskPowerAttack, autoNextWar) {
   log('[MARVEL 未來之戰] 啟動');
+  initScreenSize();
   Config.isRunning = true;
   Config.autoNextWar = autoNextWar;
   mff = new MarvelFutureFight();
