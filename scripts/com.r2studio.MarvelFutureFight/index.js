@@ -73,6 +73,9 @@ function MarvelFutureFight() {
     ButtonSkip: {x: 1856, y: 88},
     ButtonHeroLevelUp: {x: 1373, y: 963},
     ButtonHeroLevelUpConfirm: {x: 1200, y: 817},
+    ButtonHeroLevelUp2: {x: 1050, y: 1000},
+    ButtonContinue: {x: 1050, y: 370},
+    ButtonClosePromotion: {x: 1660, y: 180},
     ButtonRate: {x: 756, y: 853},
 
     ButtonAttack: {x: 1760, y: 900},
@@ -88,6 +91,7 @@ function MarvelFutureFight() {
     ButtonEnableColor: {a: 0, b: 145, g: 89, r: 64},
     ButtonEnableGreenColor: {a: 0, b: 108, g: 150, r: 79},
     ButtonRateColor: {a: 0, b: 0, g: 209, r: 248},
+    ButtonClosePromotionColor: {a: 0, b: 36, g: 32, r: 175},
   };
   this.running = false;
 }
@@ -141,6 +145,18 @@ MarvelFutureFight.prototype.checkButton = function() {
   if (isSameColor(this.Const.ButtonEnableGreenColor, getColor(img, this.Const.ButtonHeroLevelUpConfirm))) {
     log("英雄進階確認");
     this.tap(this.Const.ButtonHeroLevelUpConfirm);
+  }
+  if (isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonHeroLevelUp2))) {
+    log("英雄等級提升");
+    this.tap(this.Const.ButtonHeroLevelUp2);
+  }
+  if (isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonContinue))) {
+    log("遊戲繼續");
+    this.tap(this.Const.ButtonContinue);
+  }
+  if (isSameColor(this.Const.ButtonClosePromotionColor, getColor(img, this.Const.ButtonClosePromotion))) {
+    log("關閉促銷商品");
+    this.goBack();
   }
   if (isSameColor(this.Const.ButtonRateColor, getColor(img, this.Const.ButtonRate))) {
     log("評分");
