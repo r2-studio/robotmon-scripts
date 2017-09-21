@@ -194,12 +194,13 @@ MarvelFutureFight.prototype.taskPowerAttack = function() {
     return;
   }
   log('技能攻擊');
-  this.tap(this.Const.ButtonAttack1);
-  this.tap(this.Const.ButtonAttack2);
-  this.tap(this.Const.ButtonAttack3);
-  this.tap(this.Const.ButtonAttack4);
-  this.tap(this.Const.ButtonAttack5);
-  this.tap(this.Const.ButtonAttack6);
+  var during = 1000;
+  this.tap(this.Const.ButtonAttack1, during);
+  this.tap(this.Const.ButtonAttack2, during);
+  this.tap(this.Const.ButtonAttack3, during);
+  this.tap(this.Const.ButtonAttack4, during);
+  this.tap(this.Const.ButtonAttack5, during);
+  this.tap(this.Const.ButtonAttack6, during);
 }
 
 // ===================================================================================
