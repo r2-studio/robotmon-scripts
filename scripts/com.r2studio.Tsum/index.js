@@ -7,7 +7,7 @@ var Config = {
   debug: true,
   tsumCount: 5,
   tsumDir: 'tsums_12',
-  myTsum: 'block_plutoh2015_s',
+  myTsum: 'block_jacksparrow_s',
   tsumFiles: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_anna_s", "block_annac_s", "block_annaf_s", "block_ariel_s", "block_arielr_s", "block_arlo_s", "block_aurora_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_bb8_s", "block_beast_s", "block_beastl_s", "block_belle_s", "block_bellel_s", "block_brerrabbit_s", "block_buzz_s", "block_c3po_s", "block_charming_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chip_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_clarice_s", "block_cruella_s", "block_crush_s", "block_daisy_s", "block_daisyn_s", "block_daisyv_s", "block_daisyx_s", "block_dale_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_davyjones_s", "block_deathtrooper_s", "block_donald_s", "block_donaldn_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx_s", "block_dory_s", "block_dumbo_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsa_s", "block_elsac_s", "block_elsaf_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_finnick_s", "block_flounder_s", "block_gaston_s", "block_genie_s", "block_goofy_s", "block_goofyh2016_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_jack_s", "block_jacksparrow_s", "block_jackx_s", "block_jafar_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen_s", "block_lotso_s", "block_luke_s", "block_lukej_s", "block_lumiere_s", "block_madhatter_s", "block_madhatterj_s", "block_maleficent_s", "block_maleficentd_s", "block_marchhare_s", "block_marie_s", "block_marshmallow_s", "block_mater_s", "block_maui_s", "block_max_s", "block_mcqueen_s", "block_megara_s", "block_mickey_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeyp_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_mike_s", "block_minnie_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_oswald_s", "block_oswaldsp_s", "block_pascal_s", "block_perry_s", "block_pete_s", "block_peteb_s", "block_phillip2_s", "block_phillip_s", "block_piglet_s", "block_pinocchio_s", "block_pluto_s", "block_plutoh2015_s", "block_plutox_s", "block_pooh_s", "block_poohr_s", "block_potts_s", "block_pudding_s", "block_puffy_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_randall_s", "block_rapunzel_s", "block_rapunzelb_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite_s", "block_sora_s", "block_souffle_s", "block_stitch_s", "block_stitchf_s", "block_stitchh_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tigger_s", "block_tiggerr_s", "block_tinkerbell_s", "block_tinkerbellp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_wolf_s", "block_woody_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s"],
   rotations: ['0', '45', '90', '135', '180', '225', '270', '315'],
 
@@ -21,7 +21,7 @@ var Config = {
   tsumWidth: 12,
   tsumBoundW: 10, // tsumWidth / 2 + 2
   tsumBoundH: 10,
-  gameContinueDelay: 300,
+  gameContinueDelay: 450,
 
   tsumImages: {},
   tsumMaxScores: [],
@@ -49,13 +49,6 @@ var Button = {
   Config.virtualButtonHeight = getVirtualButtonHeight();
   Config.hasVirtualButtonBar = true;
 })();
-
-function tapBtn(xy, during) {
-  if (during === undefined) {
-    during = 50;
-  }
-  tap(Math.round(xy.x), Math.round(xy.y), during);
-}
 
 function isSameColor(c1, c2, diff) {
   if (diff == undefined) {
@@ -102,17 +95,11 @@ function getColor(img, xy) {
 }
 
 // ============== manage tsum images ===============
-function prepareTsum() {
+function prepareTsum(boardImg) {
   Config.tsumImages = loadTsumImages();
-
-  var boardImg = getScreenshotModify(Config.cropX, Config.cropY, Config.cropW, Config.cropH, Config.resizeW, Config.resizeH, 100);
-  
-  tap(920, 210, 50);
-
   if (Config.debug) {
     saveImage(boardImg, getStoragePath() + "/tmp/boardImg.jpg");
   }
-  
   Config.tsumMaxScores = getEachTsumMaxScore(Config.tsumImages, boardImg);
   Config.tsumMaxScores = Config.tsumMaxScores.splice(0, 50);
   console.log('total tsums', 'using tsums', Config.tsumMaxScores.length);
@@ -121,12 +108,22 @@ function prepareTsum() {
   removeSameTsumImages(Config.tsumMaxScores);
   console.log('after remove same tsums', Config.tsumMaxScores.length);
   printMaxScores(Config.tsumMaxScores);
-  loadTsumRotationImages(Config.tsumMaxScores); 
-  releaseImage(boardImg);
+  loadTsumRotationImages(Config.tsumMaxScores);
+  // recheck
+  for (var i = 0; i < Config.tsumMaxScores.length && i < 8; i++) {
+    for (var j = 0; j < Config.tsumMaxScores[i].rotations.length; j++) {
+      var tsumImage = Config.tsumMaxScores[i].rotations[j];
+      var xyScore = findImage(boardImg, tsumImage);
+      if (xyScore.score > Config.tsumMaxScores[i].score) {
+        Config.tsumMaxScores[i].score = xyScore.score;
+      }
+    }
+  }
+  Config.tsumMaxScores.sort(function(a, b){
+    return a.score > b.score ? -1 : 1;
+  });
+  printMaxScores(Config.tsumMaxScores);
   IS_PREPARED_TSUMS = true;
-  
-  tap(552, 1330, 100);
-  sleep(300);
 }
 
 function releaseTsum() {
@@ -155,6 +152,12 @@ function getEachTsumMaxScore(tsumImages, boardImg) {
     if (k == Config.myTsum) {
       xyScore.score = 1;
     }
+    if (k == 'block_sulley_s') {
+      xyScore.score -= 0.03;
+    }
+    if (k == 'block_arlo_s') {
+      xyScore.score += 0.02;
+    }
     tsumMaxScores.push(xyScore);
   }
   tsumMaxScores.sort(function(a, b){
@@ -173,7 +176,7 @@ function removeSameTsumImages(tsumMaxScores) {
       var imgI = tsumMaxScores[i].img;
       var imgJ = tsumMaxScores[j].img;
       var score = getIdentityScore(imgI, imgJ);
-      if (score > 0.85) {
+      if (score > 0.87) {
         erase.push(j);
       }
     }
@@ -192,7 +195,7 @@ function loadTsumRotationImages(tsumMaxScores) {
       saveImage(tsumMaxScores[i].img, getStoragePath() + "/tmp/tsum" + i + ".jpg");
     }
   }
-  for (var i = 0; i < 5 && i < tsumMaxScores.length; i++) {
+  for (var i = 0; i < 8 && i < tsumMaxScores.length; i++) {
     tsumMaxScores[i].rotations = [];
     var maxScore = tsumMaxScores[i];
     for (var r in Config.rotations) {
@@ -338,27 +341,114 @@ function calculatePaths(board) {
     if (a.length < b.length) { return 1; }
     return -1;
   });
+  log('計算出路徑', paths.length, '條');
   return paths;
 }
 
-function run() {
+// ============== control tasks ===============
+
+function Tsum() {
+  this.isRunning = true;
+}
+
+Tsum.prototype.screenshot = function() {
+  return getScreenshotModify(0, 0, 0, 0, Config.resizeWidth, Config.resizeHeight, 80);
+}
+
+Tsum.prototype.tap = function(xy, during) {
+  if (during === undefined) {
+    during = 50;
+  }
+  tap(Math.round(xy.x), Math.round(xy.y), during);
+}
+
+Tsum.prototype.goToHome = function(during) {
+  if (during === undefined) {
+    during = 60 * 1000;
+  }
+  tapUp(0, 0);
+  var start = Date.now();
+  while(this.isRunning) {
+    // log('檢查室是否在遊戲中');
+    var img = this.screenshot();
+    var isCloseBtn = isSameColor(Button.outClose.color, getColor(img, Button.outClose));
+    var isStart1Btn = isSameColor(Button.outStart1.color, getColor(img, Button.outStart1));
+    var isStart2Btn = isSameColor(Button.outStart2.color, getColor(img, Button.outStart2));
+    var isGameRandBtn = isSameColor(Button.gameRand.color, getColor(img, Button.gameRand));
+    var isGamePauseBtn = isSameColor(Button.gamePause.color, getColor(img, Button.gamePause));
+    var isGameContinue = isSameColor(Button.gameContinue.color, getColor(img, Button.gameContinue));
+    releaseImage(img);
+    // console.log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGamePauseBtn, isGameContinue);
+    if (isStart1Btn) {
+      return;
+    } else if (isCloseBtn) {
+      this.tap(Button.outClose);
+    } else if (isStart2Btn) {
+      this.tap(Button.gameSkillOn); // same as 返回
+    } else if (isGameRandBtn && isGamePauseBtn) {
+      log('in game');
+      return;
+    } else if (isGameContinue) {
+      log('in game');
+      return;
+    } else {
+      this.tap(Button.gameSkillOn); // same as 返回
+    }
+    if (Date.now() - start > during) {
+      return;
+    }
+    sleep(1000);
+  }
+}
+
+Tsum.prototype.isInGame = function() {
+  for (var i = 0; i < 10; i++) {
+    var img = this.screenshot();
+    var isCloseBtn = isSameColor(Button.outClose.color, getColor(img, Button.outClose));
+    var isStart1Btn = isSameColor(Button.outStart1.color, getColor(img, Button.outStart1));
+    var isStart2Btn = isSameColor(Button.outStart2.color, getColor(img, Button.outStart2));
+    var isGameRandBtn = isSameColor(Button.gameRand.color, getColor(img, Button.gameRand));
+    var isGamePauseBtn = isSameColor(Button.gamePause.color, getColor(img, Button.gamePause));
+    var isGameContinue = isSameColor(Button.gameContinue.color, getColor(img, Button.gameContinue));
+    releaseImage(img);
+    if (isGameContinue) {
+      return true;
+    } else if (isGameRandBtn && isGamePauseBtn) {
+      return true;
+    } else if (isCloseBtn || isStart1Btn || isStart2Btn) {
+      return false;
+    }
+    sleep(100);
+  }
+  return false;
+}
+
+Tsum.prototype.run = function() {
   var startTime = Date.now();
   if (!IS_PREPARED_TSUMS) {
-    console.log('prepare tsums...');
-    prepareTsum();
-    console.log('prepare tsums', usingTimeString(startTime));
+    this.tap(Button.gameContinue);
+    sleep(Config.gameContinueDelay);
+    log('辨識Tsum種類');
+    var boardImg = getScreenshotModify(Config.cropX, Config.cropY, Config.cropW, Config.cropH, Config.resizeW, Config.resizeH, 100);
+    this.tap(Button.gamePause);
+    prepareTsum(boardImg);
+    releaseImage(boardImg);
+    this.tap(Button.gameContinue);
+    sleep(Config.gameContinueDelay);
+    log('辨識Tsum種類時間', usingTimeString(startTime));
   }
-  printMaxScores(Config.tsumMaxScores);
-
+  if (Config.debug) {
+    printMaxScores(Config.tsumMaxScores);
+  }
   var boardImg = getScreenshotModify(Config.cropX, Config.cropY, Config.cropW, Config.cropH, Config.resizeW, Config.resizeH, 100);
   var boardTsums = [];
 
-  tap(920, 210, 50);
-
+  this.tap(Button.gamePause);
+  log('辨識盤面Tsum...');
   for (var i = 0; i < Config.tsumCount && i < Config.tsumMaxScores.length; i++) {
     for (var j = 0; j < Config.rotations.length; j++) {
       var rotatedImage = Config.tsumMaxScores[i].rotations[j];
-      var scoreLimit = Config.tsumMaxScores[i].score * 0.75;
+      var scoreLimit = (Config.tsumMaxScores[i].score - 0.5) * 0.7;
       var results = findImages(boardImg, rotatedImage, scoreLimit, 15, true);
       // console.log(JSON.stringify(results));
       for (var k in results) {
@@ -374,7 +464,7 @@ function run() {
     }
   }
   boardTsums.sort(function(a, b){return a.score > b.score ? -1 : 1;});
-  console.log('finding all rotated tsum in board', boardTsums.length, usingTimeString(startTime));
+  // console.log('finding all rotated tsum in board', boardTsums.length, usingTimeString(startTime));
   
   var board = [];
   for (var i in boardTsums) {
@@ -391,26 +481,86 @@ function run() {
       board.push(boardTsum);
     }
   }
-  console.log('find tsums in board', board.length, usingTimeString(startTime));
-  
-  for (var i = 0; i < board.length; i++) {
-    var boardTsum = board[i];
-    drawCircle(boardImg, boardTsum.x + Config.tsumWidth/2, boardTsum.y + Config.tsumWidth/2, 1, Config.colors[boardTsum.tsumIdx][0], Config.colors[boardTsum.tsumIdx][1], Config.colors[boardTsum.tsumIdx][2], 0);
-  }
+  log('辨識盤面Tsum成功數量', board.length, '費時', usingTimeString(startTime));
+  // console.log('find tsums in board', board.length, usingTimeString(startTime));
   if (Config.debug) {
+    for (var i = 0; i < board.length; i++) {
+      var boardTsum = board[i];
+      drawCircle(boardImg, boardTsum.x + Config.tsumWidth/2, boardTsum.y + Config.tsumWidth/2, 1, Config.colors[boardTsum.tsumIdx][0], Config.colors[boardTsum.tsumIdx][1], Config.colors[boardTsum.tsumIdx][2], 0);
+    }
     saveImage(boardImg, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
   }
   releaseImage(boardImg);
-
-  tap(552, 1330, 100);
-  sleep(500);
-
   runTimes++;
-
   return board;
 }
 
-// ============== control tasks ===============
+Tsum.prototype.taskPlayGame = function() {
+  log('開始遊戲...');
+  if (!this.isInGame()) {
+    this.goToHome();
+    for (var i = 0; i < 5; i++) {
+      sleep(1000);
+      this.tap(Button.outStart1, 100);
+    }
+    sleep(1000);
+  }
+  // wait for starting game
+  for (var i = 0; i < 20; i++) {
+    if (this.isInGame()) {
+      break;
+    }
+    sleep(500);
+  }
+  log('遊戲中');
+  sleep(1000);
+  var pathZero = 0;
+  // start to run
+  while(this.isRunning) {
+    var board = this.run(); // will pause game
+    log('計算連線路徑');
+    var paths = calculatePaths(board);
+    if (paths.length < 2) {
+      pathZero++;
+      if (pathZero > 2) {
+        pathZero = 0;
+        log('路徑數量為 0, 重新辨識...');
+        this.tap(Button.gameRand, 60);
+        this.tap(Button.gameRand, 60);
+        sleep(1000);
+        releaseTsum();
+        continue;
+      }
+      pathZero = 0;
+    }
+    this.tap(Button.gameContinue);
+    sleep(Config.gameContinueDelay);
+    log('開始連線');
+    link(paths);
+    
+    if (!this.isInGame()) {
+      log('遊戲結束');
+      break;
+    }
+    this.tap(Button.gameRand, 100);
+    this.tap(Button.gameRand, 100);
+    sleep(1000);
+
+    var img = this.screenshot();
+    var isSkillOn = isSameColor(Button.gameSkillOn.color, getColor(img, Button.gameSkillOn));
+    releaseImage(img);
+    if (isSkillOn) {
+      log('技能已經存滿，放技能');
+      this.tap(Button.gameSkillOn);
+      sleep(2500);
+    }
+    this.tap(Button.gameSkillOn);
+  }
+  releaseTsum();
+}
+
+var tsumObj = new Tsum();
+tsumObj.taskPlayGame();
 
 function start() {
   stop();
@@ -434,12 +584,12 @@ function stop() {
 
 // for (var k = 0; k < 25; k++) {
 //   // prepareTsum();
-//   var board = run();
-//   var paths = calculatePaths(board);
-//   link(paths);
-//   tap(920, 1550, 60);
-//   sleep(1000);
-//   tap(160, 1550, 30);
+  // var board = run();
+  // var paths = calculatePaths(board);
+  // link(paths);
+  // tap(920, 1550, 60);
+  // sleep(1000);
+  // tap(160, 1550, 30);
 // }
 
 // tap(920, 1550, 100);
