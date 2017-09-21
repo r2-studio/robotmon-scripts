@@ -127,6 +127,19 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
         <script>
+            $(function() {
+                $('#autoNextWar').change(function() {
+                    if ($(this).is(':checked')) {
+                        $('#autoSameWar').prop('checked', false);
+                    }
+                });
+                $('#autoSameWar').change(function() {
+                    if ($(this).is(':checked')) {
+                        $('#autoNextWar').prop('checked', false);
+                    }
+                });
+            });
+
             function getCheckStatus(id) {
                 return $(id).is(':checked');
             }
@@ -135,8 +148,9 @@
                     var taskAttack = getCheckStatus('#taskAttack');
                     var taskPowerAttack = getCheckStatus('#taskPowerAttack');
                     var autoNextWar = getCheckStatus('#autoNextWar');
+                    var autoSameWar = getCheckStatus('#autoSameWar');
 
-                    JavaScriptInterface.runScript(`start(${taskAttack}, ${taskPowerAttack}, ${autoNextWar});`);
+                    JavaScriptInterface.runScript(`start(${taskAttack}, ${taskPowerAttack}, ${autoNextWar}, ${autoSameWar});`);
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 } else if (eventType == 'OnReloadClick') {
@@ -169,9 +183,16 @@
                     </label>
                 </li>
                 <li class="list-group-item">
-                    自動接關
+                    自動打下一關
                     <label class="switch pull-right">
-                        <input id="autoNextWar" type="checkbox" checked>
+                        <input id="autoNextWar" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動重打同一關
+                    <label class="switch pull-right">
+                        <input id="autoSameWar" type="checkbox">
                         <span class="slider round"></span>
                     </label>
                 </li>

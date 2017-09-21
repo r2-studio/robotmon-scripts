@@ -7,6 +7,7 @@ var Config = {
   resizeHeight: 0,
   isRunning: false,
   autoNextWar: false,
+  autoSameWar: false,
 };
 
 function log() {
@@ -69,6 +70,7 @@ function MarvelFutureFight() {
     // buttons
     ButtonLevelUp: {x: 1050, y: 890},
     ButtonNextWar: {x: 1822, y: 1015},
+    ButtonSameWar: {x: 1560, y: 1015},
     ButtonNextWarGreen: {x: 1630, y: 1015},
     ButtonSkip: {x: 1856, y: 88},
     ButtonHeroLevelUp: {x: 1373, y: 963},
@@ -119,6 +121,10 @@ MarvelFutureFight.prototype.pressSkipButton = function(img) {
   }
 }
 
+MarvelFutureFight.prototype.isGameReadyScreen = function(img) {
+  return isSameColor(this.Const.ButtonEnableGreenColor, getColor(img, this.Const.ButtonNextWarGreen));
+}
+
 MarvelFutureFight.prototype.checkButton = function() {
   var img = this.screenshot();
   if (Config.autoNextWar && isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonNextWar))) {
@@ -126,10 +132,14 @@ MarvelFutureFight.prototype.checkButton = function() {
     this.tap(this.Const.ButtonNextWar);
     this.pressSkipButton(img);
   }
-  if (Config.autoNextWar && isSameColor(this.Const.ButtonEnableGreenColor, getColor(img, this.Const.ButtonNextWarGreen))) {
+  if ((Config.autoNextWar || Config.autoSameWar) && this.isGameReadyScreen(img)) {
     log("下一關(綠色按鈕)");
     this.tap(this.Const.ButtonNextWarGreen);
     this.pressSkipButton(img);
+  }
+  if (Config.autoSameWar && isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonSameWar))) {
+    log("重打同一關");
+    this.tap(this.Const.ButtonSameWar);
   }
 
   this.pressSkipButton(img);
@@ -162,17 +172,27 @@ MarvelFutureFight.prototype.checkButton = function() {
     log("評分");
     this.goBack();
   }
+
+  var isGameReadyScreen = false;
+  if (this.isGameReadyScreen(img)) {
+    isGameReadyScreen = true;
+  }
   releaseImage(img);
+  return isGameReadyScreen;
 }
 
 MarvelFutureFight.prototype.taskAttack = function() {
-  this.checkButton();
+  if (this.checkButton()) {
+    return;
+  }
   log('普通攻擊');
   this.tap(this.Const.ButtonAttack);
 }
 
 MarvelFutureFight.prototype.taskPowerAttack = function() {
-  this.checkButton();
+  if (this.checkButton()) {
+    return;
+  }
   log('技能攻擊');
   this.tap(this.Const.ButtonAttack1);
   this.tap(this.Const.ButtonAttack2);
@@ -189,15 +209,17 @@ function stop() {
   log('[MARVEL 未來之戰] 停止');
   Config.isRunning = false;
   Config.autoNextWar = false;
+  Config.autoSameWar = false;
   sleep(1000);
   gTaskController.removeAllTasks();
 }
 
-function start(taskAttack, taskPowerAttack, autoNextWar) {
+function start(taskAttack, taskPowerAttack, autoNextWar, autoSameWar) {
   log('[MARVEL 未來之戰] 啟動');
   initScreenSize();
   Config.isRunning = true;
   Config.autoNextWar = autoNextWar;
+  Config.autoSameWar = autoSameWar;
   mff = new MarvelFutureFight();
   log(Config);
   gTaskController = new TaskController();
@@ -206,5 +228,5 @@ function start(taskAttack, taskPowerAttack, autoNextWar) {
   sleep(1000);
   gTaskController.start();
 };
-// start(true, true, true);
+// start(true, true, false, false);
 // stop();
