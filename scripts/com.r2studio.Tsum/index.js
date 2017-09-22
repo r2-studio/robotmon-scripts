@@ -135,11 +135,13 @@ function releaseTsum() {
 }
 
 function printMaxScores(tsumMaxScores) {
-  var str = "";
-  for (var i = 0; i < 10 && i < tsumMaxScores.length; i++) {
-    str += i + ", " + tsumMaxScores[i].key + ", " + tsumMaxScores[i].score + "    ";
+  if (Config.debug) {
+    var str = "";
+    for (var i = 0; i < 10 && i < tsumMaxScores.length; i++) {
+      str += i + ", " + tsumMaxScores[i].key + ", " + tsumMaxScores[i].score + "    ";
+    }
+    console.log(str);
   }
-  console.log(str);
 }
 
 function getEachTsumMaxScore(tsumImages, boardImg) {
@@ -559,40 +561,24 @@ Tsum.prototype.taskPlayGame = function() {
   releaseTsum();
 }
 
-var tsumObj = new Tsum();
-tsumObj.taskPlayGame();
+var tsumObj;
+var ef;
 
 function start() {
   stop();
-
-  gTaskController = new TaskController();
+  sleep(1000);
+  tsumObj = new Tsum();
+  while(tsumObj.isRunning) {
+    tsumObj.taskPlayGame();
+    sleep(5000);
+  }
 }
 
 function stop() {
+  if (tsumObj !== undefined) {
+    tsumObj.isRunning = false;
+  }
   if (IS_PREPARED_TSUMS) {
     releaseTsum();
   }
 }
-
-// var img = getScreenshotModify(0, 0, Config.screenWidth, Config.screenHeight, Config.resizeWidth, Config.resizeHeight, 80);
-// var c = getColor(img, Button.gameSkillOff);
-// log(c);
-
-// releaseImage(img);
-// tap(552, 1330, 100);
-// sleep(600);
-
-// for (var k = 0; k < 25; k++) {
-//   // prepareTsum();
-  // var board = run();
-  // var paths = calculatePaths(board);
-  // link(paths);
-  // tap(920, 1550, 60);
-  // sleep(1000);
-  // tap(160, 1550, 30);
-// }
-
-// tap(920, 1550, 100);
-// sleep(300);
-
-// tap(920, 210, 50);
