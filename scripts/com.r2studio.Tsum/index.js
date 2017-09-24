@@ -55,7 +55,7 @@ var Button = {
   gameSkillOn: {x: 160, y: 1490 - adjY, color: {"a":0,"b":0,"g":220,"r":238}},
   gameRand: {x: 985, y: 1580 - adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 980, y: 200 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue: {x: 670, y: 1330 - adjY, color: {"a":0,"b":7,"g":176,"r":234}},
+  gameContinue: {x: 540, y: 1330 - adjY, color: {"a":0,"b":7,"g":176,"r":234}},
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
   outClose: {x: 500, y: 1520 - adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
@@ -452,7 +452,36 @@ Tsum.prototype.tap = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  tap(Math.round(xy.x + this.gameOffsetX), Math.round(xy.y + this.gameOffsetY), during);
+  var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
+  var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
+  tap(Math.round(x), Math.round(y), during);
+}
+
+Tsum.prototype.tapDown = function(xy, during) {
+  if (during === undefined) {
+    during = 50;
+  }
+  var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
+  var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
+  tapDown(Math.round(x), Math.round(y), during);
+}
+
+Tsum.prototype.moveTo = function(xy, during) {
+  if (during === undefined) {
+    during = 50;
+  }
+  var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
+  var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
+  moveTo(Math.round(x), Math.round(y), during);
+}
+
+Tsum.prototype.tapUp = function(xy, during) {
+  if (during === undefined) {
+    during = 50;
+  }
+  var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
+  var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
+  tapUp(Math.round(x), Math.round(y), during);
 }
 
 Tsum.prototype.link = function(paths) {
@@ -485,7 +514,7 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue));
     releaseImage(img);
     // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
-    if (isGameContinue) {
+    if (isGameContinue && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'playingGame';
@@ -506,6 +535,7 @@ Tsum.prototype.checkPage = function(wait) {
 Tsum.prototype.goFriendPage = function() {
   while(this.isRunning) {
     var page = this.checkPage(1500);
+    log(page);
     if (page == 'friendPage') {
       break;
     } else if (page == 'startPage') {
@@ -567,6 +597,32 @@ Tsum.prototype.findMyTsum = function() {
   }
   releaseImage(myTsumImage);
   this.myTsum = allScores[0].key;
+}
+
+Tsum.prototype.useSkill = function() {
+  this.tap(Button.gameSkillOn);
+  sleep(140);
+  if (this.myTsum == 'block_lukej_s') {
+    for (var i = 0; i < 6; i++) {
+      this.tapDown({x: 820, y: 1200}, 20);
+      this.moveTo({x: 820, y: 1150}, 20);
+      sleep(260);
+      this.moveTo({x: 825, y: 1000}, 20);
+      if (i == 0){
+        sleep(200);
+      }
+      sleep(140);
+      this.moveTo({x: 835, y: 800}, 20);
+      sleep(140);
+      this.moveTo({x: 845, y: 600}, 20);
+      sleep(140);
+      this.moveTo({x: 850, y: 450}, 20);
+      this.tapUp({x: 850, y: 420}, 20);
+      sleep(10);
+    }
+  } else {
+    sleep(2500);
+  }
 }
 
 Tsum.prototype.taskPlayGame = function() {
@@ -633,8 +689,7 @@ Tsum.prototype.taskPlayGame = function() {
     releaseImage(img);
     if (isSkillOn) {
       log('技能已經存滿，放技能');
-      this.tap(Button.gameSkillOn);
-      sleep(2500);
+      this.useSkill(); 
     }
 
     var page = this.checkPage(3500);
@@ -670,10 +725,10 @@ Tsum.prototype.taskSendHearts = function() {
   this.goFriendPage();
   log('開始送愛心');
   sleep(1500);
-  tapDown(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(Button.outSendHeart0.y + this.gameOffsetY), 100);
-  moveTo(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(Button.outSendHeart0.y + this.gameOffsetY), 100);
-  moveTo(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(90000), 100);
-  tapUp(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(90000), 100);
+  this.tapDown(Button.outSendHeart0, 100);
+  this.moveTo(Button.outSendHeart0, 100);
+  this.moveTo({x: Button.outSendHeart0.x, y: 90000}, 100);
+  this.tapUp({x: Button.outSendHeart0.x, y: 90000}, 100);
   sleep(2000);
 
   while(this.isRunning) {
@@ -690,12 +745,12 @@ Tsum.prototype.taskSendHearts = function() {
     if (isHs1) {this.tap(Button.outSendHeart1);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
     if (isHs2) {this.tap(Button.outSendHeart2);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
     if (isHs3) {this.tap(Button.outSendHeart3);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
-    tapDown(Math.round(Button.outSendHeart3.x + this.gameOffsetX), Math.round(Button.outSendHeart3.y + this.gameOffsetY), 100);
-    moveTo(Math.round(Button.outSendHeart3.x + this.gameOffsetX), Math.round(Button.outSendHeart3.y + this.gameOffsetY), 100);
-    moveTo(Math.round(Button.outSendHeart2.x + this.gameOffsetX), Math.round(Button.outSendHeart2.y + this.gameOffsetY), 100);
-    moveTo(Math.round(Button.outSendHeart1.x + this.gameOffsetX), Math.round(Button.outSendHeart1.y + this.gameOffsetY), 100);
-    moveTo(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(Button.outSendHeart0.y + this.gameOffsetY), 1000);
-    tapUp(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(Button.outSendHeart0.y + this.gameOffsetY), 100);
+    this.tapDown(Button.outSendHeart3, 100);
+    this.moveTo (Button.outSendHeart3, 100);
+    this.moveTo (Button.outSendHeart2, 100);
+    this.moveTo (Button.outSendHeart1, 100);
+    this.moveTo (Button.outSendHeart0, 1000);
+    this.tapUp  (Button.outSendHeart0, 100);
   }
 }
 
@@ -707,6 +762,7 @@ function start(debug, receiveItem, sendHearts) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
   ts.debug = debug;
+
   gTaskController = new TaskController();
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), 60 * 60 * 1000, 0);}
@@ -727,5 +783,10 @@ function stop() {
   if (gTaskController != undefined) {gTaskController.removeAllTasks();}
 }
 
-// start(true, true, false);
+// stop();
+// sleep(500);
+// ts = new Tsum();
+// ts.taskPlayGame();
+// ts.goFriendPage();
+// start(true, false, false, true);
 // stop();
