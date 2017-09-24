@@ -599,6 +599,9 @@ Tsum.prototype.taskPlayGame = function() {
 
     log('計算連線路徑');
     var paths = calculatePaths(board);
+    
+    this.tap(Button.gameContinue);
+    sleep(Config.gameContinueDelay);
 
     if (paths.length < 2) {
       if (pathZero > 2) {
@@ -614,9 +617,7 @@ Tsum.prototype.taskPlayGame = function() {
       }
       pathZero++;
     }
-    
-    this.tap(Button.gameContinue);
-    sleep(Config.gameContinueDelay);
+
     log('開始連線 數量', paths.length);
     this.link(paths);
 
