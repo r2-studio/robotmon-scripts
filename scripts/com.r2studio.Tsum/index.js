@@ -59,6 +59,14 @@ var Button = {
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
   outClose: {x: 500, y: 1520 - adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
+  outReceive: {x: 910, y: 350 - adjY},
+  outReceiveAll: {x: 800, y: 1350 - adjY},
+  outReceiveOk: {x: 750, y: 1000 - adjY},
+  outReceiveClose: {x: 530, y: 1300 - adjY},
+  outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
+  outSendHeart1: {x: 910, y: 828 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
+  outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
+  outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
 };
 
 // Utils for Tsum
@@ -125,7 +133,7 @@ function findAllTsumMatchScore(tsumImages, boardImg, myTsum) {
       xyScore.score -= 0.02;
     }
     if (k == 'block_arlo_s') {
-      xyScore.score += 0.02;
+      xyScore.score += 0.03;
     }
     tsumMaxScores.push(xyScore);
   }
@@ -205,13 +213,13 @@ function releaseTsumRotationImages(tsumMaxScores) {
 
 function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
   var startTime = Date.now();
-
+  
   var boardTsums = [];
   for (var i = 0; i < tsumCount && i < gameTsums.length; i++) {
     for (var j = 0; j < Config.rotations.length; j++) {
       var rotatedImage = gameTsums[i].rotations[j];
       var scoreLimit = (gameTsums[i].score - 0.5) * 0.75;
-      var results = findImages(boardImg, rotatedImage, scoreLimit, 15, true);
+      var results = findImages(boardImg, rotatedImage, scoreLimit, 12, true);
       // console.log(JSON.stringify(results));
       for (var k in results) {
         var result = results[k];
@@ -343,7 +351,7 @@ function calculatePaths(board) {
 // Tsum struct
 
 function Tsum() {
-  this.debug = true;
+  this.debug = false;
   this.isRunning = true;
   this.myTsum = '';
   // screen size config
@@ -393,6 +401,9 @@ Tsum.prototype.init = function() {
 }
 
 Tsum.prototype.deinit = function() {
+  if (this.isLoadRotateTsum) {
+    releaseTsumRotationImages(this.gameTsums);
+  }
   releaseTsumImages(this.allTsumImages);
   this.allTsumImages = {};
   this.isLoadAllTsum = false;
@@ -566,7 +577,7 @@ Tsum.prototype.taskPlayGame = function() {
 
   this.findMyTsum();
   log('myTsum', this.myTsum);
-
+  sleep(500);
   // start to run
   var runTimes = 0;
   var pathZero = 0;
@@ -601,6 +612,7 @@ Tsum.prototype.taskPlayGame = function() {
         this.isLoadRotateTsum = false;
         continue;
       }
+      pathZero++;
     }
     
     this.tap(Button.gameContinue);
@@ -613,7 +625,7 @@ Tsum.prototype.taskPlayGame = function() {
       this.tap(Button.gameRand, 100);
       sleep(700);
     }
-    sleep(350);
+    sleep(300);
 
     var img = this.screenshot();
     var isSkillOn = isSameColor(Button.gameSkillOn.color, this.getColor(img, Button.gameSkillOn));
@@ -624,7 +636,7 @@ Tsum.prototype.taskPlayGame = function() {
       sleep(2500);
     }
 
-    var page = this.checkPage(5000);
+    var page = this.checkPage(3500);
     if (page != 'playingGame' && page != 'pausingGame') {
       log('遊戲結束');
       break;
@@ -636,45 +648,82 @@ Tsum.prototype.taskPlayGame = function() {
   this.isLoadRotateTsum = false;
 }
 
-var tsumObj;
-if (tsumObj != undefined) {
-  tsumObj.deinit();
+Tsum.prototype.taskReceiveAllItems = function() {
+  log('前往朋友頁面');
+  this.goFriendPage();
+  sleep(1000);
+  log('接收全部物品');
+  this.tap(Button.outReceive);
+  sleep(2500);
+  this.tap(Button.outReceiveAll);
+  sleep(1500);
+  this.tap(Button.outReceiveOk);
+  sleep(1500);
+  this.tap(Button.outReceiveClose);
+  this.goFriendPage();
+  log('接收物品完成');
 }
-tsumObj = new Tsum();
-tsumObj.taskPlayGame();
-// log(tsumObj.checkPage());
-// tsumObj.findMyTsum();
-function start() {
-  stop();
 
-  gTaskController = new TaskController();
-}
+Tsum.prototype.taskSendHearts = function() {
+  log('前往朋友頁面');
+  this.goFriendPage();
+  log('開始送愛心');
+  sleep(1500);
+  tapDown(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(Button.outSendHeart0.y + this.gameOffsetY), 100);
+  moveTo(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(Button.outSendHeart0.y + this.gameOffsetY), 100);
+  moveTo(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(90000), 100);
+  tapUp(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(90000), 100);
+  sleep(2000);
 
-function stop() {
-  if (IS_PREPARED_TSUMS) {
-    releaseTsum();
+  while(this.isRunning) {
+    var img = this.screenshot();
+    isHs0 = isSameColor(Button.outSendHeart0.color, this.getColor(img, Button.outSendHeart0));
+    isHs1 = isSameColor(Button.outSendHeart1.color, this.getColor(img, Button.outSendHeart1));
+    isHs2 = isSameColor(Button.outSendHeart2.color, this.getColor(img, Button.outSendHeart2));
+    isHs3 = isSameColor(Button.outSendHeart3.color, this.getColor(img, Button.outSendHeart3));
+    releaseImage(img);
+    if (!isHs0 && !isHs1 && !isHs2 && !isHs3) {
+      break;
+    }
+    if (isHs0) {this.tap(Button.outSendHeart0);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
+    if (isHs1) {this.tap(Button.outSendHeart1);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
+    if (isHs2) {this.tap(Button.outSendHeart2);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
+    if (isHs3) {this.tap(Button.outSendHeart3);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
+    tapDown(Math.round(Button.outSendHeart3.x + this.gameOffsetX), Math.round(Button.outSendHeart3.y + this.gameOffsetY), 100);
+    moveTo(Math.round(Button.outSendHeart3.x + this.gameOffsetX), Math.round(Button.outSendHeart3.y + this.gameOffsetY), 100);
+    moveTo(Math.round(Button.outSendHeart2.x + this.gameOffsetX), Math.round(Button.outSendHeart2.y + this.gameOffsetY), 100);
+    moveTo(Math.round(Button.outSendHeart1.x + this.gameOffsetX), Math.round(Button.outSendHeart1.y + this.gameOffsetY), 100);
+    moveTo(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(Button.outSendHeart0.y + this.gameOffsetY), 1000);
+    tapUp(Math.round(Button.outSendHeart0.x + this.gameOffsetX), Math.round(Button.outSendHeart0.y + this.gameOffsetY), 100);
   }
 }
 
-// var img = getScreenshotModify(0, 0, Config.screenWidth, Config.screenHeight, Config.resizeWidth, Config.resizeHeight, 80);
-// var c = getColor(img, Button.gameSkillOff);
-// log(c);
+var ts;
+var gTaskController;
 
-// releaseImage(img);
-// tap(552, 1330, 100);
-// sleep(600);
+function start(receiveItem, sendHearts) {
+  stop();
+  log('[Tsum Tsum] 啟動');
+  ts = new Tsum();
+  gTaskController = new TaskController();
+  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
+  if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), 60 * 60 * 1000, 0);}
+  gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 5 * 1000, 0);
+  sleep(500);
+  gTaskController.start();
+}
 
-// for (var k = 0; k < 25; k++) {
-//   // prepareTsum();
-  // var board = run();
-  // var paths = calculatePaths(board);
-  // link(paths);
-  // tap(920, 1550, 60);
-  // sleep(1000);
-  // tap(160, 1550, 30);
-// }
+function stop() {
+  if (ts != undefined) {
+    log('清除殘留記憶體...');
+    ts.isRunning = false;
+    sleep(2000);
+    ts.deinit();
+    if (gTaskController != undefined) {gTaskController.removeAllTasks();}
+  }
+  ts = undefined;
+  if (gTaskController != undefined) {gTaskController.removeAllTasks();}
+}
 
-// tap(920, 1550, 100);
-// sleep(300);
-
-// tap(920, 210, 50);
+// start(true, true);
+// stop();

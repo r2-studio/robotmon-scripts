@@ -127,9 +127,15 @@
             $(function() {
             });
 
+            function getCheckStatus(id) {
+                return $(id).is(':checked');
+            }
+
             function onEvent(eventType) {
                 if (eventType == 'OnPlayClick') {
-                    JavaScriptInterface.runScript('start();');
+                    var receiveItems = getCheckStatus('#receiveItems');
+                    var sendHearts = getCheckStatus('#sendHearts');
+                    JavaScriptInterface.runScript('start('+receiveItems+', '+sendHearts+');');
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 }
@@ -141,9 +147,28 @@
     </head>
     <body>
         <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand">Tsum Tsum v0.1</a>
+            <a class="navbar-brand">Tsum Tsum v1</a>
         </nav>
         <div class="container">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    自動收禮物
+                </li>
+                <li class="list-group-item">
+                    自動收禮物
+                    <label class="switch pull-right">
+                        <input id="receiveItems" type="checkbox" checked>
+                        <a class="slider round"></a>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    自動送愛心
+                    <label class="switch pull-right">
+                        <input id="sendHearts" type="checkbox">
+                        <a class="slider round"></a>
+                    </label>
+                </li>
+            </ul>       
         </div>
     </body>
 </html>
