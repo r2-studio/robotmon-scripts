@@ -133,9 +133,10 @@
 
             function onEvent(eventType) {
                 if (eventType == 'OnPlayClick') {
+                    var debug = getCheckStatus('#debug');
                     var receiveItems = getCheckStatus('#receiveItems');
                     var sendHearts = getCheckStatus('#sendHearts');
-                    JavaScriptInterface.runScript('start('+receiveItems+', '+sendHearts+');');
+                    JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+');');
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 }
@@ -151,6 +152,13 @@
         </nav>
         <div class="container">
             <ul class="list-group">
+                <li class="list-group-item">
+                    偵錯模式
+                    <label class="switch pull-right">
+                        <input id="debug" type="checkbox" checked>
+                        <a class="slider round"></a>
+                    </label>
+                </li>
                 <li class="list-group-item">
                     自動收禮物
                 </li>

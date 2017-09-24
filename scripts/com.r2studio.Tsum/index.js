@@ -351,7 +351,7 @@ function calculatePaths(board) {
 // Tsum struct
 
 function Tsum() {
-  this.debug = false;
+  this.debug = true;
   this.isRunning = true;
   this.myTsum = '';
   // screen size config
@@ -701,10 +701,11 @@ Tsum.prototype.taskSendHearts = function() {
 var ts;
 var gTaskController;
 
-function start(receiveItem, sendHearts) {
+function start(debug, receiveItem, sendHearts) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
+  ts.debug = debug;
   gTaskController = new TaskController();
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), 60 * 60 * 1000, 0);}
@@ -725,5 +726,5 @@ function stop() {
   if (gTaskController != undefined) {gTaskController.removeAllTasks();}
 }
 
-// start(true, true);
+// start(true, true, false);
 // stop();
