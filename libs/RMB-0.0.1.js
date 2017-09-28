@@ -1,0 +1,289 @@
+var DEFAULT_CONFIG = {
+  appName: 'testApp',
+  oriScreenWidth: 1080,
+  oriScreenHeight: 1920,
+  oriVirtualButtonHeight: 0,
+  oriResizeFactor: 0.5,
+  eventDelay: 200,
+  imageThreshold: 0.85,
+  resizeFactor: 0.5,
+};
+
+function RBM(config) {
+  if (config == undefined) {
+      config = DEFAULT_CONFIG;
+  }
+  this.appName = config.appName || DEFAULT_CONFIG.appName;
+  this.oriScreenWidth = config.oriScreenWidth || DEFAULT_CONFIG.oriScreenWidth;
+  this.oriScreenHeight = config.oriScreenHeight || DEFAULT_CONFIG.oriScreenHeight;
+  this.oriVirtualButtonHeight = config.oriVirtualButtonHeight || DEFAULT_CONFIG.oriVirtualButtonHeight;
+  this.oriAppWidth = this.oriScreenWidth;
+  this.oriAppHeight = this.oriScreenHeight - this.oriVirtualButtonHeight;
+  this.oriResizeFactor = config.oriResizeFactor || DEFAULT_CONFIG.oriResizeFactor;
+  this.resizeFactor = config.resizeFactor || DEFAULT_CONFIG.resizeFactor;
+  this.imageThreshold = config.imageThreshold || DEFAULT_CONFIG.imageThreshold;
+  this.screenWidth = 0;
+  this.screenHeight = 0;
+  this.resizeScreenWidth = 0;
+  this.resizeScreenHeight = 0;
+  this.appWidth = 0;
+  this.appHeight = 0;
+  this.appMinRatio = 1;
+  this.appMaxRatio = 1;
+  this.researchTimes = 5;
+  this.virtualButtonHeight = 0;
+  this.ip = '';
+  this.during = config.eventDelay || DEFAULT_CONFIG.eventDelay;
+  this.running = true;
+  
+  this._screenshotImg = 0;
+  
+  this.init();
+}
+
+RBM.prototype.init = function() {
+  var size = getScreenSize();
+  this.screenWidth = size.width;
+  this.screenHeight = size.height;
+  this.virtualButtonHeight = getVirtualButtonHeight();
+  this.appWidth = this.screenWidth;
+  if (this.oriVirtualButtonHeight !== 0) {
+    this.appHeight = this.screenHeight - this.virtualButtonHeight;
+  } else {
+    this.appHeight = this.screenHeight;
+  }
+  this.resizeAppWidth = this.appWidth * this.resizeFactor;
+  this.resizeAppHeight = this.appHeight * this.resizeFactor;
+  var appWidthRatio = this.appWidth / this.oriAppWidth;
+  var appHeightRatio = this.appHeight / this.oriAppHeight;
+  this.appMinRatio = Math.min(appWidthRatio, appHeightRatio);
+  this.appMaxRatio = Math.max(appWidthRatio, appHeightRatio);
+};
+
+RBM.prototype.mappingImageWHs = function(wh) {
+  var nWHs = [];
+  if (this.appMinRatio === this.appMaxRatio) {
+    // width and height is same ratio
+    nWHs.push({width: wh.width * this.appMinRatio, height: wh.height * this.appMinRatio});
+  } else {
+    // 100 200, 100 240,  1, 1.2
+    var stepRatio = (this.appMaxRatio - this.appMinRatio) / researchTimes;
+    for (var r = this.appMinRatio; r <= this.appMaxRatio; r += stepRatio) {
+      nWHs.push({width: wh.width * r, height: wh.height * r});
+    }
+  }
+  return nWHs;
+};
+
+RBM.prototype.mappingXY = function(xy) {
+  var nx = Math.round(xy.x * this.appWidth / this.oriAppWidth);
+  var ny = Math.round(xy.y * this.appHeight / this.oriAppHeight);
+  return {x: nx, y: ny};
+};
+
+RBM.prototype.getImagePath = function() {
+  return getStoragePath() + "/" + this.appName + "/images";
+};
+
+// app utils
+RBM.prototype.startApp = function(packageName, activityName) {
+  if (activityName === undefined) {
+    execute('monkey -p ' + packageName + ' -c android.intent.category.LAUNCHER 1');
+  } else {
+    execute('am start -n ' + packageName + '/' + activityName);
+  }
+};
+
+RBM.prototype.stopApp = function(packageName) {
+  execute('am force-stop ' + packageName);
+};
+
+RBM.prototype.currentApp = function() {
+  var result = execute('dumpsys activity activities'); // needs grep mFocusedActivity
+  var packageName = result.split('mFocusedActivity')[1].split(" ")[3].split("/")[0];
+  var activityName = result.split('mFocusedActivity')[1].split(" ")[3].split("/")[1];
+  return {packageName: packageName, activityName: activityName};
+};
+
+// touch utils
+RBM.prototype.click = function(xy) {
+  xy = this.mappingXY(xy);
+  tap(xy.x, xy.y, this.during);
+};
+RBM.prototype.tapDown = function(xy) {
+  xy = this.mappingXY(xy);
+  tapDown(xy.x, xy.y, this.during);
+};
+RBM.prototype.moveTo = function(xy) {
+  xy = this.mappingXY(xy);
+  moveTo(xy.x, xy.y, this.during);
+};
+RBM.prototype.tapUp = function(xy) {
+  xy = this.mappingXY(xy);
+  tapUp(xy.x, xy.y, this.during);
+};
+
+RBM.prototype.swipe = function(fromXY, toXY, step) {
+  if (step === undefined) {
+    step = 5;
+  }
+  fromXY = this.mappingXY(fromXY);
+  toXY = this.mappingXY(toXY);
+  var during = this.during / (step + 2) ;
+  var diffX = (fromXY.x - toXY.x) / step;
+  var diffY = (fromXY.y - toXY.y) / step;
+  
+  tapDown(fromXY.x, fromXY.y, during);
+  for (var i = 0; i <= step; i++) {
+    moveTo(fromXY.x + i * diffX, fromXY.y + i * diffY, during);
+  }
+  tapUp(toXY.x, toXY.y, during);
+};
+
+// image utils
+RBM.prototype.screenshot = function(filename) {
+  var filePath = this.getImagePath() + '/' + filename;
+  var rbmImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, 0.8);
+  saveImage(rbmImg, filePath);
+  releaseImage(rbmImg);
+};
+
+RBM.prototype.screencrop = function(filename, x, y, w, h) {
+  var filePath = this.getImagePath() + '/' + filename;
+  var rbmImg = getScreenshotModify(x, y, w, h, w * this.resizeFactor, h * this.resizeFactor, 0.8);
+  saveImage(rbmImg, filePath);
+  releaseImage(rbmImg);
+};
+
+RBM.prototype.findImage = function(filename, threshold) {
+  if (threshold === undefined) {
+    threshold = this.imageThreshold;
+  }
+  var sourceImg = 0; 
+  if (this._screenshotImg != 0) {
+    sourceImg = this._screenshotImg;
+  } else {
+    sourceImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, 0.8);  
+  }
+  var filePath = this.getImagePath() + '/' + filename;
+  var targetImg = openImage(filePath);
+  var imageSize = getImageSize(targetImg);
+  var nWHs = this.mappingImageWHs(imageSize);
+  var result = undefined;
+  for (var i = 0; i < nWHs.length; i++) {
+    var nWH = nWHs[i];
+    nWH.width *= this.resizeFactor / this.oriResizeFactor;
+    nWH.height *= this.resizeFactor / this.oriResizeFactor;
+    var rImg = resizeImage(targetImg, nWH.width, nWH.height);
+    result = findImage(sourceImg, rImg);
+    result.width = nWH.width;
+    result.height = nWH.height;
+    releaseImage(rImg);
+    if (result.score >= threshold) {
+      break;
+    }
+  }
+  releaseImage(targetImg);
+  releaseImage(sourceImg);
+  return result;
+}
+
+RBM.prototype.imageExists = function(filename, threshold) {
+  var result = this.findImage(filename, threshold);
+  if (result === undefined) {
+    return false;
+  }
+  return true;
+};
+
+RBM.prototype.imageClick = function(filename, threshold) {
+  var result = this.findImage(filename, threshold);
+  if (result === undefined) {
+    return;
+  }
+  var x = result.x + (result.width / 2) * this.appWidth / this.resizeAppWidth;
+  var y = result.y + (result.height / 2) * this.appHeight / this.resizeAppHeight;
+  tap(x, y, this.during);
+};
+
+RBM.prototype.imageWaitClick = function(timeout) {
+  if (timeout === undefined) {
+    timeout = 10000;
+  }
+  var startTime = Date.now();
+  while(this.running) {
+    var result = this.findImage(filename, threshold);
+    if (result !== undefined) {
+      var x = Math.round(result.x * this.appWidth / this.resizeAppWidth);
+      var y = Math.round(result.y * this.appHeight / this.resizeAppHeight);
+      tap(x, y, this.during);
+      break;
+    }
+    sleep(this.during * 3);
+    if (Date.now() - startTime > timeout) {
+      break;
+    }
+  }
+};
+
+RBM.prototype.imageWaitShow = function(timeout) {
+  if (timeout === undefined) {
+    timeout = 10000;
+  }
+  var startTime = Date.now();
+  while(this.running) {
+    var result = this.findImage(filename, threshold);
+    if (result !== undefined) {
+      break;
+    }
+    sleep(this.during * 3);
+    if (Date.now() - startTime > timeout) {
+      break;
+    }
+  }
+};
+
+RBM.prototype.imageWaitGone = function(timeout) {
+  if (timeout === undefined) {
+    timeout = 10000;
+  }
+  var startTime = Date.now();
+  while(this.running) {
+    var result = this.findImage(filename, threshold);
+    if (result === undefined) {
+      break;
+    }
+    sleep(this.during * 3);
+    if (Date.now() - startTime > timeout) {
+      break;
+    }
+  }
+};
+
+RBM.prototype.keepScreenshot = function() {
+  if (this._screenshotImg != 0) {
+    releaseImage(this._screenshotImg);
+    this._screenshotImg = 0;
+  }
+  this._screenshotImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, 0.8);  
+};
+
+RBM.prototype.releaseScreenshot = function() {
+  if (this._screenshotImg != 0) {
+    releaseImage(this._screenshotImg);
+    this._screenshotImg = 0;
+  }
+};
+
+// others
+RBM.prototype.typing = function(words) {
+  typing(label, this.during);
+};
+
+RBM.prototype.keycode = function(label) {
+  keycode(label, this.during);
+};
+
+RBM.prototype.sleep = function() {
+  sleep(this.during);
+};
