@@ -94,7 +94,7 @@ RBM.prototype.mappingXY = function(xy) {
 };
 
 RBM.prototype.getImagePath = function() {
-  return getStoragePath() + "/" + this.appName + "/images";
+  return getStoragePath() + "/scripts/" + this.appName + "/images";
 };
 
 // app utils
@@ -181,6 +181,11 @@ RBM.prototype.findImage = function(filename, threshold) {
   }
   var filePath = this.getImagePath() + '/' + filename;
   var targetImg = openImage(filePath);
+  if (targetImg === 0) {
+    this.log("Image is not found: ", filePath);
+    releaseImage(sourceImg);
+    return undefined;
+  }
   var imageSize = getImageSize(targetImg);
   var nWHs = this.mappingImageWHs(imageSize);
   var result = undefined;
