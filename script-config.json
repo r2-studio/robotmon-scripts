@@ -1,7 +1,7 @@
 {
   "scripts": {
     "com.r2studio.EndlessFrontier": {
-      "versionCode": 4,
+      "versionCode": 5,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip"
     },
     "com.r2studio.Tsum": {
