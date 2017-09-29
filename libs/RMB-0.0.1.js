@@ -6,6 +6,7 @@ var DEFAULT_CONFIG = {
   oriResizeFactor: 0.5,
   eventDelay: 200,
   imageThreshold: 0.85,
+  imageQuality: 80,
   resizeFactor: 0.5,
 };
 
@@ -22,6 +23,7 @@ function RBM(config) {
   this.oriResizeFactor = config.oriResizeFactor || DEFAULT_CONFIG.oriResizeFactor;
   this.resizeFactor = config.resizeFactor || DEFAULT_CONFIG.resizeFactor;
   this.imageThreshold = config.imageThreshold || DEFAULT_CONFIG.imageThreshold;
+  this.imageQuality = config.imageQuality || DEFAULT_CONFIG.imageQuality;
   this.screenWidth = 0;
   this.screenHeight = 0;
   this.resizeScreenWidth = 0;
@@ -60,6 +62,16 @@ RBM.prototype.init = function() {
   this.appMaxRatio = Math.max(appWidthRatio, appHeightRatio);
 };
 
+RBM.prototype.log = function() {
+  sleep(10);
+  for (var i = 0; i < arguments.length; i++) {
+    if (typeof arguments[i] == 'object') {
+      arguments[i] = JSON.stringify(arguments[i]);
+    }
+  }
+  console.log.apply(console, arguments);
+};
+
 RBM.prototype.mappingImageWHs = function(wh) {
   var nWHs = [];
   if (this.appMinRatio === this.appMaxRatio) {
@@ -67,7 +79,7 @@ RBM.prototype.mappingImageWHs = function(wh) {
     nWHs.push({width: wh.width * this.appMinRatio, height: wh.height * this.appMinRatio});
   } else {
     // 100 200, 100 240,  1, 1.2
-    var stepRatio = (this.appMaxRatio - this.appMinRatio) / researchTimes;
+    var stepRatio = (this.appMaxRatio - this.appMinRatio) / this.researchTimes;
     for (var r = this.appMinRatio; r <= this.appMaxRatio; r += stepRatio) {
       nWHs.push({width: wh.width * r, height: wh.height * r});
     }
@@ -99,9 +111,9 @@ RBM.prototype.stopApp = function(packageName) {
 };
 
 RBM.prototype.currentApp = function() {
-  var result = execute('dumpsys activity activities'); // needs grep mFocusedActivity
-  var packageName = result.split('mFocusedActivity')[1].split(" ")[3].split("/")[0];
-  var activityName = result.split('mFocusedActivity')[1].split(" ")[3].split("/")[1];
+  var result = execute('dumpsys activity activities').split('mFocusedActivity')[1].split(" ")[3].split("/");
+  var packageName = result[0];
+  var activityName = result[1];
   return {packageName: packageName, activityName: activityName};
 };
 
@@ -143,14 +155,16 @@ RBM.prototype.swipe = function(fromXY, toXY, step) {
 // image utils
 RBM.prototype.screenshot = function(filename) {
   var filePath = this.getImagePath() + '/' + filename;
-  var rbmImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, 0.8);
+  var rbmImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, this.imageQuality);
   saveImage(rbmImg, filePath);
   releaseImage(rbmImg);
 };
 
-RBM.prototype.screencrop = function(filename, x, y, w, h) {
+RBM.prototype.screencrop = function(filename, x, y, x2, y2) {
   var filePath = this.getImagePath() + '/' + filename;
-  var rbmImg = getScreenshotModify(x, y, w, h, w * this.resizeFactor, h * this.resizeFactor, 0.8);
+  var w = Math.abs(x2 - x);
+  var h = Math.abs(y2 - y);
+  var rbmImg = getScreenshotModify(Math.min(x, x2), Math.min(y, y2), w, h, w * this.resizeFactor, h * this.resizeFactor, this.imageQuality);
   saveImage(rbmImg, filePath);
   releaseImage(rbmImg);
 };
@@ -163,7 +177,7 @@ RBM.prototype.findImage = function(filename, threshold) {
   if (this._screenshotImg != 0) {
     sourceImg = this._screenshotImg;
   } else {
-    sourceImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, 0.8);  
+    sourceImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, this.imageQuality);
   }
   var filePath = this.getImagePath() + '/' + filename;
   var targetImg = openImage(filePath);
@@ -201,8 +215,8 @@ RBM.prototype.imageClick = function(filename, threshold) {
   if (result === undefined) {
     return;
   }
-  var x = result.x + (result.width / 2) * this.appWidth / this.resizeAppWidth;
-  var y = result.y + (result.height / 2) * this.appHeight / this.resizeAppHeight;
+  var x = (result.x + (result.width / 2)) * this.appWidth / this.resizeAppWidth;
+  var y = (result.y + (result.height / 2)) * this.appHeight / this.resizeAppHeight;
   tap(x, y, this.during);
 };
 
@@ -265,7 +279,7 @@ RBM.prototype.keepScreenshot = function() {
     releaseImage(this._screenshotImg);
     this._screenshotImg = 0;
   }
-  this._screenshotImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, 0.8);  
+  this._screenshotImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, this.imageQuality);
 };
 
 RBM.prototype.releaseScreenshot = function() {
