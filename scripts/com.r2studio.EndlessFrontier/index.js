@@ -232,8 +232,7 @@ EndlessFrontier.prototype.initButtons = function() {
 };
 
 EndlessFrontier.prototype.goBack = function() {
-  // keycode('BACK', this.Const.during);
-  execute('input keyevent 4');
+  keycode('BACK', this.Const.during);
   sleep(this.Const.during);
 }
 
