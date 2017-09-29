@@ -3,11 +3,11 @@ var DEFAULT_CONFIG = {
   oriScreenWidth: 1080,
   oriScreenHeight: 1920,
   oriVirtualButtonHeight: 0,
-  oriResizeFactor: 0.5,
+  oriResizeFactor: 0.4,
   eventDelay: 200,
   imageThreshold: 0.85,
   imageQuality: 80,
-  resizeFactor: 0.5,
+  resizeFactor: 0.4,
 };
 
 function RBM(config) {
@@ -200,6 +200,8 @@ RBM.prototype.findImage = function(filename, threshold) {
     releaseImage(rImg);
     if (result.score >= threshold) {
       break;
+    } else {
+      result = undefined;
     }
   }
   releaseImage(targetImg);
