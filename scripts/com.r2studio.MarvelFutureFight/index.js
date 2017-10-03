@@ -9,54 +9,73 @@ var Config = {
 function MarvelFutureFight() {
 }
 
-MarvelFutureFight.prototype.tastAutoStart = function() {
-  var imageThreshold = 0.95;
-  rmb.imageClick("StartButton.png");
-  if (Config.autoSameWar) {
-    if (rmb.imageExists("FightAgainButton.png", imageThreshold)) {
-      rmb.log('打同一關');
-      rmb.imageClick("FightAgainButton.png", imageThreshold);
-    }
-  } else if (Config.autoNextWar) {
-    if (rmb.imageExists("FightNextButton.png", imageThreshold)) {
-      rmb.log('打下一關');
-      rmb.imageClick("FightNextButton.png", imageThreshold);
-    }
+MarvelFutureFight.prototype.click = function(image) {
+  var imageThreshold = 0.9;
+  if (rbm.imageExists(image, imageThreshold)) {
+    rbm.imageClick(image, imageThreshold);
+    return true;
+  }
+  return false;
+}
+
+MarvelFutureFight.prototype.taskAutoStart = function() {
+  if (this.click("StartButton.png")) {
+    rbm.log('開始(綠色)');
+    return;
   }
 
-  if (rmb.imageExists("RedCloseButton.png")) {
-    rmb.imageClick("RedCloseButton.png");
+  if (Config.autoSameWar && this.click("FightAgainButton.png")) {
+    rbm.log('打同一關');
+    return;
+  } else if (Config.autoNextWar && this.click("FightNextButton.png")) {
+    rbm.log('打下一關');
+    return;
+  }
+
+  if (this.click("RedCloseButton.png")) {
+    rbm.log('關閉(紅色)');
+    return;
+  }
+
+  if (this.click("ConfirmButtonGreen.png")) {
+    rbm.log('確定(綠色)');
+    sleep(5000);
+    if (this.click("FightExitButton.png")) {
+      rbm.log('離開(小)');
+    }
+    return;
+  }
+
+  if (this.click("ConfirmButton.png")) {
+    rbm.log('確認(藍色)');
+    return;
   }
 }
 
 MarvelFutureFight.prototype.taskAttack = function() {
-  rmb.log('普通攻擊');
-  rmb.imageClick("FightButton0.png");
-}
-
-MarvelFutureFight.prototype.taskPowerAttack = function() {
-  rmb.log('技能攻擊');
-  rmb.imageClick("FightButton1.png");
-  rmb.imageClick("FightButton2.png");
-  rmb.imageClick("FightButton3.png");
-  rmb.imageClick("FightButton4.png");
-  rmb.imageClick("FightButton5.png");
+  rbm.log('自動攻擊');
+  rbm.imageClick("FightButton0.png");
+  rbm.imageClick("FightButton1.png");
+  rbm.imageClick("FightButton2.png");
+  rbm.imageClick("FightButton3.png");
+  rbm.imageClick("FightButton4.png");
+  rbm.imageClick("FightButton5.png");
 }
 
 // ===================================================================================
-var rmb;
+var rbm;
 var mff;
 
 function stop() {
   console.log('[MARVEL 未來之戰] 停止');
   Config.autoNextWar = false;
   Config.autoSameWar = false;
-  rmb.running = false;
+  rbm.running = false;
   sleep(1000);
   gTaskController.removeAllTasks();
 }
 
-function start(taskAttack, taskPowerAttack, autoNextWar, autoSameWar) {
+function start(taskAttack, autoNextWar, autoSameWar) {
   console.log('[MARVEL 未來之戰] 啟動');
   Config.autoNextWar = autoNextWar;
   Config.autoSameWar = autoSameWar;
@@ -70,12 +89,11 @@ function start(taskAttack, taskPowerAttack, autoNextWar, autoSameWar) {
     resizeFactor: 0.3,
   };
 
-  rmb = new RBM(config);
+  rbm = new RBM(config);
   mff = new MarvelFutureFight();
   gTaskController = new TaskController();
-  if(autoNextWar || autoSameWar){gTaskController.newTask('tastAutoStart', mff.tastAutoStart.bind(mff), 1000, 0);}
+  if(autoNextWar || autoSameWar){gTaskController.newTask('taskAutoStart', mff.taskAutoStart.bind(mff), 1000, 0);}
   if(taskAttack){gTaskController.newTask('taskAttack', mff.taskAttack.bind(mff), 500, 0);}
-  if(taskPowerAttack){gTaskController.newTask('taskPowerAttack', mff.taskPowerAttack.bind(mff), 10 * 1000, 0, true);}
 
   sleep(1000);
   gTaskController.start();
@@ -83,15 +101,19 @@ function start(taskAttack, taskPowerAttack, autoNextWar, autoSameWar) {
 // start(true, true, false, false);
 // stop();
 
-// rmb.screencrop("FightButton0.png", 1700, 845, 1810, 955);
-// rmb.screencrop("FightButton1.png", 1600, 630, 1700, 730);
-// rmb.screencrop("FightButton2.png", 1480, 760, 1580, 860);
-// rmb.screencrop("FightButton3.png", 1780, 630, 1880, 730);
-// rmb.screencrop("FightButton4.png", 1500, 930, 1600, 1030);
-// rmb.screencrop("FightButton5.png", 1320, 930, 1420, 1030);
-// rmb.screencrop("FightEntryButton.png", 1400, 960, 1900, 1060);
-// rmb.screencrop("FightNextButton.png", 1640, 970, 1870, 1040);
-// rmb.screencrop("FightAgainButton.png", 1370, 970, 1600, 1040);
-// rmb.screencrop("StartButton.png", 1450, 985, 1730, 1050);
-// rmb.screencrop("ResumeButton.png", 760, 330, 1160, 410);
-// rmb.screencrop("RedCloseButton.png", 1630, 120, 1690, 180);
+// rbm.screencrop("FightButton0.png", 1700, 845, 1810, 955);
+// rbm.screencrop("FightButton1.png", 1600, 630, 1700, 730);
+// rbm.screencrop("FightButton2.png", 1480, 760, 1580, 860);
+// rbm.screencrop("FightButton3.png", 1780, 630, 1880, 730);
+// rbm.screencrop("FightButton4.png", 1500, 930, 1600, 1030);
+// rbm.screencrop("FightButton5.png", 1320, 930, 1420, 1030);
+// rbm.screencrop("FightEntryButton.png", 1400, 960, 1900, 1060);
+// rbm.screencrop("FightNextButton.png", 1640, 970, 1870, 1040);
+// rbm.screencrop("FightAgainButton.png", 1370, 970, 1600, 1040);
+// rbm.screencrop("StartButton.png", 1450, 985, 1730, 1050);
+// rbm.screencrop("ResumeButton.png", 760, 330, 1160, 410);
+// rbm.screencrop("RedCloseButton.png", 1630, 120, 1690, 180);
+// rbm.screencrop("FightExitButton.png", 1100, 960, 1330, 1040);
+// rbm.screencrop("ConfirmButton.png", 820, 960, 1090, 1030);
+// rbm.screencrop("ConfirmButtonGreen.png", 970, 780, 1240, 850);
+// rbm.screencrop("FightExitButtonSmall.png", 1800, 970, 1960, 1040);
