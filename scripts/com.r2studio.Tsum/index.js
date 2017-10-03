@@ -53,6 +53,8 @@ var Button = {
   gameQuestionCancel2: {x: 400, y: 1000 - adjY},
   gameStop: {x: 440, y: 1000 - adjY},
   gameSkillOn: {x: 160, y: 1490 - adjY, color: {"a":0,"b":0,"g":220,"r":238}},
+  gameSkillOff1: {x: 160, y: 1490 - adjY, color: {"a":0,"b":157,"g":112,"r":85}},
+  gameSkillOff2: {x: 160, y: 1490 - adjY, color: {"a":0,"b":181,"g":139,"r":72}},
   gameRand: {x: 985, y: 1580 - adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 980, y: 200 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue: {x: 540, y: 1330 - adjY, color: {"a":0,"b":7,"g":176,"r":234}},
@@ -685,9 +687,10 @@ Tsum.prototype.taskPlayGame = function() {
     sleep(300);
 
     var img = this.screenshot();
-    var isSkillOn = isSameColor(Button.gameSkillOn.color, this.getColor(img, Button.gameSkillOn));
+    var isSkillOff1 = isSameColor(Button.gameSkillOff1.color, this.getColor(img, Button.gameSkillOff1));
+    var isSkillOff2 = isSameColor(Button.gameSkillOff2.color, this.getColor(img, Button.gameSkillOff2));
     releaseImage(img);
-    if (isSkillOn) {
+    if (!isSkillOff1 && !isSkillOff2) {
       log('技能已經存滿，放技能');
       this.useSkill(); 
     }
