@@ -227,16 +227,32 @@ function releaseTsumRotationImages(tsumMaxScores) {
 
 function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
   var startTime = Date.now();
-  
+
+  // 3700s => 1800s
+  var multiTaskIds = [];
   var boardTsums = [];
   for (var i = 0; i < tsumCount && i < gameTsums.length; i++) {
-    for (var j = 0; j < Config.rotations.length; j++) {
-      var rotatedImage = gameTsums[i].rotations[j];
-      var scoreLimit = (gameTsums[i].score - 0.5) * 0.75;
-      var results = findImages(boardImg, rotatedImage, scoreLimit, 12, true);
-      // console.log(JSON.stringify(results));
-      for (var k in results) {
-        var result = results[k];
+    var ids = multiTasks(function(gameTsums, boardImg, idx) {
+      // scope independent
+      gameTsums = JSON.parse(gameTsums);
+      var results = [];
+      for (var j = 0; j < 8; j++) {
+        var rotatedImage = gameTsums[idx].rotations[j];
+        var scoreLimit = (gameTsums[idx].score - 0.5) * 0.75;
+        var result = findImages(boardImg, rotatedImage, scoreLimit, 12, true);
+        results.push(result);
+      }
+      return results;
+    }, JSON.stringify(gameTsums), boardImg, i);
+    
+    multiTaskIds.push(ids);
+  }
+  sleep(100);
+  for (var i in multiTaskIds) {
+    var resultss = waitTask(multiTaskIds[i]);
+    for (var ks in resultss) {
+      for (var k in resultss[ks]) {
+        var result = resultss[ks][k];
         boardTsums.push({
           tsumIdx: i,
           // tsum: tsumMaxScores[i],
@@ -247,6 +263,7 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
       }
     }
   }
+
   boardTsums.sort(function(a, b){return a.score > b.score ? -1 : 1;});
   // console.log('finding all rotated tsum in board', boardTsums.length, usingTimeString(startTime));
   var board = [];
