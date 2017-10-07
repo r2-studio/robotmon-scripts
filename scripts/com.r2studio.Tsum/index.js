@@ -671,25 +671,26 @@ Tsum.prototype.useSkill = function() {
   log('技能已經存滿，放技能');
 
   this.tap(Button.gameSkillOn);
-  sleep(140);
+  sleep(30);
   if (this.myTsum == 'block_lukej_s') {
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < 5; i++) {
       this.tapDown({x: 820, y: 1200}, 20);
       this.moveTo({x: 820, y: 1150}, 20);
-      sleep(260);
-      this.moveTo({x: 825, y: 1000}, 20);
-      if (i == 0){
-        sleep(200);
+      if (i == 0) {
+        sleep(1160);
       }
-      sleep(140);
+      sleep(350);
+      this.moveTo({x: 825, y: 1000}, 20);
+      sleep(100);
       this.moveTo({x: 835, y: 800}, 20);
-      sleep(140);
+      sleep(100);
       this.moveTo({x: 845, y: 600}, 20);
-      sleep(140);
+      sleep(100);
       this.moveTo({x: 850, y: 450}, 20);
       this.tapUp({x: 850, y: 420}, 20);
-      sleep(10);
+      sleep(20);
     }
+    sleep(500);
   } else {
     sleep(2500);
   }
@@ -848,8 +849,8 @@ function stop() {
 
 // stop();
 // sleep(500);
-ts = new Tsum();
+// ts = new Tsum();
 // ts.taskPlayGame();
-ts.goFriendPage();
+// ts.goFriendPage();
 // start(true, false, false, true);
 // stop();
