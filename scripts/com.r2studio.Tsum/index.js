@@ -440,6 +440,24 @@ Tsum.prototype.deinit = function() {
   this.isLoadAllTsum = false;
 }
 
+Tsum.prototype.isAppOn = function() {
+  var result = execute('dumpsys activity activities').split('mFocusedActivity')[1].split(" ")[3].split("/");
+  var packageName = result[0];
+  var activityName = result[1];
+  if (packageName.indexOf('LGTMTM') == -1) {
+    return false;
+  }
+  return true;
+};
+
+Tsum.prototype.startApp = function() {
+  log('Start TsumTsum App...');
+  execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
+  sleep(1000);
+  execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
+  sleep(2000);
+}
+
 Tsum.prototype.screenshot = function() {
   return getScreenshotModify(
     this.gameOffsetX, 
@@ -565,6 +583,9 @@ Tsum.prototype.checkPage = function(wait) {
 
 Tsum.prototype.goFriendPage = function() {
   while(this.isRunning) {
+    if (!this.isAppOn()) {
+      this.startApp();
+    }
     var page = this.checkPage(1500);
     log(page);
     if (page == 'friendPage') {
@@ -589,6 +610,9 @@ Tsum.prototype.goFriendPage = function() {
 
 Tsum.prototype.goGamePlayingPage = function() {
   while(this.isRunning) {
+    if (!this.isAppOn()) {
+      this.startApp();
+    }
     var page = this.checkPage(1500);
     log('page', page);
     if (page == 'friendPage') {
@@ -607,7 +631,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Button.outClose);
       this.tap(Button.gameStop);
     }
-    sleep(500);
+    sleep(1000);
   }
 }
 
@@ -824,8 +848,8 @@ function stop() {
 
 // stop();
 // sleep(500);
-// ts = new Tsum();
+ts = new Tsum();
 // ts.taskPlayGame();
-// ts.goFriendPage();
+ts.goFriendPage();
 // start(true, false, false, true);
 // stop();
