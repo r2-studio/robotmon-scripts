@@ -440,6 +440,24 @@ Tsum.prototype.deinit = function() {
   this.isLoadAllTsum = false;
 }
 
+Tsum.prototype.isAppOn = function() {
+  var result = execute('dumpsys activity activities').split('mFocusedActivity')[1].split(" ")[3].split("/");
+  var packageName = result[0];
+  var activityName = result[1];
+  if (packageName.indexOf('LGTMTM') == -1) {
+    return false;
+  }
+  return true;
+};
+
+Tsum.prototype.startApp = function() {
+  log('Start TsumTsum App...');
+  execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
+  sleep(1000);
+  execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
+  sleep(2000);
+}
+
 Tsum.prototype.screenshot = function() {
   return getScreenshotModify(
     this.gameOffsetX, 
@@ -565,6 +583,9 @@ Tsum.prototype.checkPage = function(wait) {
 
 Tsum.prototype.goFriendPage = function() {
   while(this.isRunning) {
+    if (!this.isAppOn()) {
+      this.startApp();
+    }
     var page = this.checkPage(1500);
     log(page);
     if (page == 'friendPage') {
@@ -589,6 +610,9 @@ Tsum.prototype.goFriendPage = function() {
 
 Tsum.prototype.goGamePlayingPage = function() {
   while(this.isRunning) {
+    if (!this.isAppOn()) {
+      this.startApp();
+    }
     var page = this.checkPage(1500);
     log('page', page);
     if (page == 'friendPage') {
@@ -607,7 +631,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Button.outClose);
       this.tap(Button.gameStop);
     }
-    sleep(500);
+    sleep(1000);
   }
 }
 
@@ -647,25 +671,26 @@ Tsum.prototype.useSkill = function() {
   log('技能已經存滿，放技能');
 
   this.tap(Button.gameSkillOn);
-  sleep(140);
+  sleep(30);
   if (this.myTsum == 'block_lukej_s') {
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < 5; i++) {
       this.tapDown({x: 820, y: 1200}, 20);
       this.moveTo({x: 820, y: 1150}, 20);
-      sleep(260);
-      this.moveTo({x: 825, y: 1000}, 20);
-      if (i == 0){
-        sleep(200);
+      if (i == 0) {
+        sleep(1160);
       }
-      sleep(140);
+      sleep(350);
+      this.moveTo({x: 825, y: 1000}, 20);
+      sleep(100);
       this.moveTo({x: 835, y: 800}, 20);
-      sleep(140);
+      sleep(100);
       this.moveTo({x: 845, y: 600}, 20);
-      sleep(140);
+      sleep(100);
       this.moveTo({x: 850, y: 450}, 20);
       this.tapUp({x: 850, y: 420}, 20);
-      sleep(10);
+      sleep(20);
     }
+    sleep(500);
   } else {
     sleep(2500);
   }
