@@ -4,15 +4,23 @@ function RBM(t){void 0==t&&(t=DEFAULT_CONFIG),this.appName=t.appName||DEFAULT_CO
 var Config = {
   autoNextWar: false,
   autoSameWar: false,
+  imageThreshold: 0.95,
 };
 
 function MarvelFutureFight() {
 }
 
+MarvelFutureFight.prototype.goBack = function() {
+  rbm.keycode('BACK');
+}
+
+MarvelFutureFight.prototype.imageExists = function(image) {
+  return rbm.imageExists(image, Config.imageThreshold);
+}
+
 MarvelFutureFight.prototype.click = function(image) {
-  var imageThreshold = 0.9;
-  if (rbm.imageExists(image, imageThreshold)) {
-    rbm.imageClick(image, imageThreshold);
+  if (rbm.imageExists(image, Config.imageThreshold)) {
+    rbm.imageClick(image, Config.imageThreshold);
     return true;
   }
   return false;
@@ -32,17 +40,18 @@ MarvelFutureFight.prototype.taskAutoStart = function() {
     return;
   }
 
-  if (this.click("RedCloseButton.png")) {
-    rbm.log('關閉(紅色)');
+  if (this.click("SkipButton.png")) {
+    rbm.log('跳過');
+    return;
+  }
+
+  if (this.imageExists("RedCloseButton.png")) {
+    this.goBack();
     return;
   }
 
   if (this.click("ConfirmButtonGreen.png")) {
     rbm.log('確定(綠色)');
-    sleep(5000);
-    if (this.click("FightExitButton.png")) {
-      rbm.log('離開(小)');
-    }
     return;
   }
 
@@ -50,16 +59,18 @@ MarvelFutureFight.prototype.taskAutoStart = function() {
     rbm.log('確認(藍色)');
     return;
   }
+
+  if (this.click("FightExitButtonSmall.png")) {
+    rbm.log('離開(小)');
+    return;
+  }
 }
 
 MarvelFutureFight.prototype.taskAttack = function() {
-  rbm.log('自動攻擊');
-  rbm.imageClick("FightButton0.png");
-  rbm.imageClick("FightButton1.png");
-  rbm.imageClick("FightButton2.png");
-  rbm.imageClick("FightButton3.png");
-  rbm.imageClick("FightButton4.png");
-  rbm.imageClick("FightButton5.png");
+  if (this.click("FightButton.png")) {
+    rbm.log('自動攻擊');
+    return;
+  }
 }
 
 // ===================================================================================
@@ -86,7 +97,7 @@ function start(taskAttack, autoNextWar, autoSameWar) {
     oriScreenHeight: 1920,
     oriResizeFactor: 0.5,
     eventDelay: 1000,
-    resizeFactor: 0.3,
+    resizeFactor: 0.4,
   };
 
   rbm = new RBM(config);
@@ -98,22 +109,19 @@ function start(taskAttack, autoNextWar, autoSameWar) {
   sleep(1000);
   gTaskController.start();
 };
-// start(true, true, false, false);
+// start(true, false, false);
 // stop();
 
-// rbm.screencrop("FightButton0.png", 1700, 845, 1810, 955);
-// rbm.screencrop("FightButton1.png", 1600, 630, 1700, 730);
-// rbm.screencrop("FightButton2.png", 1480, 760, 1580, 860);
-// rbm.screencrop("FightButton3.png", 1780, 630, 1880, 730);
-// rbm.screencrop("FightButton4.png", 1500, 930, 1600, 1030);
-// rbm.screencrop("FightButton5.png", 1320, 930, 1420, 1030);
-// rbm.screencrop("FightEntryButton.png", 1400, 960, 1900, 1060);
-// rbm.screencrop("FightNextButton.png", 1640, 970, 1870, 1040);
-// rbm.screencrop("FightAgainButton.png", 1370, 970, 1600, 1040);
+// rbm.screencrop("FightButton.png", 1700, 845, 1810, 955);
+// rbm.screencrop("FightExitButtonSmall.png", 1800, 970, 1890, 1040); // 發現英雄
+// rbm.screencrop("FightExitButton.png", 1100, 960, 1330, 1040);
+// rbm.screencrop("FightNextButton.png", 1640, 960, 1870, 1040);
+// rbm.screencrop("FightAgainButton.png", 1370, 960, 1600, 1040);
 // rbm.screencrop("StartButton.png", 1450, 985, 1730, 1050);
 // rbm.screencrop("ResumeButton.png", 760, 330, 1160, 410);
-// rbm.screencrop("RedCloseButton.png", 1630, 120, 1690, 180);
-// rbm.screencrop("FightExitButton.png", 1100, 960, 1330, 1040);
-// rbm.screencrop("ConfirmButton.png", 820, 960, 1090, 1030);
+// rbm.screencrop("SkipButton.png", 1680, 30, 1890, 100);
+// rbm.screencrop("AchievementButton.png", 1500, 830, 1790, 900);
 // rbm.screencrop("ConfirmButtonGreen.png", 970, 780, 1240, 850);
-// rbm.screencrop("FightExitButtonSmall.png", 1800, 970, 1960, 1040);
+// rbm.screencrop("CancelButton.png", 670, 780, 940, 850);
+// rbm.screencrop("RedCloseButton.png", 1630, 120, 1690, 180); // 商品
+// rbm.screencrop("ConfirmButton.png", 820, 960, 1090, 1030);
