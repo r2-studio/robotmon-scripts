@@ -64,21 +64,20 @@ MarvelFutureFight.prototype.taskAutoStart = function() {
 }
 
 MarvelFutureFight.prototype.taskAttack = function() {
-  var screenWidth = Config.oriScreenWidth;
-  var screenHeight = Config.oriScreenHeight;
-  var diff = 140;
-
-  for (var y = screenHeight; y > screenHeight - diff * 3; y -= diff) {
-    for (var x = screenWidth; x > screenWidth - diff * 4; x -= diff) {
-      if (!rbm.running) {
-        return;
-      }
-      rbm.click({x: x - diff / 2, y: y - diff / 2}, 1000);
-    }
-  }
-
   if (this.click("FightButton.png")) {
     rbm.log('自動攻擊');
+    // 隨機技能攻擊
+    var screenWidth = Config.oriScreenWidth;
+    var screenHeight = Config.oriScreenHeight;
+    var diff = 140;
+    for (var y = screenHeight; y > screenHeight - diff * 3; y -= diff) {
+      for (var x = screenWidth; x > screenWidth - diff * 4; x -= diff) {
+        if (!rbm.running) {
+          return;
+        }
+        rbm.click({x: x - diff / 2, y: y - diff / 2}, 1000);
+      }
+    }
     return;
   }
 }
