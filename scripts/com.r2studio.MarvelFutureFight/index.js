@@ -4,23 +4,20 @@ function RBM(t){void 0==t&&(t=DEFAULT_CONFIG),this.appName=t.appName||DEFAULT_CO
 var Config = {
   autoNextWar: false,
   autoSameWar: false,
+  appName: 'com.r2studio.MarvelFutureFight',
+  oriScreenWidth: 1920,
+  oriScreenHeight: 1080,
+  oriResizeFactor: 0.5,
+  eventDelay: 1000,
+  resizeFactor: 0.4,
   imageThreshold: 0.95,
 };
 
-function MarvelFutureFight() {
-}
-
-MarvelFutureFight.prototype.goBack = function() {
-  rbm.keycode('BACK');
-}
-
-MarvelFutureFight.prototype.imageExists = function(image) {
-  return rbm.imageExists(image, Config.imageThreshold);
-}
+function MarvelFutureFight() {}
 
 MarvelFutureFight.prototype.click = function(image) {
-  if (rbm.imageExists(image, Config.imageThreshold)) {
-    rbm.imageClick(image, Config.imageThreshold);
+  if (rbm.imageExists(image)) {
+    rbm.imageClick(image);
     return true;
   }
   return false;
@@ -45,8 +42,8 @@ MarvelFutureFight.prototype.taskAutoStart = function() {
     return;
   }
 
-  if (this.imageExists("RedCloseButton.png")) {
-    this.goBack();
+  if (rbm.imageExists("RedCloseButton.png")) {
+    rbm.keycode('BACK');
     return;
   }
 
@@ -67,6 +64,19 @@ MarvelFutureFight.prototype.taskAutoStart = function() {
 }
 
 MarvelFutureFight.prototype.taskAttack = function() {
+  var screenWidth = Config.oriScreenWidth;
+  var screenHeight = Config.oriScreenHeight;
+  var diff = 140;
+
+  for (var y = screenHeight; y > screenHeight - diff * 3; y -= diff) {
+    for (var x = screenWidth; x > screenWidth - diff * 4; x -= diff) {
+      if (!rbm.running) {
+        return;
+      }
+      rbm.click({x: x - diff / 2, y: y - diff / 2}, 1000);
+    }
+  }
+
   if (this.click("FightButton.png")) {
     rbm.log('自動攻擊');
     return;
@@ -91,16 +101,7 @@ function start(taskAttack, autoNextWar, autoSameWar) {
   Config.autoNextWar = autoNextWar;
   Config.autoSameWar = autoSameWar;
 
-  var config = {
-    appName: 'com.r2studio.MarvelFutureFight',
-    oriScreenWidth: 1080,
-    oriScreenHeight: 1920,
-    oriResizeFactor: 0.5,
-    eventDelay: 1000,
-    resizeFactor: 0.4,
-  };
-
-  rbm = new RBM(config);
+  rbm = new RBM(Config);
   mff = new MarvelFutureFight();
   gTaskController = new TaskController();
   if(autoNextWar || autoSameWar){gTaskController.newTask('taskAutoStart', mff.taskAutoStart.bind(mff), 1000, 0);}
