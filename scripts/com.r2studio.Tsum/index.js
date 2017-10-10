@@ -33,7 +33,6 @@ function log() {
 // ============================TSUM=============================== //
 
 var Config = {
-  tsumCount: 5,
   tsumDir: 'scripts/com.r2studio.Tsum/tsums_16',
   tsumWidth: 16,
   tsumBoundW: 13, // tsumWidth / 2 + 2
@@ -821,11 +820,14 @@ Tsum.prototype.taskSendHearts = function() {
 var ts;
 var gTaskController;
 
-function start(debug, receiveItem, sendHearts) {
+function start(debug, receiveItem, sendHearts, isFourTsum) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
   ts.debug = debug;
+  if (isFourTsum) {
+    ts.tsumCount = 4;
+  }
 
   gTaskController = new TaskController();
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
@@ -852,5 +854,5 @@ function stop() {
 // ts = new Tsum();
 // ts.taskPlayGame();
 // ts.goFriendPage();
-// start(true, false, false, true);
+// start(true, true, false, false, false);
 // stop();
