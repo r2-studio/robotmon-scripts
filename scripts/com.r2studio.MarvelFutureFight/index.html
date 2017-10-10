@@ -25,10 +25,10 @@
             function onEvent(eventType) {
                 if (eventType == 'OnPlayClick') {
                     var taskAttack = getCheckStatus('#taskAttack');
-                    var autoNextWar = getCheckStatus('#autoNextWar');
                     var autoSameWar = getCheckStatus('#autoSameWar');
+                    var autoNextWar = getCheckStatus('#autoNextWar');
 
-                    JavaScriptInterface.runScript(`start(${taskAttack}, ${autoNextWar}, ${autoSameWar});`);
+                    JavaScriptInterface.runScript(`start(${taskAttack}, ${autoSameWar}, ${autoNextWar});`);
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 } else if (eventType == 'OnReloadClick') {
@@ -42,7 +42,7 @@
     </head>
     <body>
         <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand">MARVEL 未來之戰 v2</a>
+            <a class="navbar-brand">MARVEL 未來之戰 v3</a>
         </nav>
         <div class="container">
             <ul class="list-group">
@@ -54,16 +54,16 @@
                     </label>
                 </li>
                 <li class="list-group-item">
-                    自動打下一關
+                    自動打同一關
                     <label class="switch pull-right">
-                        <input id="autoNextWar" type="checkbox">
+                        <input id="autoSameWar" type="checkbox" checked>
                         <span class="slider round"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
-                    自動打同一關
+                    自動打下一關
                     <label class="switch pull-right">
-                        <input id="autoSameWar" type="checkbox">
+                        <input id="autoNextWar" type="checkbox">
                         <span class="slider round"></span>
                     </label>
                 </li>
