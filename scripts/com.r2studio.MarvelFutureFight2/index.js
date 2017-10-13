@@ -16,52 +16,46 @@ var Config = {
 function MarvelFutureFight() {}
 
 MarvelFutureFight.prototype.runAutoMission = function(task) {
-  console.log("[MMFS] start auto mission");
+  console.log("[MMFS] start mission task");
   while (task.isRunning) {
-//    rbm.keepScreenshot();
-
     // try replay
-    if (rbm.imageClick("replay.1920x1080.png")) {
-      console.log("[MMFS] replay");
-    } else {
+    console.log("[MMFS][Mission] try to replay");
+    if (!rbm.imageClick("replay.1920x1080.png")) {
       // still available?
+      console.log("[MMFS][Mission] check biomatric");
       if (rbm.imageExists("not_available.1920x1080.png")) {
-        console.log("[MMFS] bio not available");
-        sleep(30000);
+        sleep(30000); continue;
       }
       // mission start
-      else if (rbm.imageClick("start.1920x1080.png")) {
-        console.log("[MMFS] start");
+      console.log("[MMFS][Mission] try to start");
+      if (rbm.imageClick("start.1920x1080.png")) {
         sleep(1000);
-//        rbm.releaseScreenshot();
-//        rbm.keepScreenshot();
         // check if hidden ticket is available
+        console.log("[MMFS][Mission] check hidden ticket");
         if (rbm.imageExists("hidden_available.1920x1080.png")) {
-          console.log("[MMFS] use hidden ticket");
           rbm.imageClick("yes_green.1920x1080.png");
         }
-        sleep(60000);
+        sleep(60000); continue;
       }
       // timeline start
-      else if (rbm.imageClick("fight.1920x1080.png")) {
-        console.log("[MMFS] timeline fight");
-        sleep(90000);
+      console.log("[MMFS][Mission] try to fight timeline");
+      if (rbm.imageClick("fight.1920x1080.png")) {
+        sleep(90000); continue;
       }
     }
     // wait and play again
-//    rbm.releaseScreenshot();
     sleep(5000);
   }
-  console.log("[MMFS] stop auto mission");
+  console.log("[MMFS] stop mission task");
 }
 
 MarvelFutureFight.prototype.runAutoCowork = function(task) {
-  console.log("[MMFS] start auto cowork");
+  console.log("[MMFS] start co-op task");
   while (task.isRunning) {
     console.log("[MMFS] hi auto cowork");
     sleep(1000);
   }
-  console.log("[MMFS] stop auto cowork");
+  console.log("[MMFS] stop co-op task");
 }
 
 var rbm = new RBM(Config);
@@ -71,7 +65,7 @@ var currentTask;
 // events
 function start(script) {
   rbm.init();
-  console.log('[MMFS] START script');
+  console.log('[MMFS] START');
 
   switch (script) {
     case "autoMission":
@@ -85,7 +79,7 @@ function start(script) {
 };
 
 function stop() {
-  console.log('[MMFS] STOP script');
+  console.log('[MMFS] STOP');
 
   rbm.running = false;
   currentTask.stop();

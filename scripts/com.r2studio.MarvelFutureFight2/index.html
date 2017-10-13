@@ -15,15 +15,15 @@
             });
 
             function onEvent(eventType) {
-                // var currentScript = "";
-                // var scripts = ["autoMission", "autoCowork"];
-                // for script in scripts {
-                //   if ($('#' + script).is(':checked')) {
-                //     currentScript = script
-                //   }
-                // }
+                var currentScript = "";
+                $('.task').each(function(i) {
+                    if ($(this).is(':checked')) {
+                        currentScript = $(this).prop('id');
+                    }
+                });
+
                 if (eventType == 'OnPlayClick') {
-                    JavaScriptInterface.runScript(`start("autoMission");`);
+                    JavaScriptInterface.runScript(`start("${currentScript}");`);
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 }
