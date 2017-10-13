@@ -23,15 +23,15 @@
                 return $(id).is(':checked');
             }
             function onEvent(eventType) {
-                var currentScript = "";
-                var scripts = ["autoMission", "autoCowork"];
-                for script in scripts {
-                  if (getCheckStatus('#' + script)) {
-                    currentScript = script
-                  }
-                }
+                // var currentScript = "";
+                // var scripts = ["autoMission", "autoCowork"];
+                // for script in scripts {
+                //   if (getCheckStatus('#' + script)) {
+                //     currentScript = script
+                //   }
+                // }
                 if (eventType == 'OnPlayClick') {
-                    JavaScriptInterface.runScript(`start(${currentScript});`);
+                    JavaScriptInterface.runScript(`start("autoMission");`);
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 }
@@ -58,7 +58,7 @@
                 <li class="list-group-item">
                     組隊遊戲
                     <label class="switch pull-right">
-                        <input id="autoSameWar" type="checkbox" checked>
+                        <input id="autoSameWar" type="checkbox">
                         <span class="slider round"></span>
                     </label>
                 </li>
