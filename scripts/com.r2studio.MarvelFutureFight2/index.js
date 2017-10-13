@@ -67,7 +67,7 @@ MarvelFutureFight.prototype.runAutoCowork = function(task) {
         console.log("[MMFS][Co-Op] get awards");
         sleep(2000);
         rbm.imageClick("fetch.1920x1080.png");
-        sleep(5000);
+        sleep(10000);
         console.log("[MMFS][Co-Op] yes");
         rbm.imageClick("yes.1920x1080.png");
         continue;
