@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="./index.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script>
+            $(function() {
+                $('#autoMission').change(function() {
+                    if ($(this).is(':checked')) {
+                        $('#autoCowork').prop('checked', false);
+                    }
+                });
+                $('#autoCowork').change(function() {
+                    if ($(this).is(':checked')) {
+                        $('#autoMission').prop('checked', false);
+                    }
+                });
+            });
+
+            function getCheckStatus(id) {
+                return $(id).is(':checked');
+            }
+            function onEvent(eventType) {
+                var currentScript = "";
+                var scripts = ["autoMission", "autoCowork"];
+                for script in scripts {
+                  if (getCheckStatus('#' + script)) {
+                    currentScript = script
+                  }
+                }
+                if (eventType == 'OnPlayClick') {
+                    JavaScriptInterface.runScript(`start(${currentScript});`);
+                } else if (eventType == 'OnPauseClick') {
+                    JavaScriptInterface.runScript('stop();');
+                }
+            }
+            function onLog(message) {
+                console.log(message);
+            }
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-custom" role="navigation">
+            <a class="navbar-brand">MARVEL 未來之戰 v1</a>
+        </nav>
+        <div class="container">
+            <h4>自動重複</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    各種任務（時間線、一般任務、每日任務、特殊任務、回想任務、黑暗次元、追蹤、隱藏秘密）
+                    <label class="switch pull-right">
+                        <input id="taskAttack" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    組隊遊戲
+                    <label class="switch pull-right">
+                        <input id="autoSameWar" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>
