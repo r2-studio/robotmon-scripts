@@ -65,10 +65,12 @@ MarvelFutureFight.prototype.runAutoCowork = function(task) {
       console.log("[MMFS][Co-Op] try to get awards");
       if (rbm.imageClick("get_award.1920x1080.png")) {
         console.log("[MMFS][Co-Op] get awards");
-        rbm.imageWaitClick("fetch.1920x1080.png", 10000);
+        sleep(2000);
+        rbm.imageClick("fetch.1920x1080.png");
+        sleep(5000);
         console.log("[MMFS][Co-Op] yes");
-        rbm.imageWaitClick("yes.1920x1080.png", 10000);
-        sleep(1000); continue;
+        rbm.imageClick("yes.1920x1080.png");
+        continue;
       }
       // choose a hero and start
       else {
