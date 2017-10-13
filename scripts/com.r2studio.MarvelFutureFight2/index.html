@@ -7,26 +7,18 @@
 
         <script>
             $(function() {
-                $('#autoMission').change(function() {
+                $('.task').change(function() {
                     if ($(this).is(':checked')) {
-                        $('#autoCowork').prop('checked', false);
-                    }
-                });
-                $('#autoCowork').change(function() {
-                    if ($(this).is(':checked')) {
-                        $('#autoMission').prop('checked', false);
+                        $('.task').not(this).prop('checked', false);
                     }
                 });
             });
 
-            function getCheckStatus(id) {
-                return $(id).is(':checked');
-            }
             function onEvent(eventType) {
                 // var currentScript = "";
                 // var scripts = ["autoMission", "autoCowork"];
                 // for script in scripts {
-                //   if (getCheckStatus('#' + script)) {
+                //   if ($('#' + script).is(':checked')) {
                 //     currentScript = script
                 //   }
                 // }
@@ -49,18 +41,22 @@
             <h4>自動重複</h4>
             <ul class="list-group">
                 <li class="list-group-item">
-                    各種任務（時間線、一般任務、每日任務、特殊任務、回想任務、黑暗次元、追蹤、隱藏秘密）
-                    <label class="switch pull-right">
-                        <input id="taskAttack" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
+                    <div>
+                        <label class="switch pull-left">
+                            <input id="autoMission" class="task" type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div>一般任務、每日任務、特殊任務、次元裂縫、時間線<br />回想任務、黑暗次元、追蹤、隱藏的秘密、共同的敵人</div>
                 </li>
                 <li class="list-group-item">
-                    組隊遊戲
-                    <label class="switch pull-right">
-                        <input id="autoSameWar" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
+                    <div>
+                        <label class="switch pull-left">
+                            <input id="autoCowork" class="task" type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div>組隊遊戲</div>
                 </li>
             </ul>
         </div>

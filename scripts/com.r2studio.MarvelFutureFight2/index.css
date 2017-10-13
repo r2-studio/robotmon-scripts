@@ -20,13 +20,18 @@
     padding-top: 6px !important;
 }
 
+.list-group-item > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 /* The switch - the box around the slider */
 .switch {
-    position: relative; 
+    position: relative;
     display: inline-block;
     vertical-align: middle;
     margin-bottom: 0px;
-    margin-top: -4px;
+    margin-right: 16px;
     width: 52px;
     height: 28px;
 }
@@ -92,7 +97,7 @@ input:checked + .slider:before {
 .btn-plus:focus,
 .btn-plus:active,
 .btn-plus.active {
-    color:#FFFFFF !important; 
+    color:#FFFFFF !important;
     background-color: var(--primary-color);
     border-color: var(--primary-color);
 }

@@ -48,7 +48,6 @@ MarvelFutureFight.prototype.runAutoMission = function(task) {
         sleep(90000);
       }
     }
-
     // wait and play again
 //    rbm.releaseScreenshot();
     sleep(5000);
