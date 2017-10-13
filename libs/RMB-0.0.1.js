@@ -226,7 +226,7 @@ RBM.prototype.imageClick = function(filename, threshold) {
   return true;
 };
 
-RBM.prototype.imageWaitClick = function(filename, threshold, timeout) {
+RBM.prototype.imageWaitClick = function(filename, timeout, threshold) {
   if (timeout === undefined) {
     timeout = 10000;
   }
