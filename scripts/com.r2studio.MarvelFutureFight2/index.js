@@ -77,7 +77,8 @@ MarvelFutureFight.prototype.runAutoCowork = function(task) {
         console.log("[MMFS][Co-Op] choose a hero");
         rbm.click({ x: 118, y: 900 });
         console.log("[MMFS][Co-Op] start to match");
-        rbm.imageWaitClick("match_start.1920x1080.png", 10000);
+        sleep(1000);
+        rbm.imageClick("match_start.1920x1080.png");
         sleep(30000); continue;
       }
     }
