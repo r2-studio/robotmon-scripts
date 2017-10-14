@@ -39,8 +39,6 @@ function RBM(config) {
   this.running = true;
   
   this._screenshotImg = 0;
-  
-  this.init();
 }
 
 RBM.prototype.init = function() {
@@ -220,14 +218,15 @@ RBM.prototype.imageExists = function(filename, threshold) {
 RBM.prototype.imageClick = function(filename, threshold) {
   var result = this.findImage(filename, threshold);
   if (result === undefined) {
-    return;
+    return false;
   }
   var x = (result.x + (result.width / 2)) * this.appWidth / this.resizeAppWidth;
   var y = (result.y + (result.height / 2)) * this.appHeight / this.resizeAppHeight;
   tap(x, y, this.during);
+  return true;
 };
 
-RBM.prototype.imageWaitClick = function(timeout) {
+RBM.prototype.imageWaitClick = function(filename, timeout, threshold) {
   if (timeout === undefined) {
     timeout = 10000;
   }
