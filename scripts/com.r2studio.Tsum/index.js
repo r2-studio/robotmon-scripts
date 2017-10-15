@@ -76,6 +76,7 @@ var Button = {
   outSendHeart1: {x: 910, y: 828 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
   outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
   outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
+  skillLuke1: {x: 970, y: 1270 - adjY},
 };
 
 // Utils for Tsum
@@ -709,6 +710,7 @@ Tsum.prototype.useSkill = function() {
       this.tapUp({x: 850, y: 420}, 20);
       sleep(20);
     }
+    this.tap(Button.skillLuke1);
     sleep(500);
   } else {
     sleep(2500);
