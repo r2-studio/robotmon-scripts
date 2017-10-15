@@ -411,7 +411,15 @@ function Tsum() {
 }
 
 Tsum.prototype.init = function() {
-  if (this.screenHeight / this.screenWidth > 1.5) {
+  log('Init... calculate screen size');
+  if (this.screenHeight / this.screenWidth > 1.78) {
+    // currently support for note 8
+    this.gameWidth = this.screenWidth;
+    this.gameHeight = this.gameWidth * 1.5;
+    var gameFullHeight = this.gameWidth * 1.84444;
+    var gameMarginTop = (gameFullHeight - this.gameHeight) / 2;
+    this.gameOffsetY = (this.screenHeight - gameFullHeight) + gameMarginTop;
+  } else if (this.screenHeight / this.screenWidth > 1.5) {
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.gameWidth * 1.5;
     this.gameOffsetY = (this.screenHeight - this.gameHeight) / 2;
@@ -427,7 +435,13 @@ Tsum.prototype.init = function() {
 
   this.allTsumImages = loadTsumImages();
   this.isLoadAllTsum = true;
-  log('Config', this);
+
+  if (this.debug) {
+    log('Config', this);
+    sleep(200);
+    log('Game OffsetXY', this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
+    sleep(1000);
+  }
 }
 
 Tsum.prototype.deinit = function() {
