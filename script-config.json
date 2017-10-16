@@ -1,15 +1,15 @@
 {
   "scripts": {
     "com.r2studio.EndlessFrontier": {
-      "versionCode": 5,
+      "versionCode": 6,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip"
     },
     "com.r2studio.Tsum": {
-      "versionCode": 6,
+      "versionCode": 7,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip"
     },
     "com.r2studio.MarvelFutureFight": {
-      "versionCode": 3,
+      "versionCode": 4,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MarvelFutureFight/index.zip"
     }
   },
