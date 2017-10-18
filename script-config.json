@@ -10,12 +10,11 @@
     },
     "com.r2studio.MarvelFutureFight": {
       "versionCode": 4,
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MarvelFutureFight/index.zip"
-    }
-  },
-  "libs": {
-    "RBM-0.0.1": {
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.1.js"
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MarvelFutureFight/index.zip",
+      "dependencies": [
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.1.js",
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
+      ]
     }
   }
 }
