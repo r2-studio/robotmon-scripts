@@ -134,12 +134,13 @@
 
             function onEvent(eventType) {
                 if (eventType == 'OnPlayClick') {
-                    var jsJP = getCheckStatus('#isJP');
+                    var isJP = getCheckStatus('#isJP');
                     var debug = getCheckStatus('#debug');
                     var receiveItems = getCheckStatus('#receiveItems');
                     var sendHearts = getCheckStatus('#sendHearts');
                     var isFourTsum = getCheckStatus('#isFourTsum');
-                    JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+jsJP+');');
+                    var isPause = getCheckStatus('#isPause');
+                    JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+isJP+', '+isPause+');');
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 }
@@ -187,6 +188,13 @@
                     5 To 4 Tsums 道具五變四
                     <label class="switch pull-right">
                         <input id="isFourTsum" type="checkbox">
+                        <a class="slider round"></a>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Pause when calculating 計算時暫停
+                    <label class="switch pull-right">
+                        <input id="isPause" type="checkbox" checked>
                         <a class="slider round"></a>
                     </label>
                 </li>

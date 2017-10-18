@@ -99,7 +99,7 @@ function loadTsumImages(isJP) {
   var tsumImages = {};
   var tsumDir = isJP ? Config.tsumJpDir : Config.tsumDir;
   var tsumPath = getStoragePath() + '/' + tsumDir;
-  var tsumFiles = jsJP ? Config.tsumFilesJP : Config.tsumFiles;
+  var tsumFiles = isJP ? Config.tsumFilesJP : Config.tsumFiles;
   for (var i in tsumFiles) {
     var key = Config.tsumFiles[i];
     var filename = tsumPath + '/' + key + '_0.png';
@@ -416,6 +416,7 @@ function Tsum() {
   this.allTsumImages = {};
   this.gameTsums = [];
   this.isJP = false;
+  this.isPause = true;
 
   this.init();
 }
@@ -738,12 +739,15 @@ Tsum.prototype.taskPlayGame = function() {
   while(this.isRunning) {  
     // load game tsums
     var gameImage = this.playScreenshot();
-    this.tap(Button.gamePause);
-    sleep(20);
-    this.tap(Button.gamePause);
+    if (this.isPause) {
+      this.tap(Button.gamePause);
+      sleep(20);
+      this.tap(Button.gamePause);
+    }
     if (!this.isLoadRotateTsum) {
       log('辨識Tsum種類');
-      this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.jsJP, this.debug);
+      this.tap(Button.gamePause);
+      this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
       this.isLoadRotateTsum = true;
     }
     log('辨識盤面Tsum');
@@ -757,9 +761,9 @@ Tsum.prototype.taskPlayGame = function() {
     var paths = calculatePaths(board);
     
     this.tap(Button.gameContinue);
-    sleep(Config.gameContinueDelay / 2);
+    if (this.isPause) {sleep(Config.gameContinueDelay / 2);}
     this.tap(Button.gameContinue);
-    sleep(Config.gameContinueDelay / 2);
+    if (this.isPause) {sleep(Config.gameContinueDelay / 2);}
 
     if (paths.length < 2) {
       if (pathZero > 2) {
@@ -857,7 +861,7 @@ Tsum.prototype.taskSendHearts = function() {
 var ts;
 var gTaskController;
 
-function start(debug, receiveItem, sendHearts, isFourTsum, jsJP) {
+function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -865,7 +869,8 @@ function start(debug, receiveItem, sendHearts, isFourTsum, jsJP) {
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
-  ts.isJP = jsJP;
+  ts.isJP = isJP;
+  ts.isPause = isPause;
 
   gTaskController = new TaskController();
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
