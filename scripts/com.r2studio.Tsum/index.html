@@ -134,11 +134,12 @@
 
             function onEvent(eventType) {
                 if (eventType == 'OnPlayClick') {
+                    var jsJP = getCheckStatus('#isJP');
                     var debug = getCheckStatus('#debug');
                     var receiveItems = getCheckStatus('#receiveItems');
                     var sendHearts = getCheckStatus('#sendHearts');
                     var isFourTsum = getCheckStatus('#isFourTsum');
-                    JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+');');
+                    JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+jsJP+');');
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 }
@@ -150,33 +151,40 @@
     </head>
     <body>
         <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand">Tsum Tsum v7</a>
+            <a class="navbar-brand">Tsum Tsum v8</a>
         </nav>
         <div class="container">
             <ul class="list-group">
                 <li class="list-group-item">
-                    偵錯模式
+                    Is Japan Version? 日本版？
+                    <label class="switch pull-right">
+                        <input id="isJP" type="checkbox">
+                        <a class="slider round"></a>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Debug 偵錯
                     <label class="switch pull-right">
                         <input id="debug" type="checkbox" checked>
                         <a class="slider round"></a>
                     </label>
                 </li>
                 <li class="list-group-item">
-                    自動收禮物
+                    Auto Receive Hearts 自動收愛心
                     <label class="switch pull-right">
                         <input id="receiveItems" type="checkbox" checked>
                         <a class="slider round"></a>
                     </label>
                 </li>
                 <li class="list-group-item">
-                    自動送愛心
+                    Auto Send Hearts 自動送愛心
                     <label class="switch pull-right">
                         <input id="sendHearts" type="checkbox">
                         <a class="slider round"></a>
                     </label>
                 </li>
                 <li class="list-group-item">
-                    五變四種Tsum
+                    5 To 4 Tsums 道具五變四
                     <label class="switch pull-right">
                         <input id="isFourTsum" type="checkbox">
                         <a class="slider round"></a>
