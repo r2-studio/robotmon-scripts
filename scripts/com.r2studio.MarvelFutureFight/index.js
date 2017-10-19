@@ -102,6 +102,7 @@ function start(taskAttack, autoSameWar, autoNextWar) {
   Config.autoNextWar = autoNextWar;
 
   rbm = new RBM(Config);
+  rbm.init();
   mff = new MarvelFutureFight();
   gTaskController = new TaskController();
   if(autoSameWar || autoNextWar){gTaskController.newTask('taskAutoStart', mff.taskAutoStart.bind(mff), 1000, 0);}
