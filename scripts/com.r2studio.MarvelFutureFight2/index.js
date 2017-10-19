@@ -25,20 +25,20 @@ MarvelFutureFight.prototype.runAutoMission = function(task) {
     if (!rbm.imageClick("replay.1920x1080.png", "try to replay")) {
       // still available?
       if (rbm.imageExists("not_available.1920x1080.png", "check biomatric")) {
-        sleep(30000); continue;
+        sleep(30000);
       }
       // mission start
-      if (rbm.imageClick("start.1920x1080.png", "try to start")) {
+      else if (rbm.imageClick("start.1920x1080.png", "try to start")) {
         sleep(2000);
         // check if hidden ticket is available
         if (rbm.imageExists("hidden_available.1920x1080.png", "check hidden ticket")) {
           rbm.imageClick("yes_green.1920x1080.png", "click green yes");
         }
-        sleep(60000); continue;
+        sleep(60000);
       }
       // timeline start
-      if (rbm.imageClick("fight.1920x1080.png", "try to fight timeline")) {
-        sleep(90000); continue;
+      else if (rbm.imageClick("fight.1920x1080.png", "try to fight timeline")) {
+        sleep(90000);
       }
     }
     // wait and play again
@@ -54,10 +54,10 @@ MarvelFutureFight.prototype.runAutoCowork = function(task) {
   while (task.isRunning) {
     // try next
     if (rbm.imageClick("next.1920x1080.png", "try to next")) {
-      sleep(10000); continue;
+      sleep(10000);
     }
     // enter the lobby
-    if (rbm.imageExists("lobby.1920x1080.png", "check at lobby")) {
+    else if (rbm.imageExists("lobby.1920x1080.png", "check at lobby")) {
       sleep(1000);
       // get awards
       if (rbm.imageClick("get_award.1920x1080.png", "try to get awards")) {
@@ -65,7 +65,6 @@ MarvelFutureFight.prototype.runAutoCowork = function(task) {
         rbm.imageClick("fetch.1920x1080.png", "fetch");
         sleep(10000);
         rbm.imageClick("yes.1920x1080.png", "click blue yes");
-        continue;
       }
       // choose a hero and start
       else {
@@ -73,7 +72,7 @@ MarvelFutureFight.prototype.runAutoCowork = function(task) {
         rbm.click({ x: 118, y: 900 });
         sleep(1000);
         rbm.imageClick("match_start.1920x1080.png", "start to match");
-        sleep(30000); continue;
+        sleep(30000);
       }
     }
     // wait and play again
