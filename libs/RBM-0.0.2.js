@@ -140,9 +140,9 @@ RBM.prototype.swipe = function(fromXY, toXY, step) {
   fromXY = this.mappingXY(fromXY);
   toXY = this.mappingXY(toXY);
   var during = this.during / (step + 2) ;
-  var diffX = (fromXY.x - toXY.x) / step;
-  var diffY = (fromXY.y - toXY.y) / step;
-  
+  var diffX = (toXY.x - fromXY.x) / step;
+  var diffY = (toXY.y - fromXY.y) / step;
+
   tapDown(fromXY.x, fromXY.y, during);
   for (var i = 0; i <= step; i++) {
     moveTo(fromXY.x + i * diffX, fromXY.y + i * diffY, during);
@@ -181,7 +181,9 @@ RBM.prototype.findImage = function(filename, threshold) {
   var targetImg = openImage(filePath);
   if (targetImg === 0) {
     this.log("Image is not found: ", filePath);
-    releaseImage(sourceImg);
+    if (sourceImg != this._screenshotImg) {
+      releaseImage(sourceImg);
+    }
     return undefined;
   }
   var imageSize = getImageSize(targetImg);
@@ -203,7 +205,9 @@ RBM.prototype.findImage = function(filename, threshold) {
     }
   }
   releaseImage(targetImg);
-  releaseImage(sourceImg);
+  if (sourceImg != this._screenshotImg) {
+    releaseImage(sourceImg);
+  }
   return result;
 }
 
@@ -234,8 +238,8 @@ RBM.prototype.imageWaitClick = function(filename, timeout, threshold) {
   while(this.running) {
     var result = this.findImage(filename, threshold);
     if (result !== undefined) {
-      var x = Math.round(result.x * this.appWidth / this.resizeAppWidth);
-      var y = Math.round(result.y * this.appHeight / this.resizeAppHeight);
+      var x = (result.x + (result.width / 2)) * this.appWidth / this.resizeAppWidth;
+      var y = (result.y + (result.height / 2)) * this.appHeight / this.resizeAppHeight;
       tap(x, y, this.during);
       break;
     }
@@ -246,7 +250,7 @@ RBM.prototype.imageWaitClick = function(filename, timeout, threshold) {
   }
 };
 
-RBM.prototype.imageWaitShow = function(timeout) {
+RBM.prototype.imageWaitShow = function(filename, timeout, threshold) {
   if (timeout === undefined) {
     timeout = 10000;
   }
@@ -263,7 +267,7 @@ RBM.prototype.imageWaitShow = function(timeout) {
   }
 };
 
-RBM.prototype.imageWaitGone = function(timeout) {
+RBM.prototype.imageWaitGone = function(filename, timeout, threshold) {
   if (timeout === undefined) {
     timeout = 10000;
   }
@@ -296,7 +300,7 @@ RBM.prototype.releaseScreenshot = function() {
 };
 
 // others
-RBM.prototype.typing = function(words) {
+RBM.prototype.typing = function(label) {
   typing(label, this.during);
 };
 
