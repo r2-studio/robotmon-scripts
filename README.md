@@ -128,6 +128,121 @@ log(string tag, string msg) string logMsg
 readFile(string path) string text
 writeFile(string path, string text)
 runScript(string script)
+
+httpClient(string method, string url, string body, object headers) string result
+  httpClient('GET', 'http://httpbin.org/get', '', {});
+  httpClient('POST', 'http://httpbin.org/post', 'body data', {});
+  httpClient('POST', 'http://httpbin.org/post', 'foo=bar&bar=foo', {'Content-Type': 'application/x-www-form-urlencoded'});
+
+importJS(string library)
+  // import shared library in libs
+  importJS('RBM-0.0.2')
+  // import local library
+  importJS('js/customerJS.js')
+
+getVirtualButtonHeight() int vbh
+```
+
+## RBM library
+
+```
+var rbm_config = {
+  appName: 'com.your.script',
+  oriScreenWidth: 1080, // developer's phone width
+  oriScreenHeight: 1920, // developer's phone height
+  oriVirtualButtonHeight: 0, // developer's phone with virtual button height (getVirtualButtonHeight()). If no virtual button in app, set to 0
+  oriResizeFactor: 0.6, // resize screenshot ratio in developer's environment (for screencrop)
+  eventDelay: 200, // milliseconds
+  imageThreshold: 0.85, // recognize images threshold
+  imageQuality: 80, // 0 ~ 100, compress level
+  resizeFactor: 0.6, // resize screenshot ratio in user's environment (same as oriResizeFactor is better)
+};
+
+importJS('RBM-0.0.2.js');
+var rbm = new RBM(rbm_config);
+
+// Important! calculate screen size, call it after start pressed!
+rbm.init(); 
+
+// Util for console.log, if argument is object, it will convert object to JSON string
+rbm.log(any type);
+
+// get current app in foreground 
+rbm.currentApp(); // => {packageName, activityName}
+
+// launch an app
+rbm.startApp(packageName, activityName);
+
+// close an app
+rbm.stop(packageName);
+
+// Utils. Calculate interpolation from developer's screen size to user's screen size
+rbm.click({x, y});
+rbm.tapDown({x, y});
+rbm.moveTo({x, y});
+rbm.tapUp({x, y});
+rbm.swipe({fromX, fromY}, {toX, toY}, step); // step: interpolation points between 'from' and 'to'
+
+// all about images used in this library will load/save within this folder
+rbm.getImagePath(); // => Robotmon/scripts/com.your.app/images
+
+// save screenshot (in getImagePath() path)
+rbm.screenshot();
+
+// crop screenshot and save it with filename. This function will resize images with oriResizeFactor
+// and compress with imageQuality
+rbm.screencrop(filename, fromX, fromY, toX, toY);
+rbm.screencrop('startButton.png', 100, 200, 200, 300);
+
+// ====> Functions below will calculate resize factor between developer's and user's
+
+// find image (with filename) in screen
+rbm.findImage(filename, threshold); // => {x, y, score}
+rbm.findImage('startButton.png', 0.9);
+
+// check if image is exist in screen
+rbm.imageExists(filename, threshold); // => true|false
+
+// find image in screen and click it. No found, no click
+rbm.imageClick(filename, threshold);
+
+// find image in screen and click it until timeout (milliseconds)
+rbm.imageWaitClick(filename, timeout, threshold);
+
+// block until image found or timout
+rbm.imageWaitShow(filename, timeout, threshold);
+
+// block until image gone or timout
+rbm.imageWaitGone(filename, timeout, threshold);
+
+// <====
+
+// keep/release current screenshot in memory. To avoid to many times screencap.
+rbm.keepScreenshot();
+rbm.releaseScreenshot();
+
+/* Example
+// screencap three times
+rbm.imageClick('apple.png', 0.9); // screencap, and release
+rbm.imageClick('banana.png', 0.9); // screencap, and release
+rbm.imageClick('cat.png', 0.9); // screencap, and release
+
+// screencap only one time (used when screen not change)
+rbm.keepScreenshot(); // screencap
+rbm.imageClick('apple.png', 0.9); // no screencap, no release
+rbm.imageClick('banana.png', 0.9); // no screencap, no release
+rbm.imageClick('cat.png', 0.9); // no screencap, no release
+rbm.releaseScreenshot(); // release screencap
+*/
+
+// same as keycode(label);
+rbm.keycode(label);
+
+// same as typing(words);
+rbm.typing(words);
+
+// sleep eventDelay
+rbm.sleep(); // not same as sleep(milliseconds);
 ```
 
 ## Connect to background service your self
