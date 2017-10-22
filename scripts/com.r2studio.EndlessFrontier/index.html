@@ -22,7 +22,7 @@
 
             /* The switch - the box around the slider */
             .switch {
-                position: relative; 
+                position: relative;
                 display: inline-block;
                 vertical-align: middle;
                 margin-bottom: 0px;
@@ -92,7 +92,7 @@
             .btn-plus:focus,
             .btn-plus:active,
             .btn-plus.active {
-                color:#FFFFFF !important; 
+                color:#FFFFFF !important;
                 background-color: #0d8aee;
                 border-color: #0c7cd5;
             }
@@ -170,7 +170,7 @@
                     var restartAppMinutes = $('#restartAppMinutes').val();
                     var hasVirtualButtonBar = getCheckStatus('#virtualButtonBar');
                     
-                    JavaScriptInterface.runScript(`start(${taskTreasure}, ${taskTask}, ${taskArmy}, ${taskWar}, ${taskDoubleSpeed}, ${taskBattle}, ${taskBuyArmy}, ${taskRevolution}, ${revolutionMinutes}, ${taskRestartApp}, ${restartAppMinutes}, ${hasVirtualButtonBar});`);
+                    JavaScriptInterface.runScript('start(' + taskTreasure + ',' + taskTask + ', ' + taskArmy + ', ' + taskWar + ', ' + taskDoubleSpeed + ', ' + taskBattle + ', ' + taskBuyArmy +', ' + taskRevolution +', ' + revolutionMinutes +', ' + taskRestartApp +', ' + restartAppMinutes +', ' + hasVirtualButtonBar + ');');
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 } else if (eventType == 'OnReloadClick') {
@@ -184,7 +184,7 @@
     </head>
     <body>
         <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand">無盡的邊疆 Endless Frontier v6</a>
+            <a class="navbar-brand">無盡的邊疆 Endless Frontier v7</a>
         </nav>
         <div class="container">
             <ul class="list-group">

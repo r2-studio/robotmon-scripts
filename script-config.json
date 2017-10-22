@@ -1,15 +1,18 @@
 {
   "scripts": {
     "com.r2studio.EndlessFrontier": {
-      "versionCode": 6,
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip"
+      "versionCode": 7,
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip",
+      "dependencies": [
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
+      ]
     },
     "com.r2studio.Tsum": {
       "versionCode": 8,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip"
     },
     "com.r2studio.MarvelFutureFight": {
-      "versionCode": 5,
+      "versionCode": 6,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MarvelFutureFight/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.1.js",
