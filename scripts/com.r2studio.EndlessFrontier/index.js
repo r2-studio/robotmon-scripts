@@ -88,6 +88,7 @@ function EndlessFrontier() {
     ButtonTaskMoney: {x: 1040, y: 1100},
     ButtonTaskMax: {x: 420, y: 1100},
     ButtonAutoTask: {x: 1040, y: 900},
+    ButtonUpdateArmy: {x: 850, y: 900},
     ButtonBuyArmy: {x: 760, y: 900},
     ButtonStartBattle: {x: 925, y: 1490},
     ButtonUnopenedTask: {x: 630, y: 1120},
@@ -203,6 +204,7 @@ EndlessFrontier.prototype.initButtons = function() {
   this.ButtonTaskMoney = this.getRealWHRatio(this.Const.ButtonTaskMoney);
   this.ButtonTaskMax = this.getRealWHRatio(this.Const.ButtonTaskMax);
   this.ButtonAutoTask = this.getRealWHRatio(this.Const.ButtonAutoTask);
+  this.ButtonUpdateArmy = this.getRealWHRatio(this.Const.ButtonUpdateArmy);
   this.ButtonBuyArmy = this.getRealWHRatio(this.Const.ButtonBuyArmy);
   this.ButtonUnopenedTask = this.getRealWHRatio(this.Const.ButtonUnopenedTask);
   this.ButtonTooLongBack = this.getRealWHRatio(this.Const.ButtonTooLongBack);
@@ -528,12 +530,16 @@ EndlessFrontier.prototype.taskBuyArmy = function() {
     this.tap(this.ButtonBuyArmyBuy);
     sleep(1000);
   }
+  sleep(500);
+  this.tap(this.ButtonUpdateArmy);
+  this.goToGame();
 }
 
 EndlessFrontier.prototype.taskBattle = function() {
   log('檢查自動對戰');
   this.goToGame();
   this.tap(this.ButtonMenuBattle);
+  sleep(2000); // network loading
   this.tap(this.ButtonTableRightOther);
   sleep(3000); // network loading
   this.tap(this.ButtonStartBattle);
@@ -545,11 +551,11 @@ EndlessFrontier.prototype.taskBattle = function() {
 EndlessFrontier.prototype.taskRestartApp = function() {
   log('檢查重啟遊戲');
   var packageName = this.Const.PackageNameLine;
-  var length = execute('pm path ' + packageName).split('/n').length;
-  if (length <= 2) {
+  var length = execute('pm path ' + packageName).split('\n').length;
+  if (length <= 1) {
     packageName = this.Const.PackageName;
-    length = execute('pm path ' + packageName).split('/n').length;
-    if (length <= 2) {
+    length = execute('pm path ' + packageName).split('\n').length;
+    if (length <= 1) {
       log('未安裝無盡的邊疆');
       return;
     }
@@ -557,7 +563,8 @@ EndlessFrontier.prototype.taskRestartApp = function() {
   execute('am force-stop ' + packageName);
   sleep(this.Const.during);
   execute('monkey -p ' + packageName + ' -c android.intent.category.LAUNCHER 1');
-  sleep(50000);
+  log('等待遊戲重新啟動 100 秒...');
+  sleep(100 * 1000);
   this.goToGame();
   sleep(3000); // network loading
   this.goToGame();
@@ -585,7 +592,7 @@ function start(taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskB
   if(taskTask){gTaskController.newTask('taskTask', ef.taskTask.bind(ef), 40 * 1000, 0);}
   if(taskArmy){gTaskController.newTask('taskArmy', ef.taskArmy.bind(ef), 120 * 1000, 0);}
   if(taskWar){gTaskController.newTask('taskWar', ef.taskWar.bind(ef), 100 * 1000, 0);}
-  if(taskDoubleSpeed){gTaskController.newTask('taskDoubleSpeed', ef.taskDoubleSpeed.bind(ef), 16 * 60 * 1000, 0);}
+  if(taskDoubleSpeed){gTaskController.newTask('taskDoubleSpeed', ef.taskDoubleSpeed.bind(ef), 5 * 60 * 1000, 0);}
   if(taskBattle){gTaskController.newTask('taskBattle', ef.taskBattle.bind(ef), 30 * 60 * 1000, 0);}
   if(taskBuyArmy){gTaskController.newTask('taskBuyArmy', ef.taskBuyArmy.bind(ef), 60 * 60 * 1000, 0);}
   if(taskRevolution){gTaskController.newTask('taskRevolution', ef.taskRevolution.bind(ef), revolutionMinutes * 60 * 1000, 0, true);}
