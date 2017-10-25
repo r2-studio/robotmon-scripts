@@ -87,13 +87,19 @@ function EndlessFrontier() {
     ButtonBuyArmyOK: {x: 460, y: 1220},
     ButtonBuyArmyBuy: {x: 460, y: 1320},
     ButtonDiamondCancel: {x: 780, y: 1130},
-    ButtonDoubleSpeed: {x: 1010, y: 1093},
+    ButtonDoubleSpeed: {x: 1010, y: 910},
     ButtonTaskInfoCancel: {x: 620, y: 1410},
     ButtonNetwork: {x: 650, y: 1093},
     ButtonExitGame: {x: 820, y: 990},
     ButtonArmyInfoCancel: {x: 1020, y: 260},
     ButtonTableTop: {x: 1040, y: 996},
     ButtonTableBottom: {x: 1040, y: 1642},
+    ButtonSkill1: {x: 400, y: 110},
+    ButtonSkill2: {x: 500, y: 110},
+    ButtonSkill3: {x: 600, y: 110},
+    ButtonWarSkill1: {x: 100, y: 910},
+    ButtonWarSkill2: {x: 270, y: 910},
+    ButtonWarSkill3: {x: 440, y: 910},
     // AdButtonBottomRightCancel: {x: 1036, y: 1736},
     // AdButtonTopRightCancel: {x: 1003, y: 83},
     // AdButtonTopLeftCancel: {x: 73, y: 73},
@@ -119,6 +125,7 @@ function EndlessFrontier() {
     taskTaskIgnore: 0,
     taskWarIdx: 0,
   };
+  this.skillNumber = 0;
   this.init();
 }
 
@@ -215,6 +222,12 @@ EndlessFrontier.prototype.initButtons = function() {
   this.ButtonExitGame = this.getRealWHRatio(this.Const.ButtonExitGame);
   this.Treasure = this.getRealWHRatio(this.Const.Treasure);
   this.InGameCheck = this.getRealWHRatio(this.Const.InGameCheck);
+  this.ButtonSkill1 = this.getRealWHRatio(this.Const.ButtonSkill1);
+  this.ButtonSkill2 = this.getRealWHRatio(this.Const.ButtonSkill2);
+  this.ButtonSkill3 = this.getRealWHRatio(this.Const.ButtonSkill3);
+  this.ButtonWarSkill1 = this.getRealWHRatio(this.Const.ButtonWarSkill1);
+  this.ButtonWarSkill2 = this.getRealWHRatio(this.Const.ButtonWarSkill2);
+  this.ButtonWarSkill3 = this.getRealWHRatio(this.Const.ButtonWarSkill3);
 
   // from bottom
   var cellHeight = this.TableCellHeight;
@@ -383,6 +396,18 @@ EndlessFrontier.prototype.taskDoubleSpeed = function() {
   this.tap(this.ButtonMenuStore);
   this.tap(this.ButtonMenuStoreProp);
   this.tap(this.ButtonDoubleSpeed);
+};
+
+EndlessFrontier.prototype.taskUsingSkill= function() {
+  log('自動放技能(外)');
+  if (this.skillNumber % 3 == 0) {
+    this.tap(this.ButtonSkill1);
+  } else if (this.skillNumber % 3 == 1){
+    this.tap(this.ButtonSkill2);
+  } else if (this.skillNumber % 3 == 2) {
+    this.tap(this.ButtonSkill3);
+  }
+  this.skillNumber++;
 };
 
 EndlessFrontier.prototype.taskTreasure = function() {
@@ -577,7 +602,7 @@ function stop() {
   gTaskController.removeAllTasks();
 }
 
-function start(taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, taskRestartApp, restartAppMinutes, virtualButton) {
+function start(taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, taskRestartApp, restartAppMinutes, virtualButton, useSkill) {
   log('[無盡的邊疆] 啟動');
   Config.isRunning = true;
   Config.hasVirtualButtonBar = virtualButton;
@@ -593,6 +618,7 @@ function start(taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskB
   if(taskBuyArmy){gTaskController.newTask('taskBuyArmy', ef.taskBuyArmy.bind(ef), 60 * 60 * 1000, 0);}
   if(taskRevolution){gTaskController.newTask('taskRevolution', ef.taskRevolution.bind(ef), revolutionMinutes * 60 * 1000, 0, true);}
   if(taskRestartApp){gTaskController.newTask('taskRestartApp', ef.taskRestartApp.bind(ef), restartAppMinutes * 60 * 1000, 0, true);}
+  if(useSkill){gTaskController.newTask('taskUsingSkill', ef.taskUsingSkill.bind(ef), 6 * 1000, 0);}
   sleep(1000);
   gTaskController.start();
 };
