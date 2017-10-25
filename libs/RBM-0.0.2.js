@@ -241,11 +241,11 @@ RBM.prototype.imageWaitClick = function(filename, timeout, threshold) {
       var x = (result.x + (result.width / 2)) * this.appWidth / this.resizeAppWidth;
       var y = (result.y + (result.height / 2)) * this.appHeight / this.resizeAppHeight;
       tap(x, y, this.during);
-      break;
+      return true;
     }
     sleep(this.during * 3);
     if (Date.now() - startTime > timeout) {
-      break;
+      return false;
     }
   }
 };
