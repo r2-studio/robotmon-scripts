@@ -169,8 +169,9 @@
                     var taskRestartApp = getCheckStatus('#taskRestartApp');
                     var restartAppMinutes = $('#restartAppMinutes').val();
                     var hasVirtualButtonBar = getCheckStatus('#virtualButtonBar');
+                    var useSkill = getCheckStatus('#useSkill');
                     
-                    JavaScriptInterface.runScript('start(' + taskTreasure + ',' + taskTask + ', ' + taskArmy + ', ' + taskWar + ', ' + taskDoubleSpeed + ', ' + taskBattle + ', ' + taskBuyArmy +', ' + taskRevolution +', ' + revolutionMinutes +', ' + taskRestartApp +', ' + restartAppMinutes +', ' + hasVirtualButtonBar + ');');
+                    JavaScriptInterface.runScript('start(' + taskTreasure + ',' + taskTask + ', ' + taskArmy + ', ' + taskWar + ', ' + taskDoubleSpeed + ', ' + taskBattle + ', ' + taskBuyArmy +', ' + taskRevolution +', ' + revolutionMinutes +', ' + taskRestartApp +', ' + restartAppMinutes +', ' + hasVirtualButtonBar + ', ' + useSkill + ');');
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
                 } else if (eventType == 'OnReloadClick') {
@@ -184,7 +185,7 @@
     </head>
     <body>
         <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand">無盡的邊疆 Endless Frontier v10</a>
+            <a class="navbar-brand">無盡的邊疆 Endless Frontier v11</a>
         </nav>
         <div class="container">
             <ul class="list-group">
@@ -275,6 +276,13 @@
                         <button id="revolutionMinutesMinus" type="button" class="btn btn-danger">-10</button>
                         <button id="revolutionMinutesPlus" type="button" class="btn btn-plus">+10</button>
                     </div>
+                </li>
+                <li class="list-group-item">
+                    自動使用技能
+                    <label class="switch pull-right">
+                        <input id="useSkill" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
                 </li>
             </ul>
         </div>
