@@ -129,7 +129,6 @@ EndlessFrontier.prototype.init = function() {
   Config.resizeWidth = Math.floor(Config.screenWidth / 3);
   Config.resizeHeight = Math.floor(Config.screenHeight / 3);
   Config.virtualButtonHeight = getVirtualButtonHeight();
-  Config.hasVirtualButtonBar = true;
 
   if (Config.hasVirtualButtonBar) {
     this.ScreenInfo.gameHeight = Config.screenHeight - Config.virtualButtonHeight;
