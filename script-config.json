@@ -1,17 +1,20 @@
 {
   "scripts": {
     "com.r2studio.EndlessFrontier": {
-      "versionCode": 8,
+      "title": "Endless Frontier AutoPlay",
+      "versionCode": 9,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
       ]
     },
     "com.r2studio.Tsum": {
+      "title": "Tsum Tsum AutoPlay",
       "versionCode": 8,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip"
     },
     "com.r2studio.MarvelFutureFight": {
+      "title": "Marvel Future Fight AutoPlay",
       "versionCode": 6,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MarvelFutureFight/index.zip",
       "dependencies": [

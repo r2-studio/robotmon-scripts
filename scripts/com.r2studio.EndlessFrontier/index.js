@@ -53,17 +53,6 @@ function toResizeXY(x, y) {
   return {x: rx, y: ry};
 }
 
-// init
-(function(){
-  var size = getScreenSize();
-  Config.screenHeight = size.height;
-  Config.screenWidth = size.width;
-  Config.resizeWidth = Math.floor(Config.screenWidth / 3);
-  Config.resizeHeight = Math.floor(Config.screenHeight / 3);
-  Config.virtualButtonHeight = getVirtualButtonHeight();
-  Config.hasVirtualButtonBar = true;
-})();
-
 function EndlessFrontier() {
   this.Const = {
     PackageName: 'com.ekkorr.endlessfrontier.global',
@@ -134,6 +123,14 @@ function EndlessFrontier() {
 }
 
 EndlessFrontier.prototype.init = function() {
+  var size = getScreenSize();
+  Config.screenHeight = size.height;
+  Config.screenWidth = size.width;
+  Config.resizeWidth = Math.floor(Config.screenWidth / 3);
+  Config.resizeHeight = Math.floor(Config.screenHeight / 3);
+  Config.virtualButtonHeight = getVirtualButtonHeight();
+  Config.hasVirtualButtonBar = true;
+
   if (Config.hasVirtualButtonBar) {
     this.ScreenInfo.gameHeight = Config.screenHeight - Config.virtualButtonHeight;
   } else {
@@ -175,7 +172,7 @@ EndlessFrontier.prototype.getRealWHRatioBottom = function(xy) {
 
 EndlessFrontier.prototype.initButtons = function() {
   // Menu
-  var menuY = this.ScreenInfo.gameHeight - this.getRealHeightRatio(this.Const.menuHeight) / 2;
+  var menuY = this.ScreenInfo.gameHeight - this.getRealHeightRatio(this.Const.menuHeight) / 4 * 3;
   var menuW = this.ScreenInfo.gameWidth / 6;
   var menuOffset = menuW / 2;
 
