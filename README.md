@@ -1,109 +1,214 @@
-Robotmon Javascript Apis
-================
+# Robotmon JavaScript APIs
 
-## Before Using Apis
+Only support ES5
 
-### Install App (Only support Android) (No need to root)
+## Contents
 
-Download link [Google Play](https://play.google.com/store/apps/details?id=com.r2studio.robotmon)
+* [JavaScript APIs](#JavaScript)
+* [RBM library APIs](#RBM)
+* [gRPC APIs](#gRPC)
 
-### Install developer tool
+## JavaScript APIs
 
-See [Robotmon Desktop](https://github.com/r2-studio/robotmon-desktop)
-
-### Run background service (Important)
-
-Service is built in app `com.r2studio.robotmon.Main`, that's start it. 
-
-First, connect android phone to PC with USB
-
-#### Using Double-Click Tools
-
-1. Download [Robotmon-service-manager](https://github.com/r2-studio/robotmon-desktop/releases)
-2. Unzip it
-3. Double Click `windows-start.bat` in windows, `mac-start.command` in mac, `linux-start.sh` in linux
-
-#### Using developer tool
-
-1. Click `掃描 Scan`
-2. Click `啟動 Start`
-
-#### Using command line (need adb tools) 
-
-```
-adb shell 'nohup sh -c "LD_LIBRARY_PATH=/system/lib:/data/app/com.r2studio.robotmon-1/lib/arm:/data/app/com.r2studio.robotmon-2/lib/arm CLASSPATH=/data/app/com.r2studio.robotmon-1/base.apk:/data/app/com.r2studio.robotmon-2/base.apk app_process32 /system/bin com.r2studio.robotmon.Main $@" > /dev/null 2> /dev/null &'
+```javascript
+getScreenSize()
 ```
 
-#### Check service is running
+Returns `Object` - `{width: Integer, height: Integer}`
 
-```
-$ adb shell 'ps | grep app_process'
-# or
-$ adb shell 'ps | grep app_process'
-shell     16035 16032 2295692 40508 futex_wait ab35c858 S app_process32
+```javascript
+getScreenshotModify(cropX, cropY, cropWidth, cropHeight, resizeWidth, resizeHeight, quality)
 ```
 
-#### Troubling
+* `cropX` Integer
+* `cropY` Integer
+* `cropWidth`  Integer
+* `cropHeight` Integer
+* `resizeWidth` Integer
+* `resizeHeight` Integer
+* `quality` Integer
 
-* Check LD_LIBRARY_PATH, CLASSPATH and app_process32 is correct/exists
-* Thers is no `nohub` in some devices, you may remove it and try again
-* Using `app_process` instead of `app_process32` in old phones
-* We only test HTC phones currently
+Returns `Integer` - The image pointer
 
-#### If you want to kill background service
-
-```
-# find pid
-$ adb shell ps app_process
-# or
-$ adb shell "ps | grep app_process"
-# kill it
-$ adb shell kill <pid>
+```javascript
+getScreenshot()
 ```
 
-## Javascript APIs
+Returns `Integer` - The image pointer
 
-* (Only support ES5)
+```javascript
+execute(command)
+```
+
+* `command` String
+
+Returns `String` - The result of the execution
+
+```javascript
+tap(x, y, during)
+```
+
+* `x` Integer
+* `y` Integer
+* `during` Integer
+
+```javascript
+swipe(x1, y1, x2, y2, during)
+```
+
+* `x1` Integer
+* `y1` Integer
+* `x2` Integer
+* `y2` Integer
+* `during` Integer
+
+```javascript
+tapDown(x, y, during)
+```
+
+* `x` Integer
+* `y` Integer
+* `during` Integer
+
+```javascript
+tapUp(x, y, during)
+```
+
+* `x` Integer
+* `y` Integer
+* `during` Integer
+
+```javascript
+moveTo(x, y, during)
+```
+
+* `x` Integer
+* `y` Integer
+* `during` Integer
+
+```javascript
+typing(words, during)
+```
+
+* `words` String
+* `during` Integer
+
+```javascript
+keycode(label, during)
+```
+
+* `label` String
+* `during` Integer
+
+### OpenCV
+
+```javascript
+clone(sourceImg)
+```
+
+* `sourceImg` Integer
+
+Returns `Integer` - The image pointer
+
+```javascript
+smooth(sourceImg, smoothType, size)
+```
+
+* `sourceImg` Integer
+* `smoothType` Integer
+* `size` Integer
+
+|smoothType|description|
+|---|---|
+|0|CV_BLUR_NO_SCALE|
+|1|CV_BLUR|
+|2|CV_GAUSSIAN|
+|3|CV_MEDIAN|
+|4|CV_BILATERAL|
+
+```javascript
+convertColor(sourceImg, code)
+```
+
+* `sourceImg` Integer
+* `code` Integer
+
+|code|description|
+|---|---|
+|40|CV_BGR2HSV|
+|52|CV_BGR2HLS|
+
+See more: imgproc/types_c.h
+
+```javascript
+absDiff(sourceImg, targetImg)
+```
+
+* `sourceImg` Integer
+* `targetImg` Integer
+
+Returns `Integer` - The image pointer of the difference
+
+```javascript
+threshold(sourceImg, thr, maxThr, code)
+```
+
+* `sourceImg` Integer
+* `thr` Float
+* `maxThr` Float
+* `code` Integer
+
+|code|description|
+|---|---|
+|0|CV_THRES_BINARY|
+
+See more: imgproc/types_c.h
+
+```javascript
+eroid(sourceImg, w, h, x, y)
+```
+
+* `sourceImg` Integer
+* `w` Integer
+* `h` Integer
+* `x` Integer
+* `y` Integer
+
+```javascript
+canny(sourceImg, t1, t2, apertureSize)
+```
+
+* `sourceImg` Integer
+* `t1` Float
+* `t2` Float
+* `apertureSize` Integer
+
+Returns `Integer` - The canny image pointer
+
+```javascript
+findContours(cannyImgPtr, minArea, maxArea)
+```
+
+* `cannyImgPtr` Integer
+* `minArea` Float
+* `maxArea` Float
+
+Returns `Object` - `{"0": {x: Integer, y: Integer}`
+
+```javascript
+drawCircle(sourceImg, x, y, radius, r, g, b, a)
+```
+
+* `sourceImg` Integer
+* `x` Integer
+* `y` Integer
+* `radius` Integer
+* `r` Integer
+* `g` Integer
+* `b` Integer
+* `a` Integer
 
 ```
-getScreenSize() {int width, int height}
-getScreenshotModify(int cropX, int cropY, int cropWidth, int cropHeight, int resizeWidth, int resizeHeight, int quality) int imgPtr
-getScreenshot() int imgPtr
-execute(string command) string result
-tap(int x, int y, int during)
-swipe(int x1, int y1, int x2, int y2, int during)
-tapDown(int x, int y, int during)
-tapUp(int x, int y, int during)
-moveTo(int x, int y, int during)
-typing(string words, int during)
-keycode(string label, int during)
-
-# images (openCV functions) 
-clone(int sourceImg) int imgPtr
-smooth(int sourceImg, int smoothType, size int)
-	smoothType:
-		0 = CV_BLUR_NO_SCALE
-		1 = CV_BLUR
-		2 = CV_GAUSSIAN
-		3 = CV_MEDIAN
-		4 = CV_BILATERAL
-convertColor(int sourceImg, int code)
-	code:
-		40 = CV_BGR2HSV
-		52 = CV_BGR2HLS
-	see: imgproc/types_c.h 
-
-absDiff(int sourceImg, int targetImg) int diffImgPtr
-threshold(int sourceImg, float thr, maxThr, int code)
-	code:
-		0 = CV_THRES_BINARY
-	see: imgproc/types_c.h
-
-eroid(int sourceImg, int w, int h, int x, int y)
-canny(int sourceImg, float t1, float t2, int apertureSize) int cannyImgPtr
-findContours(int cannyImgPtr, float minArea, float maxArea) {"0": {int x, int y}}
-
-drawCircle(int imgPtr, int x, int y, int radius, int r, int g, int b, int a)
 findImages(int srcPtr, int targetImg, int scoreLimit, int resultCountLimit, withoutOverlap) string json
   json format (key is string!):
     {"0": {"x": 0, "y": 0, "score": 0.99}, "1": {"x": 10, "y": 10, "score": 0.43}}
@@ -245,9 +350,7 @@ rbm.typing(words);
 rbm.sleep(); // not same as sleep(milliseconds);
 ```
 
-## Connect to background service your self
-
-### Grpc APIs (Service Client)
+## gRPC APIs (Service Client)
 
 ```
 message Empty {}
