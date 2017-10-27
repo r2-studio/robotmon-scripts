@@ -165,12 +165,12 @@ threshold(sourceImg, thr, maxThr, code)
 See more: imgproc/types_c.h
 
 ```javascript
-eroid(sourceImg, w, h, x, y)
+eroid(sourceImg, width, height, x, y)
 ```
 
 * `sourceImg` Integer
-* `w` Integer
-* `h` Integer
+* `width` Integer
+* `height` Integer
 * `x` Integer
 * `y` Integer
 
@@ -208,45 +208,192 @@ drawCircle(sourceImg, x, y, radius, r, g, b, a)
 * `b` Integer
 * `a` Integer
 
+```javascript
+findImages(sourceImg, targetImg, scoreLimit, resultCountLimit, withoutOverlap)
 ```
-findImages(int srcPtr, int targetImg, int scoreLimit, int resultCountLimit, withoutOverlap) string json
-  json format (key is string!):
-    {"0": {"x": 0, "y": 0, "score": 0.99}, "1": {"x": 10, "y": 10, "score": 0.43}}
 
-getIdentityScore(int sourceImg, int targetImg) int score
-findImage(int sourceImg, int targetImg) {int x, int y, int score}
-cropImage(int sourceImg, int x, int y, int width, int height) int imgPtr
-resizeImage(int sourceImg, int width, int height) int imgPtr
-releaseImage(int imgPtr)
-getImageColor(int sourceImg, int x, int y) {int r, int g, int b, int a}
-getImageSize(int imgPtr) {int width, int height}
-saveImage(int imgPtr, string path)
-openImage(string path) int imgPtr
-sleep(int millisecond)
+* `sourceImg` Integer
+* `targetImg` Integer
+* `scoreLimit` Integer
+* `resultCountLimit` Integer
+* `withoutOverlap` Boolean
 
-getStoragePath() string path
-getImageFromURL(string url) int imgPtr
-getImageFromBase64(string base64) int imgPtr
-getBase64FromImage(int imgPtr) string base64
-log(string tag, string msg) string logMsg
+Returns `String` - `{"0": {"x": Integer, "y": Integer, "score": Float}, "1": {"x": Integer, "y": Integer, "score": Float}}`, Key is String!
 
-readFile(string path) string text
-writeFile(string path, string text)
-runScript(string script)
-
-httpClient(string method, string url, string body, object headers) string result
-  httpClient('GET', 'http://httpbin.org/get', '', {});
-  httpClient('POST', 'http://httpbin.org/post', 'body data', {});
-  httpClient('POST', 'http://httpbin.org/post', 'foo=bar&bar=foo', {'Content-Type': 'application/x-www-form-urlencoded'});
-
-importJS(string library)
-  // import shared library in libs
-  importJS('RBM-0.0.2')
-  // import local library
-  importJS('js/customerJS.js')
-
-getVirtualButtonHeight() int vbh
+```javascript
+getIdentityScore(sourceImg, targetImg)
 ```
+
+* `sourceImg` Integer
+* `targetImg` Integer
+
+Returns `Float` - The identity score 
+
+```javascript
+findImage(sourceImg, targetImg)
+```
+
+* `sourceImg` Integer
+* `targetImg` Integer
+
+Returns `Object` - `{x: Integer, y: Integer, score: Float}`
+
+```javascript
+cropImage(sourceImg, x, y, width, height)
+```
+
+* `x` Integer
+* `y` Integer
+* `width` Integer
+* `height` Integer
+
+Returns `Integer` - The image pointer
+
+```javascript
+resizeImage(sourceImg, width, height)
+```
+
+* `width` Integer
+* `height` Integer
+
+Returns `Integer` - The image pointer
+
+```javascript
+releaseImage(imgPtr)
+```
+
+* `imgPtr` Integer
+
+```javascript
+getImageColor(sourceImg, x, y)
+```
+
+* `sourceImg` Integer
+* `x` Integer
+* `y` Integer
+
+Returns `Object` - `{r: Integer, g: Integer, b: Integer, a: Integer}`
+
+```javascript
+getImageSize(imgPtr)
+```
+
+* `imgPtr` Integer
+
+Returns `Object` - `{width: Integer, height: Integer}`
+
+```javascript
+saveImage(imgPtr, path)
+```
+
+* `imgPtr` Integer
+* `path` String
+
+```javascript
+openImage(path)
+```
+
+* `path` String
+
+Returns `Integer` - The image pointer
+
+```javascript
+sleep(milliseconds)
+```
+
+* `milliseconds` Integer
+
+```javascript
+getStoragePath()
+```
+
+Returns `String` - The storage path
+
+```javascript
+getImageFromURL(url)
+```
+
+* `url` String
+
+Returns `Integer` - The image pointer
+
+```javascript
+getImageFromBase64(base64)
+```
+
+* `base64` String
+
+Returns `Integer` - The image pointer
+
+```javascript
+getBase64FromImage(imgPtr)
+```
+
+* `imgPtr` Integer
+
+Returns `String` - base64
+
+```javascript
+log(tag, message)
+```
+
+* `tag` String
+* `message` String
+
+Returns `String` - The log message
+
+```javascript
+readFile(path)
+```
+
+* `path` String
+
+Returns `String` - The text of the file
+
+```javascript
+readFile(path, text)
+```
+
+* `path` String
+* `text` String
+
+```javascript
+runScript(script)
+```
+
+* `script` String
+
+```javascript
+httpClient(method, url, body, headers)
+
+examples:
+httpClient('GET', 'http://httpbin.org/get', '', {});
+httpClient('POST', 'http://httpbin.org/post', 'body data', {});
+httpClient('POST', 'http://httpbin.org/post', 'foo=bar&bar=foo', {'Content-Type': 'application/x-www-form-urlencoded'});
+```
+
+* `method` String
+* `url` String
+* `body` String
+* `headers` String
+
+Returns `String` - The result
+
+```javascript
+importJS(library)
+
+examples:
+importJS('RBM-0.0.2') // import shared library in libs
+importJS('js/customerJS.js') // import local library
+```
+
+* `library` String
+
+```javascript
+getVirtualButtonHeight()
+```
+
+Returns `Integer` - The height of the virtual button
 
 ## RBM library
 
@@ -269,7 +416,10 @@ var rbm = new RBM(rbm_config);
 // Important! calculate screen size, call it after start pressed!
 rbm.init(); 
 
-// Util for console.log, if argument is object, it will convert object to JSON string
+// Util for console.log, if argument is ob
+```
+getVirtualButtonHeight() int vbh
+```ject, it will convert object to JSON string
 rbm.log(any type);
 
 // get current app in foreground 
