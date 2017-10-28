@@ -4,9 +4,9 @@ Only support ES5
 
 ## Contents
 
-* [JavaScript APIs](#JavaScript)
-* [RBM library APIs](#RBM)
-* [gRPC APIs](#gRPC)
+* [JavaScript APIs](#javascrip-apis)
+* [RBM library APIs](#rbm-library-apis)
+* [gRPC APIs](#grpc-apis)
 
 ## JavaScript APIs
 
@@ -17,7 +17,7 @@ getScreenSize()
 Returns `Object` - `{width: Integer, height: Integer}`
 
 ```javascript
-getScreenshotModify(cropX, cropY, cropWidth, cropHeight, resizeWidth, resizeHeight, quality)
+getScreenshotModify(cropX, cropY, cropWidth, cropHeight, resizeWidth, resizeHeight, qualitys)
 ```
 
 * `cropX` Integer
@@ -53,16 +53,6 @@ tap(x, y, during)
 * `during` Integer
 
 ```javascript
-swipe(x1, y1, x2, y2, during)
-```
-
-* `x1` Integer
-* `y1` Integer
-* `x2` Integer
-* `y2` Integer
-* `during` Integer
-
-```javascript
 tapDown(x, y, during)
 ```
 
@@ -87,10 +77,13 @@ moveTo(x, y, during)
 * `during` Integer
 
 ```javascript
-typing(words, during)
+swipe(x1, y1, x2, y2, during)
 ```
 
-* `words` String
+* `x1` Integer
+* `y1` Integer
+* `x2` Integer
+* `y2` Integer
 * `during` Integer
 
 ```javascript
@@ -98,6 +91,13 @@ keycode(label, during)
 ```
 
 * `label` String
+* `during` Integer
+
+```javascript
+typing(words, during)
+```
+
+* `words` String
 * `during` Integer
 
 ### OpenCV
@@ -366,7 +366,7 @@ runScript(script)
 ```javascript
 httpClient(method, url, body, headers)
 
-examples:
+// Examples:
 httpClient('GET', 'http://httpbin.org/get', '', {});
 httpClient('POST', 'http://httpbin.org/post', 'body data', {});
 httpClient('POST', 'http://httpbin.org/post', 'foo=bar&bar=foo', {'Content-Type': 'application/x-www-form-urlencoded'});
@@ -375,16 +375,16 @@ httpClient('POST', 'http://httpbin.org/post', 'foo=bar&bar=foo', {'Content-Type'
 * `method` String
 * `url` String
 * `body` String
-* `headers` String
+* `headers` Object
 
 Returns `String` - The result
 
 ```javascript
 importJS(library)
 
-examples:
+// Examples:
 importJS('RBM-0.0.2') // import shared library in libs
-importJS('js/customerJS.js') // import local library
+importJS('js/customerJS') // import local library
 ```
 
 * `library` String
@@ -395,114 +395,258 @@ getVirtualButtonHeight()
 
 Returns `Integer` - The height of the virtual button
 
-## RBM library
+## RBM library APIs
 
-```
-var rbm_config = {
+The RBM library is an API wrapper of the Robotmon JavaScript APIs.
+
+### RBM Config
+
+|property|description|
+|---|---|
+|appName|The name of the script.|
+|oriScreenWidth|The width of developer's phone.|
+|oriScreenHeight|The height of developer's phone.|
+|oriVirtualButtonHeight|The virtual button height of developer's phone(`getVirtualButtonHeight()`). If no virtual button in app, just set to `0`.|
+|oriResizeFactor|The resize ratio of the screenshot in developer's environment. For `screencrop()`. Range from `0` to `1`.|
+|eventDelay|The delay milliseconds of the event.|
+|imageThreshold|The threshold of image recognition. Range from `0` to `1`.|
+|imageQuality|The compression level of the image. Range from `0` to `100`.|
+|resizeFactor|The resize ratio of the screenshot in user's environment. Same as `oriResizeFactor` is better. Range from `0` to `1`.|
+
+### Using
+
+```javascript
+// Import RBM library
+importJS('RBM-0.0.2');
+
+// Initial RBM config
+var config = {
   appName: 'com.your.script',
-  oriScreenWidth: 1080, // developer's phone width
-  oriScreenHeight: 1920, // developer's phone height
-  oriVirtualButtonHeight: 0, // developer's phone with virtual button height (getVirtualButtonHeight()). If no virtual button in app, set to 0
-  oriResizeFactor: 0.6, // resize screenshot ratio in developer's environment (for screencrop)
-  eventDelay: 200, // milliseconds
-  imageThreshold: 0.85, // recognize images threshold
-  imageQuality: 80, // 0 ~ 100, compress level
-  resizeFactor: 0.6, // resize screenshot ratio in user's environment (same as oriResizeFactor is better)
+  oriScreenWidth: 1080,
+  oriScreenHeight: 1920,
+  oriVirtualButtonHeight: 0,
+  oriResizeFactor: 0.6,
+  eventDelay: 200,
+  imageThreshold: 0.85,
+  imageQuality: 80,
+  resizeFactor: 0.6,
 };
 
-importJS('RBM-0.0.2.js');
-var rbm = new RBM(rbm_config);
+// Create RBM instance
+var rbm = new RBM(config);
 
-// Important! calculate screen size, call it after start pressed!
-rbm.init(); 
+// Important! Calculate the screen size, call it after start pressed!
+rbm.init();
 
-// Util for console.log, if argument is ob
+// Then using the following APIs of the RBM library
 ```
-getVirtualButtonHeight() int vbh
-```ject, it will convert object to JSON string
-rbm.log(any type);
 
-// get current app in foreground 
-rbm.currentApp(); // => {packageName, activityName}
+### RBM library
 
-// launch an app
-rbm.startApp(packageName, activityName);
+```javascript
+rbm.log(args)
+```
 
-// close an app
-rbm.stop(packageName);
+* `args` any type - if argument is object, it will convert object to JSON string
 
-// Utils. Calculate interpolation from developer's screen size to user's screen size
-rbm.click({x, y});
-rbm.tapDown({x, y});
-rbm.moveTo({x, y});
-rbm.tapUp({x, y});
-rbm.swipe({fromX, fromY}, {toX, toY}, step); // step: interpolation points between 'from' and 'to'
+For general output of logging information.
 
-// all about images used in this library will load/save within this folder
-rbm.getImagePath(); // => Robotmon/scripts/com.your.app/images
+```javascript
+rbm.currentApp()
+```
 
-// save screenshot (in getImagePath() path)
-rbm.screenshot();
+Returns `Object` - The current app in foreground. `{packageName: String, activityName: String}`
 
-// crop screenshot and save it with filename. This function will resize images with oriResizeFactor
-// and compress with imageQuality
-rbm.screencrop(filename, fromX, fromY, toX, toY);
-rbm.screencrop('startButton.png', 100, 200, 200, 300);
+```javascript
+rbm.startApp(packageName, activityName)
+```
 
-// ====> Functions below will calculate resize factor between developer's and user's
+* `packageName` String
+* `activityName` String
 
-// find image (with filename) in screen
-rbm.findImage(filename, threshold); // => {x, y, score}
-rbm.findImage('startButton.png', 0.9);
+Launch an app by `packageName` and `activityName`.
 
-// check if image is exist in screen
-rbm.imageExists(filename, threshold); // => true|false
+```javascript
+rbm.stopApp(packageName)
+```
 
-// find image in screen and click it. No found, no click
-rbm.imageClick(filename, threshold);
+* `packageName` String
 
-// find image in screen and click it until timeout (milliseconds)
-rbm.imageWaitClick(filename, timeout, threshold);
+Close an app by `packageName`.
 
-// block until image found or timout
-rbm.imageWaitShow(filename, timeout, threshold);
+```javascript
+rbm.click(position)
+```
 
-// block until image gone or timout
-rbm.imageWaitGone(filename, timeout, threshold);
+* `position` Object - `{x: Integer, y: Integer}`
 
-// <====
+```javascript
+rbm.tapDown(position)
+```
 
-// keep/release current screenshot in memory. To avoid to many times screencap.
-rbm.keepScreenshot();
-rbm.releaseScreenshot();
+* `position` Object - `{x: Integer, y: Integer}`
 
-/* Example
-// screencap three times
+```javascript
+rbm.tapUp(position)
+```
+
+* `position` Object - `{x: Integer, y: Integer}`
+
+```javascript
+rbm.moveTo(position)
+```
+
+* `position` Object - `{x: Integer, y: Integer}`
+
+```javascript
+rbm.swipe(from, to, steps)
+```
+
+* `from` Object - `{x: Integer, y: Integer}`
+* `to` Object - `{x: Integer, y: Integer}`
+* `steps` Integer - Interpolation points between `from` and `to`
+
+```javascript
+rbm.keycode(label)
+```
+
+* `label` String
+
+```javascript
+rbm.typing(words)
+```
+
+* `words` String
+
+```javascript
+rbm.sleep()
+```
+
+Sleep with `eventDelay`.
+
+```javascript
+rbm.getImagePath()
+// /sdcard/Robotmon/scripts/com.your.app/images
+```
+
+Returns `String` - The path of the image folder. All about images used in this library will load and save within this folder.
+
+```javascript
+rbm.screenshot(filename)
+```
+
+* `filename` String
+
+Save the screenshot in `rbm.getImagePath()`.
+
+```javascript
+rbm.screencrop(filename, fromX, fromY, toX, toY)
+
+// Examples:
+rbm.screencrop('startButton.png', 100, 200, 200, 300)
+```
+
+* `filename` String
+* `fromX` Integer
+* `fromY` Integer
+* `toX` Integer
+* `toY` Integer
+
+Crop the screenshot and save it with `filename`. This function will resize the image with `oriResizeFactor` and compress with `imageQuality`.
+
+```javascript
+rbm.findImage(filename, threshold)
+
+// Examples:
+rbm.findImage('startButton.png', 0.9)
+```
+
+* `filename` String
+* `threshold` Float
+
+Returns `Object` - Find the image with `filename` in screen. `{x: Integer, y: Integer, score: Float}`
+
+```javascript
+rbm.imageExists(filename, threshold)
+```
+
+* `filename` String
+* `threshold` Float
+
+Returns `Boolean` - Whether the image is exists in screen.
+
+```javascript
+rbm.imageClick(filename, threshold)
+```
+
+* `filename` String
+* `threshold` Float
+
+Click the image if the image is exists in screen.
+
+```javascript
+rbm.imageWaitClick(filename, timeout, threshold)
+```
+
+* `filename` String
+* `timeout` Integer
+* `threshold` Float
+
+Click the image if the image is exists in screen until timeout (milliseconds).
+
+```javascript
+rbm.imageWaitShow(filename, timeout, threshold)
+```
+
+* `filename` String
+* `timeout` Integer
+* `threshold` Float
+
+Block until the image is found or timeout
+
+```javascript
+rbm.imageWaitGone(filename, timeout, threshold)
+```
+
+* `filename` String
+* `timeout` Integer
+* `threshold` Float
+
+Block until the image is gone or timeout
+
+```javascript
+rbm.keepScreenshot()
+```
+
+Keep the screenshot in memory. To avoid to many times screencap.
+
+```javascript
+rbm.releaseScreenshot()
+```
+
+Release the screenshot in memory.
+
+### Using keepScreenshot
+
+```javascript
+// Screencap three times
 rbm.imageClick('apple.png', 0.9); // screencap, and release
 rbm.imageClick('banana.png', 0.9); // screencap, and release
 rbm.imageClick('cat.png', 0.9); // screencap, and release
 
-// screencap only one time (used when screen not change)
+// Screencap only one time (used when the screen has not changed)
 rbm.keepScreenshot(); // screencap
 rbm.imageClick('apple.png', 0.9); // no screencap, no release
 rbm.imageClick('banana.png', 0.9); // no screencap, no release
 rbm.imageClick('cat.png', 0.9); // no screencap, no release
-rbm.releaseScreenshot(); // release screencap
-*/
-
-// same as keycode(label);
-rbm.keycode(label);
-
-// same as typing(words);
-rbm.typing(words);
-
-// sleep eventDelay
-rbm.sleep(); // not same as sleep(milliseconds);
+rbm.releaseScreenshot(); // release
 ```
 
-## gRPC APIs (Service Client)
+## gRPC APIs
 
-```
+### Message
+
+```protobuf 
 message Empty {}
 
 message Response {
@@ -537,7 +681,11 @@ message ResponseScreenSize {
   int32 width = 1;
   int32 height = 2;
 }
+```
 
+### Service
+
+```protobuf 
 service GrpcService {
   rpc RunScript(RequestRunScript) returns (Response) {}
   rpc Logs(Empty) returns (stream Response) {}
