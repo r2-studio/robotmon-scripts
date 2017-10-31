@@ -1,5 +1,6 @@
 // Import RBM library
 importJS('RBM-0.0.2');
+importJS("TaskController-0.0.1");
 
 function isSameColor(c1, c2, diff) {
   if (diff == undefined) {
@@ -22,7 +23,7 @@ function isSameColor(c1, c2, diff) {
 
 // Initial RBM config
 var config = {
-  appName: 'com.r2studio.PlayYoutube',
+  appName: 'com.r2studio.LoopYT',
   oriScreenWidth: 1440,
   oriScreenHeight: 2560,
   oriVirtualButtonHeight: 0,
@@ -35,7 +36,7 @@ var config = {
 
 var Buttons = {
   chromeMenu: {x: 1350, y: 215},
-  chromeWindow: {x: 1175, y: 215},
+  chromeWindow: {x: 1170, y: 215},
   chromeURL: {x: 720, y: 215},
   chromeNewIncognito: {x: 850, y: 415},
   chromeCloseIncognito: {x: 850, y: 597},
@@ -43,13 +44,15 @@ var Buttons = {
   youtubeSearchIcon: {x: 1230, y: 405},
   youtubeSearchGo: {x: 1350, y: 405},
   youtubeSearch: {x: 800, y: 405},
-  youtubeFirstVideo: {x: 370, y: 1000},
-  youtubeFirstVideoWithOffical: {x: 370, y: 1690},
+  youtubeFirstVideo: {x: 370, y: 1350},
+  awakeTap:{x: 200, y: 1350},
   youtubeInVideo: [
     {x: 280, y: 420},
     {x: 1120, y: 420},
     {x: 280, y: 900},
     {x: 1120, y: 900},
+    {x: 700, y: 660},
+    {x: 900, y: 800},
   ],
 };
 
@@ -57,16 +60,17 @@ var settings = {
   youtubeURL: "m.youtube.com",
   searchWords: "twice",
   waitVideoTime: 10 * 1000,
-  waitVideoLoad: 3 * 1000,
-  isOfficial: true,
+  waitVideoLoad: 4 * 1000,
   isAutoDetectVideo: true,
   isAutoToggleAirplane: true,
   airplaneOnX: 100,
   airplaneOnY: 100, 
   airplaneOffX: 100,
-  airplaneOffY: 100, 
+  airplaneOffY: 100,
+  watchTimes: 0,
 };
 
+var gTaskController;
 var rbm = new RBM(config);
 
 function startChrome() {
@@ -104,11 +108,11 @@ function isVideoRunning() {
     colors.push(getImageColor(cImg, btn.x, btn.y));
   }
   releaseImage(cImg);
-  sleep(200);
+  sleep(1000);
   cImg = getScreenshot();
   for (var i = 0; i < Buttons.youtubeInVideo.length; i++) {
     var btn = Buttons.youtubeInVideo[i];
-    if (!isSameColor(colors[i], getImageColor(cImg, btn.x, btn.y))) {
+    if (!isSameColor(colors[i], getImageColor(cImg, btn.x, btn.y), 10)) {
       releaseImage(cImg);
       return true;
     }
@@ -118,7 +122,8 @@ function isVideoRunning() {
 }
 
 function taskWatchVideo() {
-  var sleepTime = 1000;
+  var sleepTime = 1500;
+  rbm.click(Buttons.awakeTap); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Open Chrome. 打開 Chrome");
   startChrome(); safeSleep(settings.waitVideoLoad);
   rbm.log("Click Window. 點擊視窗");
@@ -135,35 +140,38 @@ function taskWatchVideo() {
   rbm.log("Search: " + settings.searchWords +  ". 搜尋:" + settings.searchWords);
   rbm.click(Buttons.youtubeSearchIcon);safeSleep(sleepTime); if (!rbm.running) {return;}
   typing(settings.searchWords, 2000); safeSleep(sleepTime); if (!rbm.running) {return;}
-  keycode('ENTER');
   rbm.click(Buttons.youtubeSearchGo);safeSleep(sleepTime); if (!rbm.running) {return;}
   safeSleep(settings.waitVideoLoad);
   rbm.log("Click first video. 點擊第一個影片");
-  if (settings.isOfficial) {
-    rbm.click(Buttons.youtubeFirstVideoWithOffical);safeSleep(sleepTime); if (!rbm.running) {return;}
-  } else {
-    rbm.click(Buttons.youtubeFirstVideo);safeSleep(sleepTime); if (!rbm.running) {return;}
-  }
+  rbm.click(Buttons.youtubeFirstVideo);safeSleep(sleepTime); if (!rbm.running) {return;}
   safeSleep(settings.waitVideoLoad); if (!rbm.running) {return;}
   var videoStart = Date.now();
   rbm.log("Wait for video end. 等待影片結束...");
   while(rbm.running) {
     if (settings.isAutoDetectVideo && !isVideoRunning()) {
-      break;
+      sleep(2000);
+      if (!isVideoRunning()) {
+        rbm.log("影片結束，跳出");
+        break;
+      }
     }
     safeSleep(1000);
     if (Date.now() - videoStart > settings.waitVideoTime) {
+      rbm.log("時間到結束影片");
       break;
     }
   }
+  safeSleep(1500); if (!rbm.running) {return;}
   rbm.log("Click Window. 點擊視窗");
   rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Click Menu. 點擊選單");
   rbm.click(Buttons.chromeMenu); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Close Incognito. 關閉無痕");
   rbm.click(Buttons.chromeCloseIncognito); safeSleep(sleepTime); if (!rbm.running) {return;}
+  rbm.click(Buttons.awakeTap); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Close Chrome. 關閉Chrome");
   stopChrome();
+  safeSleep(settings.waitVideoLoad);
 }
 
 function taskChangeIp() {
@@ -175,17 +183,29 @@ function taskChangeIp() {
   safeSleep(7000);
 }
 
-function start() {
+function start(words, videoTime, watchTimes) {
   stop();
+
+  settings.searchWords = words;
+  settings.waitVideoTime = videoTime;
+
   rbm.init();
   rbm.running = true;
-  taskChangeIp();
+  gTaskController = new TaskController();
+  gTaskController.newTask('taskWatchVideo', taskWatchVideo, 2000, watchTimes);
+
+  sleep(1000);
+  gTaskController.start();
 }
 
 function stop() {
   rbm.running = false;
+  if (gTaskController !== undefined) {
+    gTaskController.removeAllTasks();
+    gTaskController.stop();
+  }
 }
 
-start();
+// start("twice_likey_jypentertainment", 6 * 60000, 1);
 // startChrome();
 
