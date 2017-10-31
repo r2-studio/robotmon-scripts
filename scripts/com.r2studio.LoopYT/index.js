@@ -45,7 +45,6 @@ var Buttons = {
   youtubeSearchGo: {x: 1350, y: 405},
   youtubeSearch: {x: 800, y: 405},
   youtubeFirstVideo: {x: 370, y: 1350},
-  awakeTap:{x: 200, y: 1350},
   youtubeInVideo: [
     {x: 280, y: 420},
     {x: 1120, y: 420},
@@ -123,7 +122,7 @@ function isVideoRunning() {
 
 function taskWatchVideo() {
   var sleepTime = 1500;
-  rbm.click(Buttons.awakeTap); safeSleep(sleepTime); if (!rbm.running) {return;}
+  rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Open Chrome. 打開 Chrome");
   startChrome(); safeSleep(settings.waitVideoLoad);
   rbm.log("Click Window. 點擊視窗");
@@ -168,7 +167,7 @@ function taskWatchVideo() {
   rbm.click(Buttons.chromeMenu); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Close Incognito. 關閉無痕");
   rbm.click(Buttons.chromeCloseIncognito); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.click(Buttons.awakeTap); safeSleep(sleepTime); if (!rbm.running) {return;}
+  rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Close Chrome. 關閉Chrome");
   stopChrome();
   safeSleep(settings.waitVideoLoad);
@@ -206,6 +205,6 @@ function stop() {
   }
 }
 
-// start("twice_likey_jypentertainment", 6 * 60000, 1);
+// start("twice_likey_jypentertainment", 6 * 60000, 3);
 // startChrome();
 
