@@ -18,6 +18,7 @@
           .list-group-item {
               padding-bottom: 6px !important;
               padding-top: 6px !important;
+              font-size: 10px;
           }
 
           /* The switch - the box around the slider */
@@ -172,31 +173,30 @@
           function onLog(message) {
               console.log(message);
           }
-          
       </script>
   </head>
   <body>
       <nav class="navbar navbar-custom" role="navigation">
-          <a class="navbar-brand">LoopYT v1</a>
+          <a class="navbar-brand">LoopYT v2</a>
       </nav>
       <div class="container">
           <ul class="list-group">
             <li class="list-group-item">
                 搜尋字串
                 <input id="searchWords" type="text" style="display: block; width:100%;" value="twice_likey_jypentertainment">
-                </li>
-                <li class="list-group-item">
-                等待影片+廣告時間 (分鐘)
+            </li>
+            <li class="list-group-item">
+                影片+廣告時間(分鐘)
                 <div class="pull-right" style="margin-top:-4px">
-                    <input id="videoTime" style="width: 50px; text-align: center;" min="0" type="number" value="5" readonly>
+                    <input id="videoTime" style="width: 45px; text-align: center;" min="0" type="number" value="5" readonly>
                     <button id="videoTimeMinus" type="button" class="btn btn-danger">-1</button>
                     <button id="videoTimePlus" type="button" class="btn btn-plus">+1</button>
                 </div>
-                </li>
-                <li class="list-group-item">
-                播放次數 (0 無限次數)
+            </li>
+            <li class="list-group-item">
+                播放次數(0 無限)
                 <div class="pull-right" style="margin-top:-4px">
-                    <input id="playTimes" style="width: 50px; text-align: center;" min="0" type="number" value="100" readonly>
+                    <input id="playTimes" style="width: 45px; text-align: center;" min="0" type="number" value="100" readonly>
                     <button id="playTimesMinus" type="button" class="btn btn-danger">-3</button>
                     <button id="playTimesPlus" type="button" class="btn btn-plus">+3</button>
                 </div>
