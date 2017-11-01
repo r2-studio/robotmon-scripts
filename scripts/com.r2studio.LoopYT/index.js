@@ -169,7 +169,8 @@ function taskWatchVideo() {
   rbm.click(Buttons.chromeCloseIncognito); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Close Chrome. 關閉Chrome");
-  stopChrome();
+  // stopChrome();
+  keycode('HOME');
   safeSleep(settings.waitVideoLoad);
 }
 
