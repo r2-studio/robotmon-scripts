@@ -44,7 +44,12 @@ var Buttons = {
   youtubeSearchIcon: {x: 1230, y: 405},
   youtubeSearchGo: {x: 1350, y: 405},
   youtubeSearch: {x: 800, y: 405},
-  youtubeFirstVideo: {x: 370, y: 1350},
+  youtubeVideoPositions: [
+    {x: 370, y: 1060},
+    {x: 370, y: 1555},
+    {x: 370, y: 2015},
+    {x: 370, y: 2420},
+  ],
   youtubeInVideo: [
     {x: 280, y: 420},
     {x: 1120, y: 420},
@@ -67,6 +72,7 @@ var settings = {
   airplaneOffX: 100,
   airplaneOffY: 100,
   watchTimes: 0,
+  videoPosition: 0,
 };
 
 var gTaskController;
@@ -142,7 +148,7 @@ function taskWatchVideo() {
   rbm.click(Buttons.youtubeSearchGo);safeSleep(sleepTime); if (!rbm.running) {return;}
   safeSleep(settings.waitVideoLoad);
   rbm.log("Click first video. 點擊第一個影片");
-  rbm.click(Buttons.youtubeFirstVideo);safeSleep(sleepTime); if (!rbm.running) {return;}
+  rbm.click(Buttons.youtubeVideoPositions[settings.videoPosition]);safeSleep(sleepTime); if (!rbm.running) {return;}
   safeSleep(settings.waitVideoLoad); if (!rbm.running) {return;}
   var videoStart = Date.now();
   rbm.log("Wait for video end. 等待影片結束...");
@@ -183,11 +189,12 @@ function taskChangeIp() {
   safeSleep(7000);
 }
 
-function start(words, videoTime, watchTimes) {
+function start(words, videoTime, watchTimes, videoPosition) {
   stop();
 
   settings.searchWords = words;
   settings.waitVideoTime = videoTime;
+  settings.videoPosition = (+videoPosition) - 1;
 
   rbm.init();
   rbm.running = true;
@@ -206,6 +213,6 @@ function stop() {
   }
 }
 
-// start("twice_likey_jypentertainment", 6 * 60000, 3);
+// start("twice_likey_jypentertainment", 6 * 60000, 3, 2);
 // startChrome();
 
