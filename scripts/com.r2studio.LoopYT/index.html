@@ -151,6 +151,18 @@
                   }
                   $("#playTimes").val(parseInt($("#playTimes").val()) - 3);
               });
+              $("#videoPositionPlus").click(function() {
+                  if ($("#videoPosition").val() >= 4) {
+                      return;
+                  }
+                  $("#videoPosition").val(parseInt($("#videoPosition").val()) + 1);
+              });
+              $("#videoPositionMinus").click(function() {
+                  if ($("#videoPosition").val() <= 1) {
+                      return;
+                  }
+                  $("#videoPosition").val(parseInt($("#videoPosition").val()) - 1);
+              });
           });
 
           function getCheckStatus(id) {
@@ -162,8 +174,9 @@
                   var words = $("#searchWords").val();
                   var videoTime = parseInt($('#videoTime').val(), 10) * 60 * 1000;
                   var playTimes = $('#playTimes').val();
+                  var videoPosition = $('#videoPosition').val();
                   console.log('start("' + words + '", ' + videoTime + ', ' + playTimes + ');');
-                  JavaScriptInterface.runScript('start("' + words + '", ' + videoTime + ', ' + playTimes + ');');
+                  JavaScriptInterface.runScript('start("' + words + '", ' + videoTime + ', ' + playTimes + ', ' + videoPosition + ');');
               } else if (eventType == 'OnPauseClick') {
                   JavaScriptInterface.runScript('stop();');
               } else if (eventType == 'OnReloadClick') {
@@ -199,6 +212,14 @@
                     <input id="playTimes" style="width: 45px; text-align: center;" min="0" type="number" value="100" readonly>
                     <button id="playTimesMinus" type="button" class="btn btn-danger">-3</button>
                     <button id="playTimesPlus" type="button" class="btn btn-plus">+3</button>
+                </div>
+            </li>
+            <li class="list-group-item">
+                點第幾個影片
+                <div class="pull-right" style="margin-top:-4px">
+                    <input id="videoPosition" style="width: 45px; text-align: center;" min="0" type="number" value="1" readonly>
+                    <button id="videoPositionMinus" type="button" class="btn btn-danger">-1</button>
+                    <button id="videoPositionPlus" type="button" class="btn btn-plus">+1</button>
                 </div>
             </li>
             <li class="list-group-item">
