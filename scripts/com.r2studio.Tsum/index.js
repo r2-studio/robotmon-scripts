@@ -74,6 +74,8 @@ var Button = {
   outReceiveAll: {x: 800, y: 1350 - adjY},
   outReceiveOk: {x: 750, y: 1000 - adjY},
   outReceiveClose: {x: 530, y: 1300 - adjY},
+  outReceiveOne: {x: 905, y: 525 - adjY},
+  outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
   outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
   outSendHeart1: {x: 910, y: 828 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
   outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
@@ -417,6 +419,7 @@ function Tsum() {
   this.gameTsums = [];
   this.isJP = false;
   this.isPause = true;
+  this.receiveOneItem = false;
 
   this.init();
 }
@@ -581,13 +584,13 @@ Tsum.prototype.checkPage = function(wait) {
   var start = Date.now();
   while(this.isRunning) {
     var img = this.screenshot();
-    var isCloseBtn = isSameColor(Button.outClose.color, this.getColor(img, Button.outClose));
-    var isStart1Btn = isSameColor(Button.outStart1.color, this.getColor(img, Button.outStart1));
-    var isStart2Btn = isSameColor(Button.outStart2.color, this.getColor(img, Button.outStart2));
-    var isGameRandBtn = isSameColor(Button.gameRand.color, this.getColor(img, Button.gameRand));
-    var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue));
+    var isCloseBtn = isSameColor(Button.outClose.color, this.getColor(img, Button.outClose), 40);
+    var isStart1Btn = isSameColor(Button.outStart1.color, this.getColor(img, Button.outStart1), 40);
+    var isStart2Btn = isSameColor(Button.outStart2.color, this.getColor(img, Button.outStart2), 40);
+    var isGameRandBtn = isSameColor(Button.gameRand.color, this.getColor(img, Button.gameRand), 40);
+    var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue), 40);
     releaseImage(img);
-    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
+    log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
     if (isGameContinue && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
@@ -824,6 +827,33 @@ Tsum.prototype.taskReceiveAllItems = function() {
   log('接收物品完成');
 }
 
+Tsum.prototype.taskReceiveOneItem = function() {
+  log('前往朋友頁面');
+  this.goFriendPage();
+  sleep(1000);
+  log('一個一個接收物品');
+  this.tap(Button.outReceive);
+  sleep(2500);
+  
+  while (this.isRunning) {
+    var img = this.screenshot();
+    var isHeartItem = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 35);
+    releaseImage(img);
+    if (isHeartItem) {
+      this.tap(Button.outReceiveOne);
+      sleep(3000);
+      this.tap(Button.outReceiveOk);
+      sleep(3000);
+      this.tap(Button.outReceiveClose);
+      sleep(1000);
+    } else {
+      log('結束接收物品');
+      break;
+    }
+  }
+  this.goFriendPage();
+}
+
 Tsum.prototype.taskSendHearts = function() {
   log('前往朋友頁面');
   this.goFriendPage();
@@ -861,7 +891,7 @@ Tsum.prototype.taskSendHearts = function() {
 var ts;
 var gTaskController;
 
-function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause) {
+function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiveOneItem) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -871,10 +901,12 @@ function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause) {
   }
   ts.isJP = isJP;
   ts.isPause = isPause;
+  ts.receiveOneItem = receiveOneItem;
 
   gTaskController = new TaskController();
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), 60 * 60 * 1000, 0);}
+  if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), 5 * 60 * 1000, 0);}
   gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 5 * 1000, 0);
   sleep(500);
   gTaskController.start();
@@ -897,5 +929,5 @@ function stop() {
 // ts = new Tsum();
 // ts.taskPlayGame();
 // ts.goFriendPage();
-// start(true, true, false, false, false, false);
+// start(true, false, false, false, false, false, true);
 // stop();
