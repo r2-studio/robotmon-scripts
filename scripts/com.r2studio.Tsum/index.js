@@ -823,6 +823,8 @@ Tsum.prototype.taskReceiveAllItems = function() {
   this.tap(Button.outReceiveOk);
   sleep(1500);
   this.tap(Button.outReceiveClose);
+  sleep(1000);
+  this.tap(Button.outClose);
   this.goFriendPage();
   log('接收物品完成');
 }
@@ -851,6 +853,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
       break;
     }
   }
+  sleep(1000);
+  this.tap(Button.outClose);
   this.goFriendPage();
 }
 
@@ -875,10 +879,10 @@ Tsum.prototype.taskSendHearts = function() {
     if (!isHs0 && !isHs1 && !isHs2 && !isHs3) {
       break;
     }
-    if (isHs0) {this.tap(Button.outSendHeart0);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
-    if (isHs1) {this.tap(Button.outSendHeart1);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
-    if (isHs2) {this.tap(Button.outSendHeart2);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
-    if (isHs3) {this.tap(Button.outSendHeart3);sleep(1500);this.tap(Button.outReceiveOk);sleep(2500);this.tap(Button.outReceiveOk);sleep(1200);}
+    if (isHs0) {this.tap(Button.outSendHeart0);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
+    if (isHs1) {this.tap(Button.outSendHeart1);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
+    if (isHs2) {this.tap(Button.outSendHeart2);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
+    if (isHs3) {this.tap(Button.outSendHeart3);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
     this.tapDown(Button.outSendHeart3, 100);
     this.moveTo (Button.outSendHeart3, 100);
     this.moveTo (Button.outSendHeart2, 100);
