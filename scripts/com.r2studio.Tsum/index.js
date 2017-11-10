@@ -34,6 +34,7 @@ function log() {
 
 var Config = {
   captureGameWidth: 1080,
+  recordDir: 'scripts/com.r2studio.Tsum/record',
   tsumDir: 'scripts/com.r2studio.Tsum/tsums_16',
   tsumJpDir: 'scripts/com.r2studio.Tsum/tsums_jp_16',
   tsumWidth: 16,
@@ -83,6 +84,8 @@ var Button = {
   outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 863 - adjY},
   skillLuke1: {x: 970, y: 1270 - adjY},
+  outReceiveNameFrom: {x: 160, y: 465 - adjY},
+  outReceiveNameTo: {x: 620, y: 520 - adjY},
 };
 
 // Utils for Tsum
@@ -423,6 +426,10 @@ function Tsum() {
   this.isPause = true;
   this.receiveOneItem = false;
 
+  // record
+  this.record = {};
+  this.recordImages = {};
+
   this.init();
 }
 
@@ -471,7 +478,18 @@ Tsum.prototype.deinit = function() {
 }
 
 Tsum.prototype.isAppOn = function() {
-  var result = execute('dumpsys activity activities').split('mFocusedActivity')[1].split(" ")[3].split("/");
+  var results = execute('dumpsys activity activities').split('mFocusedActivity');
+  if (results.length < 2) {
+    return true;
+  }
+  results = results[1].split(" ");
+  if (results.length < 4) {
+    return true;
+  }
+  var result = results[3].split("/");
+  if (result.length < 2) {
+    return true;
+  }
   var packageName = result[0];
   var activityName = result[1];
   if (packageName.indexOf('LGTMTM') == -1) {
@@ -831,6 +849,83 @@ Tsum.prototype.taskReceiveAllItems = function() {
   log('接收物品完成');
 }
 
+Tsum.prototype.readRecord = function() {
+  log("讀取紀錄");
+  var recordDir = getStoragePath() + '/' + Config.recordDir;
+  var recordFile = recordDir + '/record.txt';
+  var txt = readFile(recordFile);
+  if (txt != undefined && txt != "") {
+    this.record = JSON.parse(txt);
+  }
+  for (var filename in this.record) {
+    this.recordImages[filename] = openImage(recordDir + '/' + filename);
+  }
+}
+
+Tsum.prototype.countReceiveHeart = function() {
+  log("記錄誰送心");
+  var recordDir = getStoragePath() + '/' + Config.recordDir;
+  var from = this.toResizeXYs(Button.outReceiveNameFrom);
+  var to = this.toResizeXYs(Button.outReceiveNameTo);
+  var img = this.screenshot();
+  var nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
+  var score = 0;
+  var existFilename = '';
+  for(var key in this.recordImages) {
+    if (this.recordImages[key] != 0) {
+      score = getIdentityScore(nameImg, this.recordImages[key]);
+      if (score >= 0.95) {
+        existFilename = key;
+        log("score > 0.95", key, score);
+        break;
+      }
+    }
+  }
+  
+  var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
+  if (existFilename == '') {
+    // not found, new friend
+    var filename = 'f_' + Date.now() + '.png';
+    this.record[filename] = {
+      receiveCounts: {},
+      lastReceiveTime: Date.now(),
+    };
+    this.record[filename].receiveCounts[dayTime] = 1;
+    this.recordImages[filename] = nameImg;
+    log('新朋友，儲存', recordDir + '/' + filename);
+    saveImage(nameImg, recordDir + '/' + filename);
+    saveImage(nameImg, recordDir + '/' + filename);
+  } else {
+    // found
+    if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
+      this.record[existFilename].receiveCounts[dayTime] = 0;
+    }
+    this.record[existFilename].receiveCounts[dayTime]++;
+    log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
+    releaseImage(nameImg);
+  }
+  releaseImage(img);
+}
+
+Tsum.prototype.saveRecord = function() {
+  log("儲存紀錄");
+  var recordFile = getStoragePath() + '/' + Config.recordDir + '/record.txt';
+  writeFile(recordFile, JSON.stringify(this.record));
+}
+
+Tsum.prototype.releaseRecord = function() {
+  for(var filename in this.recordImages) {
+    releaseImage(this.recordImages[filename]);
+  }
+  this.record = {};
+  this.recordImages = {};
+}
+
+Tsum.prototype.clear = function() {
+  var recordDir = getStoragePath() + '/' + Config.recordDir;
+  execute('rm -r ' + recordDir);
+}
+
 Tsum.prototype.taskReceiveOneItem = function() {
   log('前往朋友頁面');
   this.goFriendPage();
@@ -838,12 +933,16 @@ Tsum.prototype.taskReceiveOneItem = function() {
   log('一個一個接收物品');
   this.tap(Button.outReceive);
   sleep(2500);
-  
+
   while (this.isRunning) {
     var img = this.screenshot();
     var isHeartItem = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 35);
     releaseImage(img);
     if (isHeartItem) {
+      if (this.recordReceive) {
+        this.countReceiveHeart();
+        this.saveRecord();
+      }
       this.tap(Button.outReceiveOne);
       sleep(3000);
       this.tap(Button.outReceiveOk);
@@ -921,7 +1020,7 @@ Tsum.prototype.taskSendHearts = function() {
 var ts;
 var gTaskController;
 
-function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiveOneItem) {
+function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiveOneItem, recordReceive) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -932,6 +1031,11 @@ function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiv
   ts.isJP = isJP;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
+  ts.recordReceive = recordReceive;
+
+  if (ts.recordReceive) {
+    ts.readRecord();
+  }
 
   gTaskController = new TaskController();
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
@@ -948,6 +1052,9 @@ function stop() {
     ts.isRunning = false;
     sleep(2000);
     ts.deinit();
+    if (ts.recordReceive) {
+      ts.releaseRecord();
+    }
     if (gTaskController != undefined) {gTaskController.removeAllTasks();}
   }
   ts = undefined;
@@ -959,5 +1066,5 @@ function stop() {
 // ts = new Tsum();
 // ts.taskPlayGame();
 // ts.goFriendPage();
-// start(true, false, false, false, false, false, true);
+// start(true, false, false, false, false, false, true, true);
 // stop();
