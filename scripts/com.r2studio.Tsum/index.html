@@ -31,6 +31,10 @@
                 height: 28px;
             }
 
+            ul{
+                padding-left: 5px;
+            }
+
             /* Hide default HTML checkbox */
             .switch input {display:none;}
 
@@ -126,6 +130,9 @@
 
         <script>
             $(function() {
+                $("#updateRecord").click(function(){
+                    refreshRecord();
+                });
             });
 
             function getCheckStatus(id) {
@@ -141,19 +148,77 @@
                     var isFourTsum = getCheckStatus('#isFourTsum');
                     var isPause = getCheckStatus('#isPause');
                     var receiveOneItem = getCheckStatus('#receiveOneItem');
-                    JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+isJP+', '+isPause+ ','+ receiveOneItem + ');');
+                    var recordReceive = getCheckStatus('#recordReceive');
+                    JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+isJP+', '+isPause+ ','+ receiveOneItem + ','+ recordReceive + ');');
                 } else if (eventType == 'OnPauseClick') {
                     JavaScriptInterface.runScript('stop();');
+                } else if (eventType == 'OnSettingClick') {
+                    // refreshRecord();
                 }
             }
             function onLog(message) {
                 console.log(message);
             }
+            function refreshRecord() {
+                JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
+            }
+            var imageQueue = [];
+            var isRunning = false;
+            function getBase64(id, filename) {
+                var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/'+filename+'");if(__img_ != 0){var __'+id+'_base64_="'+id+',"+getBase64FromImage(__img_);releaseImage(__img_);};__'+id+'_base64_;';
+                imageQueue.push(script);
+                if (!isRunning) {
+                    isRunning = true;
+                    JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
+                }
+            }
+            function assignImage(results) {
+                var rs = results.split(',');
+                if (rs.length == 2) {
+                    $("#"+rs[0]).attr("src", "data:image/png;base64,"+rs[1]);
+                }
+                if (imageQueue.length == 0) {
+                    isRunning = false;
+                } else {
+                    JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
+                }
+            }
+            function getTimeString(d) {
+                return (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes();
+            }
+            function getDayTimeString(d) {
+                return (d.getMonth()+1) + "/" + d.getDate();
+            }
+            function genRecord(record) {
+                if (record == undefined || record == "undefined" || record == "") {
+                    return;
+                }
+                record = JSON.parse(record);
+                var html = "<ul>";
+                for (var filename in record) {
+                    var imgId = filename.split('.')[0];
+                    var lastTime = new Date(record[filename].lastReceiveTime);
+                    html += "<li>"
+                    html += "<div><img id='" +imgId+ "' />" + getTimeString(lastTime) + "</div>";
+                    html += "<ul>";
+                    for(var day in record[filename].receiveCounts) {
+                        var dayTime = new Date(+day * 86400000 );
+                        html += "<li>";
+                        html += getDayTimeString(dayTime) + ": get " + record[filename].receiveCounts[day] + " hearts";
+                        html += "</li>";
+                    }
+                    html += "</ul>";
+                    html += "</li>";
+                    getBase64(imgId, filename);
+                }
+                html += "</ul>";
+                $("#record").html(html);
+            }
         </script>
     </head>
     <body>
         <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand">Tsum Tsum v11</a>
+            <a class="navbar-brand">Tsum Tsum v12</a>
         </nav>
         <div class="container">
             <ul class="list-group">
@@ -189,6 +254,13 @@
                     </label>
                 </li>
                 <li class="list-group-item">
+                    Record Receive 紀錄送心者
+                    <label class="switch pull-right">
+                        <input id="recordReceive" type="checkbox">
+                        <a class="slider round"></a>
+                    </label>
+                </li>
+                <li class="list-group-item">
                     Auto Send Hearts 自動送愛心
                     <label class="switch pull-right">
                         <input id="sendHearts" type="checkbox">
@@ -210,6 +282,10 @@
                     </label>
                 </li>
             </ul>       
+            <div>Who send hearts to You 誰送你心</div>
+            <button id="updateRecord">Update</button>
+            <div id="record">
+            </div>
         </div>
     </body>
 </html>

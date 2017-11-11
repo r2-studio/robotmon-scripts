@@ -2,7 +2,7 @@
   "scripts": {
     "com.r2studio.EndlessFrontier": {
       "title": "Endless Frontier AutoPlay",
-      "versionCode": 11,
+      "versionCode": 12,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
