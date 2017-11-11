@@ -160,12 +160,12 @@
                 console.log(message);
             }
             function refreshRecord() {
-                JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/scripts/com.r2studio.Tsum/record/record.txt")', 'genRecord');
+                JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
             }
             var imageQueue = [];
             var isRunning = false;
             function getBase64(id, filename) {
-                var script = 'var __img_=openImage(getStoragePath()+"/scripts/com.r2studio.Tsum/record/'+filename+'");var __'+id+'_base64_="'+id+',"+getBase64FromImage(__img_);releaseImage(__img_);__'+id+'_base64_;';
+                var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/'+filename+'");if(__img_ != 0){var __'+id+'_base64_="'+id+',"+getBase64FromImage(__img_);releaseImage(__img_);};__'+id+'_base64_;';
                 imageQueue.push(script);
                 if (!isRunning) {
                     isRunning = true;

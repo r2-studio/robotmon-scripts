@@ -34,7 +34,7 @@ function log() {
 
 var Config = {
   captureGameWidth: 1080,
-  recordDir: 'scripts/com.r2studio.Tsum/record',
+  recordDir: 'tsum_record',
   tsumDir: 'scripts/com.r2studio.Tsum/tsums_16',
   tsumJpDir: 'scripts/com.r2studio.Tsum/tsums_jp_16',
   tsumWidth: 16,
@@ -874,13 +874,14 @@ Tsum.prototype.countReceiveHeart = function() {
   for(var key in this.recordImages) {
     if (this.recordImages[key] != 0) {
       score = getIdentityScore(nameImg, this.recordImages[key]);
-      if (score >= 0.95) {
+      if (score >= 0.98) {
         existFilename = key;
-        log("score > 0.95", key, score);
+        log("score > 0.98", key, score);
         break;
       }
     }
   }
+  console.log("Score: " + score);
   
   var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
   if (existFilename == '') {
@@ -901,6 +902,7 @@ Tsum.prototype.countReceiveHeart = function() {
       this.record[existFilename].receiveCounts[dayTime] = 0;
     }
     this.record[existFilename].receiveCounts[dayTime]++;
+    this.record[existFilename].lastReceiveTime = Date.now();
     log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
     releaseImage(nameImg);
   }
@@ -1038,8 +1040,8 @@ function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiv
   }
 
   gTaskController = new TaskController();
-  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
   if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), 5 * 60 * 1000, 0);}
+  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), 60 * 60 * 1000, 0);}
   gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 5 * 1000, 0);
   sleep(500);
