@@ -48,7 +48,7 @@ var Buttons = {
     {x: 370, y: 1060},
     {x: 370, y: 1555},
     {x: 370, y: 2015},
-    {x: 370, y: 2420},
+    {x: 370, y: 2380},
   ],
   youtubeInVideo: [
     {x: 280, y: 420},
@@ -66,13 +66,14 @@ var settings = {
   waitVideoTime: 10 * 1000,
   waitVideoLoad: 4 * 1000,
   isAutoDetectVideo: true,
-  isAutoToggleAirplane: true,
   airplaneOnX: 100,
   airplaneOnY: 100, 
   airplaneOffX: 100,
   airplaneOffY: 100,
   watchTimes: 0,
   videoPosition: 0,
+  toggleAirplainTimes: 0,
+  count: 0,
 };
 
 var gTaskController;
@@ -87,11 +88,21 @@ function stopChrome() {
 }
 
 function airplaneOn() {
-  execute("am start -a android.settings.AIRPLANE_MODE_SETTINGS");
+  rbm.log("開關 3g/4g 網路");
+  rbm.startApp("com.android.settings", ".RadioInfo");
+  safeSleep(4000);
+  rbm.stopApp("com.android.settings");
+  keycode('HOME');
+  safeSleep(1000);
 }
 
 function airplaneOff() {
-  execute("am start -a android.settings.AIRPLANE_MODE_SETTINGS");
+  rbm.log("開關 3g/4g 網路");
+  rbm.startApp("com.android.settings", ".RadioInfo");
+  safeSleep(4000);
+  rbm.stopApp("com.android.settings");
+  keycode('HOME');
+  safeSleep(1000);
 }
 
 function safeSleep(t) {
@@ -178,6 +189,14 @@ function taskWatchVideo() {
   // stopChrome();
   keycode('HOME');
   safeSleep(settings.waitVideoLoad);
+  settings.count++;
+
+  if (settings.toggleAirplainTimes > 0 && (settings.count % settings.toggleAirplainTimes) == 0) {
+    rbm.log("重啟 3g/4g網路");
+    airplaneOff();
+    sleep(3000);
+    airplaneOn();
+  }
 }
 
 function taskChangeIp() {
@@ -189,13 +208,14 @@ function taskChangeIp() {
   safeSleep(7000);
 }
 
-function start(words, videoTime, watchTimes, videoPosition, isAutoDetect) {
+function start(words, videoTime, watchTimes, videoPosition, isAutoDetect, airplaneTimes) {
   stop();
 
   settings.searchWords = words;
   settings.waitVideoTime = videoTime;
   settings.videoPosition = (+videoPosition) - 1;
   settings.isAutoDetectVideo = isAutoDetect;
+  settings.toggleAirplainTimes = airplaneTimes;
 
   rbm.init();
   rbm.running = true;
@@ -213,7 +233,6 @@ function stop() {
     gTaskController.stop();
   }
 }
-
-// start("twice_likey_jypentertainment", 6 * 60000, 3, 2);
+// start("twice_likey_jypentertainment", 6 * 60000, 3, 2, 1);
 // startChrome();
 
