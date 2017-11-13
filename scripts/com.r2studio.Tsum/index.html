@@ -1,291 +1,378 @@
 <html>
-    <head>
-        <style>
-            .navbar-custom {
-                border-radius: 0 !important;
-                background-color: #2196F3;
-                color: #FFFFFF;
-            }
-            .navbar-custom > a {
-                width: 100%;
-                color: #FFFFFF;
-                text-align: center;
-            }
-            .navbar-custom > a:hover {
-                color: #FFFFFF;
-            }
+  <head>
+    <style>
+      .navbar-custom {
+        border-radius: 0 !important;
+        background-color: #2196F3;
+        color: #FFFFFF;
+      }
+      .navbar-custom > a {
+        width: 100%;
+        color: #FFFFFF;
+        text-align: center;
+      }
+      .navbar-custom > a:hover {
+        color: #FFFFFF;
+      }
 
-            .list-group-item {
-                padding-bottom: 6px !important;
-                padding-top: 6px !important;
-            }
+      .list-group-item {
+        padding-bottom: 6px !important;
+        padding-top: 6px !important;
+      }
 
-            /* The switch - the box around the slider */
-            .switch {
-                position: relative; 
-                display: inline-block;
-                vertical-align: middle;
-                margin-bottom: 0px;
-                margin-top: -4px;
-                width: 52px;
-                height: 28px;
-            }
+      /* The switch - the box around the slider */
+      .switch {
+        position: relative; 
+        display: inline-block;
+        vertical-align: middle;
+        margin-bottom: 0px;
+        margin-top: -4px;
+        width: 52px;
+        height: 28px;
+      }
 
-            ul{
-                padding-left: 5px;
-            }
+      ul{
+        padding-left: 5px;
+      }
 
-            /* Hide default HTML checkbox */
-            .switch input {display:none;}
+      /* Hide default HTML checkbox */
+      .switch input {display:none;}
 
-            /* The slider */
-            .slider {
-                position: absolute;
-                cursor: pointer;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #ccc;
-                -webkit-transition: .4s;
-                transition: .4s;
-            }
+      /* The slider */
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
 
-            .slider:before {
-                position: absolute;
-                content: "";
-                height: 24px;
-                width: 24px;
-                left: 2px;
-                bottom: 4px;
-                top: 2px;
-                background-color: white;
-                -webkit-transition: .4s;
-                transition: .4s;
-            }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 2px;
+        bottom: 4px;
+        top: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
 
-            input:checked + .slider {
-                background-color: #2196F3;
-            }
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
 
-            input:focus + .slider {
-                box-shadow: 0 0 1px #2196F3;
-            }
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
 
-            input:checked + .slider:before {
-                -webkit-transform: translateX(24px);
-                -ms-transform: translateX(24px);
-                transform: translateX(24px);
-            }
+      input:checked + .slider:before {
+        -webkit-transform: translateX(24px);
+        -ms-transform: translateX(24px);
+        transform: translateX(24px);
+      }
 
-            /* Rounded sliders */
-            .slider.round {
-                border-radius: 28px;
-            }
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 28px;
+      }
 
-            .slider.round:before {
-                border-radius: 50%;
-            }
+      .slider.round:before {
+        border-radius: 50%;
+      }
 
-            .btn-plus {
-                color:#FFFFFF;
-                background-color: #2196F3;
-                border-color: #2196F3;
-            }
-            .btn-plus:hover,
-            .btn-plus:focus,
-            .btn-plus:active,
-            .btn-plus.active {
-                color:#FFFFFF !important; 
-                background-color: #0d8aee;
-                border-color: #0c7cd5;
-            }
-            .btn-plus.disabled:hover,
-            .btn-plus.disabled:focus,
-            .btn-plus.disabled:active,
-            .btn-plus.disabled.active,
-            .btn-plus[disabled]:hover,
-            .btn-plus[disabled]:focus,
-            .btn-plus[disabled]:active,
-            .btn-plus[disabled].active,
-            fieldset[disabled] .btn-plus:hover,
-            fieldset[disabled] .btn-plus:focus,
-            fieldset[disabled] .btn-plus:active,
-            fieldset[disabled] .btn-plus.active {
-                color:#FFFFFF;
-                background-color: #2196F3;
-                border-color: #2196F3;
-            }
-            .btn-plus,
-            .btn-danger {
-                width: 35px;
-                padding: 3px 0px 3px 0px !important;
-            }
-        </style>
+      .btn-plus {
+        color:#FFFFFF;
+        background-color: #2196F3;
+        border-color: #2196F3;
+      }
+      .btn-plus:hover,
+      .btn-plus:focus,
+      .btn-plus:active,
+      .btn-plus.active {
+        color:#FFFFFF !important; 
+        background-color: #0d8aee;
+        border-color: #0c7cd5;
+      }
+      .btn-plus.disabled:hover,
+      .btn-plus.disabled:focus,
+      .btn-plus.disabled:active,
+      .btn-plus.disabled.active,
+      .btn-plus[disabled]:hover,
+      .btn-plus[disabled]:focus,
+      .btn-plus[disabled]:active,
+      .btn-plus[disabled].active,
+      fieldset[disabled] .btn-plus:hover,
+      fieldset[disabled] .btn-plus:focus,
+      fieldset[disabled] .btn-plus:active,
+      fieldset[disabled] .btn-plus.active {
+        color:#FFFFFF;
+        background-color: #2196F3;
+        border-color: #2196F3;
+      }
+      .btn-plus,
+      .btn-danger {
+        width: 35px;
+        padding: 3px 0px 3px 0px !important;
+      }
+      .title {
+        width: 70%;
+        /* overflow-x: hidden; */
+        display: inline-block;
+      }
+      .setting_input_value {
+        width: 40px;
+        text-align: center;
+      }
+      .setting_input_value[type=text] {
+        width: 80%;
+      }
+    </style>
 
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        <script>
-            $(function() {
-                $("#updateRecord").click(function(){
-                    refreshRecord();
-                });
+    <script>
+      var settings = [
+        {
+          titles: ["English switch", "中文字 開關"],
+          default: true,
+        },
+        {
+          titles: ["English switch", "中文字 開關"],
+          default: 10,
+          step: 10,
+          max: 100,
+          min: 0
+        },
+        {
+          titles: ["English switch", "中文字 開關"],
+          default: "abcc",
+        },
+      ];
+      function genSettings(jContainer, settings) {
+        for (var i in settings) {
+          var setting = settings[i];
+          var jSetting = $("<div id='setting_" + i + "' class='list-group-item'></div>");
+          if (typeof setting.default === "boolean") {
+            var jLabel = $('<label class="switch pull-right"></label>');
+            var jInput = $("<input id='setting_value_" + i + "' class='setting_input_value' type='checkbox' " + (setting.default ? 'checked' : '') + "/>");
+            jLabel.append(jInput);
+            jLabel.append('<a class="slider round"></a>');
+            jSetting.append(jLabel);
+            for (var j in setting.titles) {
+              jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
+            }
+          } else if (typeof setting.default === "number") {
+            var step = setting.step;
+            var max = setting.max;
+            var min = setting.min;
+            var jLabel = $('<label class="pull-right"></label>');
+            var jInput = $("<input id='setting_value_" + i + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
+            var jBtnP = $('<button id="setting_value_p_' + i + '"  type="button" class="btn btn-danger">+' + step + '</button>');
+            var jBtnM = $('<button id="setting_value_m_' + i + '"  type="button" class="btn btn-danger">-' + step + '</button>');
+            jBtnP.click(function() {
+              var newValue = (+jInput.val()) + step;
+              if (newValue <= max) {
+                jInput.val(newValue);
+              }
             });
+            jBtnM.click(function() {
+              var newValue = (+jInput.val()) - step;
+              if (newValue >= min) {
+                jInput.val(newValue);
+              }
+            });
+            jLabel.append(jInput);
+            jLabel.append(jBtnP);
+            jLabel.append(jBtnM);
+            jSetting.append(jLabel);
+            for (var j in setting.titles) {
+              jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
+            }
+          } else if (typeof setting.default === "string") {
+            for (var j in setting.titles) {
+              jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
+            }
+            jSetting.append("<br />");
+            var jInput = $("<input id='setting_value_" + i + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
+            jSetting.append(jInput);
+          }
+          jContainer.append(jSetting);
+        }
+      }
+      
+    </script>
 
-            function getCheckStatus(id) {
-                return $(id).is(':checked');
-            }
+    <script>
+      $(function() {
+        genSettings($("#settings"), settings);
 
-            function onEvent(eventType) {
-                if (eventType == 'OnPlayClick') {
-                    var isJP = getCheckStatus('#isJP');
-                    var debug = getCheckStatus('#debug');
-                    var receiveItems = getCheckStatus('#receiveItems');
-                    var sendHearts = getCheckStatus('#sendHearts');
-                    var isFourTsum = getCheckStatus('#isFourTsum');
-                    var isPause = getCheckStatus('#isPause');
-                    var receiveOneItem = getCheckStatus('#receiveOneItem');
-                    var recordReceive = getCheckStatus('#recordReceive');
-                    JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+isJP+', '+isPause+ ','+ receiveOneItem + ','+ recordReceive + ');');
-                } else if (eventType == 'OnPauseClick') {
-                    JavaScriptInterface.runScript('stop();');
-                } else if (eventType == 'OnSettingClick') {
-                    // refreshRecord();
-                }
-            }
-            function onLog(message) {
-                console.log(message);
-            }
-            function refreshRecord() {
-                JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
-            }
-            var imageQueue = [];
-            var isRunning = false;
-            function getBase64(id, filename) {
-                var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/'+filename+'");if(__img_ != 0){var __'+id+'_base64_="'+id+',"+getBase64FromImage(__img_);releaseImage(__img_);};__'+id+'_base64_;';
-                imageQueue.push(script);
-                if (!isRunning) {
-                    isRunning = true;
-                    JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
-                }
-            }
-            function assignImage(results) {
-                var rs = results.split(',');
-                if (rs.length == 2) {
-                    $("#"+rs[0]).attr("src", "data:image/png;base64,"+rs[1]);
-                }
-                if (imageQueue.length == 0) {
-                    isRunning = false;
-                } else {
-                    JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
-                }
-            }
-            function getTimeString(d) {
-                return (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes();
-            }
-            function getDayTimeString(d) {
-                return (d.getMonth()+1) + "/" + d.getDate();
-            }
-            function genRecord(record) {
-                if (record == undefined || record == "undefined" || record == "") {
-                    return;
-                }
-                record = JSON.parse(record);
-                var html = "<ul>";
-                for (var filename in record) {
-                    var imgId = filename.split('.')[0];
-                    var lastTime = new Date(record[filename].lastReceiveTime);
-                    html += "<li>"
-                    html += "<div><img id='" +imgId+ "' />" + getTimeString(lastTime) + "</div>";
-                    html += "<ul>";
-                    for(var day in record[filename].receiveCounts) {
-                        var dayTime = new Date(+day * 86400000 );
-                        html += "<li>";
-                        html += getDayTimeString(dayTime) + ": get " + record[filename].receiveCounts[day] + " hearts";
-                        html += "</li>";
-                    }
-                    html += "</ul>";
-                    html += "</li>";
-                    getBase64(imgId, filename);
-                }
-                html += "</ul>";
-                $("#record").html(html);
-            }
-        </script>
-    </head>
-    <body>
-        <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand">Tsum Tsum v12</a>
-        </nav>
-        <div class="container">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    感謝 ttung 提供改善辨識、送心功能
-                </li>
-                <li class="list-group-item">
-                    Is Japan Version? 日本版？
-                    <label class="switch pull-right">
-                        <input id="isJP" type="checkbox">
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    Debug 偵錯
-                    <label class="switch pull-right">
-                        <input id="debug" type="checkbox" checked>
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    Auto Receive Hearts 自動收愛心
-                    <label class="switch pull-right">
-                        <input id="receiveItems" type="checkbox" checked>
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    Receive One Hearts 自動收一顆愛心
-                    <label class="switch pull-right">
-                        <input id="receiveOneItem" type="checkbox">
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    Record Receive 紀錄送心者
-                    <label class="switch pull-right">
-                        <input id="recordReceive" type="checkbox">
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    Auto Send Hearts 自動送愛心
-                    <label class="switch pull-right">
-                        <input id="sendHearts" type="checkbox">
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    5 To 4 Tsums 道具五變四
-                    <label class="switch pull-right">
-                        <input id="isFourTsum" type="checkbox">
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    Pause when calculating 計算時暫停
-                    <label class="switch pull-right">
-                        <input id="isPause" type="checkbox" checked>
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-            </ul>       
-            <div>Who send hearts to You 誰送你心</div>
-            <button id="updateRecord">Update</button>
-            <div id="record">
-            </div>
-        </div>
-    </body>
+        $("#updateRecord").click(function(){
+          refreshRecord();
+        });
+      });
+
+      function getCheckStatus(id) {
+        return $(id).is(':checked');
+      }
+
+      function onEvent(eventType) {
+        if (eventType == 'OnPlayClick') {
+          var isJP = getCheckStatus('#isJP');
+          var debug = getCheckStatus('#debug');
+          var receiveItems = getCheckStatus('#receiveItems');
+          var sendHearts = getCheckStatus('#sendHearts');
+          var isFourTsum = getCheckStatus('#isFourTsum');
+          var isPause = getCheckStatus('#isPause');
+          var receiveOneItem = getCheckStatus('#receiveOneItem');
+          var recordReceive = getCheckStatus('#recordReceive');
+          JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+isJP+', '+isPause+ ','+ receiveOneItem + ','+ recordReceive + ');');
+        } else if (eventType == 'OnPauseClick') {
+          JavaScriptInterface.runScript('stop();');
+        } else if (eventType == 'OnSettingClick') {
+          // refreshRecord();
+        }
+      }
+      function onLog(message) {
+        console.log(message);
+      }
+      function refreshRecord() {
+        JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
+      }
+      var imageQueue = [];
+      var isRunning = false;
+      function getBase64(id, filename) {
+        var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/'+filename+'");if(__img_ != 0){var __'+id+'_base64_="'+id+',"+getBase64FromImage(__img_);releaseImage(__img_);};__'+id+'_base64_;';
+        imageQueue.push(script);
+        if (!isRunning) {
+          isRunning = true;
+          JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
+        }
+      }
+      function assignImage(results) {
+        var rs = results.split(',');
+        if (rs.length == 2) {
+          $("#"+rs[0]).attr("src", "data:image/png;base64,"+rs[1]);
+        }
+        if (imageQueue.length == 0) {
+          isRunning = false;
+        } else {
+          JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
+        }
+      }
+      function getTimeString(d) {
+        return (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes();
+      }
+      function getDayTimeString(d) {
+        return (d.getMonth()+1) + "/" + d.getDate();
+      }
+      function genRecord(record) {
+        if (record == undefined || record == "undefined" || record == "") {
+          return;
+        }
+        record = JSON.parse(record);
+        var html = "<ul>";
+        for (var filename in record) {
+          var imgId = filename.split('.')[0];
+          var lastTime = new Date(record[filename].lastReceiveTime);
+          html += "<li>"
+          html += "<div><img id='" +imgId+ "' />" + getTimeString(lastTime) + "</div>";
+          html += "<ul>";
+          for(var day in record[filename].receiveCounts) {
+            var dayTime = new Date(+day * 86400000 );
+            html += "<li>";
+            html += getDayTimeString(dayTime) + ": get " + record[filename].receiveCounts[day] + " hearts";
+            html += "</li>";
+          }
+          html += "</ul>";
+          html += "</li>";
+          getBase64(imgId, filename);
+        }
+        html += "</ul>";
+        $("#record").html(html);
+      }
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-custom" role="navigation">
+      <a class="navbar-brand">Tsum Tsum v12</a>
+    </nav>
+    <div class="container">
+      <div id="settings" class="list-group"></div>
+      <ul class="list-group">
+        <li class="list-group-item">
+          感謝 ttung 提供改善辨識、送心功能
+        </li>
+        <li class="list-group-item">
+          Is Japan Version? 日本版？
+          <label class="switch pull-right">
+            <input id="isJP" type="checkbox">
+            <a class="slider round"></a>
+          </label>
+        </li>
+        <li class="list-group-item">
+          Debug 偵錯
+          <label class="switch pull-right">
+            <input id="debug" type="checkbox" checked>
+            <a class="slider round"></a>
+          </label>
+        </li>
+        <li class="list-group-item">
+          Auto Receive Hearts 自動收愛心
+          <label class="switch pull-right">
+            <input id="receiveItems" type="checkbox" checked>
+            <a class="slider round"></a>
+          </label>
+        </li>
+        <li class="list-group-item">
+          Receive One Hearts 自動收一顆愛心
+          <label class="switch pull-right">
+            <input id="receiveOneItem" type="checkbox">
+            <a class="slider round"></a>
+          </label>
+        </li>
+        <li class="list-group-item">
+          Record Receive 紀錄送心者
+          <label class="switch pull-right">
+            <input id="recordReceive" type="checkbox">
+            <a class="slider round"></a>
+          </label>
+        </li>
+        <li class="list-group-item">
+          Auto Send Hearts 自動送愛心
+          <label class="switch pull-right">
+            <input id="sendHearts" type="checkbox">
+            <a class="slider round"></a>
+          </label>
+        </li>
+        <li class="list-group-item">
+          5 To 4 Tsums 道具五變四
+          <label class="switch pull-right">
+            <input id="isFourTsum" type="checkbox">
+            <a class="slider round"></a>
+          </label>
+        </li>
+        <li class="list-group-item">
+          Pause when calculating 計算時暫停
+          <label class="switch pull-right">
+            <input id="isPause" type="checkbox" checked>
+            <a class="slider round"></a>
+          </label>
+        </li>
+      </ul>     
+      <div>Who send hearts to You 誰送你心</div>
+      <button id="updateRecord">Update</button>
+      <div id="record">
+      </div>
+    </div>
+  </body>
 </html>
