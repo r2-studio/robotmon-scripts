@@ -175,10 +175,10 @@
           { titles: ["Auto Send Hearts? 自動送愛心"], default: false},
           { 
             titles: ["How ofter(min) 多久一次(分)"],
-            default: 25,
+            default: 26,
             step: 5,
             max: 60,
-            min: 5,
+            min: 1,
           },
           { titles: ["Sent to 0 score? 送心給0分"], default: false},
         ]
@@ -198,7 +198,7 @@
             }
           }
         }
-        command += "undeinfed);"
+        command += "undefined);"
         console.log("start command: " + command);
         return command
       }

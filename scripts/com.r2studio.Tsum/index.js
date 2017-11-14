@@ -77,10 +77,11 @@ var Button = {
   outReceiveClose: {x: 530, y: 1300 - adjY},
   outReceiveOne: {x: 790, y: 525 - adjY, color: {"a":0,"b":7,"g":171,"r":236}, color2: {"a":0,"b":125,"g":83,"r":48}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
-  outSendHeart1: {x: 910, y: 828 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
-  outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
-  outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
+  outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}, color3: {"a":0,"b":199,"g":162,"r":46}},
+  outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}, color3: {"a":0,"b":199,"g":162,"r":46}},
+  outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}, color3: {"a":0,"b":199,"g":162,"r":46}},
+  outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}, color3: {"a":0,"b":199,"g":162,"r":46}},
+  outSendHeartClose: {x: 665, y: 1340 - adjY, color: {"a":0,"b":6,"g":175,"r":233}},
   outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 863 - adjY},
   skillLuke1: {x: 970, y: 1270 - adjY},
@@ -1028,7 +1029,7 @@ Tsum.prototype.taskSendHearts = function() {
         this.moveTo (Button.outSendHeart3, 100);
         this.moveTo (Button.outSendHeart2, 100);
         this.moveTo (Button.outSendHeart1, 100);
-        this.moveTo (Button.outSendHeart0, 1000);
+        this.moveTo (Button.outSendHeart0, 800);
         this.tapUp  (Button.outSendHeart0, 100);
         retry++;
         log("沒愛心可送或零分，再檢查次數: " + retry);
@@ -1037,17 +1038,51 @@ Tsum.prototype.taskSendHearts = function() {
         break;
       }
     } else {
-      if (isHs0) {this.tap(Button.outSendHeart0);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
-      if (isHs1) {this.tap(Button.outSendHeart1);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
-      if (isHs2) {this.tap(Button.outSendHeart2);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
-      if (isHs3) {this.tap(Button.outSendHeart3);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
+      if (isHs0) {if (!this.sendHeart(Button.outSendHeart0)) {continue;}}
+      if (isHs1) {if (!this.sendHeart(Button.outSendHeart1)) {continue;}}
+      if (isHs2) {if (!this.sendHeart(Button.outSendHeart2)) {continue;}}
+      if (isHs3) {if (!this.sendHeart(Button.outSendHeart3)) {continue;}}
       this.tapDown(Button.outSendHeart3, 100);
       this.moveTo (Button.outSendHeart3, 100);
       this.moveTo (Button.outSendHeart2, 100);
       this.moveTo (Button.outSendHeart1, 100);
-      this.moveTo (Button.outSendHeart0, 1000);
+      this.moveTo (Button.outSendHeart0, 800);
       this.tapUp  (Button.outSendHeart0, 100);
     }
+  }
+}
+
+Tsum.prototype.sendHeart = function(btn) {
+  this.tap(btn);
+  sleep(800);
+  var unknownCount = 0;
+  while (this.isRunning) {
+    var img = this.screenshot();
+    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
+    var isSend = isSameColor(btn.color, this.getColor(img, btn), 35);
+    var isSent1 = isSameColor(btn.color2, this.getColor(img, btn), 35);
+    var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 35);
+    log(this.getColor(img, btn));
+    releaseImage(img);
+    
+    if (isOk) {
+      this.tap(Button.outReceiveOk);
+    } else if (isSend) {
+      this.tap(btn);
+      sleep(800);
+    } else if (isSent1) {
+      return true;
+    } else if (isClose) {
+      this.tap(Button.outSendHeartClose);
+    } else {
+      this.tap(Button.outSendHeartClose);
+      unknownCount++;
+    }
+    if (unknownCount >= 10) {
+      log("未知狀態，離開");
+      return false;
+    }
+    sleep(250);
   }
 }
 
@@ -1100,8 +1135,10 @@ function stop() {
 // sleep(500);
 // ts = new Tsum();
 // ts.recordReceive = true;
+// ts.sentToZero = true;
 // ts.readRecord();
-// ts.taskReceiveOneItem();
+// ts.taskSendHearts();
+// ts.taskSendHearts();
 // ts.goFriendPage();
 // start(true, false, false, false, false, false, true, true);
 // stop();
