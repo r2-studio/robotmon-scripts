@@ -295,15 +295,6 @@
 
       function onEvent(eventType) {
         if (eventType == 'OnPlayClick') {
-          // var isJP = getCheckStatus('#isJP');
-          // var debug = getCheckStatus('#debug');
-          // var receiveItems = getCheckStatus('#receiveItems');
-          // var sendHearts = getCheckStatus('#sendHearts');
-          // var isFourTsum = getCheckStatus('#isFourTsum');
-          // var isPause = getCheckStatus('#isPause');
-          // var receiveOneItem = getCheckStatus('#receiveOneItem');
-          // var recordReceive = getCheckStatus('#recordReceive');
-          // JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+isJP+', '+isPause+ ','+ receiveOneItem + ','+ recordReceive + ');');
           var startCommand = genStartCommand(settings);
           JavaScriptInterface.runScript(startCommand);
         } else if (eventType == 'OnPauseClick') {
@@ -390,7 +381,7 @@
   </head>
   <body>
     <nav class="navbar navbar-custom" role="navigation">
-      <a class="navbar-brand">Tsum Tsum v12</a>
+      <a class="navbar-brand">Tsum Tsum v13</a>
     </nav>
     <div class="container">
       <div id="settings"></div>

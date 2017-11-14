@@ -73,9 +73,9 @@ var Button = {
   outClose: {x: 500, y: 1520 - adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
   outReceive: {x: 910, y: 350 - adjY},
   outReceiveAll: {x: 800, y: 1350 - adjY},
-  outReceiveOk: {x: 750, y: 1000 - adjY},
+  outReceiveOk: {x: 690, y: 1020 - adjY, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveClose: {x: 530, y: 1300 - adjY},
-  outReceiveOne: {x: 905, y: 525 - adjY},
+  outReceiveOne: {x: 790, y: 525 - adjY, color: {"a":0,"b":7,"g":171,"r":236}, color2: {"a":0,"b":125,"g":83,"r":48}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
   outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
   outSendHeart1: {x: 910, y: 828 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
@@ -85,7 +85,7 @@ var Button = {
   outFriendScoreTo: {x: 760, y: 863 - adjY},
   skillLuke1: {x: 970, y: 1270 - adjY},
   outReceiveNameFrom: {x: 160, y: 465 - adjY},
-  outReceiveNameTo: {x: 620, y: 520 - adjY},
+  outReceiveNameTo: {x: 620, y: 555 - adjY},
 };
 
 // Utils for Tsum
@@ -425,7 +425,8 @@ function Tsum() {
   this.isJP = false;
   this.isPause = true;
   this.receiveOneItem = false;
-
+  this.sentToZero = false;
+  this.recordReceive = true;
   // record
   this.record = {};
   this.recordImages = {};
@@ -934,31 +935,62 @@ Tsum.prototype.taskReceiveOneItem = function() {
   sleep(1000);
   log('一個一個接收物品');
   this.tap(Button.outReceive);
-  sleep(2500);
+  sleep(2000);
 
+  var receivedCount = 0;
+  var nonItemCount = 0;
+  var unknownCount = 0;
   while (this.isRunning) {
     var img = this.screenshot();
-    var isHeartItem = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 35);
+    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
+    var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
+    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     releaseImage(img);
-    if (isHeartItem) {
+    if (isItem) {
       if (this.recordReceive) {
         this.countReceiveHeart();
         this.saveRecord();
       }
       this.tap(Button.outReceiveOne);
-      sleep(3000);
+      receivedCount++;
+      nonItemCount = 0;
+      unknownCount = 0;
+    } else if (isOk) {
       this.tap(Button.outReceiveOk);
-      sleep(3000);
-      this.tap(Button.outReceiveClose);
-      sleep(1000);
+      nonItemCount = 0;
+      unknownCount = 0;
+    } else if (isNonItem) {
+      this.tap(Button.outReceiveOk);
+      nonItemCount++;
+      unknownCount = 0;
     } else {
-      log('結束接收物品');
+      this.tap(Button.outReceiveOk);
+      unknownCount++;
+    }
+    sleep(800);
+    if (unknownCount >= 8) {
+      log('停在未知頁面太久，離開');
+      this.tap(Button.outClose);
+      this.goFriendPage();
       break;
     }
+    if (nonItemCount >= 3) {
+      this.tap(Button.outClose);
+      this.goFriendPage();
+      sleep(1000);
+      if (receivedCount == 0) {
+        log('結束接收物品');
+        break;
+      } else {
+        log('檢查還有沒有物品');
+        sleep(1000);
+        receivedCount = 0;
+        nonItemCount = 0;
+        this.tap(Button.outReceive);
+        sleep(2000);
+      }
+    }
   }
-  sleep(1000);
-  this.tap(Button.outClose);
-  this.goFriendPage();
 }
 
 Tsum.prototype.taskSendHearts = function() {
@@ -990,7 +1022,7 @@ Tsum.prototype.taskSendHearts = function() {
       }
     }
     releaseImage(img);
-    if ((!isHs0 && !isHs1 && !isHs2 && !isHs3) || isZero) {
+    if ((!isHs0 && !isHs1 && !isHs2 && !isHs3) || (!this.sentToZero && isZero)) {
       if(retry < 5){
         this.tapDown(Button.outSendHeart3, 100);
         this.moveTo (Button.outSendHeart3, 100);
@@ -1022,7 +1054,7 @@ Tsum.prototype.taskSendHearts = function() {
 var ts;
 var gTaskController;
 
-function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiveOneItem, recordReceive) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -1034,16 +1066,17 @@ function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiv
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
+  ts.sentToZero = sentToZero;
 
   if (ts.recordReceive) {
     ts.readRecord();
   }
 
   gTaskController = new TaskController();
-  if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), 5 * 60 * 1000, 0);}
-  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
-  if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), 60 * 60 * 1000, 0);}
-  gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 5 * 1000, 0);
+  if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
+  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
+  if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
+  if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
   sleep(500);
   gTaskController.start();
 }
@@ -1066,7 +1099,9 @@ function stop() {
 // stop();
 // sleep(500);
 // ts = new Tsum();
-// ts.taskPlayGame();
+// ts.recordReceive = true;
+// ts.readRecord();
+// ts.taskReceiveOneItem();
 // ts.goFriendPage();
 // start(true, false, false, false, false, false, true, true);
 // stop();
