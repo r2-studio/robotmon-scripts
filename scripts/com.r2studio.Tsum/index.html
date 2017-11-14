@@ -122,7 +122,7 @@
         padding: 3px 0px 3px 0px !important;
       }
       .title {
-        width: 70%;
+        width: 65%;
         /* overflow-x: hidden; */
         display: inline-block;
       }
@@ -142,82 +142,150 @@
 
     <script>
       var settings = [
-        {
-          titles: ["English switch", "中文字 開關"],
-          default: true,
-        },
-        {
-          titles: ["English switch", "中文字 開關"],
-          default: 10,
-          step: 10,
-          max: 100,
-          min: 0
-        },
-        {
-          titles: ["English switch", "中文字 開關"],
-          default: "abcc",
-        },
+        [{titles: ["感謝ttung提供改善辨識、送心功能"]}],
+        [
+          { titles: ["Is Japan Version? 日本版？"], default: false},
+          { titles: ["Debug 偵錯？"], default: true},
+          { titles: ["Pause(calculating) 計算時暫停"], default: true},
+          { titles: ["5 To 4 Tsums 道具五變四"], default: false},
+          { titles: ["Auto Play Game? 自動玩遊戲"], default: true},
+        ],
+        [
+          { titles: ["Receive All Hearts? 收全部愛心"], default: true},
+          { 
+            titles: ["How ofter(min) 多久一次(分)"],
+            default: 25,
+            step: 5,
+            max: 60,
+            min: 5,
+          },
+        ],
+        [
+          { titles: ["Receive Hearts One By One?", "一顆一顆收愛心"], default: false},
+          { 
+            titles: ["How ofter(min) 多久一次(分)"],
+            default: 5,
+            step: 2,
+            max: 60,
+            min: 1,
+          },
+          { titles: ["Record Sender 記錄送心者"], default: true},
+        ],
+        [
+          { titles: ["Auto Send Hearts? 自動送愛心"], default: false},
+          { 
+            titles: ["How ofter(min) 多久一次(分)"],
+            default: 25,
+            step: 5,
+            max: 60,
+            min: 5,
+          },
+          { titles: ["Sent to 0 score? 送心給0分"], default: false},
+        ]
       ];
+      function genStartCommand(settings) {
+        var command = "start(";
+        for (var i in settings) {
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            if (typeof setting.default === "boolean") {
+              command += $("#setting_value_" + id).is(':checked') + ", ";
+            } else if (typeof setting.default === "number") {
+              command += $("#setting_value_" + id).val() + ", ";
+            } else if (typeof setting.default === "string") {
+              command += "'" + $("#setting_value_" + id).val() + "', ";
+            }
+          }
+        }
+        command += "undeinfed);"
+        console.log("start command: " + command);
+        return command
+      }
+
       function genSettings(jContainer, settings) {
         for (var i in settings) {
-          var setting = settings[i];
-          var jSetting = $("<div id='setting_" + i + "' class='list-group-item'></div>");
-          if (typeof setting.default === "boolean") {
-            var jLabel = $('<label class="switch pull-right"></label>');
-            var jInput = $("<input id='setting_value_" + i + "' class='setting_input_value' type='checkbox' " + (setting.default ? 'checked' : '') + "/>");
-            jLabel.append(jInput);
-            jLabel.append('<a class="slider round"></a>');
-            jSetting.append(jLabel);
-            for (var j in setting.titles) {
-              jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
-            }
-          } else if (typeof setting.default === "number") {
-            var step = setting.step;
-            var max = setting.max;
-            var min = setting.min;
-            var jLabel = $('<label class="pull-right"></label>');
-            var jInput = $("<input id='setting_value_" + i + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
-            var jBtnP = $('<button id="setting_value_p_' + i + '"  type="button" class="btn btn-danger">+' + step + '</button>');
-            var jBtnM = $('<button id="setting_value_m_' + i + '"  type="button" class="btn btn-danger">-' + step + '</button>');
-            jBtnP.click(function() {
-              var newValue = (+jInput.val()) + step;
-              if (newValue <= max) {
-                jInput.val(newValue);
+          var jGroup = $("<div class='list-group'></div>");
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            var jSetting = $("<div id='setting_" + id + "' class='list-group-item'></div>");
+            if (typeof setting.default === "boolean") {
+              var jLabel = $('<label class="switch pull-right"></label>');
+              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='checkbox' " + (setting.default ? 'checked' : '') + "/>");
+              jLabel.append(jInput);
+              jLabel.append('<a class="slider round"></a>');
+              jSetting.append(jLabel);
+              for (var j in setting.titles) {
+                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
               }
-            });
-            jBtnM.click(function() {
-              var newValue = (+jInput.val()) - step;
-              if (newValue >= min) {
-                jInput.val(newValue);
+            } else if (typeof setting.default === "number") {
+              var step = setting.step;
+              var max = setting.max;
+              var min = setting.min;
+              var jLabel = $('<label class="pull-right"></label>');
+              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
+              var jBtnP = $('<button id="setting_value_p_' + id + '"  type="button" class="btn btn-danger">+' + step + '</button>');
+              var jBtnM = $('<button id="setting_value_m_' + id + '"  type="button" class="btn btn-danger">-' + step + '</button>');
+              console.log(jInput);
+              jBtnP.click((function(jInput, min, max, step){
+                return function() {
+                  var newValue = (+jInput.val()) + step;
+                  if (newValue <= max) {
+                    jInput.val(newValue);
+                  }
+                }
+              })(jInput, min, max, step));
+              jBtnM.click((function(jInput, min, max, step){
+                return function() {
+                  var newValue = (+jInput.val()) - step;
+                  if (newValue >= min) {
+                    jInput.val(newValue);
+                  }
+                }
+              })(jInput, min, max, step));
+              jLabel.append(jInput);
+              jLabel.append(jBtnP);
+              jLabel.append(jBtnM);
+              jSetting.append(jLabel);
+              for (var j in setting.titles) {
+                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
               }
-            });
-            jLabel.append(jInput);
-            jLabel.append(jBtnP);
-            jLabel.append(jBtnM);
-            jSetting.append(jLabel);
-            for (var j in setting.titles) {
-              jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
+            } else if (typeof setting.default === "string") {
+              for (var j in setting.titles) {
+                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
+              }
+              jSetting.append("<br />");
+              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
+              jSetting.append(jInput);
+            } else if (setting.titles != undefined) {
+              for (var j in setting.titles) {
+                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
+              }
             }
-          } else if (typeof setting.default === "string") {
-            for (var j in setting.titles) {
-              jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
-            }
-            jSetting.append("<br />");
-            var jInput = $("<input id='setting_value_" + i + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
-            jSetting.append(jInput);
+            jGroup.append(jSetting);
           }
-          jContainer.append(jSetting);
+          jContainer.append(jGroup)
         }
       }
-      
     </script>
 
     <script>
       $(function() {
         genSettings($("#settings"), settings);
-
         $("#updateRecord").click(function(){
           refreshRecord();
+        });
+        var protect = true;
+        $("#resetRecord").click(function() {
+          if (protect) {
+            protect = false;
+            $("#resetRecord").html("Are you sure?");
+          } else {
+            protect = true;
+            $("#resetRecord").html("Reset Record?");
+            JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
+          }
         });
       });
 
@@ -227,15 +295,17 @@
 
       function onEvent(eventType) {
         if (eventType == 'OnPlayClick') {
-          var isJP = getCheckStatus('#isJP');
-          var debug = getCheckStatus('#debug');
-          var receiveItems = getCheckStatus('#receiveItems');
-          var sendHearts = getCheckStatus('#sendHearts');
-          var isFourTsum = getCheckStatus('#isFourTsum');
-          var isPause = getCheckStatus('#isPause');
-          var receiveOneItem = getCheckStatus('#receiveOneItem');
-          var recordReceive = getCheckStatus('#recordReceive');
-          JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+isJP+', '+isPause+ ','+ receiveOneItem + ','+ recordReceive + ');');
+          // var isJP = getCheckStatus('#isJP');
+          // var debug = getCheckStatus('#debug');
+          // var receiveItems = getCheckStatus('#receiveItems');
+          // var sendHearts = getCheckStatus('#sendHearts');
+          // var isFourTsum = getCheckStatus('#isFourTsum');
+          // var isPause = getCheckStatus('#isPause');
+          // var receiveOneItem = getCheckStatus('#receiveOneItem');
+          // var recordReceive = getCheckStatus('#recordReceive');
+          // JavaScriptInterface.runScript('start('+debug+','+receiveItems+', '+sendHearts+', '+isFourTsum+', '+isJP+', '+isPause+ ','+ receiveOneItem + ','+ recordReceive + ');');
+          var startCommand = genStartCommand(settings);
+          JavaScriptInterface.runScript(startCommand);
         } else if (eventType == 'OnPauseClick') {
           JavaScriptInterface.runScript('stop();');
         } else if (eventType == 'OnSettingClick') {
@@ -279,18 +349,34 @@
         if (record == undefined || record == "undefined" || record == "") {
           return;
         }
-        record = JSON.parse(record);
+        var recordObjs = JSON.parse(record);
+        record = [];
+        for (var filename in recordObjs) {
+          var obj = recordObjs[filename];
+          var totalCount = 0;
+          for (var d in obj.receiveCounts) {
+            totalCount += +obj.receiveCounts[d];
+          }
+          obj.totalCount = totalCount;
+          obj.filename = filename;
+          record.push(obj);
+        }
+        record.sort(function(a, b) {
+          return a.totalCount < b.totalCount ? -1 : 1;
+        });
+
         var html = "<ul>";
-        for (var filename in record) {
+        for (var idx in record) {
+          var filename = record[idx].filename;
           var imgId = filename.split('.')[0];
-          var lastTime = new Date(record[filename].lastReceiveTime);
+          var lastTime = new Date(record[idx].lastReceiveTime);
           html += "<li>"
           html += "<div><img id='" +imgId+ "' />" + getTimeString(lastTime) + "</div>";
           html += "<ul>";
-          for(var day in record[filename].receiveCounts) {
+          for(var day in record[idx].receiveCounts) {
             var dayTime = new Date(+day * 86400000 );
             html += "<li>";
-            html += getDayTimeString(dayTime) + ": get " + record[filename].receiveCounts[day] + " hearts";
+            html += getDayTimeString(dayTime) + ": get " + record[idx].receiveCounts[day] + " hearts";
             html += "</li>";
           }
           html += "</ul>";
@@ -307,72 +393,15 @@
       <a class="navbar-brand">Tsum Tsum v12</a>
     </nav>
     <div class="container">
-      <div id="settings" class="list-group"></div>
-      <ul class="list-group">
-        <li class="list-group-item">
-          感謝 ttung 提供改善辨識、送心功能
-        </li>
-        <li class="list-group-item">
-          Is Japan Version? 日本版？
-          <label class="switch pull-right">
-            <input id="isJP" type="checkbox">
-            <a class="slider round"></a>
-          </label>
-        </li>
-        <li class="list-group-item">
-          Debug 偵錯
-          <label class="switch pull-right">
-            <input id="debug" type="checkbox" checked>
-            <a class="slider round"></a>
-          </label>
-        </li>
-        <li class="list-group-item">
-          Auto Receive Hearts 自動收愛心
-          <label class="switch pull-right">
-            <input id="receiveItems" type="checkbox" checked>
-            <a class="slider round"></a>
-          </label>
-        </li>
-        <li class="list-group-item">
-          Receive One Hearts 自動收一顆愛心
-          <label class="switch pull-right">
-            <input id="receiveOneItem" type="checkbox">
-            <a class="slider round"></a>
-          </label>
-        </li>
-        <li class="list-group-item">
-          Record Receive 紀錄送心者
-          <label class="switch pull-right">
-            <input id="recordReceive" type="checkbox">
-            <a class="slider round"></a>
-          </label>
-        </li>
-        <li class="list-group-item">
-          Auto Send Hearts 自動送愛心
-          <label class="switch pull-right">
-            <input id="sendHearts" type="checkbox">
-            <a class="slider round"></a>
-          </label>
-        </li>
-        <li class="list-group-item">
-          5 To 4 Tsums 道具五變四
-          <label class="switch pull-right">
-            <input id="isFourTsum" type="checkbox">
-            <a class="slider round"></a>
-          </label>
-        </li>
-        <li class="list-group-item">
-          Pause when calculating 計算時暫停
-          <label class="switch pull-right">
-            <input id="isPause" type="checkbox" checked>
-            <a class="slider round"></a>
-          </label>
-        </li>
-      </ul>     
+      <div id="settings"></div>
       <div>Who send hearts to You 誰送你心</div>
       <button id="updateRecord">Update</button>
+      <button id="resetRecord" style="float:right;">Reset Record</button>
       <div id="record">
       </div>
+      <br />
+      <br />
+      <br />
     </div>
   </body>
 </html>
