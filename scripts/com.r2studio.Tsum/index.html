@@ -285,6 +285,7 @@
             protect = true;
             $("#resetRecord").html("Reset Record?");
             JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
+            $("#record").html("");
           }
         });
       });
