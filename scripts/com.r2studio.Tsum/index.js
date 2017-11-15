@@ -439,6 +439,7 @@ function Tsum() {
   // record
   this.record = {};
   this.recordImages = {};
+  this.receiveCheckLimit = 5;
 
   this.init();
 }
@@ -968,6 +969,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var receivedCount = 0;
   var nonItemCount = 0;
   var unknownCount = 0;
+  var receiveCheckLimit = 1;
   while (this.isRunning) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
@@ -995,7 +997,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outReceiveOk);
       unknownCount++;
     }
-    this.sleep(800);
+    this.sleep(600);
     if (unknownCount >= 8) {
       log('停在未知頁面太久，離開');
       this.tap(Button.outClose);
@@ -1006,10 +1008,11 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outClose);
       this.goFriendPage();
       this.sleep(1000);
-      if (receivedCount == 0) {
+      if (receivedCount == 0 || receiveCheckLimit >= this.receiveCheckLimit) {
         log('結束接收物品');
         break;
       } else {
+        receiveCheckLimit++;
         log('檢查還有沒有物品');
         this.sleep(1000);
         receivedCount = 0;
@@ -1040,7 +1043,7 @@ Tsum.prototype.taskSendHearts = function() {
     var heartsPos = [];
 
     var img = this.screenshot();
-    for(var y = hfy; y <= hty; y += 15) {
+    for(var y = hfy; y <= hty; y += 12) {
       var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}));  
       if (isHs) {
         heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
@@ -1076,8 +1079,9 @@ Tsum.prototype.taskSendHearts = function() {
       }
     } else {
       for (var h in heartsPos) {
-        if (!this.sendHeart(heartsPos[h])) {
-          continue;
+        var success = this.sendHeart(heartsPos[h]);
+        if (!success) {
+          this.sendHeart(heartsPos[h]);
         }
       }
       this.tapDown(Button.outSendHeart3, 100);
@@ -1141,7 +1145,7 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -1154,6 +1158,7 @@ function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveI
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
   ts.sentToZero = sentToZero;
+  ts.receiveCheckLimit = receiveCheckLimit;
 
   if (ts.recordReceive) {
     ts.readRecord();
