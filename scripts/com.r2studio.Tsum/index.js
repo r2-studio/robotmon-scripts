@@ -77,11 +77,13 @@ var Button = {
   outReceiveClose: {x: 530, y: 1300 - adjY},
   outReceiveOne: {x: 790, y: 525 - adjY, color: {"a":0,"b":7,"g":171,"r":236}, color2: {"a":0,"b":125,"g":83,"r":48}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}, color3: {"a":0,"b":199,"g":162,"r":46}},
-  outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}, color3: {"a":0,"b":199,"g":162,"r":46}},
-  outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}, color3: {"a":0,"b":199,"g":162,"r":46}},
-  outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}, color3: {"a":0,"b":199,"g":162,"r":46}},
+  outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeartClose: {x: 665, y: 1340 - adjY, color: {"a":0,"b":6,"g":175,"r":233}},
+  outSendHeartFrom: {x: 910, y: 530 - adjY},
+  outSendHeartTo: {x: 910, y: 1250 - adjY},
   outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 863 - adjY},
   skillLuke1: {x: 970, y: 1270 - adjY},
@@ -1001,29 +1003,38 @@ Tsum.prototype.taskSendHearts = function() {
   sleep(1500);
   this.tapDown(Button.outSendHeart0, 100);
   this.moveTo(Button.outSendHeart0, 100);
-  this.moveTo({x: Button.outSendHeart0.x, y: 90000}, 100);
-  this.tapUp({x: Button.outSendHeart0.x, y: 90000}, 100);
+  this.moveTo({x: Button.outSendHeart0.x, y: 150000}, 100);
+  this.tapUp({x: Button.outSendHeart0.x, y: 150000}, 100);
   sleep(2000);
 
   var retry = 0;
   while(this.isRunning) {
-    var img = this.screenshot();
-    isHs0 = isSameColor(Button.outSendHeart0.color, this.getColor(img, Button.outSendHeart0));
-    isHs1 = isSameColor(Button.outSendHeart1.color, this.getColor(img, Button.outSendHeart1));
-    isHs2 = isSameColor(Button.outSendHeart2.color, this.getColor(img, Button.outSendHeart2));
-    isHs3 = isSameColor(Button.outSendHeart3.color, this.getColor(img, Button.outSendHeart3));
+    var hfx = Button.outSendHeartFrom.x;
+    var hfy = Button.outSendHeartFrom.y;
+    var hty = Button.outSendHeartTo.y;
+    var heartsPos = [];
 
+    var img = this.screenshot();
+    for(var y = hfy; y <= hty; y += 15) {
+      var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}));  
+      if (isHs) {
+        heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
+        y += 150;
+      }
+    }
     var isZero = true;
     var fx = Button.outFriendScoreFrom.x;
     var tx = Button.outFriendScoreTo.x;
+    var sy = heartsPos.length == 0 ? Button.outFriendScoreFrom.y : (heartsPos[0].y + 40);
     for (var px = fx; px <= tx; px += 20) {
-      isZero = isSameColor(Button.outFriendScoreFrom.color, this.getColor(img, {x: px, y: Button.outFriendScoreFrom.y}), 40);
+      isZero = isSameColor(Button.outFriendScoreFrom.color, this.getColor(img, {x: px, y: sy}), 40);
       if (!isZero) {
         break;
       }
     }
     releaseImage(img);
-    if ((!isHs0 && !isHs1 && !isHs2 && !isHs3) || (!this.sentToZero && isZero)) {
+    log("收" + heartsPos.length + "顆心, 0分?" + isZero);
+    if (heartsPos.length == 0 || (!this.sentToZero && isZero)) {
       if(retry < 5){
         this.tapDown(Button.outSendHeart3, 100);
         this.moveTo (Button.outSendHeart3, 100);
@@ -1038,16 +1049,18 @@ Tsum.prototype.taskSendHearts = function() {
         break;
       }
     } else {
-      if (isHs0) {if (!this.sendHeart(Button.outSendHeart0)) {continue;}}
-      if (isHs1) {if (!this.sendHeart(Button.outSendHeart1)) {continue;}}
-      if (isHs2) {if (!this.sendHeart(Button.outSendHeart2)) {continue;}}
-      if (isHs3) {if (!this.sendHeart(Button.outSendHeart3)) {continue;}}
+      for (var h in heartsPos) {
+        if (!this.sendHeart(heartsPos[h])) {
+          continue;
+        }
+      }
       this.tapDown(Button.outSendHeart3, 100);
       this.moveTo (Button.outSendHeart3, 100);
       this.moveTo (Button.outSendHeart2, 100);
       this.moveTo (Button.outSendHeart1, 100);
       this.moveTo (Button.outSendHeart0, 800);
       this.tapUp  (Button.outSendHeart0, 100);
+      sleep(1000);
     }
   }
 }
@@ -1062,7 +1075,6 @@ Tsum.prototype.sendHeart = function(btn) {
     var isSend = isSameColor(btn.color, this.getColor(img, btn), 35);
     var isSent1 = isSameColor(btn.color2, this.getColor(img, btn), 35);
     var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 35);
-    log(this.getColor(img, btn));
     releaseImage(img);
     
     if (isOk) {
