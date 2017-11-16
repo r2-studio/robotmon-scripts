@@ -76,6 +76,7 @@ var Button = {
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
   outClose: {x: 500, y: 1520 - adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
+  outClose2: {x: 300, y: 1520 - adjY}, // 關閉
   outReceive: {x: 910, y: 350 - adjY},
   outReceiveAll: {x: 800, y: 1350 - adjY},
   outReceiveOk: {x: 690, y: 1020 - adjY, color: {"a":0,"b":6,"g":175,"r":236}},
@@ -89,11 +90,12 @@ var Button = {
   outSendHeartClose: {x: 665, y: 1340 - adjY, color: {"a":0,"b":6,"g":175,"r":233}},
   outSendHeartFrom: {x: 910, y: 530 - adjY},
   outSendHeartTo: {x: 910, y: 1250 - adjY},
-  outSendHeartEnd: {x: 328, y: 1194, color: {"a":0,"b":132,"g":85,"r":47}},
+  outSendHeartEnd: {x: 328, y: 1194 - adjY, color: {"a":0,"b":132,"g":85,"r":47}},
+  outSendHeartEnd2: {x: 227, y: 1190 - adjY, color: {"a":0,"b":123,"g":78,"r":44}},
   outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 863 - adjY},
   skillLuke1: {x: 970, y: 1270 - adjY},
-  outReceiveNameFrom: {x: 160, y: 465 - adjY},
+  outReceiveNameFrom: {x: 160, y: 460 - adjY},
   outReceiveNameTo: {x: 620, y: 555 - adjY},
 };
 
@@ -663,7 +665,7 @@ Tsum.prototype.goFriendPage = function() {
     } else if (page == 'playingGame') {
       this.tap(Button.gamePause);
     } else if (page == 'gameEnd') {
-      this.tap(Button.outGameEnd);
+      this.tap(Button.outClose2);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
@@ -692,7 +694,7 @@ Tsum.prototype.goGamePlayingPage = function() {
     } else if (page == 'playingGame') {
       break;
     } else if (page == 'gameEnd') {
-      this.tap(Button.outGameEnd);
+      this.tap(Button.outClose2);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
@@ -928,12 +930,14 @@ Tsum.prototype.countReceiveHeart = function() {
     saveImage(nameImg, recordDir + '/' + filename);
   } else {
     // found
-    if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
-      this.record[existFilename].receiveCounts[dayTime] = 0;
+    if (this.record[existFilename].lastReceiveTime == undefined || Date.now() - this.record[existFilename].lastReceiveTime > 2000) {
+      if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
+        this.record[existFilename].receiveCounts[dayTime] = 0;
+      }
+      this.record[existFilename].receiveCounts[dayTime]++;
+      this.record[existFilename].lastReceiveTime = Date.now();
+      log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
     }
-    this.record[existFilename].receiveCounts[dayTime]++;
-    this.record[existFilename].lastReceiveTime = Date.now();
-    log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
     releaseImage(nameImg);
   }
   releaseImage(img);
@@ -970,6 +974,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var nonItemCount = 0;
   var unknownCount = 0;
   var receiveCheckLimit = 1;
+  var isFinish = false;
   while (this.isRunning) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
@@ -977,18 +982,23 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     releaseImage(img);
     if (isItem) {
-      if (this.recordReceive) {
-        this.countReceiveHeart();
-        this.saveRecord();
+      if (!isFinish) {
+        if (this.recordReceive) {
+          this.countReceiveHeart();
+          this.saveRecord();
+        }
+        this.tap(Button.outReceiveOne);
+        receivedCount++;
+        nonItemCount = 0;
+        unknownCount = 0;
       }
-      this.tap(Button.outReceiveOne);
-      receivedCount++;
-      nonItemCount = 0;
-      unknownCount = 0;
+      isFinish = false;
     } else if (isOk) {
       this.tap(Button.outReceiveOk);
       nonItemCount = 0;
       unknownCount = 0;
+      this.sleep(200);
+      isFinish = true;
     } else if (isNonItem) {
       this.tap(Button.outReceiveOk);
       nonItemCount++;
@@ -996,8 +1006,9 @@ Tsum.prototype.taskReceiveOneItem = function() {
     } else {
       this.tap(Button.outReceiveOk);
       unknownCount++;
+      isFinish = false;
     }
-    this.sleep(600);
+    this.sleep(700);
     if (unknownCount >= 8) {
       log('停在未知頁面太久，離開');
       this.tap(Button.outClose);
@@ -1060,7 +1071,9 @@ Tsum.prototype.taskSendHearts = function() {
         break;
       }
     }
+    var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, Button.outSendHeartEnd2), 40);
     var isEnd = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
+    isEnd = (!isNotEnd && isEnd);
     releaseImage(img);
     log("收" + heartsPos.length + "顆心, 0分?" + isZero);
     if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero)) {
@@ -1191,6 +1204,9 @@ function stop() {
 // stop();
 // this.sleep(500);
 // ts = new Tsum();
+// ts.sentToZero = true;
+// ts.taskSendHearts();
+// ts.taskReceiveOneItem();
 // ts.taskPlayGame();
 // ts.taskReceiveAllItems();
 // var page = ts.checkPage(3500);
@@ -1200,7 +1216,6 @@ function stop() {
 // ts.recordReceive = true;
 // ts.sentToZero = true;
 // ts.readRecord();
-// ts.taskSendHearts();
 // ts.taskSendHearts();
 // ts.goFriendPage();
 // start(true, false, false, false, false, false, true, true);
