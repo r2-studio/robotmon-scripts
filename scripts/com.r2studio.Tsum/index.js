@@ -1,4 +1,4 @@
-function TaskController(){this.tasks={},this.isRunning=!1,this.interval=200}TaskController.prototype.getFirstPriorityTaskName=function(){var t=null,n=Date.now();for(var s in this.tasks){var o=this.tasks[s];n-o.lastRunTime<o.interval||(null!==t?o.priority<t.priority?t=o:o.interval>t.interval?t=o:o.lastRunTime<t.lastRunTime&&(t=o):t=o)}return null===t?"":t.name},TaskController.prototype.loop=function(){for(console.log("loop start");this.isRunning;){var t=this.getFirstPriorityTaskName(),n=this.tasks[t];void 0!==n&&(n.run(),n.lastRunTime=Date.now(),0===--n.runTimes&&delete this.tasks[t]),sleep(this.interval)}this.isRunning=!1,console.log("loop stop")},TaskController.prototype.updateRunInterval=function(t){t<this.interval&&t>=50&&(this.interval=t)},TaskController.prototype.newTaskObject=function(t,n,s,o,i){return{name:t,run:n,interval:s||1e3,runTimes:o||0,priority:i,lastRunTime:0,status:0}},TaskController.prototype.newTask=function(t,n,s,o,i){void 0===i&&(i=!1);{if("function"==typeof n){var e=this.newTaskObject(t,n,s,o,0);i&&(e.lastRunTime=Date.now()),this.updateRunInterval(e.interval);var r="system_newTask_"+t,a=this.newTaskObject(r,function(){this.tasks[t]=e}.bind(this),0,1,-20);return this.tasks[r]=a,e}console.log("Error not a function",t,n)}},TaskController.prototype.removeTask=function(t){var n="system_removeTask_"+Date.now().toString(),s=this.newTaskObject(n,function(){delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[n]=s},TaskController.prototype.removeAllTasks=function(){var t="system_removeAllTask_"+Date.now().toString(),n=this.newTaskObject(t,function(){for(var t in this.tasks)delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[t]=n},TaskController.prototype.start=function(){this.isRunning||(this.isRunning=!0,this.loop())},TaskController.prototype.stop=function(){this.isRunning&&(this.isRunning=!1,console.log("wait loop stop..."))};
+importJS("TaskController-0.0.1");
 
 // Utils
 function isSameColor(c1, c2, diff) {
@@ -21,7 +21,7 @@ function isSameColor(c1, c2, diff) {
 }
 
 function log() {
-  sleep(30);
+  this.sleep(30);
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
       arguments[i] = JSON.stringify(arguments[i]);
@@ -57,6 +57,8 @@ var Config = {
 // 1776 * 1920 (y - 78)
 var adjY = 78;
 var Button = {
+  gameBubblesFrom: {x: 100, y: 560 - adjY},
+  gameBubblesTo: {x: 1000, y: 1310 - adjY},
   gameMyTsum: {x: 100, y: 1450 - adjY},
   gameQuestionCancel: {x: 400, y: 1280 - adjY},
   gameQuestionCancel2: {x: 400, y: 1000 - adjY},
@@ -68,24 +70,33 @@ var Button = {
   gameRand: {x: 985, y: 1580 - adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 983, y: 250 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue: {x: 540, y: 1330 - adjY, color: {"a":0,"b":7,"g":176,"r":234}},
+  gameContinue1: {x: 461, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
+  gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
+  outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
   outClose: {x: 500, y: 1520 - adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
+  outClose2: {x: 300, y: 1520 - adjY}, // 關閉
   outReceive: {x: 910, y: 350 - adjY},
   outReceiveAll: {x: 800, y: 1350 - adjY},
-  outReceiveOk: {x: 750, y: 1000 - adjY},
+  outReceiveOk: {x: 690, y: 1020 - adjY, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveClose: {x: 530, y: 1300 - adjY},
-  outReceiveOne: {x: 905, y: 525 - adjY},
+  outReceiveOne: {x: 840, y: 497 - adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
-  outSendHeart1: {x: 910, y: 828 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
-  outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
-  outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}},
+  outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeartClose: {x: 665, y: 1340 - adjY, color: {"a":0,"b":6,"g":175,"r":233}},
+  outSendHeartFrom: {x: 910, y: 530 - adjY},
+  outSendHeartTo: {x: 910, y: 1250 - adjY},
+  outSendHeartEnd: {x: 328, y: 1194 - adjY, color: {"a":0,"b":132,"g":85,"r":47}},
+  outSendHeartEnd2: {x: 227, y: 1190 - adjY, color: {"a":0,"b":123,"g":78,"r":44}},
   outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 863 - adjY},
   skillLuke1: {x: 970, y: 1270 - adjY},
-  outReceiveNameFrom: {x: 160, y: 465 - adjY},
-  outReceiveNameTo: {x: 620, y: 520 - adjY},
+  outReceiveNameFrom: {x: 160, y: 460 - adjY},
+  outReceiveNameTo: {x: 620, y: 555 - adjY},
 };
 
 // Utils for Tsum
@@ -261,7 +272,7 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
     
     multiTaskIds.push(ids);
   }
-  sleep(100);
+  this.sleep(100);
   for (var i in multiTaskIds) {
     var resultss = waitTask(multiTaskIds[i]);
     for (var ks in resultss) {
@@ -425,10 +436,12 @@ function Tsum() {
   this.isJP = false;
   this.isPause = true;
   this.receiveOneItem = false;
-
+  this.sentToZero = false;
+  this.recordReceive = true;
   // record
   this.record = {};
   this.recordImages = {};
+  this.receiveCheckLimit = 5;
 
   this.init();
 }
@@ -462,9 +475,9 @@ Tsum.prototype.init = function() {
 
   if (this.debug) {
     log('Config', this);
-    sleep(200);
+    this.sleep(200);
     log('Game OffsetXY', this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
-    sleep(1000);
+    this.sleep(1000);
   }
 }
 
@@ -501,9 +514,9 @@ Tsum.prototype.isAppOn = function() {
 Tsum.prototype.startApp = function() {
   log('Start TsumTsum App...');
   execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
-  sleep(1000);
+  this.sleep(1000);
   execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
-  sleep(2000);
+  this.sleep(2000);
 }
 
 Tsum.prototype.screenshot = function() {
@@ -609,9 +622,12 @@ Tsum.prototype.checkPage = function(wait) {
     var isStart2Btn = isSameColor(Button.outStart2.color, this.getColor(img, Button.outStart2), 40);
     var isGameRandBtn = isSameColor(Button.gameRand.color, this.getColor(img, Button.gameRand), 40);
     var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue), 40);
+    var isGameContinue1 = isSameColor(Button.gameContinue1.color, this.getColor(img, Button.gameContinue1), 40);
+    var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
+    var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
     releaseImage(img);
     log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
-    if (isGameContinue && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
+    if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'playingGame';
@@ -621,11 +637,13 @@ Tsum.prototype.checkPage = function(wait) {
       return 'startPage';
     } else if (isCloseBtn) {
       return 'otherPage';
+    } else if (isGemeEnd) {
+      return 'gameEnd';
     }
     if (Date.now() - start > wait) {
       return 'unknown';
     }
-    sleep(Config.gameContinueDelay);
+    this.sleep(Config.gameContinueDelay);
   }
 }
 
@@ -646,13 +664,15 @@ Tsum.prototype.goFriendPage = function() {
       this.tap(Button.gameStop);
     } else if (page == 'playingGame') {
       this.tap(Button.gamePause);
+    } else if (page == 'gameEnd') {
+      this.tap(Button.outClose2);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
       this.tap(Button.outClose);
       this.tap(Button.gameStop);
     }
-    sleep(1000);
+    this.sleep(1000);
   }
 }
 
@@ -673,13 +693,15 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Button.gameContinue);
     } else if (page == 'playingGame') {
       break;
+    } else if (page == 'gameEnd') {
+      this.tap(Button.outClose2);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
       this.tap(Button.outClose);
       this.tap(Button.gameStop);
     }
-    sleep(1000);
+    this.sleep(1000);
   }
 }
 
@@ -712,7 +734,7 @@ Tsum.prototype.useSkill = function() {
     releaseImage(img);
     if (!isSkillOff1 && !isSkillOff2 && !isSkillOff3) {
       if (i == 0) {
-        sleep(300);
+        this.sleep(300);
       }
     } else {
       return;
@@ -721,29 +743,29 @@ Tsum.prototype.useSkill = function() {
   log('技能已經存滿，放技能');
 
   this.tap(Button.gameSkillOn);
-  sleep(30);
+  this.sleep(30);
   if (this.myTsum == 'block_lukej_s') {
     for (var i = 0; i < 5; i++) {
       this.tapDown({x: 820, y: 1200}, 20);
       this.moveTo({x: 820, y: 1150}, 20);
       if (i == 0) {
-        sleep(1160);
+        this.sleep(1160);
       }
-      sleep(350);
+      this.sleep(350);
       this.moveTo({x: 825, y: 1000}, 20);
-      sleep(100);
+      this.sleep(100);
       this.moveTo({x: 835, y: 800}, 20);
-      sleep(100);
+      this.sleep(100);
       this.moveTo({x: 845, y: 600}, 20);
-      sleep(100);
+      this.sleep(100);
       this.moveTo({x: 850, y: 450}, 20);
       this.tapUp({x: 850, y: 420}, 20);
-      sleep(20);
+      this.sleep(20);
     }
     this.tap(Button.skillLuke1);
-    sleep(500);
+    this.sleep(500);
   } else {
-    sleep(2500);
+    this.sleep(2500);
   }
 }
 
@@ -751,11 +773,11 @@ Tsum.prototype.taskPlayGame = function() {
   log('進入遊戲中...');
   this.goGamePlayingPage();
   log('遊戲中');
-  sleep(2400);
+  this.sleep(2400);
 
   this.findMyTsum();
   log('myTsum', this.myTsum);
-  sleep(500);
+  this.sleep(500);
   // start to run
   var runTimes = 0;
   var pathZero = 0;
@@ -764,7 +786,7 @@ Tsum.prototype.taskPlayGame = function() {
     var gameImage = this.playScreenshot();
     if (this.isPause) {
       this.tap(Button.gamePause);
-      sleep(20);
+      this.sleep(20);
       this.tap(Button.gamePause);
     }
     if (!this.isLoadRotateTsum) {
@@ -784,9 +806,9 @@ Tsum.prototype.taskPlayGame = function() {
     var paths = calculatePaths(board);
     
     this.tap(Button.gameContinue);
-    if (this.isPause) {sleep(Config.gameContinueDelay / 2);}
+    if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
     this.tap(Button.gameContinue);
-    if (this.isPause) {sleep(Config.gameContinueDelay / 2);}
+    if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
 
     if (paths.length < 2) {
       if (pathZero > 2) {
@@ -794,7 +816,7 @@ Tsum.prototype.taskPlayGame = function() {
         log('路徑數量為 0, 重新辨識...');
         this.tap(Button.gameRand, 60);
         this.tap(Button.gameRand, 60);
-        sleep(1000);
+        this.sleep(1000);
         releaseTsumRotationImages(this.gameTsums);
         this.gameTsums = [];
         this.isLoadRotateTsum = false;
@@ -806,18 +828,28 @@ Tsum.prototype.taskPlayGame = function() {
     log('開始連線 數量', paths.length);
     this.link(paths);
 
+    // click bubbles
+    if (runTimes % 5 == 2) {
+      log("Clear bubbles");
+      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 150) {
+        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 150) {
+          this.tap({x: bx, y: by}, 10);
+        }
+      }
+    }
+    
     if (runTimes % 4 == 3) {
       this.tap(Button.gameRand, 100);
       this.tap(Button.gameRand, 100);
-      sleep(700);
+      this.sleep(700);
     }
-    sleep(300);
+    this.sleep(300);
     this.useSkill();
 
     // double check
     var page = this.checkPage(3500);
     if (page != 'playingGame' && page != 'pausingGame') {
-      sleep(this.gameContinueDelay);
+      this.sleep(Config.gameContinueDelay);
       var page = this.checkPage(3500);
       if (page != 'playingGame' && page != 'pausingGame') {
         log('遊戲結束');
@@ -834,16 +866,16 @@ Tsum.prototype.taskPlayGame = function() {
 Tsum.prototype.taskReceiveAllItems = function() {
   log('前往朋友頁面');
   this.goFriendPage();
-  sleep(1000);
+  this.sleep(1000);
   log('接收全部物品');
   this.tap(Button.outReceive);
-  sleep(2500);
+  this.sleep(2500);
   this.tap(Button.outReceiveAll);
-  sleep(1500);
+  this.sleep(1500);
   this.tap(Button.outReceiveOk);
-  sleep(1500);
+  this.sleep(1500);
   this.tap(Button.outReceiveClose);
-  sleep(1000);
+  this.sleep(1000);
   this.tap(Button.outClose);
   this.goFriendPage();
   log('接收物品完成');
@@ -898,12 +930,14 @@ Tsum.prototype.countReceiveHeart = function() {
     saveImage(nameImg, recordDir + '/' + filename);
   } else {
     // found
-    if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
-      this.record[existFilename].receiveCounts[dayTime] = 0;
+    if (this.record[existFilename].lastReceiveTime == undefined || Date.now() - this.record[existFilename].lastReceiveTime > 2000) {
+      if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
+        this.record[existFilename].receiveCounts[dayTime] = 0;
+      }
+      this.record[existFilename].receiveCounts[dayTime]++;
+      this.record[existFilename].lastReceiveTime = Date.now();
+      log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
     }
-    this.record[existFilename].receiveCounts[dayTime]++;
-    this.record[existFilename].lastReceiveTime = Date.now();
-    log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
     releaseImage(nameImg);
   }
   releaseImage(img);
@@ -931,90 +965,192 @@ Tsum.prototype.clear = function() {
 Tsum.prototype.taskReceiveOneItem = function() {
   log('前往朋友頁面');
   this.goFriendPage();
-  sleep(1000);
+  this.sleep(1000);
   log('一個一個接收物品');
   this.tap(Button.outReceive);
-  sleep(2500);
+  this.sleep(2000);
 
+  var receivedCount = 0;
+  var nonItemCount = 0;
+  var unknownCount = 0;
+  var receiveCheckLimit = 1;
+  var isFinish = false;
   while (this.isRunning) {
     var img = this.screenshot();
-    var isHeartItem = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 35);
+    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
+    var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
+    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     releaseImage(img);
-    if (isHeartItem) {
-      if (this.recordReceive) {
-        this.countReceiveHeart();
-        this.saveRecord();
+    if (isItem) {
+      if (!isFinish) {
+        if (this.recordReceive) {
+          this.countReceiveHeart();
+          this.saveRecord();
+        }
+        this.tap(Button.outReceiveOne);
+        receivedCount++;
+        nonItemCount = 0;
+        unknownCount = 0;
       }
-      this.tap(Button.outReceiveOne);
-      sleep(3000);
+      isFinish = false;
+    } else if (isOk) {
       this.tap(Button.outReceiveOk);
-      sleep(3000);
-      this.tap(Button.outReceiveClose);
-      sleep(1000);
+      nonItemCount = 0;
+      unknownCount = 0;
+      this.sleep(200);
+      isFinish = true;
+    } else if (isNonItem) {
+      this.tap(Button.outReceiveOk);
+      nonItemCount++;
+      unknownCount = 0;
     } else {
-      log('結束接收物品');
+      this.tap(Button.outReceiveOk);
+      unknownCount++;
+      isFinish = false;
+    }
+    this.sleep(700);
+    if (unknownCount >= 8) {
+      log('停在未知頁面太久，離開');
+      this.tap(Button.outClose);
+      this.goFriendPage();
       break;
     }
+    if (nonItemCount >= 3) {
+      this.tap(Button.outClose);
+      this.goFriendPage();
+      this.sleep(1000);
+      if (receivedCount == 0 || receiveCheckLimit >= this.receiveCheckLimit) {
+        log('結束接收物品');
+        break;
+      } else {
+        receiveCheckLimit++;
+        log('檢查還有沒有物品');
+        this.sleep(1000);
+        receivedCount = 0;
+        nonItemCount = 0;
+        this.tap(Button.outReceive);
+        this.sleep(2000);
+      }
+    }
   }
-  sleep(1000);
-  this.tap(Button.outClose);
-  this.goFriendPage();
 }
 
 Tsum.prototype.taskSendHearts = function() {
   log('前往朋友頁面');
   this.goFriendPage();
   log('開始送愛心');
-  sleep(1500);
+  this.sleep(1500);
   this.tapDown(Button.outSendHeart0, 100);
   this.moveTo(Button.outSendHeart0, 100);
-  this.moveTo({x: Button.outSendHeart0.x, y: 90000}, 100);
-  this.tapUp({x: Button.outSendHeart0.x, y: 90000}, 100);
-  sleep(2000);
+  this.moveTo({x: Button.outSendHeart0.x, y: 150000}, 100);
+  this.tapUp({x: Button.outSendHeart0.x, y: 150000}, 100);
+  this.sleep(2000);
 
   var retry = 0;
   while(this.isRunning) {
-    var img = this.screenshot();
-    isHs0 = isSameColor(Button.outSendHeart0.color, this.getColor(img, Button.outSendHeart0));
-    isHs1 = isSameColor(Button.outSendHeart1.color, this.getColor(img, Button.outSendHeart1));
-    isHs2 = isSameColor(Button.outSendHeart2.color, this.getColor(img, Button.outSendHeart2));
-    isHs3 = isSameColor(Button.outSendHeart3.color, this.getColor(img, Button.outSendHeart3));
+    var hfx = Button.outSendHeartFrom.x;
+    var hfy = Button.outSendHeartFrom.y;
+    var hty = Button.outSendHeartTo.y;
+    var heartsPos = [];
 
+    var img = this.screenshot();
+    for(var y = hfy; y <= hty; y += 12) {
+      var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}));  
+      if (isHs) {
+        heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
+        y += 150;
+      }
+    }
     var isZero = true;
     var fx = Button.outFriendScoreFrom.x;
     var tx = Button.outFriendScoreTo.x;
+    var sy = heartsPos.length == 0 ? Button.outFriendScoreFrom.y : (heartsPos[0].y + 40);
     for (var px = fx; px <= tx; px += 20) {
-      isZero = isSameColor(Button.outFriendScoreFrom.color, this.getColor(img, {x: px, y: Button.outFriendScoreFrom.y}), 40);
+      isZero = isSameColor(Button.outFriendScoreFrom.color, this.getColor(img, {x: px, y: sy}), 40);
       if (!isZero) {
         break;
       }
     }
+    var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, Button.outSendHeartEnd2), 40);
+    var isEnd = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
+    isEnd = (!isNotEnd && isEnd);
     releaseImage(img);
-    if ((!isHs0 && !isHs1 && !isHs2 && !isHs3) || isZero) {
-      if(retry < 5){
+    log("收" + heartsPos.length + "顆心, 0分?" + isZero);
+    if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero)) {
+      if(retry < 3){
         this.tapDown(Button.outSendHeart3, 100);
         this.moveTo (Button.outSendHeart3, 100);
         this.moveTo (Button.outSendHeart2, 100);
         this.moveTo (Button.outSendHeart1, 100);
-        this.moveTo (Button.outSendHeart0, 1000);
+        this.moveTo (Button.outSendHeart0, 800);
         this.tapUp  (Button.outSendHeart0, 100);
         retry++;
         log("沒愛心可送或零分，再檢查次數: " + retry);
-        sleep(1000);
+        this.sleep(1000);
       } else {
         break;
       }
     } else {
-      if (isHs0) {this.tap(Button.outSendHeart0);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
-      if (isHs1) {this.tap(Button.outSendHeart1);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
-      if (isHs2) {this.tap(Button.outSendHeart2);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
-      if (isHs3) {this.tap(Button.outSendHeart3);sleep(2000);this.tap(Button.outReceiveOk);sleep(3000);this.tap(Button.outReceiveOk);sleep(1700);}
+      for (var h in heartsPos) {
+        var success = this.sendHeart(heartsPos[h]);
+        if (!success) {
+          this.sendHeart(heartsPos[h]);
+        }
+      }
       this.tapDown(Button.outSendHeart3, 100);
       this.moveTo (Button.outSendHeart3, 100);
       this.moveTo (Button.outSendHeart2, 100);
       this.moveTo (Button.outSendHeart1, 100);
-      this.moveTo (Button.outSendHeart0, 1000);
+      this.moveTo (Button.outSendHeart0, 800);
       this.tapUp  (Button.outSendHeart0, 100);
+      this.sleep(1000);
+    }
+  }
+}
+
+Tsum.prototype.sendHeart = function(btn) {
+  this.tap(btn);
+  this.sleep(800);
+  var unknownCount = 0;
+  while (this.isRunning) {
+    var img = this.screenshot();
+    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
+    var isSend = isSameColor(btn.color, this.getColor(img, btn), 35);
+    var isSent1 = isSameColor(btn.color2, this.getColor(img, btn), 35);
+    var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 35);
+    releaseImage(img);
+    
+    if (isOk) {
+      this.tap(Button.outReceiveOk);
+    } else if (isSend) {
+      this.tap(btn);
+      this.sleep(800);
+    } else if (isSent1) {
+      return true;
+    } else if (isClose) {
+      this.tap(Button.outSendHeartClose);
+    } else {
+      this.tap(Button.outSendHeartClose);
+      unknownCount++;
+    }
+    if (unknownCount >= 10) {
+      log("未知狀態，離開");
+      return false;
+    }
+    this.sleep(250);
+  }
+}
+
+Tsum.prototype.sleep = function(t) {
+  var waitTime = 0;
+  if (t == undefined) {
+    t = 1000;
+  }
+  while(this.isRunning) {
+    sleep(100);
+    waitTime += 100;
+    if (waitTime >= t) {
+      break;
     }
   }
 }
@@ -1022,7 +1158,7 @@ Tsum.prototype.taskSendHearts = function() {
 var ts;
 var gTaskController;
 
-function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiveOneItem, recordReceive) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -1034,16 +1170,18 @@ function start(debug, receiveItem, sendHearts, isFourTsum, isJP, isPause, receiv
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
+  ts.sentToZero = sentToZero;
+  ts.receiveCheckLimit = receiveCheckLimit;
 
   if (ts.recordReceive) {
     ts.readRecord();
   }
 
   gTaskController = new TaskController();
-  if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), 5 * 60 * 1000, 0);}
-  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), 30 * 60 * 1000, 0);}
-  if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), 60 * 60 * 1000, 0);}
-  gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 5 * 1000, 0);
+  if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
+  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
+  if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
+  if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
   sleep(500);
   gTaskController.start();
 }
@@ -1064,9 +1202,21 @@ function stop() {
 }
 
 // stop();
-// sleep(500);
+// this.sleep(500);
 // ts = new Tsum();
+// ts.sentToZero = true;
+// ts.taskSendHearts();
+// ts.taskReceiveOneItem();
 // ts.taskPlayGame();
+// ts.taskReceiveAllItems();
+// var page = ts.checkPage(3500);
+// sleep(10);
+// console.log(page);
+// ts.goFriendPage();
+// ts.recordReceive = true;
+// ts.sentToZero = true;
+// ts.readRecord();
+// ts.taskSendHearts();
 // ts.goFriendPage();
 // start(true, false, false, false, false, false, true, true);
 // stop();
