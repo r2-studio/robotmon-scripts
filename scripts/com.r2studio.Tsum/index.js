@@ -1142,15 +1142,17 @@ Tsum.prototype.sendHeart = function(btn) {
 }
 
 Tsum.prototype.sleep = function(t) {
-  var waitTime = 0;
   if (t == undefined) {
     t = 1000;
   }
+  var waitTime = t;
   while(this.isRunning) {
-    sleep(100);
-    waitTime += 100;
-    if (waitTime >= t) {
+    if (waitTime <= 500) {
+      sleep(waitTime);
       break;
+    } else {
+      sleep(500);
+      waitTime -= 500;
     }
   }
 }
