@@ -1180,7 +1180,7 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -1195,6 +1195,9 @@ function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, receive
   ts.sentToZero = sentToZero;
   ts.receiveCheckLimit = receiveCheckLimit;
   ts.clearBubbles = clearBubbles;
+  if (largeImage) {
+    ts.resizeRatio = 1;
+  }
 
   if (ts.recordReceive) {
     ts.readRecord();
