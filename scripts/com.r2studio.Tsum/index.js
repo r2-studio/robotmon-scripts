@@ -48,9 +48,9 @@ var Config = {
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
   scoreTable: {
-    block_sulley_s: -0.02,
-    block_arlo_s: 0.03,
-    block_lotso_s: 0.03,
+    // block_sulley_s: -0.02,
+    // block_arlo_s: 0.03,
+    // block_lotso_s: 0.03,
   },
 };
 
@@ -122,6 +122,7 @@ function loadTsumImages(isJP) {
     var key = Config.tsumFiles[i];
     var filename = tsumPath + '/' + key + '_0.png';
     var img = openImage(filename);
+    smooth(img, 1, 2);
     tsumImages[key] = img;
   }
   return tsumImages;
@@ -147,6 +148,7 @@ function loadTsumRotationImages(tsumMaxScores, isJP, debug) {
     for (var r in Config.rotations) {
       var filename = tsumPath + '/' + maxScore.key + '_' + Config.rotations[r] + '.png';
       var img = openImage(filename);
+      smooth(img, 1, 2);
       tsumMaxScores[i].rotations.push(img);
     }
   }
@@ -206,7 +208,7 @@ function removeSameTsumImages(tsumMaxScores, threshold) {
 function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug) {
   // releaseRotationTsum();
   if (debug) {
-    saveImage(boardImg, getStoragePath() + "/tmp/boardImg.jpg");
+    saveImage(boardImg, getStoragePath() + "/tmp/boardImg.png");
   }
   var gameTsums = findAllTsumMatchScore(allTsumImages, boardImg, myTsum);
   gameTsums = gameTsums.splice(0, 50);
@@ -442,7 +444,7 @@ function Tsum() {
   this.record = {};
   this.recordImages = {};
   this.receiveCheckLimit = 5;
-
+  this.clearBubbles = true;
   this.init();
 }
 
@@ -595,8 +597,12 @@ Tsum.prototype.tapUp = function(xy, during) {
 }
 
 Tsum.prototype.link = function(paths) {
+  var isBubble = false;
   for (var i in paths) {
     var path = paths[i];
+    if (path.length > 7) {
+      isBubble = true;
+    }
     for (var j in path) {
       var point = path[j];
       var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth/2) * this.playWidth / this.playResizeWidth);
@@ -611,6 +617,7 @@ Tsum.prototype.link = function(paths) {
       }
     }
   }
+  return isBubble;
 }
 
 Tsum.prototype.checkPage = function(wait) {
@@ -626,7 +633,7 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
     releaseImage(img);
-    log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
+    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
     if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
@@ -781,9 +788,11 @@ Tsum.prototype.taskPlayGame = function() {
   // start to run
   var runTimes = 0;
   var pathZero = 0;
+  var clearBubbles = false;
   while(this.isRunning) {  
     // load game tsums
     var gameImage = this.playScreenshot();
+    smooth(gameImage, 1, 2);
     if (this.isPause) {
       this.tap(Button.gamePause);
       this.sleep(20);
@@ -826,11 +835,17 @@ Tsum.prototype.taskPlayGame = function() {
     }
 
     log('開始連線 數量', paths.length);
-    this.link(paths);
+    paths = paths.splice(0, 10);
+    var isBubble = this.link(paths);
+    if (isBubble) {
+      log("產生泡泡");
+      clearBubbles = true;
+    }
 
     // click bubbles
-    if (runTimes % 5 == 2) {
+    if (clearBubbles && runTimes % 4 == 2) {
       log("Clear bubbles");
+      clearBubbles = false;
       for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 150) {
         for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 150) {
           this.tap({x: bx, y: by}, 10);
@@ -1160,7 +1175,7 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -1174,6 +1189,7 @@ function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveI
   ts.recordReceive = recordReceive;
   ts.sentToZero = sentToZero;
   ts.receiveCheckLimit = receiveCheckLimit;
+  ts.clearBubbles = clearBubbles;
 
   if (ts.recordReceive) {
     ts.readRecord();
