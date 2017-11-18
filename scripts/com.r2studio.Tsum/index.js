@@ -744,7 +744,7 @@ Tsum.prototype.useSkill = function() {
         this.sleep(300);
       }
     } else {
-      return;
+      return false;
     }
   }
   log('技能已經存滿，放技能');
@@ -774,6 +774,7 @@ Tsum.prototype.useSkill = function() {
   } else {
     this.sleep(2500);
   }
+  return true;
 }
 
 Tsum.prototype.taskPlayGame = function() {
@@ -805,10 +806,12 @@ Tsum.prototype.taskPlayGame = function() {
       this.isLoadRotateTsum = true;
     }
     log('辨識盤面Tsum');
+    log(Date.now());
     var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug);
     if (this.debug) {
-      saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
+      //saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
     }
+    log(Date.now());
     releaseImage(gameImage);
 
     log('計算連線路徑');
@@ -859,7 +862,9 @@ Tsum.prototype.taskPlayGame = function() {
       this.sleep(700);
     }
     this.sleep(300);
-    this.useSkill();
+    if (this.useSkill()) {
+      clearBubbles = true;
+    }
 
     // double check
     var page = this.checkPage(3500);
@@ -1070,7 +1075,7 @@ Tsum.prototype.taskSendHearts = function() {
 
     var img = this.screenshot();
     for(var y = hfy; y <= hty; y += 12) {
-      var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}));  
+      var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}), 40);  
       if (isHs) {
         heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
         y += 150;
@@ -1152,7 +1157,7 @@ Tsum.prototype.sendHeart = function(btn) {
       log("未知狀態，離開");
       return false;
     }
-    this.sleep(250);
+    this.sleep(300);
   }
 }
 
@@ -1225,6 +1230,7 @@ function stop() {
 // ts.sentToZero = true;
 // ts.taskSendHearts();
 // ts.taskReceiveOneItem();
+// ts.isPause = false;
 // ts.taskPlayGame();
 // ts.taskReceiveAllItems();
 // var page = ts.checkPage(3500);
