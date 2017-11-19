@@ -48,9 +48,9 @@ var Config = {
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
   scoreTable: {
-    block_sulley_s: -0.02,
-    block_arlo_s: 0.03,
-    block_lotso_s: 0.03,
+    // block_sulley_s: -0.02,
+    // block_arlo_s: 0.03,
+    // block_lotso_s: 0.03,
   },
 };
 
@@ -87,7 +87,7 @@ var Button = {
   outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeartClose: {x: 665, y: 1340 - adjY, color: {"a":0,"b":6,"g":175,"r":233}},
+  outSendHeartClose: {x: 666, y: 1354 - adjY, color: {r: 236, g: 178, b: 9}},
   outSendHeartFrom: {x: 910, y: 530 - adjY},
   outSendHeartTo: {x: 910, y: 1250 - adjY},
   outSendHeartEnd: {x: 328, y: 1194 - adjY, color: {"a":0,"b":132,"g":85,"r":47}},
@@ -122,6 +122,7 @@ function loadTsumImages(isJP) {
     var key = Config.tsumFiles[i];
     var filename = tsumPath + '/' + key + '_0.png';
     var img = openImage(filename);
+    smooth(img, 1, 2);
     tsumImages[key] = img;
   }
   return tsumImages;
@@ -147,6 +148,7 @@ function loadTsumRotationImages(tsumMaxScores, isJP, debug) {
     for (var r in Config.rotations) {
       var filename = tsumPath + '/' + maxScore.key + '_' + Config.rotations[r] + '.png';
       var img = openImage(filename);
+      smooth(img, 1, 2);
       tsumMaxScores[i].rotations.push(img);
     }
   }
@@ -206,7 +208,7 @@ function removeSameTsumImages(tsumMaxScores, threshold) {
 function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug) {
   // releaseRotationTsum();
   if (debug) {
-    saveImage(boardImg, getStoragePath() + "/tmp/boardImg.jpg");
+    saveImage(boardImg, getStoragePath() + "/tmp/boardImg.png");
   }
   var gameTsums = findAllTsumMatchScore(allTsumImages, boardImg, myTsum);
   gameTsums = gameTsums.splice(0, 50);
@@ -442,7 +444,7 @@ function Tsum() {
   this.record = {};
   this.recordImages = {};
   this.receiveCheckLimit = 5;
-
+  this.clearBubbles = true;
   this.init();
 }
 
@@ -595,8 +597,12 @@ Tsum.prototype.tapUp = function(xy, during) {
 }
 
 Tsum.prototype.link = function(paths) {
+  var isBubble = false;
   for (var i in paths) {
     var path = paths[i];
+    if (path.length > 7) {
+      isBubble = true;
+    }
     for (var j in path) {
       var point = path[j];
       var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth/2) * this.playWidth / this.playResizeWidth);
@@ -611,6 +617,7 @@ Tsum.prototype.link = function(paths) {
       }
     }
   }
+  return isBubble;
 }
 
 Tsum.prototype.checkPage = function(wait) {
@@ -626,7 +633,7 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
     releaseImage(img);
-    log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
+    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
     if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
@@ -737,7 +744,7 @@ Tsum.prototype.useSkill = function() {
         this.sleep(300);
       }
     } else {
-      return;
+      return false;
     }
   }
   log('技能已經存滿，放技能');
@@ -767,6 +774,7 @@ Tsum.prototype.useSkill = function() {
   } else {
     this.sleep(2500);
   }
+  return true;
 }
 
 Tsum.prototype.taskPlayGame = function() {
@@ -781,9 +789,11 @@ Tsum.prototype.taskPlayGame = function() {
   // start to run
   var runTimes = 0;
   var pathZero = 0;
+  var clearBubbles = false;
   while(this.isRunning) {  
     // load game tsums
     var gameImage = this.playScreenshot();
+    smooth(gameImage, 1, 2);
     if (this.isPause) {
       this.tap(Button.gamePause);
       this.sleep(20);
@@ -796,10 +806,12 @@ Tsum.prototype.taskPlayGame = function() {
       this.isLoadRotateTsum = true;
     }
     log('辨識盤面Tsum');
+    log(Date.now());
     var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug);
     if (this.debug) {
-      saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
+      //saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
     }
+    log(Date.now());
     releaseImage(gameImage);
 
     log('計算連線路徑');
@@ -826,11 +838,17 @@ Tsum.prototype.taskPlayGame = function() {
     }
 
     log('開始連線 數量', paths.length);
-    this.link(paths);
+    paths = paths.splice(0, 10);
+    var isBubble = this.link(paths);
+    if (isBubble) {
+      log("產生泡泡");
+      clearBubbles = true;
+    }
 
     // click bubbles
-    if (runTimes % 5 == 2) {
+    if (clearBubbles && runTimes % 4 == 2) {
       log("Clear bubbles");
+      clearBubbles = false;
       for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 150) {
         for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 150) {
           this.tap({x: bx, y: by}, 10);
@@ -844,7 +862,9 @@ Tsum.prototype.taskPlayGame = function() {
       this.sleep(700);
     }
     this.sleep(300);
-    this.useSkill();
+    if (this.useSkill()) {
+      clearBubbles = true;
+    }
 
     // double check
     var page = this.checkPage(3500);
@@ -1055,7 +1075,7 @@ Tsum.prototype.taskSendHearts = function() {
 
     var img = this.screenshot();
     for(var y = hfy; y <= hty; y += 12) {
-      var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}));  
+      var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}), 40);  
       if (isHs) {
         heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
         y += 150;
@@ -1075,7 +1095,7 @@ Tsum.prototype.taskSendHearts = function() {
     var isEnd = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
     isEnd = (!isNotEnd && isEnd);
     releaseImage(img);
-    log("收" + heartsPos.length + "顆心, 0分?" + isZero);
+    log("Send " + heartsPos.length + "hearts, 0 score?" + isZero);
     if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero)) {
       if(retry < 3){
         this.tapDown(Button.outSendHeart3, 100);
@@ -1096,6 +1116,9 @@ Tsum.prototype.taskSendHearts = function() {
         if (!success) {
           this.sendHeart(heartsPos[h]);
         }
+        if (!this.isRunning) {
+          return;
+        }
       }
       this.tapDown(Button.outSendHeart3, 100);
       this.moveTo (Button.outSendHeart3, 100);
@@ -1114,10 +1137,10 @@ Tsum.prototype.sendHeart = function(btn) {
   var unknownCount = 0;
   while (this.isRunning) {
     var img = this.screenshot();
-    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
-    var isSend = isSameColor(btn.color, this.getColor(img, btn), 35);
-    var isSent1 = isSameColor(btn.color2, this.getColor(img, btn), 35);
-    var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 35);
+    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
+    var isSend = isSameColor(btn.color, this.getColor(img, btn), 40);
+    var isSent1 = isSameColor(btn.color2, this.getColor(img, btn), 40);
+    var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 40);
     releaseImage(img);
     
     if (isOk) {
@@ -1137,20 +1160,22 @@ Tsum.prototype.sendHeart = function(btn) {
       log("未知狀態，離開");
       return false;
     }
-    this.sleep(250);
+    this.sleep(300);
   }
 }
 
 Tsum.prototype.sleep = function(t) {
-  var waitTime = 0;
   if (t == undefined) {
     t = 1000;
   }
+  var waitTime = t;
   while(this.isRunning) {
-    sleep(100);
-    waitTime += 100;
-    if (waitTime >= t) {
+    if (waitTime <= 500) {
+      sleep(waitTime);
       break;
+    } else {
+      sleep(500);
+      waitTime -= 500;
     }
   }
 }
@@ -1158,7 +1183,7 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum();
@@ -1172,6 +1197,10 @@ function start(isJP, debug, isPause, isFourTsum, autoPlay, receiveItem, receiveI
   ts.recordReceive = recordReceive;
   ts.sentToZero = sentToZero;
   ts.receiveCheckLimit = receiveCheckLimit;
+  ts.clearBubbles = clearBubbles;
+  if (largeImage) {
+    ts.resizeRatio = 1;
+  }
 
   if (ts.recordReceive) {
     ts.readRecord();
@@ -1207,6 +1236,7 @@ function stop() {
 // ts.sentToZero = true;
 // ts.taskSendHearts();
 // ts.taskReceiveOneItem();
+// ts.isPause = false;
 // ts.taskPlayGame();
 // ts.taskReceiveAllItems();
 // var page = ts.checkPage(3500);
