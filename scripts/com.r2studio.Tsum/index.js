@@ -1116,6 +1116,9 @@ Tsum.prototype.taskSendHearts = function() {
         if (!success) {
           this.sendHeart(heartsPos[h]);
         }
+        if (!this.isRunning) {
+          return;
+        }
       }
       this.tapDown(Button.outSendHeart3, 100);
       this.moveTo (Button.outSendHeart3, 100);

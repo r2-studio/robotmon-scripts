@@ -297,6 +297,7 @@
                   if (newValue <= max) {
                     jInput.val(newValue);
                   }
+                  saveSettings(settings);
                 }
               })(jInput, min, max, step));
               jBtnM.click((function(jInput, min, max, step){
@@ -305,6 +306,7 @@
                   if (newValue >= min) {
                     jInput.val(newValue);
                   }
+                  saveSettings(settings);
                 }
               })(jInput, min, max, step));
               jLabel.append(jInput);
@@ -376,6 +378,7 @@
           var startCommand = genStartCommand(settings);
           JavaScriptInterface.runScript(startCommand);
         } else if (eventType == 'OnPauseClick') {
+          JavaScriptInterface.runScript('stop();');
           JavaScriptInterface.runScript('stop();');
         } else if (eventType == 'OnSettingClick') {
           // refreshRecord();
