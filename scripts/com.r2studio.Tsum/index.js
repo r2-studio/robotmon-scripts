@@ -87,7 +87,7 @@ var Button = {
   outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeartClose: {x: 665, y: 1340 - adjY, color: {"a":0,"b":6,"g":175,"r":233}},
+  outSendHeartClose: {x: 666, y: 1354 - adjY, color: {r: 236, g: 178, b: 9}},
   outSendHeartFrom: {x: 910, y: 530 - adjY},
   outSendHeartTo: {x: 910, y: 1250 - adjY},
   outSendHeartEnd: {x: 328, y: 1194 - adjY, color: {"a":0,"b":132,"g":85,"r":47}},
@@ -1095,7 +1095,7 @@ Tsum.prototype.taskSendHearts = function() {
     var isEnd = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
     isEnd = (!isNotEnd && isEnd);
     releaseImage(img);
-    log("收" + heartsPos.length + "顆心, 0分?" + isZero);
+    log("Send " + heartsPos.length + "hearts, 0 score?" + isZero);
     if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero)) {
       if(retry < 3){
         this.tapDown(Button.outSendHeart3, 100);
@@ -1134,10 +1134,10 @@ Tsum.prototype.sendHeart = function(btn) {
   var unknownCount = 0;
   while (this.isRunning) {
     var img = this.screenshot();
-    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
-    var isSend = isSameColor(btn.color, this.getColor(img, btn), 35);
-    var isSent1 = isSameColor(btn.color2, this.getColor(img, btn), 35);
-    var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 35);
+    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
+    var isSend = isSameColor(btn.color, this.getColor(img, btn), 40);
+    var isSent1 = isSameColor(btn.color2, this.getColor(img, btn), 40);
+    var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 40);
     releaseImage(img);
     
     if (isOk) {
