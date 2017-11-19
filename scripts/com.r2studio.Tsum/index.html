@@ -142,6 +142,7 @@
 
     <script>
       VERSION = 14;
+      ASC = true;
 
       var settings = [
         [{titles: ["感謝ttung提供改善辨識、送心功能"]}],
@@ -341,7 +342,12 @@
         loadSettings(settings);
         genSettings($("#settings"), settings);
 
-        $("#updateRecord").click(function(){
+        $("#updateRecordASC").click(function(){
+          ASC = true;
+          refreshRecord();
+        });
+        $("#updateRecordDESC").click(function(){
+          ASC = false;
           refreshRecord();
         });
         var protect = true;
@@ -421,10 +427,16 @@
           obj.filename = filename;
           record.push(obj);
         }
-        record.sort(function(a, b) {
-          return a.totalCount < b.totalCount ? -1 : 1;
-        });
-
+        if (ASC) {
+          record.sort(function(a, b) {
+            return a.totalCount < b.totalCount ? -1 : 1;
+          });
+        } else {
+          record.sort(function(a, b) {
+            return a.totalCount >= b.totalCount ? -1 : 1;
+          });
+        }
+        
         var html = "<ul>";
         for (var idx in record) {
           var filename = record[idx].filename;
@@ -455,7 +467,8 @@
     <div class="container">
       <div id="settings"></div>
       <div>Who send hearts to You 誰送你心</div>
-      <button id="updateRecord">Update</button>
+      <button id="updateRecordASC">Update(ASC)</button>
+      <button id="updateRecordDESC">Update(DESC)</button>
       <button id="resetRecord" style="float:right;">Reset Record</button>
       <div id="record">
       </div>
