@@ -83,6 +83,8 @@ var Button = {
   outReceiveClose: {x: 530, y: 1300 - adjY},
   outReceiveOne: {x: 840, y: 497 - adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
+  outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}},
+  outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
   outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -920,6 +922,10 @@ Tsum.prototype.countReceiveHeart = function() {
   var from = this.toResizeXYs(Button.outReceiveNameFrom);
   var to = this.toResizeXYs(Button.outReceiveNameTo);
   var img = this.screenshot();
+
+  // for speed up
+  this.tap(Button.outReceiveOne);
+
   var nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
   var score = 0;
   var existFilename = '';
@@ -1000,8 +1006,17 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
+    var isLoading = isSameColor(Button.outReceiveLoading.color, this.getColor(img, Button.outReceiveLoading), 35);
+    var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     releaseImage(img);
-    if (isItem) {
+    if (isTimeout) {
+      log('Try again... wait 2 sec');
+      this.tap(Button.outReceiveOk);
+      this.sleep(2000);
+    } else if (isLoading) {
+      log('Network delay...');
+      this.sleep(300);
+    } else if (isItem) {
       if (!isFinish) {
         if (this.recordReceive) {
           this.countReceiveHeart();
@@ -1017,7 +1032,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outReceiveOk);
       nonItemCount = 0;
       unknownCount = 0;
-      this.sleep(200);
+      this.sleep(500);
       isFinish = true;
     } else if (isNonItem) {
       this.tap(Button.outReceiveOk);
@@ -1028,7 +1043,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       unknownCount++;
       isFinish = false;
     }
-    this.sleep(700);
+    this.sleep(500);
     if (unknownCount >= 8) {
       log('停在未知頁面太久，離開');
       this.tap(Button.outClose);
@@ -1038,7 +1053,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     if (nonItemCount >= 3) {
       this.tap(Button.outClose);
       this.goFriendPage();
-      this.sleep(1000);
+      this.sleep(800);
       if (receivedCount == 0 || receiveCheckLimit >= this.receiveCheckLimit) {
         log('結束接收物品');
         break;
@@ -1224,10 +1239,10 @@ function stop() {
     if (ts.recordReceive) {
       ts.releaseRecord();
     }
-    if (gTaskController != undefined) {gTaskController.removeAllTasks();}
+    if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
   }
   ts = undefined;
-  if (gTaskController != undefined) {gTaskController.removeAllTasks();}
+  if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
 }
 
 // stop();
