@@ -1,6 +1,11 @@
 <html>
     <head>
         <style>
+            li > div {
+                display: flex;
+                align-items: center;
+            }
+
             .navbar-custom {
                 border-radius: 0 !important;
                 background-color: #2196F3;
@@ -25,8 +30,7 @@
                 position: relative;
                 display: inline-block;
                 vertical-align: middle;
-                margin-bottom: 0px;
-                margin-top: -4px;
+                margin: 0px;
                 width: 52px;
                 height: 28px;
             }
@@ -123,8 +127,11 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/10.0.7/i18next.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
 
         <script>
+            var version = "v11";
             $(function() {
                 $("#revolutionMinutesPlus").click(function() {
                     if ($("#revolutionMinutes").val() >= 300) {
@@ -149,6 +156,68 @@
                         return;
                     }
                     $("#restartAppMinutes").val(parseInt($("#restartAppMinutes").val()) - 10);
+                });
+
+                function updateLocale() {
+                    $('.navbar').localize();
+                    $('.container').localize();
+                }
+                i18next.init({
+                    lng: 'en',
+                    resources: {
+                        en: {
+                            translation: {
+                                nav: {
+                                    title: "Endless Frontier " + version
+                                },
+                                li: {
+                                    language: "Language",
+                                    virtual_button_bar: "Virtual button bar",
+                                    restart_app: "Auto restart app",
+                                    restart_app_minutes: "Auto restart app(mins)",
+                                    treasure: "Auto treasure chests",
+                                    task: "Auto quest",
+                                    army: "Auto unit",
+                                    war: "Auto dungeon",
+                                    double_speed: "Auto x2 game speed",
+                                    battle: "Auto battle",
+                                    buy_army: "Auto buy unit",
+                                    revolution: "Auto revive",
+                                    revolution_minutes: "Auto revive(mins)",
+                                    skill: "Auto use skills"
+                                }
+                            }
+                        },
+                        zh_TW: {
+                            translation: {
+                                nav: {
+                                    title: "無盡的邊疆  " + version
+                                },
+                                li: {
+                                    language: "語言",
+                                    virtual_button_bar: "虛擬鍵盤",
+                                    restart_app: "自動重啟遊戲",
+                                    restart_app_minutes: "自動重啟遊戲(分鐘)",
+                                    treasure: "自動開寶箱",
+                                    task: "自動完成任務",
+                                    army: "自動完成士兵",
+                                    war: "自動打素材",
+                                    double_speed: "自動兩倍遊戲加速",
+                                    battle: "自動對戰",
+                                    buy_army: "自動買士兵",
+                                    revolution: "自動定時轉世",
+                                    revolution_minutes: "自動定時轉世(分鐘)",
+                                    skill: "自動使用技能"
+                                }
+                            }
+                        }
+                    }
+                }, function(err, t) {
+                    jqueryI18next.init(i18next, $);
+                    updateLocale();
+                });
+                i18next.on('languageChanged', () => {
+                    updateLocale();
                 });
             });
 
@@ -185,104 +254,167 @@
     </head>
     <body>
         <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand">無盡的邊疆 Endless Frontier v11</a>
+            <a class="navbar-brand" data-i18n="nav.title"></a>
         </nav>
         <div class="container">
             <ul class="list-group">
                 <li class="list-group-item">
-                    虛擬鍵盤
-                    <label class="switch pull-right">
-                        <input id="virtualButtonBar" type="checkbox" checked>
-                        <a class="slider round"></a>
-                    </label>
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.language"></div>
+                        <div class="col-xs-6">
+                            <div class="pull-right">
+                                <button onclick="i18next.changeLanguage('en')" class="btn btn-plus">EN</button>
+                                <button onclick="i18next.changeLanguage('zh_TW')" class="btn btn-plus">中文</button>
+                            </div>
+                        </div>
+                    </div>
                 </li>
                 <li class="list-group-item">
-                    自動重啟遊戲
-                    <label class="switch pull-right">
-                        <input id="taskRestartApp" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.virtual_button_bar"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="virtualButtonBar" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
                 </li>
                 <li class="list-group-item">
-                    自動重啟遊戲(分鐘)
-                    <div class="pull-right" style="margin-top:-4px">
-                        <input id="restartAppMinutes" style="width: 40px; text-align: center;" min="0" type="number" value="60" readonly>
-                        <button id="restartAppMinutesMinus" type="button" class="btn btn-danger">-10</button>
-                        <button id="restartAppMinutesPlus" type="button" class="btn btn-plus">+10</button>
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.restart_app"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskRestartApp" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.restart_app_minutes"></div>
+                        <div class="col-xs-6">
+                            <div class="pull-right">
+                                <input id="restartAppMinutes" style="width: 40px; text-align: center;" min="0" type="number" value="60" readonly>
+                                <button id="restartAppMinutesMinus" class="btn btn-danger">-10</button>
+                                <button id="restartAppMinutesPlus" class="btn btn-plus">+10</button>
+                            </div>
+                        </div>
                     </div>
                 </li>
             </ul>
             <ul class="list-group">
                 <li class="list-group-item">
-                    自動開寶箱
-                    <label class="switch pull-right">
-                        <input id="taskTreasure" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    自動完成任務
-                    <label class="switch pull-right">
-                        <input id="taskTask" type="checkbox" checked>
-                        <a class="slider round"></a>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    自動完成士兵
-                    <label class="switch pull-right">
-                        <input id="taskArmy" type="checkbox"checked >
-                        <span class="slider round"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    自動打素材
-                    <label class="switch pull-right">
-                        <input id="taskWar" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    自動兩倍遊戲加速
-                    <label class="switch pull-right">
-                        <input id="taskDoubleSpeed" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    自動對戰
-                    <label class="switch pull-right">
-                        <input id="taskBattle" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    自動買士兵
-                    <label class="switch pull-right">
-                        <input id="taskBuyArmy" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    自動定時轉世
-                    <label class="switch pull-right">
-                        <input id="taskRevolution" type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    自動定時轉世(分鐘)
-                    <div class="pull-right" style="margin-top:-4px">
-                        <input id="revolutionMinutes" style="width: 40px; text-align: center;" min="0" type="number" value="60" readonly>
-                        <button id="revolutionMinutesMinus" type="button" class="btn btn-danger">-10</button>
-                        <button id="revolutionMinutesPlus" type="button" class="btn btn-plus">+10</button>
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.treasure"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskTreasure" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
                     </div>
                 </li>
                 <li class="list-group-item">
-                    自動使用技能
-                    <label class="switch pull-right">
-                        <input id="useSkill" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.task"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskTask" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.army"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskArmy" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.war"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskWar" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.double_speed"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskDoubleSpeed" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.battle"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskBattle" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.buy_army"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskBuyArmy" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.revolution"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="taskRevolution" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.revolution_minutes"></div>
+                        <div class="col-xs-6">
+                            <div class="pull-right">
+                                <input id="revolutionMinutes" style="width: 40px; text-align: center;" min="0" type="number" value="60" readonly>
+                                <button id="revolutionMinutesMinus" type="button" class="btn btn-danger">-10</button>
+                                <button id="revolutionMinutesPlus" type="button" class="btn btn-plus">+10</button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-6" data-i18n="li.skill"></div>
+                        <div class="col-xs-6">
+                            <label class="switch pull-right">
+                                <input id="useSkill" type="checkbox" checked>
+                                <a class="slider round"></a>
+                            </label>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>
