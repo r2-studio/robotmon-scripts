@@ -141,6 +141,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
+      VERSION = 14;
+
       var settings = [
         [{titles: ["感謝ttung提供改善辨識、送心功能"]}],
         [{titles: ["Thanks Chris Kwan's and Melissa Stinson's help"]}],
@@ -193,6 +195,55 @@
           { titles: ["Sent to 0 score? 送心給0分"], default: false},
         ]
       ];
+      function loadSettings(settings) {
+        var recordSettings = {};
+        if (localStorage = undefined) {
+          return;
+        }
+        var version = +localStorage.getItem('tsumtsumversion');
+        if (!version || VERSION != version) {
+          return;
+        }
+        var settingsJSON = localStorage.getItem('tsumtsumsettings');
+        if (!settingsJSON) {
+          return;
+        }
+        recordSettings = JSON.parse(settingsJSON);
+        if (!recordSettings) {
+          return;
+        }
+        for (var i in settings) {
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            if (recordSettings[id] != undefined) {
+              setting.default = recordSettings[id];
+            }
+          }
+        }
+        console.log('load settings');
+      }
+      function saveSettings(settings) {
+        if (localStorage != undefined) {
+          var recordSettings = {};
+          for (var i in settings) {
+            for (var g in settings[i]) {
+              var id =  i + "_" + g;
+              var setting = settings[i][g];
+              if (typeof setting.default === "boolean") {
+                recordSettings[id] = $("#setting_value_" + id).is(':checked');
+              } else if (typeof setting.default === "number") {
+                recordSettings[id] = +$("#setting_value_" + id).val();
+              } else if (typeof setting.default === "string") {
+                recordSettings[id] = $("#setting_value_" + id).val();
+              }
+            }
+          }
+          localStorage.setItem('tsumtsumversion', VERSION);
+          localStorage.setItem('tsumtsumsettings', JSON.stringify(recordSettings));
+          console.log('save settings');
+        }
+      }
       function genStartCommand(settings) {
         var command = "start(";
         for (var i in settings) {
@@ -229,6 +280,7 @@
               for (var j in setting.titles) {
                 jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
               }
+              jInput.change(function(){saveSettings(settings);});
             } else if (typeof setting.default === "number") {
               var step = setting.step;
               var max = setting.max;
@@ -237,7 +289,7 @@
               var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
               var jBtnP = $('<button id="setting_value_p_' + id + '"  type="button" class="btn btn-danger">+' + step + '</button>');
               var jBtnM = $('<button id="setting_value_m_' + id + '"  type="button" class="btn btn-danger">-' + step + '</button>');
-              console.log(jInput);
+              // console.log(jInput);
               jBtnP.click((function(jInput, min, max, step){
                 return function() {
                   var newValue = (+jInput.val()) + step;
@@ -261,6 +313,7 @@
               for (var j in setting.titles) {
                 jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
               }
+              jInput.change(function(){saveSettings(settings);});
             } else if (typeof setting.default === "string") {
               for (var j in setting.titles) {
                 jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
@@ -268,6 +321,7 @@
               jSetting.append("<br />");
               var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
               jSetting.append(jInput);
+              jInput.change(function(){saveSettings(settings);});
             } else if (setting.titles != undefined) {
               for (var j in setting.titles) {
                 jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
@@ -282,7 +336,11 @@
 
     <script>
       $(function() {
+        $("#version").html("Tsum Tsum v" + VERSION);
+
+        loadSettings(settings);
         genSettings($("#settings"), settings);
+
         $("#updateRecord").click(function(){
           refreshRecord();
         });
@@ -392,7 +450,7 @@
   </head>
   <body>
     <nav class="navbar navbar-custom" role="navigation">
-      <a class="navbar-brand">Tsum Tsum v14</a>
+      <a id="version" class="navbar-brand">Tsum Tsum v14</a>
     </nav>
     <div class="container">
       <div id="settings"></div>
