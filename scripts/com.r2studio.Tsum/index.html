@@ -350,6 +350,9 @@
           ASC = false;
           refreshRecord();
         });
+        $("#goToTop").click(function(){
+          window.scrollTo(0, 0);
+        });
         var protect = true;
         $("#resetRecord").click(function() {
           if (protect) {
@@ -472,6 +475,7 @@
       <button id="resetRecord" style="float:right;">Reset Record</button>
       <div id="record">
       </div>
+      <button id="goToTop">Go Top</button>
       <br />
       <br />
       <br />
