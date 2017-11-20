@@ -119,7 +119,7 @@
       }
       .btn-plus,
       .btn-danger {
-        width: 35px;
+        min-width: 35px;
         padding: 3px 0px 3px 0px !important;
       }
       .setting_input_value {
@@ -151,7 +151,7 @@
             title_zh_TW: "感謝 ttung 提供改善辨識和送心功能",
           },
           {
-            title: "Thanks Chris Kwan's and Melissa Stinson's help",
+            title: "Thanks Chris Kwan's and Melissa Stinson's great help",
             title_zh_TW: "感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙",
           },
         ],
@@ -162,11 +162,11 @@
             buttons: [
               {
                 title: "En",
-                onclick: "loadLocale('en-US')"
+                onclick: "saveLocale('en-US')"
               },
               {
                 title: "中文",
-                onclick: "loadLocale('zh-TW')"
+                onclick: "saveLocale('zh-TW')"
               }
             ]
           },
@@ -222,8 +222,8 @@
           { title: "Sent to 0 score", title_zh_TW: "送心給0分", default: false},
         ]
       ];
-      function loadLocale(locale) {
-        if (localStorage != undefined) {
+      function saveLocale(locale) {
+        if (localStorage !== undefined) {
           localStorage.setItem('tsumtsumlanguage', locale);
           location.reload();
         }
@@ -435,6 +435,20 @@
             $("#record").html("");
           }
         });
+
+        if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === "zh-TW") {
+          $("#senders").text("誰送你心");
+          $("#updateRecordASC").text("更新(遞增)");
+          $("#updateRecordDESC").text("更新(遞減)");
+          $("#resetRecord").text("清除紀錄");
+          $("#goToTop").text("回頁面頂端");
+        } else {
+          $("#senders").text("Who send hearts to You");
+          $("#updateRecordASC").text("Update(ASC)");
+          $("#updateRecordDESC").text("Update(DESC)");
+          $("#resetRecord").text("Reset Record");
+          $("#goToTop").text("Go Top");
+        }
       });
 
       function getCheckStatus(id) {
@@ -540,13 +554,14 @@
     </nav>
     <div class="container">
       <div id="settings"></div>
-      <div>Who send hearts to You 誰送你心</div>
-      <button id="updateRecordASC">Update(ASC)</button>
-      <button id="updateRecordDESC">Update(DESC)</button>
-      <button id="resetRecord" style="float:right;">Reset Record</button>
+      <div id="senders" style="padding-bottom:5px;"></div>
+      <button id="updateRecordASC" class="btn btn-plus" style="margin-left:0px;">Update(ASC)</button>
+      <button id="updateRecordDESC" class="btn btn-plus">Update(DESC)</button>
+      <button id="resetRecord" style="float:right;" class="btn btn-danger">Reset Record</button>
       <div id="record">
       </div>
-      <button id="goToTop">Go Top</button>
+      <br />
+      <button id="goToTop" class="btn btn-plus" style="margin-left:0px;">Go Top</button>
       <br />
       <br />
       <br />
