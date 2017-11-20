@@ -25,8 +25,7 @@
         position: relative; 
         display: inline-block;
         vertical-align: middle;
-        margin-bottom: 0px;
-        margin-top: -4px;
+        margin: 0px;
         width: 52px;
         height: 28px;
       }
@@ -123,7 +122,6 @@
       }
       .title {
         width: 65%;
-        /* overflow-x: hidden; */
         display: inline-block;
       }
       .setting_input_value {
@@ -145,19 +143,34 @@
       ASC = true;
 
       var settings = [
-        [{titles: ["感謝ttung提供改善辨識、送心功能"]}],
-        [{titles: ["Thanks Chris Kwan's and Melissa Stinson's help"]}],
         [
-          { titles: ["Is Japan Version? 日本版？"], default: false},
-          { titles: ["Debug 偵錯？"], default: true},
-          { titles: ["Pause(calculating) 計算時暫停"], default: true},
-          { titles: ["5 To 4 Tsums 道具五變四"], default: false},
-          { titles: ["Auto Play Game? 自動玩遊戲"], default: true},
-          { titles: ["Clear Bubbles? 自動清除泡泡"], default: true},
-          { titles: ["Enlarge Record Image? (Emulator)", "放大送心者圖片(模擬器)"], default: false},
+          {titles: ["感謝ttung提供改善辨識、送心功能"]},
+          {titles: ["Thanks Chris Kwan's and Melissa Stinson's help"]}
         ],
         [
-          { titles: ["Receive All Hearts? 收全部愛心"], default: true},
+          {
+            titles: ["Language"],
+            buttons: [
+              {
+                title: "En",
+                onclick: "console.log('en')"
+              },
+              {
+                title: "中文",
+                onclick: "console.log('zh_TW')"
+              }
+            ]
+          },
+          { titles: ["Is Japan Version? 日本版？"], default: false},
+          { titles: ["Debug 偵錯？"], default: true},
+          { titles: ["Pause(calculating) 計算時暫停"], default: true},
+          { titles: ["5 To 4 Tsums 道具五變四"], default: false},
+          { titles: ["Auto Play Game? 自動玩遊戲"], default: true},
+          { titles: ["Clear Bubbles? 自動清除泡泡"], default: true},
+          { titles: ["Enlarge Record Image? (Emulator)", "放大送心者圖片(模擬器)"], default: false},
+        ],
+        [
+          { titles: ["Receive All Hearts? 收全部愛心"], default: true},
           { 
             titles: ["Waiting time (min) before repeat. 完成後休息時間(分)"],
             default: 25,
@@ -167,7 +180,7 @@
           },
         ],
         [
-          { titles: ["Receive Hearts One By One?", "一顆一顆收愛心"], default: false},
+          { titles: ["Receive Hearts One By One?", "一顆一顆收愛心"], default: false},
           { 
             titles: ["Waiting time (min) before repeat. 完成後休息時間(分)"],
             default: 5,
@@ -185,7 +198,7 @@
           { titles: ["Record Sender 記錄送心者"], default: true},
         ],
         [
-          { titles: ["Auto Send Hearts? 自動送愛心"], default: false},
+          { titles: ["Auto Send Hearts? 自動送愛心"], default: false},
           { 
             titles: ["Waiting time (min) before repeat. 完成後休息時間(分)"],
             default: 26,
@@ -271,7 +284,8 @@
           for (var g in settings[i]) {
             var id =  i + "_" + g;
             var setting = settings[i][g];
-            var jSetting = $("<div id='setting_" + id + "' class='list-group-item'></div>");
+            var jGroupItem = $("<div id='setting_" + id + "' class='list-group-item'></div>");
+            var jSetting = $("<div class='row'></div>");
             if (typeof setting.default === "boolean") {
               var jLabel = $('<label class="switch pull-right"></label>');
               var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='checkbox' " + (setting.default ? 'checked' : '') + "/>");
@@ -288,8 +302,8 @@
               var min = setting.min;
               var jLabel = $('<label class="pull-right"></label>');
               var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
-              var jBtnP = $('<button id="setting_value_p_' + id + '"  type="button" class="btn btn-danger">+' + step + '</button>');
-              var jBtnM = $('<button id="setting_value_m_' + id + '"  type="button" class="btn btn-danger">-' + step + '</button>');
+              var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
+              var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
               // console.log(jInput);
               jBtnP.click((function(jInput, min, max, step){
                 return function() {
@@ -325,12 +339,23 @@
               var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
               jSetting.append(jInput);
               jInput.change(function(){saveSettings(settings);});
+            } else if (setting.buttons !== undefined) {
+              var jDiv = $('<div class="pull-right"></div>');
+              for (var j in setting.buttons) {
+                var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + ' class="btn btn-plus">' + setting.buttons[j].title + '</button>');
+                jDiv.append(jBtn);
+              }
+              jSetting.append(jDiv);
+              for (var j in setting.titles) {
+                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
+              }
             } else if (setting.titles != undefined) {
               for (var j in setting.titles) {
                 jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
               }
             }
-            jGroup.append(jSetting);
+            jGroupItem.append(jSetting);
+            jGroup.append(jGroupItem);
           }
           jContainer.append(jGroup)
         }
@@ -468,7 +493,7 @@
   </head>
   <body>
     <nav class="navbar navbar-custom" role="navigation">
-      <a id="version" class="navbar-brand">Tsum Tsum v14</a>
+      <a id="version" class="navbar-brand"></a>
     </nav>
     <div class="container">
       <div id="settings"></div>
