@@ -351,7 +351,7 @@ readFile(path)
 Returns `String` - The text of the file
 
 ```javascript
-readFile(path, text)
+writeFile(path, text)
 ```
 
 * `path` String
@@ -540,6 +540,21 @@ rbm.screenshot(filename)
 Save the screenshot in `rbm.getImagePath()`.
 
 ```javascript
+rbm.oriScreencrop(filename, fromX, fromY, toX, toY)
+
+// Examples:
+rbm.oriScreencrop('startButton.png', 100, 200, 200, 300)
+```
+
+* `filename` String
+* `fromX` Integer
+* `fromY` Integer
+* `toX` Integer
+* `toY` Integer
+
+Crop the original screenshot and save it with `filename`. This function will resize the image with `oriResizeFactor` and compress with `imageQuality`.
+
+```javascript
 rbm.screencrop(filename, fromX, fromY, toX, toY)
 
 // Examples:
@@ -552,7 +567,7 @@ rbm.screencrop('startButton.png', 100, 200, 200, 300)
 * `toX` Integer
 * `toY` Integer
 
-Crop the screenshot and save it with `filename`. This function will resize the image with `oriResizeFactor` and compress with `imageQuality`.
+Crop the screenshot and save it with `filename`. This function will resize the image with `resizeFactor` and compress with `imageQuality`.
 
 ```javascript
 rbm.findImage(filename, threshold)
@@ -619,6 +634,19 @@ rbm.keepScreenshot()
 ```
 
 Keep the screenshot in memory. To avoid to many times screencap.
+
+
+```javascript
+rbm.screencrop(fromX, fromY, toX, toY)
+```
+
+* `fromX` Integer
+* `fromY` Integer
+* `toX` Integer
+* `toY` Integer
+
+Keep the partial screenshot in memory. To avoid to many times screencap.
+
 
 ```javascript
 rbm.releaseScreenshot()
