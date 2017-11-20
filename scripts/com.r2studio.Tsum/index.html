@@ -16,8 +16,7 @@
       }
 
       .list-group-item {
-        padding-bottom: 6px !important;
-        padding-top: 6px !important;
+        padding: 6px 10px !important;
       }
 
       /* The switch - the box around the slider */
@@ -30,7 +29,7 @@
         height: 28px;
       }
 
-      ul{
+      ul {
         padding-left: 5px;
       }
 
@@ -86,6 +85,9 @@
         border-radius: 50%;
       }
 
+      .btn {
+        margin-left: 5px;
+      }
       .btn-plus {
         color:#FFFFFF;
         background-color: #2196F3;
@@ -120,16 +122,16 @@
         width: 35px;
         padding: 3px 0px 3px 0px !important;
       }
-      .title {
-        width: 65%;
-        display: inline-block;
-      }
       .setting_input_value {
         width: 40px;
         text-align: center;
       }
       .setting_input_value[type=text] {
         width: 80%;
+      }
+      .row {
+          display: flex;
+          align-items: center;
       }
     </style>
 
@@ -278,6 +280,35 @@
         return command
       }
 
+      function appendTitles(jSetting, titles) {
+        for (var j in titles) {
+          jSetting.append("<div class='col-xs-6'>" + titles[j] + "</div>");
+        }
+      }
+
+      function appendCol(jSetting, jContent) {
+        var jDiv = $('<div class="pull-right"></div>');
+        var jCol = $('<div class="col-xs-6"></div>');
+        if (Array.isArray(jContent)) {
+          for (var j in jContent) {
+            jDiv.append(jContent[j]);
+          }
+        } else {
+          jDiv.append(jContent);
+        }
+        jCol.append(jDiv);
+        jSetting.append(jCol);
+      }
+
+      function getSwitchButton(id, checked) {
+        var jLabel = $('<label class="switch pull-right"></label>');
+        var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='checkbox' " + (checked ? 'checked' : '') + "/>");
+        jInput.change(function() {saveSettings(settings);});
+        jLabel.append(jInput);
+        jLabel.append('<a class="slider round"></a>');
+        return jLabel;
+      }
+
       function genSettings(jContainer, settings) {
         for (var i in settings) {
           var jGroup = $("<div class='list-group'></div>");
@@ -287,24 +318,16 @@
             var jGroupItem = $("<div id='setting_" + id + "' class='list-group-item'></div>");
             var jSetting = $("<div class='row'></div>");
             if (typeof setting.default === "boolean") {
-              var jLabel = $('<label class="switch pull-right"></label>');
-              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='checkbox' " + (setting.default ? 'checked' : '') + "/>");
-              jLabel.append(jInput);
-              jLabel.append('<a class="slider round"></a>');
-              jSetting.append(jLabel);
-              for (var j in setting.titles) {
-                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
-              }
-              jInput.change(function(){saveSettings(settings);});
+              appendTitles(jSetting, setting.titles);
+              appendCol(jSetting, getSwitchButton(id, setting.default));
             } else if (typeof setting.default === "number") {
               var step = setting.step;
               var max = setting.max;
               var min = setting.min;
-              var jLabel = $('<label class="pull-right"></label>');
+              var jBtns = [];
               var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
               var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
               var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
-              // console.log(jInput);
               jBtnP.click((function(jInput, min, max, step){
                 return function() {
                   var newValue = (+jInput.val()) + step;
@@ -323,35 +346,28 @@
                   saveSettings(settings);
                 }
               })(jInput, min, max, step));
-              jLabel.append(jInput);
-              jLabel.append(jBtnP);
-              jLabel.append(jBtnM);
-              jSetting.append(jLabel);
-              for (var j in setting.titles) {
-                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
-              }
-              jInput.change(function(){saveSettings(settings);});
+              jBtns.push(jInput);
+              jBtns.push(jBtnP);
+              jBtns.push(jBtnM);
+              jInput.change(function() {saveSettings(settings);});
+              appendTitles(jSetting, setting.titles);
+              appendCol(jSetting, jBtns);
             } else if (typeof setting.default === "string") {
-              for (var j in setting.titles) {
-                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
-              }
-              jSetting.append("<br />");
               var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
-              jSetting.append(jInput);
-              jInput.change(function(){saveSettings(settings);});
+              jInput.change(function() {saveSettings(settings);});
+              appendTitles(jSetting, setting.titles);
+              appendCol(jSetting, jInput);
             } else if (setting.buttons !== undefined) {
-              var jDiv = $('<div class="pull-right"></div>');
+              var jBtns = [];
               for (var j in setting.buttons) {
                 var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + ' class="btn btn-plus">' + setting.buttons[j].title + '</button>');
-                jDiv.append(jBtn);
+                jBtns.push(jBtn);
               }
-              jSetting.append(jDiv);
-              for (var j in setting.titles) {
-                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
-              }
+              appendTitles(jSetting, setting.titles);
+              appendCol(jSetting, jBtns);
             } else if (setting.titles != undefined) {
               for (var j in setting.titles) {
-                jSetting.append("<div class='title'>" + setting.titles[j] + "</div>");
+                jSetting.append("<div class='col-xs-12'>" + setting.titles[j] + "</div>");
               }
             }
             jGroupItem.append(jSetting);
@@ -369,15 +385,15 @@
         loadSettings(settings);
         genSettings($("#settings"), settings);
 
-        $("#updateRecordASC").click(function(){
+        $("#updateRecordASC").click(function() {
           ASC = true;
           refreshRecord();
         });
-        $("#updateRecordDESC").click(function(){
+        $("#updateRecordDESC").click(function() {
           ASC = false;
           refreshRecord();
         });
-        $("#goToTop").click(function(){
+        $("#goToTop").click(function() {
           window.scrollTo(0, 0);
         });
         var protect = true;
