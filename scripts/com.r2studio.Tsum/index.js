@@ -121,7 +121,7 @@ function loadTsumImages(isJP) {
   var tsumPath = getStoragePath() + '/' + tsumDir;
   var tsumFiles = isJP ? Config.tsumFilesJP : Config.tsumFiles;
   for (var i in tsumFiles) {
-    var key = Config.tsumFiles[i];
+    var key = tsumFiles[i];
     var filename = tsumPath + '/' + key + '_0.png';
     var img = openImage(filename);
     smooth(img, 1, 2);
@@ -410,7 +410,7 @@ function calculatePaths(board) {
 
 // Tsum struct
 
-function Tsum() {
+function Tsum(isJP) {
   this.debug = true;
   this.isRunning = true;
   this.myTsum = '';
@@ -437,7 +437,7 @@ function Tsum() {
   this.isLoadRotateTsum = false;
   this.allTsumImages = {};
   this.gameTsums = [];
-  this.isJP = false;
+  this.isJP = isJP;
   this.isPause = true;
   this.receiveOneItem = false;
   this.sentToZero = false;
@@ -1201,12 +1201,11 @@ var gTaskController;
 function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
-  ts = new Tsum();
+  ts = new Tsum(isJP);
   ts.debug = debug;
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
-  ts.isJP = isJP;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
