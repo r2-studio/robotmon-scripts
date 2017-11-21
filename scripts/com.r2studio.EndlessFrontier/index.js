@@ -602,7 +602,7 @@ function stop() {
   gTaskController.removeAllTasks();
 }
 
-function start(taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, taskRestartApp, restartAppMinutes, virtualButton, useSkill) {
+function start(virtualButton, taskRestartApp, restartAppMinutes, taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, useSkill) {
   log('[無盡的邊疆] 啟動');
   Config.isRunning = true;
   Config.hasVirtualButtonBar = virtualButton;

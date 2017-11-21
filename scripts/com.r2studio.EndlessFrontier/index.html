@@ -1,422 +1,481 @@
 <html>
-    <head>
-        <style>
-            li > div {
-                display: flex;
-                align-items: center;
-            }
 
-            .navbar-custom {
-                border-radius: 0 !important;
-                background-color: #2196F3;
-                color: #FFFFFF;
-            }
-            .navbar-custom > a {
-                width: 100%;
-                color: #FFFFFF;
-                text-align: center;
-            }
-            .navbar-custom > a:hover {
-                color: #FFFFFF;
-            }
+<head>
+	<style>
+		.navbar-custom {
+			border-radius: 0 !important;
+			background-color: #2196F3;
+			color: #FFFFFF;
+		}
 
-            .list-group-item {
-                padding-bottom: 6px !important;
-                padding-top: 6px !important;
-            }
+		.navbar-custom>a {
+			width: 100%;
+			color: #FFFFFF;
+			text-align: center;
+		}
 
-            /* The switch - the box around the slider */
-            .switch {
-                position: relative;
-                display: inline-block;
-                vertical-align: middle;
-                margin: 0px;
-                width: 52px;
-                height: 28px;
-            }
+		.navbar-custom>a:hover {
+			color: #FFFFFF;
+		}
 
-            /* Hide default HTML checkbox */
-            .switch input {display:none;}
+		.list-group-item {
+			padding: 6px 10px !important;
+		}
 
-            /* The slider */
-            .slider {
-                position: absolute;
-                cursor: pointer;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #ccc;
-                -webkit-transition: .4s;
-                transition: .4s;
-            }
+		.switch {
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			margin: 0px;
+			width: 52px;
+			height: 28px;
+		}
 
-            .slider:before {
-                position: absolute;
-                content: "";
-                height: 24px;
-                width: 24px;
-                left: 2px;
-                bottom: 4px;
-                top: 2px;
-                background-color: white;
-                -webkit-transition: .4s;
-                transition: .4s;
-            }
+		.switch input {
+			display: none;
+		}
 
-            input:checked + .slider {
-                background-color: #2196F3;
-            }
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
 
-            input:focus + .slider {
-                box-shadow: 0 0 1px #2196F3;
-            }
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 24px;
+			width: 24px;
+			left: 2px;
+			bottom: 4px;
+			top: 2px;
+			background-color: white;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
 
-            input:checked + .slider:before {
-                -webkit-transform: translateX(24px);
-                -ms-transform: translateX(24px);
-                transform: translateX(24px);
-            }
+		input:checked+.slider {
+			background-color: #2196F3;
+		}
 
-            /* Rounded sliders */
-            .slider.round {
-                border-radius: 28px;
-            }
+		input:focus+.slider {
+			box-shadow: 0 0 1px #2196F3;
+		}
 
-            .slider.round:before {
-                border-radius: 50%;
-            }
+		input:checked+.slider:before {
+			-webkit-transform: translateX(24px);
+			-ms-transform: translateX(24px);
+			transform: translateX(24px);
+		}
 
-            .btn-plus {
-                color:#FFFFFF;
-                background-color: #2196F3;
-                border-color: #2196F3;
-            }
-            .btn-plus:hover,
-            .btn-plus:focus,
-            .btn-plus:active,
-            .btn-plus.active {
-                color:#FFFFFF !important;
-                background-color: #0d8aee;
-                border-color: #0c7cd5;
-            }
-            .btn-plus.disabled:hover,
-            .btn-plus.disabled:focus,
-            .btn-plus.disabled:active,
-            .btn-plus.disabled.active,
-            .btn-plus[disabled]:hover,
-            .btn-plus[disabled]:focus,
-            .btn-plus[disabled]:active,
-            .btn-plus[disabled].active,
-            fieldset[disabled] .btn-plus:hover,
-            fieldset[disabled] .btn-plus:focus,
-            fieldset[disabled] .btn-plus:active,
-            fieldset[disabled] .btn-plus.active {
-                color:#FFFFFF;
-                background-color: #2196F3;
-                border-color: #2196F3;
-            }
-            .btn-plus,
-            .btn-danger {
-                width: 35px;
-                padding: 3px 0px 3px 0px !important;
-            }
-        </style>
+		.slider.round {
+			border-radius: 28px;
+		}
 
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/10.0.7/i18next.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
+		.slider.round:before {
+			border-radius: 50%;
+		}
 
-        <script>
-            var version = "v11";
-            $(function() {
-                $("#revolutionMinutesPlus").click(function() {
-                    if ($("#revolutionMinutes").val() >= 300) {
-                        return;
-                    }
-                    $("#revolutionMinutes").val(parseInt($("#revolutionMinutes").val()) + 10);
-                });
-                $("#revolutionMinutesMinus").click(function() {
-                    if ($("#revolutionMinutes").val() <= 0) {
-                        return;
-                    }
-                    $("#revolutionMinutes").val(parseInt($("#revolutionMinutes").val()) - 10);
-                });
-                $("#restartAppMinutesPlus").click(function() {
-                    if ($("#restartAppMinutes").val() >= 300) {
-                        return;
-                    }
-                    $("#restartAppMinutes").val(parseInt($("#restartAppMinutes").val()) + 10);
-                });
-                $("#restartAppMinutesMinus").click(function() {
-                    if ($("#restartAppMinutes").val() <= 0) {
-                        return;
-                    }
-                    $("#restartAppMinutes").val(parseInt($("#restartAppMinutes").val()) - 10);
-                });
+		.btn {
+			margin-left: 5px;
+		}
 
-                function updateLocale() {
-                    $('.navbar').localize();
-                    $('.container').localize();
-                }
-                i18next.init({
-                    lng: 'en',
-                    resources: {
-                        en: {
-                            translation: {
-                                nav: {
-                                    title: "Endless Frontier " + version
-                                },
-                                li: {
-                                    language: "Language",
-                                    virtual_button_bar: "Virtual button bar",
-                                    restart_app: "Auto restart app",
-                                    restart_app_minutes: "Auto restart app(mins)",
-                                    treasure: "Auto treasure chests",
-                                    task: "Auto quest",
-                                    army: "Auto unit",
-                                    war: "Auto dungeon",
-                                    double_speed: "Auto x2 game speed",
-                                    battle: "Auto battle",
-                                    buy_army: "Auto buy unit",
-                                    revolution: "Auto revive",
-                                    revolution_minutes: "Auto revive(mins)",
-                                    skill: "Auto use skills"
-                                }
-                            }
-                        },
-                        zh_TW: {
-                            translation: {
-                                nav: {
-                                    title: "無盡的邊疆  " + version
-                                },
-                                li: {
-                                    language: "語言",
-                                    virtual_button_bar: "虛擬鍵盤",
-                                    restart_app: "自動重啟遊戲",
-                                    restart_app_minutes: "自動重啟遊戲(分鐘)",
-                                    treasure: "自動開寶箱",
-                                    task: "自動完成任務",
-                                    army: "自動完成士兵",
-                                    war: "自動打素材",
-                                    double_speed: "自動兩倍遊戲加速",
-                                    battle: "自動對戰",
-                                    buy_army: "自動買士兵",
-                                    revolution: "自動定時轉世",
-                                    revolution_minutes: "自動定時轉世(分鐘)",
-                                    skill: "自動使用技能"
-                                }
-                            }
-                        }
-                    }
-                }, function(err, t) {
-                    jqueryI18next.init(i18next, $);
-                    updateLocale();
-                });
-                i18next.on('languageChanged', () => {
-                    updateLocale();
-                });
-            });
+		.btn-plus {
+			color: #FFFFFF;
+			background-color: #2196F3;
+			border-color: #2196F3;
+		}
 
-            function getCheckStatus(id) {
-                return $(id).is(':checked');
-            }
-            function onEvent(eventType) {
-                if (eventType == 'OnPlayClick') {
-                    var taskTreasure = getCheckStatus('#taskTreasure');
-                    var taskTask = getCheckStatus('#taskTask');
-                    var taskArmy = getCheckStatus('#taskArmy');
-                    var taskWar = getCheckStatus('#taskWar');
-                    var taskDoubleSpeed = getCheckStatus('#taskDoubleSpeed');
-                    var taskBattle = getCheckStatus('#taskBattle');
-                    var taskBuyArmy = getCheckStatus('#taskBuyArmy');
-                    var taskRevolution = getCheckStatus('#taskRevolution');
-                    var revolutionMinutes = $('#revolutionMinutes').val();
-                    var taskRestartApp = getCheckStatus('#taskRestartApp');
-                    var restartAppMinutes = $('#restartAppMinutes').val();
-                    var hasVirtualButtonBar = getCheckStatus('#virtualButtonBar');
-                    var useSkill = getCheckStatus('#useSkill');
-                    
-                    JavaScriptInterface.runScript('start(' + taskTreasure + ',' + taskTask + ', ' + taskArmy + ', ' + taskWar + ', ' + taskDoubleSpeed + ', ' + taskBattle + ', ' + taskBuyArmy +', ' + taskRevolution +', ' + revolutionMinutes +', ' + taskRestartApp +', ' + restartAppMinutes +', ' + hasVirtualButtonBar + ', ' + useSkill + ');');
-                } else if (eventType == 'OnPauseClick') {
-                    JavaScriptInterface.runScript('stop();');
-                } else if (eventType == 'OnReloadClick') {
-                    JavaScriptInterface.runScript(script);
-                }
-            }
-            function onLog(message) {
-                console.log(message);
-            }
-        </script>
-    </head>
-    <body>
-        <nav class="navbar navbar-custom" role="navigation">
-            <a class="navbar-brand" data-i18n="nav.title"></a>
-        </nav>
-        <div class="container">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.language"></div>
-                        <div class="col-xs-6">
-                            <div class="pull-right">
-                                <button onclick="i18next.changeLanguage('en')" class="btn btn-plus">EN</button>
-                                <button onclick="i18next.changeLanguage('zh_TW')" class="btn btn-plus">中文</button>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.virtual_button_bar"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="virtualButtonBar" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.restart_app"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskRestartApp" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.restart_app_minutes"></div>
-                        <div class="col-xs-6">
-                            <div class="pull-right">
-                                <input id="restartAppMinutes" style="width: 40px; text-align: center;" min="0" type="number" value="60" readonly>
-                                <button id="restartAppMinutesMinus" class="btn btn-danger">-10</button>
-                                <button id="restartAppMinutesPlus" class="btn btn-plus">+10</button>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.treasure"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskTreasure" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.task"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskTask" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.army"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskArmy" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.war"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskWar" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.double_speed"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskDoubleSpeed" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.battle"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskBattle" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.buy_army"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskBuyArmy" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.revolution"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="taskRevolution" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.revolution_minutes"></div>
-                        <div class="col-xs-6">
-                            <div class="pull-right">
-                                <input id="revolutionMinutes" style="width: 40px; text-align: center;" min="0" type="number" value="60" readonly>
-                                <button id="revolutionMinutesMinus" type="button" class="btn btn-danger">-10</button>
-                                <button id="revolutionMinutesPlus" type="button" class="btn btn-plus">+10</button>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-xs-6" data-i18n="li.skill"></div>
-                        <div class="col-xs-6">
-                            <label class="switch pull-right">
-                                <input id="useSkill" type="checkbox" checked>
-                                <a class="slider round"></a>
-                            </label>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </body>
+		.btn-plus:hover,
+		.btn-plus:focus,
+		.btn-plus:active,
+		.btn-plus.active {
+			color: #FFFFFF !important;
+			background-color: #0d8aee;
+			border-color: #0c7cd5;
+		}
+
+		.btn-plus.disabled:hover,
+		.btn-plus.disabled:focus,
+		.btn-plus.disabled:active,
+		.btn-plus.disabled.active,
+		.btn-plus[disabled]:hover,
+		.btn-plus[disabled]:focus,
+		.btn-plus[disabled]:active,
+		.btn-plus[disabled].active,
+		fieldset[disabled] .btn-plus:hover,
+		fieldset[disabled] .btn-plus:focus,
+		fieldset[disabled] .btn-plus:active,
+		fieldset[disabled] .btn-plus.active {
+			color: #FFFFFF;
+			background-color: #2196F3;
+			border-color: #2196F3;
+		}
+
+		.btn-plus,
+		.btn-danger {
+			min-width: 35px;
+			padding: 3px 0px 3px 0px !important;
+		}
+
+		.setting_input_value {
+			width: 40px;
+			text-align: center;
+		}
+
+		.setting_input_value[type=text] {
+			width: 80%;
+		}
+
+		.row {
+			display: flex;
+			align-items: center;
+		}
+
+		ul {
+			padding-left: 5px;
+		}
+	</style>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<script>
+		TAG = "EndlessFrontier";
+		VERSION = 13;
+		var settings = [
+			[
+				{
+					title: "Language",
+					title_zh_TW: "語言",
+					buttons: [{
+						title: "En",
+						onclick: "saveLocale('en-US')"
+					}, {
+						title: "中文",
+						onclick: "saveLocale('zh-TW')"
+					}],
+				},
+				{
+					title: "Virtual button bar",
+					title_zh_TW: "虛擬鍵盤",
+					default: true
+				},
+				{
+					title: "Auto restart app",
+					title_zh_TW: "自動重啟遊戲",
+					default: false
+				},
+				{
+					title: "Auto restart app(mins)",
+					title_zh_TW: "自動重啟遊戲(分鐘)",
+					default: 60,
+					step: 10,
+					max: 180,
+					min: 10,
+				}
+			],
+			[
+				{
+					title: "Auto treasure chests",
+					title_zh_TW: "自動開寶箱",
+					default: true
+				},
+				{
+					title: "Auto quest",
+					title_zh_TW: "自動完成任務",
+					default: true
+				},
+				{
+					title: "Auto unit",
+					title_zh_TW: "自動完成士兵",
+					default: true
+				},
+				{
+					title: "Auto dungeon",
+					title_zh_TW: "自動打素材",
+					default: true
+				},
+				{
+					title: "Auto x2 game speed",
+					title_zh_TW: "自動兩倍遊戲加速",
+					default: true
+				},
+				{
+					title: "Auto battle",
+					title_zh_TW: "自動對戰",
+					default: true
+				},
+				{
+					title: "Auto buy unit",
+					title_zh_TW: "自動買士兵",
+					default: true
+				},
+				{
+					title: "Auto revive",
+					title_zh_TW: "自動定時轉世",
+					default: true
+				},
+				{
+					title: "Auto revive(mins)",
+					title_zh_TW: "自動定時轉世(分鐘)",
+					default: 60,
+					step: 10,
+					max: 180,
+					min: 10,
+				},
+				{
+					title: "Auto use skills",
+					title_zh_TW: "自動使用技能",
+					default: false
+				}
+			]
+		];
+
+		function saveLocale(locale) {
+			if (localStorage !== undefined) {
+				localStorage.setItem(TAG + '-locale', locale);
+				location.reload();
+			}
+		}
+
+		function loadSettings(settings) {
+			var recordSettings = {};
+			if (localStorage = undefined) {
+				return;
+			}
+			var version = +localStorage.getItem(TAG + '-version');
+			if (!version || VERSION != version) {
+				return;
+			}
+			var settingsJSON = localStorage.getItem(TAG + '-settings');
+			if (!settingsJSON) {
+				return;
+			}
+			recordSettings = JSON.parse(settingsJSON);
+			if (!recordSettings) {
+				return;
+			}
+			for (var i in settings) {
+				for (var g in settings[i]) {
+					var id = i + "_" + g;
+					var setting = settings[i][g];
+					if (recordSettings[id] != undefined) {
+						setting.default = recordSettings[id];
+					}
+				}
+			}
+			console.log('Load settings');
+		}
+
+		function saveSettings(settings) {
+			if (localStorage != undefined) {
+				var recordSettings = {};
+				for (var i in settings) {
+					for (var g in settings[i]) {
+						var id = i + "_" + g;
+						var setting = settings[i][g];
+						if (typeof setting.default === "boolean") {
+							recordSettings[id] = $("#setting_value_" + id).is(':checked');
+						} else if (typeof setting.default === "number") {
+							recordSettings[id] = +$("#setting_value_" + id).val();
+						} else if (typeof setting.default === "string") {
+							recordSettings[id] = $("#setting_value_" + id).val();
+						}
+					}
+				}
+				localStorage.setItem(TAG + '-version', VERSION);
+				localStorage.setItem(TAG + '-settings', JSON.stringify(recordSettings));
+				console.log('Save settings');
+			}
+		}
+
+		function genStartCommand(settings) {
+			var command = "start(";
+			for (var i in settings) {
+				for (var g in settings[i]) {
+					var id = i + "_" + g;
+					var setting = settings[i][g];
+					if (typeof setting.default === "boolean") {
+						command += $("#setting_value_" + id).is(':checked') + ", ";
+					} else if (typeof setting.default === "number") {
+						command += $("#setting_value_" + id).val() + ", ";
+					} else if (typeof setting.default === "string") {
+						command += "'" + $("#setting_value_" + id).val() + "', ";
+					}
+				}
+			}
+			command += "undefined);"
+			console.log("Start command: " + command);
+			return command;
+		}
+
+		function getTitle(setting) {
+			if (localStorage === undefined) {
+				return setting.title;
+			}
+			var lang = localStorage.getItem(TAG + '-locale');
+			if (!lang) {
+				return setting.title;
+			} else if (lang === "zh-TW") {
+				return setting.title_zh_TW;
+			}
+			return setting.title;
+		}
+
+		function appendTitle(jSetting, title) {
+			jSetting.append("<div class='col-xs-6'>" + title + "</div>");
+		}
+
+		function appendCol(jSetting, jContent) {
+			var jDiv = $('<div class="pull-right"></div>');
+			var jCol = $('<div class="col-xs-6"></div>');
+			if (Array.isArray(jContent)) {
+				for (var j in jContent) {
+					jDiv.append(jContent[j]);
+				}
+			} else {
+				jDiv.append(jContent);
+			}
+			jCol.append(jDiv);
+			jSetting.append(jCol);
+		}
+
+		function getSwitchButton(id, checked) {
+			var jLabel = $('<label class="switch pull-right"></label>');
+			var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='checkbox' " + (checked ?
+				'checked' : '') + "/>");
+			jInput.change(function () {
+				saveSettings(settings);
+			});
+			jLabel.append(jInput);
+			jLabel.append('<a class="slider round"></a>');
+			return jLabel;
+		}
+
+		function genSettings(jContainer, settings) {
+			for (var i in settings) {
+				var jGroup = $("<div class='list-group'></div>");
+				for (var g in settings[i]) {
+					var id = i + "_" + g;
+					var setting = settings[i][g];
+					var title = getTitle(setting);
+					var jGroupItem = $("<div id='setting_" + id + "' class='list-group-item'></div>");
+					var jSetting = $("<div class='row'></div>");
+					if (typeof setting.default === "boolean") {
+						appendTitle(jSetting, title);
+						appendCol(jSetting, getSwitchButton(id, setting.default));
+					} else if (typeof setting.default === "number") {
+						var step = setting.step;
+						var max = setting.max;
+						var min = setting.min;
+						var jBtns = [];
+						var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='number' value='" + setting
+							.default + "' readonly/>");
+						var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
+						var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
+						jBtnP.click((function (jInput, min, max, step) {
+							return function () {
+								var newValue = (+jInput.val()) + step;
+								if (newValue <= max) {
+									jInput.val(newValue);
+								}
+								saveSettings(settings);
+							}
+						})(jInput, min, max, step));
+						jBtnM.click((function (jInput, min, max, step) {
+							return function () {
+								var newValue = (+jInput.val()) - step;
+								if (newValue >= min) {
+									jInput.val(newValue);
+								}
+								saveSettings(settings);
+							}
+						})(jInput, min, max, step));
+						jBtns.push(jInput);
+						jBtns.push(jBtnP);
+						jBtns.push(jBtnM);
+						jInput.change(function () {
+							saveSettings(settings);
+						});
+						appendTitle(jSetting, title);
+						appendCol(jSetting, jBtns);
+					} else if (typeof setting.default === "string") {
+						var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='text' value='" + setting.default +
+							"'/>");
+						jInput.change(function () {
+							saveSettings(settings);
+						});
+						appendTitle(jSetting, title);
+						appendCol(jSetting, jInput);
+					} else if (setting.buttons !== undefined) {
+						var jBtns = [];
+						for (var j in setting.buttons) {
+							var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick +
+								' class="btn btn-plus">' + setting.buttons[j].title + '</button>');
+							jBtns.push(jBtn);
+						}
+						appendTitle(jSetting, title);
+						appendCol(jSetting, jBtns);
+					} else if (title !== undefined) {
+						jSetting.append("<div class='col-xs-12'>" + title + "</div>");
+					}
+					jGroupItem.append(jSetting);
+					jGroup.append(jGroupItem);
+				}
+				jContainer.append(jGroup)
+			}
+		}
+	</script>
+
+	<script>
+		$(function () {
+			if (localStorage !== undefined && localStorage.getItem(TAG + '-locale') === "zh-TW") {
+				$("#version").html("無盡的邊疆 v" + VERSION);
+			} else {
+				$("#version").html("Endless Frontier v" + VERSION);
+			}
+
+			loadSettings(settings);
+			genSettings($("#settings"), settings);
+		});
+
+		function getCheckStatus(id) {
+			return $(id).is(':checked');
+		}
+
+		function onEvent(eventType) {
+			if (eventType == 'OnPlayClick') {
+				var startCommand = genStartCommand(settings);
+				JavaScriptInterface.runScript(startCommand);
+			} else if (eventType == 'OnPauseClick') {
+				JavaScriptInterface.runScript('stop();');
+			} else if (eventType == 'OnReloadClick') {
+				JavaScriptInterface.runScript(script);
+			}
+		}
+
+		function onLog(message) {
+			console.log(message);
+		}
+	</script>
+</head>
+
+<body>
+	<nav class="navbar navbar-custom" role="navigation">
+		<a id="version" class="navbar-brand"></a>
+	</nav>
+	<div class="container">
+		<div id="settings"></div>
+	</div>
+</body>
+
 </html>
