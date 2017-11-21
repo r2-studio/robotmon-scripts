@@ -848,7 +848,7 @@ Tsum.prototype.taskPlayGame = function() {
     }
 
     // click bubbles
-    if (clearBubbles && runTimes % 4 == 2) {
+    if (this.clearBubbles && clearBubbles && runTimes % 4 == 2) {
       log("Clear bubbles");
       clearBubbles = false;
       for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 150) {
