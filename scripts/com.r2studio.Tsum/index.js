@@ -69,7 +69,7 @@ var Button = {
   gameSkillOff3: {x: 160, y: 1630 - adjY, color: {"a":0,"b":128,"g":73,"r":16}},
   gameRand: {x: 985, y: 1580 - adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 983, y: 250 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue: {x: 540, y: 1330 - adjY, color: {"a":0,"b":7,"g":176,"r":234}},
+  gameContinue: {x: 540, y: 1270 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameContinue1: {x: 461, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
@@ -635,7 +635,7 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
     releaseImage(img);
-    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
+    log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
     if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
@@ -806,6 +806,11 @@ Tsum.prototype.taskPlayGame = function() {
       this.tap(Button.gamePause);
       this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
       this.isLoadRotateTsum = true;
+      var page = this.checkPage(3500);
+      if (page != 'playingGame' && page != 'pausingGame') {
+        log('遊戲結束');
+        break;
+      }
     }
     log('辨識盤面Tsum');
     log(Date.now());
