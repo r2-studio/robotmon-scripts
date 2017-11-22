@@ -1158,11 +1158,11 @@ Tsum.prototype.sendHeart = function(btn) {
     var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 40);
     releaseImage(img);
     
-    if (isOk) {
-      this.tap(Button.outReceiveOk);
-    } else if (isSend) {
+    if (isSend) {
       this.tap(btn);
       this.sleep(800);
+    } else if (isOk) {
+      this.tap(Button.outReceiveOk);
     } else if (isSent1) {
       return true;
     } else if (isClose) {
@@ -1241,7 +1241,6 @@ function stop() {
     if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
   }
   ts = undefined;
-  if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
 }
 
 // stop();
