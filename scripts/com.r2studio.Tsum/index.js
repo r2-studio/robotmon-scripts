@@ -69,7 +69,7 @@ var Button = {
   gameSkillOff3: {x: 160, y: 1630 - adjY, color: {"a":0,"b":128,"g":73,"r":16}},
   gameRand: {x: 985, y: 1580 - adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 983, y: 250 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue: {x: 540, y: 1330 - adjY, color: {"a":0,"b":7,"g":176,"r":234}},
+  gameContinue: {x: 540, y: 1270 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameContinue1: {x: 461, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
@@ -121,7 +121,7 @@ function loadTsumImages(isJP) {
   var tsumPath = getStoragePath() + '/' + tsumDir;
   var tsumFiles = isJP ? Config.tsumFilesJP : Config.tsumFiles;
   for (var i in tsumFiles) {
-    var key = Config.tsumFiles[i];
+    var key = tsumFiles[i];
     var filename = tsumPath + '/' + key + '_0.png';
     var img = openImage(filename);
     smooth(img, 1, 2);
@@ -410,7 +410,7 @@ function calculatePaths(board) {
 
 // Tsum struct
 
-function Tsum() {
+function Tsum(isJP) {
   this.debug = true;
   this.isRunning = true;
   this.myTsum = '';
@@ -437,7 +437,7 @@ function Tsum() {
   this.isLoadRotateTsum = false;
   this.allTsumImages = {};
   this.gameTsums = [];
-  this.isJP = false;
+  this.isJP = isJP;
   this.isPause = true;
   this.receiveOneItem = false;
   this.sentToZero = false;
@@ -635,7 +635,7 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
     releaseImage(img);
-    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue);
+    log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
     if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
@@ -806,6 +806,11 @@ Tsum.prototype.taskPlayGame = function() {
       this.tap(Button.gamePause);
       this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
       this.isLoadRotateTsum = true;
+      var page = this.checkPage(3500);
+      if (page != 'playingGame' && page != 'pausingGame') {
+        log('遊戲結束');
+        break;
+      }
     }
     log('辨識盤面Tsum');
     log(Date.now());
@@ -848,7 +853,7 @@ Tsum.prototype.taskPlayGame = function() {
     }
 
     // click bubbles
-    if (clearBubbles && runTimes % 4 == 2) {
+    if (this.clearBubbles && clearBubbles && runTimes % 4 == 2) {
       log("Clear bubbles");
       clearBubbles = false;
       for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 150) {
@@ -1158,11 +1163,11 @@ Tsum.prototype.sendHeart = function(btn) {
     var isClose = isSameColor(Button.outSendHeartClose.color, this.getColor(img, Button.outSendHeartClose), 40);
     releaseImage(img);
     
-    if (isOk) {
-      this.tap(Button.outReceiveOk);
-    } else if (isSend) {
+    if (isSend) {
       this.tap(btn);
       this.sleep(800);
+    } else if (isOk) {
+      this.tap(Button.outReceiveOk);
     } else if (isSent1) {
       return true;
     } else if (isClose) {
@@ -1201,12 +1206,11 @@ var gTaskController;
 function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
-  ts = new Tsum();
+  ts = new Tsum(isJP);
   ts.debug = debug;
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
-  ts.isJP = isJP;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
@@ -1242,7 +1246,6 @@ function stop() {
     if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
   }
   ts = undefined;
-  if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
 }
 
 // stop();
