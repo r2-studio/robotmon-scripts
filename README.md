@@ -582,6 +582,21 @@ rbm.findImage('startButton.png', 0.9)
 Returns `Object` - Find the image with `filename` in screen. `{x: Integer, y: Integer, score: Float}`
 
 ```javascript
+rbm.findImages(filename, threshold, countLimit, allowOverlap, deep)
+
+// Examples:
+rbm.findImages('startButton.png', 0.9, 3, false, false)
+```
+
+* `filename` String
+* `threshold` Float
+* `countLimit` Integer
+* `allowOverlap` Boolean
+* `deep` Boolean
+
+Returns `Object` - Find the image with `filename` in screen. `{x: Integer, y: Integer, score: Float}`
+
+```javascript
 rbm.imageExists(filename, threshold)
 ```
 
