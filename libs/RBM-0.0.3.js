@@ -200,12 +200,12 @@ RBM.prototype.findImage = function(filename, threshold) {
     return undefined;
   }
   var imageSize = getImageSize(targetImg);
+  imageSize.width *= this.resizeFactor / this.oriResizeFactor;
+  imageSize.height *= this.resizeFactor / this.oriResizeFactor;
   var nWHs = this.mappingImageWHs(imageSize);
   var result = undefined;
   for (var i = 0; i < nWHs.length; i++) {
     var nWH = nWHs[i];
-    nWH.width *= this.resizeFactor / this.oriResizeFactor;
-    nWH.height *= this.resizeFactor / this.oriResizeFactor;
     var rImg = resizeImage(targetImg, nWH.width, nWH.height);
     result = findImage(sourceImg, rImg);
     result.width = nWH.width;
@@ -220,6 +220,10 @@ RBM.prototype.findImage = function(filename, threshold) {
   releaseImage(targetImg);
   if (sourceImg != this._screenshotImg) {
     releaseImage(sourceImg);
+  }
+  if (result !== undefined) {
+    result.x = this.partialOffsetXY.x + result.x * (this.appWidth / this.resizeAppWidth);
+    result.y = this.partialOffsetXY.y + result.y * (this.appHeight / this.resizeAppHeight);
   }
   return result;
 }
@@ -237,9 +241,9 @@ RBM.prototype.imageClick = function(filename, threshold) {
   if (result === undefined) {
     return false;
   }
-  var x = (result.x + (result.width / 2)) * this.appWidth / this.resizeAppWidth;
-  var y = (result.y + (result.height / 2)) * this.appHeight / this.resizeAppHeight;
-  tap(this.partialOffsetXY.x + x, this.partialOffsetXY.y + y, this.during);
+  var x = result.x + (result.width / 2);
+  var y = result.y + (result.height / 2);
+  tap(x, y, this.during);
   return true;
 };
 
@@ -251,9 +255,9 @@ RBM.prototype.imageWaitClick = function(filename, timeout, threshold) {
   while(this.running) {
     var result = this.findImage(filename, threshold);
     if (result !== undefined) {
-      var x = (result.x + (result.width / 2)) * this.appWidth / this.resizeAppWidth;
-      var y = (result.y + (result.height / 2)) * this.appHeight / this.resizeAppHeight;
-      tap(this.partialOffsetXY.x + x, this.partialOffsetXY.y + y, this.during);
+      var x = result.x + (result.width / 2);
+      var y = result.y + (result.height / 2);
+      tap(x, y, this.during);
       return true;
     }
     sleep(this.during * 3);
