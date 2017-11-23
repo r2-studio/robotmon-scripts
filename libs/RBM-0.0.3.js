@@ -221,11 +221,72 @@ RBM.prototype.findImage = function(filename, threshold) {
   if (sourceImg != this._screenshotImg) {
     releaseImage(sourceImg);
   }
+  
   if (result !== undefined) {
     result.x = this.partialOffsetXY.x + result.x * (this.appWidth / this.resizeAppWidth);
     result.y = this.partialOffsetXY.y + result.y * (this.appHeight / this.resizeAppHeight);
+    result.width *= this.appWidth / this.resizeAppWidth;
+    result.height *= this.appWidth / this.resizeAppWidth;
   }
   return result;
+}
+
+RBM.prototype.findImages = function(filename, threshold, countLimit, allowOverlap, deep) {
+  if (threshold === undefined) {
+    threshold = this.imageThreshold;
+  }
+  var sourceImg = 0; 
+  if (this._screenshotImg != 0) {
+    sourceImg = this._screenshotImg;
+  } else {
+    sourceImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, this.imageQuality);
+  }
+  var filePath = this.getImagePath() + '/' + filename;
+  var targetImg = openImage(filePath);
+  if (targetImg === 0) {
+    this.log("Image is not found: ", filePath);
+    if (sourceImg != this._screenshotImg) {
+      releaseImage(sourceImg);
+    }
+    return [];
+  }
+  var imageSize = getImageSize(targetImg);
+  imageSize.width *= this.resizeFactor / this.oriResizeFactor;
+  imageSize.height *= this.resizeFactor / this.oriResizeFactor;
+  var nWHs = this.mappingImageWHs(imageSize);
+  var results = [];
+  for (var i = 0; i < nWHs.length; i++) {
+    var nWH = nWHs[i];
+    var rImg = resizeImage(targetImg, nWH.width, nWH.height);
+    var tmpResults = findImages(sourceImg, rImg, threshold, countLimit, !allowOverlap);
+    releaseImage(rImg);
+    for (var k in tmpResults) {
+      results.push({
+        x: tmpResults[k].x,
+        y: tmpResults[k].y,
+        width: nWH.width,
+        height: nWH.height,
+        score: tmpResults[k].score,
+      });
+    }
+    if (results.length >= countLimit) {
+      break;
+    }
+    if (!deep && results.length > 0) {
+      break;
+    }
+  }
+  releaseImage(targetImg);
+  if (sourceImg != this._screenshotImg) {
+    releaseImage(sourceImg);
+  }
+  for (var i in results) {
+    results[i].x = this.partialOffsetXY.x + results[i].x * (this.appWidth / this.resizeAppWidth);
+    results[i].y = this.partialOffsetXY.y + results[i].y * (this.appHeight / this.resizeAppHeight);
+    results[i].width *= this.appWidth / this.resizeAppWidth;
+    results[i].height *= this.appWidth / this.resizeAppWidth;
+  }
+  return results;
 }
 
 RBM.prototype.imageExists = function(filename, threshold) {
@@ -344,3 +405,109 @@ RBM.prototype.keycode = function(label) {
 RBM.prototype.sleep = function() {
   sleep(this.during);
 };
+
+// ============== RBM Test ==============
+
+/*
+var config = {
+  appName: 'com.rbm.test',
+  oriScreenWidth: 1440,
+  oriScreenHeight: 2560,
+  oriVirtualButtonHeight: 0,
+  oriResizeFactor: 1,
+  eventDelay: 200,
+  imageThreshold: 0.85,
+  imageQuality: 80,
+  resizeFactor: 0.5,
+};
+
+function testMappingImageWHs() {
+  // 1
+  var rbm = new RBM(config);
+  rbm.init();
+  var results = rbm.mappingImageWHs({height: 150, width: 120});
+  if (results[0].height != 150 || results[0].width != 120) {
+    rbm.log("Error result.height != 150 || result.width != 120", results);
+  }
+  
+  // 2
+  rbm = new RBM(config);
+  rbm.oriAppWidth = 1440;
+  rbm.oriAppHeight = 3072;
+  rbm.init();
+  var results = rbm.mappingImageWHs({height: 150, width: 120});
+  if (results[0].height != 125 || results[5].height != 150) {
+    rbm.log("Error results[0].height != 125 || results[5].height != 150", results);
+  }
+  
+  // 3
+  rbm = new RBM(config);
+  rbm.oriAppWidth = 720;
+  rbm.oriAppHeight = 1536;
+  rbm.init();
+  var results = rbm.mappingImageWHs({height: 150, width: 120});
+  if (results[0].height != 250 || results[5].height != 300) {
+    rbm.log("Error results[0].height != 250 || results[5].height != 300", results);
+  }
+}
+
+function testFindImage() {
+  var rbm = new RBM(config);
+  rbm.init();
+  //rbm.oriScreencrop('test1.png', 50, 120, 450, 320); // h 200, w 400
+  
+  // 1
+  var result = rbm.findImage('test1.png');
+  if (result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120) {
+    rbm.log("Error result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120", result);
+  }
+  
+  // 2
+  rbm.keepScreenshotPartial(0, 20, 500, 420);
+  var result = rbm.findImage('test1.png');
+  if (result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120) {
+    rbm.log("Error result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120", result);
+  }
+  rbm.releaseScreenshot();
+}
+
+function testFindImageRetry() {
+  var rbm = new RBM(config);
+  rbm.oriAppWidth = 1440;
+  rbm.oriAppHeight = 3072;
+  rbm.init();
+  
+  // 1
+  var result = rbm.findImage('test1.png', 0.95);
+  rbm.log(result);
+  if (result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120) {
+    rbm.log("Error result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120", result);
+  }
+  
+  // 2
+  rbm.keepScreenshotPartial(0, 20, 500, 420);
+  var result = rbm.findImage('test1.png', 0.95);
+  if (result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120) {
+    rbm.log("Error result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120", result);
+  }
+  rbm.releaseScreenshot();
+}
+
+function testFindImages() {
+  var rbm = new RBM(config);
+  rbm.init();
+  //rbm.oriScreencrop('test1.png', 50, 120, 450, 320); // h 200, w 400
+  
+  // 1
+  var results = rbm.findImages('test1.png', 0.95, 3, false);
+  rbm.log(results);
+  if (results[0].height != 200 || results[0].width != 400 || results[0].x != 50 || results[0].y != 120) {
+    rbm.log("Error result.height != 200 || result.width != 400 || result.x != 50 || result.y != 120", result);
+  }
+}
+
+testMappingImageWHs();
+testFindImage();
+testFindImageRetry();
+testFindImages();
+*/
