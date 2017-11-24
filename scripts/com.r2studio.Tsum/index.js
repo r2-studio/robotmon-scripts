@@ -14,9 +14,6 @@ function isSameColor(c1, c2, diff) {
   if (Math.abs(c1.b - c2.b) > diff) {
     return false;
   }
-  if (Math.abs(c1.a - c2.a) > diff) {
-    return false;
-  }
   return true;
 }
 
@@ -83,7 +80,7 @@ var Button = {
   outReceiveClose: {x: 530, y: 1300 - adjY},
   outReceiveOne: {x: 840, y: 497 - adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}},
+  outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}, color2: {r: 60, g: 98, b: 147}},
   outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
   outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -635,7 +632,7 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
     releaseImage(img);
-    log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
+    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
     if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
@@ -1018,8 +1015,15 @@ Tsum.prototype.taskReceiveOneItem = function() {
       log('Try again... wait 2 sec');
       this.tap(Button.outReceiveOk);
       this.sleep(2000);
+    } else if (isOk) {
+      this.tap(Button.outReceiveOk);
+      nonItemCount = 0;
+      unknownCount = 0;
+      this.sleep(500);
+      isFinish = true;
     } else if (isLoading) {
       log('Network delay...');
+      this.tap(Button.outReceiveOk);
       this.sleep(300);
     } else if (isItem) {
       if (!isFinish) {
@@ -1033,12 +1037,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
         unknownCount = 0;
       }
       isFinish = false;
-    } else if (isOk) {
-      this.tap(Button.outReceiveOk);
-      nonItemCount = 0;
-      unknownCount = 0;
-      this.sleep(500);
-      isFinish = true;
     } else if (isNonItem) {
       this.tap(Button.outReceiveOk);
       nonItemCount++;
