@@ -82,7 +82,7 @@ var Button = {
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
   outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}, color2: {r: 60, g: 98, b: 147}},
   outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
-  outSendHeartTop: {x: 910, y: 424 - adjY},
+  outSendHeartTop: {x: 910, y: 427 - adjY},
   outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -771,6 +771,20 @@ Tsum.prototype.useSkill = function() {
     }
     this.tap(Button.skillLuke1);
     this.sleep(500);
+  } else if(this.myTsum == 'block_moana_s') {
+    this.sleep(2500);
+    log("Clear bubbles");
+    for (var by = 1000; by <= 1300; by += 150) 
+    {
+      this.tap({x: 100, y: by}, 80);
+      this.tap({x: 1000, y: by}, 80);
+      this.tap({x: 250, y: by}, 80);
+      this.tap({x: 750, y: by}, 80);
+      this.tap({x: 400, y: by}, 80);
+      this.tap({x: 600, y: by}, 80);
+      this.tap({x: 450, y: by}, 80);
+    }
+    this.sleep(300);
   } else {
     this.sleep(2500);
   }
@@ -1117,12 +1131,13 @@ Tsum.prototype.taskSendHearts = function() {
     log("Send " + heartsPos.length + "hearts, 0 score?" + isZero);
     if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero)) {
       if(retry < 3){
-        this.tapDown(Button.outSendHeart3, 100);
-        this.moveTo (Button.outSendHeart3, 100);
-        this.moveTo (Button.outSendHeart2, 100);
-        this.moveTo (Button.outSendHeart1, 100);
+        this.tapDown(Button.outSendHeart3, 50);
+        this.moveTo (Button.outSendHeart3, 50);
+        this.moveTo (Button.outSendHeart2, 50);
+        this.moveTo (Button.outSendHeart1, 50);
+        this.moveTo (Button.outSendHeart0, 50);
         this.moveTo (Button.outSendHeartTop, 600);
-        this.tapUp  (Button.outSendHeartTop, 100);
+        this.tapUp  (Button.outSendHeartTop, 50);
         retry++;
         log("沒愛心可送或零分，再檢查次數: " + retry);
         this.sleep(500);
@@ -1139,12 +1154,13 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
-      this.tapDown(Button.outSendHeart3, 100);
-      this.moveTo (Button.outSendHeart3, 100);
-      this.moveTo (Button.outSendHeart2, 100);
-      this.moveTo (Button.outSendHeart1, 100);
+      this.tapDown(Button.outSendHeart3, 50);
+      this.moveTo (Button.outSendHeart3, 50);
+      this.moveTo (Button.outSendHeart2, 50);
+      this.moveTo (Button.outSendHeart1, 50);
+      this.moveTo (Button.outSendHeart0, 50);
       this.moveTo (Button.outSendHeartTop, 600);
-      this.tapUp  (Button.outSendHeartTop, 100);
+      this.tapUp  (Button.outSendHeartTop, 50);
       this.sleep(500);
     }
   }
@@ -1152,7 +1168,7 @@ Tsum.prototype.taskSendHearts = function() {
 
 Tsum.prototype.sendHeart = function(btn) {
   this.tap(btn);
-  this.sleep(800);
+  this.sleep(400);
   var unknownCount = 0;
   while (this.isRunning) {
     var img = this.screenshot();
@@ -1179,7 +1195,7 @@ Tsum.prototype.sendHeart = function(btn) {
       log("未知狀態，離開");
       return false;
     }
-    this.sleep(300);
+    this.sleep(250);
   }
 }
 
@@ -1237,13 +1253,13 @@ function stop() {
   if (ts != undefined) {
     log('清除殘留記憶體...');
     ts.isRunning = false;
-    sleep(2000);
     ts.deinit();
     if (ts.recordReceive) {
       ts.releaseRecord();
     }
     if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
   }
+  sleep(2000);
   ts = undefined;
 }
 
