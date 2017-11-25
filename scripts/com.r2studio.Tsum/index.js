@@ -785,6 +785,14 @@ Tsum.prototype.useSkill = function() {
       this.tap({x: 450, y: by}, 80);
     }
     this.sleep(300);
+  } else if (this.myTsum == 'block_donaldn_s') {
+    for (var i = 0; i < 3; i++) {
+      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 120) {
+        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 120) {
+          this.tap({x: bx, y: by}, 10);
+        }
+      }
+    }
   } else {
     this.sleep(2500);
   }
