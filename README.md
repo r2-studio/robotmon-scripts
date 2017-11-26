@@ -358,10 +358,24 @@ writeFile(path, text)
 * `text` String
 
 ```javascript
+encrypt(script)
+```
+
+Returns String - The encrypted script
+
+* `script` String
+
+```javascript
 runScript(script)
 ```
 
 * `script` String
+
+```javascript
+runEncryptedScript(script)
+```
+
+* `script` String - The script is encrypted by `encrypt`
 
 ```javascript
 httpClient(method, url, body, headers)
