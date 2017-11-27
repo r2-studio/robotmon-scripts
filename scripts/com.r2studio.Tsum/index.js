@@ -268,7 +268,8 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
       for (var j = 0; j < 8; j++) {
         var rotatedImage = gameTsums[idx].rotations[j];
         var scoreLimit = (gameTsums[idx].score - 0.5) * 0.75;
-        var result = findImages(boardImg, rotatedImage, scoreLimit, 12, true);
+        var countLimit = (j == 0) ? 10 : 6;
+        var result = findImages(boardImg, rotatedImage, scoreLimit, countLimit, true);
         results.push(result);
       }
       return results;
@@ -276,7 +277,7 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
     
     multiTaskIds.push(ids);
   }
-  this.sleep(100);
+  this.sleep(50);
   for (var i in multiTaskIds) {
     var resultss = waitTask(multiTaskIds[i]);
     for (var ks in resultss) {
@@ -348,7 +349,7 @@ function calculateNearTsumPaths(tsum, ts) {
     var minDis = result.dis;
     var minTsum = result.tsum;
     var minIdx = result.idx;
-    if (minIdx == -1 || minDis > Config.tsumWidth * 2.6) {
+    if (minIdx == -1 || minDis > Config.tsumWidth * 2.8) {
       break;
     }
     tsum = minTsum;
