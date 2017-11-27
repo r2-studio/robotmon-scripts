@@ -797,8 +797,8 @@ Tsum.prototype.useSkill = function() {
     this.sleep(300);
   } else if (this.myTsum == 'block_donaldn_s') {
     for (var i = 0; i < 3; i++) {
-      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 120) {
-        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 120) {
+      for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 140) {
+        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 140) {
           this.tap({x: bx, y: by}, 10);
         }
       }
@@ -901,6 +901,9 @@ Tsum.prototype.taskPlayGame = function() {
     this.sleep(300);
     if (this.useSkill()) {
       clearBubbles += 2;
+      if (this.useSkill()) {
+        this.useSkill();
+      }
     }
 
     // double check
@@ -1305,6 +1308,7 @@ function stop() {
 // ts.taskSendHearts();
 // ts.taskReceiveOneItem();
 // ts.isPause = false;
+// ts.clearBubbles = false;
 // ts.taskPlayGame();
 // ts.taskReceiveAllItems();
 // var page = ts.checkPage(3500);
