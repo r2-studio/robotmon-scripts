@@ -781,7 +781,7 @@ Tsum.prototype.useSkill = function() {
       this.sleep(20);
     }
     this.tap(Button.skillLuke1);
-    this.sleep(500);
+    this.sleep(800);
   } else if(this.myTsum == 'block_moana_s') {
     this.sleep(2500);
     log("Clear bubbles");
