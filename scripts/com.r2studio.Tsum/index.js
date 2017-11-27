@@ -69,6 +69,8 @@ var Button = {
   gameContinue: {x: 540, y: 1270 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameContinue1: {x: 461, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
+  gameMagicalTime1: {x: 320, y: 1255, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime2: {x: 750, y: 1255, color: {"a":0,"b":13,"g":175,"r":240}},
   outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
@@ -631,6 +633,8 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue), 40);
     var isGameContinue1 = isSameColor(Button.gameContinue1.color, this.getColor(img, Button.gameContinue1), 40);
     var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
+    var isMagicTime1 = isSameColor(Button.gameMagicalTime1.color, this.getColor(img, Button.gameMagicalTime1), 40);
+    var isMagicTime2 = isSameColor(Button.gameMagicalTime2.color, this.getColor(img, Button.gameMagicalTime2), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
     releaseImage(img);
     // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
@@ -638,6 +642,8 @@ Tsum.prototype.checkPage = function(wait) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'playingGame';
+    } else if (isMagicTime1 && isMagicTime2) {
+      return 'magicTime';
     } else if (isStart1Btn) {
       return 'friendPage';
     } else if (isStart2Btn) {
@@ -673,6 +679,8 @@ Tsum.prototype.goFriendPage = function() {
       this.tap(Button.gamePause);
     } else if (page == 'gameEnd') {
       this.tap(Button.outClose2);
+    } else if (page == 'magicTime') {
+      this.tap(Button.gameMagicalTime1);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
@@ -700,6 +708,8 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Button.gameContinue);
     } else if (page == 'playingGame') {
       break;
+    } else if (page == 'magicTime') {
+      this.tap(Button.gameMagicalTime1);
     } else if (page == 'gameEnd') {
       this.tap(Button.outClose2);
     } else if (page == 'unknown') {
@@ -1152,10 +1162,10 @@ Tsum.prototype.taskSendHearts = function() {
         this.moveTo (Button.outSendHeart1, 50);
         this.moveTo (Button.outSendHeart0, 50);
         this.moveTo (Button.outSendHeartTop, 500);
-        this.tapUp  (Button.outSendHeartTop, 50);
+        this.tapUp  (Button.outSendHeartTop, 100);
         retry++;
         log("沒愛心可送或零分，再檢查次數: " + retry);
-        this.sleep(200);
+        this.sleep(500);
       } else {
         break;
       }
@@ -1175,11 +1185,11 @@ Tsum.prototype.taskSendHearts = function() {
       this.moveTo (Button.outSendHeart1, 50);
       this.moveTo (Button.outSendHeart0, 50);
       this.moveTo (Button.outSendHeartTop, 500);
-      this.tapUp  (Button.outSendHeartTop, 50);
+      this.tapUp  (Button.outSendHeartTop, 100);
 
-      this.sleep(200);
+      this.sleep(350);
       if (heartsPos.length == 0) {
-        this.sleep(500); // end bug
+        this.sleep(750); // end bug
       }
     }
   }
