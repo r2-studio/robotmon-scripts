@@ -64,6 +64,7 @@ var Button = {
   gameSkillOff1: {x: 160, y: 1630 - adjY, color: {"a":0,"b":157,"g":112,"r":85}},
   gameSkillOff2: {x: 160, y: 1630 - adjY, color: {"a":0,"b":181,"g":139,"r":72}},
   gameSkillOff3: {x: 160, y: 1630 - adjY, color: {"a":0,"b":128,"g":73,"r":16}},
+  gameSkillOff4: {x: 160, y: 1630 - adjY, color: {"a":0,"b":178,"g":153,"r":3}},
   gameRand: {x: 985, y: 1580 - adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 983, y: 250 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue: {x: 540, y: 1270 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
@@ -730,10 +731,11 @@ Tsum.prototype.findMyTsum = function() {
     this.playOffsetY + this.playHeight,
     tsumSize * 1.7,
     tsumSize * 1.7,
-    Config.tsumWidth * 2, 
-    Config.tsumWidth * 2,
+    Config.tsumWidth * 2.1, 
+    Config.tsumWidth * 2.1,
     100
   );
+  smooth(myTsumImage, 1, 2);
   var allScores = findAllTsumMatchScore(this.allTsumImages, myTsumImage, '');
   if (this.debug) {
     saveImage(myTsumImage, getStoragePath() + "/tmp/mytsum.jpg");
@@ -748,11 +750,12 @@ Tsum.prototype.useSkill = function() {
     var isSkillOff1 = isSameColor(Button.gameSkillOff1.color, this.getColor(img, Button.gameSkillOff1), 60);
     var isSkillOff2 = isSameColor(Button.gameSkillOff2.color, this.getColor(img, Button.gameSkillOff2), 60);
     var isSkillOff3 = isSameColor(Button.gameSkillOff3.color, this.getColor(img, Button.gameSkillOff3), 60);
-    // log(isSkillOff1, isSkillOff2, isSkillOff3);
+    var isSkillOff4 = isSameColor(Button.gameSkillOff4.color, this.getColor(img, Button.gameSkillOff4), 60);
+    // log(isSkillOff1, isSkillOff2, isSkillOff3, this.getColor(img, Button.gameSkillOff1), this.getColor(img, Button.gameSkillOff2), this.getColor(img, Button.gameSkillOff3));
     releaseImage(img);
-    if (!isSkillOff1 && !isSkillOff2 && !isSkillOff3) {
+    if (!isSkillOff1 && !isSkillOff2 && !isSkillOff3 && !isSkillOff4) {
       if (i == 0) {
-        this.sleep(300);
+        this.sleep(200);
       }
     } else {
       return false;
@@ -796,10 +799,10 @@ Tsum.prototype.useSkill = function() {
       this.tap({x: 450, y: by}, 80);
     }
     this.sleep(300);
-  } else if (this.myTsum == 'block_donaldn_s') {
+  } else if (this.myTsum.search('block_donald') != -1) {
     for (var i = 0; i < 3; i++) {
-      for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 140) {
-        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 140) {
+      for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
+        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 150) {
           this.tap({x: bx, y: by}, 10);
         }
       }
@@ -887,8 +890,8 @@ Tsum.prototype.taskPlayGame = function() {
     if (this.clearBubbles && clearBubbles >= 3) {
       log("Clear bubbles");
       clearBubbles = 0;
-      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 150) {
-        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 150) {
+      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
+        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 140) {
           this.tap({x: bx, y: by}, 10);
         }
       }
@@ -902,7 +905,16 @@ Tsum.prototype.taskPlayGame = function() {
     this.sleep(300);
     if (this.useSkill()) {
       clearBubbles += 2;
+      if (page != 'playingGame' && page != 'pausingGame') {
+        log('遊戲結束');
+        break;
+      }
       if (this.useSkill()) {
+        var page = this.checkPage(1000);
+        if (page != 'playingGame' && page != 'pausingGame') {
+          log('遊戲結束');
+          break;
+        }
         this.useSkill();
       }
     }
@@ -922,7 +934,7 @@ Tsum.prototype.taskPlayGame = function() {
   releaseTsumRotationImages(this.gameTsums);
   this.gameTsums = [];
   this.isLoadRotateTsum = false;
-  this.sleep(2000);
+  this.sleep(4000);
 }
 
 Tsum.prototype.taskReceiveAllItems = function() {
