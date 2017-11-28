@@ -70,8 +70,14 @@ var Button = {
   gameContinue: {x: 540, y: 1270 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameContinue1: {x: 461, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameMagicalTime1: {x: 320, y: 1255, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime2: {x: 750, y: 1255, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime1: {x: 320, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime2: {x: 750, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  outGameItem1: {x: 241, y: 770 - adjY, color:{ r: 42, g: 109, b: 190}},
+  outGameItem2: {x: 496, y: 788 - adjY, color:{ r: 47, g: 113, b: 197}},
+  outGameItem3: {x: 709, y: 781 - adjY, color:{ r: 34, g: 102, b: 185}},
+  outGameItem4: {x: 950, y: 817 - adjY, color:{ r: 44, g: 110, b: 194}},
+  outGameItem5: {x: 262, y: 1051 - adjY, color:{ r: 34, g: 124, b: 200}},
+  outGameItem6: {x: 435, y: 1030 - adjY, color:{ r: 42, g: 108, b: 192}},
   outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
@@ -444,6 +450,7 @@ function Tsum(isJP) {
   this.receiveOneItem = false;
   this.sentToZero = false;
   this.recordReceive = true;
+  this.enableAllItems = false;
   // record
   this.record = {};
   this.recordImages = {};
@@ -703,6 +710,34 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (page == 'friendPage') {
       this.tap(Button.outStart1);
     } else if (page == 'startPage') {
+      var img = this.screenshot();
+      var outGameItem1 = isSameColor(Button.outGameItem1.color, this.getColor(img, Button.outGameItem1), 40);
+      var outGameItem2 = isSameColor(Button.outGameItem2.color, this.getColor(img, Button.outGameItem2), 40);
+      var outGameItem3 = isSameColor(Button.outGameItem3.color, this.getColor(img, Button.outGameItem3), 40);
+      var outGameItem4 = isSameColor(Button.outGameItem4.color, this.getColor(img, Button.outGameItem4), 40);
+      var outGameItem5 = isSameColor(Button.outGameItem5.color, this.getColor(img, Button.outGameItem5), 40);
+      var outGameItem6 = isSameColor(Button.outGameItem6.color, this.getColor(img, Button.outGameItem6), 40);
+      // log(this.getColor(img, Button.outGameItem1), this.getColor(img, Button.outGameItem2), this.getColor(img, Button.outGameItem3), this.getColor(img, Button.outGameItem4), this.getColor(img, Button.outGameItem5), this.getColor(img, Button.outGameItem6));
+      releaseImage(img);
+      if (this.enableAllItems) {
+        if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(200);};
+        if (outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = false; this.sleep(200);};
+        if (outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = false; this.sleep(200);};
+        if (outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = false; this.sleep(200);};
+        if (outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = false; this.sleep(200);};
+        if (outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = false; this.sleep(200);};
+      } else {
+        if (!outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = true; this.sleep(200);};
+        if (!outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = true; this.sleep(200);};
+        if (!outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = true; this.sleep(200);};
+        if (!outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = true; this.sleep(200);};
+        if (!outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = true; this.sleep(200);};
+        if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(200);};
+      }
+      if (this.tsumCount == 4) {
+        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(200);};
+        if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(200);};
+      }
       this.tap(Button.outStart2);
     } else if (page == 'otherPage') {
       this.tap(Button.outClose);
@@ -745,6 +780,10 @@ Tsum.prototype.findMyTsum = function() {
 }
 
 Tsum.prototype.useSkill = function() {
+  var page = this.checkPage(1000);
+  if (page != 'playingGame' && page != 'pausingGame') {
+    return false;
+  }
   for (var i = 0; i < 2; i++) {
     var img = this.screenshot();
     var isSkillOff1 = isSameColor(Button.gameSkillOff1.color, this.getColor(img, Button.gameSkillOff1), 60);
@@ -852,7 +891,6 @@ Tsum.prototype.taskPlayGame = function() {
     if (this.debug) {
       //saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
     }
-    log(Date.now());
     releaseImage(gameImage);
 
     log('計算連線路徑');
@@ -904,17 +942,8 @@ Tsum.prototype.taskPlayGame = function() {
     }
     this.sleep(300);
     if (this.useSkill()) {
-      clearBubbles += 2;
-      if (page != 'playingGame' && page != 'pausingGame') {
-        log('遊戲結束');
-        break;
-      }
+      clearBubbles += 1;
       if (this.useSkill()) {
-        var page = this.checkPage(1000);
-        if (page != 'playingGame' && page != 'pausingGame') {
-          log('遊戲結束');
-          break;
-        }
         this.useSkill();
       }
     }
@@ -1269,7 +1298,7 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP);
@@ -1283,6 +1312,7 @@ function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeIm
   ts.sentToZero = sentToZero;
   ts.receiveCheckLimit = receiveCheckLimit;
   ts.clearBubbles = clearBubbles;
+  ts.enableAllItems = enableAllItems;
   if (largeImage) {
     ts.resizeRatio = 1;
   }
@@ -1317,6 +1347,7 @@ function stop() {
 // stop();
 // this.sleep(500);
 // ts = new Tsum();
+// ts.goGamePlayingPage();
 // ts.sentToZero = true;
 // ts.taskSendHearts();
 // ts.taskReceiveOneItem();
