@@ -91,6 +91,7 @@ var Button = {
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
   outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}, color2: {r: 60, g: 98, b: 147}},
   outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
+  outDisconnected: {x:  147, y: 1008 - adjY, color: {r: 243, g: 89, b: 117}},
   outSendHeartTop: {x: 910, y: 430 - adjY},
   outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -645,12 +646,17 @@ Tsum.prototype.checkPage = function(wait) {
     var isMagicTime1 = isSameColor(Button.gameMagicalTime1.color, this.getColor(img, Button.gameMagicalTime1), 40);
     var isMagicTime2 = isSameColor(Button.gameMagicalTime2.color, this.getColor(img, Button.gameMagicalTime2), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
+    var isDisconnected1 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 40);
+    var isDisconnected2 = isSameColor(Button.outDisconnected.color, this.getColor(img, Button.outDisconnected), 40);
+    var isDisconnected3 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outDisconnected), 40);
     releaseImage(img);
     // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
     if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'playingGame';
+    } else if (isDisconnected1 && (isDisconnected2 || isDisconnected3)) {
+      return 'networkDisconnected';
     } else if (isMagicTime1 && isMagicTime2) {
       return 'magicTime';
     } else if (isStart1Btn) {
@@ -686,6 +692,8 @@ Tsum.prototype.goFriendPage = function() {
       this.tap(Button.gameStop);
     } else if (page == 'playingGame') {
       this.tap(Button.gamePause);
+    } else if (page == 'networkDisconnected') {
+      this.tap(Button.outReceiveTimeout);
     } else if (page == 'gameEnd') {
       this.tap(Button.outClose2);
     } else if (page == 'magicTime') {
@@ -745,6 +753,8 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Button.gameContinue);
     } else if (page == 'playingGame') {
       break;
+    } else if (page == 'networkDisconnected') {
+      this.tap(Button.outReceiveTimeout);
     } else if (page == 'magicTime') {
       this.tap(Button.gameMagicalTime1);
     } else if (page == 'gameEnd') {
