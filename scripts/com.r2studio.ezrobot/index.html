@@ -1,0 +1,314 @@
+<html>
+
+<head>
+  <style>
+    .navbar-custom {
+      border-radius: 0 !important;
+      background-color: #2196F3;
+      color: #FFFFFF;
+    }
+
+    .navbar-custom>a {
+      width: 100%;
+      color: #FFFFFF;
+      text-align: center;
+    }
+
+    .navbar-custom>a:hover {
+      color: #FFFFFF;
+    }
+
+    .list-group-item {
+      padding: 6px 10px !important;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0px;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 4px;
+      top: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input {
+      width: 100%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(24px);
+      -ms-transform: translateX(24px);
+      transform: translateX(24px);
+    }
+
+    .slider.round {
+      border-radius: 28px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    .btn {
+      margin-left: 5px;
+    }
+
+    .btn-plus {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus:hover,
+    .btn-plus:focus,
+    .btn-plus:active,
+    .btn-plus.active {
+      color: #FFFFFF !important;
+      background-color: #0d8aee;
+      border-color: #0c7cd5;
+    }
+
+    .btn-plus.disabled:hover,
+    .btn-plus.disabled:focus,
+    .btn-plus.disabled:active,
+    .btn-plus.disabled.active,
+    .btn-plus[disabled]:hover,
+    .btn-plus[disabled]:focus,
+    .btn-plus[disabled]:active,
+    .btn-plus[disabled].active,
+    fieldset[disabled] .btn-plus:hover,
+    fieldset[disabled] .btn-plus:focus,
+    fieldset[disabled] .btn-plus:active,
+    fieldset[disabled] .btn-plus.active {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus,
+    .btn-danger {
+      min-width: 35px;
+      padding: 3px 0px 3px 0px !important;
+    }
+
+    .setting_input_value {
+      width: 40px;
+      text-align: center;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+    }
+
+    ul {
+      padding-left: 5px;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/10.0.7/i18next.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+
+  <script>
+    TAG = "EZRobot";
+    VERSION = 1;
+
+    $(function () {
+      $("#version").html(TAG + " v" + VERSION);
+
+      function updateLocale() {
+        $('.container').localize();
+      }
+      i18next.init({
+        lng: 'en',
+        resources: {
+          en: {
+            translation: {
+              li: {
+                language: "Language",
+                action_name: "name",
+              }
+            }
+          },
+          zh_TW: {
+            translation: {
+              li: {
+                language: "語言",
+                action_name: "名稱",
+              }
+            }
+          }
+        }
+      }, function (err, t) {
+        jqueryI18next.init(i18next, $);
+        updateLocale();
+      });
+      i18next.on('languageChanged', () => {
+        updateLocale();
+      });
+    });
+
+    function appendCol(jSetting, jContent) {
+      var jDiv = $('<div class="pull-right"></div>');
+      var jCol = $('<div class="col-xs-6"></div>');
+      if (Array.isArray(jContent)) {
+        for (var j in jContent) {
+          jDiv.append(jContent[j]);
+        }
+      } else {
+        jDiv.append(jContent);
+      }
+      jSetting.append(jCol.append(jDiv));
+    }
+
+    function getOption(value) {
+      return "<option value='" + value.toLowerCase() + "'>" + value + "</option>"
+    }
+
+    function getButtons(jGroupItem, step, value, max, min) {
+      var jBtns = [];
+      var jInput = $("<input class='setting_input_value' type='number' value='" + value + "' readonly/>");
+      var jBtnP = $("<button class='btn btn-plus'>+" + step + "</button>");
+      var jBtnM = $("<button class='btn btn-danger'>-" + step + "</button>");
+      var jBtnD = $("<button class='btn btn-danger'>x</button>");
+      jBtnP.click((function (jInput, min, max, step) {
+        return function () {
+          var newValue = (+jInput.val()) + step;
+          if (newValue <= max) {
+            jInput.val(newValue);
+          }
+        }
+      })(jInput, min, max, step));
+      jBtnM.click((function (jInput, min, max, step) {
+        return function () {
+          var newValue = (+jInput.val()) - step;
+          if (newValue >= min) {
+            jInput.val(newValue);
+          }
+        }
+      })(jInput, min, max, step));
+      jBtnD.click((function (jGroupItem) {
+        return function () {
+          jGroupItem.remove();
+        }
+      })(jGroupItem));
+      jBtns.push(jInput);
+      jBtns.push(jBtnP);
+      jBtns.push(jBtnM);
+      jBtns.push(jBtnD);
+      return jBtns;
+    }
+
+    function addAction() {
+      var actionName = $('#action-name').val();
+      var jContainer = $('#container');
+      var jGroup = $("<ul class='list-group'></ul>");
+      var jGroupItem = $("<li class='list-group-item'></li>");
+      var jRow = $("<div class='row'></div>");
+      var jCommand = $("<select class='select2'><option>Select</option>" + getOption('Loop') + getOption('Sleep') + getOption('Log') + "</select>");
+      jCommand.change(function () {
+        if (this.value === 'sleep') {
+          var jGroupItem = $("<li class='list-group-item'></li>");
+          var jRow = $("<div class='row'></div>");
+          var jActionName = $("<div class='col-xs-6'></div>");
+          jContainer.append(jGroup.append(jGroupItem.append(jRow.append(jActionName.append(this.value)))));
+          appendCol(jRow, getButtons(jGroupItem, 1, 5, 120, 1));
+        }
+        this.selectedIndex = 0;
+      })
+      var jActionName = $("<div class='col-xs-6'></div>");
+      jActionName.append(actionName)
+      jContainer.append(jGroup.append(jGroupItem.append(jRow.append(jActionName.append(jCommand)))));
+      appendCol(jRow, getButtons(jGroupItem, 1, 5, 100, 1));
+    }
+
+    function onEvent(eventType) {
+      if (eventType == 'OnPlayClick') {
+        JavaScriptInterface.runScript('start();');
+      } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript('stop();');
+      }
+    }
+    function onLog(message) {
+      console.log(message);
+    }
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-custom" role="navigation">
+    <a id="version" class="navbar-brand"></a>
+  </nav>
+  <div id="container" class="container">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-xs-6" data-i18n="li.language"></div>
+          <div class="col-xs-6">
+            <div class="pull-right">
+              <button onclick="i18next.changeLanguage('en')" class="btn btn-plus">EN</button>
+              <button onclick="i18next.changeLanguage('zh_TW')" class="btn btn-plus">中文</button>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-xs-2" data-i18n="li.action_name"></div>
+          <div class="col-xs-8">
+            <input id="action-name" type="text"></input>
+          </div>
+          <div class="col-xs-2">
+            <div class="pull-right">
+              <button onclick="addAction()" class="btn btn-plus">+</button>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</body>
+
+</html>
