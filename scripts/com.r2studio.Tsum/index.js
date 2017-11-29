@@ -718,6 +718,7 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (page == 'friendPage') {
       this.tap(Button.outStart1);
     } else if (page == 'startPage') {
+      this.sleep(800);
       var img = this.screenshot();
       var outGameItem1 = isSameColor(Button.outGameItem1.color, this.getColor(img, Button.outGameItem1), 40);
       var outGameItem2 = isSameColor(Button.outGameItem2.color, this.getColor(img, Button.outGameItem2), 40);
@@ -935,7 +936,7 @@ Tsum.prototype.taskPlayGame = function() {
     }
 
     // click bubbles
-    if (this.clearBubbles && clearBubbles >= 3) {
+    if (this.clearBubbles && clearBubbles >= 2) {
       log("Clear bubbles");
       clearBubbles = 0;
       for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
@@ -952,7 +953,7 @@ Tsum.prototype.taskPlayGame = function() {
     }
     this.sleep(300);
     if (this.useSkill()) {
-      clearBubbles += 1;
+      clearBubbles++;
       if (this.useSkill()) {
         this.useSkill();
       }
