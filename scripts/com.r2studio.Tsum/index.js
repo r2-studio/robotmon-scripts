@@ -1175,7 +1175,12 @@ Tsum.prototype.taskSendHearts = function() {
   this.sleep(2000);
 
   var retry = 0;
+  var times = 0;
   while(this.isRunning) {
+    times++;
+    if (times % 10 == 9) {
+      this.goFriendPage();
+    }
     var hfx = Button.outSendHeartFrom.x;
     var hfy = Button.outSendHeartFrom.y - 130;
     var hty = Button.outSendHeartTo.y + 60;
@@ -1235,6 +1240,7 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
+      this.sleep(100);
       this.tapDown(Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart2, 50);
@@ -1243,9 +1249,9 @@ Tsum.prototype.taskSendHearts = function() {
       this.moveTo (Button.outSendHeartTop, 500);
       this.tapUp  (Button.outSendHeartTop, 100);
 
-      this.sleep(350);
+      this.sleep(300);
       if (heartsPos.length == 0) {
-        this.sleep(750); // end bug
+        this.sleep(700); // end bug
       }
     }
   }
@@ -1310,7 +1316,6 @@ var ts;
 var gTaskController;
 
 function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
-  stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP);
   ts.debug = debug;
@@ -1339,20 +1344,25 @@ function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeIm
   if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
   sleep(500);
   gTaskController.start();
+  // loop stop here...
+  log('清除殘留記憶體...');
+  ts.deinit();
+  if (ts.recordReceive) {
+    ts.releaseRecord();
+  }
+  ts = undefined;
+  log("TaskController finish...");
 }
 
 function stop() {
   if (ts != undefined) {
-    log('清除殘留記憶體...');
     ts.isRunning = false;
-    ts.deinit();
-    if (ts.recordReceive) {
-      ts.releaseRecord();
-    }
-    if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
+    sleep(1000);
   }
+  if (gTaskController != undefined) {gTaskController.removeAllTasks();}
+  if (gTaskController != undefined) {gTaskController.stop();}
+  log("Stop finish...");
   sleep(2000);
-  ts = undefined;
 }
 
 // stop();
