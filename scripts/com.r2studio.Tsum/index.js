@@ -14,9 +14,6 @@ function isSameColor(c1, c2, diff) {
   if (Math.abs(c1.b - c2.b) > diff) {
     return false;
   }
-  if (Math.abs(c1.a - c2.a) > diff) {
-    return false;
-  }
   return true;
 }
 
@@ -43,7 +40,7 @@ var Config = {
   screenResize: 200,
   loadRotatedCount: 8,
   tsumFiles: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_anna_s", "block_annac_s", "block_annaf_s", "block_ariel_s", "block_arielr_s", "block_arlo_s", "block_aurora_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_bb8_s", "block_beast_s", "block_beastl_s", "block_belle_s", "block_bellel_s", "block_brerrabbit_s", "block_buzz_s", "block_c3po_s", "block_carl_s", "block_charming_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chip_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_clarice_s", "block_claricepi_s", "block_cruella_s", "block_crush_s", "block_daisy_s", "block_daisyn_s", "block_daisyv_s", "block_daisyx_s", "block_dale_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_davyjones_s", "block_deathtrooper_s", "block_donald_s", "block_donaldn_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx_s", "block_dory_s", "block_dumbott_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsa_s", "block_elsac_s", "block_elsaf_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_finnick_s", "block_flounder_s", "block_flynn_s", "block_gaston_s", "block_genie_s", "block_goofy_s", "block_goofyh2016_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_jack_s", "block_jacksparrow2_s", "block_jacksparrow_s", "block_jackx_s", "block_jafartt_s", "block_jailerdog_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen2_s", "block_littlegreenmen_s", "block_lotso_s", "block_luke_s", "block_lukej_s", "block_lumiere_s", "block_madhatter_s", "block_madhatterj_s", "block_maleficent_s", "block_maleficentd_s", "block_marchhare_s", "block_marie_s", "block_mater_s", "block_maui_s", "block_max_s", "block_maximus_s", "block_mcqueentt_s", "block_megara_s", "block_mickey_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeyp_s", "block_mickeypi_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_mike_s", "block_mikeu_s", "block_minnie_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_mulan_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_oswald_s", "block_oswaldsp_s", "block_pascal_s", "block_perry_s", "block_pete_s", "block_peteb_s", "block_phillip2_s", "block_phillip_s", "block_piglet_s", "block_ping_s", "block_pinocchio_s", "block_pluto_s", "block_plutoh2015_s", "block_plutox_s", "block_pocahontas_s", "block_pooh_s", "block_poohr_s", "block_potts_s", "block_pudding_s", "block_puffy_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_ramirez_s", "block_randall_s", "block_rapunzel2_s", "block_rapunzel_s", "block_rapunzelb_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_salazar_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite_s", "block_sora_s", "block_souffle_s", "block_stitch_s", "block_stitchf_s", "block_stitchh_s", "block_stitchpi_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tigger_s", "block_tiggerr_s", "block_tinkerbell_s", "block_tinkerbellp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_walle_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_woody_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s"],
-  tsumFilesJP: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_anna_s", "block_annac_s", "block_annaf_s", "block_ariel_s", "block_arielr_s", "block_arlo_s", "block_aurora_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_bb8_s", "block_beast_s", "block_beastl_s", "block_belle_s", "block_bellel_s", "block_bluefairy_s", "block_boogie_s", "block_brerrabbit_s", "block_buzz_s", "block_c3po_s", "block_carl_s", "block_charming_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chip_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_clarice_s", "block_claricepi_s", "block_cruella_s", "block_crush_s", "block_daisy_s", "block_daisyn_s", "block_daisyv_s", "block_daisyx_s", "block_dale_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_davyjones_s", "block_deathtrooper_s", "block_donald_s", "block_donaldht_s", "block_donaldhtskill_s", "block_donaldn_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx_s", "block_dory_s", "block_dumbo_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsa_s", "block_elsac_s", "block_elsaf_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_finnick_s", "block_flounder_s", "block_flynn_s", "block_gaston_s", "block_genie_s", "block_goofy_s", "block_goofyh2016_s", "block_goofyht_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_jack_s", "block_jacksparrow2_s", "block_jacksparrow_s", "block_jackx_s", "block_jafar_s", "block_jailerdog_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen2_s", "block_littlegreenmen_s", "block_lotso_s", "block_luke_s", "block_lukej_s", "block_lumiere_s", "block_madhatter_s", "block_madhatterj_s", "block_maleficent_s", "block_maleficentd_s", "block_marchhare_s", "block_marie_s", "block_mater_s", "block_maui_s", "block_max_s", "block_maximus_s", "block_mcqueen_s", "block_megara_s", "block_mickey_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeyp_s", "block_mickeypi_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_mike_s", "block_mikeu_s", "block_minnie_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh2017_s", "block_minnieh_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_mulan_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_oswald_s", "block_oswaldsp_s", "block_pascal_s", "block_patch_s", "block_perry_s", "block_pete_s", "block_peteb_s", "block_peterpan_s", "block_phillip2_s", "block_phillip_s", "block_piglet_s", "block_ping_s", "block_pinocchio_s", "block_pluto_s", "block_plutoh2015_s", "block_plutox_s", "block_pocahontas_s", "block_pooh_s", "block_poohr_s", "block_potts_s", "block_pudding_s", "block_puffy_s", "block_pumpkinking_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_ramirez_s", "block_randall_s", "block_rapunzel2_s", "block_rapunzel_s", "block_rapunzelb_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_salazar_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite_s", "block_sora_s", "block_soraht_s", "block_souffle_s", "block_stitch_s", "block_stitchf_s", "block_stitchh_s", "block_stitchpi_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tigger_s", "block_tiggerr_s", "block_timothy_s", "block_tinkerbell_s", "block_tinkerbellp_s", "block_tramp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_walle_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_woody_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s"],
+  tsumFilesJP: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_anna_s", "block_annac_s", "block_annaf_s", "block_ariel_s", "block_arielr_s", "block_arlo_s", "block_aurora_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_baymaxx_s", "block_bb8_s", "block_beast_s", "block_beastl_s", "block_belle_s", "block_bellel_s", "block_bluefairy_s", "block_boogie_s", "block_brerrabbit_s", "block_buzz_s", "block_c3po_s", "block_carl_s", "block_charming_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chip_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_clarice_s", "block_claricepi_s", "block_cruella_s", "block_crush_s", "block_daisy_s", "block_daisyn_s", "block_daisyv_s", "block_daisyx_s", "block_dale_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_davyjones_s", "block_deathtrooper_s", "block_donald_s", "block_donaldht_s", "block_donaldhtskill_s", "block_donaldn_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx2_s", "block_donaldx_s", "block_dory_s", "block_drossel_s", "block_dumbo_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsa_s", "block_elsac_s", "block_elsaf_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_finnick_s", "block_flounder_s", "block_flynn_s", "block_gaston_s", "block_genie_s", "block_goofy_s", "block_goofyh2016_s", "block_goofyht_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_hunnypot_s", "block_jack_s", "block_jacksparrow2_s", "block_jacksparrow_s", "block_jackx_s", "block_jafar_s", "block_jailerdog_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen2_s", "block_littlegreenmen_s", "block_lotso_s", "block_luke_s", "block_lukej_s", "block_lumiere_s", "block_lumpy_s", "block_madhatter_s", "block_madhatterj_s", "block_maleficent_s", "block_maleficentd_s", "block_marchhare_s", "block_marie_s", "block_mariex_s", "block_mater_s", "block_maui_s", "block_max_s", "block_maximus_s", "block_mcqueen_s", "block_megara_s", "block_mickey_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeyp_s", "block_mickeypi_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_mike_s", "block_mikeu_s", "block_minnie_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh2017_s", "block_minnieh_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_mulan_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_oswald_s", "block_oswaldsp_s", "block_owl_s", "block_pascal_s", "block_patch_s", "block_perry_s", "block_pete_s", "block_peteb_s", "block_peterpan_s", "block_phillip2_s", "block_phillip_s", "block_piglet2_s", "block_piglet_s", "block_ping_s", "block_pinocchio_s", "block_pluto_s", "block_plutoh2015_s", "block_plutox_s", "block_pocahontas_s", "block_pooh2_s", "block_pooh_s", "block_poohr_s", "block_potts_s", "block_prince_s", "block_pudding_s", "block_puffy_s", "block_pumpkinking_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_ramirez_s", "block_randall_s", "block_rapunzel2_s", "block_rapunzel_s", "block_rapunzelb_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_salazar_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite2_s", "block_snowwhite_s", "block_sora_s", "block_soraht_s", "block_souffle_s", "block_stitch_s", "block_stitchf_s", "block_stitchh_s", "block_stitchpi_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tigger_s", "block_tiggerr_s", "block_timothy_s", "block_tinkerbell_s", "block_tinkerbellp_s", "block_tramp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_walle_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_woody_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s"],
   rotations: ['0', '45', '90', '135', '180', '225', '270', '315'],
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
@@ -67,11 +64,20 @@ var Button = {
   gameSkillOff1: {x: 160, y: 1630 - adjY, color: {"a":0,"b":157,"g":112,"r":85}},
   gameSkillOff2: {x: 160, y: 1630 - adjY, color: {"a":0,"b":181,"g":139,"r":72}},
   gameSkillOff3: {x: 160, y: 1630 - adjY, color: {"a":0,"b":128,"g":73,"r":16}},
+  gameSkillOff4: {x: 160, y: 1630 - adjY, color: {"a":0,"b":178,"g":153,"r":3}},
   gameRand: {x: 985, y: 1580 - adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 983, y: 250 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue: {x: 540, y: 1270 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameContinue1: {x: 461, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
+  gameMagicalTime1: {x: 320, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime2: {x: 750, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  outGameItem1: {x: 241, y: 770 - adjY, color:{ r: 42, g: 109, b: 190}},
+  outGameItem2: {x: 496, y: 788 - adjY, color:{ r: 47, g: 113, b: 197}},
+  outGameItem3: {x: 709, y: 781 - adjY, color:{ r: 34, g: 102, b: 185}},
+  outGameItem4: {x: 950, y: 817 - adjY, color:{ r: 44, g: 110, b: 194}},
+  outGameItem5: {x: 262, y: 1051 - adjY, color:{ r: 34, g: 124, b: 200}},
+  outGameItem6: {x: 435, y: 1030 - adjY, color:{ r: 42, g: 108, b: 192}},
   outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
@@ -79,12 +85,14 @@ var Button = {
   outClose2: {x: 300, y: 1520 - adjY}, // 關閉
   outReceive: {x: 910, y: 350 - adjY},
   outReceiveAll: {x: 800, y: 1350 - adjY},
-  outReceiveOk: {x: 690, y: 1020 - adjY, color: {"a":0,"b":6,"g":175,"r":236}},
+  outReceiveOk: {x: 835, y: 1020 - adjY, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveClose: {x: 530, y: 1300 - adjY},
   outReceiveOne: {x: 840, y: 497 - adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}},
+  outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}, color2: {r: 60, g: 98, b: 147}},
   outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
+  outDisconnected: {x:  147, y: 1008 - adjY, color: {r: 243, g: 89, b: 117}},
+  outSendHeartTop: {x: 910, y: 430 - adjY},
   outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -268,7 +276,8 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
       for (var j = 0; j < 8; j++) {
         var rotatedImage = gameTsums[idx].rotations[j];
         var scoreLimit = (gameTsums[idx].score - 0.5) * 0.75;
-        var result = findImages(boardImg, rotatedImage, scoreLimit, 12, true);
+        var countLimit = (j == 0) ? 10 : 6;
+        var result = findImages(boardImg, rotatedImage, scoreLimit, countLimit, true);
         results.push(result);
       }
       return results;
@@ -276,7 +285,7 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
     
     multiTaskIds.push(ids);
   }
-  this.sleep(100);
+  this.sleep(50);
   for (var i in multiTaskIds) {
     var resultss = waitTask(multiTaskIds[i]);
     for (var ks in resultss) {
@@ -348,7 +357,7 @@ function calculateNearTsumPaths(tsum, ts) {
     var minDis = result.dis;
     var minTsum = result.tsum;
     var minIdx = result.idx;
-    if (minIdx == -1 || minDis > Config.tsumWidth * 2.6) {
+    if (minIdx == -1 || minDis > Config.tsumWidth * 2.8) {
       break;
     }
     tsum = minTsum;
@@ -442,6 +451,7 @@ function Tsum(isJP) {
   this.receiveOneItem = false;
   this.sentToZero = false;
   this.recordReceive = true;
+  this.enableAllItems = false;
   // record
   this.record = {};
   this.recordImages = {};
@@ -633,13 +643,22 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue), 40);
     var isGameContinue1 = isSameColor(Button.gameContinue1.color, this.getColor(img, Button.gameContinue1), 40);
     var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
+    var isMagicTime1 = isSameColor(Button.gameMagicalTime1.color, this.getColor(img, Button.gameMagicalTime1), 40);
+    var isMagicTime2 = isSameColor(Button.gameMagicalTime2.color, this.getColor(img, Button.gameMagicalTime2), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
+    var isDisconnected1 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 40);
+    var isDisconnected2 = isSameColor(Button.outDisconnected.color, this.getColor(img, Button.outDisconnected), 40);
+    var isDisconnected3 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outDisconnected), 40);
     releaseImage(img);
-    log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
+    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
     if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'playingGame';
+    } else if (isDisconnected1 && (isDisconnected2 || isDisconnected3)) {
+      return 'networkDisconnected';
+    } else if (isMagicTime1 && isMagicTime2) {
+      return 'magicTime';
     } else if (isStart1Btn) {
       return 'friendPage';
     } else if (isStart2Btn) {
@@ -673,8 +692,12 @@ Tsum.prototype.goFriendPage = function() {
       this.tap(Button.gameStop);
     } else if (page == 'playingGame') {
       this.tap(Button.gamePause);
+    } else if (page == 'networkDisconnected') {
+      this.tap(Button.outReceiveTimeout);
     } else if (page == 'gameEnd') {
       this.tap(Button.outClose2);
+    } else if (page == 'magicTime') {
+      this.tap(Button.gameMagicalTime1);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
@@ -695,6 +718,35 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (page == 'friendPage') {
       this.tap(Button.outStart1);
     } else if (page == 'startPage') {
+      this.sleep(800);
+      var img = this.screenshot();
+      var outGameItem1 = isSameColor(Button.outGameItem1.color, this.getColor(img, Button.outGameItem1), 40);
+      var outGameItem2 = isSameColor(Button.outGameItem2.color, this.getColor(img, Button.outGameItem2), 40);
+      var outGameItem3 = isSameColor(Button.outGameItem3.color, this.getColor(img, Button.outGameItem3), 40);
+      var outGameItem4 = isSameColor(Button.outGameItem4.color, this.getColor(img, Button.outGameItem4), 40);
+      var outGameItem5 = isSameColor(Button.outGameItem5.color, this.getColor(img, Button.outGameItem5), 40);
+      var outGameItem6 = isSameColor(Button.outGameItem6.color, this.getColor(img, Button.outGameItem6), 40);
+      // log(this.getColor(img, Button.outGameItem1), this.getColor(img, Button.outGameItem2), this.getColor(img, Button.outGameItem3), this.getColor(img, Button.outGameItem4), this.getColor(img, Button.outGameItem5), this.getColor(img, Button.outGameItem6));
+      releaseImage(img);
+      if (this.enableAllItems) {
+        if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(200);};
+        if (outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = false; this.sleep(200);};
+        if (outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = false; this.sleep(200);};
+        if (outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = false; this.sleep(200);};
+        if (outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = false; this.sleep(200);};
+        if (outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = false; this.sleep(200);};
+      } else {
+        if (!outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = true; this.sleep(200);};
+        if (!outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = true; this.sleep(200);};
+        if (!outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = true; this.sleep(200);};
+        if (!outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = true; this.sleep(200);};
+        if (!outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = true; this.sleep(200);};
+        if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(200);};
+      }
+      if (this.tsumCount == 4) {
+        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(200);};
+        if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(200);};
+      }
       this.tap(Button.outStart2);
     } else if (page == 'otherPage') {
       this.tap(Button.outClose);
@@ -702,6 +754,10 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Button.gameContinue);
     } else if (page == 'playingGame') {
       break;
+    } else if (page == 'networkDisconnected') {
+      this.tap(Button.outReceiveTimeout);
+    } else if (page == 'magicTime') {
+      this.tap(Button.gameMagicalTime1);
     } else if (page == 'gameEnd') {
       this.tap(Button.outClose2);
     } else if (page == 'unknown') {
@@ -721,10 +777,11 @@ Tsum.prototype.findMyTsum = function() {
     this.playOffsetY + this.playHeight,
     tsumSize * 1.7,
     tsumSize * 1.7,
-    Config.tsumWidth * 2, 
-    Config.tsumWidth * 2,
+    Config.tsumWidth * 2.1, 
+    Config.tsumWidth * 2.1,
     100
   );
+  smooth(myTsumImage, 1, 2);
   var allScores = findAllTsumMatchScore(this.allTsumImages, myTsumImage, '');
   if (this.debug) {
     saveImage(myTsumImage, getStoragePath() + "/tmp/mytsum.jpg");
@@ -734,16 +791,21 @@ Tsum.prototype.findMyTsum = function() {
 }
 
 Tsum.prototype.useSkill = function() {
+  var page = this.checkPage(1000);
+  if (page != 'playingGame' && page != 'pausingGame') {
+    return false;
+  }
   for (var i = 0; i < 2; i++) {
     var img = this.screenshot();
     var isSkillOff1 = isSameColor(Button.gameSkillOff1.color, this.getColor(img, Button.gameSkillOff1), 60);
     var isSkillOff2 = isSameColor(Button.gameSkillOff2.color, this.getColor(img, Button.gameSkillOff2), 60);
     var isSkillOff3 = isSameColor(Button.gameSkillOff3.color, this.getColor(img, Button.gameSkillOff3), 60);
-    // log(isSkillOff1, isSkillOff2, isSkillOff3);
+    var isSkillOff4 = isSameColor(Button.gameSkillOff4.color, this.getColor(img, Button.gameSkillOff4), 60);
+    // log(isSkillOff1, isSkillOff2, isSkillOff3, this.getColor(img, Button.gameSkillOff1), this.getColor(img, Button.gameSkillOff2), this.getColor(img, Button.gameSkillOff3));
     releaseImage(img);
-    if (!isSkillOff1 && !isSkillOff2 && !isSkillOff3) {
+    if (!isSkillOff1 && !isSkillOff2 && !isSkillOff3 && !isSkillOff4) {
       if (i == 0) {
-        this.sleep(300);
+        this.sleep(200);
       }
     } else {
       return false;
@@ -772,7 +834,29 @@ Tsum.prototype.useSkill = function() {
       this.sleep(20);
     }
     this.tap(Button.skillLuke1);
-    this.sleep(500);
+    this.sleep(800);
+  } else if(this.myTsum == 'block_moana_s') {
+    this.sleep(2500);
+    log("Clear bubbles");
+    for (var by = 1000; by <= 1300; by += 150) 
+    {
+      this.tap({x: 100, y: by}, 80);
+      this.tap({x: 1000, y: by}, 80);
+      this.tap({x: 250, y: by}, 80);
+      this.tap({x: 750, y: by}, 80);
+      this.tap({x: 400, y: by}, 80);
+      this.tap({x: 600, y: by}, 80);
+      this.tap({x: 450, y: by}, 80);
+    }
+    this.sleep(300);
+  } else if (this.myTsum.search('block_donald') != -1) {
+    for (var i = 0; i < 3; i++) {
+      for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
+        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 150) {
+          this.tap({x: bx, y: by}, 10);
+        }
+      }
+    }
   } else {
     this.sleep(2500);
   }
@@ -791,7 +875,7 @@ Tsum.prototype.taskPlayGame = function() {
   // start to run
   var runTimes = 0;
   var pathZero = 0;
-  var clearBubbles = false;
+  var clearBubbles = 0;
   while(this.isRunning) {  
     // load game tsums
     var gameImage = this.playScreenshot();
@@ -818,7 +902,6 @@ Tsum.prototype.taskPlayGame = function() {
     if (this.debug) {
       //saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
     }
-    log(Date.now());
     releaseImage(gameImage);
 
     log('計算連線路徑');
@@ -849,15 +932,15 @@ Tsum.prototype.taskPlayGame = function() {
     var isBubble = this.link(paths);
     if (isBubble) {
       log("產生泡泡");
-      clearBubbles = true;
+      clearBubbles++;
     }
 
     // click bubbles
-    if (this.clearBubbles && clearBubbles && runTimes % 4 == 2) {
+    if (this.clearBubbles && clearBubbles >= 2) {
       log("Clear bubbles");
-      clearBubbles = false;
-      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 150) {
-        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 150) {
+      clearBubbles = 0;
+      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
+        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 140) {
           this.tap({x: bx, y: by}, 10);
         }
       }
@@ -870,7 +953,10 @@ Tsum.prototype.taskPlayGame = function() {
     }
     this.sleep(300);
     if (this.useSkill()) {
-      clearBubbles = true;
+      clearBubbles++;
+      if (this.useSkill()) {
+        this.useSkill();
+      }
     }
 
     // double check
@@ -888,6 +974,7 @@ Tsum.prototype.taskPlayGame = function() {
   releaseTsumRotationImages(this.gameTsums);
   this.gameTsums = [];
   this.isLoadRotateTsum = false;
+  this.sleep(4000);
 }
 
 Tsum.prototype.taskReceiveAllItems = function() {
@@ -1018,8 +1105,15 @@ Tsum.prototype.taskReceiveOneItem = function() {
       log('Try again... wait 2 sec');
       this.tap(Button.outReceiveOk);
       this.sleep(2000);
+    } else if (isOk) {
+      this.tap(Button.outReceiveOk);
+      nonItemCount = 0;
+      unknownCount = 0;
+      this.sleep(500);
+      isFinish = true;
     } else if (isLoading) {
       log('Network delay...');
+      this.tap(Button.outReceiveOk);
       this.sleep(300);
     } else if (isItem) {
       if (!isFinish) {
@@ -1033,12 +1127,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
         unknownCount = 0;
       }
       isFinish = false;
-    } else if (isOk) {
-      this.tap(Button.outReceiveOk);
-      nonItemCount = 0;
-      unknownCount = 0;
-      this.sleep(500);
-      isFinish = true;
     } else if (isNonItem) {
       this.tap(Button.outReceiveOk);
       nonItemCount++;
@@ -1089,22 +1177,23 @@ Tsum.prototype.taskSendHearts = function() {
   var retry = 0;
   while(this.isRunning) {
     var hfx = Button.outSendHeartFrom.x;
-    var hfy = Button.outSendHeartFrom.y;
-    var hty = Button.outSendHeartTo.y;
+    var hfy = Button.outSendHeartFrom.y - 130;
+    var hty = Button.outSendHeartTo.y + 60;
     var heartsPos = [];
 
     var img = this.screenshot();
-    for(var y = hfy; y <= hty; y += 12) {
+    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
+    for(var y = hfy; y <= hty; y += 9) {
       var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}), 40);  
       if (isHs) {
         heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
-        y += 150;
+        y += 140;
       }
     }
     var isZero = true;
     var fx = Button.outFriendScoreFrom.x;
     var tx = Button.outFriendScoreTo.x;
-    var sy = heartsPos.length == 0 ? Button.outFriendScoreFrom.y : (heartsPos[0].y + 40);
+    var sy = heartsPos.length == 0 ? Button.outFriendScoreFrom.y : (heartsPos[0].y + 35);
     for (var px = fx; px <= tx; px += 20) {
       isZero = isSameColor(Button.outFriendScoreFrom.color, this.getColor(img, {x: px, y: sy}), 40);
       if (!isZero) {
@@ -1115,18 +1204,24 @@ Tsum.prototype.taskSendHearts = function() {
     var isEnd = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
     isEnd = (!isNotEnd && isEnd);
     releaseImage(img);
-    log("Send " + heartsPos.length + "hearts, 0 score?" + isZero);
-    if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero)) {
+    log("Send " + heartsPos.length + " hearts, 0 score?" + isZero + " End " + isEnd);
+
+    if (isOk && heartsPos.length == 0) {
+      this.tap(Button.outReceiveOk);
+    }
+
+    if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero && heartsPos.length != 0)) {
       if(retry < 3){
-        this.tapDown(Button.outSendHeart3, 100);
-        this.moveTo (Button.outSendHeart3, 100);
-        this.moveTo (Button.outSendHeart2, 100);
-        this.moveTo (Button.outSendHeart1, 100);
-        this.moveTo (Button.outSendHeart0, 800);
-        this.tapUp  (Button.outSendHeart0, 100);
+        this.tapDown(Button.outSendHeart3, 50);
+        this.moveTo (Button.outSendHeart3, 50);
+        this.moveTo (Button.outSendHeart2, 50);
+        this.moveTo (Button.outSendHeart1, 50);
+        this.moveTo (Button.outSendHeart0, 50);
+        this.moveTo (Button.outSendHeartTop, 500);
+        this.tapUp  (Button.outSendHeartTop, 100);
         retry++;
         log("沒愛心可送或零分，再檢查次數: " + retry);
-        this.sleep(1000);
+        this.sleep(500);
       } else {
         break;
       }
@@ -1140,21 +1235,28 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
-      this.tapDown(Button.outSendHeart3, 100);
-      this.moveTo (Button.outSendHeart3, 100);
-      this.moveTo (Button.outSendHeart2, 100);
-      this.moveTo (Button.outSendHeart1, 100);
-      this.moveTo (Button.outSendHeart0, 800);
-      this.tapUp  (Button.outSendHeart0, 100);
-      this.sleep(1000);
+      this.tapDown(Button.outSendHeart3, 50);
+      this.moveTo (Button.outSendHeart3, 50);
+      this.moveTo (Button.outSendHeart2, 50);
+      this.moveTo (Button.outSendHeart1, 50);
+      this.moveTo (Button.outSendHeart0, 50);
+      this.moveTo (Button.outSendHeartTop, 500);
+      this.tapUp  (Button.outSendHeartTop, 100);
+
+      this.sleep(350);
+      if (heartsPos.length == 0) {
+        this.sleep(750); // end bug
+      }
     }
   }
 }
 
 Tsum.prototype.sendHeart = function(btn) {
   this.tap(btn);
-  this.sleep(800);
+  this.sleep(300);
   var unknownCount = 0;
+  var isSent = 0;
+  var isClickedOk = false;
   while (this.isRunning) {
     var img = this.screenshot();
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
@@ -1165,11 +1267,15 @@ Tsum.prototype.sendHeart = function(btn) {
     
     if (isSend) {
       this.tap(btn);
-      this.sleep(800);
+      this.sleep(300);
     } else if (isOk) {
       this.tap(Button.outReceiveOk);
-    } else if (isSent1) {
-      return true;
+      isClickedOk = true;
+    } else if (isSent1 && isClickedOk) {
+      isSent++;
+      if (isSent >= 2) {
+        return true;
+      }
     } else if (isClose) {
       this.tap(Button.outSendHeartClose);
     } else {
@@ -1180,7 +1286,7 @@ Tsum.prototype.sendHeart = function(btn) {
       log("未知狀態，離開");
       return false;
     }
-    this.sleep(300);
+    this.sleep(100);
   }
 }
 
@@ -1203,7 +1309,7 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   stop();
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP);
@@ -1217,6 +1323,7 @@ function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeIm
   ts.sentToZero = sentToZero;
   ts.receiveCheckLimit = receiveCheckLimit;
   ts.clearBubbles = clearBubbles;
+  ts.enableAllItems = enableAllItems;
   if (largeImage) {
     ts.resizeRatio = 1;
   }
@@ -1238,23 +1345,25 @@ function stop() {
   if (ts != undefined) {
     log('清除殘留記憶體...');
     ts.isRunning = false;
-    sleep(2000);
     ts.deinit();
     if (ts.recordReceive) {
       ts.releaseRecord();
     }
     if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
   }
+  sleep(2000);
   ts = undefined;
 }
 
 // stop();
 // this.sleep(500);
 // ts = new Tsum();
+// ts.goGamePlayingPage();
 // ts.sentToZero = true;
 // ts.taskSendHearts();
 // ts.taskReceiveOneItem();
 // ts.isPause = false;
+// ts.clearBubbles = false;
 // ts.taskPlayGame();
 // ts.taskReceiveAllItems();
 // var page = ts.checkPage(3500);
