@@ -1114,6 +1114,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     } else if (isLoading) {
       log('Network delay...');
       this.tap(Button.outReceiveOk);
+      this.tap(Button.outStart1)
       this.sleep(300);
     } else if (isItem) {
       if (!isFinish) {
