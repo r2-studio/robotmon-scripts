@@ -141,6 +141,48 @@
     ul {
       padding-left: 5px;
     }
+
+    #setting-window {
+      position: absolute;
+      border: 2px solid rgb(24, 114, 179);
+      z-index: 3;
+      width: 80%;
+      height: 40%;
+      left: 10%;
+      top: 20%;
+      background-color: white;
+      border-radius: 5px;
+      display: none;
+    }
+    #setting-window .setting-title {
+      color: #FFFFFF;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      background-color: rgb(24, 114, 179);
+    }
+    #setting-window .setting-content {
+      margin: 20px;
+      text-align: center;
+    }
+    #setting-window button {
+      float: right;
+      border: 0px;
+      margin-left: 8px;
+    }
+    #setting-window #setting-close{
+      background-color: rgb(223, 76, 76);
+    }
+    #setting-window #setting-done {
+      background-color: rgb(39, 197, 79);
+    }
+    .setting-content input {
+      width: 40px;
+    }
+    .setting-content .action-parameters {
+      display: none;
+      margin: 10px;
+    }
   </style>
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -156,6 +198,12 @@
     VERSION = 1;
 
     $(function () {
+      editSetting({
+        action: 'loop',
+        times: 4,
+      }, function(result) {
+        console.log(result);
+      });
       $("#version").html(TAG + " v" + VERSION);
 
       function updateLocale() {
@@ -274,6 +322,59 @@
     function onLog(message) {
       console.log(message);
     }
+    
+    function editSetting(setting, okCallback) {
+      $("#setting-window").show();
+      if (setting == undefined) {
+        setting = {
+          action: 'rbm.click',
+          args: [100, 100],
+        };
+      }
+
+      $("#setting-action").off("change").on("change", function(e) {
+        $(".action-parameters").hide();
+        var action = $("#setting-action").val();
+        $("#action-" + action.replace("rbm.", "")).show();
+      });
+      
+      $("#setting-done").off("click").on("click", function(e){
+        $("#setting-window").hide();
+        if (okCallback == undefined) {
+          return;
+        }
+        var action = $("#setting-action").val();
+        if (action == 'loop') {
+          okCallback({
+            action: action,
+            times: $("#action-loop input").val(),
+            commands: setting.commands ? setting.commands : [],
+          });
+        } else {
+          var args = [];
+          $("#action-" + action.replace("rbm.", "") + " input").each(function(e){
+            args.push(+$(this).val()); // to integer
+          });
+          okCallback({
+            action: action,
+            args: args,
+          });
+        }
+      });
+      
+      $("#setting-close").off("click").on("click", function(e){
+        $("#setting-window").hide();
+      });
+      // show current setting
+      $("#setting-action").val(setting.action).change();
+      if (setting.action == 'loop') {
+        $("#action-loop input").val(setting.times);
+      } else {
+        for (var i = 0; i < setting.args.length; i++) {
+          $("#action-" + setting.action.replace("rbm.", "") + " input").eq(i).val(setting.args[i]);
+        }
+      }
+    }
   </script>
 </head>
 
@@ -282,6 +383,55 @@
     <a id="version" class="navbar-brand"></a>
   </nav>
   <div id="container" class="container">
+    <div id="setting-window">
+      <div class="setting-title">
+        Setting
+        <button id="setting-done">O</button>
+        <button id="setting-close">X</button>
+      </div>
+      <div class="setting-content">
+        Action:
+        <select id="setting-action">
+          <!-- <option value="">Select Actions</option> -->
+          <option class="setting-actions" value="loop">Loop</option>
+          <option class="setting-actions" value="rbm.click">Click</option>
+          <option class="setting-actions" value="rbm.tapDown">TapDown</option>
+          <option class="setting-actions" value="rbm.moveTo">MoveTo</option>
+          <option class="setting-actions" value="rbm.tapUp">TapUp</option>
+          <option class="setting-actions" value="swipe">Swipe</option>
+          <option class="setting-actions" value="safeSleep">Sleep</option>
+        </select>
+        <div id="action-loop" class="action-parameters">
+          Times: <input type="text" value="3" />
+        </div>
+        <div id="action-click" class="action-parameters">
+          X: <input type="text" value="100" />
+          Y: <input type="text" value="100" />
+        </div>
+        <div id="action-tapDown" class="action-parameters">
+          X: <input type="text" value="100" />
+          Y: <input type="text" value="100" />
+        </div>
+        <div id="action-moveTo" class="action-parameters">
+          X: <input type="text" value="100" />
+          Y: <input type="text" value="100" />
+        </div>
+        <div id="action-tapUp" class="action-parameters">
+          X: <input type="text" value="100" />
+          Y: <input type="text" value="100" />
+        </div>
+        <div id="action-swipe" class="action-parameters">
+          X1: <input type="text" value="100" />
+          Y1: <input type="text" value="100" />
+          <br />
+          X2: <input type="text" value="100" />
+          Y2: <input type="text" value="200" />
+        </div>
+        <div id="action-safeSleep" class="action-parameters">
+          Milliseconds: <input type="text" value="1000" />
+        </div>
+      </div>
+    </div>
     <ul class="list-group">
       <li class="list-group-item">
         <div class="row">
