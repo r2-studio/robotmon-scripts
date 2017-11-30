@@ -420,7 +420,7 @@ function calculatePaths(board) {
 
 // Tsum struct
 
-function Tsum(isJP) {
+function Tsum(isJP, detect) {
   this.debug = true;
   this.isRunning = true;
   this.myTsum = '';
@@ -458,12 +458,44 @@ function Tsum(isJP) {
   this.recordImages = {};
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
-  this.init();
+  this.init(detect);
 }
 
-Tsum.prototype.init = function() {
+Tsum.prototype.detect = function() {
+  var size = getScreenSize();
+  var img = getScreenshot();
+  var top = 0;
+  var bottom = size.height - getVirtualButtonHeight();
+  for (var y = 0; y < size.height; y++) {
+    var color = getImageColor(img, size.width - 2, y);
+    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
+      top = y;
+      break;
+    }
+  }
+  for (var y = bottom - 1; y > 0; y--) {
+    var color = getImageColor(img, size.width - 2, y);
+    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
+      bottom = y+1;
+      break;
+    }
+  }
+  releaseImage(img);
+  log('Detect top bottom', top, bottom);
+  sleep(500);
+  return {top: top, bottom: bottom};
+}
+
+Tsum.prototype.init = function(detect) {
   log('Init... calculate screen size');
-  if (this.screenHeight / this.screenWidth > 1.78) {
+  if (detect) {
+    var topBottom = this.detect();
+    var h = topBottom.bottom - topBottom.top;
+    this.gameWidth = this.screenWidth;
+    this.gameHeight = this.gameWidth * 1.5;
+    this.gameOffsetX = 0;
+    this.gameOffsetY = topBottom.top + (h - this.gameHeight) / 2;
+  } else if (this.screenHeight / this.screenWidth > 1.78) {
     // currently support for note 8
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.gameWidth * 1.5;
@@ -1341,9 +1373,9 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, enableAllItems, detect, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
-  ts = new Tsum(isJP);
+  ts = new Tsum(isJP, detect);
   ts.debug = debug;
   if (isFourTsum) {
     ts.tsumCount = 4;
@@ -1393,7 +1425,8 @@ function stop() {
 
 // stop();
 // this.sleep(500);
-// ts = new Tsum();
+// ts = new Tsum(false, true);
+// ts.detect();
 // ts.goGamePlayingPage();
 // ts.sentToZero = true;
 // ts.taskSendHearts();
