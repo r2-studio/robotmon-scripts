@@ -762,23 +762,23 @@ Tsum.prototype.goGamePlayingPage = function() {
       // log(this.getColor(img, Button.outGameItem1), this.getColor(img, Button.outGameItem2), this.getColor(img, Button.outGameItem3), this.getColor(img, Button.outGameItem4), this.getColor(img, Button.outGameItem5), this.getColor(img, Button.outGameItem6));
       releaseImage(img);
       if (this.enableAllItems) {
-        if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(200);};
-        if (outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = false; this.sleep(200);};
-        if (outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = false; this.sleep(200);};
-        if (outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = false; this.sleep(200);};
-        if (outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = false; this.sleep(200);};
-        if (outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = false; this.sleep(200);};
+        if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(500);};
+        if (outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = false; this.sleep(500);};
+        if (outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = false; this.sleep(500);};
+        if (outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = false; this.sleep(500);};
+        if (outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = false; this.sleep(500);};
+        if (outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = false; this.sleep(500);};
       } else {
-        if (!outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = true; this.sleep(200);};
-        if (!outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = true; this.sleep(200);};
-        if (!outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = true; this.sleep(200);};
-        if (!outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = true; this.sleep(200);};
-        if (!outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = true; this.sleep(200);};
-        if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(200);};
+        if (!outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = true; this.sleep(500);};
+        if (!outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = true; this.sleep(500);};
+        if (!outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = true; this.sleep(500);};
+        if (!outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = true; this.sleep(500);};
+        if (!outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = true; this.sleep(500);};
+        if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(500);};
       }
       if (this.tsumCount == 4) {
-        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(200);};
-        if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(200);};
+        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(500);};
+        if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(500);};
       }
       this.tap(Button.outStart2);
     } else if (page == 'otherPage') {
