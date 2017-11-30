@@ -89,7 +89,8 @@ var Button = {
   outReceiveClose: {x: 530, y: 1300 - adjY},
   outReceiveOne: {x: 840, y: 497 - adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}, color2: {r: 60, g: 98, b: 147}},
+  outIsLoading1: {x: 540, y: 720 - adjY, color: {"a":0,"b":255,"g":255,"r":255}},
+  outIsLoading2: {x: 540, y: 910 - adjY, color: {"a":0,"b":255,"g":255,"r":255}},
   outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
   outDisconnected: {x:  147, y: 1008 - adjY, color: {r: 243, g: 89, b: 117}},
   outSendHeartTop: {x: 910, y: 430 - adjY},
@@ -638,7 +639,7 @@ Tsum.prototype.checkPage = function(wait) {
     var img = this.screenshot();
     var isCloseBtn = isSameColor(Button.outClose.color, this.getColor(img, Button.outClose), 40);
     var isStart1Btn = isSameColor(Button.outStart1.color, this.getColor(img, Button.outStart1), 40);
-    var isStart2Btn = isSameColor(Button.outStart2.color, this.getColor(img, Button.outStart2), 40);
+    var isStart2Btn = isSameColor(Button.outStart2.color, this.getColor(img, Button.outStart2), 20);
     var isGameRandBtn = isSameColor(Button.gameRand.color, this.getColor(img, Button.gameRand), 40);
     var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue), 40);
     var isGameContinue1 = isSameColor(Button.gameContinue1.color, this.getColor(img, Button.gameContinue1), 40);
@@ -1080,6 +1081,24 @@ Tsum.prototype.clear = function() {
   execute('rm -r ' + recordDir);
 }
 
+Tsum.prototype.isLoading = function() {
+  var img = this.screenshot();
+  var fx = Button.outIsLoading1.x;
+  var fy = Button.outIsLoading1.y;
+  var ty = Button.outIsLoading2.y;
+  var whiteCount = 0;
+  for (var y = fy; y <= ty; y+=10) {
+    if (isSameColor(Button.outIsLoading1.color, this.getColor(img, {x: fx, y: y}), 30)) {
+      whiteCount++;
+    }
+  }
+  releaseImage(img);
+  if (whiteCount >= 3) {
+    return true;
+  }
+  return false;
+}
+
 Tsum.prototype.taskReceiveOneItem = function() {
   log('前往朋友頁面');
   this.goFriendPage();
@@ -1088,9 +1107,11 @@ Tsum.prototype.taskReceiveOneItem = function() {
   this.tap(Button.outReceive);
   this.sleep(2000);
 
+  var unknownPage = 0;
   var receivedCount = 0;
   var nonItemCount = 0;
   var unknownCount = 0;
+  var networkLoadingCount = 0;
   var receiveCheckLimit = 1;
   var isFinish = false;
   while (this.isRunning) {
@@ -1098,7 +1119,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
-    var isLoading = isSameColor(Button.outReceiveLoading.color, this.getColor(img, Button.outReceiveLoading), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     releaseImage(img);
     if (isTimeout) {
@@ -1109,12 +1129,16 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outReceiveOk);
       nonItemCount = 0;
       unknownCount = 0;
+      networkLoadingCount = 0;
       this.sleep(500);
       isFinish = true;
-    } else if (isLoading) {
+    } else if (this.isLoading()) {
       log('Network delay...');
-      this.tap(Button.outReceiveOk);
-      this.tap(Button.outStart1)
+      networkLoadingCount++;
+      if (networkLoadingCount > 20) {
+        this.tap(Button.outReceiveOk);
+        this.tap(Button.outStart1);
+      }
       this.sleep(300);
     } else if (isItem) {
       if (!isFinish) {
@@ -1126,6 +1150,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receivedCount++;
         nonItemCount = 0;
         unknownCount = 0;
+        networkLoadingCount = 0;
       }
       isFinish = false;
     } else if (isNonItem) {
