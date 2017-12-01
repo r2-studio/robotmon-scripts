@@ -196,15 +196,11 @@
   <script>
     TAG = "EZRobot";
     VERSION = 1;
+    var setting = [];
 
     $(function () {
-      editSetting({
-        action: 'loop',
-        times: 4,
-      }, function(result) {
-        console.log(result);
-      });
       $("#version").html(TAG + " v" + VERSION);
+      loadSettings();
 
       function updateLocale() {
         $('.container').localize();
@@ -216,7 +212,12 @@
             translation: {
               li: {
                 language: "Language",
-                action_name: "name",
+                action_name: "Name",
+              },
+              button: {
+                add: "Add",
+                done: "Done",
+                cancel: "Cancel"
               }
             }
           },
@@ -225,6 +226,11 @@
               li: {
                 language: "語言",
                 action_name: "名稱",
+              },
+              button: {
+                add: "新增",
+                done: "確定",
+                cancel: "取消"
               }
             }
           }
@@ -251,65 +257,79 @@
       jSetting.append(jCol.append(jDiv));
     }
 
-    function getOption(value) {
-      return "<option value='" + value.toLowerCase() + "'>" + value + "</option>"
+    function loadSettings() {
+      $('#group').empty();
+      for (var index = 0; index < setting.length; index++) {
+        addSettingRow(setting, index);
+      }
     }
 
-    function getButtons(jGroupItem, step, value, max, min) {
+    function addSettingRow(commands, index) {
+      var element = commands[index];
+      var action;
+      var args;
+      if (element.action == 'loop') {
+        action = element.action;
+        args = element.times;
+      } else {
+        action = element.action.replace('rbm.', '');
+        args = element.args;
+      }
+
+      var jGroup = $('#group');
+      var jGroupItem = $("<li class='list-group-item'></li>");
+      var jRow = $("<div class='row'></div>");
+      var jActionName = $("<div class='col-xs-6'></div>");
+      jGroup.append(jGroupItem.append(jRow.append(jActionName.append(action))));
+      appendCol(jRow, getButtons(commands, index, element));
+
+      if (element.action == 'loop') {
+        for (var i = 0; i < element.commands.length; i++) {
+          addSettingRow(element.commands, i);
+        }
+      }
+    }
+
+    function getButtons(commands, index, element) {
       var jBtns = [];
-      var jInput = $("<input class='setting_input_value' type='number' value='" + value + "' readonly/>");
-      var jBtnP = $("<button class='btn btn-plus'>+" + step + "</button>");
-      var jBtnM = $("<button class='btn btn-danger'>-" + step + "</button>");
-      var jBtnD = $("<button class='btn btn-danger'>x</button>");
-      jBtnP.click((function (jInput, min, max, step) {
-        return function () {
-          var newValue = (+jInput.val()) + step;
-          if (newValue <= max) {
-            jInput.val(newValue);
-          }
-        }
-      })(jInput, min, max, step));
-      jBtnM.click((function (jInput, min, max, step) {
-        return function () {
-          var newValue = (+jInput.val()) - step;
-          if (newValue >= min) {
-            jInput.val(newValue);
-          }
-        }
-      })(jInput, min, max, step));
-      jBtnD.click((function (jGroupItem) {
-        return function () {
-          jGroupItem.remove();
-        }
-      })(jGroupItem));
-      jBtns.push(jInput);
-      jBtns.push(jBtnP);
-      jBtns.push(jBtnM);
-      jBtns.push(jBtnD);
+      var jBtnEdit = $("<button class='btn btn-plus'>編輯</button>");
+      var jBtnDelete = $("<button class='btn btn-danger'>刪除</button>");
+      jBtnEdit.click(function () {
+        editSetting(element, function(result) {
+          commands[index] = result;
+          loadSettings();
+        });
+        $("#setting-window").show();
+      });
+      jBtnDelete.click(function () {
+        commands.splice(index, 1);
+        loadSettings();
+      });
+      if (element.action === 'loop') {
+        var jBtnAdd = $("<button class='btn btn-plus'>新增</button>");
+        jBtnAdd.click(function () {
+          addAction(element);
+        });
+        jBtns.push(jBtnAdd);
+      }
+      jBtns.push(jBtnEdit);
+      jBtns.push(jBtnDelete);
       return jBtns;
     }
 
-    function addAction() {
-      var actionName = $('#action-name').val();
-      var jContainer = $('#container');
-      var jGroup = $("<ul class='list-group'></ul>");
-      var jGroupItem = $("<li class='list-group-item'></li>");
-      var jRow = $("<div class='row'></div>");
-      var jCommand = $("<select class='select2'><option>Select</option>" + getOption('Loop') + getOption('Sleep') + getOption('Log') + "</select>");
-      jCommand.change(function () {
-        if (this.value === 'sleep') {
-          var jGroupItem = $("<li class='list-group-item'></li>");
-          var jRow = $("<div class='row'></div>");
-          var jActionName = $("<div class='col-xs-6'></div>");
-          jContainer.append(jGroup.append(jGroupItem.append(jRow.append(jActionName.append(this.value)))));
-          appendCol(jRow, getButtons(jGroupItem, 1, 5, 120, 1));
+    function addAction(element = undefined) {
+      editSetting({
+        action: 'loop',
+        times: 5,
+      }, function(result) {
+        if (element !== undefined) {
+          element.commands.push(result)
+        } else {
+          setting.push(result);
         }
-        this.selectedIndex = 0;
-      })
-      var jActionName = $("<div class='col-xs-6'></div>");
-      jActionName.append(actionName)
-      jContainer.append(jGroup.append(jGroupItem.append(jRow.append(jActionName.append(jCommand)))));
-      appendCol(jRow, getButtons(jGroupItem, 1, 5, 100, 1));
+        loadSettings();
+      });
+      $("#setting-window").show();
     }
 
     function onEvent(eventType) {
@@ -324,7 +344,6 @@
     }
     
     function editSetting(setting, okCallback) {
-      $("#setting-window").show();
       if (setting == undefined) {
         setting = {
           action: 'rbm.click',
@@ -386,19 +405,18 @@
     <div id="setting-window">
       <div class="setting-title">
         Setting
-        <button id="setting-done">O</button>
-        <button id="setting-close">X</button>
+        <button id="setting-done" data-i18n="button.done"></button>
+        <button id="setting-close" data-i18n="button.cancel"></button>
       </div>
       <div class="setting-content">
         Action:
-        <select id="setting-action">
-          <!-- <option value="">Select Actions</option> -->
+        <select id="setting-action" class='select2'>
           <option class="setting-actions" value="loop">Loop</option>
           <option class="setting-actions" value="rbm.click">Click</option>
           <option class="setting-actions" value="rbm.tapDown">TapDown</option>
           <option class="setting-actions" value="rbm.moveTo">MoveTo</option>
           <option class="setting-actions" value="rbm.tapUp">TapUp</option>
-          <option class="setting-actions" value="swipe">Swipe</option>
+          <option class="setting-actions" value="rbm.swipe">Swipe</option>
           <option class="setting-actions" value="safeSleep">Sleep</option>
         </select>
         <div id="action-loop" class="action-parameters">
@@ -452,12 +470,13 @@
           </div>
           <div class="col-xs-2">
             <div class="pull-right">
-              <button onclick="addAction()" class="btn btn-plus">+</button>
+              <button onclick="addAction()" class="btn btn-plus" data-i18n="button.add"></button>
             </div>
           </div>
         </div>
       </li>
     </ul>
+    <ul id="group" class="list-group"></ul>
   </div>
 </body>
 
