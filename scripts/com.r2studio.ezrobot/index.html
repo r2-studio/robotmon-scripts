@@ -280,12 +280,12 @@
     function loadSettings() {
       $('#group').empty();
       for (var index = 0; index < setting.length; index++) {
-        addSettingRow(setting, index);
+        addSettingRow(setting, index, '#ffffff', 0);
       }
       updateLocale();
     }
 
-    function addSettingRow(commands, index) {
+    function addSettingRow(commands, index, backgroundColor, marginLeft) {
       var element = commands[index];
       var action;
       var args;
@@ -298,7 +298,7 @@
       }
 
       var jGroup = $('#group');
-      var jGroupItem = $("<li class='list-group-item'></li>");
+      var jGroupItem = $("<li class='list-group-item' style='background-color:" + backgroundColor + ";margin-left:" + marginLeft + "px !important;'></li>");
       var jRow = $("<div class='row'></div>");
       var jActionName = $("<div class='col-xs-6'></div>");
       jGroup.append(jGroupItem.append(jRow.append(jActionName.append(action))));
@@ -306,7 +306,7 @@
 
       if (element.action == 'loop') {
         for (var i = 0; i < element.commands.length; i++) {
-          addSettingRow(element.commands, i);
+          addSettingRow(element.commands, i, backgroundColor === '#ffffff' ? '#f2f2f2' : '#ffffff', marginLeft + 15);
         }
       }
     }
