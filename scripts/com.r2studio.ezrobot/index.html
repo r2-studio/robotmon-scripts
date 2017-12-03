@@ -200,11 +200,15 @@
 
     $(function () {
       $("#version").html(TAG + " v" + VERSION);
+      initLocale();
       loadSettings();
+    });
 
-      function updateLocale() {
-        $('.container').localize();
-      }
+    function updateLocale() {
+      $('.container').localize();
+    }
+
+    function initLocale() {
       i18next.init({
         lng: 'en',
         resources: {
@@ -216,8 +220,16 @@
               },
               button: {
                 add: "Add",
+                cancel: "Cancel",
+                delete: "Delete",
                 done: "Done",
-                cancel: "Cancel"
+                edit: "Edit"
+              },
+              title: {
+                action: "Action:",
+                milliseconds: "Milliseconds:",
+                setting: "Setting",
+                times: "Times"
               }
             }
           },
@@ -229,8 +241,16 @@
               },
               button: {
                 add: "新增",
+                cancel: "取消",
+                delete: "刪除",
                 done: "確定",
-                cancel: "取消"
+                edit: "編輯"
+              },
+              title: {
+                action: "動作:",
+                milliseconds: "毫秒:",
+                setting: "設定",
+                times: "次數"
               }
             }
           }
@@ -239,10 +259,10 @@
         jqueryI18next.init(i18next, $);
         updateLocale();
       });
-      i18next.on('languageChanged', () => {
+      i18next.on('languageChanged', function() {
         updateLocale();
       });
-    });
+    }
 
     function appendCol(jSetting, jContent) {
       var jDiv = $('<div class="pull-right"></div>');
@@ -262,6 +282,7 @@
       for (var index = 0; index < setting.length; index++) {
         addSettingRow(setting, index);
       }
+      updateLocale();
     }
 
     function addSettingRow(commands, index) {
@@ -292,8 +313,8 @@
 
     function getButtons(commands, index, element) {
       var jBtns = [];
-      var jBtnEdit = $("<button class='btn btn-plus'>編輯</button>");
-      var jBtnDelete = $("<button class='btn btn-danger'>刪除</button>");
+      var jBtnEdit = $("<button class='btn btn-plus' data-i18n='button.edit'></button>");
+      var jBtnDelete = $("<button class='btn btn-danger' data-i18n='button.delete'></button>");
       jBtnEdit.click(function () {
         editSetting(element, function(result) {
           commands[index] = result;
@@ -306,7 +327,7 @@
         loadSettings();
       });
       if (element.action === 'loop') {
-        var jBtnAdd = $("<button class='btn btn-plus'>新增</button>");
+        var jBtnAdd = $("<button class='btn btn-plus' data-i18n='button.add'></button>");
         jBtnAdd.click(function () {
           addAction(element);
         });
@@ -404,23 +425,32 @@
   <div id="container" class="container">
     <div id="setting-window">
       <div class="setting-title">
-        Setting
-        <button id="setting-done" data-i18n="button.done"></button>
-        <button id="setting-close" data-i18n="button.cancel"></button>
+        <div class="row">
+          <div class="col-xs-4 col-xs-offset-4" data-i18n="title.setting"></div>
+          <div class="col-xs-4">
+            <div class="pull-right">
+              <button id="setting-done" data-i18n="button.done"></button>
+              <button id="setting-close" data-i18n="button.cancel"></button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="setting-content">
-        Action:
-        <select id="setting-action" class='select2'>
-          <option class="setting-actions" value="loop">Loop</option>
-          <option class="setting-actions" value="rbm.click">Click</option>
-          <option class="setting-actions" value="rbm.tapDown">TapDown</option>
-          <option class="setting-actions" value="rbm.moveTo">MoveTo</option>
-          <option class="setting-actions" value="rbm.tapUp">TapUp</option>
-          <option class="setting-actions" value="rbm.swipe">Swipe</option>
-          <option class="setting-actions" value="safeSleep">Sleep</option>
-        </select>
+        <div class="row center-block">
+          <div style="display:inline-block;" data-i18n="title.action"></div>
+          <select id="setting-action" class='select2'>
+            <option class="setting-actions" value="loop">Loop</option>
+            <option class="setting-actions" value="rbm.click">Click</option>
+            <option class="setting-actions" value="rbm.tapDown">TapDown</option>
+            <option class="setting-actions" value="rbm.moveTo">MoveTo</option>
+            <option class="setting-actions" value="rbm.tapUp">TapUp</option>
+            <option class="setting-actions" value="rbm.swipe">Swipe</option>
+            <option class="setting-actions" value="safeSleep">Sleep</option>
+          </select>
+        </div>
         <div id="action-loop" class="action-parameters">
-          Times: <input type="text" value="3" />
+          <div style="display:inline-block;" data-i18n="title.times"></div>
+          <input type="text" value="3" />
         </div>
         <div id="action-click" class="action-parameters">
           X: <input type="text" value="100" />
@@ -446,7 +476,8 @@
           Y2: <input type="text" value="200" />
         </div>
         <div id="action-safeSleep" class="action-parameters">
-          Milliseconds: <input type="text" value="1000" />
+          <div style="display:inline-block;" data-i18n="title.milliseconds"></div>
+          <input type="text" value="1000" />
         </div>
       </div>
     </div>
