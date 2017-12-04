@@ -286,6 +286,10 @@
     }
 
     function initSettings() {
+      if ($("#setting-script").val() === null) {
+        return;
+      }
+
       $('#group').empty();
       for (var index = 0; index < setting.length; index++) {
         addSettingRow(setting, index, '#ffffff', 0);
@@ -347,7 +351,11 @@
       return jBtns;
     }
 
-    function addAction(element = undefined) {
+    function addAction(element) {
+      if ($("#setting-script").val() === null) {
+        return;
+      }
+
       editSetting({
         action: 'loop',
         times: 5,
