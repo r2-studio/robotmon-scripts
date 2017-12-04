@@ -46,6 +46,7 @@ function safeSleep(t) {
   }
 }
 var callFunction = function(thisObj, functionName, args) {
+  console.log(functionName, JSON.stringify(args));
   eval(functionName).apply(thisObj, args);
 }
 
