@@ -152,7 +152,7 @@
       border: 2px solid #2196F3;
       z-index: 3;
       width: 80%;
-      height: 50%;
+      height: 60%;
       left: 10%;
       top: 25%;
       background-color: white;
@@ -190,6 +190,9 @@
       z-index: 2;
       background-color: rgba(0,0,0,0.5);
       display: none;
+    }
+    #select2-setting-action-results {
+      max-height: 250px;
     }
   </style>
 
@@ -279,7 +282,7 @@
 
     function appendCol(jSetting, jContent) {
       var jDiv = $('<div class="pull-right"></div>');
-      var jCol = $('<div class="col-xs-6"></div>');
+      var jCol = $('<div class="col-xs-7"></div>');
       if (Array.isArray(jContent)) {
         for (var j in jContent) {
           jDiv.append(jContent[j]);
@@ -309,41 +312,46 @@
 
       $('#group').empty();
       for (var index = 0; index < setting.length; index++) {
-        addSettingRow(setting, index, '#ffffff', 0);
+        addSettingRow(null, setting, index, '#ffffff', 0);
       }
       updateLocale();
     }
 
-    function addSettingRow(commands, index, backgroundColor, marginLeft) {
+    function addSettingRow(pCommands, commands, index, backgroundColor, marginLeft) {
       var element = commands[index];
       var action;
       var args;
       if (element.action == 'loop') {
-        action = element.action;
+        action = element.action + ' ' + element.times;
         args = element.times;
       } else {
-        action = element.action.replace('rbm.', '');
         args = element.args;
+        action = element.action.replace('rbm.', '') + ' ' + args.join(',');
       }
 
       var jGroup = $('#group');
       var jGroupItem = $("<li class='list-group-item' style='background-color:" + backgroundColor + ";margin-left:" + marginLeft + "px !important;'></li>");
       var jRow = $("<div class='row'></div>");
-      var jActionName = $("<div class='col-xs-6'></div>");
+      var jActionName = $("<div class='col-xs-5'></div>");
       jGroup.append(jGroupItem.append(jRow.append(jActionName.append(action))));
-      appendCol(jRow, getButtons(commands, index, element));
+      appendCol(jRow, getButtons(pCommands, commands, index, element));
 
       if (element.action == 'loop') {
         for (var i = 0; i < element.commands.length; i++) {
-          addSettingRow(element.commands, i, backgroundColor === '#ffffff' ? '#f2f2f2' : '#ffffff', marginLeft + 15);
+          addSettingRow(commands, element.commands, i, backgroundColor === '#ffffff' ? '#f2f2f2' : '#ffffff', marginLeft + 15);
         }
       }
     }
 
-    function getButtons(commands, index, element) {
+    function getButtons(pCommands, commands, index, element) {
       var jBtns = [];
       var jBtnEdit = $("<button class='btn btn-plus'><i class='fa fa-pencil' aria-hidden='true'></i></button>");
       var jBtnDelete = $("<button class='btn btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button>");
+      var jBtnLeft = $("<button class='btn btn-success'><i class='fa fa-arrow-left' aria-hidden='true'></i></button>");
+      var jBtnRight = $("<button class='btn btn-success'><i class='fa fa-arrow-right' aria-hidden='true'></i></button>");
+      var jBtnUp = $("<button class='btn btn-success'><i class='fa fa-arrow-up' aria-hidden='true'></i></button>");
+      var jBtnDown = $("<button class='btn btn-success'><i class='fa fa-arrow-down' aria-hidden='true'></i></button>");
+      
       jBtnEdit.click(function () {
         editSetting(element, function(result) {
           commands[index] = result;
@@ -363,6 +371,40 @@
         });
         jBtns.push(jBtnAdd);
       }
+      jBtnLeft.click(function () {
+        pCommands.push(element);
+        commands.splice(index, 1);
+        initSettingRows();
+      });
+      jBtnRight.click(function () {
+        commands[index - 1].commands.push(element);
+        commands.splice(index, 1);
+        initSettingRows();
+      });
+      jBtnUp.click(function () {
+        var tmp = commands[index - 1];
+        commands[index - 1] = commands[index];
+        commands[index] = tmp;
+        initSettingRows();
+      });
+      jBtnDown.click(function () {
+        var tmp = commands[index + 1];
+        commands[index + 1] = commands[index];
+        commands[index] = tmp;
+        initSettingRows();
+      });
+      if (index != 0) {
+        jBtns.push(jBtnUp);
+      }
+      if (pCommands != null) {
+        jBtns.push(jBtnLeft);
+      }
+      if (index != 0 && commands[index - 1].action == 'loop') {
+        jBtns.push(jBtnRight);
+      }
+      // if (index != commands.length - 1) {  
+      //   jBtns.push(jBtnDown);
+      // }
       jBtns.push(jBtnEdit);
       jBtns.push(jBtnDelete);
       return jBtns;
@@ -574,7 +616,7 @@
           </div>
           <div class="col-xs-2">
             <div class="pull-right">
-              <button onclick="addSettingScript()" class="btn btn-plus"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+              <button onclick="addSettingScript()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
             </div>
           </div>
         </div>
