@@ -389,7 +389,7 @@
 
     function onEvent(eventType) {
       if (eventType == 'OnPlayClick') {
-        JavaScriptInterface.runScript('start();');
+        JavaScriptInterface.runScript('start(' + JSON.stringify(setting) + ');');
       } else if (eventType == 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
       }

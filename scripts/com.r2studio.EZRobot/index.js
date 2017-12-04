@@ -73,7 +73,7 @@ function start(JSONcommands) {
   stop();
   var screenSize = getScreenSize();
   var config = {
-    appName: 'com.r2studio.ezrobot',
+    appName: 'com.r2studio.EZRobot',
     oriScreenWidth: screenSize.width,
     oriScreenHeight: screenSize.height,
     oriVirtualButtonHeight: 0,
@@ -97,4 +97,4 @@ function stop() {
   }
 }
 
-start(JSON.stringify(testConfig));
+// start(JSON.stringify(testConfig));
