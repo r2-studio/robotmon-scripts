@@ -17,8 +17,12 @@ function isSameColor(c1, c2, diff) {
   return true;
 }
 
+function absColor(c1, c2) {
+  return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
+}
+
 function log() {
-  this.sleep(30);
+  this.sleep(10);
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
       arguments[i] = JSON.stringify(arguments[i]);
@@ -110,6 +114,227 @@ var Button = {
   skillLuke1: {x: 970, y: 1270 - adjY},
   outReceiveNameFrom: {x: 160, y: 460 - adjY},
   outReceiveNameTo: {x: 620, y: 555 - adjY},
+};
+
+var Page = {
+  TodayMission: {
+    name: 'TodayMission',
+    colors: [
+      {x: 540, y: 1408 - adjY, r: 238, g: 181, b: 12 , match: true, threshold: 70},
+      {x: 975, y: 428  - adjY, r: 161, g: 224, b: 231, match: true, threshold: 70},
+      {x: 554, y: 1260 - adjY, r: 24 , g: 189, b: 219, match: true, threshold: 70},
+    ],
+    back: {x: 558, y: 1473},
+    next: {x: 558, y: 1473},
+  },
+  ScorePage: {
+    name: 'ScorePage',
+    colors: [
+      {x: 302, y: 1509 - adjY, r: 235, g: 184, b: 7  , match: true, threshold: 70},
+      {x: 777, y: 1516 - adjY, r: 248, g: 142, b: 20 , match: true, threshold: 70},
+      {x: 774, y: 428  - adjY, r: 243, g: 248, b: 242, match: true, threshold: 70},
+    ],
+    back: {x: 309, y: 1581 - adjY},
+    next: {x: 784, y: 1581 - adjY},
+  },
+  FriendPage: {
+    name: 'FriendPage',
+    colors: [
+      {x: 547, y: 1520 - adjY, r: 246, g: 135, b: 17 , match: true, threshold: 70},
+      {x: 187, y: 1527 - adjY, r: 240, g: 218, b: 72 , match: true, threshold: 70},
+      {x: 860, y: 1505 - adjY, r: 238, g: 189, b: 11 , match: true, threshold: 70},
+      {x: 698, y: 392  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 70},
+    ],
+    back: {x: 547, y: 1581 - adjY},
+    next: {x: 547, y: 1581 - adjY},
+  },
+  GiftHeart: {
+    name: 'GiftHeart',
+    colors: [
+      {x: 216, y: 1012 - adjY, r: 233, g: 172, b: 6, match: true, threshold: 70},
+      {x: 673, y: 1008 - adjY, r: 235, g: 174, b: 8, match: true, threshold: 70},
+      {x: 468, y: 731  - adjY, r: 214, g: 61 , b: 143, match: true, threshold: 75},
+      {x: 572, y: 489  - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 70},
+      {x: 583, y: 1123 - adjY, r: 28 , g: 186, b: 221, match: true, threshold: 70},
+    ],
+    back: {x: 774, y: 1023 - adjY},
+    next: {x: 320, y: 1019 - adjY},
+  },
+  MailBox: {
+    name: 'MailBox',
+    colors: [
+      {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 70},
+      {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 70},
+      {x: 604, y: 1347 - adjY, r: 234, g: 171, b: 6  , match: true, threshold: 70},
+    ],
+    back: {x: 561, y: 1581 - adjY},
+    next: {x: 561, y: 1581 - adjY},
+  },
+  ReceiveHeart: {
+    name: 'ReceiveHeart',
+    colors: [
+      {x: 208, y: 1008 - adjY, r: 233, g: 172, b: 6  , match: true, threshold: 70},
+      {x: 662, y: 1008 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 70},
+      {x: 561, y: 482  - adjY, r: 28 , g: 191, b: 222, match: true, threshold: 70},
+      {x: 565, y: 1138 - adjY, r: 30 , g: 195, b: 225, match: true, threshold: 70},
+      {x: 334, y: 745  - adjY, r: 213, g: 62 , b: 143, match: true, threshold: 75},
+      {x: 586, y: 749  - adjY, r: 248, g: 249, b: 51 , match: true, threshold: 90},
+    ],
+    back: {x: 774, y: 1023 - adjY},
+    next: {x: 320, y: 1019 - adjY},
+  },
+  Received: {
+    name: 'Received',
+    colors: [
+      {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 70},
+      {x: 806, y: 817 - adjY, r: 45, g: 80 , b: 122, match: true, threshold: 70},
+      {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 70},
+    ],
+    back: {x: 774, y: 1023 - adjY},
+    next: {x: 320, y: 1019 - adjY},
+  },
+  StartPage: {
+    name: 'StartPage',
+    colors: [
+      {x: 752, y: 399  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 70},
+      {x: 856, y: 1358 - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 70},
+      {x: 169, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 70},
+      {x: 547, y: 1509 - adjY, r: 235, g: 118, b: 134, match: true, threshold: 70},
+      {x: 846, y: 1509 - adjY, r: 236, g: 185, b: 8, match: true, threshold: 70},
+    ],
+    back: {x: 190, y: 1574 - adjY},
+    next: {x: 558, y: 1563 - adjY},
+  },
+  SettingPage: {
+    name: 'SettingPage',
+    colors: [
+      {x: 741, y: 345  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 70},
+      {x: 363, y: 504  - adjY, r: 21 , g: 184, b: 219, match: true, threshold: 70},
+      {x: 464, y: 1084 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 70},
+      {x: 903, y: 1228 - adjY, r: 237, g: 176, b: 10 , match: true, threshold: 70},
+      {x: 554, y: 1516 - adjY, r: 236, g: 180, b: 9 , match: true, threshold: 70},
+    ],
+    back: {x: 565, y: 1577 - adjY},
+    next: {x: 565, y: 1577 - adjY},
+  },
+  TsumsPage: {
+    name: 'TsumsPage',
+    colors: [
+      {x: 514, y: 842  - adjY, r: 41, g: 177, b: 203 , match: true, threshold: 70},
+      {x: 180, y: 1520 - adjY, r: 238, g: 180, b: 11 , match: true, threshold: 90},
+      {x: 817, y: 1516 - adjY, r: 238, g: 191, b: 13 , match: true, threshold: 70},
+    ],
+    back: {x: 176, y: 1520 - adjY},
+    next: {x: 176, y: 1520 - adjY},
+  },
+  GamePause: {
+    name: 'GamePause',
+    colors: [
+      {x: 165, y: 1005 - adjY, r: 234, g: 173, b: 7  , match: true, threshold: 70},
+      {x: 594, y: 1001 - adjY, r: 233, g: 171, b: 8  , match: true, threshold: 70},
+      {x: 367, y: 702  - adjY, r: 24 , g: 191, b: 225, match: true, threshold: 70},
+      {x: 738, y: 540  - adjY, r: 248, g: 244, b: 245 , match: true, threshold: 70},
+      {x: 550, y: 1264 - adjY, r: 236, g: 182, b: 11  , match: true, threshold: 70},
+    ],
+    back: {x: 331, y: 1008 - adjY},
+    next: {x: 561, y: 1350 - adjY},
+  },
+  GamePlaying: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 982, y: 194  - adjY, r: 236, g: 192, b: 5, match: true, threshold: 70},
+      {x: 986, y: 1563 - adjY, r: 236, g: 191, b: 2, match: true, threshold: 70},
+    ],
+    back: {x: 986, y: 201 - adjY},
+    next: {x: 986, y: 201 - adjY},
+  },
+  MagicalTime: {
+    name: 'MagicalTime',
+    colors: [
+      {x: 817, y: 435  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 70},
+      {x: 594, y: 785  - adjY, r: 248, g: 102, b: 121, match: true, threshold: 90},
+      {x: 208, y: 1145 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 70},
+      {x: 662, y: 1141 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 70},
+    ],
+    back: {x: 856, y: 1149 - adjY},
+    next: {x: 381, y: 1149 - adjY},
+  },
+  NetworkDisable: {
+    name: 'NetworkDisable',
+    colors: [
+      {x: 478, y: 1008 - adjY, r: 236, g: 94, b: 116, match: true, threshold: 70},
+      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 70},
+    ],
+    back: {x: 356, y: 1008 - adjY},
+    next: {x: 885, y: 1012 - adjY},
+  },
+  NetworkTimeout: {
+    name: 'NetworkTimeout',
+    colors: [
+      {x: 478, y: 1008 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 70},
+      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 70},
+    ],
+    back: {x: 356, y: 1008 - adjY},
+    next: {x: 885, y: 1012 - adjY},
+  },
+  HighScore: {
+    name: 'HighScore',
+    colors: [
+      {x: 298, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 70},
+      {x: 810, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 70},
+    ],
+    back: {x: 298, y: 1253 - adjY},
+    next: {x: 810, y: 1253 - adjY},
+  },
+  RankUp: {
+    name: 'RankUp',
+    colors: [
+      {x: 327, y: 1458 - adjY, r: 236, g: 175, b: 9, match: true, threshold: 70},
+      {x: 792, y: 1455 - adjY, r: 234, g: 173, b: 5, match: true, threshold: 70},
+    ],
+    back: {x: 327, y: 1458 - adjY},
+    next: {x: 792, y: 1455 - adjY},
+  },
+  InvitePage: {
+    name: 'InvitePage',
+    colors: [
+      {x: 342, y: 835  - adjY, r: 58 , g: 87 , b: 145, match: true, threshold: 70},
+      {x: 669, y: 832  - adjY, r: 0  , g: 181, b: 1  , match: true, threshold: 70},
+      {x: 536, y: 1271 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 70},
+    ],
+    back: {x: 576, y: 1314 - adjY},
+    next: {x: 576, y: 1314 - adjY},
+  },
+  EventPage: {
+    name: 'EventPage',
+    colors: [
+      {x: 554, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 70},
+      {x: 997, y: 1617 - adjY, r: 230, g: 169, b: 3 , match: true, threshold: 70},
+    ],
+    back: {x: 554, y: 1509 - adjY},
+    next: {x: 554, y: 1509 - adjY},
+  },
+  FriendInfo: {
+    name: 'FriendInfo',
+    colors: [
+      {x: 565, y: 504   - adjY, r: 31, g: 190, b: 220, match: true, threshold: 70},
+      {x: 547, y: 1123  - adjY, r: 27, g: 192, b: 222 , match: true, threshold: 70},
+      {x: 554, y: 1260  - adjY, r: 238, g: 186, b: 12, match: true, threshold: 70},
+    ],
+    back: {x: 576, y: 1336 - adjY},
+    next: {x: 576, y: 1336 - adjY},
+  },
+  MyInfo: {
+    name: 'MyInfo',
+    colors: [
+      {x: 734, y: 284  - adjY, r: 29 , g: 189, b: 223, match: true, threshold: 70},
+      {x: 802, y: 381  - adjY, r: 241, g: 246, b: 240, match: true, threshold: 70},
+      {x: 766, y: 1347 - adjY, r: 31 , g: 190, b: 222, match: true, threshold: 70},
+      {x: 691, y: 1584 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 70},
+    ],
+    back: {x: 576, y: 1588 - adjY},
+    next: {x: 576, y: 1588 - adjY},
+  },
 };
 
 // Utils for Tsum
@@ -667,51 +892,44 @@ Tsum.prototype.link = function(paths) {
   return isBubble;
 }
 
-Tsum.prototype.checkPage = function(wait) {
+function adsColor(c1, v2) {
+  return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
+}
+
+Tsum.prototype.findPage = function(times, timeout) {
+  if (times == undefined) {times = 2;}
+  if (timeout == undefined) {timeout = 700;}
   var start = Date.now();
   while(this.isRunning) {
-    var img = this.screenshot();
-    var isCloseBtn = isSameColor(Button.outClose.color, this.getColor(img, Button.outClose), 40);
-    var isStart1Btn = isSameColor(Button.outStart1.color, this.getColor(img, Button.outStart1), 40);
-    var isStart2Btn = isSameColor(Button.outStart2.color, this.getColor(img, Button.outStart2), 20);
-    var isGameRandBtn = isSameColor(Button.gameRand.color, this.getColor(img, Button.gameRand), 40);
-    var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue), 40);
-    var isGameContinue1 = isSameColor(Button.gameContinue1.color, this.getColor(img, Button.gameContinue1), 40);
-    var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
-    var isMagicTime1 = isSameColor(Button.gameMagicalTime1.color, this.getColor(img, Button.gameMagicalTime1), 40);
-    var isMagicTime2 = isSameColor(Button.gameMagicalTime2.color, this.getColor(img, Button.gameMagicalTime2), 40);
-    var isMagicTime3 = isSameColor(Button.gameMagicalTime3.color, this.getColor(img, Button.gameMagicalTime3), 40);
-    var isMagicTime4 = isSameColor(Button.gameMagicalTime4.color, this.getColor(img, Button.gameMagicalTime4), 40);
-    var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
-    var isDisconnected1 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 40);
-    var isDisconnected2 = isSameColor(Button.outDisconnected.color, this.getColor(img, Button.outDisconnected), 40);
-    var isDisconnected3 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outDisconnected), 40);
-    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
-    // log(isMagicTime1, isMagicTime2, this.getColor(img, Button.gameMagicalTime1), this.getColor(img, Button.gameMagicalTime2));
-    releaseImage(img);
-    if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
-      return 'pausingGame';
-    } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
-      return 'playingGame';
-    } else if (isDisconnected1 && (isDisconnected2 || isDisconnected3)) {
-      return 'networkDisconnected';
-    } else if (isMagicTime1 && isMagicTime2) {
-      return 'magicTime';
-    } else if (isMagicTime3 && isMagicTime4) {
-      return 'magicTime';
-    } else if (isStart1Btn) {
-      return 'friendPage';
-    } else if (isStart2Btn) {
-      return 'startPage';
-    } else if (isCloseBtn) {
-      return 'otherPage';
-    } else if (isGemeEnd) {
-      return 'gameEnd';
+    for (var t = 0; t < times; t++) {
+      var img = this.screenshot();
+      for (var pageName in Page) {
+        var page = Page[pageName];
+        var currentPage = '';
+        for (var i = 0; i < page.colors.length; i++) {
+          var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
+          if (diff < page.colors[i].threshold && page.colors[i].match) {
+            currentPage = pageName;
+          } else if (diff >= threshold && !page.colors[i].match) {
+            currentPage = pageName;
+          } else {
+            currentPage = '';
+            break;
+          }
+        }
+        if (currentPage != '') {
+          break;
+        }
+      }
+      releaseImage(img);
+      this.sleep(100);
+    } // for times
+    if (currentPage != '') {
+      return currentPage;
     }
-    if (Date.now() - start > wait) {
+    if (Date.now() - start > timeout) {
       return 'unknown';
     }
-    this.sleep(Config.gameContinueDelay);
   }
 }
 
@@ -720,30 +938,22 @@ Tsum.prototype.goFriendPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
-    var page = this.checkPage(1500);
-    log(page);
-    if (page == 'friendPage') {
-      break;
-    } else if (page == 'startPage') {
-      this.tap(Button.gameSkillOn);
-    } else if (page == 'otherPage') {
-      this.tap(Button.outClose);
-    } else if (page == 'pausingGame') {
-      this.tap(Button.gameStop);
-    } else if (page == 'playingGame') {
-      this.tap(Button.gamePause);
-    } else if (page == 'networkDisconnected') {
-      this.tap(Button.outReceiveTimeout);
-    } else if (page == 'gameEnd') {
-      this.tap(Button.outClose2);
-    } else if (page == 'magicTime') {
-      this.tap(Button.gameMagicalTime1);
-      this.tap(Button.gameMagicalTime3);
+    var page = this.findPage(2, 1000);
+    log('Current Page', page);
+    if (page == 'FriendPage') {
+      // check again
+      page = this.findPage(1, 500);
+      if (page == 'FriendPage') {
+        return;
+      }
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
       this.tap(Button.outClose);
       this.tap(Button.gameStop);
+      this.sleep(500);
+    } else {
+      this.tap(Page[page].back);
     }
     this.sleep(1000);
   }
@@ -754,11 +964,11 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
-    var page = this.checkPage(1500);
-    log('page', page);
-    if (page == 'friendPage') {
-      this.tap(Button.outStart1);
-    } else if (page == 'startPage') {
+    var page = this.findPage(2, 3000);
+    log('Current Page', page);
+    if (page == 'FriendPage') {
+      this.tap(Page[page].next);
+    } else if (page == 'StartPage') {
       this.sleep(800);
       var img = this.screenshot();
       var outGameItem1 = isSameColor(Button.outGameItem1.color, this.getColor(img, Button.outGameItem1), 40);
@@ -789,24 +999,22 @@ Tsum.prototype.goGamePlayingPage = function() {
         if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(500);};
       }
       this.tap(Button.outStart2);
-    } else if (page == 'otherPage') {
-      this.tap(Button.outClose);
-    } else if (page == 'pausingGame') {
-      this.tap(Button.gameContinue);
-    } else if (page == 'playingGame') {
-      break;
-    } else if (page == 'networkDisconnected') {
-      this.tap(Button.outReceiveTimeout);
-    } else if (page == 'magicTime') {
-      this.tap(Button.gameMagicalTime1);
-      this.tap(Button.gameMagicalTime3);
-    } else if (page == 'gameEnd') {
-      this.tap(Button.outClose2);
+    } else if (page == 'GamePlaying') {
+      // check again
+      page = this.findPage(1, 500);
+      if (page == 'GamePlaying') {
+        return;
+      }
+    } else if (page == 'GamePause') {
+      this.tap(Page[page].next);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
       this.tap(Button.outClose);
       this.tap(Button.gameStop);
+      this.sleep(500);
+    } else {
+      this.tap(Page[page].back);
     }
     this.sleep(1000);
   }
@@ -833,8 +1041,8 @@ Tsum.prototype.findMyTsum = function() {
 }
 
 Tsum.prototype.useSkill = function() {
-  var page = this.checkPage(1000);
-  if (page != 'playingGame' && page != 'pausingGame') {
+  var page = this.findPage(1, 500);
+  if (page != 'GamePlaying' && page != 'GamePause') {
     return false;
   }
   for (var i = 0; i < 2; i++) {
@@ -909,8 +1117,7 @@ Tsum.prototype.taskPlayGame = function() {
   log('進入遊戲中...');
   this.goGamePlayingPage();
   log('遊戲中');
-  this.sleep(2400);
-
+  this.sleep(500);
   this.findMyTsum();
   log('myTsum', this.myTsum);
   this.sleep(500);
@@ -932,8 +1139,8 @@ Tsum.prototype.taskPlayGame = function() {
       this.tap(Button.gamePause);
       this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
       this.isLoadRotateTsum = true;
-      var page = this.checkPage(3500);
-      if (page != 'playingGame' && page != 'pausingGame') {
+      var page = this.findPage(2, 1000);
+      if (page != 'GamePlaying' && page != 'GamePause') {
         log('遊戲結束');
         break;
       }
@@ -1002,11 +1209,11 @@ Tsum.prototype.taskPlayGame = function() {
     }
 
     // double check
-    var page = this.checkPage(3500);
-    if (page != 'playingGame' && page != 'pausingGame') {
-      this.sleep(Config.gameContinueDelay);
-      var page = this.checkPage(3500);
-      if (page != 'playingGame' && page != 'pausingGame') {
+    var page = this.findPage(1, 2500);
+    if (page != 'GamePlaying' && page != 'GamePause') {
+      this.sleep(500);
+      page = this.findPage(1, 2500);
+      if (page != 'GamePlaying' && page != 'GamePause') {
         log('遊戲結束');
         break;
       }
@@ -1435,6 +1642,7 @@ function stop() {
 // stop();
 // this.sleep(500);
 // ts = new Tsum(false, true);
+// log(ts.findPage(2, 1000));
 // ts.detect();
 // ts.goGamePlayingPage();
 // ts.sentToZero = true;
@@ -1444,7 +1652,6 @@ function stop() {
 // ts.clearBubbles = false;
 // ts.taskPlayGame();
 // ts.taskReceiveAllItems();
-// var page = ts.checkPage(3500);
 // sleep(10);
 // console.log(page);
 // ts.goFriendPage();
