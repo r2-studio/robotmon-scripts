@@ -55,7 +55,7 @@ var Config = {
 var adjY = 78;
 var Button = {
   gameBubblesFrom: {x: 100, y: 560 - adjY},
-  gameBubblesTo: {x: 1000, y: 1310 - adjY},
+  gameBubblesTo: {x: 1000, y: 1460 - adjY},
   gameMyTsum: {x: 100, y: 1450 - adjY},
   gameQuestionCancel: {x: 400, y: 1280 - adjY},
   gameQuestionCancel2: {x: 400, y: 1000 - adjY},
