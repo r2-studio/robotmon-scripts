@@ -30,6 +30,15 @@
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.1.js",
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
       ]
+    },
+    "com.r2studio.EZRobot": {
+      "title": "EZRobot",
+      "versionCode": 1,
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",
+      "dependencies": [
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
+      ]
     }
   },
   "libs": {
