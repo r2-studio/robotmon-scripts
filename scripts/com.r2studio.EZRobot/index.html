@@ -119,9 +119,23 @@
     }
 
     .btn-plus,
-    .btn-danger {
+    .btn-danger,
+    .btn-success {
       min-width: 35px;
       padding: 3px 0px 3px 0px !important;
+    }
+
+    .btn-circle {
+      min-width: 30px;
+      min-height: 30px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      padding: 5px 0;
+      font-size: 16px;
+      line-height: 1.4;
+      border-radius: 15px;
+      border: 0px;
     }
 
     .setting_input_value {
@@ -140,7 +154,7 @@
 
     #setting-window {
       position: absolute;
-      border: 2px solid rgb(24, 114, 179);
+      border: 2px solid #2196F3;
       z-index: 3;
       width: 80%;
       height: 40%;
@@ -155,22 +169,11 @@
       width: 100%;
       text-align: center;
       padding: 10px;
-      background-color: rgb(24, 114, 179);
+      background-color: #2196F3;
     }
     #setting-window .setting-content {
       margin: 20px;
       text-align: center;
-    }
-    #setting-window button {
-      float: right;
-      border: 0px;
-      margin-left: 8px;
-    }
-    #setting-window #setting-close{
-      background-color: rgb(223, 76, 76);
-    }
-    #setting-window #setting-done {
-      background-color: rgb(39, 197, 79);
     }
     .setting-content input {
       width: 40px;
@@ -222,9 +225,7 @@
             translation: {
               button: {
                 add: "Add",
-                cancel: "Cancel",
                 delete: "Delete",
-                done: "Done",
                 edit: "Edit",
                 load: "Load",
                 save: "Save"
@@ -244,9 +245,7 @@
             translation: {
               button: {
                 add: "新增",
-                cancel: "取消",
                 delete: "刪除",
-                done: "確定",
                 edit: "編輯",
                 load: "讀取",
                 save: "儲存"
@@ -486,8 +485,8 @@
           <div class="col-xs-4 col-xs-offset-4" data-i18n="title.setting"></div>
           <div class="col-xs-4">
             <div class="pull-right">
-              <button id="setting-done" data-i18n="button.done"></button>
-              <button id="setting-close" data-i18n="button.cancel"></button>
+              <button id="setting-done" class="btn-success btn-circle">o</button>
+              <button id="setting-close" class="btn-danger btn-circle" style="margin-left:6px">x</button>
             </div>
           </div>
         </div>
@@ -552,11 +551,11 @@
       </li>
       <li class="list-group-item">
         <div class="row">
-          <div class="col-xs-8">
+          <div class="col-xs-10">
             <div style="display:inline-block;" data-i18n="title.name"></div>
             <input id="setting-name" type="text"></input>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-2">
             <div class="pull-right">
               <button onclick="addSettingScript()" class="btn btn-plus" data-i18n="button.add"></button>
             </div>
@@ -572,8 +571,8 @@
           <div class="col-xs-6">
             <div class="pull-right">
               <button onclick="addAction()" class="btn btn-plus" data-i18n="button.add"></button>
-              <button onclick="loadSetting()" class="btn btn-plus" data-i18n="button.load"></button>
-              <button onclick="saveSetting()" class="btn btn-plus" data-i18n="button.save"></button>
+              <button onclick="loadSetting()" class="btn btn-success" data-i18n="button.load"></button>
+              <button onclick="saveSetting()" class="btn btn-success" data-i18n="button.save"></button>
             </div>
           </div>
         </div>
