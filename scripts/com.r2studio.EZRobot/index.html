@@ -121,8 +121,9 @@
     .btn-plus,
     .btn-danger,
     .btn-success {
-      min-width: 35px;
-      padding: 3px 0px 3px 0px !important;
+      min-width: 25px;
+      min-height: 25px;
+      padding: 1px 0px 1px 0px !important;
     }
 
     .btn-circle {
@@ -200,6 +201,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/10.0.7/i18next.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script>
     TAG = "EZRobot";
@@ -340,8 +342,8 @@
 
     function getButtons(commands, index, element) {
       var jBtns = [];
-      var jBtnEdit = $("<button class='btn btn-plus' data-i18n='button.edit'></button>");
-      var jBtnDelete = $("<button class='btn btn-danger' data-i18n='button.delete'></button>");
+      var jBtnEdit = $("<button class='btn btn-plus'><i class='fa fa-pencil' aria-hidden='true'></i></button>");
+      var jBtnDelete = $("<button class='btn btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button>");
       jBtnEdit.click(function () {
         editSetting(element, function(result) {
           commands[index] = result;
@@ -355,7 +357,7 @@
         initSettingRows();
       });
       if (element.action === 'loop') {
-        var jBtnAdd = $("<button class='btn btn-plus' data-i18n='button.add'></button>");
+        var jBtnAdd = $("<button class='btn btn-plus'><i class='fa fa-plus' aria-hidden='true'></i></button>");
         jBtnAdd.click(function () {
           addAction(element);
         });
@@ -424,7 +426,7 @@
 
     function onEvent(eventType) {
       if (eventType == 'OnPlayClick') {
-        JavaScriptInterface.runScript('start(' + JSON.stringify(setting) + ');');
+        JavaScriptInterface.runScript('start(\'' + JSON.stringify(setting) + '\');');
       } else if (eventType == 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
       }
@@ -572,7 +574,7 @@
           </div>
           <div class="col-xs-2">
             <div class="pull-right">
-              <button onclick="addSettingScript()" class="btn btn-plus" data-i18n="button.add"></button>
+              <button onclick="addSettingScript()" class="btn btn-plus"><i class="fa fa-pencil" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>
@@ -585,9 +587,9 @@
           </div>
           <div class="col-xs-6">
             <div class="pull-right">
-              <button onclick="addAction()" class="btn btn-plus" data-i18n="button.add"></button>
-              <button onclick="loadSetting()" class="btn btn-success" data-i18n="button.load"></button>
-              <button onclick="saveSetting()" class="btn btn-success" data-i18n="button.save"></button>
+              <button onclick="addAction()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
+              <button onclick="loadSetting()" class="btn btn-success"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
+              <button onclick="saveSetting()" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>
