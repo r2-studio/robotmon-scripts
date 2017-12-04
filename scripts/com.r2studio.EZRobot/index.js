@@ -87,6 +87,8 @@ function start(JSONcommands) {
   rbm = new RBM(config);
   rbm.running = true;
   rbm.init();
+  rbm.log('[EZRobot] Start');
+  rbm.log(JSONcommands);
   var commands = JSON.parse(JSONcommands);
   runCommands(commands);
 }
@@ -94,6 +96,7 @@ function start(JSONcommands) {
 function stop() {
   if (rbm != undefined) {
     rbm.running = false;
+    rbm.log('[EZRobot] Stop');
   }
 }
 
