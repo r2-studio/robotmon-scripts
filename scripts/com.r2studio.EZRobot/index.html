@@ -133,14 +133,8 @@
       text-align: center;
       padding: 5px 0;
       font-size: 16px;
-      line-height: 1.4;
       border-radius: 15px;
       border: 0px;
-    }
-
-    .setting_input_value {
-      width: 40px;
-      text-align: center;
     }
 
     .row {
@@ -157,9 +151,9 @@
       border: 2px solid #2196F3;
       z-index: 3;
       width: 80%;
-      height: 40%;
+      height: 50%;
       left: 10%;
-      top: 20%;
+      top: 25%;
       background-color: white;
       border-radius: 5px;
       display: none;
@@ -168,15 +162,19 @@
       color: #FFFFFF;
       width: 100%;
       text-align: center;
-      padding: 10px;
       background-color: #2196F3;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     #setting-window .setting-content {
       margin: 20px;
       text-align: center;
     }
     .setting-content input {
-      width: 40px;
+      width: 50px;
+      margin: 5px 0px;
     }
     .setting-content .action-parameters {
       display: none;
@@ -214,6 +212,7 @@
       initSettings();
       initSettingRows();
       $('.select2').select2({
+        dropdownAutoWidth : true,
         minimumResultsForSearch: -1
       });
     });
@@ -397,7 +396,7 @@
       }
       $("#setting-script").append('<option value="' + name + '">' + name + '</option>').val(name);
       setting = [];
-      localStorage.setItem(TAG + '-' + name, JSON.stringify(setting));
+      localStorage.setItem(TAG + '-setting-' + name, JSON.stringify(setting));
       initSettingRows();
     }
 
@@ -442,7 +441,7 @@
         };
       }
 
-      $("#setting-action").off("change").on("change", function(e) {
+      $("#setting-action").on("change", function(e) {
         $(".action-parameters").hide();
         var action = $("#setting-action").val();
         $("#action-" + action.replace("rbm.", "")).show();
@@ -498,14 +497,10 @@
     <div id="overlay" class="overlay"></div>
     <div id="setting-window">
       <div class="setting-title">
-        <div class="row">
-          <div class="col-xs-4 col-xs-offset-4" data-i18n="title.setting"></div>
-          <div class="col-xs-4">
-            <div class="pull-right">
-              <button id="setting-done" class="btn-success btn-circle">o</button>
-              <button id="setting-close" class="btn-danger btn-circle" style="margin-left:6px">x</button>
-            </div>
-          </div>
+        <div data-i18n="title.setting"></div>
+        <div style="position: absolute; right: 6px;">
+          <button id="setting-done" class="btn-success btn-circle">O</button>
+          <button id="setting-close" class="btn-danger btn-circle" style="margin-left:6px">X</button>
         </div>
       </div>
       <div class="setting-content">
@@ -542,11 +537,14 @@
           Y: <input type="text" value="100" />
         </div>
         <div id="action-swipe" class="action-parameters">
-          X1: <input type="text" value="100" />
-          Y1: <input type="text" value="100" />
-          <br />
-          X2: <input type="text" value="100" />
-          Y2: <input type="text" value="200" />
+          <div class="row center-block">
+            X1: <input type="text" value="100" />
+            Y1: <input type="text" value="100" />
+          </div>
+          <div class="row center-block">
+            X2: <input type="text" value="100" />
+            Y2: <input type="text" value="200" />
+          </div>
         </div>
         <div id="action-safeSleep" class="action-parameters">
           <div style="display:inline-block;" data-i18n="title.milliseconds"></div>
@@ -583,7 +581,7 @@
         <div class="row">
           <div class="col-xs-6">
             <div style="display:inline-block;" data-i18n="title.script"></div>
-            <select id="setting-script" class='select2'></select>
+            <select id="setting-script" class='select2' style="width:90px;"></select>
           </div>
           <div class="col-xs-6">
             <div class="pull-right">
