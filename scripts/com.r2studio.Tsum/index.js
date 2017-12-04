@@ -72,6 +72,8 @@ var Button = {
   gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameMagicalTime1: {x: 320, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameMagicalTime2: {x: 750, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime3: {x: 320, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime4: {x: 750, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   outGameItem1: {x: 241, y: 770 - adjY, color:{ r: 42, g: 109, b: 190}},
   outGameItem2: {x: 496, y: 788 - adjY, color:{ r: 47, g: 113, b: 197}},
   outGameItem3: {x: 709, y: 781 - adjY, color:{ r: 34, g: 102, b: 185}},
@@ -678,12 +680,15 @@ Tsum.prototype.checkPage = function(wait) {
     var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
     var isMagicTime1 = isSameColor(Button.gameMagicalTime1.color, this.getColor(img, Button.gameMagicalTime1), 40);
     var isMagicTime2 = isSameColor(Button.gameMagicalTime2.color, this.getColor(img, Button.gameMagicalTime2), 40);
+    var isMagicTime3 = isSameColor(Button.gameMagicalTime3.color, this.getColor(img, Button.gameMagicalTime3), 40);
+    var isMagicTime4 = isSameColor(Button.gameMagicalTime4.color, this.getColor(img, Button.gameMagicalTime4), 40);
     var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
     var isDisconnected1 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 40);
     var isDisconnected2 = isSameColor(Button.outDisconnected.color, this.getColor(img, Button.outDisconnected), 40);
     var isDisconnected3 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outDisconnected), 40);
-    releaseImage(img);
     // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
+    // log(isMagicTime1, isMagicTime2, this.getColor(img, Button.gameMagicalTime1), this.getColor(img, Button.gameMagicalTime2));
+    releaseImage(img);
     if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
       return 'pausingGame';
     } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
@@ -691,6 +696,8 @@ Tsum.prototype.checkPage = function(wait) {
     } else if (isDisconnected1 && (isDisconnected2 || isDisconnected3)) {
       return 'networkDisconnected';
     } else if (isMagicTime1 && isMagicTime2) {
+      return 'magicTime';
+    } else if (isMagicTime3 && isMagicTime4) {
       return 'magicTime';
     } else if (isStart1Btn) {
       return 'friendPage';
@@ -731,6 +738,7 @@ Tsum.prototype.goFriendPage = function() {
       this.tap(Button.outClose2);
     } else if (page == 'magicTime') {
       this.tap(Button.gameMagicalTime1);
+      this.tap(Button.gameMagicalTime3);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
@@ -791,6 +799,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Button.outReceiveTimeout);
     } else if (page == 'magicTime') {
       this.tap(Button.gameMagicalTime1);
+      this.tap(Button.gameMagicalTime3);
     } else if (page == 'gameEnd') {
       this.tap(Button.outClose2);
     } else if (page == 'unknown') {
