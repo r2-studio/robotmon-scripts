@@ -211,6 +211,7 @@
       $("#version").html(TAG + " v" + VERSION);
       initLocale();
       initSettings();
+      initSettingRows();
     });
 
     function updateLocale() {
@@ -285,6 +286,18 @@
     }
 
     function initSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i).startsWith(TAG + '-setting-')) {
+          var name = localStorage.key(i).replace(TAG + '-setting-', '');
+          $("#setting-script").append('<option value="' + name + '">' + name + '</option>').val(name);
+        }
+      }
+    }
+
+    function initSettingRows() { 
       if ($("#setting-script").val() === null) {
         return;
       }
@@ -329,14 +342,14 @@
       jBtnEdit.click(function () {
         editSetting(element, function(result) {
           commands[index] = result;
-          initSettings();
+          initSettingRows();
         });
         $("#overlay").show();
         $("#setting-window").show();
       });
       jBtnDelete.click(function () {
         commands.splice(index, 1);
-        initSettings();
+        initSettingRows();
       });
       if (element.action === 'loop') {
         var jBtnAdd = $("<button class='btn btn-plus' data-i18n='button.add'></button>");
@@ -364,7 +377,7 @@
         } else {
           setting.push(result);
         }
-        initSettings();
+        initSettingRows();
       });
       $("#overlay").show();
       $("#setting-window").show();
@@ -381,7 +394,7 @@
       $("#setting-script").append('<option value="' + name + '">' + name + '</option>').val(name);
       setting = [];
       localStorage.setItem(TAG + '-' + name, JSON.stringify(setting));
-      initSettings();
+      initSettingRows();
     }
 
     function loadSetting() {
@@ -389,8 +402,8 @@
         return;
       }
       var name = $("#setting-script").val();
-      setting = JSON.parse(localStorage.getItem(TAG + '-' + name));
-      initSettings();
+      setting = JSON.parse(localStorage.getItem(TAG + '-setting-' + name));
+      initSettingRows();
     }
 
     function saveSetting() {
@@ -403,7 +416,7 @@
         return;
       }
       var name = $("#setting-script").val();
-      localStorage.setItem(TAG + '-' + name, JSON.stringify(setting));
+      localStorage.setItem(TAG + '-setting-' + name, JSON.stringify(setting));
     }
 
     function onEvent(eventType) {
