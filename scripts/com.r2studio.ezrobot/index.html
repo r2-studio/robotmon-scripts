@@ -60,10 +60,6 @@
       transition: .4s;
     }
 
-    input {
-      width: 100%;
-    }
-
     input:checked+.slider {
       background-color: #2196F3;
     }
@@ -201,7 +197,7 @@
     $(function () {
       $("#version").html(TAG + " v" + VERSION);
       initLocale();
-      loadSettings();
+      initSettings();
     });
 
     function updateLocale() {
@@ -214,19 +210,20 @@
         resources: {
           en: {
             translation: {
-              li: {
-                language: "Language",
-                action_name: "Name",
-              },
               button: {
                 add: "Add",
                 cancel: "Cancel",
                 delete: "Delete",
                 done: "Done",
-                edit: "Edit"
+                edit: "Edit",
+                load: "Load",
+                save: "Save"
               },
               title: {
+                language: "Language",
+                name: "Name",
                 action: "Action:",
+                script: "Script",
                 milliseconds: "Milliseconds:",
                 setting: "Setting",
                 times: "Times"
@@ -235,18 +232,19 @@
           },
           zh_TW: {
             translation: {
-              li: {
-                language: "語言",
-                action_name: "名稱",
-              },
               button: {
                 add: "新增",
                 cancel: "取消",
                 delete: "刪除",
                 done: "確定",
-                edit: "編輯"
+                edit: "編輯",
+                load: "讀取",
+                save: "儲存"
               },
               title: {
+                language: "語言",
+                name: "名稱",
+                script: "腳本",
                 action: "動作:",
                 milliseconds: "毫秒:",
                 setting: "設定",
@@ -277,7 +275,7 @@
       jSetting.append(jCol.append(jDiv));
     }
 
-    function loadSettings() {
+    function initSettings() {
       $('#group').empty();
       for (var index = 0; index < setting.length; index++) {
         addSettingRow(setting, index, '#ffffff', 0);
@@ -318,13 +316,13 @@
       jBtnEdit.click(function () {
         editSetting(element, function(result) {
           commands[index] = result;
-          loadSettings();
+          initSettings();
         });
         $("#setting-window").show();
       });
       jBtnDelete.click(function () {
         commands.splice(index, 1);
-        loadSettings();
+        initSettings();
       });
       if (element.action === 'loop') {
         var jBtnAdd = $("<button class='btn btn-plus' data-i18n='button.add'></button>");
@@ -348,9 +346,45 @@
         } else {
           setting.push(result);
         }
-        loadSettings();
+        initSettings();
       });
       $("#setting-window").show();
+    }
+
+    function addSettingScript() {
+      var name = $("#setting-name").val();
+      if (name === undefined || name === '') {
+        return;
+      }
+      if (localStorage === undefined || localStorage.getItem(TAG + '-' + name) !== null) {
+        return;
+      }
+      $("#setting-script").append('<option value="' + name + '">' + name + '</option>').val(name);
+      setting = [];
+      localStorage.setItem(TAG + '-' + name, JSON.stringify(setting));
+      initSettings();
+    }
+
+    function loadSetting() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var name = $("#setting-script").val();
+      setting = JSON.parse(localStorage.getItem(TAG + '-' + name));
+      initSettings();
+    }
+
+    function saveSetting() {
+      if (localStorage === undefined){
+        return;
+      }
+      localStorage.setItem(TAG + '-version', VERSION);
+
+      if ($("#setting-script").val() === null) {
+        return;
+      }
+      var name = $("#setting-script").val();
+      localStorage.setItem(TAG + '-' + name, JSON.stringify(setting));
     }
 
     function onEvent(eventType) {
@@ -484,7 +518,7 @@
     <ul class="list-group">
       <li class="list-group-item">
         <div class="row">
-          <div class="col-xs-6" data-i18n="li.language"></div>
+          <div class="col-xs-6" data-i18n="title.language"></div>
           <div class="col-xs-6">
             <div class="pull-right">
               <button onclick="i18next.changeLanguage('en')" class="btn btn-plus">EN</button>
@@ -495,13 +529,28 @@
       </li>
       <li class="list-group-item">
         <div class="row">
-          <div class="col-xs-2" data-i18n="li.action_name"></div>
           <div class="col-xs-8">
-            <input id="action-name" type="text"></input>
+            <div style="display:inline-block;" data-i18n="title.name"></div>
+            <input id="setting-name" type="text"></input>
           </div>
-          <div class="col-xs-2">
+          <div class="col-xs-4">
+            <div class="pull-right">
+              <button onclick="addSettingScript()" class="btn btn-plus" data-i18n="button.add"></button>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-xs-6">
+            <div style="display:inline-block;" data-i18n="title.script"></div>
+            <select id="setting-script" class='select2'></select>
+          </div>
+          <div class="col-xs-6">
             <div class="pull-right">
               <button onclick="addAction()" class="btn btn-plus" data-i18n="button.add"></button>
+              <button onclick="loadSetting()" class="btn btn-plus" data-i18n="button.load"></button>
+              <button onclick="saveSetting()" class="btn btn-plus" data-i18n="button.save"></button>
             </div>
           </div>
         </div>
