@@ -133,7 +133,6 @@
       height: 30px;
       text-align: center;
       padding: 5px 0;
-      font-size: 16px;
       border-radius: 15px;
       border: 0px;
     }
@@ -367,7 +366,7 @@
       if (element.action === 'loop') {
         var jBtnAdd = $("<button class='btn btn-plus'><i class='fa fa-plus' aria-hidden='true'></i></button>");
         jBtnAdd.click(function () {
-          addAction(element);
+          addSetting(element);
         });
         jBtns.push(jBtnAdd);
       }
@@ -410,7 +409,7 @@
       return jBtns;
     }
 
-    function addAction(element) {
+    function addSetting(element) {
       if ($("#setting-script").val() === null) {
         return;
       }
@@ -435,7 +434,7 @@
       if (name === undefined || name === '') {
         return;
       }
-      if (localStorage === undefined || localStorage.getItem(TAG + '-' + name) !== null) {
+      if (localStorage === undefined || localStorage.getItem(TAG + '-setting-' + name) !== null) {
         return;
       }
       $("#setting-script").append('<option value="' + name + '">' + name + '</option>').val(name);
@@ -464,6 +463,15 @@
       }
       var name = $("#setting-script").val();
       localStorage.setItem(TAG + '-setting-' + name, JSON.stringify(setting));
+    }
+
+    function deleteSetting() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var name = $("#setting-script").val();
+      localStorage.removeItem(TAG + '-setting-' + name);
+      $("#setting-script").find(":selected").remove();
     }
 
     function onEvent(eventType) {
@@ -543,8 +551,8 @@
       <div class="setting-title">
         <div data-i18n="title.setting"></div>
         <div style="position: absolute; right: 6px;">
-          <button id="setting-done" class="btn-success btn-circle">O</button>
-          <button id="setting-close" class="btn-danger btn-circle" style="margin-left:6px">X</button>
+          <button id="setting-done" class="btn-success btn-circle"><i class="fa fa-circle-o" aria-hidden="true"></i></button>
+          <button id="setting-close" class="btn-danger btn-circle" style="margin-left:6px"><i class="fa fa-times" aria-hidden="true"></i></button>
         </div>
       </div>
       <div class="setting-content">
@@ -629,9 +637,10 @@
           </div>
           <div class="col-xs-6">
             <div class="pull-right">
-              <button onclick="addAction()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
+              <button onclick="addSetting()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
               <button onclick="loadSetting()" class="btn btn-success"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
               <button onclick="saveSetting()" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+              <button onclick="deleteSetting()" class='btn btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button>
             </div>
           </div>
         </div>
