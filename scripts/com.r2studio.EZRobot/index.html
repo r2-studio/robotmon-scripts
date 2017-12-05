@@ -367,7 +367,7 @@
       if (element.action === 'loop') {
         var jBtnAdd = $("<button class='btn btn-plus'><i class='fa fa-plus' aria-hidden='true'></i></button>");
         jBtnAdd.click(function () {
-          addAction(element);
+          addSetting(element);
         });
         jBtns.push(jBtnAdd);
       }
@@ -410,7 +410,7 @@
       return jBtns;
     }
 
-    function addAction(element) {
+    function addSetting(element) {
       if ($("#setting-script").val() === null) {
         return;
       }
@@ -435,7 +435,7 @@
       if (name === undefined || name === '') {
         return;
       }
-      if (localStorage === undefined || localStorage.getItem(TAG + '-' + name) !== null) {
+      if (localStorage === undefined || localStorage.getItem(TAG + '-setting-' + name) !== null) {
         return;
       }
       $("#setting-script").append('<option value="' + name + '">' + name + '</option>').val(name);
@@ -464,6 +464,15 @@
       }
       var name = $("#setting-script").val();
       localStorage.setItem(TAG + '-setting-' + name, JSON.stringify(setting));
+    }
+
+    function deleteSetting() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var name = $("#setting-script").val();
+      localStorage.removeItem(TAG + '-setting-' + name);
+      $("#setting-script").find(":selected").remove();
     }
 
     function onEvent(eventType) {
@@ -629,9 +638,10 @@
           </div>
           <div class="col-xs-6">
             <div class="pull-right">
-              <button onclick="addAction()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
+              <button onclick="addSetting()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
               <button onclick="loadSetting()" class="btn btn-success"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
               <button onclick="saveSetting()" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+              <button onclick="deleteSetting()" class='btn btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button>
             </div>
           </div>
         </div>
