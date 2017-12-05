@@ -1,0 +1,644 @@
+<html>
+
+<head>
+  <style>
+    .navbar-custom {
+      border-radius: 0 !important;
+      background-color: #2196F3;
+      color: #FFFFFF;
+    }
+
+    .navbar-custom>a {
+      width: 100%;
+      color: #FFFFFF;
+      text-align: center;
+    }
+
+    .navbar-custom>a:hover {
+      color: #FFFFFF;
+    }
+
+    .list-group-item {
+      padding: 6px 10px !important;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0px;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 4px;
+      top: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(24px);
+      -ms-transform: translateX(24px);
+      transform: translateX(24px);
+    }
+
+    .slider.round {
+      border-radius: 28px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    .btn {
+      margin-left: 5px;
+    }
+
+    .btn-plus {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus:hover,
+    .btn-plus:focus,
+    .btn-plus:active,
+    .btn-plus.active {
+      color: #FFFFFF !important;
+      background-color: #0d8aee;
+      border-color: #0c7cd5;
+    }
+
+    .btn-plus.disabled:hover,
+    .btn-plus.disabled:focus,
+    .btn-plus.disabled:active,
+    .btn-plus.disabled.active,
+    .btn-plus[disabled]:hover,
+    .btn-plus[disabled]:focus,
+    .btn-plus[disabled]:active,
+    .btn-plus[disabled].active,
+    fieldset[disabled] .btn-plus:hover,
+    fieldset[disabled] .btn-plus:focus,
+    fieldset[disabled] .btn-plus:active,
+    fieldset[disabled] .btn-plus.active {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus,
+    .btn-danger,
+    .btn-success {
+      min-width: 25px;
+      min-height: 25px;
+      padding: 1px 0px 1px 0px !important;
+    }
+
+    .btn-circle {
+      min-width: 30px;
+      min-height: 30px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      padding: 5px 0;
+      font-size: 16px;
+      border-radius: 15px;
+      border: 0px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+    }
+
+    ul {
+      padding-left: 5px;
+    }
+
+    #setting-window {
+      position: absolute;
+      border: 2px solid #2196F3;
+      z-index: 3;
+      width: 80%;
+      height: 60%;
+      left: 10%;
+      top: 25%;
+      background-color: white;
+      border-radius: 5px;
+      display: none;
+    }
+    #setting-window .setting-title {
+      color: #FFFFFF;
+      width: 100%;
+      text-align: center;
+      background-color: #2196F3;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #setting-window .setting-content {
+      margin: 20px;
+      text-align: center;
+    }
+    .setting-content input {
+      width: 50px;
+      margin: 5px 0px;
+    }
+    .setting-content .action-parameters {
+      display: none;
+      margin: 10px;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      background-color: rgba(0,0,0,0.5);
+      display: none;
+    }
+    #select2-setting-action-results {
+      max-height: 250px;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/10.0.7/i18next.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script>
+    TAG = "EZRobot";
+    VERSION = 1;
+    var setting = [];
+
+    $(function () {
+      $("#version").html(TAG + " v" + VERSION);
+      initLocale();
+      initSettings();
+      initSettingRows();
+      $('.select2').select2({
+        dropdownAutoWidth : true,
+        minimumResultsForSearch: -1
+      });
+    });
+
+    function updateLocale() {
+      $('.container').localize();
+    }
+
+    function initLocale() {
+      i18next.init({
+        lng: 'en',
+        resources: {
+          en: {
+            translation: {
+              button: {
+                add: "Add",
+                delete: "Delete",
+                edit: "Edit",
+                load: "Load",
+                save: "Save"
+              },
+              title: {
+                language: "Language",
+                name: "Name",
+                action: "Action:",
+                script: "Script",
+                milliseconds: "Milliseconds:",
+                setting: "Setting",
+                times: "Times"
+              }
+            }
+          },
+          zh_TW: {
+            translation: {
+              button: {
+                add: "新增",
+                delete: "刪除",
+                edit: "編輯",
+                load: "讀取",
+                save: "儲存"
+              },
+              title: {
+                language: "語言",
+                name: "名稱",
+                script: "腳本",
+                action: "動作:",
+                milliseconds: "毫秒:",
+                setting: "設定",
+                times: "次數"
+              }
+            }
+          }
+        }
+      }, function (err, t) {
+        jqueryI18next.init(i18next, $);
+        updateLocale();
+      });
+      i18next.on('languageChanged', function() {
+        updateLocale();
+      });
+    }
+
+    function appendCol(jSetting, jContent) {
+      var jDiv = $('<div class="pull-right"></div>');
+      var jCol = $('<div class="col-xs-7"></div>');
+      if (Array.isArray(jContent)) {
+        for (var j in jContent) {
+          jDiv.append(jContent[j]);
+        }
+      } else {
+        jDiv.append(jContent);
+      }
+      jSetting.append(jCol.append(jDiv));
+    }
+
+    function initSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i).startsWith(TAG + '-setting-')) {
+          var name = localStorage.key(i).replace(TAG + '-setting-', '');
+          $("#setting-script").append('<option value="' + name + '">' + name + '</option>').val(name);
+        }
+      }
+    }
+
+    function initSettingRows() { 
+      if ($("#setting-script").val() === null) {
+        return;
+      }
+
+      $('#group').empty();
+      for (var index = 0; index < setting.length; index++) {
+        addSettingRow(null, setting, index, '#ffffff', 0);
+      }
+      updateLocale();
+    }
+
+    function addSettingRow(pCommands, commands, index, backgroundColor, marginLeft) {
+      var element = commands[index];
+      var action;
+      var args;
+      if (element.action == 'loop') {
+        action = element.action + ' ' + element.times;
+        args = element.times;
+      } else {
+        args = element.args;
+        action = element.action.replace('rbm.', '') + ' ' + args.join(',');
+      }
+
+      var jGroup = $('#group');
+      var jGroupItem = $("<li class='list-group-item' style='background-color:" + backgroundColor + ";margin-left:" + marginLeft + "px !important;'></li>");
+      var jRow = $("<div class='row'></div>");
+      var jActionName = $("<div class='col-xs-5'></div>");
+      jGroup.append(jGroupItem.append(jRow.append(jActionName.append(action))));
+      appendCol(jRow, getButtons(pCommands, commands, index, element));
+
+      if (element.action == 'loop') {
+        for (var i = 0; i < element.commands.length; i++) {
+          addSettingRow(commands, element.commands, i, backgroundColor === '#ffffff' ? '#f2f2f2' : '#ffffff', marginLeft + 15);
+        }
+      }
+    }
+
+    function getButtons(pCommands, commands, index, element) {
+      var jBtns = [];
+      var jBtnEdit = $("<button class='btn btn-plus'><i class='fa fa-pencil' aria-hidden='true'></i></button>");
+      var jBtnDelete = $("<button class='btn btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button>");
+      var jBtnLeft = $("<button class='btn btn-success'><i class='fa fa-arrow-left' aria-hidden='true'></i></button>");
+      var jBtnRight = $("<button class='btn btn-success'><i class='fa fa-arrow-right' aria-hidden='true'></i></button>");
+      var jBtnUp = $("<button class='btn btn-success'><i class='fa fa-arrow-up' aria-hidden='true'></i></button>");
+      var jBtnDown = $("<button class='btn btn-success'><i class='fa fa-arrow-down' aria-hidden='true'></i></button>");
+      
+      jBtnEdit.click(function () {
+        editSetting(element, function(result) {
+          commands[index] = result;
+          initSettingRows();
+        });
+        $("#overlay").show();
+        $("#setting-window").show();
+      });
+      jBtnDelete.click(function () {
+        commands.splice(index, 1);
+        initSettingRows();
+      });
+      if (element.action === 'loop') {
+        var jBtnAdd = $("<button class='btn btn-plus'><i class='fa fa-plus' aria-hidden='true'></i></button>");
+        jBtnAdd.click(function () {
+          addAction(element);
+        });
+        jBtns.push(jBtnAdd);
+      }
+      jBtnLeft.click(function () {
+        pCommands.push(element);
+        commands.splice(index, 1);
+        initSettingRows();
+      });
+      jBtnRight.click(function () {
+        commands[index - 1].commands.push(element);
+        commands.splice(index, 1);
+        initSettingRows();
+      });
+      jBtnUp.click(function () {
+        var tmp = commands[index - 1];
+        commands[index - 1] = commands[index];
+        commands[index] = tmp;
+        initSettingRows();
+      });
+      jBtnDown.click(function () {
+        var tmp = commands[index + 1];
+        commands[index + 1] = commands[index];
+        commands[index] = tmp;
+        initSettingRows();
+      });
+      if (index != 0) {
+        jBtns.push(jBtnUp);
+      }
+      if (pCommands != null) {
+        jBtns.push(jBtnLeft);
+      }
+      if (index != 0 && commands[index - 1].action == 'loop') {
+        jBtns.push(jBtnRight);
+      }
+      // if (index != commands.length - 1) {  
+      //   jBtns.push(jBtnDown);
+      // }
+      jBtns.push(jBtnEdit);
+      jBtns.push(jBtnDelete);
+      return jBtns;
+    }
+
+    function addAction(element) {
+      if ($("#setting-script").val() === null) {
+        return;
+      }
+
+      editSetting({
+        action: 'loop',
+        times: 5,
+      }, function(result) {
+        if (element !== undefined) {
+          element.commands.push(result)
+        } else {
+          setting.push(result);
+        }
+        initSettingRows();
+      });
+      $("#overlay").show();
+      $("#setting-window").show();
+    }
+
+    function addSettingScript() {
+      var name = $("#setting-name").val();
+      if (name === undefined || name === '') {
+        return;
+      }
+      if (localStorage === undefined || localStorage.getItem(TAG + '-' + name) !== null) {
+        return;
+      }
+      $("#setting-script").append('<option value="' + name + '">' + name + '</option>').val(name);
+      setting = [];
+      localStorage.setItem(TAG + '-setting-' + name, JSON.stringify(setting));
+      initSettingRows();
+    }
+
+    function loadSetting() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var name = $("#setting-script").val();
+      setting = JSON.parse(localStorage.getItem(TAG + '-setting-' + name));
+      initSettingRows();
+    }
+
+    function saveSetting() {
+      if (localStorage === undefined){
+        return;
+      }
+      localStorage.setItem(TAG + '-version', VERSION);
+
+      if ($("#setting-script").val() === null) {
+        return;
+      }
+      var name = $("#setting-script").val();
+      localStorage.setItem(TAG + '-setting-' + name, JSON.stringify(setting));
+    }
+
+    function onEvent(eventType) {
+      if (eventType == 'OnPlayClick') {
+        JavaScriptInterface.runScript('start(\'' + JSON.stringify(setting) + '\');');
+      } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript('stop();');
+      }
+    }
+    function onLog(message) {
+      console.log(message);
+    }
+    
+    function editSetting(setting, okCallback) {
+      if (setting == undefined) {
+        setting = {
+          action: 'rbm.click',
+          args: [100, 100],
+        };
+      }
+
+      $("#setting-action").on("change", function(e) {
+        $(".action-parameters").hide();
+        var action = $("#setting-action").val();
+        $("#action-" + action.replace("rbm.", "")).show();
+      });
+      
+      $("#setting-done").off("click").on("click", function(e){
+        $("#overlay").hide();
+        $("#setting-window").hide();
+        if (okCallback == undefined) {
+          return;
+        }
+        var action = $("#setting-action").val();
+        if (action == 'loop') {
+          okCallback({
+            action: action,
+            times: $("#action-loop input").val(),
+            commands: setting.commands ? setting.commands : [],
+          });
+        } else {
+          var args = [];
+          $("#action-" + action.replace("rbm.", "") + " input").each(function(e){
+            args.push(+$(this).val()); // to integer
+          });
+          okCallback({
+            action: action,
+            args: args,
+          });
+        }
+      });
+      
+      $("#setting-close").off("click").on("click", function(e){
+        $("#overlay").hide();
+        $("#setting-window").hide();
+      });
+      // show current setting
+      $("#setting-action").val(setting.action).change();
+      if (setting.action == 'loop') {
+        $("#action-loop input").val(setting.times);
+      } else {
+        for (var i = 0; i < setting.args.length; i++) {
+          $("#action-" + setting.action.replace("rbm.", "") + " input").eq(i).val(setting.args[i]);
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-custom" role="navigation">
+    <a id="version" class="navbar-brand"></a>
+  </nav>
+  <div id="container" class="container">
+    <div id="overlay" class="overlay"></div>
+    <div id="setting-window">
+      <div class="setting-title">
+        <div data-i18n="title.setting"></div>
+        <div style="position: absolute; right: 6px;">
+          <button id="setting-done" class="btn-success btn-circle">O</button>
+          <button id="setting-close" class="btn-danger btn-circle" style="margin-left:6px">X</button>
+        </div>
+      </div>
+      <div class="setting-content">
+        <div class="row center-block">
+          <div style="display:inline-block;" data-i18n="title.action"></div>
+          <select id="setting-action" class='select2'>
+            <option class="setting-actions" value="loop">Loop</option>
+            <option class="setting-actions" value="rbm.click">Click</option>
+            <option class="setting-actions" value="rbm.tapDown">TapDown</option>
+            <option class="setting-actions" value="rbm.moveTo">MoveTo</option>
+            <option class="setting-actions" value="rbm.tapUp">TapUp</option>
+            <option class="setting-actions" value="rbm.swipe">Swipe</option>
+            <option class="setting-actions" value="safeSleep">Sleep</option>
+          </select>
+        </div>
+        <div id="action-loop" class="action-parameters">
+          <div style="display:inline-block;" data-i18n="title.times"></div>
+          <input type="number" value="3" />
+        </div>
+        <div id="action-click" class="action-parameters">
+          X: <input type="number" value="100" />
+          Y: <input type="number" value="100" />
+        </div>
+        <div id="action-tapDown" class="action-parameters">
+          X: <input type="number" value="100" />
+          Y: <input type="number" value="100" />
+        </div>
+        <div id="action-moveTo" class="action-parameters">
+          X: <input type="number" value="100" />
+          Y: <input type="number" value="100" />
+        </div>
+        <div id="action-tapUp" class="action-parameters">
+          X: <input type="number" value="100" />
+          Y: <input type="number" value="100" />
+        </div>
+        <div id="action-swipe" class="action-parameters">
+          <div class="row center-block">
+            X1: <input type="number" value="100" />
+            Y1: <input type="number" value="100" />
+          </div>
+          <div class="row center-block">
+            X2: <input type="number" value="100" />
+            Y2: <input type="number" value="200" />
+          </div>
+        </div>
+        <div id="action-safeSleep" class="action-parameters">
+          <div style="display:inline-block;" data-i18n="title.milliseconds"></div>
+          <input type="number" value="1000" />
+        </div>
+      </div>
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-xs-6" data-i18n="title.language"></div>
+          <div class="col-xs-6">
+            <div class="pull-right">
+              <button onclick="i18next.changeLanguage('en')" class="btn btn-plus">EN</button>
+              <button onclick="i18next.changeLanguage('zh_TW')" class="btn btn-plus">中文</button>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-xs-10">
+            <div style="display:inline-block;" data-i18n="title.name"></div>
+            <input id="setting-name" type="text"></input>
+          </div>
+          <div class="col-xs-2">
+            <div class="pull-right">
+              <button onclick="addSettingScript()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-xs-6">
+            <div style="display:inline-block;" data-i18n="title.script"></div>
+            <select id="setting-script" class='select2' style="width:90px;"></select>
+          </div>
+          <div class="col-xs-6">
+            <div class="pull-right">
+              <button onclick="addAction()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
+              <button onclick="loadSetting()" class="btn btn-success"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
+              <button onclick="saveSetting()" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <ul id="group" class="list-group"></ul>
+  </div>
+</body>
+
+</html>
