@@ -256,8 +256,8 @@ var Page = {
       {x: 208, y: 1145 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 70},
       {x: 662, y: 1141 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 70},
     ],
-    back: {x: 856, y: 1149 - adjY},
-    next: {x: 381, y: 1149 - adjY},
+    back: {x: 381, y: 1149 - adjY},
+    next: {x: 856, y: 1149 - adjY},
   },
   NetworkDisable: {
     name: 'NetworkDisable',
@@ -274,7 +274,7 @@ var Page = {
       {x: 478, y: 1008 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 70},
       {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 70},
     ],
-    back: {x: 356, y: 1008 - adjY},
+    back: {x: 885, y: 1012 - adjY},
     next: {x: 885, y: 1012 - adjY},
   },
   HighScore: {
@@ -1120,7 +1120,7 @@ Tsum.prototype.taskPlayGame = function() {
   this.sleep(500);
   this.findMyTsum();
   log('myTsum', this.myTsum);
-  this.sleep(500);
+  // this.sleep(500);
   // start to run
   var runTimes = 0;
   var pathZero = 0;
@@ -1146,10 +1146,9 @@ Tsum.prototype.taskPlayGame = function() {
       }
     }
     log('辨識盤面Tsum');
-    log(Date.now());
     var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug);
     if (this.debug) {
-      //saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
+      saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
     }
     releaseImage(gameImage);
 
