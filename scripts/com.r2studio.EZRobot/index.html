@@ -137,6 +137,44 @@
       border: 0px;
     }
 
+    .dropbtn {
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 0.5px solid rgba(0,0,0,0.2);
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .show {
+      display: block;
+    }
+
     .row {
       display: flex;
       align-items: center;
@@ -538,6 +576,24 @@
         }
       }
     }
+
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function selectSettingDropdown() {
+      document.getElementById("setting-dropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          if (dropdowns[i].classList.contains('show')) {
+            dropdowns[i].classList.remove('show');
+          }
+        }
+      }
+    }
   </script>
 </head>
 
@@ -633,7 +689,15 @@
         <div class="row">
           <div class="col-xs-6">
             <div style="display:inline-block;" data-i18n="title.script"></div>
-            <select id="setting-script" class='select2' style="width:90px;"></select>
+            <div class="dropdown">
+              <button onclick="selectSettingDropdown()" class="dropbtn">Dropdown</button>
+              <div id="setting-dropdown" class="dropdown-content">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+              </div>
+            </div>
+            <!-- <select id="setting-script" class='select2' style="width:90px;"></select> -->
           </div>
           <div class="col-xs-6">
             <div class="pull-right">
