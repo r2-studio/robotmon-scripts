@@ -143,6 +143,7 @@
       cursor: pointer;
       border-radius: 5px;
       border: 0.5px solid rgba(0,0,0,0.2);
+      background-color: white;
     }
 
     .dropdown {
@@ -155,6 +156,7 @@
       position: absolute;
       background-color: #f9f9f9;
       min-width: 150px;
+      max-width: 200px;
       overflow: auto;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
       z-index: 1;
@@ -169,6 +171,13 @@
 
     .dropdown a:hover {
       background-color: #f1f1f1;
+    }
+
+    .dropdown button {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 90px;
     }
 
     .show {
@@ -210,6 +219,9 @@
       margin: 20px;
       text-align: center;
     }
+    #setting-window .setting-content div div div a {
+      text-align: left;
+    }
     .setting-content input {
       width: 50px;
       margin: 5px 0px;
@@ -228,9 +240,6 @@
       background-color: rgba(0,0,0,0.5);
       display: none;
     }
-    #select2-setting-action-results {
-      max-height: 250px;
-    }
   </style>
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -243,7 +252,7 @@
 
   <script>
     TAG = "EZRobot";
-    VERSION = 1;
+    VERSION = 2;
     var setting = [];
     var noSetting = 'No Setting';
 
@@ -253,6 +262,7 @@
       initLocale();
       initSettings();
       initSettingRows();
+      initActionDropdown();
     });
 
     function updateLocale() {
@@ -333,6 +343,23 @@
         var name = $(this).text();
         $("#setting-dropdown-btn").text(name);
       });
+    }
+
+    function initActionDropdown() {
+      var names = ['loop', 'rbm.click', 'rbm.tapDown', 'rbm.moveTo', 'rbm.tapUp', 'rbm.swipe', 'safeSleep'];
+      for (var i = 0; i < names.length; i++) {
+        const name = names[i].replace('rbm.', '');
+        $("#action-dropdown").append('<a href="#' + names[i] + '" class="action-dropdown-item">' + name + '</a>');
+      }
+      $(".action-dropdown-item").off("click").on("click", function() {
+        var name = $(this).text();
+        var href = $(this).attr('href').replace('rbm.', '').replace('#', '');
+        $("#action-dropdown-btn").text(name);
+        $(".action-parameters").hide();
+        $("#action-" + href).show();
+      });
+      $("#action-dropdown-btn").text(names[0]);
+      $("#action-loop").show();
     }
 
     function initSettings() {
@@ -545,20 +572,14 @@
           args: [100, 100],
         };
       }
-
-      $("#setting-action").on("change", function(e) {
-        $(".action-parameters").hide();
-        var action = $("#setting-action").val();
-        $("#action-" + action.replace("rbm.", "")).show();
-      });
       
-      $("#setting-done").off("click").on("click", function(e){
+      $("#setting-done").off("click").on("click", function(e) {
         $("#overlay").hide();
         $("#setting-window").hide();
         if (okCallback == undefined) {
           return;
         }
-        var action = $("#setting-action").val();
+        var action = $("#action-dropdown-btn").text();
         if (action == 'loop') {
           okCallback({
             action: action,
@@ -567,7 +588,7 @@
           });
         } else {
           var args = [];
-          $("#action-" + action.replace("rbm.", "") + " input").each(function(e){
+          $("#action-" + action + " input").each(function(e) {
             args.push(+$(this).val()); // to integer
           });
           okCallback({
@@ -577,17 +598,20 @@
         }
       });
       
-      $("#setting-close").off("click").on("click", function(e){
+      $("#setting-close").off("click").on("click", function(e) {
         $("#overlay").hide();
         $("#setting-window").hide();
       });
-      // show current setting
-      $("#setting-action").val(setting.action).change();
-      if (setting.action == 'loop') {
+
+      var action = setting.action.replace('rbm.', '');
+      $("#action-dropdown-btn").text(action);
+      $(".action-parameters").hide();
+      $("#action-" + action).show();
+      if (action == 'loop') {
         $("#action-loop input").val(setting.times);
       } else {
         for (var i = 0; i < setting.args.length; i++) {
-          $("#action-" + setting.action.replace("rbm.", "") + " input").eq(i).val(setting.args[i]);
+          $("#action-" + action + " input").eq(i).val(setting.args[i]);
         }
       }
     }
@@ -596,6 +620,9 @@
     toggle between hiding and showing the dropdown content */
     function selectSettingDropdown() {
       document.getElementById("setting-dropdown").classList.toggle("show");
+    }
+    function selectActionDropdown() {
+      document.getElementById("action-dropdown").classList.toggle("show");
     }
 
     // Close the dropdown if the user clicks outside of it
@@ -629,15 +656,10 @@
       <div class="setting-content">
         <div class="row center-block">
           <div style="display:inline-block;" data-i18n="title.action"></div>
-          <select id="setting-action" class='select2'>
-            <option class="setting-actions" value="loop">Loop</option>
-            <option class="setting-actions" value="rbm.click">Click</option>
-            <option class="setting-actions" value="rbm.tapDown">TapDown</option>
-            <option class="setting-actions" value="rbm.moveTo">MoveTo</option>
-            <option class="setting-actions" value="rbm.tapUp">TapUp</option>
-            <option class="setting-actions" value="rbm.swipe">Swipe</option>
-            <option class="setting-actions" value="safeSleep">Sleep</option>
-          </select>
+          <div class="dropdown">
+            <button id="action-dropdown-btn" onclick="selectActionDropdown()" class="dropbtn"></button>
+            <div id="action-dropdown" class="dropdown-content"></div>
+          </div>
         </div>
         <div id="action-loop" class="action-parameters">
           <div style="display:inline-block;" data-i18n="title.times"></div>
