@@ -1349,7 +1349,7 @@ Tsum.prototype.isLoading = function() {
   var ty = Button.outIsLoading2.y;
   var whiteCount = 0;
   for (var y = fy; y <= ty; y+=10) {
-    if (isSameColor(Button.outIsLoading1.color, this.getColor(img, {x: fx, y: y}), 30)) {
+    if (isSameColor(Button.outIsLoading1.color, this.getColor(img, {x: fx, y: y}), 20)) {
       whiteCount++;
     }
   }
@@ -1396,7 +1396,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     } else if (this.isLoading()) {
       log('Network delay...');
       networkLoadingCount++;
-      if (networkLoadingCount > 20) {
+      if (networkLoadingCount > 10) {
         this.tap(Button.outReceiveOk);
         this.tap(Button.outStart1);
       }
