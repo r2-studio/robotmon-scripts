@@ -120,9 +120,9 @@ var Page = {
   TodayMission: {
     name: 'TodayMission',
     colors: [
-      {x: 540, y: 1408 - adjY, r: 238, g: 181, b: 12 , match: true, threshold: 70},
-      {x: 975, y: 428  - adjY, r: 161, g: 224, b: 231, match: true, threshold: 70},
-      {x: 554, y: 1260 - adjY, r: 24 , g: 189, b: 219, match: true, threshold: 70},
+      {x: 540, y: 1408 - adjY, r: 238, g: 181, b: 12 , match: true, threshold: 80},
+      {x: 975, y: 428  - adjY, r: 161, g: 224, b: 231, match: true, threshold: 80},
+      {x: 554, y: 1260 - adjY, r: 24 , g: 189, b: 219, match: true, threshold: 80},
     ],
     back: {x: 558, y: 1473},
     next: {x: 558, y: 1473},
@@ -130,9 +130,9 @@ var Page = {
   ScorePage: {
     name: 'ScorePage',
     colors: [
-      {x: 302, y: 1509 - adjY, r: 235, g: 184, b: 7  , match: true, threshold: 70},
-      {x: 777, y: 1516 - adjY, r: 248, g: 142, b: 20 , match: true, threshold: 70},
-      {x: 774, y: 428  - adjY, r: 243, g: 248, b: 242, match: true, threshold: 70},
+      {x: 302, y: 1509 - adjY, r: 235, g: 184, b: 7  , match: true, threshold: 80},
+      {x: 777, y: 1516 - adjY, r: 248, g: 142, b: 20 , match: true, threshold: 80},
+      {x: 774, y: 428  - adjY, r: 243, g: 248, b: 242, match: true, threshold: 80},
     ],
     back: {x: 309, y: 1581 - adjY},
     next: {x: 784, y: 1581 - adjY},
@@ -140,10 +140,10 @@ var Page = {
   FriendPage: {
     name: 'FriendPage',
     colors: [
-      {x: 547, y: 1520 - adjY, r: 246, g: 135, b: 17 , match: true, threshold: 70},
-      {x: 187, y: 1527 - adjY, r: 240, g: 218, b: 72 , match: true, threshold: 70},
-      {x: 860, y: 1505 - adjY, r: 238, g: 189, b: 11 , match: true, threshold: 70},
-      {x: 698, y: 392  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 70},
+      {x: 547, y: 1520 - adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
+      {x: 187, y: 1527 - adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
+      {x: 860, y: 1505 - adjY, r: 238, g: 189, b: 11 , match: true, threshold: 80},
+      {x: 698, y: 392  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
     ],
     back: {x: 547, y: 1581 - adjY},
     next: {x: 547, y: 1581 - adjY},
@@ -151,11 +151,11 @@ var Page = {
   GiftHeart: {
     name: 'GiftHeart',
     colors: [
-      {x: 216, y: 1012 - adjY, r: 233, g: 172, b: 6, match: true, threshold: 70},
-      {x: 673, y: 1008 - adjY, r: 235, g: 174, b: 8, match: true, threshold: 70},
-      {x: 468, y: 731  - adjY, r: 214, g: 61 , b: 143, match: true, threshold: 75},
-      {x: 572, y: 489  - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 70},
-      {x: 583, y: 1123 - adjY, r: 28 , g: 186, b: 221, match: true, threshold: 70},
+      {x: 216, y: 1012 - adjY, r: 233, g: 172, b: 6, match: true, threshold: 80},
+      {x: 673, y: 1008 - adjY, r: 235, g: 174, b: 8, match: true, threshold: 80},
+      {x: 468, y: 731  - adjY, r: 214, g: 61 , b: 143, match: true, threshold: 100},
+      {x: 572, y: 489  - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
+      {x: 583, y: 1123 - adjY, r: 28 , g: 186, b: 221, match: true, threshold: 80},
     ],
     back: {x: 774, y: 1023 - adjY},
     next: {x: 320, y: 1019 - adjY},
@@ -163,9 +163,19 @@ var Page = {
   MailBox: {
     name: 'MailBox',
     colors: [
-      {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 70},
-      {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 70},
-      {x: 604, y: 1347 - adjY, r: 234, g: 171, b: 6  , match: true, threshold: 70},
+      {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 604, y: 1347 - adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80},
+    ],
+    back: {x: 561, y: 1581 - adjY},
+    next: {x: 561, y: 1581 - adjY},
+  },
+  MailBox2: {
+    name: 'MailBox2',
+    colors: [
+      {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 619, y: 1354 - adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80},
     ],
     back: {x: 561, y: 1581 - adjY},
     next: {x: 561, y: 1581 - adjY},
@@ -173,12 +183,12 @@ var Page = {
   ReceiveHeart: {
     name: 'ReceiveHeart',
     colors: [
-      {x: 208, y: 1008 - adjY, r: 233, g: 172, b: 6  , match: true, threshold: 70},
-      {x: 662, y: 1008 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 70},
-      {x: 561, y: 482  - adjY, r: 28 , g: 191, b: 222, match: true, threshold: 70},
-      {x: 565, y: 1138 - adjY, r: 30 , g: 195, b: 225, match: true, threshold: 70},
-      {x: 334, y: 745  - adjY, r: 213, g: 62 , b: 143, match: true, threshold: 75},
-      {x: 586, y: 749  - adjY, r: 248, g: 249, b: 51 , match: true, threshold: 90},
+      {x: 208, y: 1008 - adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
+      {x: 662, y: 1008 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+      {x: 561, y: 482  - adjY, r: 28 , g: 191, b: 222, match: true, threshold: 80},
+      {x: 565, y: 1138 - adjY, r: 30 , g: 195, b: 225, match: true, threshold: 80},
+      {x: 334, y: 745  - adjY, r: 213, g: 62 , b: 143, match: true, threshold: 90},
+      {x: 586, y: 749  - adjY, r: 248, g: 249, b: 51 , match: true, threshold: 100},
     ],
     back: {x: 774, y: 1023 - adjY},
     next: {x: 320, y: 1019 - adjY},
@@ -186,9 +196,9 @@ var Page = {
   Received: {
     name: 'Received',
     colors: [
-      {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 70},
-      {x: 806, y: 817 - adjY, r: 45, g: 80 , b: 122, match: true, threshold: 70},
-      {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 70},
+      {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
+      {x: 806, y: 817 - adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
+      {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
     ],
     back: {x: 774, y: 1023 - adjY},
     next: {x: 320, y: 1019 - adjY},
@@ -196,11 +206,11 @@ var Page = {
   StartPage: {
     name: 'StartPage',
     colors: [
-      {x: 752, y: 399  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 70},
-      {x: 856, y: 1358 - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 70},
-      {x: 169, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 70},
-      {x: 547, y: 1509 - adjY, r: 235, g: 118, b: 134, match: true, threshold: 70},
-      {x: 846, y: 1509 - adjY, r: 236, g: 185, b: 8, match: true, threshold: 70},
+      {x: 752, y: 399  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 856, y: 1358 - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
+      {x: 169, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
+      {x: 547, y: 1509 - adjY, r: 235, g: 118, b: 134, match: true, threshold: 80},
+      {x: 792, y: 1588 - adjY, r: 234, g: 171, b: 8, match: true, threshold: 100},
     ],
     back: {x: 190, y: 1574 - adjY},
     next: {x: 558, y: 1563 - adjY},
@@ -208,11 +218,11 @@ var Page = {
   SettingPage: {
     name: 'SettingPage',
     colors: [
-      {x: 741, y: 345  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 70},
-      {x: 363, y: 504  - adjY, r: 21 , g: 184, b: 219, match: true, threshold: 70},
-      {x: 464, y: 1084 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 70},
-      {x: 903, y: 1228 - adjY, r: 237, g: 176, b: 10 , match: true, threshold: 70},
-      {x: 554, y: 1516 - adjY, r: 236, g: 180, b: 9 , match: true, threshold: 70},
+      {x: 741, y: 345  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 363, y: 504  - adjY, r: 21 , g: 184, b: 219, match: true, threshold: 80},
+      {x: 464, y: 1084 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
+      {x: 903, y: 1228 - adjY, r: 237, g: 176, b: 10 , match: true, threshold: 80},
+      {x: 554, y: 1516 - adjY, r: 236, g: 180, b: 9 , match: true, threshold: 80},
     ],
     back: {x: 565, y: 1577 - adjY},
     next: {x: 565, y: 1577 - adjY},
@@ -220,9 +230,9 @@ var Page = {
   TsumsPage: {
     name: 'TsumsPage',
     colors: [
-      {x: 514, y: 842  - adjY, r: 41, g: 177, b: 203 , match: true, threshold: 70},
-      {x: 180, y: 1520 - adjY, r: 238, g: 180, b: 11 , match: true, threshold: 90},
-      {x: 817, y: 1516 - adjY, r: 238, g: 191, b: 13 , match: true, threshold: 70},
+      {x: 514, y: 842  - adjY, r: 41, g: 177, b: 203 , match: true, threshold: 80},
+      {x: 180, y: 1520 - adjY, r: 238, g: 180, b: 11 , match: true, threshold: 100},
+      {x: 817, y: 1516 - adjY, r: 238, g: 191, b: 13 , match: true, threshold: 80},
     ],
     back: {x: 176, y: 1520 - adjY},
     next: {x: 176, y: 1520 - adjY},
@@ -230,11 +240,11 @@ var Page = {
   GamePause: {
     name: 'GamePause',
     colors: [
-      {x: 165, y: 1005 - adjY, r: 234, g: 173, b: 7  , match: true, threshold: 70},
-      {x: 594, y: 1001 - adjY, r: 233, g: 171, b: 8  , match: true, threshold: 70},
-      {x: 367, y: 702  - adjY, r: 24 , g: 191, b: 225, match: true, threshold: 70},
-      {x: 738, y: 540  - adjY, r: 248, g: 244, b: 245 , match: true, threshold: 70},
-      {x: 550, y: 1264 - adjY, r: 236, g: 182, b: 11  , match: true, threshold: 70},
+      {x: 165, y: 1005 - adjY, r: 234, g: 173, b: 7  , match: true, threshold: 80},
+      {x: 594, y: 1001 - adjY, r: 233, g: 171, b: 8  , match: true, threshold: 80},
+      {x: 367, y: 702  - adjY, r: 24 , g: 191, b: 225, match: true, threshold: 80},
+      {x: 738, y: 540  - adjY, r: 248, g: 244, b: 245 , match: true, threshold: 80},
+      {x: 550, y: 1264 - adjY, r: 236, g: 182, b: 11  , match: true, threshold: 80},
     ],
     back: {x: 331, y: 1008 - adjY},
     next: {x: 561, y: 1350 - adjY},
@@ -242,8 +252,8 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 982, y: 194  - adjY, r: 236, g: 192, b: 5, match: true, threshold: 70},
-      {x: 986, y: 1563 - adjY, r: 236, g: 191, b: 2, match: true, threshold: 70},
+      {x: 982, y: 194  - adjY, r: 236, g: 192, b: 5, match: true, threshold: 80},
+      {x: 986, y: 1563 - adjY, r: 236, g: 191, b: 2, match: true, threshold: 80},
     ],
     back: {x: 986, y: 201 - adjY},
     next: {x: 986, y: 201 - adjY},
@@ -251,10 +261,10 @@ var Page = {
   MagicalTime: {
     name: 'MagicalTime',
     colors: [
-      {x: 817, y: 435  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 70},
-      {x: 594, y: 785  - adjY, r: 248, g: 102, b: 121, match: true, threshold: 90},
-      {x: 208, y: 1145 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 70},
-      {x: 662, y: 1141 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 70},
+      {x: 817, y: 435  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 594, y: 785  - adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
+      {x: 208, y: 1145 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
+      {x: 662, y: 1141 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
     ],
     back: {x: 381, y: 1149 - adjY},
     next: {x: 856, y: 1149 - adjY},
@@ -262,8 +272,8 @@ var Page = {
   NetworkDisable: {
     name: 'NetworkDisable',
     colors: [
-      {x: 478, y: 1008 - adjY, r: 236, g: 94, b: 116, match: true, threshold: 70},
-      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 70},
+      {x: 478, y: 1008 - adjY, r: 236, g: 94, b: 116, match: true, threshold: 80},
+      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
     ],
     back: {x: 356, y: 1008 - adjY},
     next: {x: 885, y: 1012 - adjY},
@@ -271,8 +281,8 @@ var Page = {
   NetworkTimeout: {
     name: 'NetworkTimeout',
     colors: [
-      {x: 478, y: 1008 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 70},
-      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 70},
+      {x: 478, y: 1008 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
     ],
     back: {x: 885, y: 1012 - adjY},
     next: {x: 885, y: 1012 - adjY},
@@ -280,8 +290,8 @@ var Page = {
   HighScore: {
     name: 'HighScore',
     colors: [
-      {x: 298, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 70},
-      {x: 810, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 70},
+      {x: 298, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
+      {x: 810, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
     ],
     back: {x: 298, y: 1253 - adjY},
     next: {x: 810, y: 1253 - adjY},
@@ -289,8 +299,8 @@ var Page = {
   RankUp: {
     name: 'RankUp',
     colors: [
-      {x: 327, y: 1458 - adjY, r: 236, g: 175, b: 9, match: true, threshold: 70},
-      {x: 792, y: 1455 - adjY, r: 234, g: 173, b: 5, match: true, threshold: 70},
+      {x: 327, y: 1458 - adjY, r: 236, g: 175, b: 9, match: true, threshold: 80},
+      {x: 792, y: 1455 - adjY, r: 234, g: 173, b: 5, match: true, threshold: 80},
     ],
     back: {x: 327, y: 1458 - adjY},
     next: {x: 792, y: 1455 - adjY},
@@ -298,9 +308,9 @@ var Page = {
   InvitePage: {
     name: 'InvitePage',
     colors: [
-      {x: 342, y: 835  - adjY, r: 58 , g: 87 , b: 145, match: true, threshold: 70},
-      {x: 669, y: 832  - adjY, r: 0  , g: 181, b: 1  , match: true, threshold: 70},
-      {x: 536, y: 1271 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 70},
+      {x: 342, y: 835  - adjY, r: 58 , g: 87 , b: 145, match: true, threshold: 80},
+      {x: 669, y: 832  - adjY, r: 0  , g: 181, b: 1  , match: true, threshold: 80},
+      {x: 536, y: 1271 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
     ],
     back: {x: 576, y: 1314 - adjY},
     next: {x: 576, y: 1314 - adjY},
@@ -308,8 +318,8 @@ var Page = {
   EventPage: {
     name: 'EventPage',
     colors: [
-      {x: 554, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 70},
-      {x: 997, y: 1617 - adjY, r: 230, g: 169, b: 3 , match: true, threshold: 70},
+      {x: 554, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
+      {x: 997, y: 1617 - adjY, r: 230, g: 169, b: 3 , match: true, threshold: 80},
     ],
     back: {x: 554, y: 1509 - adjY},
     next: {x: 554, y: 1509 - adjY},
@@ -317,9 +327,9 @@ var Page = {
   FriendInfo: {
     name: 'FriendInfo',
     colors: [
-      {x: 565, y: 504   - adjY, r: 31, g: 190, b: 220, match: true, threshold: 70},
-      {x: 547, y: 1123  - adjY, r: 27, g: 192, b: 222 , match: true, threshold: 70},
-      {x: 554, y: 1260  - adjY, r: 238, g: 186, b: 12, match: true, threshold: 70},
+      {x: 565, y: 504   - adjY, r: 31, g: 190, b: 220, match: true, threshold: 80},
+      {x: 547, y: 1123  - adjY, r: 27, g: 192, b: 222 , match: true, threshold: 80},
+      {x: 554, y: 1260  - adjY, r: 238, g: 186, b: 12, match: true, threshold: 80},
     ],
     back: {x: 576, y: 1336 - adjY},
     next: {x: 576, y: 1336 - adjY},
@@ -327,10 +337,10 @@ var Page = {
   MyInfo: {
     name: 'MyInfo',
     colors: [
-      {x: 734, y: 284  - adjY, r: 29 , g: 189, b: 223, match: true, threshold: 70},
-      {x: 802, y: 381  - adjY, r: 241, g: 246, b: 240, match: true, threshold: 70},
-      {x: 766, y: 1347 - adjY, r: 31 , g: 190, b: 222, match: true, threshold: 70},
-      {x: 691, y: 1584 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 70},
+      {x: 734, y: 284  - adjY, r: 29 , g: 189, b: 223, match: true, threshold: 80},
+      {x: 802, y: 381  - adjY, r: 241, g: 246, b: 240, match: true, threshold: 80},
+      {x: 766, y: 1347 - adjY, r: 31 , g: 190, b: 222, match: true, threshold: 80},
+      {x: 691, y: 1584 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
     ],
     back: {x: 576, y: 1588 - adjY},
     next: {x: 576, y: 1588 - adjY},
@@ -675,6 +685,7 @@ function Tsum(isJP, detect) {
   this.allTsumImages = {};
   this.gameTsums = [];
   this.isJP = isJP;
+  this.coinItem = false;
   this.isPause = true;
   this.receiveOneItem = false;
   this.sentToZero = false;
@@ -978,6 +989,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       var outGameItem5 = isSameColor(Button.outGameItem5.color, this.getColor(img, Button.outGameItem5), 40);
       var outGameItem6 = isSameColor(Button.outGameItem6.color, this.getColor(img, Button.outGameItem6), 40);
       // log(this.getColor(img, Button.outGameItem1), this.getColor(img, Button.outGameItem2), this.getColor(img, Button.outGameItem3), this.getColor(img, Button.outGameItem4), this.getColor(img, Button.outGameItem5), this.getColor(img, Button.outGameItem6));
+      // log(outGameItem1, outGameItem2, outGameItem3, outGameItem4, outGameItem5, outGameItem6);
       releaseImage(img);
       if (this.enableAllItems) {
         if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(500);};
@@ -995,8 +1007,10 @@ Tsum.prototype.goGamePlayingPage = function() {
         if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(500);};
       }
       if (this.tsumCount == 4) {
-        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(500);};
         if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(500);};
+      }
+      if (this.coinItem) {
+        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(500);};
       }
       this.tap(Button.outStart2);
     } else if (page == 'GamePlaying') {
@@ -1588,13 +1602,14 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, enableAllItems, detect, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, isPause, isFourTsum, coinItem, autoPlay, clearBubbles, largeImage, enableAllItems, detect, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
+  ts.coinItem = coinItem;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
@@ -1643,6 +1658,7 @@ function stop() {
 // ts = new Tsum(false, true);
 // log(ts.findPage(2, 1000));
 // ts.detect();
+// ts.coinItem = true;
 // ts.goGamePlayingPage();
 // ts.sentToZero = true;
 // ts.taskSendHearts();
