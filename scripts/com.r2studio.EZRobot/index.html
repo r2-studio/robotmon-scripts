@@ -346,7 +346,7 @@
     }
 
     function initActionDropdown() {
-      var names = ['loop', 'rbm.click', 'rbm.tapDown', 'rbm.moveTo', 'rbm.tapUp', 'rbm.swipe', 'safeSleep'];
+      var names = ['loop', 'Click', 'TapDown', 'MoveTo', 'TapUp', 'Swipe', 'safeSleep'];
       for (var i = 0; i < names.length; i++) {
         const name = names[i].replace('rbm.', '');
         $("#action-dropdown").append('<a href="#' + names[i] + '" class="action-dropdown-item">' + name + '</a>');
@@ -591,9 +591,6 @@
           $("#action-" + action + " input").each(function(e) {
             args.push(+$(this).val()); // to integer
           });
-          if (action !== 'safeSleep') {
-            action = 'rbm.' + action;
-          }
           okCallback({
             action: action,
             args: args,
@@ -668,23 +665,23 @@
           <div style="display:inline-block;" data-i18n="title.times"></div>
           <input type="number" value="3" />
         </div>
-        <div id="action-click" class="action-parameters">
+        <div id="action-Click" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
         </div>
-        <div id="action-tapDown" class="action-parameters">
+        <div id="action-TapDown" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
         </div>
-        <div id="action-moveTo" class="action-parameters">
+        <div id="action-MoveTo" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
         </div>
-        <div id="action-tapUp" class="action-parameters">
+        <div id="action-TapUp" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
         </div>
-        <div id="action-swipe" class="action-parameters">
+        <div id="action-Swipe" class="action-parameters">
           <div class="row center-block">
             X1: <input type="number" value="100" />
             Y1: <input type="number" value="100" />
