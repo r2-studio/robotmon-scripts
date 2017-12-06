@@ -251,6 +251,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
 
   <script>
+    if (typeof String.prototype.startsWith != 'function') {
+      // see below for better implementation!
+      String.prototype.startsWith = function (str){
+        return this.indexOf(str) === 0;
+      };
+    }
+
     TAG = "EZRobot";
     VERSION = 2;
     var setting = [];
@@ -348,7 +355,7 @@
     function initActionDropdown() {
       var names = ['loop', 'Click', 'TapDown', 'MoveTo', 'TapUp', 'Swipe', 'safeSleep'];
       for (var i = 0; i < names.length; i++) {
-        const name = names[i].replace('rbm.', '');
+        var name = names[i].replace('rbm.', '');
         $("#action-dropdown").append('<a href="#' + names[i] + '" class="action-dropdown-item">' + name + '</a>');
       }
       $(".action-dropdown-item").off("click").on("click", function() {
@@ -357,6 +364,7 @@
         $("#action-dropdown-btn").text(name);
         $(".action-parameters").hide();
         $("#action-" + href).show();
+        document.getElementById("action-dropdown").classList.toggle("show");
       });
       $("#action-dropdown-btn").text(names[0]);
       $("#action-loop").show();
@@ -623,18 +631,6 @@
     }
     function selectActionDropdown() {
       document.getElementById("action-dropdown").classList.toggle("show");
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          if (dropdowns[i].classList.contains('show')) {
-            dropdowns[i].classList.remove('show');
-          }
-        }
-      }
     }
   </script>
 </head>
