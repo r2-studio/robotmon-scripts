@@ -33,7 +33,7 @@
     },
     "com.r2studio.EZRobot": {
       "title": "EZRobot",
-      "versionCode": 2,
+      "versionCode": 3,
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",

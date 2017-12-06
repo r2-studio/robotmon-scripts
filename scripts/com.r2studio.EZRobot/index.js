@@ -32,6 +32,28 @@ var testConfig = [{
   ],
 }];
 
+var Click = function(x, y) {
+  rbm.click({x: x, y: y});
+};
+var TapDown = function(x, y) {
+  rbm.tapDown({x: x, y: y});
+};
+var MoveTo = function(x, y) {
+  rbm.moveTo({x: x, y: y});
+};
+var TapUp = function(x, y) {
+  rbm.moveTo({x: x, y: y});
+};
+var Swipe = function(x1, y1, x2, y2) {
+  rbm.swipe({x: x1, y: y1}, {x: x2, y: y2}, 4);
+};
+var Home = function() {
+  keycode('HOME');
+}
+var Back = function() {
+  keycode('BACK');
+}
+
 function safeSleep(t) {
   if (t == undefined) {
     t = 200;

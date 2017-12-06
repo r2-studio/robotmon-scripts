@@ -251,8 +251,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
 
   <script>
+    if (typeof String.prototype.startsWith != 'function') {
+      // see below for better implementation!
+      String.prototype.startsWith = function (str){
+        return this.indexOf(str) === 0;
+      };
+    }
+
     TAG = "EZRobot";
-    VERSION = 2;
+    VERSION = 3;
     var setting = [];
     var noSetting = 'No Setting';
 
@@ -342,13 +349,14 @@
       $(".setting-dropdown-item").off("click").on("click", function() {
         var name = $(this).text();
         $("#setting-dropdown-btn").text(name);
+        $("#setting-dropdown").removeClass("show");
       });
     }
 
     function initActionDropdown() {
-      var names = ['loop', 'rbm.click', 'rbm.tapDown', 'rbm.moveTo', 'rbm.tapUp', 'rbm.swipe', 'safeSleep'];
+      var names = ['loop', 'Click', 'TapDown', 'MoveTo', 'TapUp', 'Swipe', 'safeSleep'];
       for (var i = 0; i < names.length; i++) {
-        const name = names[i].replace('rbm.', '');
+        var name = names[i].replace('rbm.', '');
         $("#action-dropdown").append('<a href="#' + names[i] + '" class="action-dropdown-item">' + name + '</a>');
       }
       $(".action-dropdown-item").off("click").on("click", function() {
@@ -357,6 +365,7 @@
         $("#action-dropdown-btn").text(name);
         $(".action-parameters").hide();
         $("#action-" + href).show();
+        $("#action-dropdown").removeClass("show");
       });
       $("#action-dropdown-btn").text(names[0]);
       $("#action-loop").show();
@@ -591,9 +600,6 @@
           $("#action-" + action + " input").each(function(e) {
             args.push(+$(this).val()); // to integer
           });
-          if (action !== 'safeSleep') {
-            action = 'rbm.' + action;
-          }
           okCallback({
             action: action,
             args: args,
@@ -622,22 +628,10 @@
     /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
     function selectSettingDropdown() {
-      document.getElementById("setting-dropdown").classList.toggle("show");
+      $("#setting-dropdown").addClass("show");
     }
     function selectActionDropdown() {
-      document.getElementById("action-dropdown").classList.toggle("show");
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          if (dropdowns[i].classList.contains('show')) {
-            dropdowns[i].classList.remove('show');
-          }
-        }
-      }
+      $("#action-dropdown").addClass("show");
     }
   </script>
 </head>
@@ -668,23 +662,23 @@
           <div style="display:inline-block;" data-i18n="title.times"></div>
           <input type="number" value="3" />
         </div>
-        <div id="action-click" class="action-parameters">
+        <div id="action-Click" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
         </div>
-        <div id="action-tapDown" class="action-parameters">
+        <div id="action-TapDown" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
         </div>
-        <div id="action-moveTo" class="action-parameters">
+        <div id="action-MoveTo" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
         </div>
-        <div id="action-tapUp" class="action-parameters">
+        <div id="action-TapUp" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
         </div>
-        <div id="action-swipe" class="action-parameters">
+        <div id="action-Swipe" class="action-parameters">
           <div class="row center-block">
             X1: <input type="number" value="100" />
             Y1: <input type="number" value="100" />
