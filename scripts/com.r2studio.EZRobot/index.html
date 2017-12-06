@@ -591,6 +591,9 @@
           $("#action-" + action + " input").each(function(e) {
             args.push(+$(this).val()); // to integer
           });
+          if (action !== 'safeSleep') {
+            action = 'rbm.' + action;
+          }
           okCallback({
             action: action,
             args: args,
