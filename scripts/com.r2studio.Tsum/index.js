@@ -275,7 +275,7 @@ var Page = {
       {x: 478, y: 1008 - adjY, r: 236, g: 94, b: 116, match: true, threshold: 80},
       {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
     ],
-    back: {x: 356, y: 1008 - adjY},
+    back: {x: 885, y: 1008 - adjY},
     next: {x: 885, y: 1012 - adjY},
   },
   NetworkTimeout: {
