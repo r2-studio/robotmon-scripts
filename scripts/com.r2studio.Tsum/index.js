@@ -17,8 +17,12 @@ function isSameColor(c1, c2, diff) {
   return true;
 }
 
+function absColor(c1, c2) {
+  return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
+}
+
 function log() {
-  this.sleep(30);
+  this.sleep(10);
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
       arguments[i] = JSON.stringify(arguments[i]);
@@ -38,8 +42,8 @@ var Config = {
   tsumBoundW: 13, // tsumWidth / 2 + 2
   tsumBoundH: 13,
   screenResize: 200,
-  loadRotatedCount: 8,
-  tsumFiles: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_anna_s", "block_annac_s", "block_annaf_s", "block_ariel_s", "block_arielr_s", "block_arlo_s", "block_aurora_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_bb8_s", "block_beast_s", "block_beastl_s", "block_belle_s", "block_bellel_s", "block_brerrabbit_s", "block_buzz_s", "block_c3po_s", "block_carl_s", "block_charming_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chip_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_clarice_s", "block_claricepi_s", "block_cruella_s", "block_crush_s", "block_daisy_s", "block_daisyn_s", "block_daisyv_s", "block_daisyx_s", "block_dale_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_davyjones_s", "block_deathtrooper_s", "block_donald_s", "block_donaldn_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx_s", "block_dory_s", "block_dumbott_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsa_s", "block_elsac_s", "block_elsaf_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_finnick_s", "block_flounder_s", "block_flynn_s", "block_gaston_s", "block_genie_s", "block_goofy_s", "block_goofyh2016_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_jack_s", "block_jacksparrow2_s", "block_jacksparrow_s", "block_jackx_s", "block_jafartt_s", "block_jailerdog_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen2_s", "block_littlegreenmen_s", "block_lotso_s", "block_luke_s", "block_lukej_s", "block_lumiere_s", "block_madhatter_s", "block_madhatterj_s", "block_maleficent_s", "block_maleficentd_s", "block_marchhare_s", "block_marie_s", "block_mater_s", "block_maui_s", "block_max_s", "block_maximus_s", "block_mcqueentt_s", "block_megara_s", "block_mickey_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeyp_s", "block_mickeypi_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_mike_s", "block_mikeu_s", "block_minnie_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_mulan_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_oswald_s", "block_oswaldsp_s", "block_pascal_s", "block_perry_s", "block_pete_s", "block_peteb_s", "block_phillip2_s", "block_phillip_s", "block_piglet_s", "block_ping_s", "block_pinocchio_s", "block_pluto_s", "block_plutoh2015_s", "block_plutox_s", "block_pocahontas_s", "block_pooh_s", "block_poohr_s", "block_potts_s", "block_pudding_s", "block_puffy_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_ramirez_s", "block_randall_s", "block_rapunzel2_s", "block_rapunzel_s", "block_rapunzelb_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_salazar_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite_s", "block_sora_s", "block_souffle_s", "block_stitch_s", "block_stitchf_s", "block_stitchh_s", "block_stitchpi_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tigger_s", "block_tiggerr_s", "block_tinkerbell_s", "block_tinkerbellp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_walle_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_woody_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s"],
+  loadRotatedCount: 10,
+  tsumFiles: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_anna_s", "block_annac_s", "block_annaf_s", "block_ariel_s", "block_arielr_s", "block_arlo_s", "block_aurora_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_bb8_s", "block_beast_s", "block_beastl_s", "block_belle_s", "block_bellel_s", "block_bluefairy_s", "block_brerrabbit_s", "block_buzz_s", "block_c3po_s", "block_carl_s", "block_charming_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chip_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_clarice_s", "block_claricepi_s", "block_cruella_s", "block_crush_s", "block_daisy_s", "block_daisyn_s", "block_daisyv_s", "block_daisyx_s", "block_dale_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_davyjones_s", "block_deathtrooper_s", "block_donald_s", "block_donaldn_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx_s", "block_dory_s", "block_dumbo_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsa_s", "block_elsac_s", "block_elsaf_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_finnick_s", "block_flounder_s", "block_flynn_s", "block_gaston_s", "block_genie_s", "block_goofy_s", "block_goofyh2016_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_jack_s", "block_jacksparrow2_s", "block_jacksparrow_s", "block_jackx_s", "block_jafar_s", "block_jailerdog_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen2_s", "block_littlegreenmen_s", "block_lotso_s", "block_luke_s", "block_lukej_s", "block_lumiere_s", "block_madhatter_s", "block_madhatterj_s", "block_maleficent_s", "block_maleficentd_s", "block_marchhare_s", "block_marie_s", "block_mater_s", "block_maui_s", "block_max_s", "block_maximus_s", "block_mcqueen_s", "block_megara_s", "block_mickey_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeyp_s", "block_mickeypi_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_mike_s", "block_mikeu_s", "block_minnie_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_mulan_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_oswald_s", "block_oswaldsp_s", "block_pascal_s", "block_patch_s", "block_perry_s", "block_pete_s", "block_peteb_s", "block_peterpan_s", "block_phillip2_s", "block_phillip_s", "block_piglet_s", "block_ping_s", "block_pinocchio_s", "block_pluto_s", "block_plutoh2015_s", "block_plutox_s", "block_pocahontas_s", "block_pooh_s", "block_poohr_s", "block_potts_s", "block_pudding_s", "block_puffy_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_ramirez_s", "block_randall_s", "block_rapunzel2_s", "block_rapunzel_s", "block_rapunzelb_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_salazar_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite_s", "block_sora_s", "block_souffle_s", "block_stitch_s", "block_stitchf_s", "block_stitchh_s", "block_stitchpi_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tigger_s", "block_tiggerr_s", "block_timothy_s", "block_tinkerbell_s", "block_tinkerbellp_s", "block_tramp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_walle_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_woody_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s"],
   tsumFilesJP: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_anna_s", "block_annac_s", "block_annaf_s", "block_ariel_s", "block_arielr_s", "block_arlo_s", "block_aurora_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_baymaxx_s", "block_bb8_s", "block_beast_s", "block_beastl_s", "block_belle_s", "block_bellel_s", "block_bluefairy_s", "block_boogie_s", "block_brerrabbit_s", "block_buzz_s", "block_c3po_s", "block_carl_s", "block_charming_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chip_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_clarice_s", "block_claricepi_s", "block_cruella_s", "block_crush_s", "block_daisy_s", "block_daisyn_s", "block_daisyv_s", "block_daisyx_s", "block_dale_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_davyjones_s", "block_deathtrooper_s", "block_donald_s", "block_donaldht_s", "block_donaldhtskill_s", "block_donaldn_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx2_s", "block_donaldx_s", "block_dory_s", "block_drossel_s", "block_dumbo_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsa_s", "block_elsac_s", "block_elsaf_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_finnick_s", "block_flounder_s", "block_flynn_s", "block_gaston_s", "block_genie_s", "block_goofy_s", "block_goofyh2016_s", "block_goofyht_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_hunnypot_s", "block_jack_s", "block_jacksparrow2_s", "block_jacksparrow_s", "block_jackx_s", "block_jafar_s", "block_jailerdog_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen2_s", "block_littlegreenmen_s", "block_lotso_s", "block_luke_s", "block_lukej_s", "block_lumiere_s", "block_lumpy_s", "block_madhatter_s", "block_madhatterj_s", "block_maleficent_s", "block_maleficentd_s", "block_marchhare_s", "block_marie_s", "block_mariex_s", "block_mater_s", "block_maui_s", "block_max_s", "block_maximus_s", "block_mcqueen_s", "block_megara_s", "block_mickey_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeyp_s", "block_mickeypi_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_mike_s", "block_mikeu_s", "block_minnie_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh2017_s", "block_minnieh_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_mulan_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_oswald_s", "block_oswaldsp_s", "block_owl_s", "block_pascal_s", "block_patch_s", "block_perry_s", "block_pete_s", "block_peteb_s", "block_peterpan_s", "block_phillip2_s", "block_phillip_s", "block_piglet2_s", "block_piglet_s", "block_ping_s", "block_pinocchio_s", "block_pluto_s", "block_plutoh2015_s", "block_plutox_s", "block_pocahontas_s", "block_pooh2_s", "block_pooh_s", "block_poohr_s", "block_potts_s", "block_prince_s", "block_pudding_s", "block_puffy_s", "block_pumpkinking_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_ramirez_s", "block_randall_s", "block_rapunzel2_s", "block_rapunzel_s", "block_rapunzelb_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_salazar_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite2_s", "block_snowwhite_s", "block_sora_s", "block_soraht_s", "block_souffle_s", "block_stitch_s", "block_stitchf_s", "block_stitchh_s", "block_stitchpi_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tigger_s", "block_tiggerr_s", "block_timothy_s", "block_tinkerbell_s", "block_tinkerbellp_s", "block_tramp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_walle_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_woody_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s"],
   rotations: ['0', '45', '90', '135', '180', '225', '270', '315'],
   gameContinueDelay: 400,
@@ -55,7 +59,7 @@ var Config = {
 var adjY = 78;
 var Button = {
   gameBubblesFrom: {x: 100, y: 560 - adjY},
-  gameBubblesTo: {x: 1000, y: 1310 - adjY},
+  gameBubblesTo: {x: 1000, y: 1460 - adjY},
   gameMyTsum: {x: 100, y: 1450 - adjY},
   gameQuestionCancel: {x: 400, y: 1280 - adjY},
   gameQuestionCancel2: {x: 400, y: 1000 - adjY},
@@ -72,6 +76,8 @@ var Button = {
   gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameMagicalTime1: {x: 320, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameMagicalTime2: {x: 750, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime3: {x: 320, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime4: {x: 750, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   outGameItem1: {x: 241, y: 770 - adjY, color:{ r: 42, g: 109, b: 190}},
   outGameItem2: {x: 496, y: 788 - adjY, color:{ r: 47, g: 113, b: 197}},
   outGameItem3: {x: 709, y: 781 - adjY, color:{ r: 34, g: 102, b: 185}},
@@ -89,7 +95,8 @@ var Button = {
   outReceiveClose: {x: 530, y: 1300 - adjY},
   outReceiveOne: {x: 840, y: 497 - adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outReceiveLoading: {x: 610, y: 860 - adjY, color: {"a":0,"b":84,"g":71,"r":57}, color2: {r: 60, g: 98, b: 147}},
+  outIsLoading1: {x: 540, y: 720 - adjY, color: {"a":0,"b":255,"g":255,"r":255}},
+  outIsLoading2: {x: 540, y: 910 - adjY, color: {"a":0,"b":255,"g":255,"r":255}},
   outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
   outDisconnected: {x:  147, y: 1008 - adjY, color: {r: 243, g: 89, b: 117}},
   outSendHeartTop: {x: 910, y: 430 - adjY},
@@ -107,6 +114,237 @@ var Button = {
   skillLuke1: {x: 970, y: 1270 - adjY},
   outReceiveNameFrom: {x: 160, y: 460 - adjY},
   outReceiveNameTo: {x: 620, y: 555 - adjY},
+};
+
+var Page = {
+  TodayMission: {
+    name: 'TodayMission',
+    colors: [
+      {x: 540, y: 1408 - adjY, r: 238, g: 181, b: 12 , match: true, threshold: 80},
+      {x: 975, y: 428  - adjY, r: 161, g: 224, b: 231, match: true, threshold: 80},
+      {x: 554, y: 1260 - adjY, r: 24 , g: 189, b: 219, match: true, threshold: 80},
+    ],
+    back: {x: 558, y: 1473},
+    next: {x: 558, y: 1473},
+  },
+  ScorePage: {
+    name: 'ScorePage',
+    colors: [
+      {x: 302, y: 1509 - adjY, r: 235, g: 184, b: 7  , match: true, threshold: 80},
+      {x: 777, y: 1516 - adjY, r: 248, g: 142, b: 20 , match: true, threshold: 80},
+      {x: 774, y: 428  - adjY, r: 243, g: 248, b: 242, match: true, threshold: 80},
+    ],
+    back: {x: 309, y: 1581 - adjY},
+    next: {x: 784, y: 1581 - adjY},
+  },
+  FriendPage: {
+    name: 'FriendPage',
+    colors: [
+      {x: 547, y: 1520 - adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
+      {x: 187, y: 1527 - adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
+      {x: 860, y: 1505 - adjY, r: 238, g: 189, b: 11 , match: true, threshold: 80},
+      {x: 698, y: 392  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+    ],
+    back: {x: 547, y: 1581 - adjY},
+    next: {x: 547, y: 1581 - adjY},
+  },
+  GiftHeart: {
+    name: 'GiftHeart',
+    colors: [
+      {x: 216, y: 1012 - adjY, r: 233, g: 172, b: 6, match: true, threshold: 80},
+      {x: 673, y: 1008 - adjY, r: 235, g: 174, b: 8, match: true, threshold: 80},
+      {x: 468, y: 731  - adjY, r: 214, g: 61 , b: 143, match: true, threshold: 100},
+      {x: 572, y: 489  - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
+      {x: 583, y: 1123 - adjY, r: 28 , g: 186, b: 221, match: true, threshold: 80},
+    ],
+    back: {x: 774, y: 1023 - adjY},
+    next: {x: 320, y: 1019 - adjY},
+  },
+  MailBox: {
+    name: 'MailBox',
+    colors: [
+      {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 604, y: 1347 - adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80},
+    ],
+    back: {x: 561, y: 1581 - adjY},
+    next: {x: 561, y: 1581 - adjY},
+  },
+  MailBox2: {
+    name: 'MailBox2',
+    colors: [
+      {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 619, y: 1354 - adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80},
+    ],
+    back: {x: 561, y: 1581 - adjY},
+    next: {x: 561, y: 1581 - adjY},
+  },
+  ReceiveHeart: {
+    name: 'ReceiveHeart',
+    colors: [
+      {x: 208, y: 1008 - adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
+      {x: 662, y: 1008 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+      {x: 561, y: 482  - adjY, r: 28 , g: 191, b: 222, match: true, threshold: 80},
+      {x: 565, y: 1138 - adjY, r: 30 , g: 195, b: 225, match: true, threshold: 80},
+      {x: 334, y: 745  - adjY, r: 213, g: 62 , b: 143, match: true, threshold: 90},
+      {x: 586, y: 749  - adjY, r: 248, g: 249, b: 51 , match: true, threshold: 100},
+    ],
+    back: {x: 774, y: 1023 - adjY},
+    next: {x: 320, y: 1019 - adjY},
+  },
+  Received: {
+    name: 'Received',
+    colors: [
+      {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
+      {x: 806, y: 817 - adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
+      {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
+    ],
+    back: {x: 774, y: 1023 - adjY},
+    next: {x: 320, y: 1019 - adjY},
+  },
+  StartPage: {
+    name: 'StartPage',
+    colors: [
+      {x: 752, y: 399  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 856, y: 1358 - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
+      {x: 169, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
+      {x: 547, y: 1509 - adjY, r: 235, g: 118, b: 134, match: true, threshold: 80},
+      {x: 792, y: 1588 - adjY, r: 234, g: 171, b: 8, match: true, threshold: 100},
+    ],
+    back: {x: 190, y: 1574 - adjY},
+    next: {x: 558, y: 1563 - adjY},
+  },
+  SettingPage: {
+    name: 'SettingPage',
+    colors: [
+      {x: 741, y: 345  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 363, y: 504  - adjY, r: 21 , g: 184, b: 219, match: true, threshold: 80},
+      {x: 464, y: 1084 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
+      {x: 903, y: 1228 - adjY, r: 237, g: 176, b: 10 , match: true, threshold: 80},
+      {x: 554, y: 1516 - adjY, r: 236, g: 180, b: 9 , match: true, threshold: 80},
+    ],
+    back: {x: 565, y: 1577 - adjY},
+    next: {x: 565, y: 1577 - adjY},
+  },
+  TsumsPage: {
+    name: 'TsumsPage',
+    colors: [
+      {x: 514, y: 842  - adjY, r: 41, g: 177, b: 203 , match: true, threshold: 80},
+      {x: 180, y: 1520 - adjY, r: 238, g: 180, b: 11 , match: true, threshold: 100},
+      {x: 817, y: 1516 - adjY, r: 238, g: 191, b: 13 , match: true, threshold: 80},
+    ],
+    back: {x: 176, y: 1520 - adjY},
+    next: {x: 176, y: 1520 - adjY},
+  },
+  GamePause: {
+    name: 'GamePause',
+    colors: [
+      {x: 165, y: 1005 - adjY, r: 234, g: 173, b: 7  , match: true, threshold: 80},
+      {x: 594, y: 1001 - adjY, r: 233, g: 171, b: 8  , match: true, threshold: 80},
+      {x: 367, y: 702  - adjY, r: 24 , g: 191, b: 225, match: true, threshold: 80},
+      {x: 738, y: 540  - adjY, r: 248, g: 244, b: 245 , match: true, threshold: 80},
+      {x: 550, y: 1264 - adjY, r: 236, g: 182, b: 11  , match: true, threshold: 80},
+    ],
+    back: {x: 331, y: 1008 - adjY},
+    next: {x: 561, y: 1350 - adjY},
+  },
+  GamePlaying: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 982, y: 194  - adjY, r: 236, g: 192, b: 5, match: true, threshold: 80},
+      {x: 986, y: 1563 - adjY, r: 236, g: 191, b: 2, match: true, threshold: 80},
+    ],
+    back: {x: 986, y: 201 - adjY},
+    next: {x: 986, y: 201 - adjY},
+  },
+  MagicalTime: {
+    name: 'MagicalTime',
+    colors: [
+      {x: 817, y: 435  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 594, y: 785  - adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
+      {x: 208, y: 1145 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
+      {x: 662, y: 1141 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+    ],
+    back: {x: 381, y: 1149 - adjY},
+    next: {x: 856, y: 1149 - adjY},
+  },
+  NetworkDisable: {
+    name: 'NetworkDisable',
+    colors: [
+      {x: 478, y: 1008 - adjY, r: 236, g: 94, b: 116, match: true, threshold: 80},
+      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
+    ],
+    back: {x: 885, y: 1008 - adjY},
+    next: {x: 885, y: 1012 - adjY},
+  },
+  NetworkTimeout: {
+    name: 'NetworkTimeout',
+    colors: [
+      {x: 478, y: 1008 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
+    ],
+    back: {x: 885, y: 1012 - adjY},
+    next: {x: 885, y: 1012 - adjY},
+  },
+  HighScore: {
+    name: 'HighScore',
+    colors: [
+      {x: 298, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
+      {x: 810, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
+    ],
+    back: {x: 298, y: 1253 - adjY},
+    next: {x: 810, y: 1253 - adjY},
+  },
+  RankUp: {
+    name: 'RankUp',
+    colors: [
+      {x: 327, y: 1458 - adjY, r: 236, g: 175, b: 9, match: true, threshold: 80},
+      {x: 792, y: 1455 - adjY, r: 234, g: 173, b: 5, match: true, threshold: 80},
+    ],
+    back: {x: 327, y: 1458 - adjY},
+    next: {x: 792, y: 1455 - adjY},
+  },
+  InvitePage: {
+    name: 'InvitePage',
+    colors: [
+      {x: 342, y: 835  - adjY, r: 58 , g: 87 , b: 145, match: true, threshold: 80},
+      {x: 669, y: 832  - adjY, r: 0  , g: 181, b: 1  , match: true, threshold: 80},
+      {x: 536, y: 1271 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
+    ],
+    back: {x: 576, y: 1314 - adjY},
+    next: {x: 576, y: 1314 - adjY},
+  },
+  EventPage: {
+    name: 'EventPage',
+    colors: [
+      {x: 554, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
+      {x: 997, y: 1617 - adjY, r: 230, g: 169, b: 3 , match: true, threshold: 80},
+    ],
+    back: {x: 554, y: 1509 - adjY},
+    next: {x: 554, y: 1509 - adjY},
+  },
+  FriendInfo: {
+    name: 'FriendInfo',
+    colors: [
+      {x: 565, y: 504   - adjY, r: 31, g: 190, b: 220, match: true, threshold: 80},
+      {x: 547, y: 1123  - adjY, r: 27, g: 192, b: 222 , match: true, threshold: 80},
+      {x: 554, y: 1260  - adjY, r: 238, g: 186, b: 12, match: true, threshold: 80},
+    ],
+    back: {x: 576, y: 1336 - adjY},
+    next: {x: 576, y: 1336 - adjY},
+  },
+  MyInfo: {
+    name: 'MyInfo',
+    colors: [
+      {x: 734, y: 284  - adjY, r: 29 , g: 189, b: 223, match: true, threshold: 80},
+      {x: 802, y: 381  - adjY, r: 241, g: 246, b: 240, match: true, threshold: 80},
+      {x: 766, y: 1347 - adjY, r: 31 , g: 190, b: 222, match: true, threshold: 80},
+      {x: 691, y: 1584 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
+    ],
+    back: {x: 576, y: 1588 - adjY},
+    next: {x: 576, y: 1588 - adjY},
+  },
 };
 
 // Utils for Tsum
@@ -227,7 +465,7 @@ function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug) {
     printMaxScores(gameTsums);
   }
   // Remove same Tsums
-  removeSameTsumImages(gameTsums, 0.88);
+  removeSameTsumImages(gameTsums, 0.92);
   console.log('after remove same tsums', gameTsums.length);
   if (debug) {
     printMaxScores(gameTsums);
@@ -235,7 +473,7 @@ function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug) {
   
   loadTsumRotationImages(gameTsums, isJP, debug);
   // recheck first 5(4) tsums with rotation
-  for (var i = 0; i < gameTsums.length && i < 8; i++) {
+  for (var i = 0; i < gameTsums.length && i < Config.loadRotatedCount; i++) {
     for (var j = 0; j < gameTsums[i].rotations.length; j++) {
       var tsumImage = gameTsums[i].rotations[j];
       var xyScore = findImage(boardImg, tsumImage);
@@ -419,7 +657,7 @@ function calculatePaths(board) {
 
 // Tsum struct
 
-function Tsum(isJP) {
+function Tsum(isJP, detect) {
   this.debug = true;
   this.isRunning = true;
   this.myTsum = '';
@@ -447,6 +685,7 @@ function Tsum(isJP) {
   this.allTsumImages = {};
   this.gameTsums = [];
   this.isJP = isJP;
+  this.coinItem = false;
   this.isPause = true;
   this.receiveOneItem = false;
   this.sentToZero = false;
@@ -457,12 +696,44 @@ function Tsum(isJP) {
   this.recordImages = {};
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
-  this.init();
+  this.init(detect);
 }
 
-Tsum.prototype.init = function() {
+Tsum.prototype.detect = function() {
+  var size = getScreenSize();
+  var img = getScreenshot();
+  var top = 0;
+  var bottom = size.height - getVirtualButtonHeight();
+  for (var y = 0; y < size.height; y++) {
+    var color = getImageColor(img, size.width - 2, y);
+    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
+      top = y;
+      break;
+    }
+  }
+  for (var y = bottom - 1; y > 0; y--) {
+    var color = getImageColor(img, size.width - 2, y);
+    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
+      bottom = y+1;
+      break;
+    }
+  }
+  releaseImage(img);
+  log('Detect top bottom', top, bottom);
+  sleep(500);
+  return {top: top, bottom: bottom};
+}
+
+Tsum.prototype.init = function(detect) {
   log('Init... calculate screen size');
-  if (this.screenHeight / this.screenWidth > 1.78) {
+  if (detect) {
+    var topBottom = this.detect();
+    var h = topBottom.bottom - topBottom.top;
+    this.gameWidth = this.screenWidth;
+    this.gameHeight = this.gameWidth * 1.5;
+    this.gameOffsetX = 0;
+    this.gameOffsetY = topBottom.top + (h - this.gameHeight) / 2;
+  } else if (this.screenHeight / this.screenWidth > 1.78) {
     // currently support for note 8
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.gameWidth * 1.5;
@@ -620,58 +891,56 @@ Tsum.prototype.link = function(paths) {
       var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth/2) * this.playWidth / this.playResizeWidth);
       var y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth/2) * this.playHeight / this.playResizeHeight);
       if (j == 0) {
-        tapDown(x, y, 30);
+        tapDown(x, y, 20);
       }
-      moveTo(x, y, 30);
+      moveTo(x, y, 20);
       // moveTo(x, y, 30);
       if (j == path.length - 1) {
-        tapUp(x, y, 30);
+        tapUp(x, y, 20);
       }
     }
   }
   return isBubble;
 }
 
-Tsum.prototype.checkPage = function(wait) {
+function adsColor(c1, v2) {
+  return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
+}
+
+Tsum.prototype.findPage = function(times, timeout) {
+  if (times == undefined) {times = 2;}
+  if (timeout == undefined) {timeout = 700;}
   var start = Date.now();
   while(this.isRunning) {
-    var img = this.screenshot();
-    var isCloseBtn = isSameColor(Button.outClose.color, this.getColor(img, Button.outClose), 40);
-    var isStart1Btn = isSameColor(Button.outStart1.color, this.getColor(img, Button.outStart1), 40);
-    var isStart2Btn = isSameColor(Button.outStart2.color, this.getColor(img, Button.outStart2), 40);
-    var isGameRandBtn = isSameColor(Button.gameRand.color, this.getColor(img, Button.gameRand), 40);
-    var isGameContinue = isSameColor(Button.gameContinue.color, this.getColor(img, Button.gameContinue), 40);
-    var isGameContinue1 = isSameColor(Button.gameContinue1.color, this.getColor(img, Button.gameContinue1), 40);
-    var isGameContinue2 = isSameColor(Button.gameContinue2.color, this.getColor(img, Button.gameContinue2), 40);
-    var isMagicTime1 = isSameColor(Button.gameMagicalTime1.color, this.getColor(img, Button.gameMagicalTime1), 40);
-    var isMagicTime2 = isSameColor(Button.gameMagicalTime2.color, this.getColor(img, Button.gameMagicalTime2), 40);
-    var isGemeEnd = isSameColor(Button.outGameEnd.color, this.getColor(img, Button.outGameEnd), 40);
-    var isDisconnected1 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 40);
-    var isDisconnected2 = isSameColor(Button.outDisconnected.color, this.getColor(img, Button.outDisconnected), 40);
-    var isDisconnected3 = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outDisconnected), 40);
-    releaseImage(img);
-    // log(isCloseBtn, isStart1Btn, isStart2Btn, isGameRandBtn, isGameContinue, isGameContinue1, isGameContinue2);
-    if (isGameContinue && isGameContinue1 && isGameContinue2 && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
-      return 'pausingGame';
-    } else if (isGameRandBtn && !isCloseBtn && !isStart1Btn && !isStart2Btn) {
-      return 'playingGame';
-    } else if (isDisconnected1 && (isDisconnected2 || isDisconnected3)) {
-      return 'networkDisconnected';
-    } else if (isMagicTime1 && isMagicTime2) {
-      return 'magicTime';
-    } else if (isStart1Btn) {
-      return 'friendPage';
-    } else if (isStart2Btn) {
-      return 'startPage';
-    } else if (isCloseBtn) {
-      return 'otherPage';
-    } else if (isGemeEnd) {
-      return 'gameEnd';
+    for (var t = 0; t < times; t++) {
+      var img = this.screenshot();
+      for (var pageName in Page) {
+        var page = Page[pageName];
+        var currentPage = '';
+        for (var i = 0; i < page.colors.length; i++) {
+          var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
+          if (diff < page.colors[i].threshold && page.colors[i].match) {
+            currentPage = pageName;
+          } else if (diff >= threshold && !page.colors[i].match) {
+            currentPage = pageName;
+          } else {
+            currentPage = '';
+            break;
+          }
+        }
+        if (currentPage != '') {
+          break;
+        }
+      }
+      releaseImage(img);
+      this.sleep(100);
+    } // for times
+    if (currentPage != '') {
+      return currentPage;
     }
-    if (Date.now() - start > wait) {
+    if (Date.now() - start > timeout) {
       return 'unknown';
     }
-    this.sleep(Config.gameContinueDelay);
   }
 }
 
@@ -680,29 +949,22 @@ Tsum.prototype.goFriendPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
-    var page = this.checkPage(1500);
-    log(page);
-    if (page == 'friendPage') {
-      break;
-    } else if (page == 'startPage') {
-      this.tap(Button.gameSkillOn);
-    } else if (page == 'otherPage') {
-      this.tap(Button.outClose);
-    } else if (page == 'pausingGame') {
-      this.tap(Button.gameStop);
-    } else if (page == 'playingGame') {
-      this.tap(Button.gamePause);
-    } else if (page == 'networkDisconnected') {
-      this.tap(Button.outReceiveTimeout);
-    } else if (page == 'gameEnd') {
-      this.tap(Button.outClose2);
-    } else if (page == 'magicTime') {
-      this.tap(Button.gameMagicalTime1);
+    var page = this.findPage(2, 1000);
+    log('Current Page', page);
+    if (page == 'FriendPage') {
+      // check again
+      page = this.findPage(1, 500);
+      if (page == 'FriendPage') {
+        return;
+      }
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
       this.tap(Button.outClose);
       this.tap(Button.gameStop);
+      this.sleep(500);
+    } else {
+      this.tap(Page[page].back);
     }
     this.sleep(1000);
   }
@@ -713,11 +975,11 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
-    var page = this.checkPage(1500);
-    log('page', page);
-    if (page == 'friendPage') {
-      this.tap(Button.outStart1);
-    } else if (page == 'startPage') {
+    var page = this.findPage(2, 3000);
+    log('Current Page', page);
+    if (page == 'FriendPage') {
+      this.tap(Page[page].next);
+    } else if (page == 'StartPage') {
       this.sleep(800);
       var img = this.screenshot();
       var outGameItem1 = isSameColor(Button.outGameItem1.color, this.getColor(img, Button.outGameItem1), 40);
@@ -727,44 +989,46 @@ Tsum.prototype.goGamePlayingPage = function() {
       var outGameItem5 = isSameColor(Button.outGameItem5.color, this.getColor(img, Button.outGameItem5), 40);
       var outGameItem6 = isSameColor(Button.outGameItem6.color, this.getColor(img, Button.outGameItem6), 40);
       // log(this.getColor(img, Button.outGameItem1), this.getColor(img, Button.outGameItem2), this.getColor(img, Button.outGameItem3), this.getColor(img, Button.outGameItem4), this.getColor(img, Button.outGameItem5), this.getColor(img, Button.outGameItem6));
+      // log(outGameItem1, outGameItem2, outGameItem3, outGameItem4, outGameItem5, outGameItem6);
       releaseImage(img);
       if (this.enableAllItems) {
-        if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(200);};
-        if (outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = false; this.sleep(200);};
-        if (outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = false; this.sleep(200);};
-        if (outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = false; this.sleep(200);};
-        if (outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = false; this.sleep(200);};
-        if (outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = false; this.sleep(200);};
+        if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(500);};
+        if (outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = false; this.sleep(500);};
+        if (outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = false; this.sleep(500);};
+        if (outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = false; this.sleep(500);};
+        if (outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = false; this.sleep(500);};
+        if (outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = false; this.sleep(500);};
       } else {
-        if (!outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = true; this.sleep(200);};
-        if (!outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = true; this.sleep(200);};
-        if (!outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = true; this.sleep(200);};
-        if (!outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = true; this.sleep(200);};
-        if (!outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = true; this.sleep(200);};
-        if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(200);};
+        if (!outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = true; this.sleep(500);};
+        if (!outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = true; this.sleep(500);};
+        if (!outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = true; this.sleep(500);};
+        if (!outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = true; this.sleep(500);};
+        if (!outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = true; this.sleep(500);};
+        if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(500);};
       }
       if (this.tsumCount == 4) {
-        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(200);};
-        if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(200);};
+        if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(500);};
+      }
+      if (this.coinItem) {
+        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(500);};
       }
       this.tap(Button.outStart2);
-    } else if (page == 'otherPage') {
-      this.tap(Button.outClose);
-    } else if (page == 'pausingGame') {
-      this.tap(Button.gameContinue);
-    } else if (page == 'playingGame') {
-      break;
-    } else if (page == 'networkDisconnected') {
-      this.tap(Button.outReceiveTimeout);
-    } else if (page == 'magicTime') {
-      this.tap(Button.gameMagicalTime1);
-    } else if (page == 'gameEnd') {
-      this.tap(Button.outClose2);
+    } else if (page == 'GamePlaying') {
+      // check again
+      page = this.findPage(1, 500);
+      if (page == 'GamePlaying') {
+        return;
+      }
+    } else if (page == 'GamePause') {
+      this.tap(Page[page].next);
     } else if (page == 'unknown') {
       this.tap(Button.gameQuestionCancel);
       this.tap(Button.gameQuestionCancel2);
       this.tap(Button.outClose);
       this.tap(Button.gameStop);
+      this.sleep(500);
+    } else {
+      this.tap(Page[page].back);
     }
     this.sleep(1000);
   }
@@ -791,8 +1055,8 @@ Tsum.prototype.findMyTsum = function() {
 }
 
 Tsum.prototype.useSkill = function() {
-  var page = this.checkPage(1000);
-  if (page != 'playingGame' && page != 'pausingGame') {
+  var page = this.findPage(1, 500);
+  if (page != 'GamePlaying' && page != 'GamePause') {
     return false;
   }
   for (var i = 0; i < 2; i++) {
@@ -858,7 +1122,7 @@ Tsum.prototype.useSkill = function() {
       }
     }
   } else {
-    this.sleep(2500);
+    this.sleep(3000);
   }
   return true;
 }
@@ -867,11 +1131,10 @@ Tsum.prototype.taskPlayGame = function() {
   log('進入遊戲中...');
   this.goGamePlayingPage();
   log('遊戲中');
-  this.sleep(2400);
-
+  this.sleep(500);
   this.findMyTsum();
   log('myTsum', this.myTsum);
-  this.sleep(500);
+  // this.sleep(500);
   // start to run
   var runTimes = 0;
   var pathZero = 0;
@@ -890,17 +1153,16 @@ Tsum.prototype.taskPlayGame = function() {
       this.tap(Button.gamePause);
       this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
       this.isLoadRotateTsum = true;
-      var page = this.checkPage(3500);
-      if (page != 'playingGame' && page != 'pausingGame') {
+      var page = this.findPage(2, 1000);
+      if (page != 'GamePlaying' && page != 'GamePause') {
         log('遊戲結束');
         break;
       }
     }
     log('辨識盤面Tsum');
-    log(Date.now());
     var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug);
     if (this.debug) {
-      //saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
+      saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
     }
     releaseImage(gameImage);
 
@@ -960,11 +1222,11 @@ Tsum.prototype.taskPlayGame = function() {
     }
 
     // double check
-    var page = this.checkPage(3500);
-    if (page != 'playingGame' && page != 'pausingGame') {
-      this.sleep(Config.gameContinueDelay);
-      var page = this.checkPage(3500);
-      if (page != 'playingGame' && page != 'pausingGame') {
+    var page = this.findPage(1, 2500);
+    if (page != 'GamePlaying' && page != 'GamePause') {
+      this.sleep(500);
+      page = this.findPage(1, 2500);
+      if (page != 'GamePlaying' && page != 'GamePause') {
         log('遊戲結束');
         break;
       }
@@ -1080,6 +1342,24 @@ Tsum.prototype.clear = function() {
   execute('rm -r ' + recordDir);
 }
 
+Tsum.prototype.isLoading = function() {
+  var img = this.screenshot();
+  var fx = Button.outIsLoading1.x;
+  var fy = Button.outIsLoading1.y;
+  var ty = Button.outIsLoading2.y;
+  var whiteCount = 0;
+  for (var y = fy; y <= ty; y+=10) {
+    if (isSameColor(Button.outIsLoading1.color, this.getColor(img, {x: fx, y: y}), 30)) {
+      whiteCount++;
+    }
+  }
+  releaseImage(img);
+  if (whiteCount >= 3) {
+    return true;
+  }
+  return false;
+}
+
 Tsum.prototype.taskReceiveOneItem = function() {
   log('前往朋友頁面');
   this.goFriendPage();
@@ -1088,9 +1368,11 @@ Tsum.prototype.taskReceiveOneItem = function() {
   this.tap(Button.outReceive);
   this.sleep(2000);
 
+  var unknownPage = 0;
   var receivedCount = 0;
   var nonItemCount = 0;
   var unknownCount = 0;
+  var networkLoadingCount = 0;
   var receiveCheckLimit = 1;
   var isFinish = false;
   while (this.isRunning) {
@@ -1098,7 +1380,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
-    var isLoading = isSameColor(Button.outReceiveLoading.color, this.getColor(img, Button.outReceiveLoading), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     releaseImage(img);
     if (isTimeout) {
@@ -1109,11 +1390,16 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outReceiveOk);
       nonItemCount = 0;
       unknownCount = 0;
+      networkLoadingCount = 0;
       this.sleep(500);
       isFinish = true;
-    } else if (isLoading) {
+    } else if (this.isLoading()) {
       log('Network delay...');
-      this.tap(Button.outReceiveOk);
+      networkLoadingCount++;
+      if (networkLoadingCount > 20) {
+        this.tap(Button.outReceiveOk);
+        this.tap(Button.outStart1);
+      }
       this.sleep(300);
     } else if (isItem) {
       if (!isFinish) {
@@ -1125,6 +1411,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receivedCount++;
         nonItemCount = 0;
         unknownCount = 0;
+        networkLoadingCount = 0;
       }
       isFinish = false;
     } else if (isNonItem) {
@@ -1175,7 +1462,12 @@ Tsum.prototype.taskSendHearts = function() {
   this.sleep(2000);
 
   var retry = 0;
+  var times = 0;
   while(this.isRunning) {
+    times++;
+    if (times % 10 == 9) {
+      this.goFriendPage();
+    }
     var hfx = Button.outSendHeartFrom.x;
     var hfy = Button.outSendHeartFrom.y - 130;
     var hty = Button.outSendHeartTo.y + 60;
@@ -1235,6 +1527,7 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
+      this.sleep(100);
       this.tapDown(Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart2, 50);
@@ -1243,9 +1536,9 @@ Tsum.prototype.taskSendHearts = function() {
       this.moveTo (Button.outSendHeartTop, 500);
       this.tapUp  (Button.outSendHeartTop, 100);
 
-      this.sleep(350);
+      this.sleep(300);
       if (heartsPos.length == 0) {
-        this.sleep(750); // end bug
+        this.sleep(700); // end bug
       }
     }
   }
@@ -1309,14 +1602,14 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeImage, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
-  stop();
+function start(isJP, debug, isPause, isFourTsum, coinItem, autoPlay, clearBubbles, largeImage, enableAllItems, detect, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
-  ts = new Tsum(isJP);
+  ts = new Tsum(isJP, detect);
   ts.debug = debug;
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
+  ts.coinItem = coinItem;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
@@ -1339,25 +1632,33 @@ function start(isJP, debug, isPause, isFourTsum, autoPlay, clearBubbles, largeIm
   if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
   sleep(500);
   gTaskController.start();
+  // loop stop here...
+  log('清除殘留記憶體...');
+  ts.deinit();
+  if (ts.recordReceive) {
+    ts.releaseRecord();
+  }
+  ts = undefined;
+  log("TaskController finish...");
 }
 
 function stop() {
   if (ts != undefined) {
-    log('清除殘留記憶體...');
     ts.isRunning = false;
-    ts.deinit();
-    if (ts.recordReceive) {
-      ts.releaseRecord();
-    }
-    if (gTaskController != undefined) {gTaskController.removeAllTasks();gTaskController.stop();}
+    sleep(1000);
   }
+  if (gTaskController != undefined) {gTaskController.removeAllTasks();}
+  if (gTaskController != undefined) {gTaskController.stop();}
+  log("Stop finish...");
   sleep(2000);
-  ts = undefined;
 }
 
 // stop();
 // this.sleep(500);
-// ts = new Tsum();
+// ts = new Tsum(false, true);
+// log(ts.findPage(2, 1000));
+// ts.detect();
+// ts.coinItem = true;
 // ts.goGamePlayingPage();
 // ts.sentToZero = true;
 // ts.taskSendHearts();
@@ -1366,7 +1667,6 @@ function stop() {
 // ts.clearBubbles = false;
 // ts.taskPlayGame();
 // ts.taskReceiveAllItems();
-// var page = ts.checkPage(3500);
 // sleep(10);
 // console.log(page);
 // ts.goFriendPage();
