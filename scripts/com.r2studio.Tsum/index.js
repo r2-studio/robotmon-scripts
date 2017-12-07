@@ -83,7 +83,7 @@ var Button = {
   outGameItem3: {x: 709, y: 781 - adjY, color:{ r: 34, g: 102, b: 185}},
   outGameItem4: {x: 950, y: 817 - adjY, color:{ r: 44, g: 110, b: 194}},
   outGameItem5: {x: 262, y: 1051 - adjY, color:{ r: 34, g: 124, b: 200}},
-  outGameItem6: {x: 435, y: 1030 - adjY, color:{ r: 42, g: 108, b: 192}},
+  outGameItem6: {x: 500, y: 1105 - adjY, color:{ r: 50, g: 116, b: 200}},
   outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
