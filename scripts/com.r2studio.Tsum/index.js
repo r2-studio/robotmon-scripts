@@ -1270,16 +1270,11 @@ Tsum.prototype.readRecord = function() {
   }
 }
 
-Tsum.prototype.countReceiveHeart = function() {
-  log("記錄誰送心");
+Tsum.prototype.recognizeSender = function(img) {
+  log("辨識誰送心");
   var recordDir = getStoragePath() + '/' + Config.recordDir;
   var from = this.toResizeXYs(Button.outReceiveNameFrom);
   var to = this.toResizeXYs(Button.outReceiveNameTo);
-  var img = this.screenshot();
-
-  // for speed up
-  this.tap(Button.outReceiveOne);
-
   var nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
   var score = 0;
   var existFilename = '';
@@ -1294,9 +1289,8 @@ Tsum.prototype.countReceiveHeart = function() {
     }
   }
   console.log("Score: " + score);
-  
-  var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
   if (existFilename == '') {
+    var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
     // not found, new friend
     var filename = 'f_' + Date.now() + '.png';
     this.record[filename] = {
@@ -1307,20 +1301,25 @@ Tsum.prototype.countReceiveHeart = function() {
     this.recordImages[filename] = nameImg;
     log('新朋友，儲存', recordDir + '/' + filename);
     saveImage(nameImg, recordDir + '/' + filename);
-    saveImage(nameImg, recordDir + '/' + filename);
   } else {
-    // found
-    if (this.record[existFilename].lastReceiveTime == undefined || Date.now() - this.record[existFilename].lastReceiveTime > 2000) {
-      if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
-        this.record[existFilename].receiveCounts[dayTime] = 0;
-      }
-      this.record[existFilename].receiveCounts[dayTime]++;
-      this.record[existFilename].lastReceiveTime = Date.now();
-      log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
-    }
     releaseImage(nameImg);
   }
-  releaseImage(img);
+  return existFilename;
+}
+
+Tsum.prototype.countReceiveHeart = function(existFilename) {
+  if (existFilename == "") {
+    return;
+  }
+  log("計算誰送心");
+  var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
+  // found
+  if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
+    this.record[existFilename].receiveCounts[dayTime] = 0;
+  }
+  this.record[existFilename].receiveCounts[dayTime]++;
+  this.record[existFilename].lastReceiveTime = Date.now();
+  log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
 }
 
 Tsum.prototype.saveRecord = function() {
@@ -1363,18 +1362,17 @@ Tsum.prototype.isLoading = function() {
 Tsum.prototype.taskReceiveOneItem = function() {
   log('前往朋友頁面');
   this.goFriendPage();
-  this.sleep(1000);
+  this.sleep(1000)
+  this.tap(Button.outReceive);;
   log('一個一個接收物品');
-  this.tap(Button.outReceive);
-  this.sleep(2000);
+  this.sleep(1000);
 
   var unknownPage = 0;
   var receivedCount = 0;
-  var nonItemCount = 0;
-  var unknownCount = 0;
-  var networkLoadingCount = 0;
   var receiveCheckLimit = 1;
-  var isFinish = false;
+
+  var sender = "";
+  var receiveTime = Date.now();
   while (this.isRunning) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
@@ -1382,69 +1380,51 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     releaseImage(img);
-    if (isTimeout) {
-      log('Try again... wait 2 sec');
-      this.tap(Button.outReceiveOk);
-      this.sleep(2000);
-    } else if (isOk) {
-      this.tap(Button.outReceiveOk);
-      nonItemCount = 0;
-      unknownCount = 0;
-      networkLoadingCount = 0;
-      this.sleep(500);
-      isFinish = true;
-    } else if (this.isLoading()) {
-      log('Network delay...');
-      networkLoadingCount++;
-      if (networkLoadingCount > 10) {
-        this.tap(Button.outReceiveOk);
-        this.tap(Button.outStart1);
-      }
-      this.sleep(300);
-    } else if (isItem) {
-      if (!isFinish) {
-        if (this.recordReceive) {
-          this.countReceiveHeart();
-          this.saveRecord();
-        }
+    if (isItem) {
+      if (this.recordReceive) {
+        var img = this.screenshot();
         this.tap(Button.outReceiveOne);
-        receivedCount++;
-        nonItemCount = 0;
-        unknownCount = 0;
-        networkLoadingCount = 0;
+        sender = this.recognizeSender(img);
+        releaseImage(img);
       }
-      isFinish = false;
-    } else if (isNonItem) {
+      this.tap(Button.outReceiveOne);
+      this.sleep(300);
+    } else if (isOk) {
+      if (this.recordReceive && sender != "") {
+        this.countReceiveHeart(sender);
+        this.saveRecord();
+        sender = "";
+      }
       this.tap(Button.outReceiveOk);
-      nonItemCount++;
-      unknownCount = 0;
+      receivedCount++;
+    } else if (isTimeout) {
+      log('Try again... wait 1 sec');
+      this.tap(Button.outReceiveOk);
+      this.sleep(1000);
     } else {
-      this.tap(Button.outReceiveOk);
-      unknownCount++;
-      isFinish = false;
+      this.tap(Button.outReceiveClose);
     }
-    this.sleep(500);
-    if (unknownCount >= 8) {
-      log('停在未知頁面太久，離開');
+    this.sleep(200);
+
+    if (!isNonItem) {
+      receiveTime = Date.now();
+    }
+    
+    if (Date.now() - receiveTime > 2000) {
       this.tap(Button.outClose);
       this.goFriendPage();
-      break;
-    }
-    if (nonItemCount >= 3) {
-      this.tap(Button.outClose);
-      this.goFriendPage();
-      this.sleep(800);
+      this.sleep(500);
       if (receivedCount == 0 || receiveCheckLimit >= this.receiveCheckLimit) {
         log('結束接收物品');
         break;
       } else {
         receiveCheckLimit++;
-        log('檢查還有沒有物品');
-        this.sleep(1000);
         receivedCount = 0;
-        nonItemCount = 0;
+        sender = "";
+        log('檢查還有沒有物品');
+        this.sleep(500);
         this.tap(Button.outReceive);
-        this.sleep(2000);
+        this.sleep(1500);
       }
     }
   }
