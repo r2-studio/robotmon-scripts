@@ -148,6 +148,17 @@ var Page = {
     back: {x: 547, y: 1581 - adjY},
     next: {x: 547, y: 1581 - adjY},
   },
+  FriendPage2: {
+    name: 'FriendPage',
+    colors: [
+      {x: 547, y: 1520 - adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
+      {x: 187, y: 1527 - adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
+      {x: 799, y: 1581 - adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80},
+      {x: 698, y: 392  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+    ],
+    back: {x: 547, y: 1581 - adjY},
+    next: {x: 547, y: 1581 - adjY},
+  },
   GiftHeart: {
     name: 'GiftHeart',
     colors: [
@@ -764,6 +775,7 @@ Tsum.prototype.init = function(detect) {
     log('Game OffsetXY', this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
     this.sleep(1000);
   }
+  execute("mkdir -p " + getStoragePath() + '/' + Config.recordDir);
 }
 
 Tsum.prototype.deinit = function() {
@@ -914,8 +926,9 @@ Tsum.prototype.findPage = function(times, timeout) {
   while(this.isRunning) {
     for (var t = 0; t < times; t++) {
       var img = this.screenshot();
-      for (var pageName in Page) {
-        var page = Page[pageName];
+      for (var key in Page) {
+        var page = Page[key];
+        var pageName = page.name;
         var currentPage = '';
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
@@ -1202,7 +1215,7 @@ Tsum.prototype.taskPlayGame = function() {
       log("Clear bubbles");
       clearBubbles = 0;
       for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
-        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 140) {
+        for (var by = Button.gameBubblesFrom.y + 280; by <= Button.gameBubblesTo.y; by += 140) {
           this.tap({x: bx, y: by}, 10);
         }
       }
@@ -1301,6 +1314,12 @@ Tsum.prototype.recognizeSender = function(img) {
     this.recordImages[filename] = nameImg;
     log('新朋友，儲存', recordDir + '/' + filename);
     saveImage(nameImg, recordDir + '/' + filename);
+    this.sleep(80);
+    var check = execute("ls " + recordDir + '/' + filename);
+    if (check.indexOf(filename) == -1) {
+      log("Save image fail. Resave it.");
+      saveImage(nameImg, recordDir + '/' + filename);
+    }
   } else {
     releaseImage(nameImg);
   }
@@ -1375,7 +1394,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var receiveTime = Date.now();
   while (this.isRunning) {
     var img = this.screenshot();
-    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
+    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
@@ -1383,20 +1402,22 @@ Tsum.prototype.taskReceiveOneItem = function() {
     if (isItem) {
       if (this.recordReceive) {
         var img = this.screenshot();
-        this.tap(Button.outReceiveOne);
-        sender = this.recognizeSender(img);
+        var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
+        if (isItem2) {
+          this.tap(Button.outReceiveOne);
+          sender = this.recognizeSender(img);
+        }
         releaseImage(img);
       }
       this.tap(Button.outReceiveOne);
-      this.sleep(300);
     } else if (isOk) {
       if (this.recordReceive && sender != "") {
         this.countReceiveHeart(sender);
-        this.saveRecord();
         sender = "";
       }
       this.tap(Button.outReceiveOk);
       receivedCount++;
+      this.saveRecord();
     } else if (isTimeout) {
       log('Try again... wait 1 sec');
       this.tap(Button.outReceiveOk);
@@ -1445,7 +1466,7 @@ Tsum.prototype.taskSendHearts = function() {
   var times = 0;
   while(this.isRunning) {
     times++;
-    if (times % 10 == 9) {
+    if (times % 15 == 14) {
       this.goFriendPage();
     }
     var hfx = Button.outSendHeartFrom.x;
@@ -1507,7 +1528,7 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
-      this.sleep(100);
+      this.sleep(250);
       this.tapDown(Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart2, 50);
@@ -1582,7 +1603,7 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, coinItem, autoPlay, clearBubbles, largeImage, enableAllItems, detect, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
