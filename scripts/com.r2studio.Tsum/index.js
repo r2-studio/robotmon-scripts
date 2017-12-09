@@ -148,6 +148,17 @@ var Page = {
     back: {x: 547, y: 1581 - adjY},
     next: {x: 547, y: 1581 - adjY},
   },
+  FriendPage2: {
+    name: 'FriendPage',
+    colors: [
+      {x: 547, y: 1520 - adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
+      {x: 187, y: 1527 - adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
+      {x: 799, y: 1581 - adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80},
+      {x: 698, y: 392  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+    ],
+    back: {x: 547, y: 1581 - adjY},
+    next: {x: 547, y: 1581 - adjY},
+  },
   GiftHeart: {
     name: 'GiftHeart',
     colors: [
@@ -764,6 +775,7 @@ Tsum.prototype.init = function(detect) {
     log('Game OffsetXY', this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
     this.sleep(1000);
   }
+  execute("mkdir -p " + getStoragePath() + '/' + Config.recordDir);
 }
 
 Tsum.prototype.deinit = function() {
@@ -914,8 +926,9 @@ Tsum.prototype.findPage = function(times, timeout) {
   while(this.isRunning) {
     for (var t = 0; t < times; t++) {
       var img = this.screenshot();
-      for (var pageName in Page) {
-        var page = Page[pageName];
+      for (var key in Page) {
+        var page = Page[key];
+        var pageName = page.name;
         var currentPage = '';
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
@@ -1202,7 +1215,7 @@ Tsum.prototype.taskPlayGame = function() {
       log("Clear bubbles");
       clearBubbles = 0;
       for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
-        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 140) {
+        for (var by = Button.gameBubblesFrom.y + 280; by <= Button.gameBubblesTo.y; by += 140) {
           this.tap({x: bx, y: by}, 10);
         }
       }
@@ -1270,16 +1283,11 @@ Tsum.prototype.readRecord = function() {
   }
 }
 
-Tsum.prototype.countReceiveHeart = function() {
-  log("記錄誰送心");
+Tsum.prototype.recognizeSender = function(img) {
+  log("辨識誰送心");
   var recordDir = getStoragePath() + '/' + Config.recordDir;
   var from = this.toResizeXYs(Button.outReceiveNameFrom);
   var to = this.toResizeXYs(Button.outReceiveNameTo);
-  var img = this.screenshot();
-
-  // for speed up
-  this.tap(Button.outReceiveOne);
-
   var nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
   var score = 0;
   var existFilename = '';
@@ -1294,9 +1302,8 @@ Tsum.prototype.countReceiveHeart = function() {
     }
   }
   console.log("Score: " + score);
-  
-  var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
   if (existFilename == '') {
+    var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
     // not found, new friend
     var filename = 'f_' + Date.now() + '.png';
     this.record[filename] = {
@@ -1307,20 +1314,31 @@ Tsum.prototype.countReceiveHeart = function() {
     this.recordImages[filename] = nameImg;
     log('新朋友，儲存', recordDir + '/' + filename);
     saveImage(nameImg, recordDir + '/' + filename);
-    saveImage(nameImg, recordDir + '/' + filename);
-  } else {
-    // found
-    if (this.record[existFilename].lastReceiveTime == undefined || Date.now() - this.record[existFilename].lastReceiveTime > 2000) {
-      if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
-        this.record[existFilename].receiveCounts[dayTime] = 0;
-      }
-      this.record[existFilename].receiveCounts[dayTime]++;
-      this.record[existFilename].lastReceiveTime = Date.now();
-      log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
+    this.sleep(80);
+    var check = execute("ls " + recordDir + '/' + filename);
+    if (check.indexOf(filename) == -1) {
+      log("Save image fail. Resave it.");
+      saveImage(nameImg, recordDir + '/' + filename);
     }
+  } else {
     releaseImage(nameImg);
   }
-  releaseImage(img);
+  return existFilename;
+}
+
+Tsum.prototype.countReceiveHeart = function(existFilename) {
+  if (existFilename == "") {
+    return;
+  }
+  log("計算誰送心");
+  var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
+  // found
+  if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
+    this.record[existFilename].receiveCounts[dayTime] = 0;
+  }
+  this.record[existFilename].receiveCounts[dayTime]++;
+  this.record[existFilename].lastReceiveTime = Date.now();
+  log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
 }
 
 Tsum.prototype.saveRecord = function() {
@@ -1363,88 +1381,71 @@ Tsum.prototype.isLoading = function() {
 Tsum.prototype.taskReceiveOneItem = function() {
   log('前往朋友頁面');
   this.goFriendPage();
-  this.sleep(1000);
+  this.sleep(1000)
+  this.tap(Button.outReceive);;
   log('一個一個接收物品');
-  this.tap(Button.outReceive);
-  this.sleep(2000);
+  this.sleep(1000);
 
   var unknownPage = 0;
   var receivedCount = 0;
-  var nonItemCount = 0;
-  var unknownCount = 0;
-  var networkLoadingCount = 0;
   var receiveCheckLimit = 1;
-  var isFinish = false;
+
+  var sender = "";
+  var receiveTime = Date.now();
   while (this.isRunning) {
     var img = this.screenshot();
-    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
+    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     releaseImage(img);
-    if (isTimeout) {
-      log('Try again... wait 2 sec');
-      this.tap(Button.outReceiveOk);
-      this.sleep(2000);
-    } else if (isOk) {
-      this.tap(Button.outReceiveOk);
-      nonItemCount = 0;
-      unknownCount = 0;
-      networkLoadingCount = 0;
-      this.sleep(500);
-      isFinish = true;
-    } else if (this.isLoading()) {
-      log('Network delay...');
-      networkLoadingCount++;
-      if (networkLoadingCount > 10) {
-        this.tap(Button.outReceiveOk);
-        this.tap(Button.outStart1);
-      }
-      this.sleep(300);
-    } else if (isItem) {
-      if (!isFinish) {
-        if (this.recordReceive) {
-          this.countReceiveHeart();
-          this.saveRecord();
+    if (isItem) {
+      if (this.recordReceive) {
+        var img = this.screenshot();
+        var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
+        if (isItem2) {
+          this.tap(Button.outReceiveOne);
+          sender = this.recognizeSender(img);
         }
-        this.tap(Button.outReceiveOne);
-        receivedCount++;
-        nonItemCount = 0;
-        unknownCount = 0;
-        networkLoadingCount = 0;
+        releaseImage(img);
       }
-      isFinish = false;
-    } else if (isNonItem) {
+      this.tap(Button.outReceiveOne);
+    } else if (isOk) {
+      if (this.recordReceive && sender != "") {
+        this.countReceiveHeart(sender);
+        sender = "";
+      }
       this.tap(Button.outReceiveOk);
-      nonItemCount++;
-      unknownCount = 0;
+      receivedCount++;
+      this.saveRecord();
+    } else if (isTimeout) {
+      log('Try again... wait 1 sec');
+      this.tap(Button.outReceiveOk);
+      this.sleep(1000);
     } else {
-      this.tap(Button.outReceiveOk);
-      unknownCount++;
-      isFinish = false;
+      this.tap(Button.outReceiveClose);
     }
-    this.sleep(500);
-    if (unknownCount >= 8) {
-      log('停在未知頁面太久，離開');
+    this.sleep(200);
+
+    if (!isNonItem) {
+      receiveTime = Date.now();
+    }
+    
+    if (Date.now() - receiveTime > 2000) {
       this.tap(Button.outClose);
       this.goFriendPage();
-      break;
-    }
-    if (nonItemCount >= 3) {
-      this.tap(Button.outClose);
-      this.goFriendPage();
-      this.sleep(800);
+      this.sleep(500);
       if (receivedCount == 0 || receiveCheckLimit >= this.receiveCheckLimit) {
         log('結束接收物品');
         break;
       } else {
         receiveCheckLimit++;
-        log('檢查還有沒有物品');
-        this.sleep(1000);
         receivedCount = 0;
-        nonItemCount = 0;
+        sender = "";
+        log('檢查還有沒有物品');
+        this.sleep(500);
         this.tap(Button.outReceive);
-        this.sleep(2000);
+        this.sleep(1500);
       }
     }
   }
@@ -1465,7 +1466,7 @@ Tsum.prototype.taskSendHearts = function() {
   var times = 0;
   while(this.isRunning) {
     times++;
-    if (times % 10 == 9) {
+    if (times % 15 == 14) {
       this.goFriendPage();
     }
     var hfx = Button.outSendHeartFrom.x;
@@ -1527,7 +1528,7 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
-      this.sleep(100);
+      this.sleep(250);
       this.tapDown(Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart2, 50);
@@ -1602,7 +1603,7 @@ Tsum.prototype.sleep = function(t) {
 var ts;
 var gTaskController;
 
-function start(isJP, debug, isPause, isFourTsum, coinItem, autoPlay, clearBubbles, largeImage, enableAllItems, detect, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
