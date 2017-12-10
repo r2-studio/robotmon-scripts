@@ -119,6 +119,10 @@ var Button = {
   outReceiveClose: {x: 530, y: 1300 - adjY},
   outReceiveOne: {x: 840, y: 497 - adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
+  outReceiveOneCoin: {x: 291, y: 579 - adjY, color: {r: 232, g: 229, b: 38}},
+  outReceiveOneRuby: {x: 295, y: 579 - adjY, color: {r: 224, g: 93, b: 101}}, // ruby
+  outReceiveOneTicket1: {x: 298, y: 569 - adjY, color: {r: 125, g: 188, b: 177}}, // green
+  outReceiveOneTicket2: {x: 316, y: 576 - adjY, color: {r: 248, g: 255, b: 253}}, // white
   outIsLoading1: {x: 540, y: 720 - adjY, color: {"a":0,"b":255,"g":255,"r":255}},
   outIsLoading2: {x: 540, y: 910 - adjY, color: {"a":0,"b":255,"g":255,"r":255}},
   outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
@@ -206,7 +210,7 @@ var Page = {
     next: {x: 561, y: 1581 - adjY},
   },
   MailBox2: {
-    name: 'MailBox2',
+    name: 'MailBox',
     colors: [
       {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
       {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
@@ -728,7 +732,7 @@ function Tsum(isJP, detect) {
   this.enableAllItems = false;
   this.sendHearts = false;
   this.showLog = true;
-  this.onlyReceiveHearts = false;
+  this.keepRuby = false;
   // record
   this.record = {};
   this.recordImages = {};
@@ -1289,13 +1293,13 @@ Tsum.prototype.taskReceiveAllItems = function() {
   this.sleep(1000);
   log('接收全部物品');
   this.tap(Button.outReceive);
-  this.sleep(2500);
+  this.sleep(3500);
   this.tap(Button.outReceiveAll);
-  this.sleep(1500);
+  this.sleep(2500);
   this.tap(Button.outReceiveOk);
-  this.sleep(1500);
+  this.sleep(2000);
   this.tap(Button.outReceiveClose);
-  this.sleep(1000);
+  this.sleep(1500);
   this.tap(Button.outClose);
   this.goFriendPage();
   log('接收物品完成');
@@ -1426,13 +1430,17 @@ Tsum.prototype.taskReceiveOneItem = function() {
   while (this.isRunning) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
-    var isHeart = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 40);
+    var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 24);
+    // var isHeart = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 30);
+    // var isCoin = isSameColor(Button.outReceiveOneCoin.color, this.getColor(img, Button.outReceiveOneCoin), 40);
+    // var isTicket1 = isSameColor(Button.outReceiveOneTicket1.color, this.getColor(img, Button.outReceiveOneTicket1), 35);
+    // var isTicket2 = isSameColor(Button.outReceiveOneTicket2.color, this.getColor(img, Button.outReceiveOneTicket2), 35);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     releaseImage(img);
     if (isItem) {
-      if (!this.onlyReceiveHearts || isHeart) {
+      if (!this.keepRuby || !isRuby) {
         if (this.recordReceive) {
           var img = this.screenshot();
           var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
@@ -1456,6 +1464,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         sender = undefined;
         this.saveRecord();
       }
+      this.sleep(100);
       this.tap(Button.outReceiveOk);
       receivedCount++;
     } else if (isTimeout) {
@@ -1534,8 +1543,8 @@ Tsum.prototype.taskSendHearts = function() {
       }
     }
     var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, Button.outSendHeartEnd2), 40);
-    var isEnd = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
-    isEnd = (!isNotEnd && isEnd);
+    var isEnd2 = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
+    var isEnd = (!isNotEnd && isEnd2);
     releaseImage(img);
     log("Send " + heartsPos.length + " hearts, 0 score?" + isZero + " End " + isEnd);
 
@@ -1554,7 +1563,7 @@ Tsum.prototype.taskSendHearts = function() {
         this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
         retry++;
         log("沒愛心可送或零分，再檢查次數: " + retry);
-        this.sleep(500);
+        this.sleep(1000);
       } else {
         break;
       }
@@ -1578,8 +1587,8 @@ Tsum.prototype.taskSendHearts = function() {
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
       this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
 
-      this.sleep(400);
-      if (heartsPos.length == 0) {
+      this.sleep(350);
+      if (heartsPos.length == 0 && isEnd2) {
         this.sleep(700); // end bug
       }
     }
@@ -1594,38 +1603,33 @@ Tsum.prototype.sendHeart = function(btn) {
   var isSent = false;
   // log("sendHeart");
   while (this.isRunning) {
-    var page = this.findPage(2, 600);
+    var page = this.findPage(1, 600);
     if (page == "FriendPage") {
       // log("sendHeart A");
       var img = this.screenshot();
       var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 45);
       var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 45);
       releaseImage(img);
-      if (isSendBtn) {
+      if ((isSendBtn || !isSentBtn) && !isGift && !isSent) {
+        // log("sendHeart A-A");
         this.tap(btn);
         this.sleep(200);
-      } else if (isSentBtn && isGift && isSent) {
-        this.sleep(200);
-        return true;
       } else {
-        log("Unknown...", isSendBtn, isSentBtn);
-        if (!isSentBtn) {
-          this.tap(btn);
-          this.sleep(200);
-        }
-        unknownCount += 3;
+        unknownCount += 1;
       }
     } else if (page == "GiftHeart") {
+      this.sleep(200);
       this.tap(Button.outReceiveOk);
       this.sleep(200);
       isGift = true;
       // log("sendHeart B");
     } else if (page == "Received") {
+      this.sleep(200);
       this.tap(Button.outSendHeartClose);
       if (isGift) {
         isSent = true;
-        this.sleep(200);
         // log("sendHeart C");
+        this.sleep(200);
         return true;
       }
     } else if (page == "FriendInfo") {
@@ -1639,7 +1643,7 @@ Tsum.prototype.sendHeart = function(btn) {
       log("未知狀態，離開");
       return false;
     }
-    this.sleep(100);
+    this.sleep(200);
   }
 }
 
@@ -1659,7 +1663,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, onlyReceiveHearts, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, keepRuby, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1677,7 +1681,7 @@ function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubble
   ts.receiveOneItem = receiveOneItem;
   ts.sendHearts = sendHearts;
   ts.showHeartLog = showHeartLog;
-  ts.onlyReceiveHearts = onlyReceiveHearts;
+  ts.keepRuby = keepRuby;
   if (largeImage) {
     ts.resizeRatio = 1;
   }
@@ -1722,6 +1726,7 @@ function stop() {
 // ts.goGamePlayingPage();
 // ts.sentToZero = true;
 // ts.taskSendHearts();
+// ts.keepRuby = true;
 // ts.taskReceiveOneItem();
 // ts.isPause = false;
 // ts.clearBubbles = false;
