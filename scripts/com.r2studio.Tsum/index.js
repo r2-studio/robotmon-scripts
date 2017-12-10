@@ -1569,7 +1569,7 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
-      this.sleep(200);
+      this.sleep(400);
       this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
@@ -1578,7 +1578,7 @@ Tsum.prototype.taskSendHearts = function() {
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
       this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
 
-      this.sleep(300);
+      this.sleep(400);
       if (heartsPos.length == 0) {
         this.sleep(700); // end bug
       }
@@ -1592,27 +1592,42 @@ Tsum.prototype.sendHeart = function(btn) {
   var isClickedOk = false;
   var isGift = false;
   var isSent = false;
+  // log("sendHeart");
   while (this.isRunning) {
-    var page = this.findPage(1, 300);
+    var page = this.findPage(2, 600);
     if (page == "FriendPage") {
+      // log("sendHeart A");
       var img = this.screenshot();
-      var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
-      var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 40);
+      var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 45);
+      var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 45);
       releaseImage(img);
       if (isSendBtn) {
         this.tap(btn);
-        this.sleep(300);
+        this.sleep(200);
       } else if (isSentBtn && isGift && isSent) {
+        this.sleep(200);
         return true;
+      } else {
+        log("Unknown...", isSendBtn, isSentBtn);
+        if (!isSentBtn) {
+          this.tap(btn);
+          this.sleep(200);
+        }
+        unknownCount += 3;
       }
     } else if (page == "GiftHeart") {
       this.tap(Button.outReceiveOk);
-      isGift = true;
-    } else if (page == "Received") {
-      isSent = true;
-      this.tap(Button.outSendHeartClose);
       this.sleep(200);
-      return true;
+      isGift = true;
+      // log("sendHeart B");
+    } else if (page == "Received") {
+      this.tap(Button.outSendHeartClose);
+      if (isGift) {
+        isSent = true;
+        this.sleep(200);
+        // log("sendHeart C");
+        return true;
+      }
     } else if (page == "FriendInfo") {
       this.tap(Page.FriendInfo.back);
     } else if (page == "MyInfo") {
