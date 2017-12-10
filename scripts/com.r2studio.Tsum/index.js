@@ -1528,7 +1528,7 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
-      this.sleep(250);
+      this.sleep(300);
       this.tapDown(Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart3, 50);
       this.moveTo (Button.outSendHeart2, 50);
@@ -1566,6 +1566,7 @@ Tsum.prototype.sendHeart = function(btn) {
       this.tap(Button.outReceiveOk);
       isClickedOk = true;
     } else if (isSent1 && isClickedOk) {
+      this.sleep(200);
       isSent++;
       if (isSent >= 2) {
         return true;
