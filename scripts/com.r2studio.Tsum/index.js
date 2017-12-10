@@ -37,7 +37,7 @@ function log() {
         if (sendTask.lastRunTime == 0) {
           msg += "/0";
         } else {
-          var next = (Date.now() - sendTask.lastRunTime + sendTask.interval) / 1000;
+          var next = (Date.now() - (sendTask.lastRunTime + sendTask.interval)) / 1000;
           msg += "/" + (+next.toFixed(0));
         }
       }
@@ -728,6 +728,7 @@ function Tsum(isJP, detect) {
   this.enableAllItems = false;
   this.sendHearts = false;
   this.showLog = true;
+  this.onlyReceiveHearts = false;
   // record
   this.record = {};
   this.recordImages = {};
@@ -1425,21 +1426,27 @@ Tsum.prototype.taskReceiveOneItem = function() {
   while (this.isRunning) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
+    var isHeart = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 40);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     releaseImage(img);
     if (isItem) {
-      if (this.recordReceive) {
-        var img = this.screenshot();
-        var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
-        if (isItem2) {
-          this.tap(Button.outReceiveOne);
-          sender = this.recognizeSender(img);
+      if (!this.onlyReceiveHearts || isHeart) {
+        if (this.recordReceive) {
+          var img = this.screenshot();
+          var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
+          if (isItem2) {
+            this.tap(Button.outReceiveOne);
+            sender = this.recognizeSender(img);
+          }
+          releaseImage(img);
         }
-        releaseImage(img);
+        this.tap(Button.outReceiveOne);
+      } else {
+        isNonItem = true;
+        receiveTime = 0;
       }
-      this.tap(Button.outReceiveOne);
     } else if (isOk) {
       if (this.recordReceive && sender != undefined) {
         if (sender != "") {
@@ -1637,7 +1644,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, onlyReceiveHearts, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1655,6 +1662,7 @@ function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubble
   ts.receiveOneItem = receiveOneItem;
   ts.sendHearts = sendHearts;
   ts.showHeartLog = showHeartLog;
+  ts.onlyReceiveHearts = onlyReceiveHearts;
   if (largeImage) {
     ts.resizeRatio = 1;
   }
