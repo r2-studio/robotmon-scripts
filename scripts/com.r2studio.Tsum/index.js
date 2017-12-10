@@ -1,5 +1,8 @@
 importJS("TaskController-0.0.1");
 
+var ts;
+var gTaskController;
+
 // Utils
 function isSameColor(c1, c2, diff) {
   if (diff == undefined) {
@@ -23,12 +26,33 @@ function absColor(c1, c2) {
 
 function log() {
   this.sleep(10);
+  var args = [];
+  if (ts != undefined && ts.showHeartLog) {
+    var msg = "";
+    msg += "R:"+ts.receivedCount+" ";
+    msg += "S:"+ts.sentCount;
+    if (gTaskController != undefined && gTaskController.tasks != undefined) {
+      var sendTask = gTaskController.tasks["sendHearts"];
+      if (sendTask != undefined) {
+        if (sendTask.lastRunTime == 0) {
+          msg += "/0";
+        } else {
+          var next = (Date.now() - sendTask.lastRunTime + sendTask.interval) / 1000;
+          msg += "/" + (+next.toFixed(0));
+        }
+      }
+    }
+    if (msg != "") {
+      args.push("["+msg+"]");
+    }
+  }
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
       arguments[i] = JSON.stringify(arguments[i]);
     }
+    args.push(arguments[i]);
   }
-  console.log.apply(console, arguments);
+  console.log.apply(console, args);
 }
 
 // ============================TSUM=============================== //
@@ -365,7 +389,7 @@ function printMaxScores(tsumMaxScores) {
   for (var i = 0; i < 10 && i < tsumMaxScores.length; i++) {
     str += i + ", " + tsumMaxScores[i].key + ", " + tsumMaxScores[i].score + "    ";
   }
-  console.log(str);
+  log(str);
 }
 
 function usingTimeString(startTime) {
@@ -471,13 +495,13 @@ function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug) {
   }
   var gameTsums = findAllTsumMatchScore(allTsumImages, boardImg, myTsum);
   gameTsums = gameTsums.splice(0, 50);
-  console.log('total tsums', 'using tsums', gameTsums.length);
+  log('total tsums', 'using tsums', gameTsums.length);
   if (debug) {
     printMaxScores(gameTsums);
   }
   // Remove same Tsums
   removeSameTsumImages(gameTsums, 0.92);
-  console.log('after remove same tsums', gameTsums.length);
+  log('after remove same tsums', gameTsums.length);
   if (debug) {
     printMaxScores(gameTsums);
   }
@@ -702,6 +726,8 @@ function Tsum(isJP, detect) {
   this.sentToZero = false;
   this.recordReceive = true;
   this.enableAllItems = false;
+  this.sendHearts = false;
+  this.showLog = true;
   // record
   this.record = {};
   this.recordImages = {};
@@ -1305,7 +1331,7 @@ Tsum.prototype.recognizeSender = function(img) {
       }
     }
   }
-  console.log("Score: " + score);
+  // console.log("Score: " + score);
   if (existFilename == '') {
     var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
     // not found, new friend
@@ -1394,7 +1420,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var receivedCount = 0;
   var receiveCheckLimit = 1;
 
-  var sender = "";
+  var sender = undefined;
   var receiveTime = Date.now();
   while (this.isRunning) {
     var img = this.screenshot();
@@ -1415,13 +1441,16 @@ Tsum.prototype.taskReceiveOneItem = function() {
       }
       this.tap(Button.outReceiveOne);
     } else if (isOk) {
-      if (this.recordReceive && sender != "") {
-        this.countReceiveHeart(sender);
-        sender = "";
+      if (this.recordReceive && sender != undefined) {
+        if (sender != "") {
+          this.countReceiveHeart(sender);
+        }
+        this.receivedCount++;
+        sender = undefined;
+        this.saveRecord();
       }
       this.tap(Button.outReceiveOk);
       receivedCount++;
-      this.saveRecord();
     } else if (isTimeout) {
       log('Try again... wait 1 sec');
       this.tap(Button.outReceiveOk);
@@ -1528,6 +1557,7 @@ Tsum.prototype.taskSendHearts = function() {
         if (!success) {
           success = this.sendHeart(heartsPos[h]);
         }
+        this.sentCount++;
         if (!this.isRunning) {
           return;
         }
@@ -1557,7 +1587,6 @@ Tsum.prototype.sendHeart = function(btn) {
   var isSent = false;
   while (this.isRunning) {
     var page = this.findPage(1, 300);
-    log(page);
     if (page == "FriendPage") {
       var img = this.screenshot();
       var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
@@ -1608,10 +1637,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-var ts;
-var gTaskController;
-
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1626,6 +1652,9 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum,
   ts.receiveCheckLimit = receiveCheckLimit;
   ts.clearBubbles = clearBubbles;
   ts.enableAllItems = enableAllItems;
+  ts.receiveOneItem = receiveOneItem;
+  ts.sendHearts = sendHearts;
+  ts.showHeartLog = showHeartLog;
   if (largeImage) {
     ts.resizeRatio = 1;
   }
@@ -1661,16 +1690,15 @@ function stop() {
   log("Stop finish...");
   sleep(2000);
 }
-
 // stop();
 // this.sleep(500);
-ts = new Tsum(false, true);
+// ts = new Tsum(false, true);
 // log(ts.findPage(2, 1000));
 // ts.detect();
 // ts.coinItem = true;
 // ts.goGamePlayingPage();
-ts.sentToZero = true;
-ts.taskSendHearts();
+// ts.sentToZero = true;
+// ts.taskSendHearts();
 // ts.taskReceiveOneItem();
 // ts.isPause = false;
 // ts.clearBubbles = false;
