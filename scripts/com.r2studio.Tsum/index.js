@@ -1586,14 +1586,14 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
-      this.sleep(400);
+      this.sleep(200);
       this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
-      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 400);
+      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 50);
 
       this.sleep(350);
       if (this.sendHeartMaxDuring != 0) {
@@ -1617,7 +1617,7 @@ Tsum.prototype.sendHeart = function(btn) {
   var isSent = false;
   // log("sendHeart");
   while (this.isRunning) {
-    var page = this.findPage(1, 600);
+    var page = this.findPage(1, 300);
     if (page == "FriendPage") {
       // log("sendHeart A");
       var img = this.screenshot();
@@ -1632,18 +1632,18 @@ Tsum.prototype.sendHeart = function(btn) {
         unknownCount += 1;
       }
     } else if (page == "GiftHeart") {
-      this.sleep(200);
+      this.sleep(150);
       this.tap(Button.outReceiveOk);
-      this.sleep(200);
+      this.sleep(150);
       isGift = true;
       // log("sendHeart B");
     } else if (page == "Received") {
-      this.sleep(200);
+      this.sleep(150);
       this.tap(Button.outSendHeartClose);
       if (isGift) {
         isSent = true;
         // log("sendHeart C");
-        this.sleep(200);
+        this.sleep(150);
         return true;
       }
     } else if (page == "FriendInfo") {
@@ -1657,7 +1657,7 @@ Tsum.prototype.sendHeart = function(btn) {
       log("未知狀態，離開");
       return false;
     }
-    this.sleep(200);
+    this.sleep(150);
   }
 }
 
