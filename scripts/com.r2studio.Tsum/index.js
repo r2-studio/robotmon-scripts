@@ -733,6 +733,8 @@ function Tsum(isJP, detect) {
   this.sendHearts = false;
   this.showLog = true;
   this.keepRuby = false;
+  this.showHeartLog = true;
+  this.sendHeartMaxDuring = 0;
   // record
   this.record = {};
   this.recordImages = {};
@@ -1663,7 +1665,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, receiveOneItemInterval, receiveCheckLimit, recordReceive, keepRuby, largeImage, sendHearts, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sendHeartMaxDuring, sendHeartsInterval, sentToZero) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1680,8 +1682,9 @@ function start(isJP, debug, detect, showHeartLog, autoPlay, isPause, clearBubble
   ts.enableAllItems = enableAllItems;
   ts.receiveOneItem = receiveOneItem;
   ts.sendHearts = sendHearts;
-  ts.showHeartLog = showHeartLog;
+  ts.showHeartLog = true;
   ts.keepRuby = keepRuby;
+  ts.sendHeartMaxDuring = sendHeartMaxDuring * 60 * 1000;
   if (largeImage) {
     ts.resizeRatio = 1;
   }
