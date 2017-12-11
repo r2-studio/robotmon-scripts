@@ -53,6 +53,12 @@ var Home = function() {
 var Back = function() {
   keycode('BACK');
 }
+var Screenshot = function() {
+  var img = getScreenshot();
+  saveImage(img, getStoragePath() + "/screenshot/" + Date.now() + ".png");
+  safeSleep(100);
+  releaseImage(img);
+}
 
 function safeSleep(t) {
   if (t == undefined) {

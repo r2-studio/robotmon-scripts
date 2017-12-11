@@ -200,7 +200,7 @@
       width: 80%;
       height: 60%;
       left: 10%;
-      top: 25%;
+      top: 15%;
       background-color: white;
       border-radius: 5px;
       display: none;
@@ -354,7 +354,7 @@
     }
 
     function initActionDropdown() {
-      var names = ['loop', 'Click', 'TapDown', 'MoveTo', 'TapUp', 'Swipe', 'safeSleep'];
+      var names = ['loop', 'Click', 'TapDown', 'MoveTo', 'TapUp', 'Swipe', 'safeSleep', 'Home', 'Back', 'Screenshot'];
       for (var i = 0; i < names.length; i++) {
         var name = names[i].replace('rbm.', '');
         $("#action-dropdown").append('<a href="#' + names[i] + '" class="action-dropdown-item">' + name + '</a>');
