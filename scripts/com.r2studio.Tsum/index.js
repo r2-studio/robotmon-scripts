@@ -1502,17 +1502,21 @@ Tsum.prototype.taskReceiveOneItem = function() {
   }
 }
 
-Tsum.prototype.taskSendHearts = function() {
-  log('前往朋友頁面');
-  this.goFriendPage();
-  log('開始送愛心');
-  this.sleep(1500);
+Tsum.prototype.friendPageGoTop = function() {
   this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart0.x - 10, y: 150000}, 100);
   this.tapUp({x: Button.outSendHeart0.x - 10, y: 150000}, 100);
   this.sleep(2500);
+}
 
+Tsum.prototype.taskSendHearts = function() {
+  log('前往朋友頁面');
+  this.goFriendPage();
+  log('開始送愛心');
+  this.sleep(1000);
+
+  var startTime = Date.now();
   var retry = 0;
   var times = 0;
   while(this.isRunning) {
@@ -1567,6 +1571,8 @@ Tsum.prototype.taskSendHearts = function() {
         log("沒愛心可送或零分，再檢查次數: " + retry);
         this.sleep(1000);
       } else {
+        this.sleep(1000);
+        this.friendPageGoTop();
         break;
       }
     } else {
@@ -1590,6 +1596,12 @@ Tsum.prototype.taskSendHearts = function() {
       this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
 
       this.sleep(350);
+      if (this.sendHeartMaxDuring != 0) {
+        if (Date.now() - startTime > this.sendHeartMaxDuring) {
+          log("Deadline... Exit");
+          break;
+        }
+      }
       if (heartsPos.length == 0 && isEnd2) {
         this.sleep(700); // end bug
       }
@@ -1728,6 +1740,7 @@ function stop() {
 // ts.coinItem = true;
 // ts.goGamePlayingPage();
 // ts.sentToZero = true;
+// ts.sendHeartMaxDuring = 40 * 1000;
 // ts.taskSendHearts();
 // ts.keepRuby = true;
 // ts.taskReceiveOneItem();
