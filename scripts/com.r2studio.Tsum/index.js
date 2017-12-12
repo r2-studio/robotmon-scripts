@@ -1518,6 +1518,9 @@ Tsum.prototype.taskSendHearts = function() {
   this.goFriendPage();
   log('開始送愛心');
   this.sleep(1000);
+  if (this.sendHeartMaxDuring == 0) {
+    this.friendPageGoTop();
+  }
 
   var startTime = Date.now();
   var retry = 0;
@@ -1574,22 +1577,34 @@ Tsum.prototype.taskSendHearts = function() {
         log("沒愛心可送或零分，再檢查次數: " + retry);
         this.sleep(1000);
       } else {
-        this.sleep(1000);
-        this.friendPageGoTop();
+        if (this.sendHeartMaxDuring != 0) {
+          this.sleep(1000);
+          this.friendPageGoTop();
+        }
         break;
       }
     } else {
+      var rTimes = 0;
       for (var h in heartsPos) {
         var success = this.sendHeart(heartsPos[h]);
         if (!success) {
-          success = this.sendHeart(heartsPos[h]);
+          success = this.sendHeart(heartsPos[h]); 
         }
-        this.record['hearts_count'].sentCount++;
+        if (success) {
+          rTimes++;
+          this.record['hearts_count'].sentCount++;
+        } else {
+          this.goFriendPage();
+          this.sleep(1000);
+        }
         if (!this.isRunning) {
           return;
         }
       }
-      if (this.recordReceive) {
+      if (heartsPos.length != 0 && rTimes == 0) {
+        continue;
+      }
+      if (this.recordReceive && heartsPos.length != 0) {
         this.saveRecord();
       }
       this.sleep(250);
@@ -1599,9 +1614,9 @@ Tsum.prototype.taskSendHearts = function() {
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 400);
-      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 50);
+      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
 
-      this.sleep(350);
+      this.sleep(400);
       if (this.sendHeartMaxDuring != 0) {
         if (Date.now() - startTime > this.sendHeartMaxDuring) {
           log("Deadline... Exit");
@@ -1683,7 +1698,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sendHeartMaxDuring, sendHeartsInterval, sentToZero) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
