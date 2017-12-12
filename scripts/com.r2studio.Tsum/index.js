@@ -27,17 +27,17 @@ function absColor(c1, c2) {
 function log() {
   this.sleep(10);
   var args = [];
-  if (ts != undefined && ts.showHeartLog) {
+  if (ts != undefined && ts.showHeartLog && ts.record && ts.record['hearts_count']) {
     var msg = "";
-    msg += "R:"+ts.receivedCount+" ";
-    msg += "S:"+ts.sentCount;
+    msg += "R:"+ts.record['hearts_count'].receivedCount+" ";
+    msg += "S:"+ts.record['hearts_count'].sentCount;
     if (gTaskController != undefined && gTaskController.tasks != undefined) {
       var sendTask = gTaskController.tasks["sendHearts"];
       if (sendTask != undefined) {
         if (sendTask.lastRunTime == 0) {
           msg += "/0";
         } else {
-          var next = (Date.now() - (sendTask.lastRunTime + sendTask.interval)) / 1000;
+          var next = (Date.now() - (sendTask.lastRunTime + sendTask.interval)) / 60000;
           msg += "/" + (+next.toFixed(0));
         }
       }
@@ -736,15 +736,16 @@ function Tsum(isJP, detect) {
   this.showHeartLog = true;
   this.sendHeartMaxDuring = 0;
   // record
-  this.record = {};
+  this.record = {
+    hearts_count: {
+      receivedCount: 0,
+      sentCount: 0,
+    }
+  };
   this.recordImages = {};
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
   this.init(detect);
-
-  // log
-  this.sentCount = 0;
-  this.receivedCount = 0;
 }
 
 Tsum.prototype.detect = function() {
@@ -1316,7 +1317,9 @@ Tsum.prototype.readRecord = function() {
     this.record = JSON.parse(txt);
   }
   for (var filename in this.record) {
-    this.recordImages[filename] = openImage(recordDir + '/' + filename);
+    if (filename != "hearts_count") {
+      this.recordImages[filename] = openImage(recordDir + '/' + filename);
+    }
   }
 }
 
@@ -1462,7 +1465,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         if (sender != "") {
           this.countReceiveHeart(sender);
         }
-        this.receivedCount++;
+        this.record['hearts_count'].receivedCount++;
         sender = undefined;
         this.saveRecord();
       }
@@ -1581,12 +1584,15 @@ Tsum.prototype.taskSendHearts = function() {
         if (!success) {
           success = this.sendHeart(heartsPos[h]);
         }
-        this.sentCount++;
+        this.record['hearts_count'].sentCount++;
         if (!this.isRunning) {
           return;
         }
       }
-      this.sleep(200);
+      if (this.recordReceive) {
+        this.saveRecord();
+      }
+      this.sleep(250);
       this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
@@ -1700,9 +1706,15 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum,
   if (largeImage) {
     ts.resizeRatio = 1;
   }
-
+  
   if (ts.recordReceive) {
     ts.readRecord();
+  }
+  if (ts.record['hearts_count'] == undefined) {
+    ts.record['hearts_count'] = {
+      receivedCount: 0,
+      sentCount: 0,
+    };
   }
 
   gTaskController = new TaskController();
@@ -1735,6 +1747,7 @@ function stop() {
 // stop();
 // this.sleep(500);
 // ts = new Tsum(false, true);
+//ts.readRecord();
 // log(ts.findPage(2, 1000));
 // ts.detect();
 // ts.coinItem = true;

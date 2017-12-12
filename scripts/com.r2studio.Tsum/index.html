@@ -525,6 +525,9 @@
         var recordObjs = JSON.parse(record);
         record = [];
         for (var filename in recordObjs) {
+          if (filename == "hearts_count"){
+            continue;
+          }
           var obj = recordObjs[filename];
           var totalCount = 0;
           for (var d in obj.receiveCounts) {
