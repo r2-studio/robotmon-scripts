@@ -133,6 +133,11 @@
           display: flex;
           align-items: center;
       }
+      #goToTop {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+      }
     </style>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -141,7 +146,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 20;
+      VERSION = 21;
       ASC = true;
 
       var settings = [
@@ -180,7 +185,7 @@
           { title: "Clear Bubbles", title_zh_TW: "自動清除泡泡", default: true},
           { title: "5>4", title_zh_TW: "道具五變四", default: false},
           { title: "+Coin", title_zh_TW: "道具Coin", default: false},
-          { title: "All Bouns Items", title_zh_TW: "開/關全部道具", default: false},
+          { title: "All Bonus Items", title_zh_TW: "開/關全部道具", default: false},
         ],
         [
           { title: "Receive All Hearts", title_zh_TW: "收全部愛心", default: true},
@@ -195,6 +200,15 @@
         ],
         [
           { title: "Receive Hearts One By One", title_zh_TW: "一顆一顆收愛心", default: false},
+          { title: "Skip Ruby", title_zh_TW: "保留鑽石", default: false},
+          {
+            title: "Max Times to Open Mailbox",
+            title_zh_TW: "重複檢查上限次數",
+            default: 5,
+            step: 1,
+            max: 20,
+            min: 1,
+          },
           {
             title: "Waiting time (min) before repeat",
             title_zh_TW: "完成後休息時間(分)",
@@ -203,19 +217,20 @@
             max: 60,
             min: 1,
           },
-          {
-            title: "Limit of recheck times",
-            title_zh_TW: "重複檢查上限次數",
-            default: 5,
-            step: 1,
-            max: 20,
-            min: 1,
-          },
           { title: "Record Sender", title_zh_TW: "記錄送心者", default: true},
-          { title: "Enlarge Record Image(Emulator)", title_zh_TW: "放大送心者圖片(模擬器)", default: false},
+          { title: "Enlarge Sender's Image (Emulator)", title_zh_TW: "放大送心者圖片(模擬器)", default: false},
         ],
         [
           { title: "Auto Send Hearts", title_zh_TW: "自動送愛心", default: false},
+          { title: "Send to 0 score", title_zh_TW: "送心給0分", default: false},
+          {
+            title: "Max run time(min) [0 = no limit]",
+            title_zh_TW: "執行時間上限(分)",
+            default: 0,
+            step: 5,
+            max: 80,
+            min: 0,
+          },
           {
             title: "Waiting time (min) before repeat",
             title_zh_TW: "完成後休息時間(分)",
@@ -224,7 +239,6 @@
             max: 60,
             min: 1,
           },
-          { title: "Send to 0 score", title_zh_TW: "送心給0分", default: false},
         ]
       ];
       function saveLocale(locale) {
@@ -511,6 +525,9 @@
         var recordObjs = JSON.parse(record);
         record = [];
         for (var filename in recordObjs) {
+          if (filename == "hearts_count"){
+            continue;
+          }
           var obj = recordObjs[filename];
           var totalCount = 0;
           for (var d in obj.receiveCounts) {
@@ -566,7 +583,7 @@
       <div id="record">
       </div>
       <br />
-      <button id="goToTop" class="btn btn-plus" style="margin-left:0px;">Go Top</button>
+      <button id="goToTop" class="btn btn-plus">Go Top</button>
       <br />
       <br />
       <br />
