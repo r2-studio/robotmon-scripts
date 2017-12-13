@@ -146,7 +146,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 20.2;
+      VERSION = 21;
       ASC = true;
 
       var settings = [
@@ -202,19 +202,19 @@
           { title: "Receive Hearts One By One", title_zh_TW: "一顆一顆收愛心", default: false},
           { title: "Skip Ruby", title_zh_TW: "保留鑽石", default: false},
           {
-            title: "Waiting time (min) before repeat",
-            title_zh_TW: "完成後休息時間(分)",
-            default: 5,
-            step: 2,
-            max: 60,
-            min: 1,
-          },
-          {
             title: "Max Times to Open Mailbox",
             title_zh_TW: "重複檢查上限次數",
             default: 5,
             step: 1,
             max: 20,
+            min: 1,
+          },
+          {
+            title: "Waiting time (min) before repeat",
+            title_zh_TW: "完成後休息時間(分)",
+            default: 5,
+            step: 2,
+            max: 60,
             min: 1,
           },
           { title: "Record Sender", title_zh_TW: "記錄送心者", default: true},

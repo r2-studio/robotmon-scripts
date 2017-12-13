@@ -137,6 +137,7 @@ var Button = {
   outSendHeartTo: {x: 910, y: 1250 - adjY},
   outSendHeartEnd: {x: 328, y: 1194 - adjY, color: {"a":0,"b":132,"g":85,"r":47}},
   outSendHeartEnd2: {x: 227, y: 1190 - adjY, color: {"a":0,"b":123,"g":78,"r":44}},
+  outSendHeartEnd3: {x: 316, y: 1152 - adjY, color: {r: 55, g: 91, b: 139}},
   outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 863 - adjY},
   skillLuke1: {x: 970, y: 1270 - adjY},
@@ -1531,13 +1532,13 @@ Tsum.prototype.taskSendHearts = function() {
       this.goFriendPage();
     }
     var hfx = Button.outSendHeartFrom.x;
-    var hfy = Button.outSendHeartFrom.y - 130;
-    var hty = Button.outSendHeartTo.y + 60;
+    var hfy = Button.outSendHeartFrom.y - 40;
+    var hty = Button.outSendHeartTo.y + 30;
     var heartsPos = [];
 
     var img = this.screenshot();
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
-    for(var y = hfy; y <= hty; y += 9) {
+    for(var y = hfy; y <= hty; y += 8) {
       var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}), 40);
       if (isHs) {
         heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
@@ -1556,10 +1557,11 @@ Tsum.prototype.taskSendHearts = function() {
     }
     var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, Button.outSendHeartEnd2), 40);
     var isEnd2 = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
-    var isEnd = (!isNotEnd && isEnd2);
+    var isEnd3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, Button.outSendHeartEnd3), 40);
+    var isEnd = (!isNotEnd && isEnd2 && isEnd3);
     releaseImage(img);
     log("Send " + heartsPos.length + " hearts, 0 score?" + isZero + " End " + isEnd);
-
+    
     if (isOk && heartsPos.length == 0) {
       this.tap(Button.outReceiveOk);
     }
@@ -1602,6 +1604,7 @@ Tsum.prototype.taskSendHearts = function() {
         }
       }
       if (heartsPos.length != 0 && rTimes == 0) {
+        log(heartsPos.length + " hearts but no hearts send.");
         continue;
       }
       if (this.recordReceive && heartsPos.length != 0) {
@@ -1640,13 +1643,13 @@ Tsum.prototype.sendHeart = function(btn) {
   while (this.isRunning) {
     var page = this.findPage(1, 300);
     if (page == "FriendPage") {
-      // log("sendHeart A");
+      log("sendHeart A");
       var img = this.screenshot();
-      var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 45);
-      var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 45);
+      var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
+      var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 40);
       releaseImage(img);
       if ((isSendBtn || !isSentBtn) && !isGift && !isSent) {
-        // log("sendHeart A-A");
+        log("sendHeart A-A");
         this.tap(btn);
         this.sleep(200);
       } else {
@@ -1657,13 +1660,14 @@ Tsum.prototype.sendHeart = function(btn) {
       this.tap(Button.outReceiveOk);
       this.sleep(150);
       isGift = true;
-      // log("sendHeart B");
+      log("sendHeart B");
     } else if (page == "Received") {
       this.sleep(150);
       this.tap(Button.outSendHeartClose);
+      log("sendHeart C");
       if (isGift) {
         isSent = true;
-        // log("sendHeart C");
+        log("sendHeart C-C");
         this.sleep(150);
         return true;
       }
@@ -1698,7 +1702,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveOneItemInterval, receiveCheckLimit, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
