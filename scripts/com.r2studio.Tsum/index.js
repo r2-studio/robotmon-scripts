@@ -237,7 +237,7 @@ var Page = {
     name: 'Received',
     colors: [
       {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 806, y: 817 - adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
+      {x: 889, y: 752 - adjY, r: 40, g: 72 , b: 111, match: true, threshold: 80},
       {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
     ],
     back: {x: 774, y: 1023 - adjY},
@@ -1642,14 +1642,15 @@ Tsum.prototype.sendHeart = function(btn) {
   // log("sendHeart");
   while (this.isRunning) {
     var page = this.findPage(1, 300);
+    // log(page);
     if (page == "FriendPage") {
-      log("sendHeart A");
+      // log("sendHeart A");
       var img = this.screenshot();
       var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
       var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 40);
       releaseImage(img);
       if ((isSendBtn || !isSentBtn) && !isGift && !isSent) {
-        log("sendHeart A-A");
+        // log("sendHeart A-A");
         this.tap(btn);
         this.sleep(200);
       } else {
@@ -1660,14 +1661,14 @@ Tsum.prototype.sendHeart = function(btn) {
       this.tap(Button.outReceiveOk);
       this.sleep(150);
       isGift = true;
-      log("sendHeart B");
+      // log("sendHeart B");
     } else if (page == "Received") {
       this.sleep(150);
       this.tap(Button.outSendHeartClose);
-      log("sendHeart C");
+      // log("sendHeart C");
       if (isGift) {
         isSent = true;
-        log("sendHeart C-C");
+        // log("sendHeart C-C");
         this.sleep(150);
         return true;
       }
