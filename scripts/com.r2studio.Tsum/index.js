@@ -237,6 +237,16 @@ var Page = {
     name: 'Received',
     colors: [
       {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
+      {x: 806, y: 817 - adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
+      {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
+    ],
+    back: {x: 774, y: 1023 - adjY},
+    next: {x: 320, y: 1019 - adjY},
+  },
+  Received2: {
+    name: 'Received',
+    colors: [
+      {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
       {x: 889, y: 752 - adjY, r: 40, g: 72 , b: 111, match: true, threshold: 80},
       {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
     ],
