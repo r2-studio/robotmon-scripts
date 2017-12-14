@@ -6,7 +6,7 @@ Only support ES5
 
 * [JavaScript Events](#javascrip-svents)
 * [JavaScript Interface](#javascrip-interface)
-* [JavaScript APIs](#javascrip-apis)
+* [JavaScript Raw APIs](#javascrip-apis)
 * [RBM library APIs](#rbm-library-apis)
 * [gRPC APIs](#grpc-apis)
 
@@ -137,17 +137,33 @@ showPauseButton()
 
 Show the `pause button` on floating widget.
 
-## JavaScript APIs
+## JavaScript Raw APIs
 
-```javascript
-getScreenSize()
-```
+
+#### `getScreenSize()`
 
 Returns `Object` - `{width: Integer, height: Integer}`
 
 ```javascript
-getScreenshotModify(cropX, cropY, cropWidth, cropHeight, resizeWidth, resizeHeight, qualitys)
+var sizeObj = getScreenSize();
+console.log(sizeObj.width, sizeObj.height);
+// 1080 1920
 ```
+
+#### `getScreenshot()`
+
+Returns `Integer` - The image pointer
+
+```javascript
+var img = getScreenshot();
+console.log(img);
+// 122344533 <- image pointer
+releaseImage(img); // Don't forgot release a pointer
+```
+
+#### `getScreenshotModify(cropX, cropY, cropWidth, cropHeight, resizeWidth, resizeHeight, qualitys)`
+
+Get screenshot, crop and resize. For speeding up screenshot.
 
 * `cropX` Integer
 * `cropY` Integer
@@ -160,54 +176,79 @@ getScreenshotModify(cropX, cropY, cropWidth, cropHeight, resizeWidth, resizeHeig
 Returns `Integer` - The image pointer
 
 ```javascript
-getScreenshot()
+var image = getScreenshotModify(200, 200, 100, 100, 50, 50, 80);
+console.log(image); // image width = 50, height = 50 
+// 12333122
+releaseImage(image);
 ```
 
-Returns `Integer` - The image pointer
+#### `execute(command)`
 
-```javascript
-execute(command)
-```
+Call exec command in android system. It's permission is same as `adb shell`
 
 * `command` String
 
 Returns `String` - The result of the execution
 
 ```javascript
-tap(x, y, during)
+var result = execute("ls -al /sdcard");
+console.log(result);
+// drwxr-xr-x   2 root  root    64B 12 14 23:44 Robotmon
 ```
+
+#### `tap(x, y, during)`
+
+Simulate a tap event
 
 * `x` Integer
 * `y` Integer
 * `during` Integer
 
 ```javascript
-tapDown(x, y, during)
+tap(200, 200, 10);
+// Will inject a tap down and a tap up event to system
 ```
+
+#### `tapDown(x, y, during)`
 
 * `x` Integer
 * `y` Integer
 * `during` Integer
 
 ```javascript
-tapUp(x, y, during)
+tapDown(200, 200, 40);
+// Will inject a tapDown event to system
 ```
+
+#### `tapUp(x, y, during)`
 
 * `x` Integer
 * `y` Integer
 * `during` Integer
 
 ```javascript
-moveTo(x, y, during)
+tapUp(200, 200, 40);
+// Will inject a tapUo event to system
 ```
+
+#### `moveTo(x, y, during)`
+
+moveTo should be betewwn `tapDown` and `tapUp`
 
 * `x` Integer
 * `y` Integer
 * `during` Integer
 
 ```javascript
-swipe(x1, y1, x2, y2, during)
+tapDown(500, 300, 40);
+moveTo(500, 600, 40);
+tapUp(500, 600, 40);
+// Will inject a swipe down event
 ```
+
+#### `swipe(x1, y1, x2, y2, during)`
+
+Simulate a swipe event, using `tapDown`, `moveTo` and `tapUp` event. This function may not work in some game, you should implement yourself.
 
 * `x1` Integer
 * `y1` Integer
@@ -216,32 +257,61 @@ swipe(x1, y1, x2, y2, during)
 * `during` Integer
 
 ```javascript
-keycode(label, during)
+swipe(500, 300, 40); // same as above example
+// Will inject a swipe down event
 ```
+
+#### `keycode(label, during)`
+
+Send a key code event to system
+Like adb shell input keyevent command
+[Android Keycode List](https://developer.android.com/reference/android/view/KeyEvent.html)
 
 * `label` String
 * `during` Integer
 
 ```javascript
-typing(words, during)
+keycode('HOME', 40); // same as keycode('KEYCODE_HOME', 40);
+// Will send a HOME event to system
 ```
+
+#### `typing(words, during)`
+
+Only allow English words
 
 * `words` String
 * `during` Integer
 
+```javascript
+typing('Hello!', 100);
+// Will type 'H' 'e' 'l' 'l' 'o' '!' 6 words
+```
+
 ### OpenCV
 
-```javascript
-clone(sourceImg)
-```
+#### `clone(sourceImg)`
+
+Duplicate an image to another.
 
 * `sourceImg` Integer
 
 Returns `Integer` - The image pointer
 
 ```javascript
-smooth(sourceImg, smoothType, size)
+var oriImage = getScreenshot();
+for (var i = 0; i < 10; i++) {
+  var cloneImage = clone(oriImage);
+  // modify clone Image here
+  smooth(cloneImage, 1, 5); // blur
+  release(cloneImage);
+}
+release(oriImage);
 ```
+
+
+#### `smooth(sourceImg, smoothType, size)`
+
+Same as OpenCV `smooth()` function.
 
 * `sourceImg` Integer
 * `smoothType` Integer
@@ -256,8 +326,16 @@ smooth(sourceImg, smoothType, size)
 |4|CV_BILATERAL|
 
 ```javascript
-convertColor(sourceImg, code)
+var img = getScreenshot();
+smooth(img, 2, 5); // Gaussian blur
+saveImage(img, getStoragePath + '/smooth.png');
+releaseImage(img);
 ```
+
+#### `convertColor(sourceImg, code)`
+
+Same as OpenCV `cvtColor()`.
+Note that `getScreenshot` and `getScreenshotModify` is BGR order;
 
 * `sourceImg` Integer
 * `code` Integer
@@ -267,11 +345,18 @@ convertColor(sourceImg, code)
 |40|CV_BGR2HSV|
 |52|CV_BGR2HLS|
 
-See more: imgproc/types_c.h
+See more: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
 
 ```javascript
-absDiff(sourceImg, targetImg)
+var img = getScreenshot();
+// Convert BGR to HSV color
+convertColor(40, img);
+releaseImage(ig);
 ```
+
+#### `absDiff(sourceImg, targetImg)`
+
+Same as OpenCV `adbdiff()`.
 
 * `sourceImg` Integer
 * `targetImg` Integer
@@ -279,8 +364,18 @@ absDiff(sourceImg, targetImg)
 Returns `Integer` - The image pointer of the difference
 
 ```javascript
-threshold(sourceImg, thr, maxThr, code)
+var img1 = getScreenshot();
+sleep(100);
+var img2 = getScreenshot();
+var diff = absDiff(img1, img2); // in gray order
+releaseImage(img1);
+releaseImage(img2);
+releaseImage(diff);
 ```
+
+#### `threshold(sourceImg, thr, maxThr, code)`
+
+Same as OpenCV `threshold()`.
 
 * `sourceImg` Integer
 * `thr` Float
@@ -291,11 +386,30 @@ threshold(sourceImg, thr, maxThr, code)
 |---|---|
 |0|CV_THRES_BINARY|
 
-See more: imgproc/types_c.h
+See more: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
 
 ```javascript
-eroid(sourceImg, width, height, x, y)
+keycode('MENU');
+sleep(1000);
+var img1 = getScreenshot();
+keycode('HOME');
+sleep(1000);
+var img2 = getScreenshot();
+var diff = absDiff(img1, img2); // in gray order
+threshold(diff, 100, 255); // set to 0 if <= 100, set to 255 if > 100
+var value = getImageColor(diff, 500, 200); // value => {r":255,"g":0,"b":0","a":0}
+console.log(value['r']); // current diff value is show on 'r'
+// 255
+releaseImage(img1);
+releaseImage(img2);
+releaseImage(diff);
 ```
+
+#### `eroid(sourceImg, width, height, x, y)`
+
+Same as OpenCV `eroid`.
+
+`width`, `height`, `x`, `y` is `getStructuringElement()` parameters.
 
 * `sourceImg` Integer
 * `width` Integer
@@ -304,8 +418,16 @@ eroid(sourceImg, width, height, x, y)
 * `y` Integer
 
 ```javascript
-canny(sourceImg, t1, t2, apertureSize)
+var img = getScreenshot();
+threshold(img, 100, 255);
+eroid(img, 3, 3, 1, 1);
+saveImage(img, getStoragePath() + '/test_eroid.png');
+releaseImage(img);
 ```
+
+#### `canny(sourceImg, t1, t2, apertureSize)`
+
+Same as OpenCV `canny`
 
 * `sourceImg` Integer
 * `t1` Float
@@ -315,18 +437,40 @@ canny(sourceImg, t1, t2, apertureSize)
 Returns `Integer` - The canny image pointer
 
 ```javascript
-findContours(cannyImgPtr, minArea, maxArea)
+var img = getScreenshot();
+threshold(img, 30, 255);
+eroid(img, 5, 5, 1, 1);
+var cannyImg = canny(img, 50, 150, 3);
+saveImage(cannyImg, getStoragePath() + '/test_canny.png');
+releaseImage(img);
+releaseImage(cannyImg);
 ```
 
-* `cannyImgPtr` Integer
+#### `findContours(cannyImgPtr, minArea, maxArea)`
+
+Same as OpenCV `findContours`.
+
+* `cannyImgPtr` Integer (Canny image as input)
 * `minArea` Float
 * `maxArea` Float
 
 Returns `Object` - `{"0": {x: Integer, y: Integer}`
 
 ```javascript
-drawCircle(sourceImg, x, y, radius, r, g, b, a)
+var img = getScreenshot();
+threshold(img, 30, 255);
+eroid(img, 5, 5, 1, 1);
+var cannyImg = canny(img, 50, 150, 3);
+var results = findContours(cannyImg, 1000, 10000); // area > 100
+console.log(JSON.stringify(results));
+// {"0":{"x":537,"y":1850},"1":{"x":133,"y":601}}
+releaseImage(img);
+releaseImage(cannyImg);
 ```
+
+#### `drawCircle(sourceImg, x, y, radius, r, g, b, a)`
+
+Draw circle in an image.
 
 * `sourceImg` Integer
 * `x` Integer
@@ -338,8 +482,72 @@ drawCircle(sourceImg, x, y, radius, r, g, b, a)
 * `a` Integer
 
 ```javascript
-findImages(sourceImg, targetImg, scoreLimit, resultCountLimit, withoutOverlap)
+var img = getScreenshot();
+drawCircle(img, 100, 100, 10, 0, 0, 255, 0); // draw a blue circle
+saveImage(img, getStoragePath() + '/test_drawCircle.png');
+releaseImage(img);
 ```
+
+#### `getIdentityScore(sourceImg, targetImg)`
+
+* `sourceImg` Integer
+* `targetImg` Integer
+
+Returns `Float` - The identity score
+
+```javascript
+keycode('MENU');
+sleep(1000);
+var img1 = getScreenshot();
+keycode('HOME');
+sleep(1000);
+var img2 = getScreenshot();
+var score = getIdentityScore(img1, img2);
+console.log(score); // 0.6004924774169922
+releaseImage(img1);
+releaseImage(img2);
+```
+
+#### `cropImage(sourceImg, x, y, width, height)`
+
+Crop image.
+
+* `x` Integer
+* `y` Integer
+* `width` Integer
+* `height` Integer
+
+Returns `Integer` - The image pointer
+
+```javascript
+var img = getScreenshot();
+var cropImg = cropImage(img, 350, 550, 150, 150);
+saveImage(cropImg, getStoragePath() + '/test_crop.png');
+releaseImage(img);
+releaseImage(cropImg);
+```
+
+#### `findImage(sourceImg, targetImg)`
+
+Using OpenCV `Template Match` to fing image.
+
+* `sourceImg` Integer
+* `targetImg` Integer
+
+Returns `Object` - `{x: Integer, y: Integer, score: Float}`
+
+```javascript
+var img = getScreenshot();
+var cropImg = cropImage(img, 350, 550, 150, 150);
+var result = findImage(img, cropImg);
+console.log(JSON.stringify(result)); // {"score":0.9999997615814209,"x":350,"y":550}
+releaseImage(img);
+releaseImage(cropImg);
+```
+
+#### `findImages(sourceImg, targetImg, scoreLimit, resultCountLimit, withoutOverlap)`
+
+Same as `findImage()`, but find mulitple times.
 
 * `sourceImg` Integer
 * `targetImg` Integer
@@ -350,37 +558,17 @@ findImages(sourceImg, targetImg, scoreLimit, resultCountLimit, withoutOverlap)
 Returns `String` - `{"0": {"x": Integer, "y": Integer, "score": Float}, "1": {"x": Integer, "y": Integer, "score": Float}}`, Key is String!
 
 ```javascript
-getIdentityScore(sourceImg, targetImg)
+var img = getScreenshot();
+var cropImg = cropImage(img, 350, 550, 150, 150);
+var result = findImages(img, cropImg, 0.95, 3, true);
+console.log(JSON.stringify(result)); // {"0":{"score":0.9999997615814209,"x":350,"y":550}}
+releaseImage(img);
+releaseImage(cropImg);
 ```
 
-* `sourceImg` Integer
-* `targetImg` Integer
+#### `resizeImage(sourceImg, width, height)`
 
-Returns `Float` - The identity score 
-
-```javascript
-findImage(sourceImg, targetImg)
-```
-
-* `sourceImg` Integer
-* `targetImg` Integer
-
-Returns `Object` - `{x: Integer, y: Integer, score: Float}`
-
-```javascript
-cropImage(sourceImg, x, y, width, height)
-```
-
-* `x` Integer
-* `y` Integer
-* `width` Integer
-* `height` Integer
-
-Returns `Integer` - The image pointer
-
-```javascript
-resizeImage(sourceImg, width, height)
-```
+Resize image.
 
 * `width` Integer
 * `height` Integer
@@ -388,14 +576,27 @@ resizeImage(sourceImg, width, height)
 Returns `Integer` - The image pointer
 
 ```javascript
-releaseImage(imgPtr)
+var img = getScreenshot();
+var resizeImg = resizeImage(img, 108, 192);
+saveImage(resizeImg, getStoragePath() + '/test_resize.png');
+releaseImage(img);
+releaseImage(resizeImg);
 ```
+
+#### `releaseImage(imgPtr)`
+
+Very Important! You should call this function with all imgPtrs.
 
 * `imgPtr` Integer
 
 ```javascript
-getImageColor(sourceImg, x, y)
+var img = getScreenshot(); // keep in memory
+releaseImage(img); // release from memory
 ```
+
+#### `getImageColor(sourceImg, x, y)`
+
+Get color of point from an image.
 
 * `sourceImg` Integer
 * `x` Integer
@@ -404,116 +605,135 @@ getImageColor(sourceImg, x, y)
 Returns `Object` - `{r: Integer, g: Integer, b: Integer, a: Integer}`
 
 ```javascript
-getImageSize(imgPtr)
+var img = getScreenshot();
+var color = getImageColor(img, 100, 100);
+console.log(JSON.stringify(color)); // {"a":0,"b":21,"g":36,"r":198}
+releaseImage(img);
 ```
+
+#### `getImageSize(imgPtr)`
 
 * `imgPtr` Integer
 
 Returns `Object` - `{width: Integer, height: Integer}`
 
 ```javascript
-saveImage(imgPtr, path)
+var img = getScreenshot();
+var size = getImageSize(img);
+console.log(JSON.stringify(size)); // {"height":1920,"width":1080}
+releaseImage(img);
 ```
+
+#### `saveImage(imgPtr, path)`
+
+Save image to disk.
 
 * `imgPtr` Integer
 * `path` String
 
 ```javascript
-openImage(path)
+var img = getScreenshot();
+saveImage(img, getStoragePath + '/test_save.png');
+releaseImage(img);
 ```
+
+#### `openImage(path)`
+
+Open image from disk.
 
 * `path` String
 
 Returns `Integer` - The image pointer
 
 ```javascript
-sleep(milliseconds)
+var img = openImage(getStoragePath + '/test_save.png');
+releaseImage(img);
 ```
+
+#### `sleep(milliseconds)`
+
+Like `sleep` function in C language, pause current process.
 
 * `milliseconds` Integer
 
 ```javascript
-getStoragePath()
+console.log('Hello');
+sleep(1000);
+console.log('Andy');
 ```
+
+#### `getStoragePath()`
+
+Get Robotmon folder. Like `/sdcard/Robotmon`.
 
 Returns `String` - The storage path
 
 ```javascript
-getImageFromURL(url)
+console.log(getStoragePath());
 ```
+
+#### `getImageFromURL(url)`
+
+Get image from an url.
 
 * `url` String
 
 Returns `Integer` - The image pointer
 
-```javascript
-getImageFromBase64(base64)
-```
+#### `getImageFromBase64(base64)`
+
+Get image from a base64 string.
 
 * `base64` String
 
 Returns `Integer` - The image pointer
 
-```javascript
-getBase64FromImage(imgPtr)
-```
+#### `getBase64FromImage(imgPtr)`
+
+Get base64 string from an image.
 
 * `imgPtr` Integer
 
 Returns `String` - base64
 
-```javascript
-log(tag, message)
-```
+#### `readFile(path)`
 
-* `tag` String
-* `message` String
-
-Returns `String` - The log message
-
-```javascript
-readFile(path)
-```
+Read a file as string.
 
 * `path` String
 
 Returns `String` - The text of the file
 
-```javascript
-writeFile(path, text)
-```
+#### `writeFile(path, text)`
+
+Write a string to a file.
 
 * `path` String
 * `text` String
 
-```javascript
-encrypt(script)
-```
+#### `encrypt(script)`
+
+Encrypted a string
+
+* `script` String
 
 Returns String - The encrypted script
 
-* `script` String
+#### `runEncryptedScript(script)`
 
-```javascript
-runScript(script)
-```
-
-* `script` String
-
-```javascript
-runEncryptedScript(script)
-```
+Run a encrypted javascript string.
 
 * `script` String - The script is encrypted by `encrypt`
 
-```javascript
-httpClient(method, url, body, headers)
+#### `runScript(script)`
 
-// Examples:
-httpClient('GET', 'http://httpbin.org/get', '', {});
-httpClient('POST', 'http://httpbin.org/post', 'body data', {});
-httpClient('POST', 'http://httpbin.org/post', 'foo=bar&bar=foo', {'Content-Type': 'application/x-www-form-urlencoded'});
-```
+Run a javascript string.
+
+* `script` String
+
+#### `httpClient(method, url, body, headers)`
+
+Do a http request.
 
 * `method` String
 * `url` String
@@ -523,18 +743,23 @@ httpClient('POST', 'http://httpbin.org/post', 'foo=bar&bar=foo', {'Content-Type'
 Returns `String` - The result
 
 ```javascript
-importJS(library)
-
-// Examples:
-importJS('RBM-0.0.2') // import shared library in libs
-importJS('js/customerJS') // import local library
+httpClient('GET', 'http://httpbin.org/get', '', {});
+httpClient('POST', 'http://httpbin.org/post', 'body data', {});
+httpClient('POST', 'http://httpbin.org/post', 'foo=bar&bar=foo', {'Content-Type': 'application/x-www-form-urlencoded'});
 ```
+
+#### `importJS(library)`
+
+Import an JS library.
 
 * `library` String
 
 ```javascript
-getVirtualButtonHeight()
+importJS('RBM-0.0.2') // import shared library in libs
+importJS('js/customerJS') // import local library
 ```
+
+#### `getVirtualButtonHeight()`
 
 Returns `Integer` - The height of the virtual button
 
