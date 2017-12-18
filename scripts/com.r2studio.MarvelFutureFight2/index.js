@@ -37,10 +37,7 @@ MarvelFutureFight.prototype.runAutoMission = function(task) {
         rbm.releaseScreenshot();
         log("keep screen");
         rbm.keepScreenshot();
-        // check if hidden ticket is available
-        if (rbm.imageExists("hidden_available.1920x1080.png", "check hidden ticket")) {
-          rbm.imageClick("yes_green.1920x1080.png", "click green yes");
-        }
+        rbm.imageClick("yes_green.1920x1080.png", "click green yes");
         sleep(60000);
       }
       // timeline start
@@ -105,7 +102,7 @@ function start(script) {
   var oriImageWaitClick = rbm.imageWaitClick.bind(rbm);
   rbm.imageClick = function(filename, message) { return bindLog(oriImageClick(filename), message); }
   rbm.imageExists = function(filename, message) { return bindLog(oriImageExists(filename), message); }
-  rbm.imageWaitClick = function(filename, message) { return bindLog(oriImageWaitClick(filename), message); }
+  rbm.imageWaitClick = function(filename, timeout, message) { return bindLog(oriImageWaitClick(filename, timeout), message); }
   rbm.init();
 
   tag = "[MMFS]";
