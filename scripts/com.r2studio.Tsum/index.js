@@ -73,9 +73,12 @@ var Config = {
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
   scoreTable: {
+    block_kyloren_s: 0.02,
     // block_sulley_s: -0.02,
-    // block_arlo_s: 0.03,
-    // block_lotso_s: 0.03,
+    block_arlo_s: 0.02,
+    block_mcqueen_s: 0.01,
+    block_dory_s: 0.01,
+    block_maui_s: 0.005,
   },
 };
 
