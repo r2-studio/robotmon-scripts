@@ -860,10 +860,12 @@ Tsum.prototype.isAppOn = function() {
 
 Tsum.prototype.startApp = function() {
   log('Start TsumTsum App...');
-  execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
-  this.sleep(1000);
-  execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
-  this.sleep(2000);
+  if (this.isJP) {
+    execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
+  } else {
+    execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
+  }
+  this.sleep(3000);
 }
 
 Tsum.prototype.screenshot = function() {
