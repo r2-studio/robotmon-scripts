@@ -746,6 +746,7 @@ function Tsum(isJP, detect) {
   this.keepRuby = false;
   this.showHeartLog = true;
   this.sendHeartMaxDuring = 0;
+  this.useFan = true;
   // record
   this.record = {
     hearts_count: {
@@ -1240,9 +1241,11 @@ Tsum.prototype.taskPlayGame = function() {
       if (pathZero > 2) {
         pathZero = 0;
         log('路徑數量為 0, 重新辨識...');
-        this.tap(Button.gameRand, 60);
-        this.tap(Button.gameRand, 60);
-        this.sleep(1000);
+        if (this.useFan) {
+          this.tap(Button.gameRand, 60);
+          this.tap(Button.gameRand, 60);
+          this.sleep(1000);
+        }
         releaseTsumRotationImages(this.gameTsums);
         this.gameTsums = [];
         this.isLoadRotateTsum = false;
@@ -1270,7 +1273,7 @@ Tsum.prototype.taskPlayGame = function() {
       }
     }
     
-    if (runTimes % 4 == 3) {
+    if (this.useFan && runTimes % 4 == 3) {
       this.tap(Button.gameRand, 100);
       this.tap(Button.gameRand, 100);
       this.sleep(700);
@@ -1713,7 +1716,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1733,6 +1736,7 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum,
   ts.showHeartLog = true;
   ts.keepRuby = keepRuby;
   ts.sendHeartMaxDuring = sendHeartMaxDuring * 60 * 1000;
+  ts.useFan = useFan;
   if (largeImage) {
     ts.resizeRatio = 1;
   }
