@@ -454,6 +454,9 @@
             $("#record").html("");
           }
         });
+        $("#exportRecord").click(function(){
+          exportHTML();
+        });
 
         if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === "zh-TW") {
           $("#senders").text("誰送你心");
@@ -518,6 +521,10 @@
       function getDayTimeString(d) {
         return (d.getMonth()+1) + "/" + d.getDate();
       }
+      function getRecordFilename() {
+        var d = new Date();
+        return 'record_' + d.getFullYear() + '-' + (d.getMonth()+1) + "-" + d.getDate() + "_" + d.getHours() + "-" + d.getMinutes() + '-' + d.getSeconds() + '.html';
+      }
       function genRecord(record) {
         if (record == undefined || record == "undefined" || record == "") {
           return;
@@ -568,6 +575,16 @@
         html += "</ul>";
         $("#record").html(html);
       }
+      function exportHTML() {
+        $('#exportRecord').html("Exporting");
+        var html = $("#record").html();
+        html = html.replace(/\n/g, '');
+        var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>'+ html+ '</body>\');';
+        JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
+      }
+      function exportSuccess() {
+        $('#exportRecord').html("Export HTML");
+      }
     </script>
   </head>
   <body>
@@ -582,6 +599,8 @@
       <button id="resetRecord" style="float:right;" class="btn btn-danger">Reset Record</button>
       <div id="record">
       </div>
+      <br />
+      <button id="exportRecord" style="float:right;" class="btn btn-warning">Export HTML</button>
       <br />
       <button id="goToTop" class="btn btn-plus">Go Top</button>
       <br />
