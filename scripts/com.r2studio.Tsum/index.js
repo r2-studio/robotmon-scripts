@@ -105,6 +105,7 @@ var Button = {
   gameMagicalTime2: {x: 750, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameMagicalTime3: {x: 320, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameMagicalTime4: {x: 750, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  outGameItems: [{x: 205, y: 817-adjY},{x: 435, y: 821-adjY},{x: 651, y: 817-adjY},{x: 871, y: 821-adjY},{x: 201, y: 1095-adjY},{x: 424, y: 1098-adjY}],
   outGameItem1: {x: 241, y: 770 - adjY, color:{ r: 42, g: 109, b: 190}},
   outGameItem2: {x: 496, y: 788 - adjY, color:{ r: 47, g: 113, b: 197}},
   outGameItem3: {x: 709, y: 781 - adjY, color:{ r: 34, g: 102, b: 185}},
@@ -1038,7 +1039,47 @@ Tsum.prototype.goFriendPage = function() {
   }
 }
 
+Tsum.prototype.checkGameItem = function() { 
+  var isItemsOn = [false, false, false, false, false, false];
+  if (this.enableAllItems) {
+    isItemsOn = [true, true, true, true, true, true];
+  }
+  if (this.tsumCount == 4) {
+    isItemsOn[5] = true;
+  }
+  if (this.coinItem) {
+    isItemsOn[1] = true;
+  }
+  for(var t = 0; t < 3; t++) {
+    var img = this.screenshot();
+    var isChange = false;
+    for (var i = 0; i < 6; i++) {
+      var c = this.getColor(img, Button.outGameItems[i]);
+      if (c.b > 128) { // off
+        if (isItemsOn[i]) {
+          this.tap(Button.outGameItems[i]);
+          isChange = true;
+          this.sleep(500);
+        }
+      } else { // on
+        if (!isItemsOn[i]) {
+          this.tap(Button.outGameItems[i]);
+          isChange = true;
+          this.sleep(500);
+        }
+      }
+    }
+    releaseImage(img);
+    if (!isChange) {
+      break;
+    }
+    this.sleep(500);
+  }
+  log("Check bonus", isItemsOn);
+}
+
 Tsum.prototype.goGamePlayingPage = function() {
+  
   while(this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
@@ -1048,38 +1089,8 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (page == 'FriendPage') {
       this.tap(Page[page].next);
     } else if (page == 'StartPage') {
-      this.sleep(800);
-      var img = this.screenshot();
-      var outGameItem1 = isSameColor(Button.outGameItem1.color, this.getColor(img, Button.outGameItem1), 40);
-      var outGameItem2 = isSameColor(Button.outGameItem2.color, this.getColor(img, Button.outGameItem2), 40);
-      var outGameItem3 = isSameColor(Button.outGameItem3.color, this.getColor(img, Button.outGameItem3), 40);
-      var outGameItem4 = isSameColor(Button.outGameItem4.color, this.getColor(img, Button.outGameItem4), 40);
-      var outGameItem5 = isSameColor(Button.outGameItem5.color, this.getColor(img, Button.outGameItem5), 40);
-      var outGameItem6 = isSameColor(Button.outGameItem6.color, this.getColor(img, Button.outGameItem6), 40);
-      // log(this.getColor(img, Button.outGameItem1), this.getColor(img, Button.outGameItem2), this.getColor(img, Button.outGameItem3), this.getColor(img, Button.outGameItem4), this.getColor(img, Button.outGameItem5), this.getColor(img, Button.outGameItem6));
-      // log(outGameItem1, outGameItem2, outGameItem3, outGameItem4, outGameItem5, outGameItem6);
-      releaseImage(img);
-      if (this.enableAllItems) {
-        if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(500);};
-        if (outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = false; this.sleep(500);};
-        if (outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = false; this.sleep(500);};
-        if (outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = false; this.sleep(500);};
-        if (outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = false; this.sleep(500);};
-        if (outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = false; this.sleep(500);};
-      } else {
-        if (!outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = true; this.sleep(500);};
-        if (!outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = true; this.sleep(500);};
-        if (!outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = true; this.sleep(500);};
-        if (!outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = true; this.sleep(500);};
-        if (!outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = true; this.sleep(500);};
-        if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(500);};
-      }
-      if (this.tsumCount == 4) {
-        if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(500);};
-      }
-      if (this.coinItem) {
-        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(500);};
-      }
+      this.sleep(500);
+      this.checkGameItem();
       this.tap(Button.outStart2);
     } else if (page == 'GamePlaying') {
       // check again
@@ -1786,6 +1797,7 @@ function stop() {
 // stop();
 // this.sleep(500);
 // ts = new Tsum(false, true);
+// ts.checkGameItem();
 //ts.readRecord();
 // log(ts.findPage(2, 1000));
 // ts.detect();
