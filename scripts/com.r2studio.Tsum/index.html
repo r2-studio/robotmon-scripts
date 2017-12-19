@@ -146,7 +146,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 22;
+      VERSION = 23;
       ASC = true;
 
       var settings = [
@@ -183,6 +183,7 @@
           { title: "Auto Play Game", title_zh_TW: "自動玩遊戲", default: true},
           { title: "Pause(calculating)", title_zh_TW: "計算時暫停", default: true},
           { title: "Clear Bubbles", title_zh_TW: "自動清除泡泡", default: true},
+          { title: "Use Fan?", title_zh_TW: "使用風扇", default: false},
           { title: "5>4", title_zh_TW: "道具五變四", default: false},
           { title: "+Coin", title_zh_TW: "道具Coin", default: false},
           { title: "All Bonus Items", title_zh_TW: "開/關全部道具", default: false},
@@ -454,6 +455,9 @@
             $("#record").html("");
           }
         });
+        $("#exportRecord").click(function(){
+          exportHTML();
+        });
 
         if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === "zh-TW") {
           $("#senders").text("誰送你心");
@@ -518,6 +522,10 @@
       function getDayTimeString(d) {
         return (d.getMonth()+1) + "/" + d.getDate();
       }
+      function getRecordFilename() {
+        var d = new Date();
+        return 'record_' + d.getFullYear() + '-' + (d.getMonth()+1) + "-" + d.getDate() + "_" + d.getHours() + "-" + d.getMinutes() + '-' + d.getSeconds() + '.html';
+      }
       function genRecord(record) {
         if (record == undefined || record == "undefined" || record == "") {
           return;
@@ -568,6 +576,16 @@
         html += "</ul>";
         $("#record").html(html);
       }
+      function exportHTML() {
+        $('#exportRecord').html("Exporting");
+        var html = $("#record").html();
+        html = html.replace(/\n/g, '');
+        var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>'+ html+ '</body>\');';
+        JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
+      }
+      function exportSuccess() {
+        $('#exportRecord').html("Export HTML");
+      }
     </script>
   </head>
   <body>
@@ -582,6 +600,8 @@
       <button id="resetRecord" style="float:right;" class="btn btn-danger">Reset Record</button>
       <div id="record">
       </div>
+      <br />
+      <button id="exportRecord" style="float:right;" class="btn btn-warning">Export HTML</button>
       <br />
       <button id="goToTop" class="btn btn-plus">Go Top</button>
       <br />

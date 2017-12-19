@@ -73,9 +73,12 @@ var Config = {
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
   scoreTable: {
+    block_kyloren_s: 0.02,
     // block_sulley_s: -0.02,
-    // block_arlo_s: 0.03,
-    // block_lotso_s: 0.03,
+    block_arlo_s: 0.02,
+    block_mcqueen_s: 0.01,
+    block_dory_s: 0.01,
+    block_maui_s: 0.005,
   },
 };
 
@@ -102,12 +105,7 @@ var Button = {
   gameMagicalTime2: {x: 750, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameMagicalTime3: {x: 320, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameMagicalTime4: {x: 750, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  outGameItem1: {x: 241, y: 770 - adjY, color:{ r: 42, g: 109, b: 190}},
-  outGameItem2: {x: 496, y: 788 - adjY, color:{ r: 47, g: 113, b: 197}},
-  outGameItem3: {x: 709, y: 781 - adjY, color:{ r: 34, g: 102, b: 185}},
-  outGameItem4: {x: 950, y: 817 - adjY, color:{ r: 44, g: 110, b: 194}},
-  outGameItem5: {x: 262, y: 1051 - adjY, color:{ r: 34, g: 124, b: 200}},
-  outGameItem6: {x: 500, y: 1105 - adjY, color:{ r: 50, g: 116, b: 200}},
+  outGameItems: [{x: 205, y: 817-adjY},{x: 435, y: 821-adjY},{x: 651, y: 817-adjY},{x: 871, y: 821-adjY},{x: 201, y: 1095-adjY},{x: 424, y: 1098-adjY}],
   outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
   outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
@@ -234,6 +232,16 @@ var Page = {
     next: {x: 320, y: 1019 - adjY},
   },
   Received: {
+    name: 'Received',
+    colors: [
+      {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
+      {x: 806, y: 817 - adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
+      {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
+    ],
+    back: {x: 774, y: 1023 - adjY},
+    next: {x: 320, y: 1019 - adjY},
+  },
+  Received2: {
     name: 'Received',
     colors: [
       {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
@@ -736,6 +744,7 @@ function Tsum(isJP, detect) {
   this.keepRuby = false;
   this.showHeartLog = true;
   this.sendHeartMaxDuring = 0;
+  this.useFan = true;
   // record
   this.record = {
     hearts_count: {
@@ -849,10 +858,12 @@ Tsum.prototype.isAppOn = function() {
 
 Tsum.prototype.startApp = function() {
   log('Start TsumTsum App...');
-  execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
-  this.sleep(1000);
-  execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
-  this.sleep(2000);
+  if (this.isJP) {
+    execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
+  } else {
+    execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
+  }
+  this.sleep(3000);
 }
 
 Tsum.prototype.screenshot = function() {
@@ -1022,7 +1033,47 @@ Tsum.prototype.goFriendPage = function() {
   }
 }
 
+Tsum.prototype.checkGameItem = function() { 
+  var isItemsOn = [false, false, false, false, false, false];
+  if (this.enableAllItems) {
+    isItemsOn = [true, true, true, true, true, true];
+  }
+  if (this.tsumCount == 4) {
+    isItemsOn[5] = true;
+  }
+  if (this.coinItem) {
+    isItemsOn[1] = true;
+  }
+  for(var t = 0; t < 3; t++) {
+    var img = this.screenshot();
+    var isChange = false;
+    for (var i = 0; i < 6; i++) {
+      var c = this.getColor(img, Button.outGameItems[i]);
+      if (c.b > 128) { // off
+        if (isItemsOn[i]) {
+          this.tap(Button.outGameItems[i]);
+          isChange = true;
+          this.sleep(500);
+        }
+      } else { // on
+        if (!isItemsOn[i]) {
+          this.tap(Button.outGameItems[i]);
+          isChange = true;
+          this.sleep(500);
+        }
+      }
+    }
+    releaseImage(img);
+    if (!isChange) {
+      break;
+    }
+    this.sleep(500);
+  }
+  log("Check bonus", isItemsOn);
+}
+
 Tsum.prototype.goGamePlayingPage = function() {
+  
   while(this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
@@ -1032,38 +1083,8 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (page == 'FriendPage') {
       this.tap(Page[page].next);
     } else if (page == 'StartPage') {
-      this.sleep(800);
-      var img = this.screenshot();
-      var outGameItem1 = isSameColor(Button.outGameItem1.color, this.getColor(img, Button.outGameItem1), 40);
-      var outGameItem2 = isSameColor(Button.outGameItem2.color, this.getColor(img, Button.outGameItem2), 40);
-      var outGameItem3 = isSameColor(Button.outGameItem3.color, this.getColor(img, Button.outGameItem3), 40);
-      var outGameItem4 = isSameColor(Button.outGameItem4.color, this.getColor(img, Button.outGameItem4), 40);
-      var outGameItem5 = isSameColor(Button.outGameItem5.color, this.getColor(img, Button.outGameItem5), 40);
-      var outGameItem6 = isSameColor(Button.outGameItem6.color, this.getColor(img, Button.outGameItem6), 40);
-      // log(this.getColor(img, Button.outGameItem1), this.getColor(img, Button.outGameItem2), this.getColor(img, Button.outGameItem3), this.getColor(img, Button.outGameItem4), this.getColor(img, Button.outGameItem5), this.getColor(img, Button.outGameItem6));
-      // log(outGameItem1, outGameItem2, outGameItem3, outGameItem4, outGameItem5, outGameItem6);
-      releaseImage(img);
-      if (this.enableAllItems) {
-        if (outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = false; this.sleep(500);};
-        if (outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = false; this.sleep(500);};
-        if (outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = false; this.sleep(500);};
-        if (outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = false; this.sleep(500);};
-        if (outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = false; this.sleep(500);};
-        if (outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = false; this.sleep(500);};
-      } else {
-        if (!outGameItem1) {this.tap(Button.outGameItem1);outGameItem1 = true; this.sleep(500);};
-        if (!outGameItem2) {this.tap(Button.outGameItem2);outGameItem2 = true; this.sleep(500);};
-        if (!outGameItem3) {this.tap(Button.outGameItem3);outGameItem3 = true; this.sleep(500);};
-        if (!outGameItem4) {this.tap(Button.outGameItem4);outGameItem4 = true; this.sleep(500);};
-        if (!outGameItem5) {this.tap(Button.outGameItem5);outGameItem5 = true; this.sleep(500);};
-        if (!outGameItem6) {this.tap(Button.outGameItem6);outGameItem6 = true; this.sleep(500);};
-      }
-      if (this.tsumCount == 4) {
-        if (outGameItem6) {this.tap(Button.outGameItem6); this.sleep(500);};
-      }
-      if (this.coinItem) {
-        if (outGameItem2) {this.tap(Button.outGameItem2); this.sleep(500);};
-      }
+      this.sleep(500);
+      this.checkGameItem();
       this.tap(Button.outStart2);
     } else if (page == 'GamePlaying') {
       // check again
@@ -1230,9 +1251,11 @@ Tsum.prototype.taskPlayGame = function() {
       if (pathZero > 2) {
         pathZero = 0;
         log('路徑數量為 0, 重新辨識...');
-        this.tap(Button.gameRand, 60);
-        this.tap(Button.gameRand, 60);
-        this.sleep(1000);
+        if (this.useFan) {
+          this.tap(Button.gameRand, 60);
+          this.tap(Button.gameRand, 60);
+          this.sleep(1000);
+        }
         releaseTsumRotationImages(this.gameTsums);
         this.gameTsums = [];
         this.isLoadRotateTsum = false;
@@ -1260,7 +1283,7 @@ Tsum.prototype.taskPlayGame = function() {
       }
     }
     
-    if (runTimes % 4 == 3) {
+    if (this.useFan && runTimes % 4 == 3) {
       this.tap(Button.gameRand, 100);
       this.tap(Button.gameRand, 100);
       this.sleep(700);
@@ -1703,7 +1726,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1723,6 +1746,7 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, isFourTsum,
   ts.showHeartLog = true;
   ts.keepRuby = keepRuby;
   ts.sendHeartMaxDuring = sendHeartMaxDuring * 60 * 1000;
+  ts.useFan = useFan;
   if (largeImage) {
     ts.resizeRatio = 1;
   }
@@ -1767,6 +1791,7 @@ function stop() {
 // stop();
 // this.sleep(500);
 // ts = new Tsum(false, true);
+// ts.checkGameItem();
 //ts.readRecord();
 // log(ts.findPage(2, 1000));
 // ts.detect();
