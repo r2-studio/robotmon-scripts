@@ -4,9 +4,138 @@ Only support ES5
 
 ## Contents
 
+* [JavaScript Events](#javascrip-svents)
+* [JavaScript Interface](#javascrip-interface)
 * [JavaScript APIs](#javascrip-apis)
 * [RBM library APIs](#rbm-library-apis)
 * [gRPC APIs](#grpc-apis)
+
+## JavaScript Events
+
+Add the following `<script>` in the `<head>` section of `index.html`
+
+`start()` and `stop()` should defined in `index.js`
+
+```html
+<script>
+  function onEvent(eventType) {
+    if (eventType == 'OnPlayClick') {
+      JavaScriptInterface.runScript(`start();`);
+    } else if (eventType == 'OnPauseClick') {
+      JavaScriptInterface.runScript('stop();');
+    }
+  }
+
+  function onLog(message) {
+    console.log(message);
+  }
+</script>
+```
+
+|event name|
+|---|
+|OnMenuClick|
+|OnPlayClick|
+|OnPauseClick|
+|OnLogClick|
+|OnSettingClick|
+|OnCloseClick|
+
+## JavaScript Interface
+
+```javascript
+runScript(script)
+```
+
+* `script` String
+
+```javascript
+runScriptCallback(script, callback)
+```
+
+* `script` String
+* `callback` String
+
+```javascript
+clickIconButton()
+```
+
+Click the `app icon button` on floating widget.
+
+```javascript
+clickPlayButton()
+```
+
+Click the `play button` on floating widget.
+
+```javascript
+clickPauseButton()
+```
+
+Click the `pause button` on floating widget.
+
+```javascript
+clickLogButton()
+```
+
+Click the `log button` on floating widget.
+
+```javascript
+clickSettingButton()
+```
+
+Click the `setting button` on floating widget.
+
+```javascript
+clickCloseButton()
+```
+
+Click the `close button` on floating widget.
+
+```javascript
+setXY(x, y)
+```
+
+* `x` Integer
+* `y` Integer
+
+Set the position of the floating widget.
+
+```javascript
+getX()
+```
+
+Returns `Integer` - The x position of the floating widget.
+
+```javascript
+getY()
+```
+
+Returns `Integer` - The y position of the floating widget.
+
+```javascript
+showMenu()
+```
+
+Show the menu on floating widget.
+
+```javascript
+hideMenu()
+```
+
+Hide the menu on floating widget.
+
+```javascript
+showPlayButton()
+```
+
+Show the `play button` on floating widget.
+
+```javascript
+showPauseButton()
+```
+
+Show the `pause button` on floating widget.
 
 ## JavaScript APIs
 
@@ -358,10 +487,24 @@ writeFile(path, text)
 * `text` String
 
 ```javascript
+encrypt(script)
+```
+
+Returns String - The encrypted script
+
+* `script` String
+
+```javascript
 runScript(script)
 ```
 
 * `script` String
+
+```javascript
+runEncryptedScript(script)
+```
+
+* `script` String - The script is encrypted by `encrypt`
 
 ```javascript
 httpClient(method, url, body, headers)
