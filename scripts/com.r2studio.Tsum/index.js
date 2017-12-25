@@ -1484,6 +1484,10 @@ Tsum.prototype.taskReceiveOneItem = function() {
         isNonItem = true;
         receiveTime = 0;
       }
+    } else if (isTimeout) {
+      log('Try again... wait 1 sec');
+      this.tap(Button.outReceiveOk);
+      this.sleep(1000);
     } else if (isOk) {
       if (this.recordReceive && sender != undefined) {
         if (sender != "") {
@@ -1496,10 +1500,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.sleep(100);
       this.tap(Button.outReceiveOk);
       receivedCount++;
-    } else if (isTimeout) {
-      log('Try again... wait 1 sec');
-      this.tap(Button.outReceiveOk);
-      this.sleep(1000);
     } else {
       this.tap(Button.outReceiveClose);
     }
