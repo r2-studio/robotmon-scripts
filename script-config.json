@@ -3,6 +3,7 @@
     "com.r2studio.EndlessFrontier": {
       "title": "Endless Frontier AutoPlay",
       "versionCode": 13,
+      "description": "<div>無盡邊疆自動玩遊戲</div>",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
@@ -10,7 +11,8 @@
     },
     "com.r2studio.Tsum": {
       "title": "Tsum Tsum AutoPlay",
-      "versionCode": 23,
+      "versionCode": 24,
+      "description": "<div>Update Version 24</br><ul><li>Fix duplicate sender count bug</li><li>Update Tsum Image</li></ul></div>",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip"
     },
     "com.r2studio.MarvelFutureFight": {
@@ -25,6 +27,7 @@
     "com.r2studio.LoopYT": {
       "title": "LoopYT",
       "versionCode": 4,
+      "description": "<div>自動刷Youtube影片</div>",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LoopYT/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.1.js",
@@ -34,6 +37,7 @@
     "com.r2studio.EZRobot": {
       "title": "EZRobot",
       "versionCode": 3,
+      "description": "<div>Make your scripts yourself</div>",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
