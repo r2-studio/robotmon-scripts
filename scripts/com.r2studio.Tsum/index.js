@@ -1665,34 +1665,30 @@ Tsum.prototype.sendHeart = function(btn) {
   // log("sendHeart");
   while (this.isRunning) {
     var page = this.findPage(1, 300);
-    // log(page);
     if (page == "FriendPage") {
-      // log("sendHeart A");
+      // log("sendHeart A", Date.now() / 1000);
       var img = this.screenshot();
       var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
       var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 40);
       releaseImage(img);
       if ((isSendBtn || !isSentBtn) && !isGift && !isSent) {
-        // log("sendHeart A-A");
+        // log("sendHeart A-A", Date.now() / 1000);
         this.tap(btn);
-        this.sleep(200);
       } else {
         unknownCount += 1;
       }
     } else if (page == "GiftHeart") {
-      this.sleep(150);
       this.tap(Button.outReceiveOk);
-      this.sleep(150);
       isGift = true;
-      // log("sendHeart B");
+      // log("sendHeart B", Date.now() / 1000);
     } else if (page == "Received") {
-      this.sleep(150);
+      this.sleep(100);
       this.tap(Button.outSendHeartClose);
-      // log("sendHeart C");
+      // log("sendHeart C", Date.now() / 1000);
       if (isGift) {
         isSent = true;
-        // log("sendHeart C-C");
-        this.sleep(150);
+        // log("sendHeart C-C", Date.now() / 1000);
+        this.sleep(100);
         return true;
       }
     } else if (page == "FriendInfo") {
@@ -1702,11 +1698,11 @@ Tsum.prototype.sendHeart = function(btn) {
     } else {
       unknownCount++;
     }
-    if (unknownCount >= 10) {
+    if (unknownCount >= 15) {
       log("未知狀態，離開");
       return false;
     }
-    this.sleep(150);
+    // this.sleep(150);
   }
 }
 
