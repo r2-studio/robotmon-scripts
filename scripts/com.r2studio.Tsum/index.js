@@ -1666,13 +1666,13 @@ Tsum.prototype.sendHeart = function(btn) {
   while (this.isRunning) {
     var page = this.findPage(1, 300);
     if (page == "FriendPage") {
-      log("sendHeart A", Date.now() / 1000);
+      // log("sendHeart A", Date.now() / 1000);
       var img = this.screenshot();
       var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
       var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 40);
       releaseImage(img);
       if ((isSendBtn || !isSentBtn) && !isGift && !isSent) {
-        log("sendHeart A-A", Date.now() / 1000);
+        // log("sendHeart A-A", Date.now() / 1000);
         this.tap(btn);
       } else {
         unknownCount += 1;
@@ -1680,14 +1680,14 @@ Tsum.prototype.sendHeart = function(btn) {
     } else if (page == "GiftHeart") {
       this.tap(Button.outReceiveOk);
       isGift = true;
-      log("sendHeart B", Date.now() / 1000);
+      // log("sendHeart B", Date.now() / 1000);
     } else if (page == "Received") {
       this.sleep(100);
       this.tap(Button.outSendHeartClose);
-      log("sendHeart C", Date.now() / 1000);
+      // log("sendHeart C", Date.now() / 1000);
       if (isGift) {
         isSent = true;
-        log("sendHeart C-C", Date.now() / 1000);
+        // log("sendHeart C-C", Date.now() / 1000);
         this.sleep(100);
         return true;
       }
