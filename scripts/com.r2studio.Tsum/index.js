@@ -263,6 +263,18 @@ var Page = {
     back: {x: 190, y: 1574 - adjY},
     next: {x: 558, y: 1563 - adjY},
   },
+  StartPage2: {
+    name: 'StartPage',
+    colors: [
+      {x: 820,  y: 443  - adjY, r: 245, g: 250, b: 244, match: true, threshold: 80},
+      {x: 954,  y: 1354 - adjY, r: 31 , g: 190, b: 220, match: true, threshold: 80},
+      {x: 180,  y: 1512 - adjY, r: 235, g: 182, b: 8, match: true, threshold: 80},
+      {x: 540,  y: 1512 - adjY, r: 238, g: 115, b: 133, match: true, threshold: 80},
+      {x: 1011, y: 1603 - adjY, r: 229, g: 166, b: 11, match: true, threshold: 100},
+    ],
+    back: {x: 190, y: 1574 - adjY},
+    next: {x: 558, y: 1563 - adjY},
+  },
   SettingPage: {
     name: 'SettingPage',
     colors: [
