@@ -848,21 +848,15 @@ Tsum.prototype.deinit = function() {
 }
 
 Tsum.prototype.isAppOn = function() {
-  var results = execute('dumpsys activity activities').split('mFocusedActivity');
+  var results = execute('dumpsys window windows').split('mFocusedApp');
   if (results.length < 2) {
     return true;
   }
-  results = results[1].split(" ");
-  if (results.length < 4) {
+  results = results[1].split("\n");
+  if (results.length < 1) {
     return true;
   }
-  var result = results[3].split("/");
-  if (result.length < 2) {
-    return true;
-  }
-  var packageName = result[0];
-  var activityName = result[1];
-  if (packageName.indexOf('LGTMTM') == -1) {
+  if (results[0].indexOf('LGTMTM') == -1) {
     return false;
   }
   return true;
