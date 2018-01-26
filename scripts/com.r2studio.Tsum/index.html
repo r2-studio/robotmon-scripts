@@ -180,7 +180,7 @@
           { title: "Special Screen Ratio", title_zh_TW: "特殊螢幕比例", default: false},
         ],
         [
-          { title: "Auto Play Game", title_zh_TW: "自動玩遊戲", default: true},
+          { title: "Auto Play Game", title_zh_TW: "自動玩遊戲", default: false},
           { title: "Pause(calculating)", title_zh_TW: "計算時暫停", default: true},
           { title: "Clear Bubbles", title_zh_TW: "自動清除泡泡", default: true},
           { title: "Use Fan?", title_zh_TW: "使用風扇", default: false},
@@ -189,7 +189,7 @@
           { title: "All Bonus Items", title_zh_TW: "開/關全部道具", default: false},
         ],
         [
-          { title: "Receive All Hearts", title_zh_TW: "收全部愛心", default: true},
+          { title: "Receive All Hearts", title_zh_TW: "收全部愛心", default: false},
           {
             title: "Waiting time (min) before repeat",
             title_zh_TW: "完成後休息時間(分)",
@@ -200,7 +200,7 @@
           },
         ],
         [
-          { title: "Receive Hearts One By One", title_zh_TW: "一顆一顆收愛心", default: false},
+          { title: "Receive Hearts One By One", title_zh_TW: "一顆一顆收愛心", default: true},
           { title: "Skip Ruby", title_zh_TW: "保留鑽石", default: false},
           {
             title: "Max Times to Open Mailbox",
@@ -214,31 +214,31 @@
             title: "Waiting time (min) before repeat",
             title_zh_TW: "完成後休息時間(分)",
             default: 5,
-            step: 2,
+            step: 1,
             max: 60,
-            min: 1,
+            min: 0,
           },
-          { title: "Record Sender", title_zh_TW: "記錄送心者", default: true},
+          { title: "Record Sender", title_zh_TW: "記錄送心者", default: false},
           { title: "Enlarge Sender's Image (Emulator)", title_zh_TW: "放大送心者圖片(模擬器)", default: false},
         ],
         [
           { title: "Auto Send Hearts", title_zh_TW: "自動送愛心", default: false},
           { title: "Send to 0 score", title_zh_TW: "送心給0分", default: false},
           {
-            title: "Max run time(min) [0 = no limit]",
+            title: "Send Down LB before Check MB(min) [0 = no limit]",
             title_zh_TW: "執行時間上限(分)",
             default: 0,
-            step: 5,
+            step: 1,
             max: 80,
             min: 0,
           },
           {
             title: "Waiting time (min) before repeat",
             title_zh_TW: "完成後休息時間(分)",
-            default: 26,
-            step: 5,
+            default: 1,
+            step: 1,
             max: 60,
-            min: 1,
+            min: 0,
           },
         ]
       ];
