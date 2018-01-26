@@ -1607,9 +1607,10 @@ Tsum.prototype.taskSendHearts = function() {
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
-        this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+        //Move only 3 space down Leaderboard to avoid missing Heart send
+        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 500);
+        //this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
+        this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 100);
         retry++;
         log("沒愛心可送或零分，再檢查次數: " + retry);
         this.sleep(1000);
@@ -1650,9 +1651,10 @@ Tsum.prototype.taskSendHearts = function() {
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 400);
-      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+      //Move only 3 space down Leaderboard to avoid missing Heart send
+      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 400);
+      //this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 400);
+      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 100);
 
       this.sleep(400);
       if (this.sendHeartMaxDuring != 0) {
