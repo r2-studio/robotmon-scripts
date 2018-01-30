@@ -44,6 +44,16 @@
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
       ]
     }
+    "com.donny.StoneOnline": {
+      "title": "StoneOnline",
+      "versionCode": 1,
+      "description": "<div>Grow Stone online / 礦山之旅</div>",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.donny.StoneOnline/index.zip",
+      "dependencies": [
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
+      ]
+    }
   },
   "libs": {
     "RBM-0.0.1": {
