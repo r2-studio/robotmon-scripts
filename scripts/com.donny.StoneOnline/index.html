@@ -1,0 +1,661 @@
+<html>
+  <head>
+    <style>
+      .navbar-custom {
+        border-radius: 0 !important;
+        background-color: #2196F3;
+        color: #FFFFFF;
+      }
+      .navbar-custom > a {
+        width: 100%;
+        color: #FFFFFF;
+        text-align: center;
+      }
+      .navbar-custom > a:hover {
+        color: #FFFFFF;
+      }
+
+      .list-group-item {
+        padding: 6px 10px !important;
+      }
+
+      /* The switch - the box around the slider */
+      .switch {
+        position: relative; 
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0px;
+        width: 52px;
+        height: 28px;
+      }
+
+      ul {
+        padding-left: 5px;
+      }
+
+      /* Hide default HTML checkbox */
+      .switch input {display:none;}
+
+      /* The slider */
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 2px;
+        bottom: 4px;
+        top: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(24px);
+        -ms-transform: translateX(24px);
+        transform: translateX(24px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 28px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
+      .btn {
+        margin-left: 5px;
+      }
+      .btn-plus {
+        color:#FFFFFF;
+        background-color: #2196F3;
+        border-color: #2196F3;
+      }
+      .btn-plus:hover,
+      .btn-plus:focus,
+      .btn-plus:active,
+      .btn-plus.active {
+        color:#FFFFFF !important; 
+        background-color: #0d8aee;
+        border-color: #0c7cd5;
+      }
+      .btn-plus.disabled:hover,
+      .btn-plus.disabled:focus,
+      .btn-plus.disabled:active,
+      .btn-plus.disabled.active,
+      .btn-plus[disabled]:hover,
+      .btn-plus[disabled]:focus,
+      .btn-plus[disabled]:active,
+      .btn-plus[disabled].active,
+      fieldset[disabled] .btn-plus:hover,
+      fieldset[disabled] .btn-plus:focus,
+      fieldset[disabled] .btn-plus:active,
+      fieldset[disabled] .btn-plus.active {
+        color:#FFFFFF;
+        background-color: #2196F3;
+        border-color: #2196F3;
+      }
+      .btn-plus,
+      .btn-danger {
+        min-width: 35px;
+        padding: 3px 0px 3px 0px !important;
+      }
+      .setting_input_value {
+        width: 40px;
+        text-align: center;
+      }
+      .setting_input_value[type=text] {
+        width: 80%;
+      }
+      .row {
+          display: flex;
+          align-items: center;
+      }
+      #goToTop {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+      }
+    </style>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+      VERSION = 1;
+      ASC = true;
+
+      var settings = [
+        [
+          {
+            title: "特別感謝 Robotmon 作者，連線指導腳本編寫與debug協助，才有此腳本的誕生",
+            title_zh_TW: "",
+          },
+          {
+            title: "感謝 聞西、黃可愛、杉 協助測試與反饋bug內容",
+            title_zh_TW: "",
+          },
+          {
+            title: "感謝 吳小帆 提供電腦，進行24小時運轉測試",
+            title_zh_TW: "",
+          },
+        ],
+        [
+          {
+            title: "Language",
+            title_zh_TW: "語言",
+            buttons: [
+              {
+                title: "中文",
+                onclick: "saveLocale('en-US')"
+              },
+
+            ]
+          },
+          { 
+            title: ['合成，石頭最"低"等級(1~8)'],
+            default: 6,
+            step: 1,
+            max: 8,
+            min: 1,
+          },
+		  { 
+            title: ['一般合成，石頭最"高"等級(2~24)'],
+            default: 18,
+            step: 1,
+            max: 24,
+            min: 2,
+          },
+		  { 
+            title: ['雨天合成，石頭最"高"等級(2~24)'],
+            default: 22,
+            step: 1,
+            max: 24,
+            min: 2,
+          },
+        ],
+        [
+          { title: "朋友送愛心", title_zh_TW: "", default: false},
+          { title: "看廣告拿鑽", title_zh_TW: "", default: true},
+          { title: "角色對話泡包點擊", title_zh_TW: "", default: true},
+          { title: "下雨天快速挖礦", title_zh_TW: "", default: false},
+        ],
+        [
+          { title: "白水晶製作(彎月)", title_zh_TW: "", default: false},
+		  { 
+            title: ['彎月保留量(作水晶用)(0~12)'],
+            default: 0,
+            step: 1,
+            max: 12,
+            min: 0,
+          },
+        ],
+        [		  
+          { title: "打水火石地城(只在礦區有效)", title_zh_TW: "", default: true},
+		  { 
+            title: ['打水火石地城票(剩餘量)(0~10)'],
+            default: 10,
+            step: 1,
+            max: 10,
+            min: 0,
+          },
+		  { 
+            title: ['打水火石地城等級(1~5)'],
+            default: 1,
+            step: 1,
+            max: 5,
+            min: 1,
+          },
+        ],
+        [
+          {
+            title: "----====8龍模式(含鳳凰)設定區====----",
+            title_zh_TW: "",
+          },
+
+          { title: "8龍模式(含鳳凰)", title_zh_TW: "", default: false},
+		  { 
+            title: ['合成停止(彎月數量以上)(觸發轉打獵)(0~12)'],
+            default: 9,
+            step: 1,
+            max: 12,
+            min: 0,
+          },
+          { title: "打獵←→打礦切換", title_zh_TW: "", default: false},
+		  { 
+            title: ['回礦區(彎月數量以下)(0~12)'],
+            default: 3,
+            step: 1,
+            max: 12,
+            min: 0,
+          },
+		  { 
+            title: ['自動打圖(都8龍了就打80圖吧!哩貢吼母吼!)'],
+            default: 80,
+            step: 0,
+            max: 80,
+            min: 80,
+          },
+        ],
+        [
+          { title: "異常檢查自動重開app", title_zh_TW: "", default: true},
+          {
+            title: "異常檢查自動重開時間(90~1200)",
+            default: 240,
+            step: 10,
+            max: 1200,
+            min: 90,
+          },
+        ],
+        [
+          {
+            title: "---===打獵圖功能設定===---",
+            title_zh_TW: "",
+          },
+          { title: "看廣告 <金幣2倍 && 自動重生>", title_zh_TW: "", default: true},
+          {
+            title: "看廣告金幣&重生 檢查時間(0~1200)",
+            default: 3,
+            step: 3,
+            max: 1200,
+            min: 0,
+          },
+          { title: "打圖 切換少人頻道", title_zh_TW: "", default: true},
+          {
+            title: "打圖 切換少人頻道切換時間(120~1200)",
+            default: 300,
+            step: 10,
+            max: 1200,
+            min: 120,
+          },
+        ],
+      ];
+      function saveLocale(locale) {
+        if (localStorage !== undefined) {
+          localStorage.setItem('tsumtsumlanguage', locale);
+          location.reload();
+        }
+      }
+      function loadSettings(settings) {
+        var recordSettings = {};
+        if (localStorage = undefined) {
+          return;
+        }
+        var version = +localStorage.getItem('tsumtsumversion');
+        if (!version || VERSION != version) {
+          return;
+        }
+        var settingsJSON = localStorage.getItem('tsumtsumsettings');
+        if (!settingsJSON) {
+          return;
+        }
+        recordSettings = JSON.parse(settingsJSON);
+        if (!recordSettings) {
+          return;
+        }
+        for (var i in settings) {
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            if (recordSettings[id] != undefined) {
+              setting.default = recordSettings[id];
+            }
+          }
+        }
+        console.log('Load settings');
+      }
+      function saveSettings(settings) {
+        if (localStorage != undefined) {
+          var recordSettings = {};
+          for (var i in settings) {
+            for (var g in settings[i]) {
+              var id =  i + "_" + g;
+              var setting = settings[i][g];
+              if (typeof setting.default === "boolean") {
+                recordSettings[id] = $("#setting_value_" + id).is(':checked');
+              } else if (typeof setting.default === "number") {
+                recordSettings[id] = +$("#setting_value_" + id).val();
+              } else if (typeof setting.default === "string") {
+                recordSettings[id] = $("#setting_value_" + id).val();
+              }
+            }
+          }
+          localStorage.setItem('tsumtsumversion', VERSION);
+          localStorage.setItem('tsumtsumsettings', JSON.stringify(recordSettings));
+          console.log('Save settings');
+        }
+      }
+      function genStartCommand(settings) {
+        var command = "start(";
+        for (var i in settings) {
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            if (typeof setting.default === "boolean") {
+              command += $("#setting_value_" + id).is(':checked') + ", ";
+            } else if (typeof setting.default === "number") {
+              command += $("#setting_value_" + id).val() + ", ";
+            } else if (typeof setting.default === "string") {
+              command += "'" + $("#setting_value_" + id).val() + "', ";
+            }
+          }
+        }
+        command += "undefined);"
+        console.log("Start command: " + command);
+        return command;
+      }
+
+      function getTitle(setting) {
+        if (localStorage === undefined) {
+          return setting.title;
+        }
+        var lang = localStorage.getItem('tsumtsumlanguage');
+        if (!lang) {
+          return setting.title;
+        } else if (lang === "zh-TW") {
+          return setting.title_zh_TW;
+        }
+        return setting.title;
+      }
+
+      function appendTitle(jSetting, title) {
+        jSetting.append("<div class='col-xs-6'>" + title + "</div>");
+      }
+
+      function appendCol(jSetting, jContent) {
+        var jDiv = $('<div class="pull-right"></div>');
+        var jCol = $('<div class="col-xs-6"></div>');
+        if (Array.isArray(jContent)) {
+          for (var j in jContent) {
+            jDiv.append(jContent[j]);
+          }
+        } else {
+          jDiv.append(jContent);
+        }
+        jCol.append(jDiv);
+        jSetting.append(jCol);
+      }
+
+      function getSwitchButton(id, checked) {
+        var jLabel = $('<label class="switch pull-right"></label>');
+        var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='checkbox' " + (checked ? 'checked' : '') + "/>");
+        jInput.change(function() {saveSettings(settings);});
+        jLabel.append(jInput);
+        jLabel.append('<a class="slider round"></a>');
+        return jLabel;
+      }
+
+      function genSettings(jContainer, settings) {
+        for (var i in settings) {
+          var jGroup = $("<div class='list-group'></div>");
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            var title = getTitle(setting);
+            var jGroupItem = $("<div id='setting_" + id + "' class='list-group-item'></div>");
+            var jSetting = $("<div class='row'></div>");
+            if (typeof setting.default === "boolean") {
+              appendTitle(jSetting, title);
+              appendCol(jSetting, getSwitchButton(id, setting.default));
+            } else if (typeof setting.default === "number") {
+              var step = setting.step;
+              var max = setting.max;
+              var min = setting.min;
+              var jBtns = [];
+              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
+              var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
+              var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
+              jBtnP.click((function(jInput, min, max, step){
+                return function() {
+                  var newValue = (+jInput.val()) + step;
+                  if (newValue <= max) {
+                    jInput.val(newValue);
+                  }
+                  saveSettings(settings);
+                }
+              })(jInput, min, max, step));
+              jBtnM.click((function(jInput, min, max, step){
+                return function() {
+                  var newValue = (+jInput.val()) - step;
+                  if (newValue >= min) {
+                    jInput.val(newValue);
+                  }
+                  saveSettings(settings);
+                }
+              })(jInput, min, max, step));
+              jBtns.push(jInput);
+              jBtns.push(jBtnP);
+              jBtns.push(jBtnM);
+              jInput.change(function() {saveSettings(settings);});
+              appendTitle(jSetting, title);
+              appendCol(jSetting, jBtns);
+            } else if (typeof setting.default === "string") {
+              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
+              jInput.change(function() {saveSettings(settings);});
+              appendTitle(jSetting, title);
+              appendCol(jSetting, jInput);
+            } else if (setting.buttons !== undefined) {
+              var jBtns = [];
+              for (var j in setting.buttons) {
+                var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + ' class="btn btn-plus">' + setting.buttons[j].title + '</button>');
+                jBtns.push(jBtn);
+              }
+              appendTitle(jSetting, title);
+              appendCol(jSetting, jBtns);
+            } else if (title !== undefined) {
+              jSetting.append("<div class='col-xs-12'>" + title + "</div>");
+            }
+            jGroupItem.append(jSetting);
+            jGroup.append(jGroupItem);
+          }
+          jContainer.append(jGroup)
+        }
+      }
+    </script>
+
+    <script>
+      $(function() {
+        $("#version").html(" Grow Stone online / 礦山之旅 ");
+
+        loadSettings(settings);
+        genSettings($("#settings"), settings);
+
+        $("#updateRecordASC").click(function() {
+          ASC = true;
+          refreshRecord();
+        });
+        $("#updateRecordDESC").click(function() {
+          ASC = false;
+          refreshRecord();
+        });
+        $("#goToTop").click(function() {
+          window.scrollTo(0, 0);
+        });
+        var protect = true;
+        $("#resetRecord").click(function() {
+          if (protect) {
+            protect = false;
+            $("#resetRecord").html("Are you sure?");
+          } else {
+            protect = true;
+            $("#resetRecord").html("Reset Record?");
+            JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
+            $("#record").html("");
+          }
+        });
+        $("#exportRecord").click(function(){
+          exportHTML();
+        });
+
+        if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === "zh-TW") {
+          $("#senders").text("誰送你心");
+          $("#updateRecordASC").text("更新(遞增)");
+          $("#updateRecordDESC").text("更新(遞減)");
+          $("#resetRecord").text("清除紀錄");
+          $("#goToTop").text("回頁面頂端");
+        } else {
+          $("#senders").text("List of Heart Counts");
+          $("#updateRecordASC").text("Update(ASC)");
+          $("#updateRecordDESC").text("Update(DESC)");
+          $("#resetRecord").text("Reset Record");
+          $("#goToTop").text("Go Top");
+        }
+      });
+
+      function getCheckStatus(id) {
+        return $(id).is(':checked');
+      }
+
+      function onEvent(eventType) {
+        if (eventType == 'OnPlayClick') {
+          var startCommand = genStartCommand(settings);
+          JavaScriptInterface.runScript(startCommand);
+        } else if (eventType == 'OnPauseClick') {
+          JavaScriptInterface.runScript('stop();');
+          JavaScriptInterface.runScript('stop();');
+        } else if (eventType == 'OnSettingClick') {
+          // refreshRecord();
+        }
+      }
+      function onLog(message) {
+        console.log(message);
+      }
+      function refreshRecord() {
+        JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
+      }
+      var imageQueue = [];
+      var isRunning = false;
+      function getBase64(id, filename) {
+        var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/'+filename+'");if(__img_ != 0){var __'+id+'_base64_="'+id+',"+getBase64FromImage(__img_);releaseImage(__img_);};__'+id+'_base64_;';
+        imageQueue.push(script);
+        if (!isRunning) {
+          isRunning = true;
+          JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
+        }
+      }
+      function assignImage(results) {
+        var rs = results.split(',');
+        if (rs.length == 2) {
+          $("#"+rs[0]).attr("src", "data:image/png;base64,"+rs[1]);
+        }
+        if (imageQueue.length == 0) {
+          isRunning = false;
+        } else {
+          JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
+        }
+      }
+      function getTimeString(d) {
+        return (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes();
+      }
+      function getDayTimeString(d) {
+        return (d.getMonth()+1) + "/" + d.getDate();
+      }
+      function getRecordFilename() {
+        var d = new Date();
+        return 'record_' + d.getFullYear() + '-' + (d.getMonth()+1) + "-" + d.getDate() + "_" + d.getHours() + "-" + d.getMinutes() + '-' + d.getSeconds() + '.html';
+      }
+      function genRecord(record) {
+        if (record == undefined || record == "undefined" || record == "") {
+          return;
+        }
+        var recordObjs = JSON.parse(record);
+        record = [];
+        for (var filename in recordObjs) {
+          if (filename == "hearts_count"){
+            continue;
+          }
+          var obj = recordObjs[filename];
+          var totalCount = 0;
+          for (var d in obj.receiveCounts) {
+            totalCount += +obj.receiveCounts[d];
+          }
+          obj.totalCount = totalCount;
+          obj.filename = filename;
+          record.push(obj);
+        }
+        if (ASC) {
+          record.sort(function(a, b) {
+            return a.totalCount < b.totalCount ? -1 : 1;
+          });
+        } else {
+          record.sort(function(a, b) {
+            return a.totalCount >= b.totalCount ? -1 : 1;
+          });
+        }
+        
+        var html = "<ul>";
+        for (var idx in record) {
+          var filename = record[idx].filename;
+          var imgId = filename.split('.')[0];
+          var lastTime = new Date(record[idx].lastReceiveTime);
+          html += "<li>"
+          html += "<div><img id='" +imgId+ "' />" + getTimeString(lastTime) + "</div>";
+          html += "<ul>";
+          for(var day in record[idx].receiveCounts) {
+            var dayTime = new Date(+day * 86400000 );
+            html += "<li>";
+            html += getDayTimeString(dayTime) + ": get " + record[idx].receiveCounts[day] + " hearts";
+            html += "</li>";
+          }
+          html += "</ul>";
+          html += "</li>";
+          getBase64(imgId, filename);
+        }
+        html += "</ul>";
+        $("#record").html(html);
+      }
+      function exportHTML() {
+        $('#exportRecord').html("Exporting");
+        var html = $("#record").html();
+        html = html.replace(/\n/g, '');
+        var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>'+ html+ '</body>\');';
+        JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
+      }
+      function exportSuccess() {
+        $('#exportRecord').html("Export HTML");
+      }
+    </script>
+  </head>
+  <body>
+  
+    <nav class="navbar navbar-custom" role="navigation">
+      <a id="version" class="navbar-brand"></a>
+    </nav>
+    <div class="container">
+      <div id="settings"></div>
+      <div id="senders" style="padding-bottom:5px;"></div>
+      <br />
+      <div id="record">
+      </div>
+      <br />
+      <button id="goToTop" class="btn btn-plus">Go Top</button>
+      <br />
+      <br />
+      <br />
+    </div>
+  </body>
+</html>
