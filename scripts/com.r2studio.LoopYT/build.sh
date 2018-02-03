@@ -1,1 +1,0 @@
-zip index.zip index.js index.html
