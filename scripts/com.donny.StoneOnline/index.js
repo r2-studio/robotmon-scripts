@@ -1185,7 +1185,7 @@ function AreaChange(AreaID, Timer){  //區域切換：AreaID= 1:頻道  2:狩獵
 				break;
 			}
 			rbm.releaseScreenshot();
-			select(300);
+			sleep(300);
 		}
 		
 		AreaTimer6 = Date.now() + Timer * 1000

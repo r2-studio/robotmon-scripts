@@ -1,0 +1,231 @@
+<html>
+  <head>
+      <style>
+          .navbar-custom {
+              border-radius: 0 !important;
+              background-color: #2196F3;
+              color: #FFFFFF;
+          }
+          .navbar-custom > a {
+              width: 100%;
+              color: #FFFFFF;
+              text-align: center;
+          }
+          .navbar-custom > a:hover {
+              color: #FFFFFF;
+          }
+
+          .list-group-item {
+              padding-bottom: 6px !important;
+              padding-top: 6px !important;
+              font-size: 10px;
+          }
+
+          /* The switch - the box around the slider */
+          .switch {
+              position: relative;
+              display: inline-block;
+              vertical-align: middle;
+              margin-bottom: 0px;
+              margin-top: -4px;
+              width: 52px;
+              height: 28px;
+          }
+
+          /* Hide default HTML checkbox */
+          .switch input {display:none;}
+
+          /* The slider */
+          .slider {
+              position: absolute;
+              cursor: pointer;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: #ccc;
+              -webkit-transition: .4s;
+              transition: .4s;
+          }
+
+          .slider:before {
+              position: absolute;
+              content: "";
+              height: 24px;
+              width: 24px;
+              left: 2px;
+              bottom: 4px;
+              top: 2px;
+              background-color: white;
+              -webkit-transition: .4s;
+              transition: .4s;
+          }
+
+          input:checked + .slider {
+              background-color: #2196F3;
+          }
+
+          input:focus + .slider {
+              box-shadow: 0 0 1px #2196F3;
+          }
+
+          input:checked + .slider:before {
+              -webkit-transform: translateX(24px);
+              -ms-transform: translateX(24px);
+              transform: translateX(24px);
+          }
+
+          /* Rounded sliders */
+          .slider.round {
+              border-radius: 28px;
+          }
+
+          .slider.round:before {
+              border-radius: 50%;
+          }
+
+          .btn-plus {
+              color:#FFFFFF;
+              background-color: #2196F3;
+              border-color: #2196F3;
+          }
+          .btn-plus:hover,
+          .btn-plus:focus,
+          .btn-plus:active,
+          .btn-plus.active {
+              color:#FFFFFF !important;
+              background-color: #0d8aee;
+              border-color: #0c7cd5;
+          }
+          .btn-plus.disabled:hover,
+          .btn-plus.disabled:focus,
+          .btn-plus.disabled:active,
+          .btn-plus.disabled.active,
+          .btn-plus[disabled]:hover,
+          .btn-plus[disabled]:focus,
+          .btn-plus[disabled]:active,
+          .btn-plus[disabled].active,
+          fieldset[disabled] .btn-plus:hover,
+          fieldset[disabled] .btn-plus:focus,
+          fieldset[disabled] .btn-plus:active,
+          fieldset[disabled] .btn-plus.active {
+              color:#FFFFFF;
+              background-color: #2196F3;
+              border-color: #2196F3;
+          }
+          .btn-plus,
+          .btn-danger {
+              width: 35px;
+              padding: 3px 0px 3px 0px !important;
+          }
+      </style>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+      <script>
+          $(function() {
+              $("#videoTimePlus").click(function() {
+                  if ($("#videoTime").val() >= 1000) {
+                      return;
+                  }
+                  $("#videoTime").val(parseInt($("#videoTime").val()) + 1);
+              });
+              $("#videoTimeMinus").click(function() {
+                  if ($("#videoTime").val() <= 0) {
+                      return;
+                  }
+                  $("#videoTime").val(parseInt($("#videoTime").val()) - 1);
+              });
+              $("#playTimesPlus").click(function() {
+                  if ($("#playTimes").val() >= 1000) {
+                      return;
+                  }
+                  $("#playTimes").val(parseInt($("#playTimes").val()) + 3);
+              });
+              $("#playTimesMinus").click(function() {
+                  if ($("#playTimes").val() <= 0) {
+                      return;
+                  }
+                  $("#playTimes").val(parseInt($("#playTimes").val()) - 3);
+              });
+              $("#videoPositionPlus").click(function() {
+                  if ($("#videoPosition").val() >= 4) {
+                      return;
+                  }
+                  $("#videoPosition").val(parseInt($("#videoPosition").val()) + 1);
+              });
+              $("#videoPositionMinus").click(function() {
+                  if ($("#videoPosition").val() <= 1) {
+                      return;
+                  }
+                  $("#videoPosition").val(parseInt($("#videoPosition").val()) - 1);
+              });
+          });
+
+          function getCheckStatus(id) {
+              return $(id).is(':checked');
+          }
+          function onEvent(eventType) {
+              console.log(eventType);
+              if (eventType == 'OnPlayClick') {
+                  var words = $("#searchWords").val();
+                  var videoTime = parseInt($('#videoTime').val(), 10) * 60 * 1000;
+                  var playTimes = $('#playTimes').val();
+                  var videoPosition = $('#videoPosition').val();
+                  console.log('start("' + words + '", ' + videoTime + ', ' + playTimes + ');');
+                  JavaScriptInterface.runScript('start("' + words + '", ' + videoTime + ', ' + playTimes + ', ' + videoPosition + ');');
+              } else if (eventType == 'OnPauseClick') {
+                  JavaScriptInterface.runScript('stop();');
+              } else if (eventType == 'OnReloadClick') {
+                  JavaScriptInterface.runScript(script);
+              }
+          }
+          function onLog(message) {
+              console.log(message);
+          }
+      </script>
+  </head>
+  <body>
+      <nav class="navbar navbar-custom" role="navigation">
+          <a class="navbar-brand">LoopYT v4</a>
+      </nav>
+      <div class="container">
+          <ul class="list-group">
+            <li class="list-group-item">
+                搜尋字串
+                <input id="searchWords" type="text" style="display: block; width:100%;" value="twice_likey_jypentertainment">
+            </li>
+            <li class="list-group-item">
+                影片+廣告時間(分鐘)
+                <div class="pull-right" style="margin-top:-4px">
+                    <input id="videoTime" style="width: 45px; text-align: center;" min="0" type="number" value="5" readonly>
+                    <button id="videoTimeMinus" type="button" class="btn btn-danger">-1</button>
+                    <button id="videoTimePlus" type="button" class="btn btn-plus">+1</button>
+                </div>
+            </li>
+            <li class="list-group-item">
+                播放次數(0 無限)
+                <div class="pull-right" style="margin-top:-4px">
+                    <input id="playTimes" style="width: 45px; text-align: center;" min="0" type="number" value="100" readonly>
+                    <button id="playTimesMinus" type="button" class="btn btn-danger">-3</button>
+                    <button id="playTimesPlus" type="button" class="btn btn-plus">+3</button>
+                </div>
+            </li>
+            <li class="list-group-item">
+                點第幾個影片
+                <div class="pull-right" style="margin-top:-4px">
+                    <input id="videoPosition" style="width: 45px; text-align: center;" min="0" type="number" value="1" readonly>
+                    <button id="videoPositionMinus" type="button" class="btn btn-danger">-1</button>
+                    <button id="videoPositionPlus" type="button" class="btn btn-plus">+1</button>
+                </div>
+            </li>
+            <li class="list-group-item">
+                注意: 請手動轉飛航換IP (自動功能編寫中...)
+            </li>
+          </ul>
+      </div>
+  </body>
+</html>
