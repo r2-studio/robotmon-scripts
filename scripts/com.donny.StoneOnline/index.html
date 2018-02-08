@@ -146,17 +146,17 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 1;
+      VERSION = 1.23;
       ASC = true;
 
       var settings = [
         [
           {
-            title: "特別感謝 Robotmon 作者，連線指導腳本編寫與debug協助，才有此腳本的誕生",
+            title: "特別感謝 Robotmon 作者，連線指導腳本編寫與debug協助，才有此腳本誕生",
             title_zh_TW: "",
           },
           {
-            title: "感謝 聞西、黃可愛、杉 協助測試與反饋bug內容",
+            title: "感謝 聞西、黃可愛、杉、建志協助測試與反饋bug內容",
             title_zh_TW: "",
           },
           {
@@ -192,17 +192,27 @@
           },
 		  { 
             title: ['雨天合成，石頭最"高"等級(2~24)'],
-            default: 22,
+            default: 24,
             step: 1,
             max: 24,
             min: 2,
+          },
+          {
+            title: "本腳本不提供 25級(三星球)以上合成，留點樂趣給玩家",
+            title_zh_TW: "",
           },
         ],
         [
           { title: "朋友送愛心", title_zh_TW: "", default: false},
           { title: "看廣告拿鑽", title_zh_TW: "", default: true},
           { title: "角色對話泡包點擊", title_zh_TW: "", default: true},
-          { title: "下雨天快速挖礦", title_zh_TW: "", default: false},
+		  { 
+            title: ['快速挖礦-藍   (0:關, 1:雨, 2:全天)'],
+            default: 0,
+            step: 1,
+            max: 2,
+            min: 0,
+          },
         ],
         [
           { title: "白水晶製作(彎月)", title_zh_TW: "", default: false},
@@ -254,11 +264,11 @@
             min: 0,
           },
 		  { 
-            title: ['自動打圖(都8龍了就打80圖吧!哩貢吼母吼!)'],
+            title: ['自動打圖(都8龍了就打70/80圖吧!哩貢吼母吼!)'],
             default: 80,
-            step: 0,
+            step: 10,
             max: 80,
-            min: 80,
+            min: 70,
           },
         ],
         [
@@ -279,8 +289,8 @@
           { title: "看廣告 <金幣2倍 && 自動重生>", title_zh_TW: "", default: true},
           {
             title: "看廣告金幣&重生 檢查時間(0~1200)",
-            default: 3,
-            step: 3,
+            default: 15,
+            step: 5,
             max: 1200,
             min: 0,
           },
@@ -296,7 +306,7 @@
       ];
       function saveLocale(locale) {
         if (localStorage !== undefined) {
-          localStorage.setItem('tsumtsumlanguage', locale);
+          localStorage.setItem('growstonelanguage', locale);
           location.reload();
         }
       }
@@ -305,11 +315,11 @@
         if (localStorage = undefined) {
           return;
         }
-        var version = +localStorage.getItem('tsumtsumversion');
+        var version = +localStorage.getItem('growstoneversion');
         if (!version || VERSION != version) {
           return;
         }
-        var settingsJSON = localStorage.getItem('tsumtsumsettings');
+        var settingsJSON = localStorage.getItem('growstonesettings');
         if (!settingsJSON) {
           return;
         }
@@ -344,8 +354,8 @@
               }
             }
           }
-          localStorage.setItem('tsumtsumversion', VERSION);
-          localStorage.setItem('tsumtsumsettings', JSON.stringify(recordSettings));
+          localStorage.setItem('growstoneversion', VERSION);
+          localStorage.setItem('growstonesettings', JSON.stringify(recordSettings));
           console.log('Save settings');
         }
       }
@@ -373,7 +383,7 @@
         if (localStorage === undefined) {
           return setting.title;
         }
-        var lang = localStorage.getItem('tsumtsumlanguage');
+        var lang = localStorage.getItem('growstonelanguage');
         if (!lang) {
           return setting.title;
         } else if (lang === "zh-TW") {
@@ -511,7 +521,7 @@
           exportHTML();
         });
 
-        if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === "zh-TW") {
+        if (localStorage !== undefined && localStorage.getItem('growstonelanguage') === "zh-TW") {
           $("#senders").text("誰送你心");
           $("#updateRecordASC").text("更新(遞增)");
           $("#updateRecordDESC").text("更新(遞減)");
