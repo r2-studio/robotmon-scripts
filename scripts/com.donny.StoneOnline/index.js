@@ -1,410 +1,4 @@
-var DEFAULT_CONFIG = {
-  appName: 'testApp',
-  oriScreenWidth: 1080,
-  oriScreenHeight: 1920,
-  oriVirtualButtonHeight: 0,
-  oriResizeFactor: 0.4,
-  eventDelay: 200,
-  imageThreshold: 0.85,
-  imageQuality: 80,
-  resizeFactor: 0.4,
-};
-
-function RBM(config) {
-  if (config == undefined) {
-      config = DEFAULT_CONFIG;
-  }
-  this.appName = config.appName || DEFAULT_CONFIG.appName;
-  this.oriScreenWidth = config.oriScreenWidth || DEFAULT_CONFIG.oriScreenWidth;
-  this.oriScreenHeight = config.oriScreenHeight || DEFAULT_CONFIG.oriScreenHeight;
-  this.oriVirtualButtonHeight = config.oriVirtualButtonHeight || DEFAULT_CONFIG.oriVirtualButtonHeight;
-  this.oriAppWidth = this.oriScreenWidth;
-  this.oriAppHeight = this.oriScreenHeight - this.oriVirtualButtonHeight;
-  this.oriResizeFactor = config.oriResizeFactor || DEFAULT_CONFIG.oriResizeFactor;
-  this.resizeFactor = config.resizeFactor || DEFAULT_CONFIG.resizeFactor;
-  this.imageThreshold = config.imageThreshold || DEFAULT_CONFIG.imageThreshold;
-  this.imageQuality = config.imageQuality || DEFAULT_CONFIG.imageQuality;
-  this.screenWidth = 0;
-  this.screenHeight = 0;
-  this.resizeScreenWidth = 0;
-  this.resizeScreenHeight = 0;
-  this.appWidth = 0;
-  this.appHeight = 0;
-  this.appMinRatio = 1;
-  this.appMaxRatio = 1;
-  this.researchTimes = 5;
-  this.virtualButtonHeight = 0;
-  this.ip = '';
-  this.during = config.eventDelay || DEFAULT_CONFIG.eventDelay;
-  this.running = true;
-  this.isPartial = false;
-  this.partialOffsetXY = {x: 0, y: 0};
-  
-  this._screenshotImg = 0;
-}
-
-RBM.prototype.init = function() {
-  var size = getScreenSize();
-  this.screenWidth = size.width;
-  this.screenHeight = size.height;
-  this.virtualButtonHeight = getVirtualButtonHeight();
-  this.appWidth = this.screenWidth;
-  if (this.oriVirtualButtonHeight !== 0) {
-    this.appHeight = this.screenHeight - this.virtualButtonHeight;
-  } else {
-    this.appHeight = this.screenHeight;
-  }
-  this.resizeAppWidth = this.appWidth * this.resizeFactor;
-  this.resizeAppHeight = this.appHeight * this.resizeFactor;
-  var appWidthRatio = this.appWidth / this.oriAppWidth;
-  var appHeightRatio = this.appHeight / this.oriAppHeight;
-  this.appMinRatio = Math.min(appWidthRatio, appHeightRatio);
-  this.appMaxRatio = Math.max(appWidthRatio, appHeightRatio);
-};
-
-RBM.prototype.log = function() {
-  sleep(10);
-  for (var i = 0; i < arguments.length; i++) {
-    if (typeof arguments[i] == 'object') {
-      arguments[i] = JSON.stringify(arguments[i]);
-    }
-  }
-  console.log.apply(console, arguments);
-};
-
-RBM.prototype.mappingImageWHs = function(wh) {
-  var nWHs = [];
-  if (this.appMinRatio === this.appMaxRatio) {
-    // width and height is same ratio
-    nWHs.push({width: wh.width * this.appMinRatio, height: wh.height * this.appMinRatio});
-  } else {
-    // 100 200, 100 240,  1, 1.2
-    var stepRatio = (this.appMaxRatio - this.appMinRatio) / this.researchTimes;
-    for (var r = this.appMinRatio; r <= this.appMaxRatio; r += stepRatio) {
-      nWHs.push({width: wh.width * r, height: wh.height * r});
-    }
-  }
-  return nWHs;
-};
-
-RBM.prototype.mappingXY = function(xy) {
-  var nx = Math.round(xy.x * this.appWidth / this.oriAppWidth);
-  var ny = Math.round(xy.y * this.appHeight / this.oriAppHeight);
-  return {x: nx, y: ny};
-};
-
-RBM.prototype.getImagePath = function() {
-  return getStoragePath() + "/scripts/" + this.appName + "/images";
-};
-
-RBM.prototype.startApp = function(packageName, activityName) {  // app utils
-  if (activityName === undefined) {
-    execute('monkey -p ' + packageName + ' -c android.intent.category.LAUNCHER 1');
-  } else {
-    execute('am start -n ' + packageName + '/' + activityName);
-  }
-};
-
-RBM.prototype.stopApp = function(packageName) {
-  execute('am force-stop ' + packageName);
-};
-
-RBM.prototype.currentApp = function() {
-  var result = execute('dumpsys activity activities').split('mFocusedActivity')[1].split(" ")[3].split("/");
-  var packageName = result[0];
-  var activityName = result[1];
-  return {packageName: packageName, activityName: activityName};
-};
-
-
-RBM.prototype.click = function(xy) {  // touch utils
-  xy = this.mappingXY(xy);
-  tap(xy.x, xy.y, this.during);
-};
-RBM.prototype.tapDown = function(xy) {
-  xy = this.mappingXY(xy);
-  tapDown(xy.x, xy.y, this.during);
-};
-RBM.prototype.moveTo = function(xy) {
-  xy = this.mappingXY(xy);
-  moveTo(xy.x, xy.y, this.during);
-};
-RBM.prototype.tapUp = function(xy) {
-  xy = this.mappingXY(xy);
-  tapUp(xy.x, xy.y, this.during);
-};
-
-RBM.prototype.swipe = function(fromXY, toXY, step) {
-  if (step === undefined) {
-    step = 5;
-  }
-  fromXY = this.mappingXY(fromXY);
-  toXY = this.mappingXY(toXY);
-  var during = this.during / (step + 2) ;
-  var diffX = (toXY.x - fromXY.x) / step;
-  var diffY = (toXY.y - fromXY.y) / step;
-
-  tapDown(fromXY.x, fromXY.y, during);
-  for (var i = 0; i <= step; i++) {
-    moveTo(fromXY.x + i * diffX, fromXY.y + i * diffY, during);
-  }
-  tapUp(toXY.x, toXY.y, during);
-};
-
-
-RBM.prototype.screenshot = function(filename) {  // image utils
-  var filePath = this.getImagePath() + '/' + filename;
-  var rbmImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, this.imageQuality);
-  saveImage(rbmImg, filePath);
-  releaseImage(rbmImg);
-};
-
-RBM.prototype.oriScreencrop = function(filename, x, y, x2, y2) {
-  var filePath = this.getImagePath() + '/' + filename;
-  var w = Math.abs(x2 - x);
-  var h = Math.abs(y2 - y);
-  var rbmImg = getScreenshotModify(Math.min(x, x2), Math.min(y, y2), w, h, w * this.oriResizeFactor, h * this.oriResizeFactor, this.imageQuality);
-  saveImage(rbmImg, filePath);
-  releaseImage(rbmImg);
-};
-
-RBM.prototype.screencrop = function(filename, fx, fy, tx, ty) {
-  var filePath = this.getImagePath() + '/' + filename;
-  var fxy = this.mappingXY({x: fx, y: fy});
-  var txy = this.mappingXY({x: tx, y: ty});
-  var w = Math.abs(txy.x - fxy.x);
-  var h = Math.abs(txy.y - fxy.y);
-  var rbmImg = getScreenshotModify(Math.min(fxy.x, txy.x), Math.min(fxy.y, txy.y), w, h, w * this.resizeFactor, h * this.resizeFactor, this.imageQuality);
-  saveImage(rbmImg, filePath);
-  releaseImage(rbmImg);
-};
-
-RBM.prototype.findImage = function(filename, threshold) {
-  if (threshold === undefined) {
-    threshold = this.imageThreshold;
-  }
-  var sourceImg = 0; 
-  if (this._screenshotImg != 0) {
-    sourceImg = this._screenshotImg;
-  } else {
-    sourceImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, this.imageQuality);
-  }
-  var filePath = this.getImagePath() + '/' + filename;
-  var targetImg = openImage(filePath);
-  if (targetImg === 0) {
-    this.log("Image is not found: ", filePath);
-    if (sourceImg != this._screenshotImg) {
-      releaseImage(sourceImg);
-    }
-    return undefined;
-  }
-  var imageSize = getImageSize(targetImg);
-  imageSize.width *= this.resizeFactor / this.oriResizeFactor;
-  imageSize.height *= this.resizeFactor / this.oriResizeFactor;
-  var nWHs = this.mappingImageWHs(imageSize);
-  var result = undefined;
-  for (var i = 0; i < nWHs.length; i++) {
-    var nWH = nWHs[i];
-    var rImg = resizeImage(targetImg, nWH.width, nWH.height);
-    result = findImage(sourceImg, rImg);
-    result.width = nWH.width;
-    result.height = nWH.height;
-    releaseImage(rImg);
-    if (result.score >= threshold) {
-      break;
-    } else {
-      result = undefined;
-    }
-  }
-  releaseImage(targetImg);
-  if (sourceImg != this._screenshotImg) {
-    releaseImage(sourceImg);
-  }
-  
-  if (result !== undefined) {
-    result.x = this.partialOffsetXY.x + result.x * (this.appWidth / this.resizeAppWidth);
-    result.y = this.partialOffsetXY.y + result.y * (this.appHeight / this.resizeAppHeight);
-    result.width *= this.appWidth / this.resizeAppWidth;
-    result.height *= this.appWidth / this.resizeAppWidth;
-  }
-  return result;
-}
-
-RBM.prototype.findImages = function(filename, threshold, countLimit, allowOverlap, deep) {
-  if (threshold === undefined) {
-    threshold = this.imageThreshold;
-  }
-  var sourceImg = 0; 
-  if (this._screenshotImg != 0) {
-    sourceImg = this._screenshotImg;
-  } else {
-    sourceImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, this.imageQuality);
-  }
-  var filePath = this.getImagePath() + '/' + filename;
-  var targetImg = openImage(filePath);
-  if (targetImg === 0) {
-    this.log("Image is not found: ", filePath);
-    if (sourceImg != this._screenshotImg) {
-      releaseImage(sourceImg);
-    }
-    return [];
-  }
-  var imageSize = getImageSize(targetImg);
-  imageSize.width *= this.resizeFactor / this.oriResizeFactor;
-  imageSize.height *= this.resizeFactor / this.oriResizeFactor;
-  var nWHs = this.mappingImageWHs(imageSize);
-  var results = [];
-  for (var i = 0; i < nWHs.length; i++) {
-    var nWH = nWHs[i];
-    var rImg = resizeImage(targetImg, nWH.width, nWH.height);
-    var tmpResults = findImages(sourceImg, rImg, threshold, countLimit, !allowOverlap);
-    releaseImage(rImg);
-    for (var k in tmpResults) {
-      results.push({
-        x: tmpResults[k].x,
-        y: tmpResults[k].y,
-        width: nWH.width,
-        height: nWH.height,
-        score: tmpResults[k].score,
-      });
-    }
-    if (results.length >= countLimit) {
-      break;
-    }
-    if (!deep && results.length > 0) {
-      break;
-    }
-  }
-  releaseImage(targetImg);
-  if (sourceImg != this._screenshotImg) {
-    releaseImage(sourceImg);
-  }
-  for (var i in results) {
-    results[i].x = this.partialOffsetXY.x + results[i].x * (this.appWidth / this.resizeAppWidth);
-    results[i].y = this.partialOffsetXY.y + results[i].y * (this.appHeight / this.resizeAppHeight);
-    results[i].width *= this.appWidth / this.resizeAppWidth;
-    results[i].height *= this.appWidth / this.resizeAppWidth;
-  }
-  return results;
-}
-
-RBM.prototype.imageExists = function(filename, threshold) {
-  var result = this.findImage(filename, threshold);
-  if (result === undefined) {
-    return false;
-  }
-  return true;
-};
-
-RBM.prototype.imageClick = function(filename, threshold) {
-  var result = this.findImage(filename, threshold);
-  if (result === undefined) {
-    return false;
-  }
-  var x = result.x + (result.width / 2);
-  var y = result.y + (result.height / 2);
-  tap(x, y, this.during);
-  return true;
-};
-
-RBM.prototype.imageWaitClick = function(filename, timeout, threshold) {
-  if (timeout === undefined) {
-    timeout = 10000;
-  }
-  var startTime = Date.now();
-  while(this.running) {
-    var result = this.findImage(filename, threshold);
-    if (result !== undefined) {
-      var x = result.x + (result.width / 2);
-      var y = result.y + (result.height / 2);
-      tap(x, y, this.during);
-      return true;
-    }
-    sleep(this.during * 3);
-    if (Date.now() - startTime > timeout) {
-      return false;
-    }
-  }
-};
-
-RBM.prototype.imageWaitShow = function(filename, timeout, threshold) {
-  if (timeout === undefined) {
-    timeout = 10000;
-  }
-  var startTime = Date.now();
-  while(this.running) {
-    var result = this.findImage(filename, threshold);
-    if (result !== undefined) {
-      break;
-    }
-    sleep(this.during * 3);
-    if (Date.now() - startTime > timeout) {
-      break;
-    }
-  }
-};
-
-RBM.prototype.imageWaitGone = function(filename, timeout, threshold) {
-  if (timeout === undefined) {
-    timeout = 10000;
-  }
-  var startTime = Date.now();
-  while(this.running) {
-    var result = this.findImage(filename, threshold);
-    if (result === undefined) {
-      break;
-    }
-    sleep(this.during * 3);
-    if (Date.now() - startTime > timeout) {
-      break;
-    }
-  }
-};
-
-RBM.prototype.keepScreenshot = function() {
-  if (this._screenshotImg != 0) {
-    releaseImage(this._screenshotImg);
-    this._screenshotImg = 0;
-  }
-  this._screenshotImg = getScreenshotModify(0, 0, this.appWidth, this.appHeight, this.resizeAppWidth, this.resizeAppHeight, this.imageQuality);
-};
-
-RBM.prototype.keepScreenshotPartial = function(fx, fy, tx, ty) {
-  if (this._screenshotImg != 0) {
-    releaseImage(this._screenshotImg);
-    this._screenshotImg = 0;
-  }
-  var fxy = this.mappingXY({x: fx, y: fy});
-  var txy = this.mappingXY({x: tx, y: ty});
-  var w = Math.abs(txy.x - fxy.x);
-  var h = Math.abs(txy.y - fxy.y);
-  this._screenshotImg = getScreenshotModify(Math.min(fxy.x, txy.x), Math.min(fxy.y, txy.y), w, h, w * this.resizeFactor, h * this.resizeFactor, this.imageQuality);
-  this.isPartial = true;
-  this.partialOffsetXY = {x: Math.min(fxy.x, txy.x), y: Math.min(fxy.y, txy.y)};
-}
-
-RBM.prototype.releaseScreenshot = function() {
-  if (this._screenshotImg != 0) {
-    releaseImage(this._screenshotImg);
-    this._screenshotImg = 0;
-  }
-  this.isPartial = false;
-  this.partialOffsetXY = {x: 0, y: 0};
-};
-
-
-RBM.prototype.typing = function(label) {  // others
-  typing(label, this.during);
-};
-
-RBM.prototype.keycode = function(label) {
-  keycode(label, this.during);
-};
-
-RBM.prototype.sleep = function() {
-  sleep(this.during);
-};
-
+importJS('RBM-0.0.3');
 
 // ============================STONE=============================== //
 
@@ -425,25 +19,11 @@ var config = {
 };
  
 function isSameColor(c1, c2, diff) {
-  if (diff == undefined) {
-    diff = 20;
-  }
-  if (Math.abs(c1.r - c2.r) > diff) {
-    ////console.log('r:',c1.r - c2.r)
-	return false;
-  }
-  if (Math.abs(c1.g - c2.g) > diff) {
-    ////console.log('g:',c1.g - c2.g)
-    return false;
-  }
-  if (Math.abs(c1.b - c2.b) > diff) {
-    ////console.log('b:',c1.b - c2.b)
-    return false;
-  }
-  if (Math.abs(c1.a - c2.a) > diff) {
-   ////console.log('a:',c1.a - c2.a)
-    return false;
-  }
+  if (diff == undefined) diff = 20;
+  if (Math.abs(c1.r - c2.r) > diff) return false;
+  if (Math.abs(c1.g - c2.g) > diff) return false;
+  if (Math.abs(c1.b - c2.b) > diff) return false;
+  if (Math.abs(c1.a - c2.a) > diff) return false;
   return true;
 }
 
@@ -533,7 +113,7 @@ function usingTimeString(startTime) {
   return 'usingTime: ' + (Date.now() - startTime);
 }
 
-function FindStonesImages(stoneslv1,stoneslv2,column) {  //column: 0:2~3column,2:2ndcolumn,3:3rd
+function FindStonesImages(stoneslv1,stoneslv2,column) { 
 	var a = 0
 	var now = Date.now();
 	var StonesImages = []; // [] array,  {} object
@@ -544,25 +124,9 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {  //column: 0:2~3column,2
 	var StoneMaxFindArray = new Array(16,16,16,16,16,16,16,16,16,8,6,4,4,4,18, stone15findmax,18,4,4,4,4,4,4,4,4,4,4);
 	var stoneDir = config.stoneDir;
 	var StonesPath = getStoragePath() + '/' + stoneDir;
-	
-	if (column == 0){
-		var columnj1 = 0 ; var columnj2 = 2
-	}
-	else if (column == 2){
-		var columnj1 = 0 ; var columnj2 = 1
-	}
-	else if (column == 3){
-		var columnj1 = 1 ; var columnj2 = 2
-	}
-	else if (column == 4){
-		var columnj1 = 2 ; var columnj2 = 3
-	}
-	
-	////console.log(columnj1,columnj2)
+		
 	for(var k = stoneslv1; k <= stoneslv2 ; k++) {
-		if (!config.isRunning){
-			return false;
-		}
+		if (!config.isRunning) return false;
 		
 		rbm.keepScreenshotPartial(956, 1403, 956 + 66, 1403 + 21);
 		var BagOpenCheck = rbm.imageExists('BagOpen_-.png', 0.9)
@@ -572,13 +136,10 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {  //column: 0:2~3column,2
 			//console.log('BagOpenCheck-Open')
 			combinecount = combinecount + 1
 			var comcountremainder = combinecount % 3
-			if (comcountremainder == 0){;
-				RubyBox()
-			}
+			if (comcountremainder == 0)	RubyBox();
+			
 			var comcountremainder = combinecount % 4
-			if (comcountremainder == 0){;
-				characterbubble()
-			}
+			if (comcountremainder == 0) characterbubble();
 			
 			tap(389, 1000, 60); sleep(100);
 			var x0 = 0; var y0 = 0; var x1 = 0; var y1 = 0;
@@ -594,11 +155,9 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {  //column: 0:2~3column,2
 			////console.log(StonesPath)
 			for(var index in results) {
 				var result = results[index];
-				if (!config.isRunning){
-					return false;
-				}
-				var kindexNum = index * 1
+				if (!config.isRunning) return false;
 				
+				var kindexNum = index * 1
 				var indexremainder = kindexNum % 2
 				
 				if (k == 15 && mooncompswitch > 0){
@@ -622,10 +181,10 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {  //column: 0:2~3column,2
 					var y1 = 1479 + result.y * 2  + 40
 					////console.log('indexremainder=111',x1, y1)
 					if ( x1 > x0 ){
-						DIY_swipe( x1, y1, x0, y0, 12)
+						DIY_swipe( x1, y1, x0, y0, 10)
 					}
 					else if ( x1 <= x0 ){
-						DIY_swipe( x0, y0, x1, y1, 12)
+						DIY_swipe( x0, y0, x1, y1, 10)
 					}
 				}
 
@@ -638,9 +197,7 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {  //column: 0:2~3column,2
 			ResterTimerSet = Date.now()
 		}
 		else {
-			if (!config.isRunning){
-				return false;
-			}
+			if (!config.isRunning) return false;
 			
 			sleep(100);
 			console.log('BagOpenCheck-Unknow');
@@ -649,7 +206,7 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {  //column: 0:2~3column,2
 			
 			CheckImageTap( 455,  575, 180,  60, 0.9, 'exitstone.png', 680, 1280, 1, 200, 0 ); //Exit Grow Stone Online
 			CheckImageTap( 490, 1060, 100, 160, 0.9, 'ok_button.png', 1, 1, 1, 200, 1 ); //OK_Button
-			CheckImageTap( 600,  200, 470, 700, 0.9, 'closeboard.png', 1, 1, 1, 2, 1 ); //closeboard
+			CheckImageTap( 600,  200, 470, 750, 0.9, 'closeboard.png', 1, 1, 1, 2, 1 ); //closeboard
 			CheckImageTap( 470, 1100, 133,  95, 0.9, 'Receiveaward.png', 1, 1, 1, 200, 1 ); //Receiveaward
 			CheckImageTap( 626,  868, 154,  51, 0.9, 'fastdig_ok.png', 430, 1130, 1, 200, 0 );   //fast dig OK button
 			CheckImageTap( 299,  897, 207,  39, 0.9, 'UpdataFailed.png', 540, 1120, 1, 200, 0 ); //wifi or lan disconnected
@@ -1046,10 +603,8 @@ function timetoRestarApp(CycleTimer){
 }
 
 function timetoRestarApp2(CycleTimer){ //重開app，時間控制 main
-	if (!config.isRunning || RestartAppswitch == 0){
-		return false;
-	}
 	console.log('timetoRestarApp2');
+	if (!config.isRunning || RestartAppswitch == 0) return false;
 	
 	var Timerremainder = ( Date.now() - ResterTimerSet ) / 1000 ;
 	console.log( Timerremainder,'/',CycleTimer);
@@ -1057,10 +612,10 @@ function timetoRestarApp2(CycleTimer){ //重開app，時間控制 main
 	
 	
 	var BACKtremainder = combinecount % 3
-	if ( Timerremainder <= 50 ){
+	if ( Timerremainder <= 40 ){
 		sleep(1000);
 	}
-	else if ( Timerremainder > 50 ){
+	else if ( Timerremainder > 40 ){
 		rbm.keepScreenshotPartial(935, 454 - 190, 935 + 55, 454 + 65); // x1, y1, x2, y2
 		var Disconnect = rbm.imageExists('main_fbmark.png', 0.9);
 		rbm.releaseScreenshot();
@@ -1105,7 +660,7 @@ function RestartApp(Timer){  //礦山app重開
 		
 		CheckImageTap( 490, 1060, 100, 160, 0.9, 'ok_button.png', 1, 1, 1, 200, 1 ) //OK_Button
 		CheckImageTap( 470, 1100, 133,  95, 0.9, 'Receiveaward.png', 1, 1, 1, 200, 1 ) //Receiveaward
-		CheckImageTap( 600,  200, 470, 700, 0.9, 'closeboard.png', 1, 1, 1, 2, 1 ); //closeboard
+		CheckImageTap( 600,  200, 470, 750, 0.9, 'closeboard.png', 1, 1, 1, 2, 1 ); //closeboard
 		sleep(800);
 		console.log(i,'秒');
 		rbm.keepScreenshotPartial(956, 1803, 956 + 70, 1803 + 70); // x1, y1, x2, y2
@@ -1123,16 +678,24 @@ function RestartApp(Timer){  //礦山app重開
 
 function rain_fastdig(){ //雨天加速挖 main
 	console.log('rain_fastdig')
-	if (!config.isRunning || rain_fastdigswitch == 0 || eightdragonswitch == 1 ){
-		return false;
+	if (!config.isRunning || rain_fastdigswitch == 0 || eightdragonswitch == 1 ) return false;
+	
+	if ( rain_fastdigswitch == 1 ){
+		rbm.keepScreenshotPartial(655, 120, 695, 340);
+		var targetPic1 = rbm.imageExists('weather_rain.png', 0.95);
+		rbm.releaseScreenshot();
 	}
-	rbm.keepScreenshotPartial(656 - 1, 121 - 1, 656 + 36 + 2, 307 + 29 + 2);
-	var targetPic1 = rbm.imageExists('weather_rain.png', 0.95);
-	rbm.releaseScreenshot();
+	else if ( rain_fastdigswitch == 2 ){
+		var targetPic1 = 1;
+	}
+	else {
+		var targetPic1 = 0;
+	}
+	
 	if (targetPic1){
 		sleep(10)
 		console.log('click_fastdig')
-		rbm.keepScreenshotPartial(33, 880, 34 + 87, 880 + 85 * 3 + 2);
+		rbm.keepScreenshotPartial(33, 880, 121, 1137);
 		rbm.imageClick('fastdig.png', 0.88);
 		rbm.releaseScreenshot();
 		sleep(2000);
@@ -1512,20 +1075,48 @@ function WhiteCrystalMake(Timer){ //收工藝裝備，製作水晶 (彎月)
 	}
 }
 
-function AreaChange(AreaID, Timer){  //區域切換：AreaID= 1:頻道  2:狩獵區  3:副本  4:城鎮  5:強制回礦區  6:切換少人頻道
-	if (!config.isRunning){
-		return false;
-	}
-	console.log('AreaChange(' + AreaID + ' , ' + Timer + ')')
-	var travelareaX = 240 + ( AreaID - 1 ) * 216
-	var AreaArray = new Array( '---', '頻道(選少人)', '狩獵區', '副本', '城鎮', '強制回礦區', '切換少人頻道' )
-	console.log('選擇 ' + AreaArray[AreaID])
+function AD_nonAD(){
 	
-	if (AreaID == 1 && Date.now() > AreaTimer1){
-		sleep(1000);
-		tap(990, 140, 20); sleep(1000); //點擊 右上顯示區域文字 無廣告
-		tap(990, 295, 20); sleep(2000); //點擊 右上顯示區域文字 有廣告
+	
+}
+
+function AreaChangelistclick(){
+	if (!config.isRunning) return false;
+	
+	for (var i = 0; i < 14; i++){
+		rbm.keepScreenshotPartial(1000, 100, 1080, 360); //找設定齒輪，點擊切換區域
+		var targetPic3 = rbm.findImage('stone_setting.png', 0.8);
+		rbm.releaseScreenshot();
+		//rbm.log(targetPic3)
+		if ( targetPic3 != undefined && targetPic3.score >= 0.8){
+			tapx = targetPic3.x - 30;
+			tapy = targetPic3.y + 10;
+			tap(tapx, tapy); sleep(200);
+		}
 		
+		rbm.keepScreenshotPartial(390, 360, 700, 420); //出現切換區域選單跳出檢查
+		var targetPic4 = rbm.imageExists('Travel_channels_lable.png', 0.8);
+		rbm.releaseScreenshot();
+		if ( targetPic4 ){
+			sleep(300);
+			break;
+		}
+		
+		if (!config.isRunning) return false;
+		sleep(300);
+	}
+}
+
+function AreaChange(AreaID, Timer){  //區域切換：AreaID= 1:頻道  2:狩獵區  3:副本  4:城鎮  5:強制回礦區  6:切換少人頻道
+	if (!config.isRunning) return false;
+	
+	var AreaArray = new Array( '---', '頻道', '狩獵區', '副本', '城鎮', '強制回礦區', '切換少人頻道' )
+	console.log('區域切換( ' + AreaArray[AreaID] + ' , ' + Timer + ' )')
+	var travelareaX = 240 + ( AreaID - 1 ) * 216
+	//console.log('選擇 ' + AreaArray[AreaID])
+	
+	if (AreaID == 1 && Date.now() > AreaTimer1){         //頻道
+		AreaChangelistclick();
 		tap(travelareaX, 480, 20); sleep(500); //點擊 頻道
 		
 		for (var i = 0; i < 8; i++){
@@ -1548,69 +1139,53 @@ function AreaChange(AreaID, Timer){  //區域切換：AreaID= 1:頻道  2:狩獵
 		
 		AreaTimer1 = Date.now() + Timer * 1000
 	}
-	else if (AreaID == 2 && Date.now() > AreaTimer2 ){
-		sleep(1000);
-		tap(990, 140, 20); sleep(1000); //點擊 右上顯示區域文字 無廣告
-		tap(990, 295, 20); sleep(2000); //點擊 右上顯示區域文字 有廣告
-		
+	else if (AreaID == 2 && Date.now() > AreaTimer2 ){   //狩獵區
+		AreaChangelistclick();
 		tap(travelareaX, 480, 20); sleep(1000); //點擊 狩獵區
-		
 		
 		AreaTimer2 = Date.now() + Timer * 1000
 	}
-	else if (AreaID == 3 && Date.now() > AreaTimer3  ){
-		sleep(1000);
-		tap(990, 140, 20); sleep(1000); //點擊 右上顯示區域文字 無廣告
-		tap(990, 295, 20); sleep(2000); //點擊 右上顯示區域文字 有廣告
-		
+	else if (AreaID == 3 && Date.now() > AreaTimer3  ){  //副本
+		AreaChangelistclick();
 		tap(travelareaX, 480, 20); sleep(1000); //點擊 副本
 		
 		
 		AreaTimer3 = Date.now() + Timer * 1000
 	}
-	else if (AreaID == 4 && Date.now() > AreaTimer4  ){
-		sleep(1000);
-		tap(990, 140, 20); sleep(1000); //點擊 右上顯示區域文字 無廣告
-		tap(990, 320, 20); sleep(2000); //點擊 右上顯示區域文字 有廣告
-		
+	else if (AreaID == 4 && Date.now() > AreaTimer4  ){  //城鎮
+		AreaChangelistclick();
 		tap(travelareaX, 480, 20); sleep(1000); //點擊 城鎮
-		
 		
 		AreaTimer4 = Date.now() + Timer * 1000
 	}
-	else if (AreaID == 5 && Date.now() > AreaTimer5  ){
-		sleep(1000);
-		tap(990, 140, 20); sleep(1000); //點擊 右上顯示區域文字 無廣告
-		tap(990, 295, 20); sleep(2000); //點擊 右上顯示區域文字 有廣告
-		
+	else if (AreaID == 5 && Date.now() > AreaTimer5  ){  //強制回礦區
+		AreaChangelistclick();
 		tap(456, 480, 20); sleep(1000);//點擊 狩獵區頁籤
 		tap(320, 620, 20); sleep(4000); //點擊 礦洞
+		
 		AttackMode(1); //檢查背包打開/自動攻擊
 		AreaTimer5 = Date.now() + Timer * 1000
 	}
-	else if (AreaID == 6 && Date.now() > AreaTimer6 && CHLpersonswitch == 1){
-		sleep(1000);
-		tap(990, 140, 20); sleep(1000); //點擊 右上顯示區域文字 無廣告
-		tap(990, 295, 20); sleep(2000); //點擊 右上顯示區域文字 有廣告
-		
+	else if (AreaID == 6 && Date.now() > AreaTimer6 && CHLpersonswitch == 1){  //切換少人頻道
+		AreaChangelistclick();
 		tap(240, 480, 20); sleep(500); //點擊 頻道
 		
-		for (var i = 0; i < 8; i++){
-			
+		for (var i = 0; i < 15; i++){
 			rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2
-			var target1 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.90);
-			var target2 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.90);
+			var target1 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.92);
+			var target2 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.92);
 			console.log(target1, target2, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
 			if (target1) {
-				rbm.imageClick('Travel_channels_lessperson_check.png', 0.90);
+				rbm.imageClick('Travel_channels_lessperson_check.png', 0.92);
 			}
 			else if (target2) {
 				tap(260, 580);
 				sleep(300);
+				rbm.releaseScreenshot();
 				break;
 			}
 			rbm.releaseScreenshot();
-			select(300);
+			sleep(300);
 		}
 		
 		AreaTimer6 = Date.now() + Timer * 1000
@@ -1699,9 +1274,7 @@ function AD_Goldx2(Timer){  //兩倍金幣 main
 
 function Dougeon_WFStone(Timer){ //打水火石地下城
 	console.log('wfstone')
-	if (!config.isRunning || DougeonWFStoneswitch == 0){
-		return false;
-	}
+	if (!config.isRunning || DougeonWFStoneswitch == 0) return false;
 	
 	var Map_Check_FC = Map_Check(2, 0);  // MapFc: 1打獵圖, 2礦區； Type: 1點擊圖示
 	if (Map_Check_FC && Date.now() > Dougeon_WFStoneTimer ){
@@ -1728,7 +1301,7 @@ function Dougeon_WFStone(Timer){ //打水火石地下城
 					if (dungeonbattletimes <= 0 ){
 						console.log('門票：' + j + '張, 到設定：' + DungeonTicketsset + '，跳出')
 						rbm.releaseScreenshot();
-						CheckImageTap( 600,  200, 470, 700, 0.9, 'closeboard.png', 1, 1, 1, 2, 1 ); //closeboard
+						CheckImageTap( 600,  200, 470, 750, 0.9, 'closeboard.png', 1, 1, 1, 2, 1 ); //closeboard
 						
 						ResterTimerSet = Date.now()
 						Dougeon_WFStoneTimer = Date.now() + Timer * 1000
@@ -1813,9 +1386,9 @@ function Dougeon_WFStone(Timer){ //打水火石地下城
 			if (!config.isRunning || DougeonWFStoneswitch == 0){
 				return false;
 			}
-			//sleep(200)
+			
 			rbm.keepScreenshotPartial(35, 755, 149, 1330); // x1, y1, x2, y2 //
-			var target1 = rbm.imageExists('dungeon_play.png', 0.90); //左邊 沒票
+			var target1 = rbm.imageExists('dungeon_play.png', 0.90); //左邊 PLAY 是否存在
 			if (ticketusedcount < dungeonbattletimes && ticketovercount < 8){
 				rbm.imageClick('dungeon_play.png', 0.90)  //左邊 PLAY 開幹BOSS
 				rbm.imageClick('dungeon_skip.png', 0.90)  //左邊 SKIP 跳過廢話
@@ -1842,6 +1415,7 @@ function Dougeon_WFStone(Timer){ //打水火石地下城
 				rbm.releaseScreenshot();
 			}
 			else if (target1){
+				rbm.releaseScreenshot();
 				if (ticketovercount >= 8 || ticketusedcount >= dungeonbattletimes){
 					console.log('沒票了 OR 票數達到了');
 					Map_Check(1, 1);
@@ -1855,6 +1429,22 @@ function Dougeon_WFStone(Timer){ //打水火石地下城
 	}
 }
 
+function dungeonbackcheck(){
+	if (!config.isRunning) return false;
+	console.log('dungeonbackcheck')
+	
+	rbm.keepScreenshotPartial(35, 755, 149, 1330); // x1, y1, x2, y2 //
+	var target1 = rbm.imageExists('dungeon_play.png', 0.90); //左邊 PLAY
+	var target2 = rbm.imageExists('dungeon_ticket_over.png', 0.90); //左邊 沒票
+	rbm.releaseScreenshot();
+	
+	if (target1 || target2){
+		AreaTimer5 =  Date.now();  //頻道
+		sleep(300);
+		AreaChange(5, 5);  //區域切換：AreaID= 1:礦區 1頻	
+	}
+}
+
 function EDTravel_field(){  //8龍，礦區切換至80圖，彎月數控制
 	console.log('EDTravel_field')
 	if (!config.isRunning) return false;
@@ -1862,19 +1452,20 @@ function EDTravel_field(){  //8龍，礦區切換至80圖，彎月數控制
 	if (eightdragonchangswitch == 1){
 		AreaChange(2, 0); // Change to Field
 		
-		for (var i = 0; i < 6; i++){
+		for (var i = 0; i < 8; i++){
 			xy_swipe(200, 1700, 200, 800, 25 )
 			sleep(300)
-			if ( i >= 3 ){
-				rbm.keepScreenshotPartial(240, 930, 670, 1730); // x1, y1, x2, y2
+			if ( i >= 2 ){
+				rbm.keepScreenshotPartial(240, 1050, 670, 1730); // x1, y1, x2, y2
 				var target1 = rbm.imageExists('underground_80a.png', 0.98);
-				var target2 = rbm.imageExists('underground_80b.png', 0.96);
-				rbm.log('underground_80',rbm.findImage('underground_80a.png', 0.90));
-				rbm.log('underground_80',rbm.findImage('underground_80b.png', 0.90));
+				var target2 = rbm.imageExists('underground_' + eightdragonhuntermap + 'b.png', 0.92);
+				//rbm.log('underground_80',rbm.findImage('underground_80a.png', 0.90));
+				//rbm.log('underground_80',rbm.findImage('underground_80b.png', 0.90));
+				//rbm.log('underground_' + eightdragonhuntermap + 'b.png',rbm.findImage('underground_' + eightdragonhuntermap + 'b.png', 0.90));
 				rbm.releaseScreenshot();
 				if (target1 && target2) {
-					rbm.imageClick('underground_80b.png', 0.98);
-					rbm.imageClick('underground_80b.png', 0.96);
+					rbm.imageClick('underground_' + eightdragonhuntermap + 'b.png', 0.98);
+					rbm.imageClick('underground_' + eightdragonhuntermap + 'b.png', 0.96);
 					break;
 				}
 			}
@@ -1912,6 +1503,7 @@ function StoneCompound(min, max, rainmax) { // 主流程
 	
 	var Map_Check_FC1 = Map_Check(2, 0);  // MapFc: 1打獵圖, 2礦區； Type: 1點擊圖示
 	var Map_Check_FC2 = Map_Check(1, 0);  // MapFc: 1打獵圖, 2礦區； Type: 1點擊圖示
+	
 	if ( Map_Check_FC1 ){                 // 確認在礦區
 		
 		AreaChange(5, 600);  //區域切換：AreaID= 1:礦區 1頻	
@@ -1943,19 +1535,15 @@ function StoneCompound(min, max, rainmax) { // 主流程
 			stonecompoundnotup(14, 14); //指定金星不跳階合成
 			EDTravel_field(); // 切換80圖，打獵檢查 (切換開關 = ON)
 		}
-				
+		
 		characterbubble();   //點選角色對話泡泡		
 		Dougeon_WFStone(600);
 	}
 	else if (Map_Check_FC2){              // 確認在打獵
-		AreaChange(6, CHLpersontimeset); // Change to channels
-		AD_Goldx2(AD_Goldx2timeset); //打獵 2倍金幣&看廣告自動重生
-		CheckImageTap( 470, 1120, 610 - 470, 1170 - 1120, 0.9, 'Rebirth_Now.png', 1, 1, 1, 200, 1 ); //Rebirth_Now
-		if ( eightdragonswitch == 1 && eightdragonchangswitch == 1){
+		if ( eightdragonswitch == 1 && eightdragonchangswitch == 1){  //8龍模式，彎月到達回礦區檢查
 			if (Stonecount(15) <= EDbackminigmoonset){
-				
 				rbm.keepScreenshotPartial(956, 1403, 956 + 66, 1403 + 21);
-				var BagOpenCheck = rbm.imageExists('BagOpen_-.png', 0.9)
+				var BagOpenCheck = rbm.imageExists('BagOpen_-.png', 0.85)
 				rbm.releaseScreenshot();
 				
 				if (BagOpenCheck){
@@ -1973,11 +1561,17 @@ function StoneCompound(min, max, rainmax) { // 主流程
 				EDbackminigmooncount = 0;
 			}
 		}
+
+		AreaChange(6, CHLpersontimeset); // Change to channels
+		AD_Goldx2(AD_Goldx2timeset); //打獵 2倍金幣&看廣告自動重生
+		CheckImageTap( 470, 1120, 610 - 470, 1170 - 1120, 0.9, 'Rebirth_Now.png', 1, 1, 1, 200, 1 ); //Rebirth_Now
+
+		dungeonbackcheck();  //人物在地城檢查，回礦區
 		sleep(500)
 	}
 	else {                                // 不在打獵&礦區 上右上
 		keycode('DPAD_UP', 100);
-		keycode('DPAD_RIGHT', 50);
+		keycode('DPAD_RIGHT', 100);
 		keycode('DPAD_UP', 100);
 	}
 
@@ -2006,17 +1600,9 @@ for(var n = 0; n <= 0; n++) {
 		AreaTimer5 =  Date.now();  //強制回礦區
 	}
 	else if( n > 0){
-		Travel_field();
+		EDTravel_field();
 		//Dougeon_WFStone(120);
 		
-		/*
-		rbm.keepScreenshotPartial(430, 550, 735, 600); // x1, y1, x2, y2
-		for (var j = 10; j >= -1; j-- ){  //檢查有幾張票，確認打不打
-			//var Targetimage = rbm.imageExists('Ticket_' + j + '.png', 0.90);
-			rbm.log('j = ' + j ,rbm.findImage('Ticket_' + j + '.png', 0.99));
-		}
-		rbm.releaseScreenshot();
-		*/
 	}
 	
 	console.log('n = '+ n );
@@ -2058,7 +1644,9 @@ function start(min, max, rainmax, friendheart, ad_ruby, charabubble, rainfastdig
 	eightdragonchangswitch = EDareachange;  //8龍專用(含鳳凰)，打獵←→打礦切換  EDareachange
 	EDbackminigmoonset = EDmoonback;        //8龍專用(含鳳凰)，回到礦區(彎月數量) EDmoonback
 	eightdragonhuntermap = EDgotohunter;    //設定要打獵地圖 EDgotohunter
-	//console.log('8龍模式:', EightDragon, EDmoonkeep, EDareachange, EDmoonback, EDgotohunter)
+	//console.log('8龍模式UI:', EightDragon, EDmoonkeep, EDareachange, EDmoonback, EDgotohunter)
+	//console.log('8龍模式SC:', eightdragonswitch, eightdragonmoonset, eightdragonchangswitch, EDbackminigmoonset, eightdragonhuntermap)
+	
 	
 	RestartAppswitch = resetapp;           //異常檢查自動重開app    0:關  1:開  resetapp
 	RestartApptimeset = resetapptime;      //異常檢查自動重開時間   檢查時間 "秒" resetapptime
@@ -2068,7 +1656,7 @@ function start(min, max, rainmax, friendheart, ad_ruby, charabubble, rainfastdig
 	AD_Goldx2timeset = goldx2T;            //打圖 廣告 金幣重生檢查時間   檢查時間 "秒" goldx2T
 	CHLpersonswitch = CHLperson            //打圖 頻道 切換至少人頻道     0:關  1:開  goldx2
 	CHLpersontimeset = CHLpersonT          //打圖 頻道 切換至少人頻道     切換時間 "秒"
-	console.log('廣告 金幣x2 自動重生:', goldx2, goldx2T, CHLperson, CHLpersonT)
+	//console.log('廣告 金幣x2 自動重生:', goldx2, goldx2T, CHLperson, CHLpersonT)
 	
 	
 	
