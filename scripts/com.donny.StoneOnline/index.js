@@ -916,11 +916,6 @@ function friendheartcheck(Timer){ //朋友送愛心 main
 	console.log('friendheartcheck over')
 }
 
-function CraftGet(){
-	
-	
-}
-
 function WhiteCrystalMake(Timer){ //收工藝裝備，製作水晶 (彎月)
 	if (!config.isRunning){
 		return false;
@@ -932,11 +927,11 @@ function WhiteCrystalMake(Timer){ //收工藝裝備，製作水晶 (彎月)
 	var mooncount = Stonecount(15);
 	if ( WhiteCrystalswitch > 0 && Date.now() > WhiteCrystalTimer && mooncount > 0){
 		
-		if (mooncount > 3 ){
-			mooncount = 3
+		if (mooncount > 4 ){
+			mooncount = 4
 		}
 		
-		if (Stonecount(0) < 3 ){
+		if (Stonecount(0) < 4 ){
 			sleep(500);
 			tap(990, 1400, 200); sleep(1000); //點包包下拉
 			
@@ -971,7 +966,7 @@ function WhiteCrystalMake(Timer){ //收工藝裝備，製作水晶 (彎月)
 			var filename1 = StonesPath + '/craftsokopen.png';
 			var tImg1 = openImage(filename1);
 			var image1 = getScreenshotModify(110, 1100, 870, 120, 870, 120, 100);
-			var results1 = findImages(image1, tImg1, 0.90, 3, true);
+			var results1 = findImages(image1, tImg1, 0.90, 4, true);
 			
 			for(var index in results1) {
 				var result1 = results1[index];
@@ -983,8 +978,8 @@ function WhiteCrystalMake(Timer){ //收工藝裝備，製作水晶 (彎月)
 						return false;
 					}
 				}
-				var x0 = 110 + result1.x + 40
-				var y0 = 1100 + result1.y + 85
+				var x0 = 110 + result1.x + 40;
+				var y0 = 1100 + result1.y + 85 - 85;
 				sleep(300)
 				//rbm.log(result1.x, result1.y, result1.score);
 				for (var i = 0; i < 1; i++ ){
@@ -1002,7 +997,7 @@ function WhiteCrystalMake(Timer){ //收工藝裝備，製作水晶 (彎月)
 			//製作裝備
 			var filename2 = StonesPath + '/CraftsMake.png';	
 			var tImg2 = openImage(filename2);
-			var image2 = getScreenshotModify(120, 1000, 870, 120, 870, 120, 100);
+			var image2 = getScreenshotModify(90, 1000, 900, 120, 900, 120, 100);
 			var results2 = findImages(image2, tImg2, 0.90, mooncount, true);
 			releaseImage(tImg2);
 			releaseImage(image2);
@@ -1073,11 +1068,6 @@ function WhiteCrystalMake(Timer){ //收工藝裝備，製作水晶 (彎月)
 		AttackMode(1);
 		WhiteCrystalTimer = Date.now() + Timer * 1000
 	}
-}
-
-function AD_nonAD(){
-	
-	
 }
 
 function AreaChangelistclick(){
@@ -1171,20 +1161,33 @@ function AreaChange(AreaID, Timer){  //區域切換：AreaID= 1:頻道  2:狩獵
 		tap(240, 480, 20); sleep(500); //點擊 頻道
 		
 		for (var i = 0; i < 15; i++){
-			rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2
-			var target1 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.92);
-			var target2 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.92);
-			console.log(target1, target2, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
+			
+			rbm.keepScreenshotPartial(130, 460, 200, 520); // x1, y1, x2, y2
+			var target1 = rbm.imageExists('Travel_channels_lessperson_mapcheck1.png', 0.90);
+			var target2 = rbm.imageExists('Travel_channels_lessperson_mapcheck2.png', 0.90);
+			rbm.releaseScreenshot();
 			if (target1) {
-				rbm.imageClick('Travel_channels_lessperson_check.png', 0.92);
+				
+				rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2
+				var target3 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.92);
+				var target4 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.92);
+				console.log(target3, target4, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
+				if (target3) {
+					rbm.imageClick('Travel_channels_lessperson_check.png', 0.92);
+				}
+				else if (target4) {
+					tap(260, 580);
+					sleep(300);
+					rbm.releaseScreenshot();
+					break;
+				}
+				rbm.releaseScreenshot();
 			}
 			else if (target2) {
-				tap(260, 580);
-				sleep(300);
-				rbm.releaseScreenshot();
+				keycode('BACK', 40);
 				break;
 			}
-			rbm.releaseScreenshot();
+			
 			sleep(300);
 		}
 		
@@ -1445,7 +1448,7 @@ function dungeonbackcheck(){
 	}
 }
 
-function EDTravel_field(){  //8龍，礦區切換至80圖，彎月數控制
+function EDTravel_field1(){  //8龍，礦區切換至80圖，彎月數控制
 	console.log('EDTravel_field')
 	if (!config.isRunning) return false;
 	
@@ -1466,6 +1469,43 @@ function EDTravel_field(){  //8龍，礦區切換至80圖，彎月數控制
 				if (target1 && target2) {
 					rbm.imageClick('underground_' + eightdragonhuntermap + 'b.png', 0.98);
 					rbm.imageClick('underground_' + eightdragonhuntermap + 'b.png', 0.96);
+					break;
+				}
+			}
+			if (!config.isRunning) return false;
+		}
+	}
+}
+
+function EDTravel_field(){  //8龍，礦區切打獵，彎月數控制，切換以底圖判斷； 1:70,  2:80,  3:90-E,  4:90-N,  5:90-H
+	console.log('EDTravel_field')
+	if (!config.isRunning) return false;
+	
+	if (eightdragonchangswitch == 1){
+		AreaChange(2, 0); // Change to Field
+		
+		for (var i = 0; i < 8; i++){
+			rbm.keepScreenshotPartial(935, 454 - 190, 935 + 55, 454 + 65);
+			var Disconnect = rbm.imageExists('main_fbmark.png', 0.9);
+			rbm.releaseScreenshot();
+			if (Disconnect){
+				console.log('no_list & break for')
+				break;
+			}
+			
+			xy_swipe(200, 1700, 200, 960, 25 )
+			sleep(300)
+			
+			if ( i >= 2 ){
+				rbm.keepScreenshotPartial(125, 270, 270, 1760); // x1, y1, x2, y2
+				var target1 = rbm.findImage('underground_under.png', 0.90);
+				//rbm.log('underground_under',rbm.findImage('underground_under.png', 0.90));
+				rbm.releaseScreenshot();
+				if (target1 != undefined && target1.score > 0.90) {
+					var x1 = target1.x;
+					var y1 = target1.y - ( 7 - eightdragonhuntermap ) * 140;
+					console.log(x1, y1)
+					tap(x1, y1)
 					break;
 				}
 			}
@@ -1587,19 +1627,20 @@ for(var n = 0; n <= 0; n++) {
 	friendheartswitch = 0;
 	RubyBoxClick = 0;
 	if (!config.isRunning) break;
-	if (n == 0){
+	if (n == 1){
 		DougeonWFStoneswitch = 1;   //打水火石              0:關  1:開
 		DungeonTicketsset = 5;      //打水火石剩餘票設定   0:打光所有票  11:時間為 0:00
 		DungeonRoomset = 1;         //打水火石等級設定      0:不打     1:Beginner  2:Easy  
 									//                      3:Normal   4:Hard      5:Hell
 		Dougeon_WFStoneTimer = Date.now();  //打水火石
-		AreaTimer1 =  Date.now();  //頻道
-		AreaTimer2 =  Date.now();  //狩獵區
-		AreaTimer3 =  Date.now();  //副本
-		AreaTimer4 =  Date.now();  //城鎮
-		AreaTimer5 =  Date.now();  //強制回礦區
+		AreaTimer1 =  Date.now() - 1000;  //頻道
+		AreaTimer2 =  Date.now() - 1000;  //狩獵區
+		AreaTimer3 =  Date.now() - 1000;  //副本
+		AreaTimer4 =  Date.now() - 1000;  //城鎮
+		AreaTimer5 =  Date.now() - 1000;  //強制回礦區
 	}
-	else if( n > 0){
+	else if( n > 1){
+		eightdragonhuntermap = 5;
 		EDTravel_field();
 		//Dougeon_WFStone(120);
 		
@@ -1665,8 +1706,8 @@ function start(min, max, rainmax, friendheart, ad_ruby, charabubble, rainfastdig
 	AD_GetRubyTimer = Date.now() + 50 * 1000;
 	ResterTimerSet = Date.now() + 0 * 1000;
 	WhiteCrystalTimer = Date.now() + 90 * 1000;
-	Dougeon_WFStoneTimer = Date.now() + 0 * 1000;  //打水火石
-	AD_Goldx2Timer = Date.now() + 10 * 1000;  //打水火石
+	Dougeon_WFStoneTimer = Date.now() + 40 * 1000;  //打水火石
+	AD_Goldx2Timer = Date.now() + 10 * 1000;  //打獵區金幣2倍&重生
 	
 	AreaTimer1 =  Date.now();  //頻道
 	AreaTimer2 =  Date.now();  //狩獵區
