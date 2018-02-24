@@ -409,35 +409,6 @@ var Page = {
 
 // Utils for Tsum
 
-function loadTsumImages(isJP) {
-  var tsumImages = {};
-  var tsumDir = isJP ? Config.tsumJpDir : Config.tsumDir;
-  var tsumPath = getStoragePath() + '/' + tsumDir;
-  var tsumFiles = isJP ? Config.tsumFilesJP : Config.tsumFiles;
-  for (var i in tsumFiles) {
-    var key = tsumFiles[i];
-    var filename = tsumPath + '/' + key + '_0.png';
-    var img = openImage(filename);
-    smooth(img, 1, 2);
-    tsumImages[key] = img;
-  }
-  return tsumImages;
-}
-
-function releaseTsumImages(tsumImages) {
-  for (var k in tsumImages) {
-    releaseImage(tsumImages[k]);
-  }
-}
-
-function releaseTsumRotationImages(tsumMaxScores) {
-  for (var i = 0; i < Config.loadRotatedCount && i < tsumMaxScores.length; i++) {
-    for (var r in tsumMaxScores[i].rotations) {
-      releaseImage(tsumMaxScores[i].rotations[r]);
-    }
-  }
-}
-
 // Tsum struct
 
 function Tsum(isJP, detect) {
@@ -1136,7 +1107,7 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   }
 
   gTaskController = new TaskController();
-  gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
+  gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);
   //if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
   //if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
@@ -1144,7 +1115,7 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   gTaskController.start();
   // loop stop here...
   log('清除殘留記憶體...');
-  ts.deinit();
+  //ts.deinit();
   if (ts.recordReceive) {
     ts.releaseRecord();
   }
