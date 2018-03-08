@@ -46,7 +46,7 @@
     },
     "com.donny.StoneOnline": {
       "title": "StoneOnline",
-      "versionCode": 1.23,
+      "versionCode": 1.25,
       "description": "<div>Grow Stone online / 礦山之旅</div>",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.donny.StoneOnline/index.zip",
       "dependencies": [

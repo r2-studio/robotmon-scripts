@@ -146,7 +146,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 1.23;
+      VERSION = 1.25;
       ASC = true;
 
       var settings = [
@@ -264,11 +264,11 @@
             min: 0,
           },
 		  { 
-            title: ['自動打圖(都8龍了就打70/80圖吧!哩貢吼母吼!)'],
-            default: 80,
-            step: 10,
-            max: 80,
-            min: 70,
+            title: ['自動打圖(1:70, 2:80, 3:90-E, 4:90-N, 5:90-H)'],
+            default: 2,
+            step: 1,
+            max: 5,
+            min: 1,
           },
         ],
         [
@@ -302,6 +302,10 @@
             max: 1200,
             min: 120,
           },
+        ],
+        [
+          { title: "每日獎勵，自動領(無功能)", title_zh_TW: "", default: true},
+          { title: "信件獎勵，自動領(無功能)", title_zh_TW: "", default: true},
         ],
       ];
       function saveLocale(locale) {
