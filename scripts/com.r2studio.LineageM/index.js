@@ -97,31 +97,36 @@ function taskPlayGame() {
     var s = settings[i];
     
     if (s.target == 'hp' && s.type == 'lower' && hp <= s.threshold) {
-      tap(s.x, s.y, 10);
-      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do: ', i)
+      tap(s.x, s.y, 70);
+      // rbm.click({x: s.x, y: s.y});
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do:', i, '(', s.x, ',', s.y, ')')
     }
     else if (s.target == 'hp' && s.type == 'higher' && hp > s.threshold) {
-      tap(s.x, s.y, 10);
-      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do: ', i)
+      tap(s.x, s.y, 70);
+      // rbm.click({x: s.x, y: s.y});
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do:', i, '(', s.x, ',', s.y, ')')
     }
     else if (s.target == 'mp' && s.type == 'lower' && mp <= s.threshold) {
-      tap(s.x, s.y, 10);
-      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do: ', i)
+      tap(s.x, s.y, 70);
+      // rbm.click({x: s.x, y: s.y});
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do:', i, '(', s.x, ',', s.y, ')')
     }
     else if (s.target == 'mp' && s.type == 'higher' && mp > s.threshold) {
-      tap(s.x, s.y, 10);
-      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do: ', i)
+      tap(s.x, s.y, 70);
+      // rbm.click({x: s.x, y: s.y});
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do:', i, '(', s.x, ',', s.y, ')')
     } else {
       console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do nothing')
     }
   }
+  releaseImage(img);
 }
 
 function start(words, videoTime, watchTimes, videoPosition) {
   stop();
   // settings.searchWords = words;
 
-  console.log('L start')
+  console.log('L v0.02')
   rbm.init();
   rbm.running = true;
   gTaskController = new TaskController();
