@@ -44,60 +44,6 @@ function safeSleep(t) {
   }
 }
 
-function taskWatchVideo() {
-  var sleepTime = 1500;
-  rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.log("Open Chrome. 打開 Chrome");
-  startChrome(); safeSleep(settings.waitVideoLoad);
-  rbm.log("Click Window. 點擊視窗");
-  rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.log("Click Menu. 點擊選單");
-  rbm.click(Buttons.chromeMenu); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.log("New Incognito. 新增無痕視窗");
-  rbm.click(Buttons.chromeNewIncognito); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.log("Input Youtube URL. 輸入Youtube網址");
-  rbm.click(Buttons.chromeURL); safeSleep(sleepTime); if (!rbm.running) {return;}
-  typing(settings.youtubeURL, 2000); safeSleep(sleepTime); if (!rbm.running) {return;}
-  keycode('ENTER');
-  safeSleep(settings.waitVideoLoad);
-  rbm.log("Search: " + settings.searchWords +  ". 搜尋:" + settings.searchWords);
-  rbm.click(Buttons.youtubeSearchIcon);safeSleep(sleepTime); if (!rbm.running) {return;}
-  typing(settings.searchWords, 2000); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.click(Buttons.youtubeSearchGo);safeSleep(sleepTime); if (!rbm.running) {return;}
-  safeSleep(settings.waitVideoLoad);
-  rbm.log("Click first video. 點擊第一個影片");
-  rbm.click(Buttons.youtubeVideoPositions[settings.videoPosition]);safeSleep(sleepTime); if (!rbm.running) {return;}
-  safeSleep(settings.waitVideoLoad); if (!rbm.running) {return;}
-  var videoStart = Date.now();
-  rbm.log("Wait for video end. 等待影片結束...");
-  while(rbm.running) {
-    if (settings.isAutoDetectVideo && !isVideoRunning()) {
-      sleep(2000);
-      if (!isVideoRunning()) {
-        rbm.log("影片結束，跳出");
-        break;
-      }
-    }
-    safeSleep(1000);
-    if (Date.now() - videoStart > settings.waitVideoTime) {
-      rbm.log("時間到結束影片");
-      break;
-    }
-  }
-  safeSleep(1500); if (!rbm.running) {return;}
-  rbm.log("Click Window. 點擊視窗");
-  rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.log("Click Menu. 點擊選單");
-  rbm.click(Buttons.chromeMenu); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.log("Close Incognito. 關閉無痕");
-  rbm.click(Buttons.chromeCloseIncognito); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
-  rbm.log("Close Chrome. 關閉Chrome");
-  // stopChrome();
-  keycode('HOME');
-  safeSleep(settings.waitVideoLoad);
-}
-
 function taskPlayGame() {
   var settings = [
     {
@@ -147,31 +93,32 @@ function taskPlayGame() {
     }
   }
   
-  console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp))
-  
   for (var i = 0, len = settings.length; i < len; i++) {
     var s = settings[i];
     
-    // console.log(hp, mp, JSON.stringify(s));
     if (s.target == 'hp' && s.type == 'lower' && hp <= s.threshold) {
       tap(s.x, s.y, 10);
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do: ', i)
     }
     else if (s.target == 'hp' && s.type == 'higher' && hp > s.threshold) {
       tap(s.x, s.y, 10);
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do: ', i)
     }
     else if (s.target == 'mp' && s.type == 'lower' && mp <= s.threshold) {
       tap(s.x, s.y, 10);
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do: ', i)
     }
     else if (s.target == 'mp' && s.type == 'higher' && mp > s.threshold) {
       tap(s.x, s.y, 10);
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do: ', i)
+    } else {
+      console.log('HP/MP: ', parseInt(hp), '/', parseInt(mp), 'do nothing')
     }
   }
-  
 }
 
 function start(words, videoTime, watchTimes, videoPosition) {
   stop();
-
   // settings.searchWords = words;
 
   console.log('L start')
@@ -191,7 +138,3 @@ function stop() {
     gTaskController.stop();
   }
 }
-
-// start("twice_likey_jypentertainment", 6 * 60000, 3, 2);
-// startChrome();
-
