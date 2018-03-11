@@ -189,12 +189,13 @@ function taskChangeIp() {
   safeSleep(7000);
 }
 
-function start(words, videoTime, watchTimes, videoPosition) {
+function start(words, videoTime, watchTimes, videoPosition, isAutoDetect) {
   stop();
 
   settings.searchWords = words;
   settings.waitVideoTime = videoTime;
   settings.videoPosition = (+videoPosition) - 1;
+  settings.isAutoDetectVideo = isAutoDetect;
 
   rbm.init();
   rbm.running = true;

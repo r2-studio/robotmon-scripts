@@ -175,8 +175,9 @@
                   var videoTime = parseInt($('#videoTime').val(), 10) * 60 * 1000;
                   var playTimes = $('#playTimes').val();
                   var videoPosition = $('#videoPosition').val();
-                  console.log('start("' + words + '", ' + videoTime + ', ' + playTimes + ');');
-                  JavaScriptInterface.runScript('start("' + words + '", ' + videoTime + ', ' + playTimes + ', ' + videoPosition + ');');
+                  var isAutoDetect = getCheckStatus('#autoDetect');
+                  console.log('start("' + words + '", ' + videoTime + ', ' + playTimes + ', ' + videoPosition + ', ' + isAutoDetect + ');');
+                  JavaScriptInterface.runScript('start("' + words + '", ' + videoTime + ', ' + playTimes + ', ' + videoPosition + ', ' + isAutoDetect + ');');
               } else if (eventType == 'OnPauseClick') {
                   JavaScriptInterface.runScript('stop();');
               } else if (eventType == 'OnReloadClick') {
@@ -190,13 +191,13 @@
   </head>
   <body>
       <nav class="navbar navbar-custom" role="navigation">
-          <a class="navbar-brand">LoopYT v4</a>
+          <a class="navbar-brand">LoopYT v5</a>
       </nav>
       <div class="container">
           <ul class="list-group">
             <li class="list-group-item">
                 搜尋字串
-                <input id="searchWords" type="text" style="display: block; width:100%;" value="twice_likey_jypentertainment">
+                <input id="searchWords" type="text" style="display: block; width:100%;" value="jyj">
             </li>
             <li class="list-group-item">
                 影片+廣告時間(分鐘)
@@ -221,6 +222,13 @@
                     <button id="videoPositionMinus" type="button" class="btn btn-danger">-1</button>
                     <button id="videoPositionPlus" type="button" class="btn btn-plus">+1</button>
                 </div>
+            </li>
+            <li class="list-group-item">
+                自動偵測影片結束
+                <label class="switch pull-right">
+                    <input id='autoDetect' type='checkbox'/>
+                    <span class="slider round"></span>
+                </label>
             </li>
             <li class="list-group-item">
                 注意: 請手動轉飛航換IP (自動功能編寫中...)
