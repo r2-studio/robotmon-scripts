@@ -44,19 +44,30 @@ function safeSleep(t) {
   }
 }
 
+var clickCnt = 0;
+function taskRunTrial() {
+  var setting = {
+    x: 1280,
+    y: 970,
+  }
+  tap(setting.x, setting.y, 10);
+  clickCnt ++;
+  console.log('Clicked: ', clickCnt);
+}
+
 function taskPlayGame() {
   var settings = [
     {
       'target': 'hp',
       'type': 'lower',
-      'threshold': 85,
+      'threshold': 88,
       'x': 928,
       'y': 970,
     },
     {
       'target': 'mp',
       'type': 'higher',
-      'threshold': 95,
+      'threshold': 90,
       'x': 812,
       'y': 983,
     },
@@ -78,7 +89,6 @@ function taskPlayGame() {
       break;
     }
   }
-  
   
   // var pxl = getImageColor(img, 128 , mpY)
   // console.log(pxl.r, pxl.g, pxl.b, pxl.a)
@@ -122,15 +132,21 @@ function taskPlayGame() {
   releaseImage(img);
 }
 
-function start(words, videoTime, watchTimes, videoPosition) {
+function start(runType) {
   stop();
   // settings.searchWords = words;
+  runType = runType === undefined ? 'autoPlay' : runType;
 
-  console.log('L v0.02')
   rbm.init();
   rbm.running = true;
   gTaskController = new TaskController();
-  gTaskController.newTask('taskPlayGame', taskPlayGame, 2000, 3 * 86400);
+
+  if (runType === 'autoPlay') {
+    gTaskController.newTask('taskPlayGame', taskPlayGame, 1500, 3 * 86400);
+  } else if (runType === 'trial') {
+    console.log('sent trial')
+    gTaskController.newTask('taskRunTrial', taskRunTrial, 300, 3 * 86400);
+  }
 
   sleep(1000);
   gTaskController.start();
