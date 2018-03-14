@@ -1,0 +1,175 @@
+<html>
+  <head>
+      <style>
+          .navbar-custom {
+              border-radius: 0 !important;
+              background-color: #2196F3;
+              color: #FFFFFF;
+          }
+          .navbar-custom > a {
+              width: 100%;
+              color: #FFFFFF;
+              text-align: center;
+          }
+          .navbar-custom > a:hover {
+              color: #FFFFFF;
+          }
+
+          .list-group-item {
+              padding-bottom: 6px !important;
+              padding-top: 6px !important;
+              font-size: 10px;
+          }
+
+          /* The switch - the box around the slider */
+          .switch {
+              position: relative;
+              display: inline-block;
+              vertical-align: middle;
+              margin-bottom: 0px;
+              margin-top: -4px;
+              width: 52px;
+              height: 28px;
+          }
+
+          /* Hide default HTML checkbox */
+          .switch input {display:none;}
+
+          /* The slider */
+          .slider {
+              position: absolute;
+              cursor: pointer;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: #ccc;
+              -webkit-transition: .4s;
+              transition: .4s;
+          }
+
+          .slider:before {
+              position: absolute;
+              content: "";
+              height: 24px;
+              width: 24px;
+              left: 2px;
+              bottom: 4px;
+              top: 2px;
+              background-color: white;
+              -webkit-transition: .4s;
+              transition: .4s;
+          }
+
+          input:checked + .slider {
+              background-color: #2196F3;
+          }
+
+          input:focus + .slider {
+              box-shadow: 0 0 1px #2196F3;
+          }
+
+          input:checked + .slider:before {
+              -webkit-transform: translateX(24px);
+              -ms-transform: translateX(24px);
+              transform: translateX(24px);
+          }
+
+          /* Rounded sliders */
+          .slider.round {
+              border-radius: 28px;
+          }
+
+          .slider.round:before {
+              border-radius: 50%;
+          }
+
+          .btn-plus {
+              color:#FFFFFF;
+              background-color: #2196F3;
+              border-color: #2196F3;
+          }
+          .btn-plus:hover,
+          .btn-plus:focus,
+          .btn-plus:active,
+          .btn-plus.active {
+              color:#FFFFFF !important;
+              background-color: #0d8aee;
+              border-color: #0c7cd5;
+          }
+          .btn-plus.disabled:hover,
+          .btn-plus.disabled:focus,
+          .btn-plus.disabled:active,
+          .btn-plus.disabled.active,
+          .btn-plus[disabled]:hover,
+          .btn-plus[disabled]:focus,
+          .btn-plus[disabled]:active,
+          .btn-plus[disabled].active,
+          fieldset[disabled] .btn-plus:hover,
+          fieldset[disabled] .btn-plus:focus,
+          fieldset[disabled] .btn-plus:active,
+          fieldset[disabled] .btn-plus.active {
+              color:#FFFFFF;
+              background-color: #2196F3;
+              border-color: #2196F3;
+          }
+          .btn-plus,
+          .btn-danger {
+              width: 80px;
+              padding: 3px 0px 3px 0px !important;
+          }
+      </style>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+      <script>
+          $(function() {
+            $("#runAutoPlay").click(function() {
+                $("#runType").val('autoPlay');
+            });
+            $("#runTrial").click(function() {
+                $("#runType").val('trial');
+            });
+          });
+
+          function getCheckStatus(id) {
+              return $(id).is(':checked');
+          }
+          function onEvent(eventType) {
+              console.log(eventType);
+              if (eventType == 'OnPlayClick') {
+                  var runType = $("#runType").val();
+                  console.log('start("' + runType + ');');
+                  JavaScriptInterface.runScript('start("' + runType + '", ' + null + ');');
+              } else if (eventType == 'OnPauseClick') {
+                  JavaScriptInterface.runScript('stop();');
+              } else if (eventType == 'OnReloadClick') {
+                  JavaScriptInterface.runScript(script);
+              }
+          }
+          function onLog(message) {
+              console.log(message);
+          }
+      </script>
+  </head>
+  <body>
+      <nav class="navbar navbar-custom" role="navigation">
+        <a class="navbar-brand">LineageM v0</a>
+      </nav>
+      <div class="container">
+        <ul class="list-group">
+          <li class="list-group-item">
+              功能選擇
+              <div class="pull-right" style="margin-top:-4px">
+                <input id="runType" style="width: 45px; text-align: center;" min="0" type="string" value="autoPlay" readonly>
+                <button id="runAutoPlay" type="button" class="btn btn-danger">自動打怪</button>
+                <button id="runTrial" type="button" class="btn btn-plus">狂點試煉鍵</button>
+              </div>
+          </li>
+        </ul>
+      </div>
+  </body>
+</html>
