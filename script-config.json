@@ -4,6 +4,7 @@
       "title": "Endless Frontier AutoPlay",
       "versionCode": 13,
       "description": "<div>無盡邊疆自動玩遊戲</div>",
+      "packageName": "com.ekkorr.endlessfrontier.global",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
@@ -13,11 +14,13 @@
       "title": "Tsum Tsum AutoPlay",
       "versionCode": 27,
       "description": "<div>Update Version 26</br><ul><li>Update Tsum Tsum images</li></ul></div>",
+      "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip"
     },
     "com.r2studio.MarvelFutureFight": {
       "title": "Marvel Future Fight AutoPlay",
       "versionCode": 6,
+      "packageName": "com.netmarble.mherosgb",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MarvelFutureFight/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.1.js",
@@ -28,6 +31,7 @@
       "title": "LoopYT",
       "versionCode": 5,
       "description": "<div>自動刷Youtube影片</div>",
+      "packageName": "com.google.android.youtube",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LoopYT/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.1.js",
@@ -38,9 +42,21 @@
       "title": "EZRobot",
       "versionCode": 3,
       "description": "<div>Make your scripts yourself</div>",
+      "packageName": "com.r2studio.robotmon",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
+      ]
+    },
+    "com.r2studio.LineageM": {
+      "title": "Lineage M",
+      "versionCode": 1,
+      "description": "<div>天堂M(Lineage M)</div>",
+      "packageName": "com.gamania.lineagem",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LineageM/index.zip",
+      "dependencies": [
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.2.js",
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
       ]
     },
@@ -48,6 +64,7 @@
       "title": "StoneOnline",
       "versionCode": 1.25,
       "description": "<div>Grow Stone online / 礦山之旅</div>",
+      "packageName": "net.supercat.stone",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.donny.StoneOnline/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
