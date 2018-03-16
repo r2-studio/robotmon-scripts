@@ -68,7 +68,7 @@ function EndlessFrontier() {
     ButtonEnableColor: {b: 1, g:1, r: 1, a: 0},
 
     InGameCheck: {x: 340, y: 820, color: {b: 1, g:1, r: 1, a: 0}},
-    ButtonMenuArmyRevolution: {x: 725, y: 920},
+    ButtonRevolutionScreen: {x: 65, y: 185},
     ButtonRevolutionTeam: {x: 500, y: 1180},
     ButtonMenuStoreProp: {x: 700, y: 750},
     ButtonTableRightTask: {x: 1040, y: 1100},
@@ -198,7 +198,7 @@ EndlessFrontier.prototype.initButtons = function() {
   this.TableCellHeight = this.getRealHeightRatio(this.Const.tableCellHeight);
 
   // from top
-  this.ButtonMenuArmyRevolution = this.getRealWHRatio(this.Const.ButtonMenuArmyRevolution);
+  this.ButtonRevolutionScreen = this.getRealWHRatio(this.Const.ButtonRevolutionScreen);
   this.ButtonRevolutionTeam = this.getRealWHRatio(this.Const.ButtonRevolutionTeam);
   this.ButtonMenuStoreProp = this.getRealWHRatio(this.Const.ButtonMenuStoreProp);
   this.ButtonTableRightTask = this.getRealWHRatio(this.Const.ButtonTableRightTask);
@@ -518,9 +518,7 @@ EndlessFrontier.prototype.taskWar = function() {
 EndlessFrontier.prototype.taskRevolution = function() {
   log('===轉世===');
   this.goToGame();
-  this.tap(this.ButtonMenuArmy);
-
-  this.tap(this.ButtonMenuArmyRevolution);
+  this.tap(this.ButtonRevolutionScreen);
   this.tap(this.ButtonRevolution);
   this.tap(this.ButtonRevolutionTeam);
   sleep(2000);
