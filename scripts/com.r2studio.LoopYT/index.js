@@ -88,18 +88,18 @@ function stopChrome() {
 }
 
 function airplaneOn() {
-  rbm.log("開關 3g/4g 網路");
+  rbm.log("開關 3g/4g 網路 等候 15秒");
   rbm.startApp("com.android.settings", ".RadioInfo");
-  safeSleep(4000);
+  safeSleep(14000);
   rbm.stopApp("com.android.settings");
   keycode('HOME');
   safeSleep(1000);
 }
 
 function airplaneOff() {
-  rbm.log("開關 3g/4g 網路");
+  rbm.log("開關 3g/4g 網路 等候 15秒");
   rbm.startApp("com.android.settings", ".RadioInfo");
-  safeSleep(4000);
+  safeSleep(14000);
   rbm.stopApp("com.android.settings");
   keycode('HOME');
   safeSleep(1000);
@@ -194,8 +194,9 @@ function taskWatchVideo() {
   if (settings.toggleAirplainTimes > 0 && (settings.count % settings.toggleAirplainTimes) == 0) {
     rbm.log("重啟 3g/4g網路");
     airplaneOff();
-    sleep(3000);
+    sleep(7000);
     airplaneOn();
+    sleep(3000);
   }
 }
 

@@ -168,13 +168,13 @@
                   if ($("#airplaneTimes").val() >= 20) {
                       return;
                   }
-                  $("#airplaneTimes").val(parseInt($("#airplaneTimes").val()) + 2);
+                  $("#airplaneTimes").val(parseInt($("#airplaneTimes").val()) + 1);
               });
               $("#airplaneTimesMinus").click(function() {
                   if ($("#airplaneTimes").val() <= 0) {
                       return;
                   }
-                  $("#airplaneTimes").val(parseInt($("#airplaneTimes").val()) - 2);
+                  $("#airplaneTimes").val(parseInt($("#airplaneTimes").val()) - 1);
               });
           });
 
@@ -252,8 +252,8 @@
                 看幾次重啟飛航(換IP)(0為不換)
                 <div class="pull-right" style="margin-top:-4px">
                     <input id="airplaneTimes" style="width: 45px; text-align: center;" min="0" type="number" value="4" readonly>
-                    <button id="airplaneTimesMinus" type="button" class="btn btn-danger">-2</button>
-                    <button id="airplaneTimesPlus" type="button" class="btn btn-plus">+2</button>
+                    <button id="airplaneTimesMinus" type="button" class="btn btn-danger">-1</button>
+                    <button id="airplaneTimesPlus" type="button" class="btn btn-plus">+1</button>
                 </div>
             </li>
           </ul>
