@@ -2,8 +2,8 @@
   "scripts": {
     "com.r2studio.EndlessFrontier": {
       "title": "Endless Frontier AutoPlay",
-      "versionCode": 13,
-      "description": "<div>無盡邊疆自動玩遊戲</div>",
+      "versionCode": 14,
+      "description": "<div>無盡的邊疆自動玩遊戲</br>修正轉世按鈕的位置</div>",
       "packageName": "com.ekkorr.endlessfrontier.global",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip",
       "dependencies": [
