@@ -55,6 +55,9 @@ class Point {
     this.tx = this.x * this._r;
     this.ty = this.y * this._r;
   }
+  tap(deviceRatio = 1) {
+    tap(this.x / deviceRatio, this.y / deviceRatio, 20); 
+  }
 }
 
 class FeaturePoint extends Point {
@@ -103,8 +106,7 @@ class PageFeature {
     }
   }
   tap(deviceRatio = 1, idx = 0) {
-    const p = this.featurPoints[0];
-    tap(p.x / deviceRatio, p.y / deviceRatio, 20); 
+    this.featurPoints[idx].tap(deviceRatio); 
   }
 }
 
@@ -124,6 +126,20 @@ class GameInfo {
     this.expBarRect = new Rect(this.ratio, 15, 1069, 1905, 1074);
     this.mapRect = new Rect(this.ratio, 384, 217, 1920, 937); // 1536, 720
     this.regionTypeRect = new Rect(this.ratio, 1710, 470, 1816, 498);
+
+    this.itemBtns = [
+      new Point(this.ratio, 810, 960),
+      new Point(this.ratio, 930, 960),
+      new Point(this.ratio, 1050, 960),
+      new Point(this.ratio, 1180, 960),
+      new Point(this.ratio, 1440, 960),
+      new Point(this.ratio, 1560, 960),
+      new Point(this.ratio, 1690, 960),
+      new Point(this.ratio, 1810, 960),
+    ];
+
+    this.mapBtn = new Point(this.ratio, 1740, 300);
+    this.mapDetailBtn = new Point(this.ratio, 700, 160);
 
     this.menuOnBtn = new PageFeature('menuOn', [
       new FeaturePoint(this.ratio, 1844, 56, 245, 245, 241, true),
@@ -181,7 +197,8 @@ class RoleState {
 }
 
 class LineageM {
-  constructor() {
+  constructor(config) {
+    this.config = config || {conditions: []};
     this.gi = new GameInfo();
     this.rState = new RoleState(this.gi);
 
@@ -199,6 +216,8 @@ class LineageM {
       normalRegion: openImage(getStoragePath() + '/lineageM/normalRegionType.png'),
     };
     this.gi.disconnectBtn.print(this._img);
+    this.tmpExp = 0;
+    this.isRecordLocation = false;
   }
 
   safeSleep(t) {
@@ -208,39 +227,125 @@ class LineageM {
     }
   }
 
-  checkPage() {
+  checkIsSystemPage() {
     if (this.rState.isEnter) {
       console.log('Enter the game, Wait 10 sec');        
       this.gi.enterBtn.tap(this.gi.deviceRatio);
       this.safeSleep(10 * 1000);
-      continue;
+      return true;
     }
     if (this.rState.isDisconnect) {
       console.log('Disconnect. Reconnect. Wait 10 sec');
       this.gi.disconnectBtn.tap(this.gi.deviceRatio);
       this.safeSleep(10 * 1000);
-      continue;
+      return true;
     }
     if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
       console.log('Unknow State, Wait 5 sec');
       keycode('BACK', 100);
       this.safeSleep(5 * 1000);
-      continue;
+      return true;
+    }
+    return false;
+  }
+
+  checkCondiction() {
+    for(let i = 0; i < this.config.conditions.length && this._loop; i++) {
+      const cd = this.config.conditions[i];
+      let value = 0;
+      if (cd.type === 'hp') {
+        value = this.rState.hp;
+      } else if (cd.type === 'mp') {
+        value = this.rState.mp;
+      } else if (cd.type === 'exp') {
+        value = this.rState.exp;
+      }
+      if (value < 0.1) {
+        continue;
+      }
+      if (cd.type === 'exp') {
+        if (this.rState.exp !== this.tmpExp) {
+          this.gi.itemBtns[cd.btn].tap(this.gi.deviceRatio);
+          console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
+          sleep(200);
+        }
+      } else if (value * cd.op > cd.value * cd.op) {
+        if (cd.btn >= 0 && cd.btn < 8) {
+          this.gi.itemBtns[cd.btn].tap(this.gi.deviceRatio);
+          console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
+          sleep(200);
+        }
+      }
     }
   }
 
-  conditionTasks() { 
+  start() { 
     this._loop = true;
+    let goBackTime = Date.now();
     while(this._loop) {
-      sleep(1000);
+      this.safeSleep(2000);
       this.refreshScreen();
       this.updateGlobalState();
-      this.checkPage();
+      if (this.checkIsSystemPage()) {
+        continue;
+      }
       if (this.rState.isMenuOn) {
+        console.log('Hide Menu');
         this.gi.menuOnBtn.tap(this.gi.deviceRatio);
         continue;
       }
+      if (!this.rState.isAutoPlay) {
+        console.log('Click AutoPlay');
+        this.gi.autoPlayBtn.tap(this.gi.deviceRatio);
+        continue;
+      }
+      if (this.rState.isSafeRegion) {
+        console.log('In safe region');
+        if (this.config.inHomeUseBtn >= 0 && this.config.inHomeUseBtn < 8) {
+          this.gi.itemBtns[this.config.inHomeUseBtn].tap(this.gi.deviceRatio);
+        }
+        continue;
+      }
+      if (this.config.goBack && !this.isRecordLocation) {
+        console.log('Record current location');
+        this.goToMapPage();
+        this.recordCurrentLocation();
+        this.gi.menuOnBtn.tap(this.gi.deviceRatio);
+        this.isRecordLocation = true;
+        continue;
+      }
+      console.log('Check conditions');
+      this.checkCondiction();
+      if (this.config.goBack && Date.now() - goBackTime > 60 * 1000) {
+        console.log('Go back location');
+        this.goToMapPage();
+        const diffXY = this.findDiffRecordLocation();
+        // TODO go back to origin location
+        console.log(JSON.stringify(diffXY));
+        goBackTime = Date.now();
+      }
     }
+  }
+
+  waitForChangeScreen(score = 0.8) {
+    const oriImg = clone(this._img);
+    for(let i = 0; i < 20 && this._loop; i++) {
+      sleep(500);
+      this.refreshScreen();
+      const s = getIdentityScore(this._img, oriImg);
+      if (s < score) {
+        break;
+      }
+    }
+    releaseImage(oriImg);
+  }
+
+  goToMapPage() {
+    this.gi.mapBtn.tap(this.gi.deviceRatio);
+    this.waitForChangeScreen();
+    // this.gi.mapDetailBtn.tap(this.gi.deviceRatio);
+    // this.waitForChangeScreen();
+    console.log('In Map Page');
   }
 
   stop() {
@@ -442,7 +547,42 @@ class LineageM {
   }
 }
 
-const lm = new LineageM();
+const DefaultConfig = {
+  conditions: [
+    {type: 'hp', op: -1, value: 30, btn: 3}, // if hp < 25% use 4th button, like 回卷
+    // {type: 'hp', op: -1, value: 40, btn: 2}, // if hp < 40% use 3th button, like 瞬移
+    // {type: 'hp', op: -1, value: 75, btn: 1}, // if hp < 75% use 2th button, like 高治
+    // {type: 'mp', op: -1, value: 70, btn: 0}, // if mp < 70% use 1th button, like 魂體
+    // {type: 'mp', op:  1, value: 80, btn: 4}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+  ],
+  inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
+  goBack: true, // whether to go back to origin location, check location every 5 min 
+};
+
+let lm = undefined;
+
+function start(config) {
+  if (lm !== undefined) {
+    return;
+  }
+  lm = new LineageM(config);
+  console.log('START');
+  lm.start();
+  lm.stop();
+  console.log('STOP');
+}
+
+function stop() {
+  if (lm == undefined) {
+    return;
+  }
+  lm._loop = false;
+}
+
+start(DefaultConfig);
+// lm = new LineageM();
+// lm._loop=true;
+// lm.goToMapPage();
 // const hp = lm.getHpPercent();
 // const mp = lm.getMpPercent();
 // const exp = lm.getExpPercent();
@@ -450,5 +590,5 @@ const lm = new LineageM();
 // lm.recordCurrentLocation();
 // lm.getDiffRecordLocation();
 // lm.cropAndSave('safeRegionType.png', lm.gi.regionTypeRect);
-lm.updateGlobalState();
-lm.stop();
+// lm.updateGlobalState();
+// lm.stop();
