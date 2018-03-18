@@ -42,6 +42,9 @@ class Rect {
     this.tw = (this.x2 - this.x1) * this._r;
     this.th = (this.y2 - this.y1) * this._r; 
   }
+  crop(img) {
+    return cropImage(img, this.tx, this.ty, this.tw, this.th);
+  }
 }
 
 class Point {
@@ -99,6 +102,10 @@ class PageFeature {
       p.print(img);
     }
   }
+  tap(deviceRatio = 1, idx = 0) {
+    const p = this.featurPoints[0];
+    tap(p.x / deviceRatio, p.y / deviceRatio, 20); 
+  }
 }
 
 class GameInfo {
@@ -111,15 +118,22 @@ class GameInfo {
     this.targetWidth = 960;
     this.tragetHeight = 540;
     this.ratio = this.targetWidth / this.devWidth;
+    this.deviceRatio = this.devWidth / this.screenWidth;
     this.hpBarRect = new Rect(this.ratio, 122, 30, 412, 51);
     this.mpBarRect = new Rect(this.ratio, 122, 58, 412, 72);
     this.expBarRect = new Rect(this.ratio, 15, 1069, 1905, 1074);
     this.mapRect = new Rect(this.ratio, 384, 217, 1920, 937); // 1536, 720
+    this.regionTypeRect = new Rect(this.ratio, 1710, 470, 1816, 498);
 
-    this.menuBtn = new PageFeature('menuOn', [
+    this.menuOnBtn = new PageFeature('menuOn', [
       new FeaturePoint(this.ratio, 1844, 56, 245, 245, 241, true),
       new FeaturePoint(this.ratio, 1844, 66, 128, 70, 56, true),
       new FeaturePoint(this.ratio, 1844, 76, 245, 220, 215, true),
+    ]);
+    this.menuOffBtn = new PageFeature('menuOff', [
+      new FeaturePoint(this.ratio, 1850, 56, 146, 136, 109, true),
+      new FeaturePoint(this.ratio, 1850, 66, 145, 137, 116, true),
+      new FeaturePoint(this.ratio, 1860, 76, 167, 162, 140, true),
     ]);
     this.autoPlayBtn = new PageFeature('autoPlayOff', [
       new FeaturePoint(this.ratio, 1429, 767, 140, 154, 127, true, 60),
@@ -132,6 +146,16 @@ class GameInfo {
     this.attackBtn = new PageFeature('attackOff', [
       new FeaturePoint(this.ratio, 1634, 769, 165, 180, 170, true, 60),
     ]);
+    this.disconnectBtn = new PageFeature('disconnect', [
+      new FeaturePoint(this.ratio, 840, 880, 34, 51, 79, true, 20),
+      new FeaturePoint(this.ratio, 1080, 880, 34, 51, 79, true, 20),
+      new FeaturePoint(this.ratio, 1170, 880, 31, 20, 14, true, 20),
+    ]);
+    this.enterBtn = new PageFeature('enter', [
+      new FeaturePoint(this.ratio, 1480, 990, 31, 47, 70, true, 20),
+      new FeaturePoint(this.ratio, 1750, 990, 31, 47, 70, true, 20),
+      new FeaturePoint(this.ratio, 1690, 990, 31, 47, 70, true, 20),
+    ]);
   }
 }
 
@@ -141,13 +165,18 @@ class RoleState {
     this.hp = 0;
     this.mp = 0;
     this.exp = 0;
-    this.currentPage = 'Main';
+    this.isDisconnect = false;
+    this.isEnter = false;
     this.isMenuOn = false;
+    this.isMenuOff = false;
     this.isSafeRegion = false;
     this.isAutoPlay = false;
-    this.selfSkill = false;
-    this.leftPanelOn = false;
-    this.rightPanelOn = false;
+    this.isAttecking = false;
+    this.isSelfSkill = false;
+  }
+
+  print() {
+    console.log(`hp: ${this.hp}, mp: ${this.mp}, exp: ${this.exp}, isSafe: ${this.isSafeRegion}, auto: ${this.isAutoPlay}, attack: ${this.isAttecking}`);
   }
 }
 
@@ -156,23 +185,124 @@ class LineageM {
     this.gi = new GameInfo();
     this.rState = new RoleState(this.gi);
 
+    this._loop = false;
     this._img = 0;
 
     this.refreshScreen();
     execute(`mkdir ${getStoragePath}/lineageM`);
 
     saveImage(this._img, getStoragePath() + '/lineageM/currentScreen.png');
-    for (let i = 0; i < 10; i++) { 
-      this.gi.attackBtn.print(this._img);
-      console.log(this.gi.attackBtn.check(this._img));
-      sleep(200);
-      this.refreshScreen();
+
+    // load images
+    this.images = {
+      safeRegion: openImage(getStoragePath() + '/lineageM/safeRegionType.png'),
+      normalRegion: openImage(getStoragePath() + '/lineageM/normalRegionType.png'),
+    };
+    this.gi.disconnectBtn.print(this._img);
+  }
+
+  safeSleep(t) {
+    while(this._loop && t > 0) {
+      t-=100;
+      sleep(100);
     }
   }
 
+  checkPage() {
+    if (this.rState.isEnter) {
+      console.log('Enter the game, Wait 10 sec');        
+      this.gi.enterBtn.tap(this.gi.deviceRatio);
+      this.safeSleep(10 * 1000);
+      continue;
+    }
+    if (this.rState.isDisconnect) {
+      console.log('Disconnect. Reconnect. Wait 10 sec');
+      this.gi.disconnectBtn.tap(this.gi.deviceRatio);
+      this.safeSleep(10 * 1000);
+      continue;
+    }
+    if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
+      console.log('Unknow State, Wait 5 sec');
+      keycode('BACK', 100);
+      this.safeSleep(5 * 1000);
+      continue;
+    }
+  }
+
+  conditionTasks() { 
+    this._loop = true;
+    while(this._loop) {
+      sleep(1000);
+      this.refreshScreen();
+      this.updateGlobalState();
+      this.checkPage();
+      if (this.rState.isMenuOn) {
+        this.gi.menuOnBtn.tap(this.gi.deviceRatio);
+        continue;
+      }
+    }
+  }
+
+  stop() {
+    this._loop = false;
+    sleep(2000);
+    releaseImage(this._img);
+    for (let k in this.images) {
+      releaseImage(this.images[k]);
+    }
+  }
+
+  // utils
+  cropAndSave(filename, rect) {
+    const img = rect.crop(this._img);
+    saveImage(img, `${getStoragePath()}/lineageM/${filename}`);
+    releaseImage(img);
+  }
+
   // globalState
+  isSafeRegionState() {
+    const img = this.gi.regionTypeRect.crop(this._img);
+    const safeScore = getIdentityScore(img, this.images.safeRegion);
+    const normalScore = getIdentityScore(img, this.images.normalRegion);
+    releaseImage(img);
+    if (safeScore > normalScore) {
+      return true;
+    }
+    return false;
+  }
+
   updateGlobalState() {
-    
+    this.rState.isDisconnect = this.gi.disconnectBtn.check(this._img);
+    this.rState.isEnter = this.gi.enterBtn.check(this._img);
+    if (this.rState.isDisconnect || this.rState.isEnter) {
+      return;
+    }
+    this.rState.isMenuOn = this.gi.menuOnBtn.check(this._img);
+    this.rState.isMenuOff = this.gi.menuOffBtn.check(this._img);
+    console.log(this.rState.isMenuOn, this.rState.isMenuOff);
+    if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
+      return;
+    }
+    if (this.rState.isMenuOn) {
+      return;
+    }
+    this.rState.hp = this.getHpPercent();
+    this.rState.mp = this.getMpPercent();
+    this.rState.exp = this.getExpPercent();
+    this.rState.isSafeRegion = this.isSafeRegionState();
+    this.rState.isAttecking = !this.gi.attackBtn.check(this._img);
+    this.rState.isSelfSkill = !this.gi.selfSkillBtn.check(this._img);
+    if (this.rState.isAttecking) {
+      this.rState.isAutoPlay = true;
+    } else {
+      this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
+      if (!this.rState.isAutoPlay) {
+        sleep(200);
+        this.refreshScreen();
+        this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
+      }
+    }
+    this.rState.print();
   }
 
   refreshScreen() {
@@ -319,3 +449,6 @@ const lm = new LineageM();
 // console.log(hp, mp, exp);
 // lm.recordCurrentLocation();
 // lm.getDiffRecordLocation();
+// lm.cropAndSave('safeRegionType.png', lm.gi.regionTypeRect);
+lm.updateGlobalState();
+lm.stop();
