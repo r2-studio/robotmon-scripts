@@ -69,8 +69,14 @@ class Point {
     this.dx = this.x * gRatioDevice;
     this.dy = this.y * gRatioDevice;
   }
-  tap() {
-    tap(this.dx, this.dy, 20); 
+  tap(times = 1, delay = 0) {
+    while(times > 0) {
+      if (delay > 0) {
+        sleep(delay);
+      }
+      tap(this.dx, this.dy, 20);
+      times--;
+    }
   }
 }
 
@@ -257,6 +263,12 @@ class LineageM {
   checkCondiction() {
     for(let i = 0; i < this.config.conditions.length && this._loop; i++) {
       const cd = this.config.conditions[i];
+      if (cd.useTime === undefined) {
+        cd.useTime = 0;
+      }
+      if (Date.now() - cd.useTime < cd.delay) {
+        continue;
+      }
       let value = 0;
       if (cd.type === 'hp') {
         value = this.rState.hp;
@@ -270,15 +282,17 @@ class LineageM {
       }
       if (cd.type === 'exp') {
         if (this.rState.exp !== this.tmpExp) {
-          this.gi.itemBtns[cd.btn].tap();
+          this.gi.itemBtns[cd.btn].tap(3, 100);
           console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
-          sleep(200);
+          cd.useTime = Date.now();
+          this.safeSleep(700);
         }
       } else if (value * cd.op > cd.value * cd.op) {
         if (cd.btn >= 0 && cd.btn < 8) {
-          this.gi.itemBtns[cd.btn].tap();
+          this.gi.itemBtns[cd.btn].tap(3, 100);
           console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
-          sleep(200);
+          cd.useTime = Date.now();
+          this.safeSleep(700);
         }
       }
     }
@@ -287,8 +301,9 @@ class LineageM {
   start() { 
     this._loop = true;
     let goBackTime = Date.now();
+    let useHomeTime = Date.now();
     while(this._loop) {
-      this.safeSleep(2000);
+      this.safeSleep(500);
       this.refreshScreen();
       this.updateGlobalState();
       if (this.checkIsSystemPage()) {
@@ -307,7 +322,10 @@ class LineageM {
       if (this.rState.isSafeRegion) {
         console.log('In safe region');
         if (this.config.inHomeUseBtn >= 0 && this.config.inHomeUseBtn < 8) {
-          this.gi.itemBtns[this.config.inHomeUseBtn].tap();
+          if (Date.now() - useHomeTime > this.config.isHomeUseInterval) {
+            this.gi.itemBtns[this.config.inHomeUseBtn].tap();
+            useHomeTime = Date.now();
+          }
         }
         continue;
       }
@@ -321,6 +339,7 @@ class LineageM {
       }
       console.log('Check conditions');
       this.checkCondiction();
+      // go back to record location
       if (this.config.goBack && Date.now() - goBackTime > 60 * 1000) {
         console.log('Go back location');
         this.goToMapPage();
@@ -554,13 +573,14 @@ class LineageM {
 
 const DefaultConfig = {
   conditions: [
-    {type: 'hp', op: -1, value: 30, btn: 3, delay: 0}, // if hp < 25% use 4th button, like 回卷
-    {type: 'hp', op: -1, value: 40, btn: 2, delay: 0}, // if hp < 40% use 3th button, like 瞬移
-    {type: 'hp', op: -1, value: 75, btn: 1, delay: 0}, // if hp < 75% use 2th button, like 高治
-    {type: 'mp', op: -1, value: 70, btn: 0, delay: 0}, // if mp < 70% use 1th button, like 魂體
-    {type: 'mp', op:  1, value: 80, btn: 4, delay: 0}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+    {type: 'hp', op: -1, value: 30, btn: 3, interval: 10000}, // if hp < 25% use 4th button, like 回卷
+    {type: 'hp', op: -1, value: 40, btn: 2, interval: 5000}, // if hp < 40% use 3th button, like 瞬移
+    {type: 'hp', op: -1, value: 75, btn: 1, interval: 2000}, // if hp < 75% use 2th button, like 高治
+    {type: 'mp', op: -1, value: 70, btn: 0, interval: 2000}, // if mp < 70% use 1th button, like 魂體
+    {type: 'mp', op:  1, value: 80, btn: 4, interval: 5000}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
   ],
   inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
+  isHomeUseInterval: 5000,
   goBack: true, // whether to go back to origin location, check location every 5 min 
 };
 
