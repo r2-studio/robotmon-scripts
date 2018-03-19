@@ -120,6 +120,7 @@
 
     .btn-plus,
     .btn-danger,
+    .btn-warning,
     .btn-success {
       min-width: 25px;
       min-height: 25px;
@@ -193,52 +194,9 @@
       padding-left: 5px;
     }
 
-    #setting-window {
-      position: absolute;
-      border: 2px solid #2196F3;
-      z-index: 3;
-      width: 80%;
-      height: 60%;
-      left: 10%;
-      top: 15%;
-      background-color: white;
-      border-radius: 5px;
-      display: none;
-    }
-    #setting-window .setting-title {
-      color: #FFFFFF;
-      width: 100%;
+    .setting_input {
       text-align: center;
-      background-color: #2196F3;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #setting-window .setting-content {
-      margin: 20px;
-      text-align: center;
-    }
-    #setting-window .setting-content div div div a {
-      text-align: left;
-    }
-    .setting-content input {
-      width: 50px;
-      margin: 5px 0px;
-    }
-    .setting-content .action-parameters {
-      display: none;
-      margin: 10px;
-    }
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      background-color: rgba(0,0,0,0.5);
-      display: none;
+      display: inline-block;
     }
   </style>
 
@@ -261,20 +219,19 @@
 
     TAG = "LineageM";
     VERSION = 1;
-    const setting = {
+    var settings = {
       conditions: [
-        {type: 'mp', op: -1, value: 70, btn: 0, interval: 0}, // if mp < 70% use 1th button, like 魂體
-        {type: 'hp', op: -1, value: 75, btn: 1, interval: 0}, // if hp < 75% use 2th button, like 高治
-        {type: 'hp', op: -1, value: 40, btn: 2, interval: 0}, // if hp < 40% use 3th button, like 瞬移
-        {type: 'hp', op: -1, value: 30, btn: 3, interval: 0}, // if hp < 25% use 4th button, like 回卷
-        {type: 'mp', op:  1, value: 80, btn: 4, interval: 0}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
-        {type: 'mp', op:  1, value: 80, btn: 5, interval: 0},
-        {type: 'mp', op:  1, value: 80, btn: 6, interval: 0},
-        {type: 'mp', op:  1, value: 80, btn: 7, interval: 0},
-        {type: 'mp', op:  1, value: 80, btn: 8, interval: 0},
+        {type: 'mp', op: -1, value: 70, btn: 0, interval: 1000, start: true}, // if mp < 70% use 1th button, like 魂體
+        {type: 'hp', op: -1, value: 75, btn: 1, interval: 1000, start: true}, // if hp < 75% use 2th button, like 高治
+        {type: 'hp', op: -1, value: 40, btn: 2, interval: 1000, start: true}, // if hp < 40% use 3th button, like 瞬移
+        {type: 'hp', op: -1, value: 25, btn: 3, interval: 1000, start: true}, // if hp < 25% use 4th button, like 回卷
+        {type: 'mp', op:  1, value: 80, btn: 4, interval: 1000, start: true}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+        {type: 'hp', op:  1, value: 75, btn: 5, interval: 1000, start: false},
+        {type: 'hp', op:  1, value: 75, btn: 6, interval: 1000, start: false},
+        {type: 'hp', op:  1, value: 75, btn: 7, interval: 1000, start: false},
       ],
       inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
-      goBack: true, // whether to go back to origin location, check location every 5 min 
+      goBackInterval: 0, // 0 = 不回原點
     };
 
     $(function () {
@@ -296,8 +253,8 @@
             translation: {
               text: {
                 language: "Language",
-                delay: "Delay",
-                milliseconds: "Milliseconds:",
+                interval: "Interval: ",
+                milliseconds: " Milliseconds",
               }
             }
           },
@@ -305,8 +262,8 @@
             translation: {
               text: {
                 language: "語言",
-                delay: "延遲",
-                milliseconds: "毫秒:",
+                interval: "延遲:",
+                milliseconds: " 毫秒",
               }
             }
           }
@@ -328,43 +285,88 @@
       return TAG + '-version';
     }
 
+    function getPlusButton(jInput, min, max, step) {
+      var jBtn = $('<button class="btn btn-warning">+' + step + '</button>');
+      jBtn.click((function (jInput, min, max, step) {
+        return function () {
+          var newValue = (+jInput.text()) + step;
+          if (newValue > max) {
+            jInput.text(min);
+          } else {
+            jInput.text(newValue);
+          }
+          saveSettings(settings);
+        }
+      })(jInput, min, max, step));
+      return jBtn;
+    }
+
     function loadSettings() {
       if (localStorage === undefined) {
         return;
       }
-      var tempSetting = localStorage.getItem(getSettingKey());
-      setting = JSON.parse(tempSetting == null ? setting : tempSetting);
+      var tempSettings = localStorage.getItem(getSettingKey());
+      settings = tempSettings == null ? settings : JSON.parse(tempSettings);
      
       $('#group').empty();
 
-      for (var index = 0; index < setting.conditions.length; index++) {
+      for (var index = 0; index < settings.conditions.length; index++) {
         // condition in settings
-        var condition = conditions[index];
+        var condition = settings.conditions[index];
 
         var jGroup = $('#group');
         var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
         var jRow = $("<div class='row'></div>");
+        var jLeftContent = $("<div class='col-xs-10'></div>");
         var jContent = [];
 
+        // type
         var jBtnType = $("<button class='btn btn-plus'><i class='fa fa-flask' aria-hidden='true'></i></button>");
         jBtnType.click(function () {
           
         });
 
-        var jBtnPlus = $("<button class='btn btn-plus'><i class='fa fa-plus' aria-hidden='true'></i></button>");
-        jBtnPlus.click(function () {
+        // op
+        var jBtnOp = $("<button class='btn btn-success'><i class='fa fa-angle-right' aria-hidden='true'></i></button>");
+        jBtnOp.click(function () {
 
         });
 
+        // value
+        var valueMax = 95;
+        var valueMin = 5;
+        var valueStep = 5;
+        var jValueInput = $("<div class=setting_input>" + condition.value + "</div>");
+        var jValueBtn = getPlusButton(jValueInput, valueMin, valueMax, valueStep);
+
+        // interval
+        var intervalMax = 15000;
+        var intervalMin = 500;
+        var intervalStep = 500;
+        var jIntervalInput = $("<div class=setting_input>" + condition.interval + "</div>");
+        var jIntervalBtn = getPlusButton(jIntervalInput, intervalMin, intervalMax, intervalStep);
+
         // push to content
-        jContent.push($("<div></div>").append(index));
+        jContent.push(index);
         jContent.push(jBtnType);
-        jContent.push(jBtnPlus);
+        jContent.push(jBtnOp);
+        jContent.push(jValueInput);
+        jContent.push("%");
+        jContent.push(jValueBtn);
+        jContent.push(i18next.t("text.interval"));
+        jContent.push(jIntervalInput);
+        jContent.push(jIntervalBtn);
+        jContent.push(i18next.t("text.milliseconds"));
 
         // append content to row
         for (var j in jContent) {
-          jGroup.append(jGroupItem.append(jRow.append(jContent[j])));
+          jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent[j]))));
         }
+
+        var jDiv = $('<div class="pull-right"></div>');
+        var jCol = $('<div class="col-xs-2"></div>');
+        var jSwitch = $('<div>Switch</div>');
+        jRow.append(jCol.append(jDiv.append(jSwitch)));
       }
     }
 
@@ -373,12 +375,12 @@
         return;
       }
       localStorage.setItem(getVersionKey(), VERSION);
-      localStorage.setItem(getSettingKey(), JSON.stringify(setting));
+      localStorage.setItem(getSettingKey(), JSON.stringify(settings));
     }
 
     function onEvent(eventType) {
       if (eventType == 'OnPlayClick') {
-        JavaScriptInterface.runScript('start(\'' + JSON.stringify(setting) + '\');');
+        JavaScriptInterface.runScript('start(\'' + JSON.stringify(settings) + '\');');
       } else if (eventType == 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
       }
