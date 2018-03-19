@@ -1,4 +1,18 @@
-const ZeroColor = {r: 0, g: 0, b: 0};
+// == Global variables start
+// -- screen info
+const _wh = getScreenSize();
+const gDevWidth = 1920;
+const gDevHeight = 1080;
+const gTargetWidth = 960;
+const gTargetHeight = 540;
+const gDeviceWidth = Math.max(_wh.width, _wh.height);
+const gDeviceHeight = Math.min(_wh.width, _wh.height);
+const gRatioTarget = gTargetWidth / gDevWidth;
+const gRatioDevice = gDeviceWidth / gDevWidth;
+// -- others
+const gZeroColor = {r: 0, g: 0, b: 0};
+// == Global variables en
+
 class Utils {
   static nearColor(c, c1, c2) {
     const d1 = Math.abs(c1.r - c.r) + Math.abs(c1.g - c.g) + Math.abs(c1.b - c.b);
@@ -29,18 +43,17 @@ class Utils {
 }
 
 class Rect {
-  constructor(ratio, x1, y1, x2, y2) {
-    this._r = ratio;
+  constructor(x1, y1, x2, y2) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
     this.y2 = y2;
     this.w = x2 - x1;
     this.h = y2 - y1;
-    this.tx = this.x1 * this._r;
-    this.ty = this.y1 * this._r;
-    this.tw = (this.x2 - this.x1) * this._r;
-    this.th = (this.y2 - this.y1) * this._r; 
+    this.tx = this.x1 * gRatioTarget;
+    this.ty = this.y1 * gRatioTarget;
+    this.tw = (this.x2 - this.x1) * gRatioTarget;
+    this.th = (this.y2 - this.y1) * gRatioTarget; 
   }
   crop(img) {
     return cropImage(img, this.tx, this.ty, this.tw, this.th);
@@ -48,22 +61,23 @@ class Rect {
 }
 
 class Point {
-  constructor(ratio, x, y) {
-    this._r = ratio;
+  constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.tx = this.x * this._r;
-    this.ty = this.y * this._r;
+    this.tx = this.x * gRatioTarget;
+    this.ty = this.y * gRatioTarget;
+    this.dx = this.x * gRatioDevice;
+    this.dy = this.y * gRatioDevice;
   }
-  tap(deviceRatio = 1) {
-    tap(this.x / deviceRatio, this.y / deviceRatio, 20); 
+  tap() {
+    tap(this.dx, this.dy, 20); 
   }
 }
 
 class FeaturePoint extends Point {
   // need: true => should exist, false => should not exist
-  constructor(ratio, x, y, r, g, b, need, diff = 25) {
-    super(ratio, x, y);
+  constructor(x, y, r, g, b, need, diff = 25) {
+    super(x, y);
     this.r = r;
     this.g = g;
     this.b = b;
@@ -105,72 +119,63 @@ class PageFeature {
       p.print(img);
     }
   }
-  tap(deviceRatio = 1, idx = 0) {
-    this.featurPoints[idx].tap(deviceRatio); 
+  tap(idx = 0) {
+    this.featurPoints[idx].tap(); 
   }
 }
 
 class GameInfo {
   constructor() {
-    const wh = getScreenSize();
-    this.screenWidth = wh.width;
-    this.screenHeight = wh.height;
-    this.devWidth = 1920;
-    this.devHeight = 1080;
-    this.targetWidth = 960;
-    this.tragetHeight = 540;
-    this.ratio = this.targetWidth / this.devWidth;
-    this.deviceRatio = this.devWidth / this.screenWidth;
-    this.hpBarRect = new Rect(this.ratio, 122, 30, 412, 51);
-    this.mpBarRect = new Rect(this.ratio, 122, 58, 412, 72);
-    this.expBarRect = new Rect(this.ratio, 15, 1069, 1905, 1074);
-    this.mapRect = new Rect(this.ratio, 384, 217, 1920, 937); // 1536, 720
-    this.regionTypeRect = new Rect(this.ratio, 1710, 470, 1816, 498);
+    this.hpBarRect = new Rect(122, 30, 412, 51);
+    this.mpBarRect = new Rect(122, 58, 412, 72);
+    this.expBarRect = new Rect(15, 1069, 1905, 1074);
+    this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
+    this.regionTypeRect = new Rect(1710, 470, 1816, 498);
 
     this.itemBtns = [
-      new Point(this.ratio, 810, 960),
-      new Point(this.ratio, 930, 960),
-      new Point(this.ratio, 1050, 960),
-      new Point(this.ratio, 1180, 960),
-      new Point(this.ratio, 1440, 960),
-      new Point(this.ratio, 1560, 960),
-      new Point(this.ratio, 1690, 960),
-      new Point(this.ratio, 1810, 960),
+      new Point(810, 960),
+      new Point(930, 960),
+      new Point(1050, 960),
+      new Point(1180, 960),
+      new Point(1440, 960),
+      new Point(1560, 960),
+      new Point(1690, 960),
+      new Point(1810, 960),
     ];
 
-    this.mapBtn = new Point(this.ratio, 1740, 300);
-    this.mapDetailBtn = new Point(this.ratio, 700, 160);
+    this.mapBtn = new Point(1740, 300);
+    this.mapDetailBtn = new Point(700, 160);
 
     this.menuOnBtn = new PageFeature('menuOn', [
-      new FeaturePoint(this.ratio, 1844, 56, 245, 245, 241, true),
-      new FeaturePoint(this.ratio, 1844, 66, 128, 70, 56, true),
-      new FeaturePoint(this.ratio, 1844, 76, 245, 220, 215, true),
+      new FeaturePoint(1844, 56, 245, 245, 241, true),
+      new FeaturePoint(1844, 66, 128, 70, 56, true),
+      new FeaturePoint(1844, 76, 245, 220, 215, true),
     ]);
     this.menuOffBtn = new PageFeature('menuOff', [
-      new FeaturePoint(this.ratio, 1850, 56, 146, 136, 109, true),
-      new FeaturePoint(this.ratio, 1850, 66, 145, 137, 116, true),
-      new FeaturePoint(this.ratio, 1860, 76, 167, 162, 140, true),
+      new FeaturePoint(1850, 56, 146, 136, 109, true),
+      new FeaturePoint(1850, 66, 145, 137, 116, true),
+      new FeaturePoint(1860, 76, 167, 162, 140, true),
     ]);
     this.autoPlayBtn = new PageFeature('autoPlayOff', [
-      new FeaturePoint(this.ratio, 1429, 767, 140, 154, 127, true, 60),
-      new FeaturePoint(this.ratio, 1476, 772, 140, 157, 130, true, 60),
+      new FeaturePoint(1429, 767, 140, 154, 127, true, 60),
+      new FeaturePoint(1476, 772, 140, 157, 130, true, 60),
     ]);
     this.selfSkillBtn = new PageFeature('selfSkillOff', [
-      new FeaturePoint(this.ratio, 1594, 601, 141, 147, 137, true, 60),
-      new FeaturePoint(this.ratio, 1591, 624, 117, 128, 114, true, 60),
+      new FeaturePoint(1594, 601, 141, 147, 137, true, 60),
+      new FeaturePoint(1591, 624, 117, 128, 114, true, 60),
     ]);
     this.attackBtn = new PageFeature('attackOff', [
-      new FeaturePoint(this.ratio, 1634, 769, 165, 180, 170, true, 60),
+      new FeaturePoint(1634, 769, 165, 180, 170, true, 60),
     ]);
     this.disconnectBtn = new PageFeature('disconnect', [
-      new FeaturePoint(this.ratio, 840, 880, 34, 51, 79, true, 20),
-      new FeaturePoint(this.ratio, 1080, 880, 34, 51, 79, true, 20),
-      new FeaturePoint(this.ratio, 1170, 880, 31, 20, 14, true, 20),
+      new FeaturePoint(840, 880, 34, 51, 79, true, 20),
+      new FeaturePoint(1080, 880, 34, 51, 79, true, 20),
+      new FeaturePoint(1170, 880, 31, 20, 14, true, 20),
     ]);
     this.enterBtn = new PageFeature('enter', [
-      new FeaturePoint(this.ratio, 1480, 990, 31, 47, 70, true, 20),
-      new FeaturePoint(this.ratio, 1750, 990, 31, 47, 70, true, 20),
-      new FeaturePoint(this.ratio, 1690, 990, 31, 47, 70, true, 20),
+      new FeaturePoint(1480, 990, 31, 47, 70, true, 20),
+      new FeaturePoint(1750, 990, 31, 47, 70, true, 20),
+      new FeaturePoint(1690, 990, 31, 47, 70, true, 20),
     ]);
   }
 }
@@ -230,13 +235,13 @@ class LineageM {
   checkIsSystemPage() {
     if (this.rState.isEnter) {
       console.log('Enter the game, Wait 10 sec');        
-      this.gi.enterBtn.tap(this.gi.deviceRatio);
+      this.gi.enterBtn.tap();
       this.safeSleep(10 * 1000);
       return true;
     }
     if (this.rState.isDisconnect) {
       console.log('Disconnect. Reconnect. Wait 10 sec');
-      this.gi.disconnectBtn.tap(this.gi.deviceRatio);
+      this.gi.disconnectBtn.tap();
       this.safeSleep(10 * 1000);
       return true;
     }
@@ -265,13 +270,13 @@ class LineageM {
       }
       if (cd.type === 'exp') {
         if (this.rState.exp !== this.tmpExp) {
-          this.gi.itemBtns[cd.btn].tap(this.gi.deviceRatio);
+          this.gi.itemBtns[cd.btn].tap();
           console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
           sleep(200);
         }
       } else if (value * cd.op > cd.value * cd.op) {
         if (cd.btn >= 0 && cd.btn < 8) {
-          this.gi.itemBtns[cd.btn].tap(this.gi.deviceRatio);
+          this.gi.itemBtns[cd.btn].tap();
           console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
           sleep(200);
         }
@@ -291,18 +296,18 @@ class LineageM {
       }
       if (this.rState.isMenuOn) {
         console.log('Hide Menu');
-        this.gi.menuOnBtn.tap(this.gi.deviceRatio);
+        this.gi.menuOnBtn.tap();
         continue;
       }
       if (!this.rState.isAutoPlay) {
         console.log('Click AutoPlay');
-        this.gi.autoPlayBtn.tap(this.gi.deviceRatio);
+        this.gi.autoPlayBtn.tap();
         continue;
       }
       if (this.rState.isSafeRegion) {
         console.log('In safe region');
         if (this.config.inHomeUseBtn >= 0 && this.config.inHomeUseBtn < 8) {
-          this.gi.itemBtns[this.config.inHomeUseBtn].tap(this.gi.deviceRatio);
+          this.gi.itemBtns[this.config.inHomeUseBtn].tap();
         }
         continue;
       }
@@ -310,7 +315,7 @@ class LineageM {
         console.log('Record current location');
         this.goToMapPage();
         this.recordCurrentLocation();
-        this.gi.menuOnBtn.tap(this.gi.deviceRatio);
+        this.gi.menuOnBtn.tap();
         this.isRecordLocation = true;
         continue;
       }
@@ -341,9 +346,9 @@ class LineageM {
   }
 
   goToMapPage() {
-    this.gi.mapBtn.tap(this.gi.deviceRatio);
+    this.gi.mapBtn.tap();
     this.waitForChangeScreen();
-    // this.gi.mapDetailBtn.tap(this.gi.deviceRatio);
+    // this.gi.mapDetailBtn.tap();
     // this.waitForChangeScreen();
     console.log('In Map Page');
   }
@@ -458,11 +463,11 @@ class LineageM {
 
   // MAP
   recordCurrentLocation() {
-    const p = new Point(this.gi.ratio, 768, 360);
-    const rect1 = new Rect(this.gi.ratio, p.x - 120, p.y - 90, p.x - 30, p.y - 30); // left top
-    const rect2 = new Rect(this.gi.ratio, p.x + 30, p.y - 90, p.x + 120, p.y - 30); // right top
-    const rect3 = new Rect(this.gi.ratio, p.x - 120, p.y + 30, p.x - 30, p.y + 90); // left bottom
-    const rect4 = new Rect(this.gi.ratio, p.x + 30, p.y + 30, p.x + 120, p.y + 90); // right bottom
+    const p = new Point(768, 360);
+    const rect1 = new Rect(p.x - 120, p.y - 90, p.x - 30, p.y - 30); // left top
+    const rect2 = new Rect(p.x + 30, p.y - 90, p.x + 120, p.y - 30); // right top
+    const rect3 = new Rect(p.x - 120, p.y + 30, p.x - 30, p.y + 90); // left bottom
+    const rect4 = new Rect(p.x + 30, p.y + 30, p.x + 120, p.y + 90); // right bottom
     const img1 = cropImage(this._img, rect1.tx, rect1.ty, rect1.tw, rect1.th);
     const img2 = cropImage(this._img, rect2.tx, rect2.ty, rect2.tw, rect2.th);
     const img3 = cropImage(this._img, rect3.tx, rect3.ty, rect3.tw, rect3.th);
@@ -492,7 +497,7 @@ class LineageM {
   }
 
   findDiffRecordLocation() {
-    const p = new Point(this.gi.ratio, 768, 360);
+    const p = new Point(768, 360);
     const images = [
       openImage(getStoragePath() + '/lineageM/mapRecord1.png'),
       openImage(getStoragePath() + '/lineageM/mapRecord2.png'),
@@ -508,20 +513,20 @@ class LineageM {
       const xy = findImage(this._img, images[i]);
       switch(i) {
         case 0:
-          xy.x = p.x - (xy.x / this.gi.ratio) - 120;
-          xy.y = p.y - (xy.y / this.gi.ratio) - 90;
+          xy.x = p.x - (xy.x / gRatioTarget) - 120;
+          xy.y = p.y - (xy.y / gRatioTarget) - 90;
         break;
         case 1:
-          xy.x = p.x - (xy.x / this.gi.ratio) + 30;
-          xy.y = p.y - (xy.y / this.gi.ratio) - 90;
+          xy.x = p.x - (xy.x / gRatioTarget) + 30;
+          xy.y = p.y - (xy.y / gRatioTarget) - 90;
         break;
         case 2:
-          xy.x = p.x - (xy.x / this.gi.ratio) - 120;
-          xy.y = p.y - (xy.y / this.gi.ratio) + 30;
+          xy.x = p.x - (xy.x / gRatioTarget) - 120;
+          xy.y = p.y - (xy.y / gRatioTarget) + 30;
         break;
         case 3:
-          xy.x = p.x - (xy.x / this.gi.ratio) + 30;
-          xy.y = p.y - (xy.y / this.gi.ratio) + 30;
+          xy.x = p.x - (xy.x / gRatioTarget) + 30;
+          xy.y = p.y - (xy.y / gRatioTarget) + 30;
         break;
       }
       findXYs.push(xy);
@@ -549,11 +554,11 @@ class LineageM {
 
 const DefaultConfig = {
   conditions: [
-    {type: 'hp', op: -1, value: 30, btn: 3}, // if hp < 25% use 4th button, like 回卷
-    // {type: 'hp', op: -1, value: 40, btn: 2}, // if hp < 40% use 3th button, like 瞬移
-    // {type: 'hp', op: -1, value: 75, btn: 1}, // if hp < 75% use 2th button, like 高治
-    // {type: 'mp', op: -1, value: 70, btn: 0}, // if mp < 70% use 1th button, like 魂體
-    // {type: 'mp', op:  1, value: 80, btn: 4}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+    {type: 'hp', op: -1, value: 30, btn: 3, delay: 0}, // if hp < 25% use 4th button, like 回卷
+    {type: 'hp', op: -1, value: 40, btn: 2, delay: 0}, // if hp < 40% use 3th button, like 瞬移
+    {type: 'hp', op: -1, value: 75, btn: 1, delay: 0}, // if hp < 75% use 2th button, like 高治
+    {type: 'mp', op: -1, value: 70, btn: 0, delay: 0}, // if mp < 70% use 1th button, like 魂體
+    {type: 'mp', op:  1, value: 80, btn: 4, delay: 0}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
   ],
   inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
   goBack: true, // whether to go back to origin location, check location every 5 min 
