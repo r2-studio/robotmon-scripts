@@ -197,6 +197,7 @@
     .setting_input {
       text-align: center;
       display: inline-block;
+      margin-left: 5px;
     }
   </style>
 
@@ -221,14 +222,14 @@
     VERSION = 1;
     var settings = {
       conditions: [
-        {type: 'mp', op: -1, value: 70, btn: 0, interval: 1000, start: true}, // if mp < 70% use 1th button, like 魂體
-        {type: 'hp', op: -1, value: 75, btn: 1, interval: 1000, start: true}, // if hp < 75% use 2th button, like 高治
-        {type: 'hp', op: -1, value: 40, btn: 2, interval: 1000, start: true}, // if hp < 40% use 3th button, like 瞬移
-        {type: 'hp', op: -1, value: 25, btn: 3, interval: 1000, start: true}, // if hp < 25% use 4th button, like 回卷
-        {type: 'mp', op:  1, value: 80, btn: 4, interval: 1000, start: true}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
-        {type: 'hp', op:  1, value: 75, btn: 5, interval: 1000, start: false},
-        {type: 'hp', op:  1, value: 75, btn: 6, interval: 1000, start: false},
-        {type: 'hp', op:  1, value: 75, btn: 7, interval: 1000, start: false},
+        {type: 'mp', op: -1, value: 70, btn: 0, interval: 1000, checked: true}, // if mp < 70% use 1th button, like 魂體
+        {type: 'hp', op: -1, value: 75, btn: 1, interval: 1000, checked: true}, // if hp < 75% use 2th button, like 高治
+        {type: 'hp', op: -1, value: 40, btn: 2, interval: 1000, checked: true}, // if hp < 40% use 3th button, like 瞬移
+        {type: 'hp', op: -1, value: 25, btn: 3, interval: 1000, checked: true}, // if hp < 25% use 4th button, like 回卷
+        {type: 'mp', op:  1, value: 80, btn: 4, interval: 1000, checked: true}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+        {type: 'hp', op:  1, value: 75, btn: 5, interval: 1000, checked: false},
+        {type: 'hp', op:  1, value: 75, btn: 6, interval: 1000, checked: false},
+        {type: 'hp', op:  1, value: 75, btn: 7, interval: 1000, checked: false},
       ],
       inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
       goBackInterval: 0, // 0 = 不回原點
@@ -253,8 +254,9 @@
             translation: {
               text: {
                 language: "Language",
-                interval: "Interval: ",
-                milliseconds: " Milliseconds",
+                interval: "Interval",
+                milliseconds: "ms",
+                hotkey: "Hotkey",
               }
             }
           },
@@ -262,27 +264,40 @@
             translation: {
               text: {
                 language: "語言",
-                interval: "延遲:",
-                milliseconds: " 毫秒",
+                interval: "延遲",
+                milliseconds: "毫秒",
+                hotkey: "快捷鍵",
               }
             }
           }
         }
       }, function (err, t) {
         jqueryI18next.init(i18next, $);
-        updateLocale();
+        if (localStorage !== undefined) {
+          var locale = localStorage.getItem(getLocaleKey());
+          if (locale != null) {
+            i18next.changeLanguage(locale)
+          }
+        }
       });
       i18next.on('languageChanged', function() {
+        if (localStorage !== undefined) {
+          localStorage.setItem(getLocaleKey(), i18next.language);
+        }
         updateLocale();
       });
     }
 
     function getSettingKey() {
-      return TAG + '-setting';
+      return TAG + '-settings';
     }
 
     function getVersionKey() {
       return TAG + '-version';
+    }
+
+     function getLocaleKey() {
+      return TAG + '-locale';
     }
 
     function getPlusButton(jInput, min, max, step) {
@@ -322,15 +337,28 @@
 
         // type
         var jBtnType = $("<button class='btn btn-plus'><i class='fa fa-flask' aria-hidden='true'></i></button>");
-        jBtnType.click(function () {
-          
-        });
+        jBtnType.click((function (btn) {
+          return function () {
+            if (btn.hasClass('btn-plus')) {
+              btn.removeClass('btn-plus').addClass('btn-danger');
+            } else {
+              btn.removeClass('btn-danger').addClass('btn-plus');
+            }
+          }
+        })(jBtnType));
 
         // op
         var jBtnOp = $("<button class='btn btn-success'><i class='fa fa-angle-right' aria-hidden='true'></i></button>");
-        jBtnOp.click(function () {
-
-        });
+        jBtnOp.click((function (btn) {
+          return function () {
+            var i = btn.find('i');
+            if (i.hasClass('fa-angle-right')) {
+              i.removeClass('fa-angle-right').addClass('fa-angle-left');
+            } else {
+              i.removeClass('fa-angle-left').addClass('fa-angle-right');
+            }
+          }
+        })(jBtnOp));
 
         // value
         var valueMax = 95;
@@ -347,25 +375,34 @@
         var jIntervalBtn = getPlusButton(jIntervalInput, intervalMin, intervalMax, intervalStep);
 
         // push to content
-        jContent.push(index);
+        console.log(condition.btn);
+        jContent.push($("<div class=setting_input data-i18n='text.hotkey'></div>"));
+        jContent.push($("<div class=setting_input>" + condition.btn + "</div>"));
         jContent.push(jBtnType);
         jContent.push(jBtnOp);
         jContent.push(jValueInput);
         jContent.push("%");
         jContent.push(jValueBtn);
-        jContent.push(i18next.t("text.interval"));
+        jContent.push($("<div class=setting_input data-i18n='text.interval'></div>"));
         jContent.push(jIntervalInput);
+        jContent.push($("<div class=setting_input data-i18n='text.milliseconds'></div>"));
         jContent.push(jIntervalBtn);
-        jContent.push(i18next.t("text.milliseconds"));
 
         // append content to row
         for (var j in jContent) {
           jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent[j]))));
         }
 
+        // switch
         var jDiv = $('<div class="pull-right"></div>');
         var jCol = $('<div class="col-xs-2"></div>');
-        var jSwitch = $('<div>Switch</div>');
+        var jSwitch = $('<label class="switch pull-right"></label>');
+        var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (condition.checked ? 'checked' : '') + "/>");
+        jSwitchInput.change(function () {
+          saveSettings(settings);
+        });
+        jSwitch.append(jSwitchInput);
+        jSwitch.append('<a class="slider round"></a>');
         jRow.append(jCol.append(jDiv.append(jSwitch)));
       }
     }
