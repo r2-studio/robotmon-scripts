@@ -78,6 +78,15 @@ class Point {
       times--;
     }
   }
+  tapDown() {
+    tapDown(this.dx, this.dy, 20);
+  }
+  tapUp() {
+    tapUp(this.dx, this.dy, 20);
+  }
+  moveTo() {
+    moveTo(this.dx, this.dy, 20);
+  }
 }
 
 class FeaturePoint extends Point {
@@ -101,7 +110,7 @@ class FeaturePoint extends Point {
   }
   print(img) {
     const c = getImageColor(img, this.tx, this.ty);
-    console.log('target', this.tx, this.ty, 'param', `${this._r}, ${this.x}, ${this.y}, ${c.r}, ${c.g}, ${c.b}, true`);
+    console.log('target', this.tx, this.ty, 'param', `${this.x}, ${this.y}, ${c.r}, ${c.g}, ${c.b}, true`);
   }
 }
 
@@ -149,8 +158,15 @@ class GameInfo {
       new Point(1810, 960),
     ];
 
+    this.unknownBtn = new Point(1100, 800);
+
     this.mapBtn = new Point(1740, 300);
     this.mapDetailBtn = new Point(700, 160);
+    this.mapController = new Point(290, 860);
+    this.mapControllerL = new Point(190, 860);
+    this.mapControllerR = new Point(390, 860);
+    this.mapControllerT = new Point(290, 760);
+    this.mapControllerB = new Point(290, 960);
 
     this.menuOnBtn = new PageFeature('menuOn', [
       new FeaturePoint(1844, 56, 245, 245, 241, true),
@@ -266,7 +282,7 @@ class LineageM {
       if (cd.useTime === undefined) {
         cd.useTime = 0;
       }
-      if (Date.now() - cd.useTime < cd.delay) {
+      if (Date.now() - cd.useTime < cd.interval) {
         continue;
       }
       let value = 0;
@@ -282,14 +298,14 @@ class LineageM {
       }
       if (cd.type === 'exp') {
         if (this.rState.exp !== this.tmpExp) {
-          this.gi.itemBtns[cd.btn].tap(3, 100);
+          this.gi.itemBtns[cd.btn].tap(1, 100);
           console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
           cd.useTime = Date.now();
           this.safeSleep(700);
         }
       } else if (value * cd.op > cd.value * cd.op) {
         if (cd.btn >= 0 && cd.btn < 8) {
-          this.gi.itemBtns[cd.btn].tap(3, 100);
+          this.gi.itemBtns[cd.btn].tap(1, 100);
           console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
           cd.useTime = Date.now();
           this.safeSleep(700);
@@ -329,7 +345,7 @@ class LineageM {
         }
         continue;
       }
-      if (this.config.goBack && !this.isRecordLocation) {
+      if (this.config.goBackInterval != 0 && !this.isRecordLocation) {
         console.log('Record current location');
         this.goToMapPage();
         this.recordCurrentLocation();
@@ -340,10 +356,12 @@ class LineageM {
       console.log('Check conditions');
       this.checkCondiction();
       // go back to record location
-      if (this.config.goBack && Date.now() - goBackTime > 60 * 1000) {
+      if (this.config.goBackInterval != 0 && Date.now() - goBackTime > this.config.goBackInterval) {
         console.log('Go back location');
         this.goToMapPage();
         const diffXY = this.findDiffRecordLocation();
+        this.gi.menuOnBtn.tap();
+        sleep(1000);
         // TODO go back to origin location
         console.log(JSON.stringify(diffXY));
         goBackTime = Date.now();
@@ -408,7 +426,7 @@ class LineageM {
     }
     this.rState.isMenuOn = this.gi.menuOnBtn.check(this._img);
     this.rState.isMenuOff = this.gi.menuOffBtn.check(this._img);
-    console.log(this.rState.isMenuOn, this.rState.isMenuOff);
+    // console.log(this.rState.isMenuOn, this.rState.isMenuOff);
     if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
       return;
     }
@@ -439,7 +457,7 @@ class LineageM {
       releaseImage(this._img);
       this._img = 0;
     }
-    this._img = getScreenshotModify(0, 0, this.gi.screenWidth, this.gi.screenHeight, this.gi.targetWidth, this.gi.tragetHeight, 95);
+    this._img = getScreenshotModify(0, 0, gDeviceWidth, gDeviceHeight, gTargetWidth, gTargetHeight, 95);
     return this._img;
   }
 
@@ -481,6 +499,61 @@ class LineageM {
   }
 
   // MAP
+  goMap(disX, disY) {
+    if (Math.abs(disX) < 30 && Math.abs(disY) < 30) {
+      return;
+    }
+    let timeL = 3000; let timeR = 3000; let timeT = 3000; let timeB = 3000;
+    if (disX >= 0 && disX > 30) {
+      timeR += (1600 * Math.abs(disX) / 10);
+    } else if (disX < 0 && disX < -30) {
+      timeL += (1600 * Math.abs(disX) / 10);
+    }
+    if (disY >= 0 && disY > 30) {
+      timeB += (1600 * Math.abs(disY) / 10);
+    } else if (disY < 0 && disY < -30) {
+      timeT += (1600 * Math.abs(disY) / 10);
+    }
+    const times = Math.ceil((timeL + timeR + timeT + timeB) / 24000);
+    console.log(timeL, timeR, timeT, timeB, times);
+    const tl = Math.ceil(timeL / times);
+    const tr = Math.ceil(timeR / times);
+    const tt = Math.ceil(timeT / times);
+    const tb = Math.ceil(timeB / times);
+    this.gi.mapController.tapDown();
+    for(let t = 0; t < times && this._loop; t++) {
+      if (timeL > 100) {
+        console.log('Move Left', tl);
+        this.gi.mapControllerL.moveTo();
+        this.gi.mapControllerL.moveTo();
+        this.safeSleep(tl);
+        timeL -= tl;
+      }
+      if (timeT > 100) {
+        console.log('Move Up', tt);
+        this.gi.mapControllerT.moveTo();
+        this.gi.mapControllerT.moveTo();
+        this.safeSleep(tt);
+        timeT -= tt;
+      }
+      if (timeR > 100) {
+        console.log('Move Right', tr);
+        this.gi.mapControllerR.moveTo();
+        this.gi.mapControllerR.moveTo();
+        this.safeSleep(tr);
+        timeR -= tr;
+      }
+      if (timeB > 100) {
+        console.log('Move Down', tb);
+        this.gi.mapControllerB.moveTo();
+        this.gi.mapControllerB.moveTo();
+        this.safeSleep(tb);
+        timeB -= tb;
+      }
+    }
+    this.gi.mapController.tapUp();
+  }
+
   recordCurrentLocation() {
     const p = new Point(768, 360);
     const rect1 = new Rect(p.x - 120, p.y - 90, p.x - 30, p.y - 30); // left top
@@ -510,9 +583,9 @@ class LineageM {
     }
     if (result === undefined) {
       console.log('Error can not find record location');
-      return;
+      return {x: 0, y: 0};
     }
-    
+    return result;
   }
 
   findDiffRecordLocation() {
@@ -574,14 +647,14 @@ class LineageM {
 const DefaultConfig = {
   conditions: [
     {type: 'hp', op: -1, value: 30, btn: 3, interval: 10000}, // if hp < 25% use 4th button, like 回卷
-    {type: 'hp', op: -1, value: 40, btn: 2, interval: 5000}, // if hp < 40% use 3th button, like 瞬移
-    {type: 'hp', op: -1, value: 75, btn: 1, interval: 2000}, // if hp < 75% use 2th button, like 高治
-    {type: 'mp', op: -1, value: 70, btn: 0, interval: 2000}, // if mp < 70% use 1th button, like 魂體
-    {type: 'mp', op:  1, value: 80, btn: 4, interval: 5000}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+    // {type: 'hp', op: -1, value: 40, btn: 2, interval: 5000}, // if hp < 40% use 3th button, like 瞬移
+    // {type: 'hp', op: -1, value: 75, btn: 1, interval: 2000}, // if hp < 75% use 2th button, like 高治
+    // {type: 'mp', op: -1, value: 70, btn: 0, interval: 2000}, // if mp < 70% use 1th button, like 魂體
+    {type: 'mp', op:  1, value: 50, btn: 0, interval: 8000}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
   ],
   inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
   isHomeUseInterval: 5000,
-  goBack: true, // whether to go back to origin location, check location every 5 min 
+  goBackInterval: 300 * 1000, // whether to go back to origin location, check location every n min
 };
 
 let lm = undefined;
@@ -612,8 +685,13 @@ start(DefaultConfig);
 // const mp = lm.getMpPercent();
 // const exp = lm.getExpPercent();
 // console.log(hp, mp, exp);
+// lm.goToMapPage();
+// lm._loop = true;
 // lm.recordCurrentLocation();
-// lm.getDiffRecordLocation();
+// const xy = lm.getDiffRecordLocation();
+// lm.gi.menuOnBtn.tap();
+// sleep(1000);
+// lm.goMap(-xy.x, -xy.y);
 // lm.cropAndSave('safeRegionType.png', lm.gi.regionTypeRect);
 // lm.updateGlobalState();
 // lm.stop();
