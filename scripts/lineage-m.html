@@ -1,0 +1,414 @@
+<html>
+
+<head>
+  <style>
+    .navbar-custom {
+      border-radius: 0 !important;
+      background-color: #2196F3;
+      color: #FFFFFF;
+    }
+
+    .navbar-custom>a {
+      width: 100%;
+      color: #FFFFFF;
+      text-align: center;
+    }
+
+    .navbar-custom>a:hover {
+      color: #FFFFFF;
+    }
+
+    .list-group-item {
+      padding: 6px 10px !important;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0px;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 4px;
+      top: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(24px);
+      -ms-transform: translateX(24px);
+      transform: translateX(24px);
+    }
+
+    .slider.round {
+      border-radius: 28px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    .btn {
+      margin-left: 5px;
+    }
+
+    .btn-plus {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus:hover,
+    .btn-plus:focus,
+    .btn-plus:active,
+    .btn-plus.active {
+      color: #FFFFFF !important;
+      background-color: #0d8aee;
+      border-color: #0c7cd5;
+    }
+
+    .btn-plus.disabled:hover,
+    .btn-plus.disabled:focus,
+    .btn-plus.disabled:active,
+    .btn-plus.disabled.active,
+    .btn-plus[disabled]:hover,
+    .btn-plus[disabled]:focus,
+    .btn-plus[disabled]:active,
+    .btn-plus[disabled].active,
+    fieldset[disabled] .btn-plus:hover,
+    fieldset[disabled] .btn-plus:focus,
+    fieldset[disabled] .btn-plus:active,
+    fieldset[disabled] .btn-plus.active {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus,
+    .btn-danger,
+    .btn-success {
+      min-width: 25px;
+      min-height: 25px;
+      padding: 1px 0px 1px 0px !important;
+    }
+
+    .btn-circle {
+      min-width: 30px;
+      min-height: 30px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 15px;
+      border: 0px;
+    }
+
+    .dropbtn {
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 0.5px solid rgba(0,0,0,0.2);
+      background-color: white;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 150px;
+      max-width: 200px;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 10px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dropdown button {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 90px;
+    }
+
+    .show {
+      display: block;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+    }
+
+    ul {
+      padding-left: 5px;
+    }
+
+    #setting-window {
+      position: absolute;
+      border: 2px solid #2196F3;
+      z-index: 3;
+      width: 80%;
+      height: 60%;
+      left: 10%;
+      top: 15%;
+      background-color: white;
+      border-radius: 5px;
+      display: none;
+    }
+    #setting-window .setting-title {
+      color: #FFFFFF;
+      width: 100%;
+      text-align: center;
+      background-color: #2196F3;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #setting-window .setting-content {
+      margin: 20px;
+      text-align: center;
+    }
+    #setting-window .setting-content div div div a {
+      text-align: left;
+    }
+    .setting-content input {
+      width: 50px;
+      margin: 5px 0px;
+    }
+    .setting-content .action-parameters {
+      display: none;
+      margin: 10px;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      background-color: rgba(0,0,0,0.5);
+      display: none;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/10.0.7/i18next.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
+
+  <script>
+    if (typeof String.prototype.startsWith != 'function') {
+      // see below for better implementation!
+      String.prototype.startsWith = function (str){
+        return this.indexOf(str) === 0;
+      };
+    }
+
+    TAG = "LineageM";
+    VERSION = 1;
+    const setting = {
+      conditions: [
+        {type: 'mp', op: -1, value: 70, btn: 0, interval: 0}, // if mp < 70% use 1th button, like 魂體
+        {type: 'hp', op: -1, value: 75, btn: 1, interval: 0}, // if hp < 75% use 2th button, like 高治
+        {type: 'hp', op: -1, value: 40, btn: 2, interval: 0}, // if hp < 40% use 3th button, like 瞬移
+        {type: 'hp', op: -1, value: 30, btn: 3, interval: 0}, // if hp < 25% use 4th button, like 回卷
+        {type: 'mp', op:  1, value: 80, btn: 4, interval: 0}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+        {type: 'mp', op:  1, value: 80, btn: 5, interval: 0},
+        {type: 'mp', op:  1, value: 80, btn: 6, interval: 0},
+        {type: 'mp', op:  1, value: 80, btn: 7, interval: 0},
+        {type: 'mp', op:  1, value: 80, btn: 8, interval: 0},
+      ],
+      inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
+      goBack: true, // whether to go back to origin location, check location every 5 min 
+    };
+
+    $(function () {
+      $("#version").html(TAG + " v" + VERSION);
+      initLocale();
+      loadSettings();
+      updateLocale();
+    });
+
+    function updateLocale() {
+      $('.container').localize();
+    }
+
+    function initLocale() {
+      i18next.init({
+        lng: 'en',
+        resources: {
+          en: {
+            translation: {
+              text: {
+                language: "Language",
+                delay: "Delay",
+                milliseconds: "Milliseconds:",
+              }
+            }
+          },
+          zh_TW: {
+            translation: {
+              text: {
+                language: "語言",
+                delay: "延遲",
+                milliseconds: "毫秒:",
+              }
+            }
+          }
+        }
+      }, function (err, t) {
+        jqueryI18next.init(i18next, $);
+        updateLocale();
+      });
+      i18next.on('languageChanged', function() {
+        updateLocale();
+      });
+    }
+
+    function getSettingKey() {
+      return TAG + '-setting';
+    }
+
+    function getVersionKey() {
+      return TAG + '-version';
+    }
+
+    function loadSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var tempSetting = localStorage.getItem(getSettingKey());
+      setting = JSON.parse(tempSetting == null ? setting : tempSetting);
+     
+      $('#group').empty();
+
+      for (var index = 0; index < setting.conditions.length; index++) {
+        // condition in settings
+        var condition = conditions[index];
+
+        var jGroup = $('#group');
+        var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
+        var jRow = $("<div class='row'></div>");
+        var jContent = [];
+
+        var jBtnType = $("<button class='btn btn-plus'><i class='fa fa-flask' aria-hidden='true'></i></button>");
+        jBtnType.click(function () {
+          
+        });
+
+        var jBtnPlus = $("<button class='btn btn-plus'><i class='fa fa-plus' aria-hidden='true'></i></button>");
+        jBtnPlus.click(function () {
+
+        });
+
+        // push to content
+        jContent.push($("<div></div>").append(index));
+        jContent.push(jBtnType);
+        jContent.push(jBtnPlus);
+
+        // append content to row
+        for (var j in jContent) {
+          jGroup.append(jGroupItem.append(jRow.append(jContent[j])));
+        }
+      }
+    }
+
+    function saveSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      localStorage.setItem(getVersionKey(), VERSION);
+      localStorage.setItem(getSettingKey(), JSON.stringify(setting));
+    }
+
+    function onEvent(eventType) {
+      if (eventType == 'OnPlayClick') {
+        JavaScriptInterface.runScript('start(\'' + JSON.stringify(setting) + '\');');
+      } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript('stop();');
+      }
+    }
+    function onLog(message) {
+      console.log(message);
+    }
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-custom" role="navigation">
+    <a id="version" class="navbar-brand"></a>
+  </nav>
+  <div id="container" class="container">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-xs-6" data-i18n="text.language"></div>
+          <div class="col-xs-6">
+            <div class="pull-right">
+              <button onclick="i18next.changeLanguage('en')" class="btn btn-plus">EN</button>
+              <button onclick="i18next.changeLanguage('zh_TW')" class="btn btn-plus">中文</button>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <ul id="group" class="list-group"></ul>
+  </div>
+</body>
+
+</html>
