@@ -285,14 +285,7 @@ class LineageM {
       if (Date.now() - cd.useTime < cd.interval) {
         continue;
       }
-      let value = 0;
-      if (cd.type === 'hp') {
-        value = this.rState.hp;
-      } else if (cd.type === 'mp') {
-        value = this.rState.mp;
-      } else if (cd.type === 'exp') {
-        value = this.rState.exp;
-      }
+      let value = this.rState[cd.type];
       if (value < 0.1) {
         continue;
       }
@@ -335,16 +328,36 @@ class LineageM {
         this.gi.autoPlayBtn.tap();
         continue;
       }
+
+      // go home (8th btn), rand teleport (7th btn)
       if (this.rState.isSafeRegion) {
-        console.log('In safe region');
-        if (this.config.inHomeUseBtn >= 0 && this.config.inHomeUseBtn < 8) {
-          if (Date.now() - useHomeTime > this.config.isHomeUseInterval) {
-            this.gi.itemBtns[this.config.inHomeUseBtn].tap();
-            useHomeTime = Date.now();
+        if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 6000) {
+          this.gi.itemBtns[6].tap();
+          useHomeTime = Date.now();
+        }
+      } else {
+        let dangerous = false;
+        for (let i = 0; i < this.config.conditions.length; i++) {
+          const cd = this.config.conditions[i];
+          if (cd.btn === 7 && (this.rState[cd.type] * cd.op > cd.value * cd.op)) {
+            this.gi.itemBtns[7].tap(2, 100);
+            dangerous = true;
+            console.log('Dangerous, go home');
           }
         }
+        if (dangerous) {
+          continue;
+        }
+      }
+
+      console.log('Check conditions');
+      this.checkCondiction();
+
+      if (this.rState.isSafeRegion) {
+        console.log('In safe region');
         continue;
       }
+
       if (this.config.goBackInterval != 0 && !this.isRecordLocation) {
         console.log('Record current location');
         this.goToMapPage();
@@ -353,8 +366,7 @@ class LineageM {
         this.isRecordLocation = true;
         continue;
       }
-      console.log('Check conditions');
-      this.checkCondiction();
+      
       // go back to record location
       if (this.config.goBackInterval != 0 && Date.now() - goBackTime > this.config.goBackInterval) {
         console.log('Go back location');
@@ -646,15 +658,14 @@ class LineageM {
 
 const DefaultConfig = {
   conditions: [
-    {type: 'hp', op: -1, value: 30, btn: 3, interval: 10000}, // if hp < 25% use 4th button, like 回卷
-    // {type: 'hp', op: -1, value: 40, btn: 2, interval: 5000}, // if hp < 40% use 3th button, like 瞬移
-    // {type: 'hp', op: -1, value: 75, btn: 1, interval: 2000}, // if hp < 75% use 2th button, like 高治
-    // {type: 'mp', op: -1, value: 70, btn: 0, interval: 2000}, // if mp < 70% use 1th button, like 魂體
-    {type: 'mp', op:  1, value: 50, btn: 0, interval: 8000}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+    {type: 'hp', op: -1, value: 60, btn: 6, interval: 5000}, // if hp < 60% use 3th button, like 瞬移
+    {type: 'hp', op: -1, value: 30, btn: 7, interval: 10000}, // if hp < 30% use 8th button, like 回卷
+    // {type: 'hp', op: -1, value: 75, btn: 3, interval: 2000}, // if hp < 75% use 4th button, like 高治
+    // {type: 'mp', op: -1, value: 70, btn: 4, interval: 2000}, // if mp < 70% use 5th button, like 魂體
+    {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
   ],
-  inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
-  isHomeUseInterval: 5000,
-  goBackInterval: 300 * 1000, // whether to go back to origin location, check location every n min
+  inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
+  goBackInterval: 0, // whether to go back to origin location, check location every n min
 };
 
 let lm = undefined;
