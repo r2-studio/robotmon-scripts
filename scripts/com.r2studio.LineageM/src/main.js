@@ -665,6 +665,9 @@ const DefaultConfig = {
 let lm = undefined;
 
 function start(config) {
+  if (typeof config === 'string') {
+    config = JSON.parse(config);
+  }
   if (lm !== undefined) {
     return;
   }
