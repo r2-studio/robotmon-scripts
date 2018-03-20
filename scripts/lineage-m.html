@@ -175,21 +175,22 @@
     VERSION = 1;
     var settings = {
       conditions: [
-        {type: 'mp', op: -1, value: 70, btn: 0, interval: 1000, enabled: true}, // if mp < 70% use 1th button, like 魂體
-        {type: 'hp', op: -1, value: 75, btn: 1, interval: 1000, enabled: true}, // if hp < 75% use 2th button, like 高治
-        {type: 'hp', op: -1, value: 40, btn: 2, interval: 1000, enabled: true}, // if hp < 40% use 3th button, like 瞬移
-        {type: 'hp', op: -1, value: 25, btn: 3, interval: 1000, enabled: true}, // if hp < 25% use 4th button, like 回卷
-        {type: 'mp', op:  1, value: 80, btn: 4, interval: 1000, enabled: true}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
-        {type: 'hp', op:  1, value: 75, btn: 5, interval: 1000, enabled: false},
-        {type: 'hp', op:  1, value: 75, btn: 6, interval: 1000, enabled: false},
-        {type: 'hp', op:  1, value: 75, btn: 7, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 1, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 2, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 3, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 4, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 5, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 6, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 7, interval: 1000, enabled: false},
       ],
-      inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
-      goBackInterval: 0, // 0 = 不回原點
+      inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
+      dangerousGoHome: true, // if hp < 25%, go home, use button 8th
+      goBackInterval: 0, // whether to go back to origin location, check location every n min
     };
 
     $(function () {
-      $("#version").html(TAG + " v" + VERSION);
+      $("#version").html("天堂M (Lineage M) v" + VERSION);
       initLocale();
       loadSettings();
       updateLocale();
@@ -201,25 +202,19 @@
 
     function initLocale() {
       i18next.init({
-        lng: 'en',
+        lng: 'zh_TW',
         resources: {
-          en: {
-            translation: {
-              text: {
-                language: "Language",
-                interval: "Interval",
-                milliseconds: "ms",
-                hotkey: "Hotkey",
-              }
-            }
-          },
           zh_TW: {
             translation: {
               text: {
                 language: "語言",
                 interval: "間隔",
                 milliseconds: "毫秒",
+                minutes: "分鐘",
                 hotkey: "快捷鍵",
+                inHomeUseBtn: "瞬卷 (請將瞬卷放在快捷鍵 7)",
+                dangerousGoHome: "回卷 (請將回卷放在快捷鍵 8)，hp < 25%",
+                goBackInterval: "回到原點 (0: 不啟動)",
               }
             }
           }
@@ -249,27 +244,54 @@
       return TAG + '-version';
     }
 
-     function getLocaleKey() {
+    function getLocaleKey() {
       return TAG + '-locale';
     }
 
-    function loadSettings() {
-      if (localStorage === undefined) {
-        return;
+    function appendSwitchCol(jRow, jSwitchInput) {
+      var jDiv = $('<div class="pull-right"></div>');
+      var jCol = $('<div class="col-xs-3"></div>');
+      var jSwitch = $('<label class="switch pull-right"></label>');
+      jSwitch.append(jSwitchInput);
+      jSwitch.append('<a class="slider round"></a>');
+      jRow.append(jCol.append(jDiv.append(jSwitch)));
+    }
+
+    function appendToSwitchRow(jContent, jSwitchInput) {
+      var jGroup = $('#other');
+      var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
+      var jRow = $("<div class='row'></div>");
+      var jLeftContent = $("<div class='col-xs-9'></div>");
+      if (Array.isArray(jContent)) {
+        for (var j in jContent) {
+          jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent[j]))));
+        }
+      } else {
+        jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent))));
       }
-      var tempSettings = localStorage.getItem(getSettingKey());
-      settings = tempSettings == null ? settings : JSON.parse(tempSettings);
-     
-      $('#group').empty();
+      appendSwitchCol(jRow, jSwitchInput);
+    }
+
+    function appendToRow(left, right) {
+      var jGroup = $('#other');
+      var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
+      var jRow = $("<div class='row'></div>");
+      var jLeftContent = $("<div class='col-xs-9'></div>");
+      jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(left))));
+
+      var jDiv = $('<div class="pull-right"></div>');
+      var jCol = $('<div class="col-xs-3"></div>');
+      for (var j in right) {
+        jRow.append(jCol.append(jDiv.append(right[j])));
+      }
+    }
+
+    function loadConditionSettings() {
+      $('#condition').empty();
 
       for (var index = 0; index < settings.conditions.length; index++) {
         // condition in settings
         var condition = settings.conditions[index];
-
-        var jGroup = $('#group');
-        var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
-        var jRow = $("<div class='row'></div>");
-        var jLeftContent = $("<div class='col-xs-10'></div>");
         var jContent = [];
 
         // type
@@ -366,15 +388,16 @@
         jContent.push($("<div class=setting_input data-i18n='text.milliseconds'></div>"));
         jContent.push(jIntervalBtn);
 
-        // append content to row
+        // append
+        var jGroup = $('#condition');
+        var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
+        var jRow = $("<div class='row'></div>");
+        var jLeftContent = $("<div class='col-xs-9'></div>");
         for (var j in jContent) {
           jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent[j]))));
         }
 
         // switch
-        var jDiv = $('<div class="pull-right"></div>');
-        var jCol = $('<div class="col-xs-2"></div>');
-        var jSwitch = $('<label class="switch pull-right"></label>');
         var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (condition.enabled ? 'checked' : '') + "/>");
         jSwitchInput.change((function (jInput, condition) {
           return function () {
@@ -382,10 +405,69 @@
             saveSettings();
           }
         })(jSwitchInput, condition));
-        jSwitch.append(jSwitchInput);
-        jSwitch.append('<a class="slider round"></a>');
-        jRow.append(jCol.append(jDiv.append(jSwitch)));
+        appendSwitchCol(jRow, jSwitchInput);
       }
+    }
+
+    function loadOtherSettings() {
+      $('#other').empty();
+      
+      // inHomeUseBtn
+      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.inHomeUseBtn ? 'checked' : '') + "/>");
+      jSwitchInput.change((function (jInput) {
+        return function () {
+          settings.inHomeUseBtn = jInput.is(':checked');
+          saveSettings();
+        }
+      })(jSwitchInput));
+      appendToSwitchRow($("<div class=setting_input data-i18n='text.inHomeUseBtn'></div>"), jSwitchInput);
+
+      // dangerousGoHome
+      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.dangerousGoHome ? 'checked' : '') + "/>");
+      jSwitchInput.change((function (jInput) {
+        return function () {
+          settings.dangerousGoHome = jInput.is(':checked');
+          saveSettings();
+        }
+      })(jSwitchInput));
+      appendToSwitchRow($("<div class=setting_input data-i18n='text.dangerousGoHome'></div>"), jSwitchInput);
+
+      // goBackInterval
+      var intervalMax = 20;
+      var intervalMin = 0;
+      var intervalStep = 1;
+      var jIntervalInput = $("<div class=setting_input>" + (settings.goBackInterval / 60000) + "</div>");
+      var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalStep + '</button>');
+      jIntervalBtn.click((function (jInput, min, max, step) {
+        return function () {
+          var newValue = (+jInput.text()) + step;
+          if (newValue > max) {
+            jInput.text(min);
+            settings.goBackInterval = min;
+          } else {
+            jInput.text(newValue);
+            settings.goBackInterval = newValue * 60000;
+          }
+          saveSettings();
+        }
+      })(jIntervalInput, intervalMin, intervalMax, intervalStep));
+      var jContent = [];
+      jContent.push($("<div class=setting_input data-i18n='text.interval'></div>"));
+      jContent.push(jIntervalInput);
+      jContent.push($("<div class=setting_input data-i18n='text.minutes'></div>"));
+      jContent.push(jIntervalBtn);
+      appendToRow($("<div class=setting_input data-i18n='text.goBackInterval'></div>"), jContent);
+    }
+
+    function loadSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var tempSettings = localStorage.getItem(getSettingKey());
+      settings = tempSettings == null ? settings : JSON.parse(tempSettings);
+
+      loadConditionSettings();
+      loadOtherSettings();
     }
 
     function saveSettings() {
@@ -424,24 +506,11 @@
 
 <body>
   <nav class="navbar navbar-custom" role="navigation">
-    <a id="version" class="navbar-brand"></a>
+   <a id="version" class="navbar-brand"></a>
   </nav>
   <div id="container" class="container">
-    <ul class="list-group">
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-xs-6" data-i18n="text.language"></div>
-          <div class="col-xs-6">
-            <div class="pull-right">
-              <button onclick="i18next.changeLanguage('en')" class="btn btn-plus">EN</button>
-              <button onclick="i18next.changeLanguage('zh_TW')" class="btn btn-plus">中文</button>
-            </div>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <ul id="group" class="list-group"></ul>
-    <div>若要使用瞬捲或回捲，請將瞬捲放在快捷鍵 7，回捲放在快捷鍵 8。</div>
+    <ul id="condition" class="list-group"></ul>
+    <ul id="other" class="list-group"></ul>
   </div>
 </body>
 
