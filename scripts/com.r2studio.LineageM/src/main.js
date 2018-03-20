@@ -336,16 +336,9 @@ class LineageM {
           useHomeTime = Date.now();
         }
       } else {
-        let dangerous = false;
-        for (let i = 0; i < this.config.conditions.length; i++) {
-          const cd = this.config.conditions[i];
-          if (cd.btn === 7 && (this.rState[cd.type] * cd.op > cd.value * cd.op)) {
-            this.gi.itemBtns[7].tap(2, 100);
-            dangerous = true;
-            console.log('Dangerous, go home');
-          }
-        }
-        if (dangerous) {
+        if (this.config.dangerousGoHome && this.rState.hp < 25) {
+          this.gi.itemBtns[7].tap(2, 100);
+          console.log('Dangerous, go home, use btn 8th');
           continue;
         }
       }
@@ -665,6 +658,7 @@ const DefaultConfig = {
     {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
   ],
   inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
+  dangerousGoHome: true, // if hp < 25%, go home, use button 8th
   goBackInterval: 0, // whether to go back to origin location, check location every n min
 };
 
