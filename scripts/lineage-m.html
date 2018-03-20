@@ -138,53 +138,6 @@
       border: 0px;
     }
 
-    .dropbtn {
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      border: 0.5px solid rgba(0,0,0,0.2);
-      background-color: white;
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 150px;
-      max-width: 200px;
-      overflow: auto;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      z-index: 1;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 10px;
-      text-decoration: none;
-      display: block;
-    }
-
-    .dropdown a:hover {
-      background-color: #f1f1f1;
-    }
-
-    .dropdown button {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      max-width: 90px;
-    }
-
-    .show {
-      display: block;
-    }
-
     .row {
       display: flex;
       align-items: center;
@@ -222,14 +175,14 @@
     VERSION = 1;
     var settings = {
       conditions: [
-        {type: 'mp', op: -1, value: 70, btn: 0, interval: 1000, checked: true}, // if mp < 70% use 1th button, like 魂體
-        {type: 'hp', op: -1, value: 75, btn: 1, interval: 1000, checked: true}, // if hp < 75% use 2th button, like 高治
-        {type: 'hp', op: -1, value: 40, btn: 2, interval: 1000, checked: true}, // if hp < 40% use 3th button, like 瞬移
-        {type: 'hp', op: -1, value: 25, btn: 3, interval: 1000, checked: true}, // if hp < 25% use 4th button, like 回卷
-        {type: 'mp', op:  1, value: 80, btn: 4, interval: 1000, checked: true}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
-        {type: 'hp', op:  1, value: 75, btn: 5, interval: 1000, checked: false},
-        {type: 'hp', op:  1, value: 75, btn: 6, interval: 1000, checked: false},
-        {type: 'hp', op:  1, value: 75, btn: 7, interval: 1000, checked: false},
+        {type: 'mp', op: -1, value: 70, btn: 0, interval: 1000, enabled: true}, // if mp < 70% use 1th button, like 魂體
+        {type: 'hp', op: -1, value: 75, btn: 1, interval: 1000, enabled: true}, // if hp < 75% use 2th button, like 高治
+        {type: 'hp', op: -1, value: 40, btn: 2, interval: 1000, enabled: true}, // if hp < 40% use 3th button, like 瞬移
+        {type: 'hp', op: -1, value: 25, btn: 3, interval: 1000, enabled: true}, // if hp < 25% use 4th button, like 回卷
+        {type: 'mp', op:  1, value: 80, btn: 4, interval: 1000, enabled: true}, // if mp > 80% use 5th button, like 三重矢, 光箭, 火球等
+        {type: 'hp', op:  1, value: 75, btn: 5, interval: 1000, enabled: false},
+        {type: 'hp', op:  1, value: 75, btn: 6, interval: 1000, enabled: false},
+        {type: 'hp', op:  1, value: 75, btn: 7, interval: 1000, enabled: false},
       ],
       inHomeUseBtn: -1, // if in safe region use 3th button, like 瞬移. -1 = disable
       goBackInterval: 0, // 0 = 不回原點
@@ -264,7 +217,7 @@
             translation: {
               text: {
                 language: "語言",
-                interval: "延遲",
+                interval: "間隔",
                 milliseconds: "毫秒",
                 hotkey: "快捷鍵",
               }
@@ -300,22 +253,6 @@
       return TAG + '-locale';
     }
 
-    function getPlusButton(jInput, min, max, step) {
-      var jBtn = $('<button class="btn btn-warning">+' + step + '</button>');
-      jBtn.click((function (jInput, min, max, step) {
-        return function () {
-          var newValue = (+jInput.text()) + step;
-          if (newValue > max) {
-            jInput.text(min);
-          } else {
-            jInput.text(newValue);
-          }
-          saveSettings(settings);
-        }
-      })(jInput, min, max, step));
-      return jBtn;
-    }
-
     function loadSettings() {
       if (localStorage === undefined) {
         return;
@@ -336,48 +273,89 @@
         var jContent = [];
 
         // type
-        var jBtnType = $("<button class='btn btn-plus'><i class='fa fa-flask' aria-hidden='true'></i></button>");
-        jBtnType.click((function (btn) {
+        var jBtnType = $("<button class='btn'><i class='fa fa-flask' aria-hidden='true'></i></button>");
+        if (condition.type === 'hp') {
+          jBtnType.addClass('btn-danger');
+        } else if (condition.type === 'mp') {
+          jBtnType.addClass('btn-plus');
+        }
+        jBtnType.click((function (btn, condition) {
           return function () {
             if (btn.hasClass('btn-plus')) {
               btn.removeClass('btn-plus').addClass('btn-danger');
+              condition.type = 'hp';
             } else {
               btn.removeClass('btn-danger').addClass('btn-plus');
+              condition.type = 'mp';
             }
+            saveSettings();
           }
-        })(jBtnType));
+        })(jBtnType, condition));
 
         // op
-        var jBtnOp = $("<button class='btn btn-success'><i class='fa fa-angle-right' aria-hidden='true'></i></button>");
-        jBtnOp.click((function (btn) {
+        var jBtnOp = $("<button class='btn btn-success'><i class='fa' aria-hidden='true'></i></button>");
+        if (condition.op > 0) {
+          jBtnOp.find('i').addClass('fa-angle-right');
+        } else {
+          jBtnOp.find('i').addClass('fa-angle-left');
+        }
+        jBtnOp.click((function (btn, condition) {
           return function () {
             var i = btn.find('i');
             if (i.hasClass('fa-angle-right')) {
               i.removeClass('fa-angle-right').addClass('fa-angle-left');
+              condition.op = -1;
             } else {
               i.removeClass('fa-angle-left').addClass('fa-angle-right');
+              condition.op = 1;
             }
+            saveSettings();
           }
-        })(jBtnOp));
+        })(jBtnOp, condition));
 
         // value
         var valueMax = 95;
         var valueMin = 5;
         var valueStep = 5;
         var jValueInput = $("<div class=setting_input>" + condition.value + "</div>");
-        var jValueBtn = getPlusButton(jValueInput, valueMin, valueMax, valueStep);
+        var jValueBtn = $('<button class="btn btn-warning">+' + valueStep + '</button>');
+        jValueBtn.click((function (jInput, min, max, step, condition) {
+          return function () {
+            var newValue = (+jInput.text()) + step;
+            if (newValue > max) {
+              jInput.text(min);
+              condition.value = min;
+            } else {
+              jInput.text(newValue);
+              condition.value = newValue;
+            }
+            saveSettings();
+          }
+        })(jValueInput, valueMin, valueMax, valueStep, condition));
 
         // interval
         var intervalMax = 15000;
         var intervalMin = 500;
         var intervalStep = 500;
         var jIntervalInput = $("<div class=setting_input>" + condition.interval + "</div>");
-        var jIntervalBtn = getPlusButton(jIntervalInput, intervalMin, intervalMax, intervalStep);
+        var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalStep + '</button>');
+        jIntervalBtn.click((function (jInput, min, max, step, condition) {
+          return function () {
+            var newValue = (+jInput.text()) + step;
+            if (newValue > max) {
+              jInput.text(min);
+              condition.interval = min;
+            } else {
+              jInput.text(newValue);
+              condition.interval = newValue;
+            }
+            saveSettings();
+          }
+        })(jIntervalInput, intervalMin, intervalMax, intervalStep, condition));
 
         // push to content
-        console.log(condition.btn);
         jContent.push($("<div class=setting_input data-i18n='text.hotkey'></div>"));
-        jContent.push($("<div class=setting_input>" + condition.btn + "</div>"));
+        jContent.push($("<div class=setting_input>" + (condition.btn + 1) + "</div>"));
         jContent.push(jBtnType);
         jContent.push(jBtnOp);
         jContent.push(jValueInput);
@@ -397,10 +375,13 @@
         var jDiv = $('<div class="pull-right"></div>');
         var jCol = $('<div class="col-xs-2"></div>');
         var jSwitch = $('<label class="switch pull-right"></label>');
-        var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (condition.checked ? 'checked' : '') + "/>");
-        jSwitchInput.change(function () {
-          saveSettings(settings);
-        });
+        var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (condition.enabled ? 'checked' : '') + "/>");
+        jSwitchInput.change((function (jInput, condition) {
+          return function () {
+            condition.enabled = jInput.is(':checked');
+            saveSettings();
+          }
+        })(jSwitchInput, condition));
         jSwitch.append(jSwitchInput);
         jSwitch.append('<a class="slider round"></a>');
         jRow.append(jCol.append(jDiv.append(jSwitch)));
@@ -415,9 +396,22 @@
       localStorage.setItem(getSettingKey(), JSON.stringify(settings));
     }
 
+    function getSettings() {
+      var tempSettings = $.extend(true, {}, settings);;
+      var tempConditions = [];
+      for (var index = 0; index < settings.conditions.length; index++) {
+        var condition = settings.conditions[index];
+        if (condition.enabled) {
+          tempConditions.push(condition);
+        }
+      }
+      tempSettings.conditions = tempConditions;
+      return tempSettings;
+    }
+
     function onEvent(eventType) {
       if (eventType == 'OnPlayClick') {
-        JavaScriptInterface.runScript('start(\'' + JSON.stringify(settings) + '\');');
+        JavaScriptInterface.runScript('start(\'' + JSON.stringify(getSettings()) + '\');');
       } else if (eventType == 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
       }
@@ -447,6 +441,7 @@
       </li>
     </ul>
     <ul id="group" class="list-group"></ul>
+    <div>若要使用瞬捲或回捲，請將瞬捲放在快捷鍵 7，回捲放在快捷鍵 8。</div>
   </div>
 </body>
 
