@@ -219,7 +219,7 @@ class RoleState {
   }
 
   print() {
-    console.log(`hp: ${this.hp}, mp: ${this.mp}, exp: ${this.exp}, isSafe: ${this.isSafeRegion}, auto: ${this.isAutoPlay}, attack: ${this.isAttecking}`);
+    console.log(`hp: ${this.hp}, mp: ${this.mp}, exp: ${this.exp}`);
   }
 }
 
@@ -228,21 +228,18 @@ class LineageM {
     this.config = config || {conditions: []};
     this.gi = new GameInfo();
     this.rState = new RoleState(this.gi);
-
+    this.localPath = getStoragePath() + `/scripts/com.r2studio.LineageM/images`
     this._loop = false;
     this._img = 0;
 
     this.refreshScreen();
-    execute(`mkdir ${getStoragePath}/lineageM`);
-
-    saveImage(this._img, getStoragePath() + '/lineageM/currentScreen.png');
 
     // load images
     this.images = {
-      safeRegion: openImage(getStoragePath() + '/lineageM/safeRegionType.png'),
-      normalRegion: openImage(getStoragePath() + '/lineageM/normalRegionType.png'),
+      safeRegion: openImage(`${this.localPath}/safeRegionType.png`),
+      normalRegion: openImage(`${this.localPath}/normalRegionType.png`),
     };
-    this.gi.disconnectBtn.print(this._img);
+    // this.gi.disconnectBtn.print(this._img);
     this.tmpExp = 0;
     this.isRecordLocation = false;
   }
@@ -254,16 +251,14 @@ class LineageM {
     }
   }
 
-  loadNumberImages() {
-
-  }
+  loadNumberImages() {}
 
   getImageNumber(img, numbers, maxLength = 8) {
     if (numbers.length != 10) {
       console.log('Error number length should be 10');
       return 0;
     }
-    const results = [];
+    let results = [];
     for (let i = 0; i < 10; i++) {
       const nImg = numbers[i];
       if (nImg == 0) {
@@ -406,19 +401,21 @@ class LineageM {
       if (this.config.goBackInterval != 0 && Date.now() - goBackTime > this.config.goBackInterval) {
         console.log('Go back location');
         this.goToMapPage();
-        const diffXY = this.findDiffRecordLocation();
+        const diffXY = this.getDiffRecordLocation();
         this.gi.menuOnBtn.tap();
         sleep(1000);
-        // TODO go back to origin location
         console.log(JSON.stringify(diffXY));
+        if (diffXY !== undefined) {
+          this.goMap(-diffXY.x, -diffXY.y);
+        }
         goBackTime = Date.now();
       }
     }
   }
 
-  waitForChangeScreen(score = 0.8) {
+  waitForChangeScreen(score = 0.8, maxSleep = 10000) {
     const oriImg = clone(this._img);
-    for(let i = 0; i < 20 && this._loop; i++) {
+    for(let i = 0; i < (maxSleep/500) && this._loop; i++) {
       sleep(500);
       this.refreshScreen();
       const s = getIdentityScore(this._img, oriImg);
@@ -432,8 +429,8 @@ class LineageM {
   goToMapPage() {
     this.gi.mapBtn.tap();
     this.waitForChangeScreen();
-    // this.gi.mapDetailBtn.tap();
-    // this.waitForChangeScreen();
+    this.gi.mapDetailBtn.tap();
+    this.waitForChangeScreen(0.8, 2000);
     console.log('In Map Page');
   }
 
@@ -449,7 +446,7 @@ class LineageM {
   // utils
   cropAndSave(filename, rect) {
     const img = rect.crop(this._img);
-    saveImage(img, `${getStoragePath()}/lineageM/${filename}`);
+    saveImage(img, `${this.localPath}/lineageM/${filename}`);
     releaseImage(img);
   }
 
@@ -547,22 +544,23 @@ class LineageM {
 
   // MAP
   goMap(disX, disY) {
+    const max = 20000;
     if (Math.abs(disX) < 30 && Math.abs(disY) < 30) {
       return;
     }
     let timeL = 3000; let timeR = 3000; let timeT = 3000; let timeB = 3000;
     if (disX >= 0 && disX > 30) {
-      timeR += (1600 * Math.abs(disX) / 10);
+      timeR += Math.min((1600 * Math.abs(disX) / 10), max);
     } else if (disX < 0 && disX < -30) {
-      timeL += (1600 * Math.abs(disX) / 10);
+      timeL += Math.min((1600 * Math.abs(disX) / 10), max);
     }
     if (disY >= 0 && disY > 30) {
-      timeB += (1600 * Math.abs(disY) / 10);
+      timeB += Math.min((1600 * Math.abs(disY) / 10), max);
     } else if (disY < 0 && disY < -30) {
-      timeT += (1600 * Math.abs(disY) / 10);
+      timeT += Math.min((1600 * Math.abs(disY) / 10), max);
     }
     const times = Math.ceil((timeL + timeR + timeT + timeB) / 24000);
-    console.log(timeL, timeR, timeT, timeB, times);
+    console.log('Left', timeL, 'Right', timeR, 'Up', timeT, 'Down', timeB, times);
     const tl = Math.ceil(timeL / times);
     const tr = Math.ceil(timeR / times);
     const tt = Math.ceil(timeT / times);
@@ -611,10 +609,10 @@ class LineageM {
     const img2 = cropImage(this._img, rect2.tx, rect2.ty, rect2.tw, rect2.th);
     const img3 = cropImage(this._img, rect3.tx, rect3.ty, rect3.tw, rect3.th);
     const img4 = cropImage(this._img, rect4.tx, rect4.ty, rect4.tw, rect4.th);
-    saveImage(img1, getStoragePath() + '/lineageM/mapRecord1.png');
-    saveImage(img2, getStoragePath() + '/lineageM/mapRecord2.png');
-    saveImage(img3, getStoragePath() + '/lineageM/mapRecord3.png');
-    saveImage(img4, getStoragePath() + '/lineageM/mapRecord4.png');
+    saveImage(img1, this.localPath + '/mapRecord1.png');
+    saveImage(img2, this.localPath + '/mapRecord2.png');
+    saveImage(img3, this.localPath + '/mapRecord3.png');
+    saveImage(img4, this.localPath + '/mapRecord4.png');
     releaseImage(img1); releaseImage(img2); releaseImage(img3); releaseImage(img4);
   }
 
@@ -638,10 +636,10 @@ class LineageM {
   findDiffRecordLocation() {
     const p = new Point(768, 360);
     const images = [
-      openImage(getStoragePath() + '/lineageM/mapRecord1.png'),
-      openImage(getStoragePath() + '/lineageM/mapRecord2.png'),
-      openImage(getStoragePath() + '/lineageM/mapRecord3.png'),
-      openImage(getStoragePath() + '/lineageM/mapRecord4.png'),
+      openImage(this.localPath + '/mapRecord1.png'),
+      openImage(this.localPath + '/mapRecord2.png'),
+      openImage(this.localPath + '/mapRecord3.png'),
+      openImage(this.localPath + '/mapRecord4.png'),
     ];
     const findXYs = [];
     for (let i = 0; i < images.length; i++) {
@@ -693,11 +691,11 @@ class LineageM {
 
 const DefaultConfig = {
   conditions: [
-    {type: 'hp', op: -1, value: 60, btn: 6, interval: 5000}, // if hp < 60% use 3th button, like 瞬移
-    {type: 'hp', op: -1, value: 30, btn: 7, interval: 10000}, // if hp < 30% use 8th button, like 回卷
+    // {type: 'hp', op: -1, value: 60, btn: 6, interval: 5000}, // if hp < 60% use 3th button, like 瞬移
+    // {type: 'hp', op: -1, value: 30, btn: 7, interval: 10000}, // if hp < 30% use 8th button, like 回卷
     // {type: 'hp', op: -1, value: 75, btn: 3, interval: 2000}, // if hp < 75% use 4th button, like 高治
     // {type: 'mp', op: -1, value: 70, btn: 4, interval: 2000}, // if mp < 70% use 5th button, like 魂體
-    {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
+    // {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
   ],
   inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
   dangerousGoHome: true, // if hp < 25%, go home, use button 8th
@@ -707,14 +705,15 @@ const DefaultConfig = {
 let lm = undefined;
 
 function start(config) {
+  console.log('START');
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
   if (lm !== undefined) {
+    console.log('Already Started');
     return;
   }
   lm = new LineageM(config);
-  console.log('START');
   lm.start();
   lm.stop();
   console.log('STOP');
@@ -725,9 +724,11 @@ function stop() {
     return;
   }
   lm._loop = false;
+  lm = undefined;
+  console.log('Stopping');
 }
 
-start(DefaultConfig);
+// start(DefaultConfig);
 // lm = new LineageM();
 // lm._loop=true;
 // lm.goToMapPage();
@@ -738,7 +739,7 @@ start(DefaultConfig);
 // lm.goToMapPage();
 // lm._loop = true;
 // lm.recordCurrentLocation();
-// const xy = lm.getDiffRecordLocation();
+// var xy = lm.getDiffRecordLocation();
 // lm.gi.menuOnBtn.tap();
 // sleep(1000);
 // lm.goMap(-xy.x, -xy.y);
