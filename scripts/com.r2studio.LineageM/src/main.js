@@ -254,6 +254,48 @@ class LineageM {
     }
   }
 
+  loadNumberImages() {
+
+  }
+
+  getImageNumber(img, numbers, maxLength = 8) {
+    if (numbers.length != 10) {
+      console.log('Error number length should be 10');
+      return 0;
+    }
+    const results = [];
+    for (let i = 0; i < 10; i++) {
+      const nImg = numbers[i];
+      if (nImg == 0) {
+        console.log('Error number image is empty');
+        return 0;
+      }
+      const rs = findImages(img, nImg, 0.95, maxLength, true);
+      for (let k in rs) {
+        rs[k].number = i;
+        results.push(rs[k]);
+      }
+    }
+    results.sort((a, b) => {return b.score - a.score;});
+    results = results.slice(0, Math.min(maxLength, results.length));
+    results.sort((a, b) => {return a.x - b.x;});
+    const numberSize = getImageSize(numbers[0]);
+    const nw = numberSize.width;
+    const imgSize = getImageSize(img);
+    const iw = imgSize.width;
+    let px = 0;
+    let numberStr = '';
+    for(let i in results) {
+      const r = results[i];
+      if (r.x > p) {
+        numberStr += r.number.toString();
+        p = r.x - 2;
+      }
+    }
+    console.log('number', numberStr);
+    return numberStr;
+  }
+
   checkIsSystemPage() {
     if (this.rState.isEnter) {
       console.log('Enter the game, Wait 10 sec');        
