@@ -174,9 +174,9 @@ class GameInfo {
       new FeaturePoint(1844, 76, 245, 220, 215, true),
     ]);
     this.menuOffBtn = new PageFeature('menuOff', [
-      new FeaturePoint(1850, 56, 146, 136, 109, true),
-      new FeaturePoint(1850, 66, 145, 137, 116, true),
-      new FeaturePoint(1860, 76, 167, 162, 140, true),
+      new FeaturePoint(1850, 56, 173, 166, 147, true, 40),
+      new FeaturePoint(1850, 66, 173, 166, 147, true, 40),
+      new FeaturePoint(1860, 76, 173, 166, 147, true, 40),
     ]);
     this.autoPlayBtn = new PageFeature('autoPlayOff', [
       new FeaturePoint(1429, 767, 140, 154, 127, true, 60),
@@ -380,7 +380,7 @@ class LineageM {
         }
       }
 
-      console.log('Check conditions');
+      // console.log('Check conditions');
       this.checkCondiction();
 
       if (this.rState.isSafeRegion) {

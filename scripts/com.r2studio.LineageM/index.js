@@ -285,7 +285,7 @@ var GameInfo = function GameInfo() {
   this.mapControllerB = new Point(290, 960);
 
   this.menuOnBtn = new PageFeature('menuOn', [new FeaturePoint(1844, 56, 245, 245, 241, true), new FeaturePoint(1844, 66, 128, 70, 56, true), new FeaturePoint(1844, 76, 245, 220, 215, true)]);
-  this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 146, 136, 109, true), new FeaturePoint(1850, 66, 145, 137, 116, true), new FeaturePoint(1860, 76, 167, 162, 140, true)]);
+  this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 40), new FeaturePoint(1850, 66, 173, 166, 147, true, 40), new FeaturePoint(1860, 76, 173, 166, 147, true, 40)]);
   this.autoPlayBtn = new PageFeature('autoPlayOff', [new FeaturePoint(1429, 767, 140, 154, 127, true, 60), new FeaturePoint(1476, 772, 140, 157, 130, true, 60)]);
   this.selfSkillBtn = new PageFeature('selfSkillOff', [new FeaturePoint(1594, 601, 141, 147, 137, true, 60), new FeaturePoint(1591, 624, 117, 128, 114, true, 60)]);
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
@@ -493,7 +493,7 @@ var LineageM = function () {
           }
         }
 
-        console.log('Check conditions');
+        // console.log('Check conditions');
         this.checkCondiction();
 
         if (this.rState.isSafeRegion) {
