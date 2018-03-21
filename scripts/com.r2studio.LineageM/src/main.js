@@ -143,7 +143,7 @@ class GameInfo {
   constructor() {
     this.hpBarRect = new Rect(122, 30, 412, 51);
     this.mpBarRect = new Rect(122, 58, 412, 72);
-    this.expBarRect = new Rect(15, 1069, 1905, 1074);
+    this.expBarRect = new Rect(16, 1070, 1904, 1072);
     this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
 
