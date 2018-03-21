@@ -1,175 +1,519 @@
 <html>
-  <head>
-      <style>
-          .navbar-custom {
-              border-radius: 0 !important;
-              background-color: #2196F3;
-              color: #FFFFFF;
-          }
-          .navbar-custom > a {
-              width: 100%;
-              color: #FFFFFF;
-              text-align: center;
-          }
-          .navbar-custom > a:hover {
-              color: #FFFFFF;
-          }
 
-          .list-group-item {
-              padding-bottom: 6px !important;
-              padding-top: 6px !important;
-              font-size: 10px;
-          }
+<head>
+  <style>
+    .navbar-custom {
+      border-radius: 0 !important;
+      background-color: #2196F3;
+      color: #FFFFFF;
+    }
 
-          /* The switch - the box around the slider */
-          .switch {
-              position: relative;
-              display: inline-block;
-              vertical-align: middle;
-              margin-bottom: 0px;
-              margin-top: -4px;
-              width: 52px;
-              height: 28px;
-          }
+    .navbar-custom>a {
+      width: 100%;
+      color: #FFFFFF;
+      text-align: center;
+    }
 
-          /* Hide default HTML checkbox */
-          .switch input {display:none;}
+    .navbar-custom>a:hover {
+      color: #FFFFFF;
+    }
 
-          /* The slider */
-          .slider {
-              position: absolute;
-              cursor: pointer;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              background-color: #ccc;
-              -webkit-transition: .4s;
-              transition: .4s;
-          }
+    .list-group-item {
+      padding: 6px 10px !important;
+    }
 
-          .slider:before {
-              position: absolute;
-              content: "";
-              height: 24px;
-              width: 24px;
-              left: 2px;
-              bottom: 4px;
-              top: 2px;
-              background-color: white;
-              -webkit-transition: .4s;
-              transition: .4s;
-          }
+    .switch {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0px;
+      width: 52px;
+      height: 28px;
+    }
 
-          input:checked + .slider {
-              background-color: #2196F3;
-          }
+    .switch input {
+      display: none;
+    }
 
-          input:focus + .slider {
-              box-shadow: 0 0 1px #2196F3;
-          }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
 
-          input:checked + .slider:before {
-              -webkit-transform: translateX(24px);
-              -ms-transform: translateX(24px);
-              transform: translateX(24px);
-          }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 4px;
+      top: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
 
-          /* Rounded sliders */
-          .slider.round {
-              border-radius: 28px;
-          }
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
 
-          .slider.round:before {
-              border-radius: 50%;
-          }
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
 
-          .btn-plus {
-              color:#FFFFFF;
-              background-color: #2196F3;
-              border-color: #2196F3;
-          }
-          .btn-plus:hover,
-          .btn-plus:focus,
-          .btn-plus:active,
-          .btn-plus.active {
-              color:#FFFFFF !important;
-              background-color: #0d8aee;
-              border-color: #0c7cd5;
-          }
-          .btn-plus.disabled:hover,
-          .btn-plus.disabled:focus,
-          .btn-plus.disabled:active,
-          .btn-plus.disabled.active,
-          .btn-plus[disabled]:hover,
-          .btn-plus[disabled]:focus,
-          .btn-plus[disabled]:active,
-          .btn-plus[disabled].active,
-          fieldset[disabled] .btn-plus:hover,
-          fieldset[disabled] .btn-plus:focus,
-          fieldset[disabled] .btn-plus:active,
-          fieldset[disabled] .btn-plus.active {
-              color:#FFFFFF;
-              background-color: #2196F3;
-              border-color: #2196F3;
-          }
-          .btn-plus,
-          .btn-danger {
-              width: 80px;
-              padding: 3px 0px 3px 0px !important;
-          }
-      </style>
+    input:checked+.slider:before {
+      -webkit-transform: translateX(24px);
+      -ms-transform: translateX(24px);
+      transform: translateX(24px);
+    }
 
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    .slider.round {
+      border-radius: 28px;
+    }
 
-      <script>
-          $(function() {
-            $("#runAutoPlay").click(function() {
-                $("#runType").val('autoPlay');
-            });
-            $("#runTrial").click(function() {
-                $("#runType").val('trial');
-            });
-          });
+    .slider.round:before {
+      border-radius: 50%;
+    }
 
-          function getCheckStatus(id) {
-              return $(id).is(':checked');
-          }
-          function onEvent(eventType) {
-              console.log(eventType);
-              if (eventType == 'OnPlayClick') {
-                  var runType = $("#runType").val();
-                  console.log('start("' + runType + ');');
-                  JavaScriptInterface.runScript('start("' + runType + '", ' + null + ');');
-              } else if (eventType == 'OnPauseClick') {
-                  JavaScriptInterface.runScript('stop();');
-              } else if (eventType == 'OnReloadClick') {
-                  JavaScriptInterface.runScript(script);
+    .btn {
+      margin-left: 5px;
+    }
+
+    .btn-plus {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus:hover,
+    .btn-plus:focus,
+    .btn-plus:active,
+    .btn-plus.active {
+      color: #FFFFFF !important;
+      background-color: #0d8aee;
+      border-color: #0c7cd5;
+    }
+
+    .btn-plus.disabled:hover,
+    .btn-plus.disabled:focus,
+    .btn-plus.disabled:active,
+    .btn-plus.disabled.active,
+    .btn-plus[disabled]:hover,
+    .btn-plus[disabled]:focus,
+    .btn-plus[disabled]:active,
+    .btn-plus[disabled].active,
+    fieldset[disabled] .btn-plus:hover,
+    fieldset[disabled] .btn-plus:focus,
+    fieldset[disabled] .btn-plus:active,
+    fieldset[disabled] .btn-plus.active {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus,
+    .btn-danger,
+    .btn-warning,
+    .btn-success {
+      min-width: 25px;
+      min-height: 25px;
+      padding: 1px 0px 1px 0px !important;
+    }
+
+    .btn-circle {
+      min-width: 30px;
+      min-height: 30px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 15px;
+      border: 0px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+    }
+
+    ul {
+      padding-left: 5px;
+    }
+
+    .setting_input {
+      text-align: center;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/10.0.7/i18next.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
+
+  <script>
+    if (typeof String.prototype.startsWith != 'function') {
+      // see below for better implementation!
+      String.prototype.startsWith = function (str){
+        return this.indexOf(str) === 0;
+      };
+    }
+
+    TAG = "LineageM";
+    VERSION = 2;
+    var settings = {
+      conditions: [
+        {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 75, btn: 1, interval: 1000, enabled: false},
+        {type: 'mp', op: 1, value: 75, btn: 2, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 50, btn: 3, interval: 1000, enabled: false},
+        {type: 'mp', op: -1, value: 25, btn: 4, interval: 1000, enabled: false},
+        {type: 'hp', op: -1, value: 75, btn: 5, interval: 1000, enabled: false},
+        {type: 'hp', op: -1, value: 75, btn: 6, interval: 1000, enabled: false},
+        {type: 'hp', op: -1, value: 75, btn: 7, interval: 1000, enabled: false},
+      ],
+      inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
+      dangerousGoHome: true, // if hp < 25%, go home, use button 8th
+      goBackInterval: 0, // whether to go back to origin location, check location every n min
+    };
+
+    $(function () {
+      $("#version").html("天堂M (Lineage M) v" + VERSION);
+      initLocale();
+      loadSettings();
+      updateLocale();
+    });
+
+    function updateLocale() {
+      $('.container').localize();
+    }
+
+    function initLocale() {
+      i18next.init({
+        lng: 'zh_TW',
+        resources: {
+          zh_TW: {
+            translation: {
+              text: {
+                language: "語言",
+                interval: "間隔",
+                milliseconds: "毫秒",
+                minutes: "分鐘",
+                hotkey: "快捷鍵",
+                inHomeUseBtn: "瞬卷 (請將瞬卷放在快捷鍵 7)",
+                dangerousGoHome: "回卷 (請將回卷放在快捷鍵 8)，hp < 25%",
+                goBackInterval: "回到原點 (0: 不啟動)(目前只支援地圖中間區域與亞丁大陸)",
               }
+            }
           }
-          function onLog(message) {
-              console.log(message);
+        }
+      }, function (err, t) {
+        jqueryI18next.init(i18next, $);
+        if (localStorage !== undefined) {
+          var locale = localStorage.getItem(getLocaleKey());
+          if (locale != null) {
+            i18next.changeLanguage(locale)
           }
-      </script>
-  </head>
-  <body>
-      <nav class="navbar navbar-custom" role="navigation">
-        <a class="navbar-brand">LineageM v0</a>
-      </nav>
-      <div class="container">
-        <ul class="list-group">
-          <li class="list-group-item">
-              功能選擇
-              <div class="pull-right" style="margin-top:-4px">
-                <input id="runType" style="width: 45px; text-align: center;" min="0" type="string" value="autoPlay" readonly>
-                <button id="runAutoPlay" type="button" class="btn btn-danger">自動打怪</button>
-                <button id="runTrial" type="button" class="btn btn-plus">狂點試煉鍵</button>
-              </div>
-          </li>
-        </ul>
-      </div>
-  </body>
+        }
+      });
+      i18next.on('languageChanged', function() {
+        if (localStorage !== undefined) {
+          localStorage.setItem(getLocaleKey(), i18next.language);
+        }
+        updateLocale();
+      });
+    }
+
+    function getSettingKey() {
+      return TAG + '-settings';
+    }
+
+    function getVersionKey() {
+      return TAG + '-version';
+    }
+
+    function getLocaleKey() {
+      return TAG + '-locale';
+    }
+
+    function appendSwitchCol(jRow, jSwitchInput) {
+      var jDiv = $('<div class="pull-right"></div>');
+      var jCol = $('<div class="col-xs-3"></div>');
+      var jSwitch = $('<label class="switch pull-right"></label>');
+      jSwitch.append(jSwitchInput);
+      jSwitch.append('<a class="slider round"></a>');
+      jRow.append(jCol.append(jDiv.append(jSwitch)));
+    }
+
+    function appendToSwitchRow(jContent, jSwitchInput) {
+      var jGroup = $('#other');
+      var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
+      var jRow = $("<div class='row'></div>");
+      var jLeftContent = $("<div class='col-xs-9'></div>");
+      if (Array.isArray(jContent)) {
+        for (var j in jContent) {
+          jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent[j]))));
+        }
+      } else {
+        jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent))));
+      }
+      appendSwitchCol(jRow, jSwitchInput);
+    }
+
+    function appendToRow(left, right) {
+      var jGroup = $('#other');
+      var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
+      var jRow = $("<div class='row'></div>");
+      var jLeftContent = $("<div class='col-xs-9'></div>");
+      jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(left))));
+
+      var jDiv = $('<div class="pull-right"></div>');
+      var jCol = $('<div class="col-xs-3"></div>');
+      for (var j in right) {
+        jRow.append(jCol.append(jDiv.append(right[j])));
+      }
+    }
+
+    function loadConditionSettings() {
+      $('#condition').empty();
+
+      for (var index = 0; index < settings.conditions.length; index++) {
+        // condition in settings
+        var condition = settings.conditions[index];
+        var jContent = [];
+
+        // type
+        var jBtnType = $("<button class='btn'><i class='fa fa-flask' aria-hidden='true'></i></button>");
+        if (condition.type === 'hp') {
+          jBtnType.addClass('btn-danger');
+        } else if (condition.type === 'mp') {
+          jBtnType.addClass('btn-plus');
+        }
+        jBtnType.click((function (btn, condition) {
+          return function () {
+            if (btn.hasClass('btn-plus')) {
+              btn.removeClass('btn-plus').addClass('btn-danger');
+              condition.type = 'hp';
+            } else {
+              btn.removeClass('btn-danger').addClass('btn-plus');
+              condition.type = 'mp';
+            }
+            saveSettings();
+          }
+        })(jBtnType, condition));
+
+        // op
+        var jBtnOp = $("<button class='btn btn-success'><i class='fa' aria-hidden='true'></i></button>");
+        if (condition.op > 0) {
+          jBtnOp.find('i').addClass('fa-angle-right');
+        } else {
+          jBtnOp.find('i').addClass('fa-angle-left');
+        }
+        jBtnOp.click((function (btn, condition) {
+          return function () {
+            var i = btn.find('i');
+            if (i.hasClass('fa-angle-right')) {
+              i.removeClass('fa-angle-right').addClass('fa-angle-left');
+              condition.op = -1;
+            } else {
+              i.removeClass('fa-angle-left').addClass('fa-angle-right');
+              condition.op = 1;
+            }
+            saveSettings();
+          }
+        })(jBtnOp, condition));
+
+        // value
+        var valueMax = 95;
+        var valueMin = 5;
+        var valueStep = 5;
+        var jValueInput = $("<div class=setting_input>" + condition.value + "</div>");
+        var jValueBtn = $('<button class="btn btn-warning">+' + valueStep + '</button>');
+        jValueBtn.click((function (jInput, min, max, step, condition) {
+          return function () {
+            var newValue = (+jInput.text()) + step;
+            if (newValue > max) {
+              jInput.text(min);
+              condition.value = min;
+            } else {
+              jInput.text(newValue);
+              condition.value = newValue;
+            }
+            saveSettings();
+          }
+        })(jValueInput, valueMin, valueMax, valueStep, condition));
+
+        // interval
+        var intervalMax = 15000;
+        var intervalMin = 500;
+        var intervalStep = 500;
+        var jIntervalInput = $("<div class=setting_input>" + condition.interval + "</div>");
+        var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalStep + '</button>');
+        jIntervalBtn.click((function (jInput, min, max, step, condition) {
+          return function () {
+            var newValue = (+jInput.text()) + step;
+            if (newValue > max) {
+              jInput.text(min);
+              condition.interval = min;
+            } else {
+              jInput.text(newValue);
+              condition.interval = newValue;
+            }
+            saveSettings();
+          }
+        })(jIntervalInput, intervalMin, intervalMax, intervalStep, condition));
+
+        // push to content
+        jContent.push($("<div class=setting_input data-i18n='text.hotkey'></div>"));
+        jContent.push($("<div class=setting_input>" + (condition.btn + 1) + "</div>"));
+        jContent.push(jBtnType);
+        jContent.push(jBtnOp);
+        jContent.push(jValueInput);
+        jContent.push("%");
+        jContent.push(jValueBtn);
+        jContent.push($("<div class=setting_input data-i18n='text.interval'></div>"));
+        jContent.push(jIntervalInput);
+        jContent.push($("<div class=setting_input data-i18n='text.milliseconds'></div>"));
+        jContent.push(jIntervalBtn);
+
+        // append
+        var jGroup = $('#condition');
+        var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
+        var jRow = $("<div class='row'></div>");
+        var jLeftContent = $("<div class='col-xs-9'></div>");
+        for (var j in jContent) {
+          jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent[j]))));
+        }
+
+        // switch
+        var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (condition.enabled ? 'checked' : '') + "/>");
+        jSwitchInput.change((function (jInput, condition) {
+          return function () {
+            condition.enabled = jInput.is(':checked');
+            saveSettings();
+          }
+        })(jSwitchInput, condition));
+        appendSwitchCol(jRow, jSwitchInput);
+      }
+    }
+
+    function loadOtherSettings() {
+      $('#other').empty();
+      
+      // inHomeUseBtn
+      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.inHomeUseBtn ? 'checked' : '') + "/>");
+      jSwitchInput.change((function (jInput) {
+        return function () {
+          settings.inHomeUseBtn = jInput.is(':checked');
+          saveSettings();
+        }
+      })(jSwitchInput));
+      appendToSwitchRow($("<div class=setting_input data-i18n='text.inHomeUseBtn'></div>"), jSwitchInput);
+
+      // dangerousGoHome
+      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.dangerousGoHome ? 'checked' : '') + "/>");
+      jSwitchInput.change((function (jInput) {
+        return function () {
+          settings.dangerousGoHome = jInput.is(':checked');
+          saveSettings();
+        }
+      })(jSwitchInput));
+      appendToSwitchRow($("<div class=setting_input data-i18n='text.dangerousGoHome'></div>"), jSwitchInput);
+
+      // goBackInterval
+      var intervalMax = 20;
+      var intervalMin = 0;
+      var intervalStep = 1;
+      var jIntervalInput = $("<div class=setting_input>" + (settings.goBackInterval / 60000) + "</div>");
+      var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalStep + '</button>');
+      jIntervalBtn.click((function (jInput, min, max, step) {
+        return function () {
+          var newValue = (+jInput.text()) + step;
+          if (newValue > max) {
+            jInput.text(min);
+            settings.goBackInterval = min;
+          } else {
+            jInput.text(newValue);
+            settings.goBackInterval = newValue * 60000;
+          }
+          saveSettings();
+        }
+      })(jIntervalInput, intervalMin, intervalMax, intervalStep));
+      var jContent = [];
+      jContent.push($("<div class=setting_input data-i18n='text.interval'></div>"));
+      jContent.push(jIntervalInput);
+      jContent.push($("<div class=setting_input data-i18n='text.minutes'></div>"));
+      jContent.push(jIntervalBtn);
+      appendToRow($("<div class=setting_input data-i18n='text.goBackInterval'></div>"), jContent);
+    }
+
+    function loadSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var tempSettings = localStorage.getItem(getSettingKey());
+      settings = tempSettings == null ? settings : JSON.parse(tempSettings);
+
+      loadConditionSettings();
+      loadOtherSettings();
+    }
+
+    function saveSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      localStorage.setItem(getVersionKey(), VERSION);
+      localStorage.setItem(getSettingKey(), JSON.stringify(settings));
+    }
+
+    function getSettings() {
+      var tempSettings = $.extend(true, {}, settings);;
+      var tempConditions = [];
+      for (var index = 0; index < settings.conditions.length; index++) {
+        var condition = settings.conditions[index];
+        if (condition.enabled) {
+          tempConditions.push(condition);
+        }
+      }
+      tempSettings.conditions = tempConditions;
+      return tempSettings;
+    }
+
+    function onEvent(eventType) {
+      if (eventType == 'OnPlayClick') {
+        console.log('start(\'' + JSON.stringify(getSettings()) + '\');');
+        JavaScriptInterface.runScript('start(\'' + JSON.stringify(getSettings()) + '\');');
+      } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript('stop();');
+      }
+    }
+    function onLog(message) {
+      console.log(message);
+    }
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-custom" role="navigation">
+   <a id="version" class="navbar-brand"></a>
+  </nav>
+  <div id="container" class="container">
+    <dib>注意！只支援16:9螢幕解析度，請將浮動視窗放在左邊中間位置</dib>
+    <ul id="condition" class="list-group"></ul>
+    <ul id="other" class="list-group"></ul>
+  </div>
+</body>
+
 </html>
