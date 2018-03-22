@@ -409,312 +409,6 @@ var Page = {
 
 // Utils for Tsum
 
-function printMaxScores(tsumMaxScores) {
-  var str = "";
-  for (var i = 0; i < 10 && i < tsumMaxScores.length; i++) {
-    str += i + ", " + tsumMaxScores[i].key + ", " + tsumMaxScores[i].score + "    ";
-  }
-  log(str);
-}
-
-function usingTimeString(startTime) {
-  return 'usingTime: ' + (Date.now() - startTime);
-}
-
-function loadTsumImages(isJP) {
-  var tsumImages = {};
-  var tsumDir = isJP ? Config.tsumJpDir : Config.tsumDir;
-  var tsumPath = getStoragePath() + '/' + tsumDir;
-  var tsumFiles = isJP ? Config.tsumFilesJP : Config.tsumFiles;
-  for (var i in tsumFiles) {
-    var key = tsumFiles[i];
-    var filename = tsumPath + '/' + key + '_0.png';
-    var img = openImage(filename);
-    smooth(img, 1, 2);
-    tsumImages[key] = img;
-  }
-  return tsumImages;
-}
-
-function releaseTsumImages(tsumImages) {
-  for (var k in tsumImages) {
-    releaseImage(tsumImages[k]);
-  }
-}
-
-function loadTsumRotationImages(tsumMaxScores, isJP, debug) {
-  var tsumDir = isJP ? Config.tsumJpDir : Config.tsumDir;
-  var tsumPath = getStoragePath() + '/' + tsumDir;
-  for (var i = 0; i < Config.loadRotatedCount && i < tsumMaxScores.length; i++) {
-    if (debug) {
-      saveImage(tsumMaxScores[i].img, getStoragePath() + "/tmp/tsum" + i + ".jpg");
-    }
-  }
-  for (var i = 0; i < Config.loadRotatedCount && i < tsumMaxScores.length; i++) {
-    tsumMaxScores[i].rotations = [];
-    var maxScore = tsumMaxScores[i];
-    for (var r in Config.rotations) {
-      var filename = tsumPath + '/' + maxScore.key + '_' + Config.rotations[r] + '.png';
-      var img = openImage(filename);
-      smooth(img, 1, 2);
-      tsumMaxScores[i].rotations.push(img);
-    }
-  }
-}
-
-function adjustTable(k, myTsum) {
-  if (k == myTsum) {
-    return 1;
-  }
-  if (Config.scoreTable[k] != undefined) {
-    return Config.scoreTable[k];
-  }
-  return 0;
-}
-
-function findAllTsumMatchScore(tsumImages, boardImg, myTsum) {
-  var tsumMaxScores = [];
-  for (var k in tsumImages) {
-    var tsumImage = tsumImages[k];
-    var xyScore = findImage(boardImg, tsumImage);
-    xyScore.img = tsumImage; 
-    xyScore.key = k;
-    if (k == myTsum) {
-      xyScore.score = 1;
-    } else {
-      xyScore.score += adjustTable(k, myTsum);
-    }
-    tsumMaxScores.push(xyScore);
-  }
-  tsumMaxScores.sort(function(a, b){
-    return a.score > b.score ? -1 : 1;
-  });
-  return tsumMaxScores;
-}
-
-function removeSameTsumImages(tsumMaxScores, threshold) {
-  for (var i = 0; i < tsumMaxScores.length; i++) {
-    var erase = [];
-    for (var j = 0; j < tsumMaxScores.length; j++) {
-      if (i == j) {
-        continue;
-      }
-      var imgI = tsumMaxScores[i].img;
-      var imgJ = tsumMaxScores[j].img;
-      var score = getIdentityScore(imgI, imgJ);
-      if (score > threshold) {
-        erase.push(j);
-      }
-    }
-    for (var k = erase.length - 1; k >= 0; k--) {
-      tsumMaxScores.splice(erase[k], 1);
-    }
-  }
-  return tsumMaxScores;
-}
-
-function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug) {
-  // releaseRotationTsum();
-  if (debug) {
-    saveImage(boardImg, getStoragePath() + "/tmp/boardImg.png");
-  }
-  var gameTsums = findAllTsumMatchScore(allTsumImages, boardImg, myTsum);
-  gameTsums = gameTsums.splice(0, 50);
-  log('total tsums', 'using tsums', gameTsums.length);
-  if (debug) {
-    printMaxScores(gameTsums);
-  }
-  // Remove same Tsums
-  removeSameTsumImages(gameTsums, 0.92);
-  log('after remove same tsums', gameTsums.length);
-  if (debug) {
-    printMaxScores(gameTsums);
-  }
-  
-  loadTsumRotationImages(gameTsums, isJP, debug);
-  // recheck first 5(4) tsums with rotation
-  for (var i = 0; i < gameTsums.length && i < Config.loadRotatedCount; i++) {
-    for (var j = 0; j < gameTsums[i].rotations.length; j++) {
-      var tsumImage = gameTsums[i].rotations[j];
-      var xyScore = findImage(boardImg, tsumImage);
-      if (xyScore.score > gameTsums[i].score) {
-        gameTsums[i].score = xyScore.score;
-      }
-    }
-  }
-  gameTsums.sort(function(a, b){
-    return a.score > b.score ? -1 : 1;
-  });
-
-  if (debug) {
-    printMaxScores(gameTsums);
-  }
-  return gameTsums;
-}
-
-function releaseTsumRotationImages(tsumMaxScores) {
-  for (var i = 0; i < Config.loadRotatedCount && i < tsumMaxScores.length; i++) {
-    for (var r in tsumMaxScores[i].rotations) {
-      releaseImage(tsumMaxScores[i].rotations[r]);
-    }
-  }
-}
-
-function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
-  var startTime = Date.now();
-
-  // 3700s => 1800s
-  var multiTaskIds = [];
-  var boardTsums = [];
-  for (var i = 0; i < tsumCount && i < gameTsums.length; i++) {
-    var ids = multiTasks(function(gameTsums, boardImg, idx) {
-      // scope independent
-      gameTsums = JSON.parse(gameTsums);
-      var results = [];
-      for (var j = 0; j < 8; j++) {
-        var rotatedImage = gameTsums[idx].rotations[j];
-        var scoreLimit = (gameTsums[idx].score - 0.5) * 0.75;
-        var countLimit = (j == 0) ? 10 : 6;
-        var result = findImages(boardImg, rotatedImage, scoreLimit, countLimit, true);
-        results.push(result);
-      }
-      return results;
-    }, JSON.stringify(gameTsums), boardImg, i);
-    
-    multiTaskIds.push(ids);
-  }
-  this.sleep(50);
-  for (var i in multiTaskIds) {
-    var resultss = waitTask(multiTaskIds[i]);
-    for (var ks in resultss) {
-      for (var k in resultss[ks]) {
-        var result = resultss[ks][k];
-        boardTsums.push({
-          tsumIdx: i,
-          // tsum: tsumMaxScores[i],
-          x: result.x,
-          y: result.y,
-          score: result.score,
-        });
-      }
-    }
-  }
-
-  boardTsums.sort(function(a, b){return a.score > b.score ? -1 : 1;});
-  // console.log('finding all rotated tsum in board', boardTsums.length, usingTimeString(startTime));
-  var board = [];
-  for (var i in boardTsums) {
-    var boardTsum = boardTsums[i];
-    var isExist = false;
-    for (var j in board) {
-      var bt = board[j];
-      if (boardTsum.x >= (bt.x - Config.tsumBoundW) && boardTsum.x < (bt.x + Config.tsumBoundW) && boardTsum.y >= (bt.y - Config.tsumBoundH) && boardTsum.y < (bt.y + Config.tsumBoundH)) {
-        isExist = true;
-        break;
-      }
-    }
-    if (!isExist) {
-      board.push(boardTsum);
-    }
-  }
-  log('辨識盤面Tsum成功數量', board.length, '費時', usingTimeString(startTime));
-  // console.log('find tsums in board', board.length, usingTimeString(startTime));
-  if (debug) {
-    for (var i = 0; i < board.length; i++) {
-      var boardTsum = board[i];
-      drawCircle(boardImg, boardTsum.x + Config.tsumWidth/2, boardTsum.y + Config.tsumWidth/2, 1, Config.colors[boardTsum.tsumIdx][0], Config.colors[boardTsum.tsumIdx][1], Config.colors[boardTsum.tsumIdx][2], 0);
-    }
-  }
-  return board;
-}
-
-function getDistance(t1, t2) {
-  return Math.sqrt((t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y));
-}
-
-function findNearTsum(tsum, tsums) {
-  var minDis = 99999;
-  var minTsum = null;
-  var idx = -1;
-  for(var i in tsums) {
-    var dis = getDistance(tsum, tsums[i]);
-    if (dis < minDis) {
-      minDis = dis;
-      minTsum = tsums[i];
-      idx = i;
-    }
-  }
-  return {dis: minDis, tsum: minTsum, idx: idx};
-}
-
-function calculateNearTsumPaths(tsum, ts) {
-  var path = [];
-  var tsums = ts.slice(); // copy array
-  while(true) {
-    var result = findNearTsum(tsum, tsums);
-    var minDis = result.dis;
-    var minTsum = result.tsum;
-    var minIdx = result.idx;
-    if (minIdx == -1 || minDis > Config.tsumWidth * 2.8) {
-      break;
-    }
-    tsum = minTsum;
-    tsums.splice(minIdx, 1);
-    path.push(tsum);
-  }
-  return path;
-}
-
-function calculatePathCenter(path) {
-  var cx = 0;
-  var cy = 0;
-  for (var i in path) {
-    cx += path[i].x;
-    cy += path[i].y;
-  }
-  return {x: Math.floor(cx / path.length), y: Math.floor(cy / path.length)};
-}
-
-function calculatePaths(board) {
-  var tsums = {};
-  for (var i in board) {
-    var tsum = board[i];
-    if (tsums[tsum.tsumIdx] == undefined) {
-      tsums[tsum.tsumIdx] = [];
-    }
-    tsums[tsum.tsumIdx].push(tsum);
-  }
-
-  var centers = {};
-  var paths = [];
-  
-  for (var tsumIdx in tsums) {
-    for (var i = 0; i < tsums[tsumIdx].length; i++) {
-      var path = calculateNearTsumPaths(tsums[tsumIdx][i], tsums[tsumIdx]);
-      if (path.length > 2) {
-        var c = calculatePathCenter(path);
-        if (centers[c.x] == c.y) {
-          // path already exists
-        } else {
-          centers[c.x] = c.y;
-          paths.push(path);
-          // console.log(runTimes, tsumIdx, path.length, c.x, c.y, JSON.stringify(path));
-        }
-      } else {
-        tsums[tsumIdx].splice(i, 1);
-        i--;
-      }
-    }
-  }
-
-  paths.sort(function(a, b) {
-    if (a.length < b.length) { return 1; }
-    return -1;
-  });
-  log('計算出路徑', paths.length, '條');
-  return paths;
-}
-
 // Tsum struct
 
 function Tsum(isJP, detect) {
@@ -740,10 +434,6 @@ function Tsum(isJP, detect) {
   this.playResizeHeight = Config.screenResize;
 
   this.tsumCount = 5;
-  this.isLoadAllTsum = false;
-  this.isLoadRotateTsum = false;
-  this.allTsumImages = {};
-  this.gameTsums = [];
   this.isJP = isJP;
   this.coinItem = false;
   this.isPause = true;
@@ -826,9 +516,6 @@ Tsum.prototype.init = function(detect) {
   this.playOffsetX = this.gameOffsetX;
   this.playOffsetY = this.gameOffsetY + (this.gameHeight - this.playHeight) * 0.6;
 
-  this.allTsumImages = loadTsumImages(this.isJP);
-  this.isLoadAllTsum = true;
-
   if (this.debug) {
     log('Config', this);
     this.sleep(200);
@@ -836,15 +523,6 @@ Tsum.prototype.init = function(detect) {
     this.sleep(1000);
   }
   execute("mkdir -p " + getStoragePath() + '/' + Config.recordDir);
-}
-
-Tsum.prototype.deinit = function() {
-  if (this.isLoadRotateTsum) {
-    releaseTsumRotationImages(this.gameTsums);
-  }
-  releaseTsumImages(this.allTsumImages);
-  this.allTsumImages = {};
-  this.isLoadAllTsum = false;
 }
 
 Tsum.prototype.isAppOn = function() {
@@ -887,18 +565,6 @@ Tsum.prototype.screenshot = function() {
     this.gameWidth / this.resizeRatio, 
     this.gameHeight / this.resizeRatio,
     80
-  );
-}
-
-Tsum.prototype.playScreenshot = function() {
-  return getScreenshotModify(
-    this.playOffsetX, 
-    this.playOffsetY, 
-    this.playWidth, 
-    this.playHeight, 
-    this.playResizeWidth, 
-    this.playResizeHeight,
-    100
   );
 }
 
@@ -951,34 +617,6 @@ Tsum.prototype.tapUp = function(xy, during) {
   var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
   var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
   tapUp(Math.round(x), Math.round(y), during);
-}
-
-Tsum.prototype.link = function(paths) {
-  var isBubble = false;
-  for (var i in paths) {
-    var path = paths[i];
-    if (path.length > 7) {
-      isBubble = true;
-    }
-    for (var j in path) {
-      var point = path[j];
-      var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth/2) * this.playWidth / this.playResizeWidth);
-      var y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth/2) * this.playHeight / this.playResizeHeight);
-      if (j == 0) {
-        tapDown(x, y, 20);
-      }
-      moveTo(x, y, 20);
-      // moveTo(x, y, 30);
-      if (j == path.length - 1) {
-        tapUp(x, y, 20);
-      }
-    }
-  }
-  return isBubble;
-}
-
-function adsColor(c1, v2) {
-  return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
 }
 
 Tsum.prototype.findPage = function(times, timeout) {
@@ -1043,305 +681,6 @@ Tsum.prototype.goFriendPage = function() {
     }
     this.sleep(1000);
   }
-}
-
-Tsum.prototype.checkGameItem = function() { 
-  var isItemsOn = [false, false, false, false, false, false];
-  if (this.enableAllItems) {
-    isItemsOn = [true, true, true, true, true, true];
-  }
-  if (this.tsumCount == 4) {
-    isItemsOn[5] = true;
-  }
-  if (this.coinItem) {
-    isItemsOn[1] = true;
-  }
-  for(var t = 0; t < 3; t++) {
-    var img = this.screenshot();
-    var isChange = false;
-    for (var i = 0; i < 6; i++) {
-      var c = this.getColor(img, Button.outGameItems[i]);
-      if (c.b > 128) { // off
-        if (isItemsOn[i]) {
-          this.tap(Button.outGameItems[i]);
-          isChange = true;
-          this.sleep(500);
-        }
-      } else { // on
-        if (!isItemsOn[i]) {
-          this.tap(Button.outGameItems[i]);
-          isChange = true;
-          this.sleep(500);
-        }
-      }
-    }
-    releaseImage(img);
-    if (!isChange) {
-      break;
-    }
-    this.sleep(500);
-  }
-  log("Check bonus", isItemsOn);
-}
-
-Tsum.prototype.goGamePlayingPage = function() {
-  
-  while(this.isRunning) {
-    if (!this.isAppOn()) {
-      this.startApp();
-    }
-    var page = this.findPage(2, 3000);
-    log('Current Page', page);
-    if (page == 'FriendPage') {
-      this.tap(Page[page].next);
-    } else if (page == 'StartPage') {
-      this.sleep(500);
-      this.checkGameItem();
-      this.tap(Button.outStart2);
-    } else if (page == 'GamePlaying') {
-      // check again
-      page = this.findPage(1, 500);
-      if (page == 'GamePlaying') {
-        return;
-      }
-    } else if (page == 'GamePause') {
-      this.tap(Page[page].next);
-    } else if (page == 'unknown') {
-      this.tap(Button.gameQuestionCancel);
-      this.tap(Button.gameQuestionCancel2);
-      this.tap(Button.outClose);
-      this.tap(Button.gameStop);
-      this.sleep(500);
-    } else {
-      this.tap(Page[page].back);
-    }
-    this.sleep(1000);
-  }
-}
-
-Tsum.prototype.findMyTsum = function() {
-  var tsumSize = Config.tsumWidth * this.gameWidth / this.playResizeWidth;
-  var myTsumImage = getScreenshotModify(
-    this.playOffsetX + tsumSize,
-    this.playOffsetY + this.playHeight,
-    tsumSize * 1.7,
-    tsumSize * 1.7,
-    Config.tsumWidth * 2.1, 
-    Config.tsumWidth * 2.1,
-    100
-  );
-  smooth(myTsumImage, 1, 2);
-  var allScores = findAllTsumMatchScore(this.allTsumImages, myTsumImage, '');
-  if (this.debug) {
-    saveImage(myTsumImage, getStoragePath() + "/tmp/mytsum.jpg");
-  }
-  releaseImage(myTsumImage);
-  this.myTsum = allScores[0].key;
-}
-
-Tsum.prototype.useSkill = function() {
-  var page = this.findPage(1, 500);
-  if (page != 'GamePlaying' && page != 'GamePause') {
-    return false;
-  }
-  for (var i = 0; i < 2; i++) {
-    var img = this.screenshot();
-    var isSkillOff1 = isSameColor(Button.gameSkillOff1.color, this.getColor(img, Button.gameSkillOff1), 60);
-    var isSkillOff2 = isSameColor(Button.gameSkillOff2.color, this.getColor(img, Button.gameSkillOff2), 60);
-    var isSkillOff3 = isSameColor(Button.gameSkillOff3.color, this.getColor(img, Button.gameSkillOff3), 60);
-    var isSkillOff4 = isSameColor(Button.gameSkillOff4.color, this.getColor(img, Button.gameSkillOff4), 60);
-    // log(isSkillOff1, isSkillOff2, isSkillOff3, this.getColor(img, Button.gameSkillOff1), this.getColor(img, Button.gameSkillOff2), this.getColor(img, Button.gameSkillOff3));
-    releaseImage(img);
-    if (!isSkillOff1 && !isSkillOff2 && !isSkillOff3 && !isSkillOff4) {
-      if (i == 0) {
-        this.sleep(200);
-      }
-    } else {
-      return false;
-    }
-  }
-  log('技能已經存滿，放技能');
-
-  this.tap(Button.gameSkillOn);
-  this.sleep(30);
-  if (this.myTsum == 'block_lukej_s') {
-    for (var i = 0; i < 5; i++) {
-      this.tapDown({x: 820, y: 1200}, 20);
-      this.moveTo({x: 820, y: 1150}, 20);
-      if (i == 0) {
-        this.sleep(1160);
-      }
-      this.sleep(350);
-      this.moveTo({x: 825, y: 1000}, 20);
-      this.sleep(100);
-      this.moveTo({x: 835, y: 800}, 20);
-      this.sleep(100);
-      this.moveTo({x: 845, y: 600}, 20);
-      this.sleep(100);
-      this.moveTo({x: 850, y: 450}, 20);
-      this.tapUp({x: 850, y: 420}, 20);
-      this.sleep(20);
-    }
-    this.tap(Button.skillLuke1);
-    this.sleep(800);
-  } else if(this.myTsum == 'block_moana_s') {
-    this.sleep(2500);
-    log("Clear bubbles");
-    for (var by = 1000; by <= 1300; by += 150) 
-    {
-      this.tap({x: 100, y: by}, 80);
-      this.tap({x: 1000, y: by}, 80);
-      this.tap({x: 250, y: by}, 80);
-      this.tap({x: 750, y: by}, 80);
-      this.tap({x: 400, y: by}, 80);
-      this.tap({x: 600, y: by}, 80);
-      this.tap({x: 450, y: by}, 80);
-    }
-    this.sleep(300);
-  } else if (this.myTsum.search('block_donald') != -1) {
-    for (var i = 0; i < 3; i++) {
-      for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
-        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 150) {
-          this.tap({x: bx, y: by}, 10);
-        }
-      }
-    }
-  } else {
-    this.sleep(3000);
-  }
-  return true;
-}
-
-Tsum.prototype.taskPlayGame = function() {
-  log('進入遊戲中...');
-  this.goGamePlayingPage();
-  log('遊戲中');
-  this.sleep(500);
-  this.findMyTsum();
-  log('myTsum', this.myTsum);
-  // this.sleep(500);
-  // start to run
-  var runTimes = 0;
-  var pathZero = 0;
-  var clearBubbles = 0;
-  while(this.isRunning) {  
-    // load game tsums
-    var gameImage = this.playScreenshot();
-    smooth(gameImage, 1, 2);
-    if (this.isPause) {
-      this.tap(Button.gamePause);
-      this.sleep(20);
-      this.tap(Button.gamePause);
-    }
-    if (!this.isLoadRotateTsum) {
-      log('辨識Tsum種類');
-      this.tap(Button.gamePause);
-      this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
-      this.isLoadRotateTsum = true;
-      var page = this.findPage(2, 1000);
-      if (page != 'GamePlaying' && page != 'GamePause') {
-        log('遊戲結束');
-        break;
-      }
-    }
-    log('辨識盤面Tsum');
-    var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug);
-    if (this.debug) {
-      saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
-    }
-    releaseImage(gameImage);
-
-    log('計算連線路徑');
-    var paths = calculatePaths(board);
-    
-    this.tap(Button.gameContinue);
-    if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
-    this.tap(Button.gameContinue);
-    if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
-
-    if (paths.length < 2) {
-      if (pathZero > 2) {
-        pathZero = 0;
-        log('路徑數量為 0, 重新辨識...');
-        if (this.useFan) {
-          this.tap(Button.gameRand, 60);
-          this.tap(Button.gameRand, 60);
-          this.sleep(1000);
-        }
-        releaseTsumRotationImages(this.gameTsums);
-        this.gameTsums = [];
-        this.isLoadRotateTsum = false;
-        continue;
-      }
-      pathZero++;
-    }
-
-    log('開始連線 數量', paths.length);
-    paths = paths.splice(0, 10);
-    var isBubble = this.link(paths);
-    if (isBubble) {
-      log("產生泡泡");
-      clearBubbles++;
-    }
-
-    // click bubbles
-    if (this.clearBubbles && clearBubbles >= 2) {
-      log("Clear bubbles");
-      clearBubbles = 0;
-      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
-        for (var by = Button.gameBubblesFrom.y + 280; by <= Button.gameBubblesTo.y; by += 140) {
-          this.tap({x: bx, y: by}, 10);
-        }
-      }
-    }
-    
-    if (this.useFan && runTimes % 4 == 3) {
-      this.tap(Button.gameRand, 100);
-      this.tap(Button.gameRand, 100);
-      this.sleep(700);
-    }
-    this.sleep(300);
-    if (this.useSkill()) {
-      clearBubbles++;
-      if (this.useSkill()) {
-        this.useSkill();
-      }
-    }
-
-    // double check
-    var page = this.findPage(1, 2500);
-    if (page != 'GamePlaying' && page != 'GamePause') {
-      this.sleep(500);
-      page = this.findPage(1, 2500);
-      if (page != 'GamePlaying' && page != 'GamePause') {
-        log('遊戲結束');
-        break;
-      }
-    }
-    runTimes++;
-  }
-  releaseTsumRotationImages(this.gameTsums);
-  this.gameTsums = [];
-  this.isLoadRotateTsum = false;
-  this.sleep(4000);
-}
-
-Tsum.prototype.taskReceiveAllItems = function() {
-  log('前往朋友頁面');
-  this.goFriendPage();
-  this.sleep(1000);
-  log('接收全部物品');
-  this.tap(Button.outReceive);
-  this.sleep(3500);
-  this.tap(Button.outReceiveAll);
-  this.sleep(2500);
-  this.tap(Button.outReceiveOk);
-  this.sleep(2000);
-  this.tap(Button.outReceiveClose);
-  this.sleep(1500);
-  this.tap(Button.outClose);
-  this.goFriendPage();
-  log('接收物品完成');
 }
 
 Tsum.prototype.readRecord = function() {
@@ -1607,9 +946,8 @@ Tsum.prototype.taskSendHearts = function() {
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
-        this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 500);
+        this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 100);
         retry++;
         log("沒愛心可送或零分，再檢查次數: " + retry);
         this.sleep(1000);
@@ -1650,9 +988,8 @@ Tsum.prototype.taskSendHearts = function() {
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
       this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 400);
-      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 400);
+      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 100);
 
       this.sleep(400);
       if (this.sendHeartMaxDuring != 0) {
@@ -1770,15 +1107,15 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   }
 
   gTaskController = new TaskController();
-  if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
-  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
+  gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);
+  //if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
-  if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
+  //if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
   sleep(500);
   gTaskController.start();
   // loop stop here...
   log('清除殘留記憶體...');
-  ts.deinit();
+  //ts.deinit();
   if (ts.recordReceive) {
     ts.releaseRecord();
   }
