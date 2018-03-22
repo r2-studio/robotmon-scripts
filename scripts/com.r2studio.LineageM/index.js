@@ -272,7 +272,7 @@ var GameInfo = function GameInfo() {
   this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
   this.regionTypeRect = new Rect(1710, 470, 1816, 498);
 
-  this.itemBtns = [new Point(810, 960), new Point(930, 960), new Point(1050, 960), new Point(1180, 960), new Point(1440, 960), new Point(1560, 960), new Point(1690, 960), new Point(1810, 960)];
+  this.itemBtns = [new Point(810, 960), new Point(930, 960), new Point(1050, 960), new Point(1180, 960), new Point(1440, 960), new Point(1560, 960), new Point(1690, 960), new Point(1810, 960), new Point(1310, 960)];
 
   this.unknownBtn = new Point(1100, 800);
 
