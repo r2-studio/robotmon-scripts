@@ -156,6 +156,7 @@ class GameInfo {
       new Point(1560, 960),
       new Point(1690, 960),
       new Point(1810, 960),
+      new Point(1310, 960), // special skills
     ];
 
     this.unknownBtn = new Point(1100, 800);

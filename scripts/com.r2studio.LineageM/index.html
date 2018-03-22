@@ -172,7 +172,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 2;
+    VERSION = 3;
     var settings = {
       conditions: [
         {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
@@ -183,6 +183,7 @@
         {type: 'hp', op: -1, value: 75, btn: 5, interval: 1000, enabled: false},
         {type: 'hp', op: -1, value: 75, btn: 6, interval: 1000, enabled: false},
         {type: 'hp', op: -1, value: 75, btn: 7, interval: 1000, enabled: false},
+        {type: 'hp', op: 1, value: 50, btn: 8, interval: 2000, enabled: false},
       ],
       inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
       dangerousGoHome: true, // if hp < 25%, go home, use button 8th
@@ -510,7 +511,8 @@
    <a id="version" class="navbar-brand"></a>
   </nav>
   <div id="container" class="container">
-    <dib>注意！只支援16:9螢幕解析度，請將浮動視窗放在左邊中間位置</dib>
+    <div>注意！只支援16:9螢幕解析度，請將浮動視窗放在左邊中間位置</div>
+    <div>注意！快捷鍵9 為試煉副本的特殊技能按鈕</div>
     <ul id="condition" class="list-group"></ul>
     <ul id="other" class="list-group"></ul>
   </div>
