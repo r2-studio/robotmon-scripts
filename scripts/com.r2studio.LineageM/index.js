@@ -446,7 +446,7 @@ var LineageM = function () {
             this.safeSleep(700);
           }
         } else if (value * cd.op > cd.value * cd.op) {
-          if (cd.btn >= 0 && cd.btn < 8) {
+          if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
             this.gi.itemBtns[cd.btn].tap(1, 100);
             console.log('Use ' + (cd.btn + 1) + ' btn, ' + cd.type + ', ' + cd.op + ' ' + cd.value + ' (' + value + ')');
             cd.useTime = Date.now();
@@ -479,6 +479,9 @@ var LineageM = function () {
           continue;
         }
 
+        // console.log('Check conditions');
+        this.checkCondiction();
+
         // go home (8th btn), rand teleport (7th btn)
         if (this.rState.isSafeRegion) {
           if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 6000) {
@@ -486,15 +489,12 @@ var LineageM = function () {
             useHomeTime = Date.now();
           }
         } else {
-          if (this.config.dangerousGoHome && this.rState.hp < 25) {
+          if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
             this.gi.itemBtns[7].tap(2, 100);
             console.log('Dangerous, go home, use btn 8th');
             continue;
           }
         }
-
-        // console.log('Check conditions');
-        this.checkCondiction();
 
         if (this.rState.isSafeRegion) {
           console.log('In safe region');
@@ -604,6 +604,11 @@ var LineageM = function () {
         return;
       }
       this.rState.hp = this.getHpPercent();
+      if (this.rState.hp < 25 && this.rState.hp > 0.1) {
+        sleep(300);
+        this.refreshScreen();
+        this.rState.hp = this.getHpPercent();
+      }
       this.rState.mp = this.getMpPercent();
       this.rState.exp = this.getExpPercent();
       this.rState.isSafeRegion = this.isSafeRegionState();
@@ -614,7 +619,7 @@ var LineageM = function () {
       } else {
         this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
         if (!this.rState.isAutoPlay) {
-          sleep(200);
+          sleep(300);
           this.refreshScreen();
           this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
         }
@@ -660,10 +665,10 @@ var LineageM = function () {
       for (var x = 0; x < barRect.tw; x += 1) {
         var c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));getImageColor(bar, x, y1);
         var d = Utils.minMaxDiff(c);
-        if (d < 60) {
+        if (d < 50) {
           noCount++;
-          if (noCount === 2) {
-            noX = x - 1;
+          if (noCount === 3) {
+            noX = x - 2;
             break;
           }
         } else {
