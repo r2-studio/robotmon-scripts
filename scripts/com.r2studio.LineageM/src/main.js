@@ -7,8 +7,19 @@ const gTargetWidth = 960;
 const gTargetHeight = 540;
 const gDeviceWidth = Math.max(_wh.width, _wh.height);
 const gDeviceHeight = Math.min(_wh.width, _wh.height);
+let gGameWidth = gDeviceWidth;
+let gGameHeight = gDeviceHeight;
+let gGameOffsetX = 0;
+let gGameOffsetY = 0;
+if (gDeviceWidth / gDeviceHeight > 1.78) {
+  gGameWidth = Math.round(gGameHeight * 1.777778);
+  gGameOffsetX = (gDeviceWidth - gGameWidth) / 2;
+} else if (gDeviceWidth / gDeviceHeight < 1.77) {
+  gGameHeight = Math.round(gGameWidth / 1.777778);
+  gGameOffsetY = (gDeviceHeight - gGameHeight) / 2;
+}
 const gRatioTarget = gTargetWidth / gDevWidth;
-const gRatioDevice = gDeviceWidth / gDevWidth;
+const gRatioDevice = gGameWidth / gDevWidth;
 // -- others
 const gZeroColor = {r: 0, g: 0, b: 0};
 // == Global variables en
@@ -66,8 +77,8 @@ class Point {
     this.y = y;
     this.tx = this.x * gRatioTarget;
     this.ty = this.y * gRatioTarget;
-    this.dx = this.x * gRatioDevice;
-    this.dy = this.y * gRatioDevice;
+    this.dx = gGameOffsetX + this.x * gRatioDevice;
+    this.dy = gGameOffsetY + this.y * gRatioDevice;
   }
   tap(times = 1, delay = 0) {
     while(times > 0) {
@@ -507,7 +518,7 @@ class LineageM {
       releaseImage(this._img);
       this._img = 0;
     }
-    this._img = getScreenshotModify(0, 0, gDeviceWidth, gDeviceHeight, gTargetWidth, gTargetHeight, 95);
+    this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 95);
     return this._img;
   }
 
@@ -730,6 +741,7 @@ function stop() {
     return;
   }
   lm._loop = false;
+  sleep(2000);
   lm = undefined;
   console.log('Stopping');
 }
