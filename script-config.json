@@ -51,8 +51,8 @@
     },
     "com.r2studio.LineageM": {
       "title": "Lineage M Helper",
-      "versionCode": 4,
-      "description": "<h1>天堂M無課救星</h1><ul><li>Hp, Mp 條件設定使用按鈕</li><li>回到地圖原點</li><li>安全區域瞬移</li><li>使用回卷直到安全區域</li><li>斷線重新連線</li><li>自動啟動自動攻擊</li><li>試煉副本輔助按紐</li></ul>",
+      "versionCode": 5,
+      "description": "<h1>天堂M無課救星</h1><ul><li>支援所有螢幕解析度\n</li><li>Hp, Mp 條件設定使用按鈕\n</li><li>回到地圖原點\n</li><li>安全區域瞬移\n</li><li>使用回卷直到安全區域\n</li><li>斷線重新連線\n</li><li>自動啟動自動攻擊\n</li><li>試煉副本輔助按紐\n</li></ul>",
       "packageName": "com.gamania.lineagem",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LineageM/index.zip",
       "dependencies": [

@@ -17,8 +17,19 @@ var gTargetWidth = 960;
 var gTargetHeight = 540;
 var gDeviceWidth = Math.max(_wh.width, _wh.height);
 var gDeviceHeight = Math.min(_wh.width, _wh.height);
+var gGameWidth = gDeviceWidth;
+var gGameHeight = gDeviceHeight;
+var gGameOffsetX = 0;
+var gGameOffsetY = 0;
+if (gDeviceWidth / gDeviceHeight > 1.78) {
+  gGameWidth = Math.round(gGameHeight * 1.777778);
+  gGameOffsetX = (gDeviceWidth - gGameWidth) / 2;
+} else if (gDeviceWidth / gDeviceHeight < 1.77) {
+  gGameHeight = Math.round(gGameWidth / 1.777778);
+  gGameOffsetY = (gDeviceHeight - gGameHeight) / 2;
+}
 var gRatioTarget = gTargetWidth / gDevWidth;
-var gRatioDevice = gDeviceWidth / gDevWidth;
+var gRatioDevice = gGameWidth / gDevWidth;
 // -- others
 var gZeroColor = { r: 0, g: 0, b: 0 };
 // == Global variables en
@@ -105,8 +116,8 @@ var Point = function () {
     this.y = y;
     this.tx = this.x * gRatioTarget;
     this.ty = this.y * gRatioTarget;
-    this.dx = this.x * gRatioDevice;
-    this.dy = this.y * gRatioDevice;
+    this.dx = gGameOffsetX + this.x * gRatioDevice;
+    this.dy = gGameOffsetY + this.y * gRatioDevice;
   }
 
   _createClass(Point, [{
@@ -633,7 +644,7 @@ var LineageM = function () {
         releaseImage(this._img);
         this._img = 0;
       }
-      this._img = getScreenshotModify(0, 0, gDeviceWidth, gDeviceHeight, gTargetWidth, gTargetHeight, 95);
+      this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 95);
       return this._img;
     }
 
@@ -866,6 +877,7 @@ function stop() {
     return;
   }
   lm._loop = false;
+  sleep(2000);
   lm = undefined;
   console.log('Stopping');
 }
