@@ -29,7 +29,7 @@
     },
     "com.r2studio.LoopYT": {
       "title": "LoopYT",
-      "versionCode": 8,
+      "versionCode": 9,
       "description": "<div>自動刷Youtube影片</div>",
       "packageName": "com.google.android.youtube",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LoopYT/index.zip",
