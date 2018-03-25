@@ -87,11 +87,7 @@ function stopChrome() {
   rbm.stopApp("com.android.chrome");
 }
 
-function airplaneOn() {
-  rbm.log("開關 3g/4g 網路 等候 15秒");
-  rbm.startApp("com.android.settings", ".RadioInfo");
-  safeSleep(14000);
-  rbm.stopApp("com.android.settings");
+function stopApp() {
   keycode('KEYCODE_APP_SWITCH');
   sleep(1000);
   keycode('KEYCODE_DEL');
@@ -100,17 +96,20 @@ function airplaneOn() {
   safeSleep(1000);
 }
 
+function airplaneOn() {
+  rbm.log("開關 3g/4g 網路 等候 15秒");
+  rbm.startApp("com.android.settings", ".RadioInfo");
+  safeSleep(14000);
+  rbm.stopApp("com.android.settings");
+  stopApp();
+}
+
 function airplaneOff() {
   rbm.log("開關 3g/4g 網路 等候 15秒");
   rbm.startApp("com.android.settings", ".RadioInfo");
   safeSleep(14000);
   rbm.stopApp("com.android.settings");
-  keycode('KEYCODE_APP_SWITCH');
-  safeSleep(1000);
-  keycode('KEYCODE_DEL');
-  safeSleep(1000);
-  keycode('HOME');
-  safeSleep(1000);
+  stopApp();
 }
 
 function safeSleep(t) {
@@ -194,10 +193,10 @@ function taskWatchVideo() {
   rbm.click(Buttons.chromeCloseIncognito); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.click(Buttons.chromeWindow); safeSleep(sleepTime); if (!rbm.running) {return;}
   rbm.log("Close Chrome. 關閉Chrome");
-  // stopChrome();
   keycode('HOME');
   safeSleep(settings.waitVideoLoad);
   settings.count++;
+  stopApp();
 
   if (settings.toggleAirplainTimes > 0 && (settings.count % settings.toggleAirplainTimes) == 0) {
     rbm.log("重啟 3g/4g網路");
@@ -244,4 +243,3 @@ function stop() {
 }
 // start("twice_likey_jypentertainment", 6 * 60000, 3, 2, 1);
 // startChrome();
-
