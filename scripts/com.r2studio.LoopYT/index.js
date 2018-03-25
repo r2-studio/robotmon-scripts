@@ -92,6 +92,10 @@ function airplaneOn() {
   rbm.startApp("com.android.settings", ".RadioInfo");
   safeSleep(14000);
   rbm.stopApp("com.android.settings");
+  keycode('KEYCODE_APP_SWITCH');
+  sleep(1000);
+  keycode('KEYCODE_DEL');
+  safeSleep(1000);
   keycode('HOME');
   safeSleep(1000);
 }
@@ -101,6 +105,10 @@ function airplaneOff() {
   rbm.startApp("com.android.settings", ".RadioInfo");
   safeSleep(14000);
   rbm.stopApp("com.android.settings");
+  keycode('KEYCODE_APP_SWITCH');
+  safeSleep(1000);
+  keycode('KEYCODE_DEL');
+  safeSleep(1000);
   keycode('HOME');
   safeSleep(1000);
 }
