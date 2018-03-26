@@ -280,6 +280,7 @@ var GameInfo = function GameInfo() {
   this.hpBarRect = new Rect(122, 30, 412, 51);
   this.mpBarRect = new Rect(122, 58, 412, 72);
   this.expBarRect = new Rect(16, 1070, 1904, 1072);
+  this.zeroRect = new Rect(0, 0, 1, 1);
   this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
   this.regionTypeRect = new Rect(1710, 470, 1816, 498);
 
@@ -302,7 +303,7 @@ var GameInfo = function GameInfo() {
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
   this.disconnectBtn = new PageFeature('disconnect', [new FeaturePoint(840, 880, 34, 51, 79, true, 20), new FeaturePoint(1080, 880, 34, 51, 79, true, 20), new FeaturePoint(1170, 880, 31, 20, 14, true, 20)]);
   this.enterBtn = new PageFeature('enter', [new FeaturePoint(1480, 990, 31, 47, 70, true, 20), new FeaturePoint(1750, 990, 31, 47, 70, true, 20), new FeaturePoint(1690, 990, 31, 47, 70, true, 20)]);
-  this.beAttacked = new PageFeature('beAttacked', [new FeaturePoint(1666, 756, 210, 90, 50, true, 60), new FeaturePoint(1624, 750, 210, 90, 50, true, 60), new FeaturePoint(1800, 818, 240, 160, 140, true, 30)]);
+  this.beAttacked = new PageFeature('beAttacked', [new FeaturePoint(1616, 744, 210, 90, 50, true, 60), new FeaturePoint(1676, 744, 210, 90, 50, true, 60), new FeaturePoint(1666, 756, 210, 90, 50, true, 60), new FeaturePoint(1624, 750, 210, 90, 50, true, 60), new FeaturePoint(1800, 818, 240, 160, 140, true, 30), new FeaturePoint(1634, 769, 165, 180, 170, false, 50)]);
 };
 
 var RoleState = function () {
@@ -479,11 +480,14 @@ var LineageM = function () {
         this.refreshScreen();
 
         if (this.config.beAttackedRandTeleport && this.gi.beAttacked.check(this._img)) {
-          // rand teleport (7th btn)
-          console.log('Warning!! You Are Attacked!!');
-          this.gi.itemBtns[6].tap();
-          this.safeSleep(2500);
-          continue;
+          var c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
+          if (c.r > c.g + c.b) {
+            // rand teleport (7th btn)
+            console.log('Warning!! You Are Attacked!!');
+            this.gi.itemBtns[6].tap();
+            this.safeSleep(2500);
+            continue;
+          }
         }
 
         this.updateGlobalState();
@@ -887,10 +891,9 @@ function stop() {
   if (lm == undefined) {
     return;
   }
-  lm._loop = false;
-  sleep(2000);
+  lm.stop();
   lm = undefined;
-  console.log('Stopping');
+  console.log('Stopping...');
 }
 
 // start(DefaultConfig);
