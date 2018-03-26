@@ -173,7 +173,7 @@
 
     TAG = "LineageM";
     VERSION = 6;
-    var settings = {
+    DEFAULT_CONFIG = {
       conditions: [
         {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
         {type: 'hp', op: 1, value: 75, btn: 1, interval: 1000, enabled: false},
@@ -190,6 +190,7 @@
       goBackInterval: 0, // whether to go back to origin location, check location every n min
       beAttackedRandTeleport: true,
     };
+    var settings;
 
     $(function () {
       $("#version").html("天堂M 無課救星 v" + VERSION);
@@ -476,10 +477,24 @@
       if (localStorage === undefined) {
         return;
       }
-      var version = localStorage.getItem(getVersionKey());
-      if (version == VERSION) {
-        var tempSettings = localStorage.getItem(getSettingKey());
-        settings = tempSettings == null ? settings : JSON.parse(tempSettings);
+      var tempSettings = localStorage.getItem(getSettingKey());
+      if (tempSettings == null) {
+        settings = $.extend(true, {}, DEFAULT_CONFIG);
+      } else {
+        settings = JSON.parse(tempSettings);
+        var keys = Object.keys(DEFAULT_CONFIG);
+        for (var i in keys) {
+          var key = keys[i];
+          if (key === 'conditions' && settings['conditions'] !== undefined) {
+            for (let index = settings.conditions.length; index < DEFAULT_CONFIG.conditions.length; index++) {
+              settings.conditions[index] = DEFAULT_CONFIG.conditions[index];
+            }
+            continue;
+          }
+          if (settings[key] === undefined) {
+            settings[key] = DEFAULT_CONFIG[key];
+          }
+        }
       }
       loadConditionSettings();
       loadOtherSettings();
@@ -494,7 +509,7 @@
     }
 
     function getSettings() {
-      var tempSettings = $.extend(true, {}, settings);;
+      var tempSettings = $.extend(true, {}, settings);
       var tempConditions = [];
       for (var index = 0; index < settings.conditions.length; index++) {
         var condition = settings.conditions[index];
