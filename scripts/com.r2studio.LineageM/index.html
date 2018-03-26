@@ -172,7 +172,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 5;
+    VERSION = 6;
     var settings = {
       conditions: [
         {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
@@ -188,6 +188,7 @@
       inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
       dangerousGoHome: true, // if hp < 25%, go home, use button 8th
       goBackInterval: 0, // whether to go back to origin location, check location every n min
+      beAttackedRandTeleport: true,
     };
 
     $(function () {
@@ -213,9 +214,10 @@
                 milliseconds: "毫秒",
                 minutes: "分鐘",
                 hotkey: "快捷鍵",
-                inHomeUseBtn: "瞬卷 (請將瞬卷放在快捷鍵 7)",
+                inHomeUseBtn: "安全區域瞬卷 (請將瞬卷放在快捷鍵 7)",
                 dangerousGoHome: "回卷 (請將回卷放在快捷鍵 8)，hp < 25%",
                 goBackInterval: "回到原點 (0: 不啟動)(目前只支援地圖中間區域與亞丁大陸)",
+                beAttackedRandTeleport: "被攻擊瞬移 (請將瞬卷放在快捷鍵 7)",
               }
             }
           }
@@ -423,6 +425,16 @@
       })(jSwitchInput));
       appendToSwitchRow($("<div class=setting_input data-i18n='text.inHomeUseBtn'></div>"), jSwitchInput);
 
+      // be attecked teleport
+      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.beAttackedRandTeleport ? 'checked' : '') + "/>");
+      jSwitchInput.change((function (jInput) {
+        return function () {
+          settings.beAttackedRandTeleport = jInput.is(':checked');
+          saveSettings();
+        }
+      })(jSwitchInput));
+      appendToSwitchRow($("<div class=setting_input data-i18n='text.beAttackedRandTeleport'></div>"), jSwitchInput);
+
       // dangerousGoHome
       var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.dangerousGoHome ? 'checked' : '') + "/>");
       jSwitchInput.change((function (jInput) {
@@ -464,9 +476,11 @@
       if (localStorage === undefined) {
         return;
       }
-      var tempSettings = localStorage.getItem(getSettingKey());
-      settings = tempSettings == null ? settings : JSON.parse(tempSettings);
-
+      var version = localStorage.getItem(getVersionKey());
+      if (version == VERSION) {
+        var tempSettings = localStorage.getItem(getSettingKey());
+        settings = tempSettings == null ? settings : JSON.parse(tempSettings);
+      }
       loadConditionSettings();
       loadOtherSettings();
     }
