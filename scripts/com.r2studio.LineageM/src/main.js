@@ -155,6 +155,7 @@ class GameInfo {
     this.hpBarRect = new Rect(122, 30, 412, 51);
     this.mpBarRect = new Rect(122, 58, 412, 72);
     this.expBarRect = new Rect(16, 1070, 1904, 1072);
+    this.zeroRect = new Rect(0, 0, 1, 1);
     this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
 
@@ -181,14 +182,14 @@ class GameInfo {
     this.mapControllerB = new Point(290, 960);
 
     this.menuOnBtn = new PageFeature('menuOn', [
-      new FeaturePoint(1844, 56, 245, 245, 241, true),
-      new FeaturePoint(1844, 66, 128, 70, 56, true),
-      new FeaturePoint(1844, 76, 245, 220, 215, true),
+      new FeaturePoint(1844, 56, 245, 245, 241, true, 30),
+      new FeaturePoint(1844, 66, 128, 70, 56, true, 30),
+      new FeaturePoint(1844, 76, 245, 220, 215, true, 30),
     ]);
     this.menuOffBtn = new PageFeature('menuOff', [
-      new FeaturePoint(1850, 56, 173, 166, 147, true, 40),
-      new FeaturePoint(1850, 66, 173, 166, 147, true, 40),
-      new FeaturePoint(1860, 76, 173, 166, 147, true, 40),
+      new FeaturePoint(1850, 56, 173, 166, 147, true, 50),
+      new FeaturePoint(1850, 66, 173, 166, 147, true, 50),
+      new FeaturePoint(1860, 76, 173, 166, 147, true, 50),
     ]);
     this.autoPlayBtn = new PageFeature('autoPlayOff', [
       new FeaturePoint(1429, 767, 140, 154, 127, true, 60),
@@ -211,6 +212,14 @@ class GameInfo {
       new FeaturePoint(1750, 990, 31, 47, 70, true, 20),
       new FeaturePoint(1690, 990, 31, 47, 70, true, 20),
     ]);
+    this.beAttacked = new PageFeature('beAttacked', [
+      new FeaturePoint(1616, 744, 210, 90, 50, true, 60),
+      new FeaturePoint(1676, 744, 210, 90, 50, true, 60),
+      new FeaturePoint(1666, 756, 210, 90, 50, true, 60),
+      new FeaturePoint(1624, 750, 210, 90, 50, true, 60),
+      new FeaturePoint(1800, 818, 240, 160, 140, true, 30),
+      new FeaturePoint(1634, 769, 165, 180, 170, false, 50),
+    ]);
   }
 }
 
@@ -228,6 +237,7 @@ class RoleState {
     this.isAutoPlay = false;
     this.isAttecking = false;
     this.isSelfSkill = false;
+    this.isAttecked = false;
   }
 
   print() {
@@ -361,8 +371,20 @@ class LineageM {
     let goBackTime = Date.now();
     let useHomeTime = Date.now();
     while(this._loop) {
-      this.safeSleep(500);
+      this.safeSleep(200);
       this.refreshScreen();
+
+      if (this.config.beAttackedRandTeleport && this.gi.beAttacked.check(this._img)) {
+        const c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
+        if (c.r > c.g + c.b) {
+          // rand teleport (7th btn)
+          console.log('Warning!! You Are Attacked!!');
+          this.gi.itemBtns[6].tap();
+          this.safeSleep(2500);
+          continue;
+        }
+      }
+      
       this.updateGlobalState();
       if (this.checkIsSystemPage()) {
         continue;
@@ -377,7 +399,6 @@ class LineageM {
         this.gi.autoPlayBtn.tap();
         continue;
       }
-
       // console.log('Check conditions');
       this.checkCondiction();
 
@@ -389,7 +410,7 @@ class LineageM {
         }
       } else {
         if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
-          this.gi.itemBtns[7].tap(2, 100);
+          this.gi.itemBtns[7].tap(1, 100);
           console.log('Dangerous, go home, use btn 8th');
           continue;
         }
@@ -717,6 +738,7 @@ const DefaultConfig = {
   inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
   dangerousGoHome: true, // if hp < 25%, go home, use button 8th
   goBackInterval: 0, // whether to go back to origin location, check location every n min
+  beAttackedRandTeleport: true,
 };
 
 let lm = undefined;
@@ -740,10 +762,9 @@ function stop() {
   if (lm == undefined) {
     return;
   }
-  lm._loop = false;
-  sleep(2000);
+  lm.stop();
   lm = undefined;
-  console.log('Stopping');
+  console.log('Stopping...');
 }
 
 // start(DefaultConfig);

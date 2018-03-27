@@ -172,8 +172,8 @@
     }
 
     TAG = "LineageM";
-    VERSION = 5;
-    var settings = {
+    VERSION = 6;
+    DEFAULT_CONFIG = {
       conditions: [
         {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
         {type: 'hp', op: 1, value: 75, btn: 1, interval: 1000, enabled: false},
@@ -188,7 +188,9 @@
       inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
       dangerousGoHome: true, // if hp < 25%, go home, use button 8th
       goBackInterval: 0, // whether to go back to origin location, check location every n min
+      beAttackedRandTeleport: true,
     };
+    var settings;
 
     $(function () {
       $("#version").html("天堂M 無課救星 v" + VERSION);
@@ -213,9 +215,10 @@
                 milliseconds: "毫秒",
                 minutes: "分鐘",
                 hotkey: "快捷鍵",
-                inHomeUseBtn: "瞬卷 (請將瞬卷放在快捷鍵 7)",
+                inHomeUseBtn: "安全區域瞬卷 (請將瞬卷放在快捷鍵 7)",
                 dangerousGoHome: "回卷 (請將回卷放在快捷鍵 8)，hp < 25%",
                 goBackInterval: "回到原點 (0: 不啟動)(目前只支援地圖中間區域與亞丁大陸)",
+                beAttackedRandTeleport: "被攻擊瞬移 (請將瞬卷放在快捷鍵 7)",
               }
             }
           }
@@ -423,6 +426,16 @@
       })(jSwitchInput));
       appendToSwitchRow($("<div class=setting_input data-i18n='text.inHomeUseBtn'></div>"), jSwitchInput);
 
+      // be attecked teleport
+      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.beAttackedRandTeleport ? 'checked' : '') + "/>");
+      jSwitchInput.change((function (jInput) {
+        return function () {
+          settings.beAttackedRandTeleport = jInput.is(':checked');
+          saveSettings();
+        }
+      })(jSwitchInput));
+      appendToSwitchRow($("<div class=setting_input data-i18n='text.beAttackedRandTeleport'></div>"), jSwitchInput);
+
       // dangerousGoHome
       var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.dangerousGoHome ? 'checked' : '') + "/>");
       jSwitchInput.change((function (jInput) {
@@ -465,8 +478,24 @@
         return;
       }
       var tempSettings = localStorage.getItem(getSettingKey());
-      settings = tempSettings == null ? settings : JSON.parse(tempSettings);
-
+      if (tempSettings == null) {
+        settings = $.extend(true, {}, DEFAULT_CONFIG);
+      } else {
+        settings = JSON.parse(tempSettings);
+        var keys = Object.keys(DEFAULT_CONFIG);
+        for (var i in keys) {
+          var key = keys[i];
+          if (key === 'conditions' && settings['conditions'] !== undefined) {
+            for (let index = settings.conditions.length; index < DEFAULT_CONFIG.conditions.length; index++) {
+              settings.conditions[index] = DEFAULT_CONFIG.conditions[index];
+            }
+            continue;
+          }
+          if (settings[key] === undefined) {
+            settings[key] = DEFAULT_CONFIG[key];
+          }
+        }
+      }
       loadConditionSettings();
       loadOtherSettings();
     }
@@ -480,7 +509,7 @@
     }
 
     function getSettings() {
-      var tempSettings = $.extend(true, {}, settings);;
+      var tempSettings = $.extend(true, {}, settings);
       var tempConditions = [];
       for (var index = 0; index < settings.conditions.length; index++) {
         var condition = settings.conditions[index];
