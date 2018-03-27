@@ -297,7 +297,7 @@ var GameInfo = function GameInfo() {
   this.mapControllerB = new Point(290, 960);
 
   this.menuOnBtn = new PageFeature('menuOn', [new FeaturePoint(1844, 56, 245, 245, 241, true, 30), new FeaturePoint(1844, 66, 128, 70, 56, true, 30), new FeaturePoint(1844, 76, 245, 220, 215, true, 30)]);
-  this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 50), new FeaturePoint(1850, 66, 173, 166, 147, true, 50), new FeaturePoint(1860, 76, 173, 166, 147, true, 50)]);
+  this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80)]);
   this.autoPlayBtn = new PageFeature('autoPlayOff', [new FeaturePoint(1429, 767, 140, 154, 127, true, 60), new FeaturePoint(1476, 772, 140, 157, 130, true, 60)]);
   this.selfSkillBtn = new PageFeature('selfSkillOff', [new FeaturePoint(1594, 601, 141, 147, 137, true, 60), new FeaturePoint(1591, 624, 117, 128, 114, true, 60)]);
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
@@ -499,11 +499,6 @@ var LineageM = function () {
           this.gi.menuOnBtn.tap();
           continue;
         }
-        if (!this.rState.isAutoPlay) {
-          console.log('Click AutoPlay');
-          this.gi.autoPlayBtn.tap();
-          continue;
-        }
         // console.log('Check conditions');
         this.checkCondiction();
 
@@ -517,6 +512,11 @@ var LineageM = function () {
           if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
             this.gi.itemBtns[7].tap(1, 100);
             console.log('Dangerous, go home, use btn 8th');
+            continue;
+          }
+          if (!this.rState.isAutoPlay) {
+            console.log('Click AutoPlay');
+            this.gi.autoPlayBtn.tap();
             continue;
           }
         }
@@ -667,17 +667,17 @@ var LineageM = function () {
   }, {
     key: 'getHpPercent',
     value: function getHpPercent() {
-      return this.getBarPercent(this.gi.hpBarRect, 60, 20);
+      return this.getBarPercent(this.gi.hpBarRect, 70, 16);
     }
   }, {
     key: 'getMpPercent',
     value: function getMpPercent() {
-      return this.getBarPercent(this.gi.mpBarRect, 60, 60);
+      return this.getBarPercent(this.gi.mpBarRect, 70, 70);
     }
   }, {
     key: 'getExpPercent',
     value: function getExpPercent() {
-      return this.getBarPercent(this.gi.expBarRect, 60, 60);
+      return this.getBarPercent(this.gi.expBarRect, 70, 70);
     }
   }, {
     key: 'getBarPercent',

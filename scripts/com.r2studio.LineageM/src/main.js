@@ -187,9 +187,9 @@ class GameInfo {
       new FeaturePoint(1844, 76, 245, 220, 215, true, 30),
     ]);
     this.menuOffBtn = new PageFeature('menuOff', [
-      new FeaturePoint(1850, 56, 173, 166, 147, true, 50),
-      new FeaturePoint(1850, 66, 173, 166, 147, true, 50),
-      new FeaturePoint(1860, 76, 173, 166, 147, true, 50),
+      new FeaturePoint(1850, 56, 173, 166, 147, true, 80),
+      new FeaturePoint(1850, 66, 173, 166, 147, true, 80),
+      new FeaturePoint(1860, 76, 173, 166, 147, true, 80),
     ]);
     this.autoPlayBtn = new PageFeature('autoPlayOff', [
       new FeaturePoint(1429, 767, 140, 154, 127, true, 60),
@@ -394,11 +394,6 @@ class LineageM {
         this.gi.menuOnBtn.tap();
         continue;
       }
-      if (!this.rState.isAutoPlay) {
-        console.log('Click AutoPlay');
-        this.gi.autoPlayBtn.tap();
-        continue;
-      }
       // console.log('Check conditions');
       this.checkCondiction();
 
@@ -412,6 +407,11 @@ class LineageM {
         if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
           this.gi.itemBtns[7].tap(1, 100);
           console.log('Dangerous, go home, use btn 8th');
+          continue;
+        }
+        if (!this.rState.isAutoPlay) {
+          console.log('Click AutoPlay');
+          this.gi.autoPlayBtn.tap();
           continue;
         }
       }
