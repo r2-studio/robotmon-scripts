@@ -1776,25 +1776,25 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
   sleep(500);
   gTaskController.start();
-  // loop stop here...
-  log('清除殘留記憶體...');
-  ts.deinit();
-  if (ts.recordReceive) {
-    ts.releaseRecord();
-  }
-  ts = undefined;
   log("TaskController finish...");
 }
 
 function stop() {
+  log("Stop finish...Please Wait...");
+  sleep(500);
   if (ts != undefined) {
     ts.isRunning = false;
-    sleep(1000);
+    sleep(2000);
+    // loop stop here...
+    log('清除殘留記憶體...');
+    ts.deinit();
+    if (ts.recordReceive) {
+      ts.releaseRecord();
+    }
   }
   if (gTaskController != undefined) {gTaskController.removeAllTasks();}
   if (gTaskController != undefined) {gTaskController.stop();}
-  log("Stop finish...");
-  sleep(2000);
+  ts = undefined;
 }
 // stop();
 // this.sleep(500);
