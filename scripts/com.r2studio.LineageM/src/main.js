@@ -545,38 +545,39 @@ class LineageM {
 
   // HP MP EXP
   getHpPercent() {
-    return this.getBarPercent(this.gi.hpBarRect);
+    return this.getBarPercent(this.gi.hpBarRect, 70, 16);
   }
 
   getMpPercent() {
-    return this.getBarPercent(this.gi.mpBarRect);
+    return this.getBarPercent(this.gi.mpBarRect, 70, 70);
   }
 
   getExpPercent() {
-    return this.getBarPercent(this.gi.expBarRect);
+    return this.getBarPercent(this.gi.expBarRect, 70, 70);
   }
 
-  getBarPercent(barRect) {
+  getBarPercent(barRect, b1, b2) {
     const bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
     const y1 = barRect.th / 3;
     const y2 = barRect.th / 3 * 2;
-    let noCount = 0;
     let noX = barRect.tw;
+    let bright1 = 0;
+    let bright2 = 0;
     for(let x = 0; x < barRect.tw; x += 1) {
       const c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));getImageColor(bar, x, y1);
       const d = Utils.minMaxDiff(c);
-      if (d < 50) {
-        noCount++
-        if (noCount === 3) {
-          noX = x - 2;
-          break;
-        }
-      } else {
-        noCount = 0;
+      if (d > b1) {
+        bright1++;
+      }
+      if (d > b2) {
+        bright2++;
       }
     }
     releaseImage(bar);
-    const percent = (noX / barRect.tw * 100).toFixed(1);
+    let percent = (bright1 / barRect.tw * 100).toFixed(1);
+    if (percent < 20) {
+      percent = (bright2 / barRect.tw * 100).toFixed(1);
+    }
     return percent;
   }
 

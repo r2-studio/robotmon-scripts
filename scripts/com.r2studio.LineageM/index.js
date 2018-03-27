@@ -667,41 +667,42 @@ var LineageM = function () {
   }, {
     key: 'getHpPercent',
     value: function getHpPercent() {
-      return this.getBarPercent(this.gi.hpBarRect);
+      return this.getBarPercent(this.gi.hpBarRect, 60, 20);
     }
   }, {
     key: 'getMpPercent',
     value: function getMpPercent() {
-      return this.getBarPercent(this.gi.mpBarRect);
+      return this.getBarPercent(this.gi.mpBarRect, 60, 60);
     }
   }, {
     key: 'getExpPercent',
     value: function getExpPercent() {
-      return this.getBarPercent(this.gi.expBarRect);
+      return this.getBarPercent(this.gi.expBarRect, 60, 60);
     }
   }, {
     key: 'getBarPercent',
-    value: function getBarPercent(barRect) {
+    value: function getBarPercent(barRect, b1, b2) {
       var bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
       var y1 = barRect.th / 3;
       var y2 = barRect.th / 3 * 2;
-      var noCount = 0;
       var noX = barRect.tw;
+      var bright1 = 0;
+      var bright2 = 0;
       for (var x = 0; x < barRect.tw; x += 1) {
         var c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));getImageColor(bar, x, y1);
         var d = Utils.minMaxDiff(c);
-        if (d < 50) {
-          noCount++;
-          if (noCount === 3) {
-            noX = x - 2;
-            break;
-          }
-        } else {
-          noCount = 0;
+        if (d > b1) {
+          bright1++;
+        }
+        if (d > b2) {
+          bright2++;
         }
       }
       releaseImage(bar);
-      var percent = (noX / barRect.tw * 100).toFixed(1);
+      var percent = (bright1 / barRect.tw * 100).toFixed(1);
+      if (percent < 20) {
+        percent = (bright2 / barRect.tw * 100).toFixed(1);
+      }
       return percent;
     }
 
