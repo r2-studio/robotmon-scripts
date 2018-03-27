@@ -172,7 +172,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 7;
+    VERSION = 8;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
@@ -486,7 +486,7 @@
         for (var i in keys) {
           var key = keys[i];
           if (key === 'conditions' && settings['conditions'] !== undefined) {
-            for (let index = settings.conditions.length; index < DEFAULT_CONFIG.conditions.length; index++) {
+            for (var index = settings.conditions.length; index < DEFAULT_CONFIG.conditions.length; index++) {
               settings.conditions[index] = DEFAULT_CONFIG.conditions[index];
             }
             continue;
