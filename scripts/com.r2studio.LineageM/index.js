@@ -297,7 +297,7 @@ var GameInfo = function GameInfo() {
   this.mapControllerB = new Point(290, 960);
 
   this.menuOnBtn = new PageFeature('menuOn', [new FeaturePoint(1844, 56, 245, 245, 241, true, 30), new FeaturePoint(1844, 66, 128, 70, 56, true, 30), new FeaturePoint(1844, 76, 245, 220, 215, true, 30)]);
-  this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 50), new FeaturePoint(1850, 66, 173, 166, 147, true, 50), new FeaturePoint(1860, 76, 173, 166, 147, true, 50)]);
+  this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80)]);
   this.autoPlayBtn = new PageFeature('autoPlayOff', [new FeaturePoint(1429, 767, 140, 154, 127, true, 60), new FeaturePoint(1476, 772, 140, 157, 130, true, 60)]);
   this.selfSkillBtn = new PageFeature('selfSkillOff', [new FeaturePoint(1594, 601, 141, 147, 137, true, 60), new FeaturePoint(1591, 624, 117, 128, 114, true, 60)]);
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
@@ -499,11 +499,6 @@ var LineageM = function () {
           this.gi.menuOnBtn.tap();
           continue;
         }
-        if (!this.rState.isAutoPlay) {
-          console.log('Click AutoPlay');
-          this.gi.autoPlayBtn.tap();
-          continue;
-        }
         // console.log('Check conditions');
         this.checkCondiction();
 
@@ -517,6 +512,11 @@ var LineageM = function () {
           if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
             this.gi.itemBtns[7].tap(1, 100);
             console.log('Dangerous, go home, use btn 8th');
+            continue;
+          }
+          if (!this.rState.isAutoPlay) {
+            console.log('Click AutoPlay');
+            this.gi.autoPlayBtn.tap();
             continue;
           }
         }
@@ -667,41 +667,42 @@ var LineageM = function () {
   }, {
     key: 'getHpPercent',
     value: function getHpPercent() {
-      return this.getBarPercent(this.gi.hpBarRect);
+      return this.getBarPercent(this.gi.hpBarRect, 70, 16);
     }
   }, {
     key: 'getMpPercent',
     value: function getMpPercent() {
-      return this.getBarPercent(this.gi.mpBarRect);
+      return this.getBarPercent(this.gi.mpBarRect, 70, 70);
     }
   }, {
     key: 'getExpPercent',
     value: function getExpPercent() {
-      return this.getBarPercent(this.gi.expBarRect);
+      return this.getBarPercent(this.gi.expBarRect, 70, 70);
     }
   }, {
     key: 'getBarPercent',
-    value: function getBarPercent(barRect) {
+    value: function getBarPercent(barRect, b1, b2) {
       var bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
       var y1 = barRect.th / 3;
       var y2 = barRect.th / 3 * 2;
-      var noCount = 0;
       var noX = barRect.tw;
+      var bright1 = 0;
+      var bright2 = 0;
       for (var x = 0; x < barRect.tw; x += 1) {
         var c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));getImageColor(bar, x, y1);
         var d = Utils.minMaxDiff(c);
-        if (d < 50) {
-          noCount++;
-          if (noCount === 3) {
-            noX = x - 2;
-            break;
-          }
-        } else {
-          noCount = 0;
+        if (d > b1) {
+          bright1++;
+        }
+        if (d > b2) {
+          bright2++;
         }
       }
       releaseImage(bar);
-      var percent = (noX / barRect.tw * 100).toFixed(1);
+      var percent = (bright1 / barRect.tw * 100).toFixed(1);
+      if (percent < 20) {
+        percent = (bright2 / barRect.tw * 100).toFixed(1);
+      }
       return percent;
     }
 

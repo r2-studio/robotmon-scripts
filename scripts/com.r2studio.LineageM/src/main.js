@@ -187,9 +187,9 @@ class GameInfo {
       new FeaturePoint(1844, 76, 245, 220, 215, true, 30),
     ]);
     this.menuOffBtn = new PageFeature('menuOff', [
-      new FeaturePoint(1850, 56, 173, 166, 147, true, 50),
-      new FeaturePoint(1850, 66, 173, 166, 147, true, 50),
-      new FeaturePoint(1860, 76, 173, 166, 147, true, 50),
+      new FeaturePoint(1850, 56, 173, 166, 147, true, 80),
+      new FeaturePoint(1850, 66, 173, 166, 147, true, 80),
+      new FeaturePoint(1860, 76, 173, 166, 147, true, 80),
     ]);
     this.autoPlayBtn = new PageFeature('autoPlayOff', [
       new FeaturePoint(1429, 767, 140, 154, 127, true, 60),
@@ -394,11 +394,6 @@ class LineageM {
         this.gi.menuOnBtn.tap();
         continue;
       }
-      if (!this.rState.isAutoPlay) {
-        console.log('Click AutoPlay');
-        this.gi.autoPlayBtn.tap();
-        continue;
-      }
       // console.log('Check conditions');
       this.checkCondiction();
 
@@ -412,6 +407,11 @@ class LineageM {
         if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
           this.gi.itemBtns[7].tap(1, 100);
           console.log('Dangerous, go home, use btn 8th');
+          continue;
+        }
+        if (!this.rState.isAutoPlay) {
+          console.log('Click AutoPlay');
+          this.gi.autoPlayBtn.tap();
           continue;
         }
       }
@@ -545,38 +545,39 @@ class LineageM {
 
   // HP MP EXP
   getHpPercent() {
-    return this.getBarPercent(this.gi.hpBarRect);
+    return this.getBarPercent(this.gi.hpBarRect, 70, 16);
   }
 
   getMpPercent() {
-    return this.getBarPercent(this.gi.mpBarRect);
+    return this.getBarPercent(this.gi.mpBarRect, 70, 70);
   }
 
   getExpPercent() {
-    return this.getBarPercent(this.gi.expBarRect);
+    return this.getBarPercent(this.gi.expBarRect, 70, 70);
   }
 
-  getBarPercent(barRect) {
+  getBarPercent(barRect, b1, b2) {
     const bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
     const y1 = barRect.th / 3;
     const y2 = barRect.th / 3 * 2;
-    let noCount = 0;
     let noX = barRect.tw;
+    let bright1 = 0;
+    let bright2 = 0;
     for(let x = 0; x < barRect.tw; x += 1) {
       const c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));getImageColor(bar, x, y1);
       const d = Utils.minMaxDiff(c);
-      if (d < 50) {
-        noCount++
-        if (noCount === 3) {
-          noX = x - 2;
-          break;
-        }
-      } else {
-        noCount = 0;
+      if (d > b1) {
+        bright1++;
+      }
+      if (d > b2) {
+        bright2++;
       }
     }
     releaseImage(bar);
-    const percent = (noX / barRect.tw * 100).toFixed(1);
+    let percent = (bright1 / barRect.tw * 100).toFixed(1);
+    if (percent < 20) {
+      percent = (bright2 / barRect.tw * 100).toFixed(1);
+    }
     return percent;
   }
 
