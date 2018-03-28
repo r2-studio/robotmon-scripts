@@ -77,6 +77,12 @@ var Utils = function () {
       }
       return false;
     }
+  }, {
+    key: 'targetToDevice',
+    value: function targetToDevice(xy) {
+      var r = gRatioDevice / gRatioTarget;
+      return { x: gGameOffsetX + xy.x * r, y: gGameOffsetY + xy.y * r };
+    }
   }]);
 
   return Utils;
@@ -283,6 +289,17 @@ var GameInfo = function GameInfo() {
   this.zeroRect = new Rect(0, 0, 1, 1);
   this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
   this.regionTypeRect = new Rect(1710, 470, 1816, 498);
+  this.storeHpRect = new Rect(94, 276, 194, 376);
+
+  this.storeMode = new Point(250, 970);
+  this.store10 = new Point(670, 970);
+  this.store100 = new Point(900, 970);
+  this.store1000 = new Point(1100, 970);
+  this.storeMax = new Point(1300, 970);
+  this.storeHp = new Point(150, 330);
+  this.storeArrow = new Point(400, 820);
+  this.storeBuy = new Point(1600, 970);
+  this.storeBuy2 = new Point(1130, 882);
 
   this.itemBtns = [new Point(810, 960), new Point(930, 960), new Point(1050, 960), new Point(1180, 960), new Point(1440, 960), new Point(1560, 960), new Point(1690, 960), new Point(1810, 960), new Point(1310, 960)];
 
@@ -304,6 +321,7 @@ var GameInfo = function GameInfo() {
   this.disconnectBtn = new PageFeature('disconnect', [new FeaturePoint(840, 880, 34, 51, 79, true, 20), new FeaturePoint(1080, 880, 34, 51, 79, true, 20), new FeaturePoint(1170, 880, 31, 20, 14, true, 20)]);
   this.enterBtn = new PageFeature('enter', [new FeaturePoint(1480, 990, 31, 47, 70, true, 20), new FeaturePoint(1750, 990, 31, 47, 70, true, 20), new FeaturePoint(1690, 990, 31, 47, 70, true, 20)]);
   this.beAttacked = new PageFeature('beAttacked', [new FeaturePoint(1616, 744, 210, 90, 50, true, 60), new FeaturePoint(1676, 744, 210, 90, 50, true, 60), new FeaturePoint(1666, 756, 210, 90, 50, true, 60), new FeaturePoint(1624, 750, 210, 90, 50, true, 60), new FeaturePoint(1800, 818, 240, 160, 140, true, 30), new FeaturePoint(1634, 769, 165, 180, 170, false, 50)]);
+  this.storeExceed = new PageFeature('storeExceed', [new FeaturePoint(1102, 812, 33, 23, 0, true, 40)]);
 };
 
 var RoleState = function () {
@@ -351,7 +369,9 @@ var LineageM = function () {
     // load images
     this.images = {
       safeRegion: openImage(this.localPath + '/safeRegionType.png'),
-      normalRegion: openImage(this.localPath + '/normalRegionType.png')
+      normalRegion: openImage(this.localPath + '/normalRegionType.png'),
+      hpWater: openImage(this.localPath + '/hp.png'),
+      store: openImage(this.localPath + '/store.png')
     };
     // this.gi.disconnectBtn.print(this._img);
     this.tmpExp = 0;
@@ -475,6 +495,7 @@ var LineageM = function () {
       this._loop = true;
       var goBackTime = Date.now();
       var useHomeTime = Date.now();
+      var isBuy = false;
       while (this._loop) {
         this.safeSleep(200);
         this.refreshScreen();
@@ -504,11 +525,15 @@ var LineageM = function () {
 
         // go home (8th btn), rand teleport (7th btn)
         if (this.rState.isSafeRegion) {
-          if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 6000) {
+          if (!isBuy && (this.config.autoBuyHp !== 0 || this.config.autoBuyArrow !== 0)) {
+            this.checkAndBuyItems();
+            isBuy = true;
+          } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 6000) {
             this.gi.itemBtns[6].tap();
             useHomeTime = Date.now();
           }
         } else {
+          isBuy = false;
           if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
             this.gi.itemBtns[7].tap(1, 100);
             console.log('Dangerous, go home, use btn 8th');
@@ -584,6 +609,111 @@ var LineageM = function () {
       for (var k in this.images) {
         releaseImage(this.images[k]);
       }
+    }
+  }, {
+    key: 'checkAndBuyItems',
+    value: function checkAndBuyItems() {
+      var tryTimes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
+
+      console.log('Try to buy items');
+      for (var i = 0; i < tryTimes && this._loop; i++) {
+        if (this.findStore()) {
+          this.buyItems();
+          break;
+        } else if (i < tryTimes - 1) {
+          console.log('Can not found store, try again');
+          this.gi.itemBtns[7].tap();
+          this.safeSleep(4000);
+          this.refreshScreen();
+        }
+      }
+    }
+  }, {
+    key: 'findStore',
+    value: function findStore() {
+      var stores = findImages(this._img, this.images.store, 0.95, 4, true);
+      for (var k in stores) {
+        if (!this._loop) {
+          return false;
+        }
+        this.refreshScreen();
+        var dXY = Utils.targetToDevice(stores[k]);
+        tap(dXY.x + 5, dXY.y + 5, 50);
+        this.waitForChangeScreen();if (!this._loop) {
+          return false;
+        }
+        this.gi.storeMode.tap();
+        this.safeSleep(500);if (!this._loop) {
+          return false;
+        }
+        this.refreshScreen();
+        var testHpImg = this.gi.storeHpRect.crop(this._img);
+        var s = getIdentityScore(this.images.hpWater, testHpImg);
+        console.log(s);
+        releaseImage(testHpImg);
+        if (s > 0.9) {
+          console.log('Store Found');
+          return true;
+        }
+        this.gi.menuOnBtn.tap();
+        this.safeSleep(1000);
+        continue;
+      }
+      return false;
+    }
+  }, {
+    key: 'buyItems',
+    value: function buyItems() {
+      if (this.config.autoBuyHp > 0) {
+        this.gi.storeHp.tap();
+        this.gi.store100.tap(Math.min(this.config.autoBuyHp, 10), 200);
+      }
+      sleep(500);if (!this._loop) {
+        return false;
+      }
+      if (this.config.autoBuyArrow > 0) {
+        this.gi.storeArrow.tap();
+        this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
+      }
+      sleep(500);if (!this._loop) {
+        return false;
+      }
+      if (this.config.autoBuyHp === -1) {
+        this.gi.storeHp.tap();
+        this.gi.storeMax.tap();
+      }
+      sleep(500);if (!this._loop) {
+        return false;
+      }
+      if (this.config.autoBuyArrow === -1) {
+        this.gi.storeArrow.tap();
+        this.gi.storeMax.tap();
+      }
+      this.safeSleep(500);if (!this._loop) {
+        return false;
+      }
+      this.refreshScreen();if (!this._loop) {
+        return false;
+      }
+      if (this.gi.storeExceed.check(this._img)) {
+        console.log('Buy Items');
+        this.safeSleep(500);if (!this._loop) {
+          return false;
+        }
+        this.gi.storeBuy.tap();
+        this.safeSleep(500);if (!this._loop) {
+          return false;
+        }
+        this.gi.storeBuy2.tap();
+        this.safeSleep(1000);if (!this._loop) {
+          return false;
+        }
+        this.gi.menuOnBtn.tap();
+        return true;
+      }
+      console.log('Exceed weight, not to buy');
+      this.gi.menuOnBtn.tap();
+      return true;
     }
 
     // utils
@@ -863,7 +993,9 @@ var DefaultConfig = {
   inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
   dangerousGoHome: true, // if hp < 25%, go home, use button 8th
   goBackInterval: 0, // whether to go back to origin location, check location every n min
-  beAttackedRandTeleport: true
+  beAttackedRandTeleport: true,
+  autoBuyHp: 1, // 1 * 100, -1 => max
+  autoBuyArrow: 0 // 1 * 1000, -1 => max
 };
 
 var lm = undefined;
@@ -893,7 +1025,8 @@ function stop() {
 }
 
 // start(DefaultConfig);
-// lm = new LineageM();
+// lm = new LineageM(DefaultConfig);
+// lm._loop=true;
 // for (let i = 0; i < 5; i++) {
 //   const hp = lm.getHpPercent();
 //   // const mp = lm.getMpPercent();
@@ -902,7 +1035,7 @@ function stop() {
 //   console.log(hp);
 // } 
 
-// lm._loop=true;
+// lm.checkAndBuyItems(1);
 // lm.goToMapPage();
 // const hp = lm.getHpPercent();
 // const mp = lm.getMpPercent();
