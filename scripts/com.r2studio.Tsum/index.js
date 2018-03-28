@@ -1544,8 +1544,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
 Tsum.prototype.friendPageGoTop = function() {
   this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
-  this.moveTo({x: Button.outSendHeart0.x - 10, y: 150000}, 100);
-  this.tapUp({x: Button.outSendHeart0.x - 10, y: 150000}, 100);
+  this.moveTo({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
+  this.tapUp({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
   this.sleep(2500);
 }
 

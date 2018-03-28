@@ -12,7 +12,7 @@
     },
     "com.r2studio.Tsum": {
       "title": "Tsum Tsum AutoPlay",
-      "versionCode": 28,
+      "versionCode": 29,
       "description": "<div>Update Version 28</br><ul><li>Add JP Tsums</li></ul></div>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip"
