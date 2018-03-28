@@ -1735,7 +1735,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, skillInterval,receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, skillInterval, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
