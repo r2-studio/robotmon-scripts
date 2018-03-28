@@ -751,6 +751,7 @@ function Tsum(isJP, detect) {
   this.sentToZero = false;
   this.recordReceive = true;
   this.enableAllItems = false;
+  this.skillInterval = 3000;
   this.sendHearts = false;
   this.showLog = true;
   this.keepRuby = false;
@@ -1207,7 +1208,7 @@ Tsum.prototype.useSkill = function() {
       }
     }
   } else {
-    this.sleep(3000);
+    this.sleep(this.skillInterval);
   }
   return true;
 }
@@ -1544,8 +1545,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
 Tsum.prototype.friendPageGoTop = function() {
   this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
-  this.moveTo({x: Button.outSendHeart0.x - 10, y: 150000}, 100);
-  this.tapUp({x: Button.outSendHeart0.x - 10, y: 150000}, 100);
+  this.moveTo({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
+  this.tapUp({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
   this.sleep(2500);
 }
 
@@ -1734,7 +1735,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, skillInterval, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1749,6 +1750,7 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   ts.receiveCheckLimit = receiveCheckLimit;
   ts.clearBubbles = clearBubbles;
   ts.enableAllItems = enableAllItems;
+  ts.skillInterval = skillInterval * 1000;
   ts.receiveOneItem = receiveOneItem;
   ts.sendHearts = sendHearts;
   ts.showHeartLog = true;
