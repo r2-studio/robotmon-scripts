@@ -580,7 +580,6 @@ var LineageM = function () {
     key: 'stop',
     value: function stop() {
       this._loop = false;
-      sleep(2000);
       releaseImage(this._img);
       for (var k in this.images) {
         releaseImage(this.images[k]);
@@ -643,11 +642,6 @@ var LineageM = function () {
         this.rState.isAutoPlay = true;
       } else {
         this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
-        if (!this.rState.isAutoPlay) {
-          sleep(300);
-          this.refreshScreen();
-          this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
-        }
       }
       this.rState.print();
     }
@@ -658,7 +652,7 @@ var LineageM = function () {
         releaseImage(this._img);
         this._img = 0;
       }
-      this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 95);
+      this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
       return this._img;
     }
 
@@ -667,7 +661,7 @@ var LineageM = function () {
   }, {
     key: 'getHpPercent',
     value: function getHpPercent() {
-      return this.getBarPercent(this.gi.hpBarRect, 70, 16);
+      return this.getBarPercent(this.gi.hpBarRect, 70, 15);
     }
   }, {
     key: 'getMpPercent',
@@ -683,13 +677,13 @@ var LineageM = function () {
     key: 'getBarPercent',
     value: function getBarPercent(barRect, b1, b2) {
       var bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
+      var fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
       var y1 = barRect.th / 3;
       var y2 = barRect.th / 3 * 2;
-      var noX = barRect.tw;
       var bright1 = 0;
       var bright2 = 0;
       for (var x = 0; x < barRect.tw; x += 1) {
-        var c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));getImageColor(bar, x, y1);
+        var c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));
         var d = Utils.minMaxDiff(c);
         if (d > b1) {
           bright1++;
@@ -699,11 +693,12 @@ var LineageM = function () {
         }
       }
       releaseImage(bar);
-      var percent = (bright1 / barRect.tw * 100).toFixed(1);
-      if (percent < 20) {
-        percent = (bright2 / barRect.tw * 100).toFixed(1);
+      if (fc.g - fc.r > 10) {
+        // console.log('Use second limit', b2, JSON.stringify(fc));
+        return (bright2 / barRect.tw * 100).toFixed(1);
+      } else {
+        return (bright1 / barRect.tw * 100).toFixed(1);
       }
-      return percent;
     }
 
     // MAP
@@ -884,7 +879,6 @@ function start(config) {
   }
   lm = new LineageM(config);
   lm.start();
-  lm.stop();
   console.log('STOP');
 }
 
@@ -899,6 +893,14 @@ function stop() {
 
 // start(DefaultConfig);
 // lm = new LineageM();
+// for (let i = 0; i < 5; i++) {
+//   const hp = lm.getHpPercent();
+//   // const mp = lm.getMpPercent();
+//   // const exp = lm.getExpPercent();
+//   lm.refreshScreen();
+//   console.log(hp);
+// } 
+
 // lm._loop=true;
 // lm.goToMapPage();
 // const hp = lm.getHpPercent();
