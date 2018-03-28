@@ -879,6 +879,8 @@ function start(config) {
   }
   lm = new LineageM(config);
   lm.start();
+  lm.stop();
+  lm = undefined;
   console.log('STOP');
 }
 
@@ -886,8 +888,7 @@ function stop() {
   if (lm == undefined) {
     return;
   }
-  lm.stop();
-  lm = undefined;
+  lm._loop = false;
   console.log('Stopping...');
 }
 
