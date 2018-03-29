@@ -315,12 +315,13 @@ var GameInfo = function GameInfo() {
 
   this.menuOnBtn = new PageFeature('menuOn', [new FeaturePoint(1844, 56, 245, 245, 241, true, 30), new FeaturePoint(1844, 66, 128, 70, 56, true, 30), new FeaturePoint(1844, 76, 245, 220, 215, true, 30)]);
   this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80)]);
-  this.autoPlayBtn = new PageFeature('autoPlayOff', [new FeaturePoint(1429, 767, 140, 154, 127, true, 60), new FeaturePoint(1476, 772, 140, 157, 130, true, 60)]);
+  this.autoPlayBtn = new PageFeature('autoPlayOff', [new FeaturePoint(1430, 768, 140, 154, 127, true, 60), new FeaturePoint(1476, 772, 140, 157, 130, true, 60), new FeaturePoint(1450, 738, 100, 126, 106, true, 60)]);
+  this.killNumber = new PageFeature('killNumber', [new FeaturePoint(1678, 538, 65, 62, 45, true, 30), new FeaturePoint(1780, 554, 235, 83, 44, true, 30), new FeaturePoint(1810, 554, 220, 59, 39, true, 30), new FeaturePoint(1804, 532, 255, 186, 142, true, 30)]);
   this.selfSkillBtn = new PageFeature('selfSkillOff', [new FeaturePoint(1594, 601, 141, 147, 137, true, 60), new FeaturePoint(1591, 624, 117, 128, 114, true, 60)]);
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
-  this.disconnectBtn = new PageFeature('disconnect', [new FeaturePoint(840, 880, 34, 51, 79, true, 20), new FeaturePoint(1080, 880, 34, 51, 79, true, 20), new FeaturePoint(1170, 880, 31, 20, 14, true, 20)]);
+  this.disconnectBtn = new PageFeature('disconnect', [new FeaturePoint(840, 880, 34, 51, 79, true, 20), new FeaturePoint(1080, 880, 34, 51, 79, true, 20), new FeaturePoint(1170, 880, 31, 20, 14, true, 20), new FeaturePoint(1150, 916, 31, 24, 14, true, 20)]);
   this.enterBtn = new PageFeature('enter', [new FeaturePoint(1480, 990, 31, 47, 70, true, 20), new FeaturePoint(1750, 990, 31, 47, 70, true, 20), new FeaturePoint(1690, 990, 31, 47, 70, true, 20)]);
-  this.beAttacked = new PageFeature('beAttacked', [new FeaturePoint(1616, 744, 210, 90, 50, true, 60), new FeaturePoint(1676, 744, 210, 90, 50, true, 60), new FeaturePoint(1666, 756, 210, 90, 50, true, 60), new FeaturePoint(1624, 750, 210, 90, 50, true, 60), new FeaturePoint(1800, 818, 240, 160, 140, true, 30), new FeaturePoint(1634, 769, 165, 180, 170, false, 50)]);
+  this.beAttacked = new PageFeature('beAttacked', [new FeaturePoint(1616, 744, 210, 90, 50, true, 45), new FeaturePoint(1676, 744, 210, 90, 50, true, 45), new FeaturePoint(1666, 756, 210, 90, 50, true, 45), new FeaturePoint(1624, 750, 210, 90, 50, true, 45), new FeaturePoint(1800, 818, 240, 160, 140, true, 30), new FeaturePoint(1634, 769, 165, 180, 170, false, 50)]);
   this.storeExceed = new PageFeature('storeExceed', [new FeaturePoint(1102, 812, 33, 23, 0, true, 40)]);
 };
 
@@ -341,6 +342,7 @@ var RoleState = function () {
     this.isAttecking = false;
     this.isSelfSkill = false;
     this.isAttecked = false;
+    this.hasKillNumber = false;
   }
 
   _createClass(RoleState, [{
@@ -373,7 +375,7 @@ var LineageM = function () {
       hpWater: openImage(this.localPath + '/hp.png'),
       store: openImage(this.localPath + '/store.png')
     };
-    // this.gi.disconnectBtn.print(this._img);
+    // this.gi.killNumber.print(this._img);
     this.tmpExp = 0;
     this.isRecordLocation = false;
   }
@@ -613,7 +615,7 @@ var LineageM = function () {
   }, {
     key: 'checkAndBuyItems',
     value: function checkAndBuyItems() {
-      var tryTimes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
+      var tryTimes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 6;
 
       console.log('Try to buy items');
       for (var i = 0; i < tryTimes && this._loop; i++) {
@@ -636,10 +638,10 @@ var LineageM = function () {
         if (!this._loop) {
           return false;
         }
-        this.refreshScreen();
+        // this.refreshScreen();
         var dXY = Utils.targetToDevice(stores[k]);
         tap(dXY.x + 5, dXY.y + 5, 50);
-        this.waitForChangeScreen();if (!this._loop) {
+        this.waitForChangeScreen(0.9);if (!this._loop) {
           return false;
         }
         this.gi.storeMode.tap();
@@ -649,14 +651,13 @@ var LineageM = function () {
         this.refreshScreen();
         var testHpImg = this.gi.storeHpRect.crop(this._img);
         var s = getIdentityScore(this.images.hpWater, testHpImg);
-        console.log(s);
         releaseImage(testHpImg);
         if (s > 0.9) {
           console.log('Store Found');
           return true;
         }
         this.gi.menuOnBtn.tap();
-        this.safeSleep(1000);
+        this.safeSleep(2000);
         continue;
       }
       return false;
@@ -768,10 +769,18 @@ var LineageM = function () {
       this.rState.isSafeRegion = this.isSafeRegionState();
       this.rState.isAttecking = !this.gi.attackBtn.check(this._img);
       this.rState.isSelfSkill = !this.gi.selfSkillBtn.check(this._img);
+      this.rState.hasKillNumber = this.gi.killNumber.check(this._img);
       if (this.rState.isAttecking) {
+        this.rState.isAutoPlay = true;
+      } else if (this.rState.hasKillNumber) {
         this.rState.isAutoPlay = true;
       } else {
         this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
+        if (!this.rState.isAutoPlay) {
+          sleep(200);
+          this.refreshScreen();
+          this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
+        }
       }
       this.rState.print();
     }
