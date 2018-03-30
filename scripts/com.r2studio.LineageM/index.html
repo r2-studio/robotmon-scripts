@@ -172,7 +172,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 9;
+    VERSION = 10;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
@@ -189,6 +189,8 @@
       dangerousGoHome: true, // if hp < 25%, go home, use button 8th
       goBackInterval: 0, // whether to go back to origin location, check location every n min
       beAttackedRandTeleport: true,
+      autoBuyHp: 0, // 1 * 100, -1 => max
+      autoBuyArrow: 0, // 1 * 1000, -1 => max
     };
     var settings;
 
@@ -219,6 +221,9 @@
                 dangerousGoHome: "回卷 (請將回卷放在快捷鍵 8)，hp < 25%",
                 goBackInterval: "回到原點 (0: 不啟動)(目前只支援地圖中間區域與亞丁大陸)",
                 beAttackedRandTeleport: "被攻擊瞬移 (請將瞬卷放在快捷鍵 7)",
+                autoBuyHp: "自動買紅水 (-1: Max)",
+                autoBuyArrow: "自動買銀箭 (-1: Max)",
+                unit: "單位"
               }
             }
           }
@@ -471,6 +476,64 @@
       jContent.push($("<div class=setting_input data-i18n='text.minutes'></div>"));
       jContent.push(jIntervalBtn);
       appendToRow($("<div class=setting_input data-i18n='text.goBackInterval'></div>"), jContent);
+
+      // autoBuyHp
+      var intervalMax = 10;
+      var intervalMin = -1;
+      var intervalStep = 1;
+      var intervalUnit = 100;
+      var intervalValue = settings.autoBuyHp <= 0 ? settings.autoBuyHp : settings.autoBuyHp * intervalUnit;
+      var jIntervalInput = $("<div class=setting_input>" + intervalValue + "</div>");
+      var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalUnit + '</button>');
+      jIntervalBtn.click((function (jInput, min, max, step, unit) {
+        return function () {
+          var currentValue = (+jInput.text());
+          currentValue = currentValue <= 0 ? currentValue : currentValue / unit;
+          var newValue = currentValue + step;
+          if (newValue > max) {
+            jInput.text(min);
+            settings.autoBuyHp = min;
+          } else {
+            jInput.text(newValue * unit);
+            settings.autoBuyHp = newValue;
+          }
+          saveSettings();
+        }
+      })(jIntervalInput, intervalMin, intervalMax, intervalStep, intervalUnit));
+      var jContent = [];
+      jContent.push(jIntervalInput);
+      jContent.push($("<div class=setting_input data-i18n='text.unit'></div>"));
+      jContent.push(jIntervalBtn);
+      appendToRow($("<div class=setting_input data-i18n='text.autoBuyHp'></div>"), jContent);
+
+      // autoBuyArrow
+      var intervalMax = 10;
+      var intervalMin = -1;
+      var intervalStep = 1;
+      var intervalUnit = 1000;
+      var intervalValue = settings.autoBuyArrow <= 0 ? settings.autoBuyArrow : settings.autoBuyArrow * intervalUnit;
+      var jIntervalInput = $("<div class=setting_input>" + intervalValue + "</div>");
+      var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalUnit + '</button>');
+      jIntervalBtn.click((function (jInput, min, max, step, unit) {
+        return function () {
+          var currentValue = (+jInput.text());
+          currentValue = currentValue <= 0 ? currentValue : currentValue / unit;
+          var newValue = currentValue + step;
+          if (newValue > max) {
+            jInput.text(min);
+            settings.autoBuyArrow = min;
+          } else {
+            jInput.text(newValue * unit);
+            settings.autoBuyArrow = newValue;
+          }
+          saveSettings();
+        }
+      })(jIntervalInput, intervalMin, intervalMax, intervalStep, intervalUnit));
+      var jContent = [];
+      jContent.push(jIntervalInput);
+      jContent.push($("<div class=setting_input data-i18n='text.unit'></div>"));
+      jContent.push(jIntervalBtn);
+      appendToRow($("<div class=setting_input data-i18n='text.autoBuyArrow'></div>"), jContent);
     }
 
     function loadSettings() {
@@ -542,6 +605,7 @@
   <div id="container" class="container">
     <div>支援所有螢幕解析度(請先設定為標準比例)，請將浮動視窗放在左邊中間位置</div>
     <div>注意！快捷鍵9 為試煉副本的特殊技能按鈕</div>
+    <div>自動買物品功能，必須使用回卷能夠看到商人（會重試十次），已知威頓、肯特無法</div>
     <ul id="condition" class="list-group"></ul>
     <ul id="other" class="list-group"></ul>
   </div>
