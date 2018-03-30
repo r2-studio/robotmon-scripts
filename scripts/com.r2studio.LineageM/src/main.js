@@ -209,13 +209,12 @@ class GameInfo {
     this.autoPlayBtn = new PageFeature('autoPlayOff', [
       new FeaturePoint(1430, 768, 140, 154, 127, true, 60),
       new FeaturePoint(1476, 772, 140, 157, 130, true, 60),
-      new FeaturePoint(1450, 738, 100, 126, 106, true, 60),
     ]);
     this.killNumber = new PageFeature('killNumber', [
-      new FeaturePoint(1678, 538, 65, 62, 45, true, 30),
-      new FeaturePoint(1780, 554, 235, 83, 44, true, 30),
-      new FeaturePoint(1810, 554, 220, 59, 39, true, 30),
-      new FeaturePoint(1804, 532, 255, 186, 142, true, 30),
+      new FeaturePoint(1678, 538, 65, 62, 45, true, 20),
+      new FeaturePoint(1780, 554, 235, 83, 44, true, 20),
+      new FeaturePoint(1810, 554, 220, 59, 39, true, 20),
+      new FeaturePoint(1804, 532, 255, 186, 142, true, 20),
     ]);
     this.selfSkillBtn = new PageFeature('selfSkillOff', [
       new FeaturePoint(1594, 601, 141, 147, 137, true, 60),
@@ -509,11 +508,12 @@ class LineageM {
     }
   }
 
-  checkAndBuyItems(tryTimes = 6) {
+  checkAndBuyItems(tryTimes = 10) {
     console.log('Try to buy items');
     for (let i = 0; i < tryTimes && this._loop; i++) {
       if (this.findStore()) {  
         this.buyItems();
+        this.refreshScreen();
         break;
       } else if (i < tryTimes - 1) {
         console.log('Can not found store, try again');
@@ -532,6 +532,7 @@ class LineageM {
       const dXY = Utils.targetToDevice(stores[k]);
       tap(dXY.x + 5, dXY.y + 5, 50);
       this.waitForChangeScreen(0.9);if (!this._loop) {return false;}
+      this.safeSleep(1000);
       this.gi.storeMode.tap();
       this.safeSleep(500);if (!this._loop) {return false;}
       this.refreshScreen();
@@ -850,11 +851,11 @@ const DefaultConfig = {
     // {type: 'mp', op: -1, value: 70, btn: 4, interval: 2000}, // if mp < 70% use 5th button, like 魂體
     // {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
   ],
-  inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
+  inHomeUseBtn: true, // if in safe region use 3th button, like 瞬移.
   dangerousGoHome: true, // if hp < 25%, go home, use button 8th
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   beAttackedRandTeleport: true,
-  autoBuyHp: 1, // 1 * 100, -1 => max
+  autoBuyHp: 3, // 1 * 100, -1 => max
   autoBuyArrow: 0, // 1 * 1000, -1 => max
 };
 
