@@ -140,8 +140,8 @@ class PageFeature {
       if (!p.check(img)) {
         return false;
       }
-      return true;
     }
+    return true;
   }
   print(img) {
     for (let i = 0; i < this.featurPoints.length; i++) {
@@ -164,7 +164,6 @@ class GameInfo {
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
     this.storeHpRect = new Rect(94, 276, 194, 376);
 
-    this.storeMode = new Point(250, 970);
     this.store10 = new Point(670, 970);
     this.store100 = new Point(900, 970);
     this.store1000 = new Point(1100, 970);
@@ -196,6 +195,11 @@ class GameInfo {
     this.mapControllerT = new Point(290, 760);
     this.mapControllerB = new Point(290, 960);
 
+    this.storeMode = new PageFeature('storeMode', [
+      new FeaturePoint(184, 956, 212, 192, 139, true, 32),
+      new FeaturePoint(220, 984, 15, 14, 10, true, 20),
+      new FeaturePoint(208, 982, 233, 227, 205, true, 20),
+    ]);
     this.menuOnBtn = new PageFeature('menuOn', [
       new FeaturePoint(1844, 56, 245, 245, 241, true, 30),
       new FeaturePoint(1844, 66, 128, 70, 56, true, 30),
@@ -211,10 +215,10 @@ class GameInfo {
       new FeaturePoint(1476, 772, 140, 157, 130, true, 60),
     ]);
     this.killNumber = new PageFeature('killNumber', [
-      new FeaturePoint(1678, 538, 65, 62, 45, true, 20),
-      new FeaturePoint(1780, 554, 235, 83, 44, true, 20),
-      new FeaturePoint(1810, 554, 220, 59, 39, true, 20),
-      new FeaturePoint(1804, 532, 255, 186, 142, true, 20),
+      new FeaturePoint(1678, 538, 65, 62, 45, true, 60),
+      new FeaturePoint(1780, 554, 235, 83, 44, true, 40),
+      new FeaturePoint(1810, 554, 220, 59, 39, true, 40),
+      new FeaturePoint(1804, 532, 255, 186, 142, true, 40),
     ]);
     this.selfSkillBtn = new PageFeature('selfSkillOff', [
       new FeaturePoint(1594, 601, 141, 147, 137, true, 60),
@@ -289,7 +293,7 @@ class LineageM {
       hpWater: openImage(`${this.localPath}/hp.png`),
       store: openImage(`${this.localPath}/store.png`),
     };
-    // this.gi.killNumber.print(this._img);
+    // this.gi.storeMode.print(this._img);
     this.tmpExp = 0;
     this.isRecordLocation = false;
   }
@@ -525,7 +529,7 @@ class LineageM {
   }
 
   findStore() {
-    const stores = findImages(this._img, this.images.store, 0.95, 4, true);
+    const stores = findImages(this._img, this.images.store, 0.89, 4, true);
     for (let k in stores) {
       if (!this._loop) {return false;}
       // this.refreshScreen();
@@ -533,17 +537,21 @@ class LineageM {
       tap(dXY.x + 5, dXY.y + 5, 50);
       this.waitForChangeScreen(0.9);if (!this._loop) {return false;}
       this.safeSleep(1000);
-      this.gi.storeMode.tap();
-      this.safeSleep(500);if (!this._loop) {return false;}
-      this.refreshScreen();
-      const testHpImg = this.gi.storeHpRect.crop(this._img);
-      const s = getIdentityScore(this.images.hpWater, testHpImg);
-      releaseImage(testHpImg);
-      if (s > 0.9) {
-        console.log('Store Found');
-        return true;
+      if (this.gi.storeMode.check(this._img)) {
+        this.gi.storeMode.tap();
+        this.safeSleep(500);if (!this._loop) {return false;}
+        this.refreshScreen();
+        const testHpImg = this.gi.storeHpRect.crop(this._img);
+        const s = getIdentityScore(this.images.hpWater, testHpImg);
+        releaseImage(testHpImg);
+        if (s > 0.9) {
+          console.log('Store Found');
+          return true;
+        }
       }
-      this.gi.menuOnBtn.tap();
+      if (this.gi.menuOnBtn.check(this._img)) {
+        this.gi.menuOnBtn.tap();
+      }
       this.safeSleep(2000);
       continue;
     }
@@ -640,7 +648,7 @@ class LineageM {
     } else {
       this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
       if (!this.rState.isAutoPlay) {
-        sleep(200);
+        sleep(250);
         this.refreshScreen();
         this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
       }
@@ -887,7 +895,19 @@ function stop() {
 
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
+// for (var i= 0; i < 1; i++) {
+//   lm.refreshScreen();
+//   const a = lm.gi.attackBtn.check(lm._img);
+//   const b = lm.gi.killNumber.check(lm._img);
+//   // lm.gi.killNumber.print(lm._img);
+//   // console.log(b)
+//   const c = lm.gi.autoPlayBtn.check(lm._img);
+//   lm.gi.autoPlayBtn.print(lm._img);
+//   console.log('attack Off', a, 'has kn', b, 'autoOff', c);
+// }
+
 // lm._loop=true;
+// lm.findStore();
 // for (let i = 0; i < 5; i++) {
 //   const hp = lm.getHpPercent();
 //   // const mp = lm.getMpPercent();
