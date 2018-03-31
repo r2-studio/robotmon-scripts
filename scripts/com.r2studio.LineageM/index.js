@@ -299,6 +299,8 @@ var GameInfo = function GameInfo() {
   this.storeArrow = new Point(400, 820);
   this.storeBuy = new Point(1600, 970);
   this.storeBuy2 = new Point(1130, 882);
+  this.getReward = new Point(1680, 320);
+  this.signAllience = new Point(1820, 252);
 
   this.itemBtns = [new Point(810, 960), new Point(930, 960), new Point(1050, 960), new Point(1180, 960), new Point(1440, 960), new Point(1560, 960), new Point(1690, 960), new Point(1810, 960), new Point(1310, 960)];
 
@@ -313,6 +315,11 @@ var GameInfo = function GameInfo() {
   this.mapControllerB = new Point(290, 960);
 
   this.storeMode = new PageFeature('storeMode', [new FeaturePoint(184, 956, 212, 192, 139, true, 32), new FeaturePoint(220, 984, 15, 14, 10, true, 20), new FeaturePoint(208, 982, 233, 227, 205, true, 20)]);
+  this.menuOffEvent = new PageFeature('menuOffEvent', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80), new FeaturePoint(1880, 42, 242, 30, 26, true, 30)]);
+  this.menuSign = new PageFeature('menuOpenSign', [new FeaturePoint(1652, 250, 242, 30, 26, true, 80)]);
+  this.menuMail = new PageFeature('menuOpenMail', [new FeaturePoint(1538, 466, 242, 30, 26, true, 80)]);
+  this.menuAlliance = new PageFeature('menuOpenAlliance', [new FeaturePoint(1420, 358, 242, 30, 26, true, 80)]);
+
   this.menuOnBtn = new PageFeature('menuOn', [new FeaturePoint(1844, 56, 245, 245, 241, true, 30), new FeaturePoint(1844, 66, 128, 70, 56, true, 30), new FeaturePoint(1844, 76, 245, 220, 215, true, 30)]);
   this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80)]);
   this.autoPlayBtn = new PageFeature('autoPlayOff', [new FeaturePoint(1430, 768, 140, 154, 127, true, 60), new FeaturePoint(1476, 772, 140, 157, 130, true, 60)]);
@@ -375,7 +382,7 @@ var LineageM = function () {
       hpWater: openImage(this.localPath + '/hp.png'),
       store: openImage(this.localPath + '/store.png')
     };
-    // this.gi.storeMode.print(this._img);
+    // this.gi.menuOffEvent.print(this._img);
     this.tmpExp = 0;
     this.isRecordLocation = false;
   }
@@ -546,6 +553,10 @@ var LineageM = function () {
             this.gi.autoPlayBtn.tap();
             continue;
           }
+        }
+
+        if (this.config.autoReceiveReward) {
+          this.checkAndAutoGetReward();
         }
 
         if (this.rState.isSafeRegion) {
@@ -783,12 +794,67 @@ var LineageM = function () {
       } else {
         this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
         if (!this.rState.isAutoPlay) {
-          sleep(200);
+          sleep(250);
           this.refreshScreen();
           this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
         }
       }
       this.rState.print();
+    }
+  }, {
+    key: 'checkAndAutoGetReward',
+    value: function checkAndAutoGetReward() {
+      if (!this.gi.menuOffEvent.check(this._img)) {
+        return;
+      }
+      this.gi.menuOffEvent.tap();
+      this.waitForChangeScreen(0.95, 3000);
+      if (!this._loop) {
+        return;
+      }
+      if (this.gi.menuMail.check(this._img)) {
+        console.log('Auto receive reward: mail');
+        this.gi.menuMail.tap();
+        this.waitForChangeScreen(0.9, 5000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.getReward.tap();this.safeSleep(1000);
+        this.gi.getReward.tap();this.safeSleep(1000);
+        this.gi.getReward.tap();this.safeSleep(1000);
+        this.gi.menuOnBtn.tap();
+        this.waitForChangeScreen(0.95, 5000);
+      }
+      if (this.gi.menuSign.check(this._img)) {
+        console.log('Auto receive reward: sign');
+        this.gi.menuSign.tap();
+        this.waitForChangeScreen(0.95, 5000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.getReward.tap();this.safeSleep(500);
+        this.safeSleep(5000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.getReward.tap();this.safeSleep(500);
+        this.gi.menuOnBtn.tap();
+        this.waitForChangeScreen(0.95, 5000);
+      }
+      if (this.gi.menuAlliance.check(this._img)) {
+        console.log('Auto receive reward: Allience');
+        this.waitForChangeScreen(0.9, 5000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.signAllience.tap();
+        this.safeSleep(3000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.menuOnBtn.tap();
+        this.waitForChangeScreen(0.95, 5000);
+      }
     }
   }, {
     key: 'refreshScreen',
@@ -1010,7 +1076,8 @@ var DefaultConfig = {
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   beAttackedRandTeleport: true,
   autoBuyHp: 3, // 1 * 100, -1 => max
-  autoBuyArrow: 0 // 1 * 1000, -1 => max
+  autoBuyArrow: 0, // 1 * 1000, -1 => max
+  autoReceiveReward: true
 };
 
 var lm = undefined;
@@ -1041,6 +1108,8 @@ function stop() {
 
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
+// lm._loop=true;
+// lm.autoGetReward();
 // for (var i= 0; i < 1; i++) {
 //   lm.refreshScreen();
 //   const a = lm.gi.attackBtn.check(lm._img);
@@ -1052,7 +1121,6 @@ function stop() {
 //   console.log('attack Off', a, 'has kn', b, 'autoOff', c);
 // }
 
-// lm._loop=true;
 // lm.findStore();
 // for (let i = 0; i < 5; i++) {
 //   const hp = lm.getHpPercent();
