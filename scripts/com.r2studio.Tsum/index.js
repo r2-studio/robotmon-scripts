@@ -1199,7 +1199,7 @@ Tsum.prototype.useSkill = function() {
       this.tap({x: 450, y: by}, 80);
     }
     this.sleep(300);
-  } else if (this.myTsum.search('block_donald') != -1) {
+  } else if (this.myTsum == 'block_donald_s' || this.myTsum == 'block_donaldx_s') {
     for (var i = 0; i < 3; i++) {
       for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
         for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 150) {

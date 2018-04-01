@@ -138,6 +138,53 @@
         bottom: 10px;
         right: 10px;
       }
+
+      .dropbtn {
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        border: 0.5px solid rgba(0,0,0,0.2);
+        background-color: white;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 150px;
+        max-width: 200px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 10px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown a:hover {
+        background-color: #f1f1f1;
+      }
+
+      .dropdown button {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 90px;
+      }
+
+      .show {
+        display: block;
+      }
     </style>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -195,6 +242,18 @@
             max: 30,
             min: 1,
           },
+          {
+            title: "Skill Type",
+            title_zh_TW: "技能類型",
+            default: "clear",
+            dropdown: [
+              { key: "clear", title: "Clearing", title_zh_TW: "消除系", },
+              { key: "block_donald_s", title: "Donald", title_zh_TW: "唐老鴨", },
+              { key: "block_donaldx_s", title: "Holiday Donald", title_zh_TW: "假日唐老鴨", },
+              { key: "block_lukej_s", title: "Jedi Luke", title_zh_TW: "絕地路克", },
+              { key: "block_moana_s", title: "Moana", title_zh_TW: "莫娜", },
+            ],
+          },
         ],
         [
           { title: "Receive All Hearts", title_zh_TW: "收全部愛心", default: true},
@@ -250,12 +309,14 @@
           },
         ]
       ];
+
       function saveLocale(locale) {
         if (localStorage !== undefined) {
           localStorage.setItem('tsumtsumlanguage', locale);
           location.reload();
         }
       }
+
       function loadSettings(settings) {
         var recordSettings = {};
         if (localStorage = undefined) {
@@ -284,6 +345,7 @@
         }
         console.log('Load settings');
       }
+
       function saveSettings(settings) {
         if (localStorage != undefined) {
           var recordSettings = {};
@@ -293,6 +355,8 @@
               var setting = settings[i][g];
               if (typeof setting.default === "boolean") {
                 recordSettings[id] = $("#setting_value_" + id).is(':checked');
+              } else if (typeof setting.default === "string" && setting.dropdown !== undefined) {
+                recordSettings[id] = setting.default;
               } else if (typeof setting.default === "number") {
                 recordSettings[id] = +$("#setting_value_" + id).val();
               } else if (typeof setting.default === "string") {
@@ -305,6 +369,7 @@
           console.log('Save settings');
         }
       }
+
       function genStartCommand(settings) {
         var command = "start(";
         for (var i in settings) {
@@ -313,6 +378,8 @@
             var setting = settings[i][g];
             if (typeof setting.default === "boolean") {
               command += $("#setting_value_" + id).is(':checked') + ", ";
+            } else if (typeof setting.default === "string" && setting.dropdown !== undefined) {
+              command += setting.default + ", ";
             } else if (typeof setting.default === "number") {
               command += $("#setting_value_" + id).val() + ", ";
             } else if (typeof setting.default === "string") {
@@ -367,22 +434,52 @@
 
       function genSettings(jContainer, settings) {
         for (var i in settings) {
-          var jGroup = $("<div class='list-group'></div>");
+          var jGroup = $('<div class="list-group"></div>');
           for (var g in settings[i]) {
             var id =  i + "_" + g;
             var setting = settings[i][g];
             var title = getTitle(setting);
-            var jGroupItem = $("<div id='setting_" + id + "' class='list-group-item'></div>");
-            var jSetting = $("<div class='row'></div>");
-            if (typeof setting.default === "boolean") {
+            var jGroupItem = $('<div id="setting_' + id + '" class="list-group-item"></div>');
+            var jSetting = $('<div class="row"></div>');
+            if (typeof setting.default === 'boolean') {
               appendTitle(jSetting, title);
               appendCol(jSetting, getSwitchButton(id, setting.default));
-            } else if (typeof setting.default === "number") {
+            } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
+              var jDiv = $('<div class="dropdown"></div>');
+              var jDropdownBtn = $('<button id="setting_value_' + id + '" class="dropbtn"></button>');
+              var jDropdown = $('<div class="dropdown-content"></div>');
+              jDropdownBtn.click((function (jDropdown) {
+                return function () {
+                  jDropdown.addClass('show');
+                }
+              })(jDropdown));
+              var items = setting.dropdown;
+              for (var index = 0; index < items.length; index++) {
+                var item = items[index];
+                var itemTitle = getTitle(item);
+                if (item.key === setting.default) {
+                  jDropdownBtn.text(itemTitle);
+                }
+                var jItem = $('<a href="#' + itemTitle + '" class="action-dropdown-item">' + itemTitle + '</a>');
+                jItem.click((function (jDropdownBtn, itemTitle, setting, key) {
+                  return function () {
+                    setting.default = key;
+                    jDropdownBtn.text(itemTitle);
+                    jDropdown.removeClass('show');
+                    saveSettings(settings);
+                  }
+                })(jDropdownBtn, itemTitle, setting, item.key));
+                jDropdown.append(jItem);
+              }
+              jDiv.append(jDropdownBtn).append(jDropdown);
+              appendTitle(jSetting, title);
+              appendCol(jSetting, jDiv);
+            } else if (typeof setting.default === 'number') {
               var step = setting.step;
               var max = setting.max;
               var min = setting.min;
               var jBtns = [];
-              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
+              var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>');
               var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
               var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
               jBtnP.click((function(jInput, min, max, step){
@@ -409,8 +506,8 @@
               jInput.change(function() {saveSettings(settings);});
               appendTitle(jSetting, title);
               appendCol(jSetting, jBtns);
-            } else if (typeof setting.default === "string") {
-              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
+            } else if (typeof setting.default === 'string') {
+              var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="text" value="' + setting.default + '"/>');
               jInput.change(function() {saveSettings(settings);});
               appendTitle(jSetting, title);
               appendCol(jSetting, jInput);
@@ -423,7 +520,7 @@
               appendTitle(jSetting, title);
               appendCol(jSetting, jBtns);
             } else if (title !== undefined) {
-              jSetting.append("<div class='col-xs-12'>" + title + "</div>");
+              jSetting.append('<div class="col-xs-12">' + title + '</div>');
             }
             jGroupItem.append(jSetting);
             jGroup.append(jGroupItem);
