@@ -257,8 +257,8 @@ var PageFeature = function () {
         if (!_p.check(img)) {
           return false;
         }
-        return true;
       }
+      return true;
     }
   }, {
     key: 'print',
@@ -291,7 +291,6 @@ var GameInfo = function GameInfo() {
   this.regionTypeRect = new Rect(1710, 470, 1816, 498);
   this.storeHpRect = new Rect(94, 276, 194, 376);
 
-  this.storeMode = new Point(250, 970);
   this.store10 = new Point(670, 970);
   this.store100 = new Point(900, 970);
   this.store1000 = new Point(1100, 970);
@@ -300,6 +299,8 @@ var GameInfo = function GameInfo() {
   this.storeArrow = new Point(400, 820);
   this.storeBuy = new Point(1600, 970);
   this.storeBuy2 = new Point(1130, 882);
+  this.getReward = new Point(1680, 320);
+  this.signAllience = new Point(1820, 252);
 
   this.itemBtns = [new Point(810, 960), new Point(930, 960), new Point(1050, 960), new Point(1180, 960), new Point(1440, 960), new Point(1560, 960), new Point(1690, 960), new Point(1810, 960), new Point(1310, 960)];
 
@@ -313,10 +314,16 @@ var GameInfo = function GameInfo() {
   this.mapControllerT = new Point(290, 760);
   this.mapControllerB = new Point(290, 960);
 
+  this.storeMode = new PageFeature('storeMode', [new FeaturePoint(184, 956, 212, 192, 139, true, 32), new FeaturePoint(220, 984, 15, 14, 10, true, 20), new FeaturePoint(208, 982, 233, 227, 205, true, 20)]);
+  this.menuOffEvent = new PageFeature('menuOffEvent', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80), new FeaturePoint(1880, 42, 242, 30, 26, true, 30)]);
+  this.menuSign = new PageFeature('menuOpenSign', [new FeaturePoint(1652, 250, 242, 30, 26, true, 80)]);
+  this.menuMail = new PageFeature('menuOpenMail', [new FeaturePoint(1538, 466, 242, 30, 26, true, 80)]);
+  this.menuAlliance = new PageFeature('menuOpenAlliance', [new FeaturePoint(1418, 360, 242, 30, 26, true, 80)]);
+
   this.menuOnBtn = new PageFeature('menuOn', [new FeaturePoint(1844, 56, 245, 245, 241, true, 30), new FeaturePoint(1844, 66, 128, 70, 56, true, 30), new FeaturePoint(1844, 76, 245, 220, 215, true, 30)]);
   this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80)]);
   this.autoPlayBtn = new PageFeature('autoPlayOff', [new FeaturePoint(1430, 768, 140, 154, 127, true, 60), new FeaturePoint(1476, 772, 140, 157, 130, true, 60)]);
-  this.killNumber = new PageFeature('killNumber', [new FeaturePoint(1678, 538, 65, 62, 45, true, 20), new FeaturePoint(1780, 554, 235, 83, 44, true, 20), new FeaturePoint(1810, 554, 220, 59, 39, true, 20), new FeaturePoint(1804, 532, 255, 186, 142, true, 20)]);
+  this.killNumber = new PageFeature('killNumber', [new FeaturePoint(1678, 538, 65, 62, 45, true, 60), new FeaturePoint(1780, 554, 235, 83, 44, true, 40), new FeaturePoint(1810, 554, 220, 59, 39, true, 40), new FeaturePoint(1804, 532, 255, 186, 142, true, 40)]);
   this.selfSkillBtn = new PageFeature('selfSkillOff', [new FeaturePoint(1594, 601, 141, 147, 137, true, 60), new FeaturePoint(1591, 624, 117, 128, 114, true, 60)]);
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
   this.disconnectBtn = new PageFeature('disconnect', [new FeaturePoint(840, 880, 34, 51, 79, true, 20), new FeaturePoint(1080, 880, 34, 51, 79, true, 20), new FeaturePoint(1170, 880, 31, 20, 14, true, 20), new FeaturePoint(1150, 916, 31, 24, 14, true, 20)]);
@@ -375,7 +382,7 @@ var LineageM = function () {
       hpWater: openImage(this.localPath + '/hp.png'),
       store: openImage(this.localPath + '/store.png')
     };
-    // this.gi.killNumber.print(this._img);
+    // this.gi.menuOffEvent.print(this._img);
     this.tmpExp = 0;
     this.isRecordLocation = false;
   }
@@ -548,6 +555,10 @@ var LineageM = function () {
           }
         }
 
+        if (this.config.autoReceiveReward) {
+          this.checkAndAutoGetReward();
+        }
+
         if (this.rState.isSafeRegion) {
           console.log('In safe region');
           continue;
@@ -634,7 +645,7 @@ var LineageM = function () {
   }, {
     key: 'findStore',
     value: function findStore() {
-      var stores = findImages(this._img, this.images.store, 0.95, 4, true);
+      var stores = findImages(this._img, this.images.store, 0.89, 4, true);
       for (var k in stores) {
         if (!this._loop) {
           return false;
@@ -646,19 +657,23 @@ var LineageM = function () {
           return false;
         }
         this.safeSleep(1000);
-        this.gi.storeMode.tap();
-        this.safeSleep(500);if (!this._loop) {
-          return false;
+        if (this.gi.storeMode.check(this._img)) {
+          this.gi.storeMode.tap();
+          this.safeSleep(500);if (!this._loop) {
+            return false;
+          }
+          this.refreshScreen();
+          var testHpImg = this.gi.storeHpRect.crop(this._img);
+          var s = getIdentityScore(this.images.hpWater, testHpImg);
+          releaseImage(testHpImg);
+          if (s > 0.9) {
+            console.log('Store Found');
+            return true;
+          }
         }
-        this.refreshScreen();
-        var testHpImg = this.gi.storeHpRect.crop(this._img);
-        var s = getIdentityScore(this.images.hpWater, testHpImg);
-        releaseImage(testHpImg);
-        if (s > 0.9) {
-          console.log('Store Found');
-          return true;
+        if (this.gi.menuOnBtn.check(this._img)) {
+          this.gi.menuOnBtn.tap();
         }
-        this.gi.menuOnBtn.tap();
         this.safeSleep(2000);
         continue;
       }
@@ -779,12 +794,68 @@ var LineageM = function () {
       } else {
         this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
         if (!this.rState.isAutoPlay) {
-          sleep(200);
+          sleep(250);
           this.refreshScreen();
           this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
         }
       }
       this.rState.print();
+    }
+  }, {
+    key: 'checkAndAutoGetReward',
+    value: function checkAndAutoGetReward() {
+      if (!this.gi.menuOffEvent.check(this._img)) {
+        return;
+      }
+      this.gi.menuOffEvent.tap();
+      this.waitForChangeScreen(0.95, 3000);
+      if (!this._loop) {
+        return;
+      }
+      if (this.gi.menuMail.check(this._img)) {
+        console.log('Auto receive reward: mail');
+        this.gi.menuMail.tap();
+        this.waitForChangeScreen(0.9, 5000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.getReward.tap();this.safeSleep(1000);
+        this.gi.getReward.tap();this.safeSleep(1000);
+        this.gi.getReward.tap();this.safeSleep(1000);
+        this.gi.menuOnBtn.tap();
+        this.waitForChangeScreen(0.95, 5000);
+      }
+      if (this.gi.menuSign.check(this._img)) {
+        console.log('Auto receive reward: sign');
+        this.gi.menuSign.tap();
+        this.waitForChangeScreen(0.95, 5000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.getReward.tap();this.safeSleep(500);
+        this.safeSleep(5000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.getReward.tap();this.safeSleep(500);
+        this.gi.menuOnBtn.tap();
+        this.waitForChangeScreen(0.95, 5000);
+      }
+      if (this.gi.menuAlliance.check(this._img)) {
+        console.log('Auto receive reward: Allience');
+        this.gi.menuAlliance.tap();
+        this.waitForChangeScreen(0.9, 5000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.signAllience.tap();
+        this.safeSleep(3000);
+        if (!this._loop) {
+          return;
+        }
+        this.gi.menuOnBtn.tap();
+        this.waitForChangeScreen(0.95, 5000);
+      }
     }
   }, {
     key: 'refreshScreen',
@@ -1006,7 +1077,8 @@ var DefaultConfig = {
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   beAttackedRandTeleport: true,
   autoBuyHp: 3, // 1 * 100, -1 => max
-  autoBuyArrow: 0 // 1 * 1000, -1 => max
+  autoBuyArrow: 0, // 1 * 1000, -1 => max
+  autoReceiveReward: true
 };
 
 var lm = undefined;
@@ -1038,6 +1110,19 @@ function stop() {
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
 // lm._loop=true;
+// lm.checkAndAutoGetReward();
+// for (var i= 0; i < 1; i++) {
+//   lm.refreshScreen();
+//   const a = lm.gi.attackBtn.check(lm._img);
+//   const b = lm.gi.killNumber.check(lm._img);
+//   // lm.gi.killNumber.print(lm._img);
+//   // console.log(b)
+//   const c = lm.gi.autoPlayBtn.check(lm._img);
+//   lm.gi.autoPlayBtn.print(lm._img);
+//   console.log('attack Off', a, 'has kn', b, 'autoOff', c);
+// }
+
+// lm.findStore();
 // for (let i = 0; i < 5; i++) {
 //   const hp = lm.getHpPercent();
 //   // const mp = lm.getMpPercent();
