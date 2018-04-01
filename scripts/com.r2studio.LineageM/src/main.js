@@ -215,7 +215,7 @@ class GameInfo {
       new FeaturePoint(1538, 466, 242, 30, 26, true, 80),
     ]);
     this.menuAlliance = new PageFeature('menuOpenAlliance', [
-      new FeaturePoint(1420, 358, 242, 30, 26, true, 80),
+      new FeaturePoint(1418, 360, 242, 30, 26, true, 80),
     ]);
 
     this.menuOnBtn = new PageFeature('menuOn', [
@@ -710,6 +710,7 @@ class LineageM {
     }
     if (this.gi.menuAlliance.check(this._img)) {
       console.log('Auto receive reward: Allience');
+      this.gi.menuAlliance.tap();
       this.waitForChangeScreen(0.9, 5000);
       if (!this._loop) {return;}
       this.gi.signAllience.tap();
@@ -961,7 +962,7 @@ function stop() {
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
 // lm._loop=true;
-// lm.autoGetReward();
+// lm.checkAndAutoGetReward();
 // for (var i= 0; i < 1; i++) {
 //   lm.refreshScreen();
 //   const a = lm.gi.attackBtn.check(lm._img);

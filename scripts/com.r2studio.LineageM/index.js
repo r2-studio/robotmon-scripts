@@ -318,7 +318,7 @@ var GameInfo = function GameInfo() {
   this.menuOffEvent = new PageFeature('menuOffEvent', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80), new FeaturePoint(1880, 42, 242, 30, 26, true, 30)]);
   this.menuSign = new PageFeature('menuOpenSign', [new FeaturePoint(1652, 250, 242, 30, 26, true, 80)]);
   this.menuMail = new PageFeature('menuOpenMail', [new FeaturePoint(1538, 466, 242, 30, 26, true, 80)]);
-  this.menuAlliance = new PageFeature('menuOpenAlliance', [new FeaturePoint(1420, 358, 242, 30, 26, true, 80)]);
+  this.menuAlliance = new PageFeature('menuOpenAlliance', [new FeaturePoint(1418, 360, 242, 30, 26, true, 80)]);
 
   this.menuOnBtn = new PageFeature('menuOn', [new FeaturePoint(1844, 56, 245, 245, 241, true, 30), new FeaturePoint(1844, 66, 128, 70, 56, true, 30), new FeaturePoint(1844, 76, 245, 220, 215, true, 30)]);
   this.menuOffBtn = new PageFeature('menuOff', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80)]);
@@ -843,6 +843,7 @@ var LineageM = function () {
       }
       if (this.gi.menuAlliance.check(this._img)) {
         console.log('Auto receive reward: Allience');
+        this.gi.menuAlliance.tap();
         this.waitForChangeScreen(0.9, 5000);
         if (!this._loop) {
           return;
@@ -1109,7 +1110,7 @@ function stop() {
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
 // lm._loop=true;
-// lm.autoGetReward();
+// lm.checkAndAutoGetReward();
 // for (var i= 0; i < 1; i++) {
 //   lm.refreshScreen();
 //   const a = lm.gi.attackBtn.check(lm._img);
