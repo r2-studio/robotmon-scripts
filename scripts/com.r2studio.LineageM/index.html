@@ -172,7 +172,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 10;
+    VERSION = 11;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
@@ -191,6 +191,7 @@
       beAttackedRandTeleport: true,
       autoBuyHp: 0, // 1 * 100, -1 => max
       autoBuyArrow: 0, // 1 * 1000, -1 => max
+      autoReceiveReward: true,
     };
     var settings;
 
@@ -223,7 +224,8 @@
                 beAttackedRandTeleport: "被攻擊瞬移 (請將瞬卷放在快捷鍵 7)",
                 autoBuyHp: "自動買紅水 (-1: Max)",
                 autoBuyArrow: "自動買銀箭 (-1: Max)",
-                unit: "單位"
+                unit: "單位",
+                autoReceiveReward: "自動收獎勵、簽到"
               }
             }
           }
@@ -450,6 +452,16 @@
         }
       })(jSwitchInput));
       appendToSwitchRow($("<div class=setting_input data-i18n='text.dangerousGoHome'></div>"), jSwitchInput);
+
+      // inReceiveReward
+      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.autoReceiveReward ? 'checked' : '') + "/>");
+      jSwitchInput.change((function (jInput) {
+        return function () {
+          settings.autoReceiveReward = jInput.is(':checked');
+          saveSettings();
+        }
+      })(jSwitchInput));
+      appendToSwitchRow($("<div class=setting_input data-i18n='text.autoReceiveReward'></div>"), jSwitchInput);
 
       // goBackInterval
       var intervalMax = 20;
