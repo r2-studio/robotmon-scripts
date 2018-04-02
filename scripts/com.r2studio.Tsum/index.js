@@ -1022,7 +1022,7 @@ Tsum.prototype.findPage = function(times, timeout) {
 }
 
 Tsum.prototype.exitUnknownPage = function() {
-  keycode('KEYCODE_TAB');
+  keycode('KEYCODE_DPAD_DOWN');
   this.sleep(500);
   keycode('KEYCODE_ENTER');
   this.tap(Button.gameQuestionCancel);
