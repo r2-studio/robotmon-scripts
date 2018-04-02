@@ -175,13 +175,6 @@
         background-color: #f1f1f1;
       }
 
-      .dropdown button {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        max-width: 90px;
-      }
-
       .show {
         display: block;
       }
@@ -199,67 +192,67 @@
       var settings = [
         [
           {
-            title: "Thanks ttung for improve image recognition and send heart function",
-            title_zh_TW: "感謝 ttung 提供改善辨識和送心功能",
+            title: 'Thanks ttung for improve image recognition and send heart function',
+            title_zh_TW: '感謝 ttung 提供改善辨識和送心功能',
           },
           {
-            title: "Thanks Chris Kwan's and Melissa Stinson's great help",
-            title_zh_TW: "感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙",
+            title: 'Thanks Chris Kwan\'s and Melissa Stinson\'s great help',
+            title_zh_TW: '感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙',
           },
         ],
         [
           {
-            title: "Language",
-            title_zh_TW: "語言",
+            title: 'Language',
+            title_zh_TW: '語言',
             buttons: [
               {
-                title: "En",
-                onclick: "saveLocale('en-US')"
+                title: 'En',
+                onclick: 'saveLocale("en-US")'
               },
               {
-                title: "中文",
-                onclick: "saveLocale('zh-TW')"
+                title: '中文',
+                onclick: 'saveLocale("zh-TW")'
               }
             ]
           },
-          { title: "Japan Version?", title_zh_TW: "日本版?", default: false},
-          { title: "Debug", title_zh_TW: "偵錯", default: true},
-          { title: "Special Screen Ratio", title_zh_TW: "特殊螢幕比例", default: false},
+          { title: 'Japan Version?', title_zh_TW: '日本版?', default: false},
+          { title: 'Debug', title_zh_TW: '偵錯', default: true},
+          { title: 'Special Screen Ratio', title_zh_TW: '特殊螢幕比例', default: false},
         ],
         [
-          { title: "Auto Play Game", title_zh_TW: "自動玩遊戲", default: true},
-          { title: "Pause(calculating)", title_zh_TW: "計算時暫停", default: true},
-          { title: "Clear Bubbles", title_zh_TW: "自動清除泡泡", default: true},
-          { title: "Use Fan?", title_zh_TW: "使用風扇", default: false},
-          { title: "5>4", title_zh_TW: "道具五變四", default: false},
-          { title: "+Coin", title_zh_TW: "道具Coin", default: false},
-          { title: "All Bonus Items", title_zh_TW: "開/關全部道具", default: false},
+          { title: 'Auto Play Game', title_zh_TW: '自動玩遊戲', default: true},
+          { title: 'Pause(calculating)', title_zh_TW: '計算時暫停', default: true},
+          { title: 'Clear Bubbles', title_zh_TW: '自動清除泡泡', default: true},
+          { title: 'Use Fan?', title_zh_TW: '使用風扇', default: false},
+          { title: '5>4', title_zh_TW: '道具五變四', default: false},
+          { title: '+Coin', title_zh_TW: '道具Coin', default: false},
+          { title: 'All Bonus Items', title_zh_TW: '開/關全部道具', default: false},
           {
-            title: "Skill Waiting time (sec)",
-            title_zh_TW: "技能等待時間(秒)",
+            title: 'Skill Waiting time (sec)',
+            title_zh_TW: '技能等待時間(秒)',
             default: 3,
             step: 1,
             max: 30,
             min: 1,
           },
           {
-            title: "Skill Type",
-            title_zh_TW: "技能類型",
-            default: "clear",
+            title: 'Skill Type',
+            title_zh_TW: '技能類型',
+            default: 'clear',
             dropdown: [
-              { key: "clear", title: "Clearing", title_zh_TW: "消除系", },
-              { key: "block_donald_s", title: "Donald", title_zh_TW: "唐老鴨", },
-              { key: "block_donaldx_s", title: "Holiday Donald", title_zh_TW: "假日唐老鴨", },
-              { key: "block_lukej_s", title: "Jedi Luke", title_zh_TW: "絕地路克", },
-              { key: "block_moana_s", title: "Moana", title_zh_TW: "莫娜", },
+              { key: 'clear', title: 'Clearing', title_zh_TW: '消除系', },
+              { key: 'block_donald_s', title: 'Donald', title_zh_TW: '唐老鴨', },
+              { key: 'block_donaldx_s', title: 'Holiday Donald', title_zh_TW: '假日唐老鴨', },
+              { key: 'block_lukej_s', title: 'Jedi Luke', title_zh_TW: '絕地路克', },
+              { key: 'block_moana_s', title: 'Moana', title_zh_TW: '莫娜', },
             ],
           },
         ],
         [
-          { title: "Receive All Hearts", title_zh_TW: "收全部愛心", default: true},
+          { title: 'Receive All Hearts', title_zh_TW: '收全部愛心', default: true},
           {
-            title: "Waiting time (min) before repeat",
-            title_zh_TW: "完成後休息時間(分)",
+            title: 'Waiting time (min) before repeat',
+            title_zh_TW: '完成後休息時間(分)',
             default: 25,
             step: 5,
             max: 60,
@@ -267,41 +260,41 @@
           },
         ],
         [
-          { title: "Receive Hearts One By One", title_zh_TW: "一顆一顆收愛心", default: false},
-          { title: "Skip Ruby", title_zh_TW: "保留鑽石", default: false},
+          { title: 'Receive Hearts One By One', title_zh_TW: '一顆一顆收愛心', default: false},
+          { title: 'Skip Ruby', title_zh_TW: '保留鑽石', default: false},
           {
-            title: "Max Times to Open Mailbox",
-            title_zh_TW: "重複檢查上限次數",
+            title: 'Max Times to Open Mailbox',
+            title_zh_TW: '重複檢查上限次數',
             default: 5,
             step: 1,
             max: 20,
             min: 1,
           },
           {
-            title: "Waiting time (min) before repeat",
-            title_zh_TW: "完成後休息時間(分)",
+            title: 'Waiting time (min) before repeat',
+            title_zh_TW: '完成後休息時間(分)',
             default: 5,
             step: 2,
             max: 60,
             min: 1,
           },
-          { title: "Record Sender", title_zh_TW: "記錄送心者", default: true},
-          { title: "Enlarge Sender's Image (Emulator)", title_zh_TW: "放大送心者圖片(模擬器)", default: false},
+          { title: 'Record Sender', title_zh_TW: '記錄送心者', default: true},
+          { title: 'Enlarge Sender\'s Image (Emulator)', title_zh_TW: '放大送心者圖片(模擬器)', default: false},
         ],
         [
-          { title: "Auto Send Hearts", title_zh_TW: "自動送愛心", default: false},
-          { title: "Send to 0 score", title_zh_TW: "送心給0分", default: false},
+          { title: 'Auto Send Hearts', title_zh_TW: '自動送愛心', default: false},
+          { title: 'Send to 0 score', title_zh_TW: '送心給0分', default: false},
           {
-            title: "Max run time(min) [0 = no limit]",
-            title_zh_TW: "執行時間上限(分)",
+            title: 'Max run time(min) [0 = no limit]',
+            title_zh_TW: '執行時間上限(分)',
             default: 0,
             step: 5,
             max: 80,
             min: 0,
           },
           {
-            title: "Waiting time (min) before repeat",
-            title_zh_TW: "完成後休息時間(分)",
+            title: 'Waiting time (min) before repeat',
+            title_zh_TW: '完成後休息時間(分)',
             default: 26,
             step: 5,
             max: 60,
@@ -336,7 +329,7 @@
         }
         for (var i in settings) {
           for (var g in settings[i]) {
-            var id =  i + "_" + g;
+            var id =  i + '_' + g;
             var setting = settings[i][g];
             if (recordSettings[id] != undefined) {
               setting.default = recordSettings[id];
@@ -351,16 +344,16 @@
           var recordSettings = {};
           for (var i in settings) {
             for (var g in settings[i]) {
-              var id =  i + "_" + g;
+              var id =  i + '_' + g;
               var setting = settings[i][g];
-              if (typeof setting.default === "boolean") {
-                recordSettings[id] = $("#setting_value_" + id).is(':checked');
-              } else if (typeof setting.default === "string" && setting.dropdown !== undefined) {
+              if (typeof setting.default === 'boolean') {
+                recordSettings[id] = $('#setting_value_' + id).is(':checked');
+              } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
                 recordSettings[id] = setting.default;
-              } else if (typeof setting.default === "number") {
-                recordSettings[id] = +$("#setting_value_" + id).val();
-              } else if (typeof setting.default === "string") {
-                recordSettings[id] = $("#setting_value_" + id).val();
+              } else if (typeof setting.default === 'number') {
+                recordSettings[id] = +$('#setting_value_' + id).val();
+              } else if (typeof setting.default === 'string') {
+                recordSettings[id] = $('#setting_value_' + id).val();
               }
             }
           }
@@ -371,24 +364,24 @@
       }
 
       function genStartCommand(settings) {
-        var command = "start(";
+        var command = 'start(';
         for (var i in settings) {
           for (var g in settings[i]) {
-            var id =  i + "_" + g;
+            var id =  i + '_' + g;
             var setting = settings[i][g];
-            if (typeof setting.default === "boolean") {
-              command += $("#setting_value_" + id).is(':checked') + ", ";
-            } else if (typeof setting.default === "string" && setting.dropdown !== undefined) {
-              command += setting.default + ", ";
-            } else if (typeof setting.default === "number") {
-              command += $("#setting_value_" + id).val() + ", ";
-            } else if (typeof setting.default === "string") {
-              command += "'" + $("#setting_value_" + id).val() + "', ";
+            if (typeof setting.default === 'boolean') {
+              command += $('#setting_value_' + id).is(':checked') + ', ';
+            } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
+              command += '"' + setting.default + '", ';
+            } else if (typeof setting.default === 'number') {
+              command += $('#setting_value_' + id).val() + ', ';
+            } else if (typeof setting.default === 'string') {
+              command += '"' + $('#setting_value_' + id).val() + '", ';
             }
           }
         }
-        command += "undefined);"
-        console.log("Start command: " + command);
+        command += 'undefined);'
+        console.log('Start command: ' + command);
         return command;
       }
 
@@ -399,14 +392,14 @@
         var lang = localStorage.getItem('tsumtsumlanguage');
         if (!lang) {
           return setting.title;
-        } else if (lang === "zh-TW") {
+        } else if (lang === 'zh-TW') {
           return setting.title_zh_TW;
         }
         return setting.title;
       }
 
       function appendTitle(jSetting, title) {
-        jSetting.append("<div class='col-xs-6'>" + title + "</div>");
+        jSetting.append('<div class="col-xs-6">' + title + '</div>');
       }
 
       function appendCol(jSetting, jContent) {
@@ -425,7 +418,7 @@
 
       function getSwitchButton(id, checked) {
         var jLabel = $('<label class="switch pull-right"></label>');
-        var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='checkbox' " + (checked ? 'checked' : '') + "/>");
+        var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="checkbox" ' + (checked ? 'checked' : '') + '/>');
         jInput.change(function() {saveSettings(settings);});
         jLabel.append(jInput);
         jLabel.append('<a class="slider round"></a>');
@@ -436,7 +429,7 @@
         for (var i in settings) {
           var jGroup = $('<div class="list-group"></div>');
           for (var g in settings[i]) {
-            var id =  i + "_" + g;
+            var id =  i + '_' + g;
             var setting = settings[i][g];
             var title = getTitle(setting);
             var jGroupItem = $('<div id="setting_' + id + '" class="list-group-item"></div>');
@@ -532,50 +525,50 @@
 
     <script>
       $(function() {
-        $("#version").html("Tsum Tsum v" + VERSION);
+        $('#version').html('Tsum Tsum v' + VERSION);
 
         loadSettings(settings);
-        genSettings($("#settings"), settings);
+        genSettings($('#settings'), settings);
 
-        $("#updateRecordASC").click(function() {
+        $('#updateRecordASC').click(function() {
           ASC = true;
           refreshRecord();
         });
-        $("#updateRecordDESC").click(function() {
+        $('#updateRecordDESC').click(function() {
           ASC = false;
           refreshRecord();
         });
-        $("#goToTop").click(function() {
+        $('#goToTop').click(function() {
           window.scrollTo(0, 0);
         });
         var protect = true;
-        $("#resetRecord").click(function() {
+        $('#resetRecord').click(function() {
           if (protect) {
             protect = false;
-            $("#resetRecord").html("Are you sure?");
+            $('#resetRecord').html('Are you sure?');
           } else {
             protect = true;
-            $("#resetRecord").html("Reset Record?");
+            $('#resetRecord').html('Reset Record?');
             JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
-            $("#record").html("");
+            $('#record').html('');
           }
         });
-        $("#exportRecord").click(function(){
+        $('#exportRecord').click(function(){
           exportHTML();
         });
 
-        if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === "zh-TW") {
-          $("#senders").text("誰送你心");
-          $("#updateRecordASC").text("更新(遞增)");
-          $("#updateRecordDESC").text("更新(遞減)");
-          $("#resetRecord").text("清除紀錄");
-          $("#goToTop").text("回頁面頂端");
+        if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
+          $('#senders').text('誰送你心');
+          $('#updateRecordASC').text('更新(遞增)');
+          $('#updateRecordDESC').text('更新(遞減)');
+          $('#resetRecord').text('清除紀錄');
+          $('#goToTop').text('回頁面頂端');
         } else {
-          $("#senders").text("List of Heart Counts");
-          $("#updateRecordASC").text("Update(ASC)");
-          $("#updateRecordDESC").text("Update(DESC)");
-          $("#resetRecord").text("Reset Record");
-          $("#goToTop").text("Go Top");
+          $('#senders').text('List of Heart Counts');
+          $('#updateRecordASC').text('Update(ASC)');
+          $('#updateRecordDESC').text('Update(DESC)');
+          $('#resetRecord').text('Reset Record');
+          $('#goToTop').text('Go Top');
         }
       });
 
@@ -613,7 +606,7 @@
       function assignImage(results) {
         var rs = results.split(',');
         if (rs.length == 2) {
-          $("#"+rs[0]).attr("src", "data:image/png;base64,"+rs[1]);
+          $('#' + rs[0]).attr('src', 'data:image/png;base64,' + rs[1]);
         }
         if (imageQueue.length == 0) {
           isRunning = false;
@@ -622,23 +615,23 @@
         }
       }
       function getTimeString(d) {
-        return (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes();
+        return (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
       }
       function getDayTimeString(d) {
-        return (d.getMonth()+1) + "/" + d.getDate();
+        return (d.getMonth()+1) + '/' + d.getDate();
       }
       function getRecordFilename() {
         var d = new Date();
-        return 'record_' + d.getFullYear() + '-' + (d.getMonth()+1) + "-" + d.getDate() + "_" + d.getHours() + "-" + d.getMinutes() + '-' + d.getSeconds() + '.html';
+        return 'record_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
       }
       function genRecord(record) {
-        if (record == undefined || record == "undefined" || record == "") {
+        if (record == undefined || record == 'undefined' || record == '') {
           return;
         }
         var recordObjs = JSON.parse(record);
         record = [];
         for (var filename in recordObjs) {
-          if (filename == "hearts_count"){
+          if (filename == 'hearts_count'){
             continue;
           }
           var obj = recordObjs[filename];
@@ -660,56 +653,56 @@
           });
         }
         
-        var html = "<ul>";
+        var html = '<ul>';
         for (var idx in record) {
           var filename = record[idx].filename;
           var imgId = filename.split('.')[0];
           var lastTime = new Date(record[idx].lastReceiveTime);
-          html += "<li>"
-          html += "<div><img id='" +imgId+ "' />" + getTimeString(lastTime) + "</div>";
-          html += "<ul>";
+          html += '<li>'
+          html += '<div><img id="' + imgId + '" />' + getTimeString(lastTime) + '</div>';
+          html += '<ul>';
           for(var day in record[idx].receiveCounts) {
             var dayTime = new Date(+day * 86400000 );
-            html += "<li>";
-            html += getDayTimeString(dayTime) + ": get " + record[idx].receiveCounts[day] + " hearts";
-            html += "</li>";
+            html += '<li>';
+            html += getDayTimeString(dayTime) + ': get ' + record[idx].receiveCounts[day] + ' hearts';
+            html += '</li>';
           }
-          html += "</ul>";
-          html += "</li>";
+          html += '</ul>';
+          html += '</li>';
           getBase64(imgId, filename);
         }
-        html += "</ul>";
-        $("#record").html(html);
+        html += '</ul>';
+        $('#record').html(html);
       }
       function exportHTML() {
-        $('#exportRecord').html("Exporting");
-        var html = $("#record").html();
+        $('#exportRecord').html('Exporting');
+        var html = $('#record').html();
         html = html.replace(/\n/g, '');
         var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>'+ html+ '</body>\');';
         JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
       }
       function exportSuccess() {
-        $('#exportRecord').html("Export HTML");
+        $('#exportRecord').html('Export HTML');
       }
     </script>
   </head>
   <body>
-    <nav class="navbar navbar-custom" role="navigation">
-      <a id="version" class="navbar-brand"></a>
+    <nav class='navbar navbar-custom' role='navigation'>
+      <a id='version' class='navbar-brand'></a>
     </nav>
-    <div class="container">
-      <div id="settings"></div>
-      <div id="senders" style="padding-bottom:5px;"></div>
-      <button id="updateRecordASC" class="btn btn-plus" style="margin-left:0px;">Update(ASC)</button>
-      <button id="updateRecordDESC" class="btn btn-plus">Update(DESC)</button>
-      <button id="resetRecord" style="float:right;" class="btn btn-danger">Reset Record</button>
-      <button id="exportRecord" style="float:right;" class="btn btn-warning">Export HTML</button>
+    <div class='container'>
+      <div id='settings'></div>
+      <div id='senders' style='padding-bottom:5px;'></div>
+      <button id='updateRecordASC' class='btn btn-plus' style='margin-left:0px;'>Update(ASC)</button>
+      <button id='updateRecordDESC' class='btn btn-plus'>Update(DESC)</button>
+      <button id='resetRecord' style='float:right;' class='btn btn-danger'>Reset Record</button>
+      <button id='exportRecord' style='float:right;' class='btn btn-warning'>Export HTML</button>
       <div>Click Update and wait for loading all images, then click Export HTML</div>
       <br />
-      <div id="record">
+      <div id='record'>
       </div>
       <br />
-      <button id="goToTop" class="btn btn-plus">Go Top</button>
+      <button id='goToTop' class='btn btn-plus'>Go Top</button>
       <br />
       <br />
       <br />

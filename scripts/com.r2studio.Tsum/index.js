@@ -752,6 +752,7 @@ function Tsum(isJP, detect) {
   this.recordReceive = true;
   this.enableAllItems = false;
   this.skillInterval = 3000;
+  this.skillType = '';
   this.sendHearts = false;
   this.showLog = true;
   this.keepRuby = false;
@@ -1165,7 +1166,7 @@ Tsum.prototype.useSkill = function() {
 
   this.tap(Button.gameSkillOn);
   this.sleep(30);
-  if (this.myTsum == 'block_lukej_s') {
+  if (this.skillType == 'block_lukej_s') {
     for (var i = 0; i < 5; i++) {
       this.tapDown({x: 820, y: 1200}, 20);
       this.moveTo({x: 820, y: 1150}, 20);
@@ -1185,7 +1186,7 @@ Tsum.prototype.useSkill = function() {
     }
     this.tap(Button.skillLuke1);
     this.sleep(800);
-  } else if(this.myTsum == 'block_moana_s') {
+  } else if(this.skillType == 'block_moana_s') {
     this.sleep(2500);
     log("Clear bubbles");
     for (var by = 1000; by <= 1300; by += 150) 
@@ -1199,7 +1200,7 @@ Tsum.prototype.useSkill = function() {
       this.tap({x: 450, y: by}, 80);
     }
     this.sleep(300);
-  } else if (this.myTsum == 'block_donald_s' || this.myTsum == 'block_donaldx_s') {
+  } else if (this.skillType == 'block_donald_s' || this.skillType == 'block_donaldx_s') {
     for (var i = 0; i < 3; i++) {
       for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
         for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 150) {
@@ -1735,7 +1736,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, skillInterval, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, skillInterval, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1751,6 +1752,7 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   ts.clearBubbles = clearBubbles;
   ts.enableAllItems = enableAllItems;
   ts.skillInterval = skillInterval * 1000;
+  ts.skillType = skillType;
   ts.receiveOneItem = receiveOneItem;
   ts.sendHearts = sendHearts;
   ts.showHeartLog = true;
