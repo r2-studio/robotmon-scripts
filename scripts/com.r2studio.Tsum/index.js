@@ -189,8 +189,8 @@ var Page = {
   GiftHeart: {
     name: 'GiftHeart',
     colors: [
-      {x: 216, y: 1012 - adjY, r: 233, g: 172, b: 6, match: true, threshold: 80},
-      {x: 673, y: 1008 - adjY, r: 235, g: 174, b: 8, match: true, threshold: 80},
+      {x: 216, y: 1012 - adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
+      {x: 673, y: 1008 - adjY, r: 235, g: 174, b: 8  , match: true, threshold: 80},
       {x: 468, y: 731  - adjY, r: 214, g: 61 , b: 143, match: true, threshold: 100},
       {x: 572, y: 489  - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
       {x: 583, y: 1123 - adjY, r: 28 , g: 186, b: 221, match: true, threshold: 80},
@@ -256,9 +256,9 @@ var Page = {
     colors: [
       {x: 752, y: 399  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
       {x: 856, y: 1358 - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 169, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
+      {x: 169, y: 1509 - adjY, r: 239, g: 188, b: 11 , match: true, threshold: 80},
       {x: 547, y: 1509 - adjY, r: 235, g: 118, b: 134, match: true, threshold: 80},
-      {x: 792, y: 1588 - adjY, r: 234, g: 171, b: 8, match: true, threshold: 100},
+      {x: 792, y: 1588 - adjY, r: 234, g: 171, b: 8  , match: true, threshold: 100},
     ],
     back: {x: 190, y: 1574 - adjY},
     next: {x: 558, y: 1563 - adjY},
@@ -268,9 +268,9 @@ var Page = {
     colors: [
       {x: 820,  y: 443  - adjY, r: 245, g: 250, b: 244, match: true, threshold: 80},
       {x: 954,  y: 1354 - adjY, r: 31 , g: 190, b: 220, match: true, threshold: 80},
-      {x: 180,  y: 1512 - adjY, r: 235, g: 182, b: 8, match: true, threshold: 80},
+      {x: 180,  y: 1512 - adjY, r: 235, g: 182, b: 8  , match: true, threshold: 80},
       {x: 540,  y: 1512 - adjY, r: 238, g: 115, b: 133, match: true, threshold: 80},
-      {x: 1011, y: 1603 - adjY, r: 229, g: 166, b: 11, match: true, threshold: 100},
+      {x: 1011, y: 1603 - adjY, r: 229, g: 166, b: 11 , match: true, threshold: 100},
     ],
     back: {x: 190, y: 1574 - adjY},
     next: {x: 558, y: 1563 - adjY},
@@ -282,7 +282,7 @@ var Page = {
       {x: 363, y: 504  - adjY, r: 21 , g: 184, b: 219, match: true, threshold: 80},
       {x: 464, y: 1084 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
       {x: 903, y: 1228 - adjY, r: 237, g: 176, b: 10 , match: true, threshold: 80},
-      {x: 554, y: 1516 - adjY, r: 236, g: 180, b: 9 , match: true, threshold: 80},
+      {x: 554, y: 1516 - adjY, r: 236, g: 180, b: 9  , match: true, threshold: 80},
     ],
     back: {x: 565, y: 1577 - adjY},
     next: {x: 565, y: 1577 - adjY},
@@ -303,8 +303,8 @@ var Page = {
       {x: 165, y: 1005 - adjY, r: 234, g: 173, b: 7  , match: true, threshold: 80},
       {x: 594, y: 1001 - adjY, r: 233, g: 171, b: 8  , match: true, threshold: 80},
       {x: 367, y: 702  - adjY, r: 24 , g: 191, b: 225, match: true, threshold: 80},
-      {x: 738, y: 540  - adjY, r: 248, g: 244, b: 245 , match: true, threshold: 80},
-      {x: 550, y: 1264 - adjY, r: 236, g: 182, b: 11  , match: true, threshold: 80},
+      {x: 738, y: 540  - adjY, r: 248, g: 244, b: 245, match: true, threshold: 80},
+      {x: 550, y: 1264 - adjY, r: 236, g: 182, b: 11 , match: true, threshold: 80},
     ],
     back: {x: 331, y: 1008 - adjY},
     next: {x: 561, y: 1350 - adjY},
@@ -332,8 +332,8 @@ var Page = {
   NetworkDisable: {
     name: 'NetworkDisable',
     colors: [
-      {x: 478, y: 1008 - adjY, r: 236, g: 94, b: 116, match: true, threshold: 80},
-      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 478, y: 1008 - adjY, r: 236, g: 94 , b: 116, match: true, threshold: 80},
+      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
     ],
     back: {x: 885, y: 1008 - adjY},
     next: {x: 885, y: 1012 - adjY},
@@ -388,7 +388,7 @@ var Page = {
     name: 'FriendInfo',
     colors: [
       {x: 565, y: 504   - adjY, r: 31, g: 190, b: 220, match: true, threshold: 80},
-      {x: 547, y: 1123  - adjY, r: 27, g: 192, b: 222 , match: true, threshold: 80},
+      {x: 547, y: 1123  - adjY, r: 27, g: 192, b: 222, match: true, threshold: 80},
       {x: 554, y: 1260  - adjY, r: 238, g: 186, b: 12, match: true, threshold: 80},
     ],
     back: {x: 576, y: 1336 - adjY},
@@ -1021,6 +1021,17 @@ Tsum.prototype.findPage = function(times, timeout) {
   }
 }
 
+Tsum.prototype.exitUnknownPage = function() {
+  keycode('KEYCODE_DPAD_DOWN');
+  this.sleep(500);
+  keycode('KEYCODE_ENTER');
+  this.tap(Button.gameQuestionCancel);
+  this.tap(Button.gameQuestionCancel2);
+  this.tap(Button.outClose);
+  this.tap(Button.gameStop);
+  this.sleep(500);
+}
+
 Tsum.prototype.goFriendPage = function() {
   while(this.isRunning) {
     if (!this.isAppOn()) {
@@ -1035,11 +1046,7 @@ Tsum.prototype.goFriendPage = function() {
         return;
       }
     } else if (page == 'unknown') {
-      this.tap(Button.gameQuestionCancel);
-      this.tap(Button.gameQuestionCancel2);
-      this.tap(Button.outClose);
-      this.tap(Button.gameStop);
-      this.sleep(500);
+      this.exitUnknownPage();
     } else {
       this.tap(Page[page].back);
     }
@@ -1087,7 +1094,6 @@ Tsum.prototype.checkGameItem = function() {
 }
 
 Tsum.prototype.goGamePlayingPage = function() {
-  
   while(this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
@@ -1109,11 +1115,7 @@ Tsum.prototype.goGamePlayingPage = function() {
     } else if (page == 'GamePause') {
       this.tap(Page[page].next);
     } else if (page == 'unknown') {
-      this.tap(Button.gameQuestionCancel);
-      this.tap(Button.gameQuestionCancel2);
-      this.tap(Button.outClose);
-      this.tap(Button.gameStop);
-      this.sleep(500);
+      this.exitUnknownPage();
     } else {
       this.tap(Page[page].back);
     }
