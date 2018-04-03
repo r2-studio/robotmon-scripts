@@ -421,6 +421,7 @@ class LineageM {
     let goBackTime = Date.now();
     let useHomeTime = Date.now();
     let isBuy = false;
+    let receiveTime = 0;
     while(this._loop) {
       this.safeSleep(200);
       this.refreshScreen();
@@ -471,8 +472,9 @@ class LineageM {
         }
       }
 
-      if (this.config.autoReceiveReward) {
+      if (this.config.autoReceiveReward && (Date.now() - receiveTime) > 300 * 1000) {
         this.checkAndAutoGetReward();
+        receiveTime = Date.now();
       }
 
       if (this.rState.isSafeRegion) {

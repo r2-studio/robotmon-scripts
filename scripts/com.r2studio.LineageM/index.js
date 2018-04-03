@@ -505,6 +505,7 @@ var LineageM = function () {
       var goBackTime = Date.now();
       var useHomeTime = Date.now();
       var isBuy = false;
+      var receiveTime = 0;
       while (this._loop) {
         this.safeSleep(200);
         this.refreshScreen();
@@ -555,8 +556,9 @@ var LineageM = function () {
           }
         }
 
-        if (this.config.autoReceiveReward) {
+        if (this.config.autoReceiveReward && Date.now() - receiveTime > 300 * 1000) {
           this.checkAndAutoGetReward();
+          receiveTime = Date.now();
         }
 
         if (this.rState.isSafeRegion) {
