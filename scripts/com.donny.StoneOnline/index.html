@@ -146,11 +146,14 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 1.25;
-      ASC = true;
+      VERSION = 1.31;
 
       var settings = [
         [
+          {
+            title: "1.31版，更新日期 2018.04.04，修正 領鑽/小測驗/領工藝品",
+            title_zh_TW: "",
+          },
           {
             title: "特別感謝 Robotmon 作者，連線指導腳本編寫與debug協助，才有此腳本誕生",
             title_zh_TW: "",
@@ -498,51 +501,16 @@
         loadSettings(settings);
         genSettings($("#settings"), settings);
 
-        $("#updateRecordASC").click(function() {
-          ASC = true;
-          refreshRecord();
-        });
-        $("#updateRecordDESC").click(function() {
-          ASC = false;
-          refreshRecord();
-        });
         $("#goToTop").click(function() {
           window.scrollTo(0, 0);
         });
-        var protect = true;
-        $("#resetRecord").click(function() {
-          if (protect) {
-            protect = false;
-            $("#resetRecord").html("Are you sure?");
-          } else {
-            protect = true;
-            $("#resetRecord").html("Reset Record?");
-            JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
-            $("#record").html("");
-          }
-        });
-        $("#exportRecord").click(function(){
-          exportHTML();
-        });
 
         if (localStorage !== undefined && localStorage.getItem('growstonelanguage') === "zh-TW") {
-          $("#senders").text("誰送你心");
-          $("#updateRecordASC").text("更新(遞增)");
-          $("#updateRecordDESC").text("更新(遞減)");
-          $("#resetRecord").text("清除紀錄");
           $("#goToTop").text("回頁面頂端");
         } else {
-          $("#senders").text("List of Heart Counts");
-          $("#updateRecordASC").text("Update(ASC)");
-          $("#updateRecordDESC").text("Update(DESC)");
-          $("#resetRecord").text("Reset Record");
           $("#goToTop").text("Go Top");
         }
       });
-
-      function getCheckStatus(id) {
-        return $(id).is(':checked');
-      }
 
       function onEvent(eventType) {
         if (eventType == 'OnPlayClick') {
@@ -551,121 +519,16 @@
         } else if (eventType == 'OnPauseClick') {
           JavaScriptInterface.runScript('stop();');
           JavaScriptInterface.runScript('stop();');
-        } else if (eventType == 'OnSettingClick') {
-          // refreshRecord();
         }
-      }
-      function onLog(message) {
-        console.log(message);
-      }
-      function refreshRecord() {
-        JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
-      }
-      var imageQueue = [];
-      var isRunning = false;
-      function getBase64(id, filename) {
-        var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/'+filename+'");if(__img_ != 0){var __'+id+'_base64_="'+id+',"+getBase64FromImage(__img_);releaseImage(__img_);};__'+id+'_base64_;';
-        imageQueue.push(script);
-        if (!isRunning) {
-          isRunning = true;
-          JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
-        }
-      }
-      function assignImage(results) {
-        var rs = results.split(',');
-        if (rs.length == 2) {
-          $("#"+rs[0]).attr("src", "data:image/png;base64,"+rs[1]);
-        }
-        if (imageQueue.length == 0) {
-          isRunning = false;
-        } else {
-          JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
-        }
-      }
-      function getTimeString(d) {
-        return (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes();
-      }
-      function getDayTimeString(d) {
-        return (d.getMonth()+1) + "/" + d.getDate();
-      }
-      function getRecordFilename() {
-        var d = new Date();
-        return 'record_' + d.getFullYear() + '-' + (d.getMonth()+1) + "-" + d.getDate() + "_" + d.getHours() + "-" + d.getMinutes() + '-' + d.getSeconds() + '.html';
-      }
-      function genRecord(record) {
-        if (record == undefined || record == "undefined" || record == "") {
-          return;
-        }
-        var recordObjs = JSON.parse(record);
-        record = [];
-        for (var filename in recordObjs) {
-          if (filename == "hearts_count"){
-            continue;
-          }
-          var obj = recordObjs[filename];
-          var totalCount = 0;
-          for (var d in obj.receiveCounts) {
-            totalCount += +obj.receiveCounts[d];
-          }
-          obj.totalCount = totalCount;
-          obj.filename = filename;
-          record.push(obj);
-        }
-        if (ASC) {
-          record.sort(function(a, b) {
-            return a.totalCount < b.totalCount ? -1 : 1;
-          });
-        } else {
-          record.sort(function(a, b) {
-            return a.totalCount >= b.totalCount ? -1 : 1;
-          });
-        }
-        
-        var html = "<ul>";
-        for (var idx in record) {
-          var filename = record[idx].filename;
-          var imgId = filename.split('.')[0];
-          var lastTime = new Date(record[idx].lastReceiveTime);
-          html += "<li>"
-          html += "<div><img id='" +imgId+ "' />" + getTimeString(lastTime) + "</div>";
-          html += "<ul>";
-          for(var day in record[idx].receiveCounts) {
-            var dayTime = new Date(+day * 86400000 );
-            html += "<li>";
-            html += getDayTimeString(dayTime) + ": get " + record[idx].receiveCounts[day] + " hearts";
-            html += "</li>";
-          }
-          html += "</ul>";
-          html += "</li>";
-          getBase64(imgId, filename);
-        }
-        html += "</ul>";
-        $("#record").html(html);
-      }
-      function exportHTML() {
-        $('#exportRecord').html("Exporting");
-        var html = $("#record").html();
-        html = html.replace(/\n/g, '');
-        var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>'+ html+ '</body>\');';
-        JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
-      }
-      function exportSuccess() {
-        $('#exportRecord').html("Export HTML");
       }
     </script>
   </head>
   <body>
-  
     <nav class="navbar navbar-custom" role="navigation">
       <a id="version" class="navbar-brand"></a>
     </nav>
     <div class="container">
       <div id="settings"></div>
-      <div id="senders" style="padding-bottom:5px;"></div>
-      <br />
-      <div id="record">
-      </div>
-      <br />
       <button id="goToTop" class="btn btn-plus">Go Top</button>
       <br />
       <br />
