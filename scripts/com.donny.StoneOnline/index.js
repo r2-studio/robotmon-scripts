@@ -1201,13 +1201,13 @@ function AreaChange(AreaID, Timer) {  //區域切換：AreaID= 1:頻道  2:狩�
 
 function Map_Check(MapFc, Type) { // MapFc: 1打獵圖, 2礦區； Type: 1點擊圖示
 	rbm.keepScreenshotPartial(640, 180, 750, 450);
-	var targetPic1 = rbm.imageExists('Map_hunter.png', 0.65); // 確認打獵區地圖
-	var targetPic2 = rbm.imageExists('Map_Mining.png', 0.65); // 確認在礦區
+	var targetPic1 = rbm.imageExists('Map_hunter.png', 0.70); // 確認打獵區地圖
+	var targetPic2 = rbm.imageExists('Map_Mining.png', 0.70); // 確認在礦區
 	
 	if (MapFc == 1 && targetPic1) {
 		if (Type == 1) {
-			rbm.imageClick('Map_hunter.png', 0.65); //點擊到礦區
-			rbm.imageClick('Map_hunter.png', 0.65); //點擊到礦區
+			rbm.imageClick('Map_hunter.png', 0.70); //點擊到礦區
+			rbm.imageClick('Map_hunter.png', 0.70); //點擊到礦區
 		}
 		rbm.releaseScreenshot();
 		console.log('在打獵');
@@ -1215,8 +1215,8 @@ function Map_Check(MapFc, Type) { // MapFc: 1打獵圖, 2礦區； Type: 1點擊
 	}
 	else if (MapFc == 2 && targetPic2) {
 		if (Type == 1) {
-			rbm.imageClick('Map_Mining.png', 0.65);  //點擊到打獵選單
-			rbm.imageClick('Map_Mining.png', 0.65);  //點擊到打獵選單
+			rbm.imageClick('Map_Mining.png', 0.70);  //點擊到打獵選單
+			rbm.imageClick('Map_Mining.png', 0.70);  //點擊到打獵選單
 		}
 		rbm.releaseScreenshot();
 		console.log('在礦區');
