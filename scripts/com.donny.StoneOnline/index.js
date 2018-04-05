@@ -141,7 +141,7 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {
 			var comcountremainder = combinecount % 4
 			if (comcountremainder == 0) characterbubble();
 			
-			tap(389, 1000, 60); sleep(100);
+			tap(389, 1000, 60); sleep(100); 
 			var x0 = 0; var y0 = 0; var x1 = 0; var y1 = 0;
 			var checkxy = 0;
 			var stoneDir = config.stoneDir;
@@ -397,7 +397,7 @@ function AD_GetRuby(Timer) {
 				}
 
 				QuizRestart();
-				AD_watch(120);
+				AD_watch(90);
 				AD_GetRubyTimer = AD_GetRubyTimer + Timer * 1000;
 			}
 		}
@@ -496,7 +496,7 @@ function QuizAnswer() { //小測驗解答判斷
 		var targetmathtimes1 = 0;
 		//console.log('i=',i,' main check');
 		for (var j = 0; j < 3; j++) {
-			rbm.keepScreenshotPartial(470, 965, 600, 1230);
+			rbm.keepScreenshotPartial(470, 1060, 580, 1140);
 			var targetPic1 = rbm.imageExists(Character.Attributes[i].MainFile, 0.80)
 			rbm.releaseScreenshot();
 			if (targetPic1) {  //確認比對人物編號
@@ -511,7 +511,7 @@ function QuizAnswer() { //小測驗解答判斷
 	}
 	//解答區找人與x坐標儲存
 	if (targetCharacter1 >= 1) {
-		rbm.keepScreenshotPartial(80, 830 - 100, 850, 980);
+		rbm.keepScreenshotPartial(120, 790, 650, 920);
 		for (var i = 1; i < 8; i++) {
 			var targetmathtimes2 = 0;
 			for (var j = 0; j < 1; j++) {
@@ -522,7 +522,7 @@ function QuizAnswer() { //小測驗解答判斷
 
 				if (targetPic1 != undefined && targetPic1.score >= 0.92) {  //確認比對人物編號
 					targetmathtimes2 = targetmathtimes2 + 1
-					//rbm.log(i,Character.Attributes[i].Type,'-answer-',rbm.findImage(Character.Attributes[i].AltFile, 0.90))
+					rbm.log(i,Character.Attributes[i].Type,'-answer-',rbm.findImage(Character.Attributes[i].AltFile, 0.90))
 				}
 				if (targetmathtimes2 >= 1) {
 					Character.Attributes[i].x = targetPic1.x;
@@ -560,7 +560,7 @@ function QuizAnswer() { //小測驗解答判斷
 			//sleep(1000);
 			//ScreenShottoPath();
 			
-			rbm.keepScreenshotPartial(90, 1200, 1000, 1420); // x1, y1, x2, y2
+			rbm.keepScreenshotPartial(120, 1370, 980, 1450); // x1, y1, x2, y2
 			var QuizRankFile = 'Quiz_Rank_' + Character.Attributes[targetCharacter1].Rank + '.png'
 			rbm.imageClick(QuizRankFile, 0.90);
 			rbm.releaseScreenshot();
@@ -699,7 +699,7 @@ function rain_fastdig() { //雨天加速挖 main
 	if (targetPic1) {
 		sleep(10)
 		console.log('click_fastdig')
-		rbm.keepScreenshotPartial(33, 880, 121, 1137);
+		rbm.keepScreenshotPartial(33, 880 - 150, 121, 1137);
 		rbm.imageClick('fastdig.png', 0.88);
 		rbm.releaseScreenshot();
 		sleep(2000);
@@ -770,7 +770,7 @@ function characterbubble() {  //角色對話泡包點擊 main
 				if (x1 > 640 && x1 < 1080 && y1 > 175 & y1 < 575) {
 					
 				}
-				else if (x1 > 0 && x1 < 141 && y1 > 880 & y1 < 1322) {
+				else if (x1 > 0 && x1 < 141 && y1 > 730 & y1 < 1322) {
 					
 				}
 				else{

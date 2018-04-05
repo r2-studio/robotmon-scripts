@@ -146,12 +146,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 1.32;
+      VERSION = 1.35;
 
       var settings = [
         [
           {
-            title: "1.32版，更新日期 2018.04.04，修正 領鑽/小測驗/領工藝品",
+            title: "1.35版，更新日期 2018.04.05，修正 領鑽/小測驗/領工藝品",
             title_zh_TW: "",
           },
           {
@@ -208,7 +208,7 @@
         [
           { title: "朋友送愛心", title_zh_TW: "", default: false},
           { title: "看廣告拿鑽", title_zh_TW: "", default: true},
-          { title: "角色對話泡包點擊", title_zh_TW: "", default: true},
+          { title: "角色對話泡泡點擊", title_zh_TW: "", default: true},
 		  { 
             title: ['快速挖礦-藍   (0:關, 1:雨, 2:全天)'],
             default: 0,
@@ -309,6 +309,30 @@
         [
           { title: "每日獎勵，自動領(無功能)", title_zh_TW: "", default: true},
           { title: "信件獎勵，自動領(無功能)", title_zh_TW: "", default: true},
+        ],
+        [
+          { title: "工藝製作(項目/數量)", title_zh_TW: "", default: false},
+		  { 
+            title: ['暴食者的針 (0~3)'],
+            default: 0,
+            step: 1,
+            max: 3,
+            min: 0,
+          },
+		  { 
+            title: ['寒冽冰針 (0~3)'],
+            default: 0,
+            step: 1,
+            max: 3,
+            min: 0,
+          },
+		  { 
+            title: ['閃亮水晶 (0~3)'],
+            default: 0,
+            step: 1,
+            max: 3,
+            min: 0,
+          },
         ],
       ];
       function saveLocale(locale) {
