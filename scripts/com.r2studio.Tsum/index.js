@@ -1143,6 +1143,14 @@ Tsum.prototype.findMyTsum = function() {
   this.myTsum = allScores[0].key;
 }
 
+Tsum.prototype.clearAllBubbles = function() {
+  for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
+    for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y; by += 140) {
+      this.tap({x: bx, y: by}, 10);
+    }
+  }
+}
+
 Tsum.prototype.useSkill = function() {
   var page = this.findPage(1, 500);
   if (page != 'GamePlaying' && page != 'GamePause') {
@@ -1190,17 +1198,7 @@ Tsum.prototype.useSkill = function() {
     this.sleep(800);
   } else if(this.skillType == 'block_moana_s') {
     this.sleep(2500);
-    log("Clear bubbles");
-    for (var by = 1000; by <= 1300; by += 150) 
-    {
-      this.tap({x: 100, y: by}, 80);
-      this.tap({x: 1000, y: by}, 80);
-      this.tap({x: 250, y: by}, 80);
-      this.tap({x: 750, y: by}, 80);
-      this.tap({x: 400, y: by}, 80);
-      this.tap({x: 600, y: by}, 80);
-      this.tap({x: 450, y: by}, 80);
-    }
+    this.clearAllBubbles();
     this.sleep(300);
   } else if (this.skillType == 'block_donald_s' || this.skillType == 'block_donaldx_s') {
     for (var i = 0; i < 3; i++) {
@@ -1210,6 +1208,10 @@ Tsum.prototype.useSkill = function() {
         }
       }
     }
+  } else if (this.skillType == 'block_marie_s') {
+    this.sleep(2000);
+    this.clearAllBubbles();
+    this.sleep(300);
   } else {
     this.sleep(this.skillInterval);
   }
@@ -1292,11 +1294,7 @@ Tsum.prototype.taskPlayGame = function() {
     if (this.clearBubbles && clearBubbles >= 2) {
       log("Clear bubbles");
       clearBubbles = 0;
-      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
-        for (var by = Button.gameBubblesFrom.y + 280; by <= Button.gameBubblesTo.y; by += 140) {
-          this.tap({x: bx, y: by}, 10);
-        }
-      }
+      this.clearAllBubbles();
     }
     
     if (this.useFan && runTimes % 4 == 3) {
