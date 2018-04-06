@@ -1143,6 +1143,27 @@ Tsum.prototype.findMyTsum = function() {
   this.myTsum = allScores[0].key;
 }
 
+Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
+  if (startDelay !== undefined) {
+    this.sleep(startDelay);
+  }
+
+  var fy = Button.gameBubblesFrom.y;
+  if (fromY !== undefined) {
+    fy = fromY;
+  }
+
+  for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
+    for (var by = fy; by <= Button.gameBubblesTo.y; by += 140) {
+      this.tap({x: bx, y: by}, 10);
+    }
+  }
+
+  if (endDelay !== undefined) {
+    this.sleep(endDelay);
+  }
+}
+
 Tsum.prototype.useSkill = function() {
   var page = this.findPage(1, 500);
   if (page != 'GamePlaying' && page != 'GamePause') {
@@ -1188,20 +1209,6 @@ Tsum.prototype.useSkill = function() {
     }
     this.tap(Button.skillLuke1);
     this.sleep(800);
-  } else if(this.skillType == 'block_moana_s') {
-    this.sleep(2500);
-    log("Clear bubbles");
-    for (var by = 1000; by <= 1300; by += 150) 
-    {
-      this.tap({x: 100, y: by}, 80);
-      this.tap({x: 1000, y: by}, 80);
-      this.tap({x: 250, y: by}, 80);
-      this.tap({x: 750, y: by}, 80);
-      this.tap({x: 400, y: by}, 80);
-      this.tap({x: 600, y: by}, 80);
-      this.tap({x: 450, y: by}, 80);
-    }
-    this.sleep(300);
   } else if (this.skillType == 'block_donald_s' || this.skillType == 'block_donaldx_s') {
     for (var i = 0; i < 3; i++) {
       for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
@@ -1210,6 +1217,15 @@ Tsum.prototype.useSkill = function() {
         }
       }
     }
+  } else if (this.skillType == 'block_marie_s' || this.skillType == 'block_missbunny_s' || this.skillType == 'block_rabbit_s') {
+    this.clearAllBubbles(2000, 50);
+  } else if(this.skillType == 'block_moana_s') {
+    this.clearAllBubbles(2500, 50);
+  } else if(this.skillType == 'block_mickeyh2015_s') {
+    this.clearAllBubbles(1500, 50);
+  }  else if(this.skillType == 'block_snowwhite_s') {
+    this.clearAllBubbles(1300);
+    this.clearAllBubbles(10, 50, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
   } else {
     this.sleep(this.skillInterval);
   }
@@ -1292,11 +1308,7 @@ Tsum.prototype.taskPlayGame = function() {
     if (this.clearBubbles && clearBubbles >= 2) {
       log("Clear bubbles");
       clearBubbles = 0;
-      for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
-        for (var by = Button.gameBubblesFrom.y + 280; by <= Button.gameBubblesTo.y; by += 140) {
-          this.tap({x: bx, y: by}, 10);
-        }
-      }
+      this.clearAllBubbles();
     }
     
     if (this.useFan && runTimes % 4 == 3) {
