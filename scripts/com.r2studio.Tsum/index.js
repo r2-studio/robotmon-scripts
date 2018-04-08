@@ -687,7 +687,7 @@ function calculatePaths(board) {
 
   var centers = {};
   var paths = [];
-  
+
   for (var tsumIdx in tsums) {
     for (var i = 0; i < tsums[tsumIdx].length; i++) {
       var path = calculateNearTsumPaths(tsums[tsumIdx][i], tsums[tsumIdx]);
@@ -715,11 +715,20 @@ function calculatePaths(board) {
   return paths;
 }
 
+function convertTo2DArray(arr, size) {
+  var result = [];
+  for (var i = 0; i < arr.length; i = i + size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
+
 // Tsum struct
 
 function Tsum(isJP, detect) {
   this.debug = true;
   this.isRunning = true;
+  this.runTimes = 0;
   this.myTsum = '';
   // screen size config
   var size = getScreenSize();
@@ -746,12 +755,14 @@ function Tsum(isJP, detect) {
   this.gameTsums = [];
   this.isJP = isJP;
   this.coinItem = false;
+  this.bubbleItem = false;
   this.isPause = true;
   this.receiveOneItem = false;
   this.sentToZero = false;
   this.recordReceive = true;
   this.enableAllItems = false;
   this.skillInterval = 3000;
+  this.skillLevel = 3;
   this.skillType = '';
   this.sendHearts = false;
   this.showLog = true;
@@ -955,6 +966,21 @@ Tsum.prototype.tapUp = function(xy, during) {
   tapUp(Math.round(x), Math.round(y), during);
 }
 
+Tsum.prototype.linkTsums = function(path) {
+  for (var j in path) {
+    var point = path[j];
+    var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth / 2) * this.playWidth / this.playResizeWidth);
+    var y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth / 2) * this.playHeight / this.playResizeHeight);
+    if (j == 0) {
+      tapDown(x, y, 10);
+    }
+    moveTo(x, y, 10);
+    if (j == path.length - 1) {
+      tapUp(x, y, 10);
+    }
+  }
+}
+
 Tsum.prototype.link = function(paths) {
   var isBubble = false;
   for (var i in paths) {
@@ -962,19 +988,7 @@ Tsum.prototype.link = function(paths) {
     if (path.length > 7) {
       isBubble = true;
     }
-    for (var j in path) {
-      var point = path[j];
-      var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth/2) * this.playWidth / this.playResizeWidth);
-      var y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth/2) * this.playHeight / this.playResizeHeight);
-      if (j == 0) {
-        tapDown(x, y, 20);
-      }
-      moveTo(x, y, 20);
-      // moveTo(x, y, 30);
-      if (j == path.length - 1) {
-        tapUp(x, y, 20);
-      }
-    }
+    this.linkTsums(path);
   }
   return isBubble;
 }
@@ -1064,6 +1078,9 @@ Tsum.prototype.checkGameItem = function() {
   }
   if (this.coinItem) {
     isItemsOn[1] = true;
+  }
+  if (this.bubbleItem) {
+    isItemsOn[4] = true;
   }
   for(var t = 0; t < 3; t++) {
     var img = this.screenshot();
@@ -1164,7 +1181,22 @@ Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
   }
 }
 
-Tsum.prototype.useSkill = function() {
+Tsum.prototype.useCinderellaSkill = function(board) {
+  var size = this.skillLevel + 6;
+  board.sort(function(a, b) {
+    return a.y - b.y;
+  });
+  var paths = convertTo2DArray(board, size);
+  for (var i = 0; i < paths.length - 1; i++) {
+    var path = paths[i];
+    path.sort(function(a, b) {
+      return a.x - b.x;
+    });
+    this.linkTsums(path);
+  }
+}
+
+Tsum.prototype.useSkill = function(board) {
   var page = this.findPage(1, 500);
   if (page != 'GamePlaying' && page != 'GamePause') {
     return false;
@@ -1223,13 +1255,55 @@ Tsum.prototype.useSkill = function() {
     this.clearAllBubbles(2500, 50);
   } else if(this.skillType == 'block_mickeyh2015_s') {
     this.clearAllBubbles(1500, 50);
-  }  else if(this.skillType == 'block_snowwhite_s') {
+  } else if(this.skillType == 'block_snowwhite_s') {
     this.clearAllBubbles(1300);
     this.clearAllBubbles(10, 50, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
+  } else if(this.skillType == 'block_cinderella_s') {
+    this.sleep(1500);
+    this.useCinderellaSkill(board);
+    this.sleep(500);
+    board = this.scanBoard();
+    this.useCinderellaSkill(board);
+    this.clearAllBubbles(2500, 50);
   } else {
     this.sleep(this.skillInterval);
   }
   return true;
+}
+
+Tsum.prototype.scanBoard = function() {
+  // load game tsums
+  var gameImage = this.playScreenshot();
+  smooth(gameImage, 1, 2);
+  if (this.isPause) {
+    this.tap(Button.gamePause);
+    this.sleep(20);
+    this.tap(Button.gamePause);
+  }
+  if (!this.isLoadRotateTsum) {
+    log('辨識Tsum種類');
+    this.tap(Button.gamePause);
+    this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
+    this.isLoadRotateTsum = true;
+    var page = this.findPage(2, 1000);
+    if (page != 'GamePlaying' && page != 'GamePause') {
+      log('遊戲結束');
+      return;
+    }
+  }
+  log('辨識盤面Tsum');
+  var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug);
+  if (this.debug) {
+    saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
+  }
+  releaseImage(gameImage);
+
+  this.tap(Button.gameContinue);
+  if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
+  this.tap(Button.gameContinue);
+  if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
+
+  return board;
 }
 
 Tsum.prototype.taskPlayGame = function() {
@@ -1241,44 +1315,16 @@ Tsum.prototype.taskPlayGame = function() {
   log('myTsum', this.myTsum);
   // this.sleep(500);
   // start to run
-  var runTimes = 0;
+  this.runTimes = 0;
   var pathZero = 0;
   var clearBubbles = 0;
   while(this.isRunning) {  
-    // load game tsums
-    var gameImage = this.playScreenshot();
-    smooth(gameImage, 1, 2);
-    if (this.isPause) {
-      this.tap(Button.gamePause);
-      this.sleep(20);
-      this.tap(Button.gamePause);
+    var board = this.scanBoard();
+    if (board == undefined || board == null) {
+      break;
     }
-    if (!this.isLoadRotateTsum) {
-      log('辨識Tsum種類');
-      this.tap(Button.gamePause);
-      this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
-      this.isLoadRotateTsum = true;
-      var page = this.findPage(2, 1000);
-      if (page != 'GamePlaying' && page != 'GamePause') {
-        log('遊戲結束');
-        break;
-      }
-    }
-    log('辨識盤面Tsum');
-    var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug);
-    if (this.debug) {
-      saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
-    }
-    releaseImage(gameImage);
-
     log('計算連線路徑');
     var paths = calculatePaths(board);
-    
-    this.tap(Button.gameContinue);
-    if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
-    this.tap(Button.gameContinue);
-    if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
-
     if (paths.length < 2) {
       if (pathZero > 2) {
         pathZero = 0;
@@ -1311,16 +1357,16 @@ Tsum.prototype.taskPlayGame = function() {
       this.clearAllBubbles();
     }
     
-    if (this.useFan && runTimes % 4 == 3) {
+    if (this.useFan && this.runTimes % 4 == 3) {
       this.tap(Button.gameRand, 100);
       this.tap(Button.gameRand, 100);
       this.sleep(700);
     }
     this.sleep(300);
-    if (this.useSkill()) {
+    if (this.useSkill(board)) {
       clearBubbles++;
-      if (this.useSkill()) {
-        this.useSkill();
+      if (this.useSkill(board)) {
+        this.useSkill(board);
       }
     }
 
@@ -1334,7 +1380,7 @@ Tsum.prototype.taskPlayGame = function() {
         break;
       }
     }
-    runTimes++;
+    this.runTimes++;
   }
   releaseTsumRotationImages(this.gameTsums);
   this.gameTsums = [];
@@ -1750,7 +1796,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, enableAllItems, skillInterval, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
   log('[Tsum Tsum] 啟動');
   ts = new Tsum(isJP, detect);
   ts.debug = debug;
@@ -1758,6 +1804,7 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
     ts.tsumCount = 4;
   }
   ts.coinItem = coinItem;
+  ts.bubbleItem = bubbleItem;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
@@ -1766,6 +1813,7 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   ts.clearBubbles = clearBubbles;
   ts.enableAllItems = enableAllItems;
   ts.skillInterval = skillInterval * 1000;
+  ts.skillLevel = skillLevel;
   ts.skillType = skillType;
   ts.receiveOneItem = receiveOneItem;
   ts.sendHearts = sendHearts;

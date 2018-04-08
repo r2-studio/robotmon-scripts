@@ -186,7 +186,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 30;
+      VERSION = 31;
       ASC = true;
 
       var settings = [
@@ -226,13 +226,22 @@
           { title: 'Use Fan?', title_zh_TW: '使用風扇', default: false},
           { title: '5>4', title_zh_TW: '道具五變四', default: false},
           { title: '+Coin', title_zh_TW: '道具Coin', default: false},
+          { title: '+Bubble', title_zh_TW: '道具Bubble', default: false},
           { title: 'All Bonus Items', title_zh_TW: '開/關全部道具', default: false},
           {
             title: 'Skill Waiting time (sec)',
             title_zh_TW: '技能等待時間(秒)',
             default: 3,
             step: 1,
-            max: 30,
+            max: 15,
+            min: 1,
+          },
+          {
+            title: 'Skill Level',
+            title_zh_TW: '技能等級',
+            default: 3,
+            step: 1,
+            max: 6,
             min: 1,
           },
           {
@@ -250,6 +259,7 @@
               { key: 'block_rabbit_s', title: 'Rabbit', title_zh_TW: '兔子', },
               { key: 'block_mickeyh2015_s', title: 'Horn Hat Mickey', title_zh_TW: '角帽米奇', },
               { key: 'block_snowwhite_s', title: 'Snow White', title_zh_TW: '白雪公主', },
+              { key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉', },
             ],
           },
         ],
@@ -283,7 +293,7 @@
             max: 60,
             min: 1,
           },
-          { title: 'Record Sender', title_zh_TW: '記錄送心者', default: true},
+          { title: 'Record Sender', title_zh_TW: '記錄送心者', default: false},
           { title: 'Enlarge Sender\'s Image (Emulator)', title_zh_TW: '放大送心者圖片(模擬器)', default: false},
         ],
         [
