@@ -175,23 +175,23 @@
     VERSION = 12;
     DEFAULT_CONFIG = {
       conditions: [
-        {type: 'mp', op: 1, value: 75, btn: 0, interval: 1000, enabled: false},
-        {type: 'hp', op: 1, value: 75, btn: 1, interval: 1000, enabled: false},
-        {type: 'mp', op: 1, value: 75, btn: 2, interval: 1000, enabled: false},
-        {type: 'hp', op: 1, value: 50, btn: 3, interval: 1000, enabled: false},
-        {type: 'mp', op: -1, value: 25, btn: 4, interval: 1000, enabled: false},
-        {type: 'hp', op: -1, value: 75, btn: 5, interval: 1000, enabled: false},
-        {type: 'hp', op: -1, value: 75, btn: 6, interval: 1000, enabled: false},
-        {type: 'hp', op: -1, value: 75, btn: 7, interval: 1000, enabled: false},
+        {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
+        {type: 'mp', op: 1, value: 80, btn: 1, interval: 500, enabled: false},
+        {type: 'mp', op: -1, value: 80, btn: 2, interval: 1500, enabled: false},
+        {type: 'hp', op: -1, value: 80, btn: 3, interval: 1000, enabled: false},
+        {type: 'hp', op: -1, value: 80, btn: 4, interval: 1000, enabled: false},
+        {type: 'hp', op: -1, value: 80, btn: 5, interval: 1000, enabled: false},
+        {type: 'hp', op: -1, value: 25, btn: 6, interval: 1000, enabled: false},
+        {type: 'hp', op: -1, value: 25, btn: 7, interval: 1000, enabled: false},
         {type: 'hp', op: 1, value: 50, btn: 8, interval: 2000, enabled: false},
       ],
       inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
-      dangerousGoHome: true, // if hp < 25%, go home, use button 8th
-      goBackInterval: 0, // whether to go back to origin location, check location every n min
       beAttackedRandTeleport: true,
+      dangerousGoHome: true, // if hp < 25%, go home, use button 8th
+      autoReceiveReward: true,
+      goBackInterval: 0, // whether to go back to origin location, check location every n min
       autoBuyHp: 0, // 1 * 100, -1 => max
       autoBuyArrow: 0, // 1 * 1000, -1 => max
-      autoReceiveReward: true,
     };
     var settings;
 
@@ -199,6 +199,7 @@
       $("#version").html("天堂M 無課救星 v" + VERSION);
       initLocale();
       loadSettings();
+      initView();
       updateLocale();
     });
 
@@ -268,38 +269,67 @@
       jRow.append(jCol.append(jDiv.append(jSwitch)));
     }
 
-    function appendToSwitchRow(jContent, jSwitchInput) {
-      var jGroup = $('#other');
+    function loadSwitchSetting(groupKey, object, key) {
+      var jSwitchInput = $('<input class="setting_input" type="checkbox" ' + (object[key] ? 'checked' : '') + '/>');
+      jSwitchInput.change((function (jInput) {
+        return function () {
+          object[key] = jInput.is(':checked');
+          saveSettings();
+        }
+      })(jSwitchInput));
+
+      var jGroup = $('#' + groupKey);
       var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
       var jRow = $("<div class='row'></div>");
       var jLeftContent = $("<div class='col-xs-9'></div>");
-      if (Array.isArray(jContent)) {
-        for (var j in jContent) {
-          jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent[j]))));
-        }
-      } else {
-        jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent))));
-      }
+      jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append($('<div class=setting_input data-i18n="text.' + key + '"></div>')))));
       appendSwitchCol(jRow, jSwitchInput);
     }
 
-    function appendToRow(left, right) {
-      var jGroup = $('#other');
+    function loadButtonSetting(groupKey, object, key, min, max, step, quantityOfStep, interval, title, unit) {
+      var jIntervalInput = $('<div class="setting_input">' + (object[key] / quantityOfStep) + '</div>');
+      var jIntervalBtn = $('<button class="btn btn-warning">+' + (step * interval) + '</button>');
+      jIntervalBtn.click((function (jInput, min, max, step) {
+        return function () {
+          var currentValue = (+jInput.text());
+          currentValue = currentValue <= 0 ? currentValue : currentValue / interval;
+          var newValue = currentValue + step;
+          if (newValue > max) {
+            jInput.text(min);
+            object[key] = min;
+          } else {
+            jInput.text(newValue * interval);
+            object[key] = newValue * quantityOfStep;
+          }
+          saveSettings();
+        }
+      })(jIntervalInput, min, max, step));
+
+      var jGroup = $('#' + groupKey);
       var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
       var jRow = $("<div class='row'></div>");
       var jLeftContent = $("<div class='col-xs-9'></div>");
-      jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(left))));
+      jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append($("<div class=setting_input data-i18n='text." + key + "'></div>")))));
 
+      var jRightContent = [];
+      if (title !== undefined) {
+        jRightContent.push($("<div class=setting_input data-i18n='" + title + "'></div>"));
+      }
+      jRightContent.push(jIntervalInput);
+      jRightContent.push($("<div class=setting_input data-i18n='" + unit + "'></div>"));
+      jRightContent.push(jIntervalBtn);
       var jDiv = $('<div class="pull-right"></div>');
       var jCol = $('<div class="col-xs-3"></div>');
-      for (var j in right) {
-        jRow.append(jCol.append(jDiv.append(right[j])));
+      for (var j in jRightContent) {
+        jRow.append(jCol.append(jDiv.append(jRightContent[j])));
       }
     }
 
-    function loadConditionSettings() {
+    function initView() {
       $('#condition').empty();
+      $('#other').empty();
 
+      // conditions
       for (var index = 0; index < settings.conditions.length; index++) {
         // condition in settings
         var condition = settings.conditions[index];
@@ -418,134 +448,24 @@
         })(jSwitchInput, condition));
         appendSwitchCol(jRow, jSwitchInput);
       }
-    }
 
-    function loadOtherSettings() {
-      $('#other').empty();
-      
-      // inHomeUseBtn
-      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.inHomeUseBtn ? 'checked' : '') + "/>");
-      jSwitchInput.change((function (jInput) {
-        return function () {
-          settings.inHomeUseBtn = jInput.is(':checked');
-          saveSettings();
-        }
-      })(jSwitchInput));
-      appendToSwitchRow($("<div class=setting_input data-i18n='text.inHomeUseBtn'></div>"), jSwitchInput);
-
-      // be attecked teleport
-      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.beAttackedRandTeleport ? 'checked' : '') + "/>");
-      jSwitchInput.change((function (jInput) {
-        return function () {
-          settings.beAttackedRandTeleport = jInput.is(':checked');
-          saveSettings();
-        }
-      })(jSwitchInput));
-      appendToSwitchRow($("<div class=setting_input data-i18n='text.beAttackedRandTeleport'></div>"), jSwitchInput);
-
-      // dangerousGoHome
-      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.dangerousGoHome ? 'checked' : '') + "/>");
-      jSwitchInput.change((function (jInput) {
-        return function () {
-          settings.dangerousGoHome = jInput.is(':checked');
-          saveSettings();
-        }
-      })(jSwitchInput));
-      appendToSwitchRow($("<div class=setting_input data-i18n='text.dangerousGoHome'></div>"), jSwitchInput);
-
-      // inReceiveReward
-      var jSwitchInput = $("<input class='setting_input' type='checkbox' " + (settings.autoReceiveReward ? 'checked' : '') + "/>");
-      jSwitchInput.change((function (jInput) {
-        return function () {
-          settings.autoReceiveReward = jInput.is(':checked');
-          saveSettings();
-        }
-      })(jSwitchInput));
-      appendToSwitchRow($("<div class=setting_input data-i18n='text.autoReceiveReward'></div>"), jSwitchInput);
-
-      // goBackInterval
-      var intervalMax = 20;
-      var intervalMin = 0;
-      var intervalStep = 1;
-      var jIntervalInput = $("<div class=setting_input>" + (settings.goBackInterval / 60000) + "</div>");
-      var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalStep + '</button>');
-      jIntervalBtn.click((function (jInput, min, max, step) {
-        return function () {
-          var newValue = (+jInput.text()) + step;
-          if (newValue > max) {
-            jInput.text(min);
-            settings.goBackInterval = min;
-          } else {
-            jInput.text(newValue);
-            settings.goBackInterval = newValue * 60000;
+      // other
+      var keys = Object.keys(settings);
+      for (var i in keys) {
+        var key = keys[i];
+        var value = settings[key];
+        if (typeof value === 'boolean') {
+          loadSwitchSetting('other', settings, key);
+        } else if (typeof value === 'number') {
+          if (key === 'goBackInterval') {
+            loadButtonSetting('other', settings, key, 0, 20, 1, 60000, 1, 'text.interval', 'text.minutes');
+          } else if (key === 'autoBuyHp') {
+            loadButtonSetting('other', settings, key, -1, 10, 1, 1, 100, undefined, 'text.unit');
+          } else if (key === 'autoBuyArrow') {
+            loadButtonSetting('other', settings, key, -1, 10, 1, 1, 1000, undefined, 'text.unit');
           }
-          saveSettings();
         }
-      })(jIntervalInput, intervalMin, intervalMax, intervalStep));
-      var jContent = [];
-      jContent.push($("<div class=setting_input data-i18n='text.interval'></div>"));
-      jContent.push(jIntervalInput);
-      jContent.push($("<div class=setting_input data-i18n='text.minutes'></div>"));
-      jContent.push(jIntervalBtn);
-      appendToRow($("<div class=setting_input data-i18n='text.goBackInterval'></div>"), jContent);
-
-      // autoBuyHp
-      var intervalMax = 10;
-      var intervalMin = -1;
-      var intervalStep = 1;
-      var intervalUnit = 100;
-      var intervalValue = settings.autoBuyHp <= 0 ? settings.autoBuyHp : settings.autoBuyHp * intervalUnit;
-      var jIntervalInput = $("<div class=setting_input>" + intervalValue + "</div>");
-      var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalUnit + '</button>');
-      jIntervalBtn.click((function (jInput, min, max, step, unit) {
-        return function () {
-          var currentValue = (+jInput.text());
-          currentValue = currentValue <= 0 ? currentValue : currentValue / unit;
-          var newValue = currentValue + step;
-          if (newValue > max) {
-            jInput.text(min);
-            settings.autoBuyHp = min;
-          } else {
-            jInput.text(newValue * unit);
-            settings.autoBuyHp = newValue;
-          }
-          saveSettings();
-        }
-      })(jIntervalInput, intervalMin, intervalMax, intervalStep, intervalUnit));
-      var jContent = [];
-      jContent.push(jIntervalInput);
-      jContent.push($("<div class=setting_input data-i18n='text.unit'></div>"));
-      jContent.push(jIntervalBtn);
-      appendToRow($("<div class=setting_input data-i18n='text.autoBuyHp'></div>"), jContent);
-
-      // autoBuyArrow
-      var intervalMax = 10;
-      var intervalMin = -1;
-      var intervalStep = 1;
-      var intervalUnit = 1000;
-      var intervalValue = settings.autoBuyArrow <= 0 ? settings.autoBuyArrow : settings.autoBuyArrow * intervalUnit;
-      var jIntervalInput = $("<div class=setting_input>" + intervalValue + "</div>");
-      var jIntervalBtn = $('<button class="btn btn-warning">+' + intervalUnit + '</button>');
-      jIntervalBtn.click((function (jInput, min, max, step, unit) {
-        return function () {
-          var currentValue = (+jInput.text());
-          currentValue = currentValue <= 0 ? currentValue : currentValue / unit;
-          var newValue = currentValue + step;
-          if (newValue > max) {
-            jInput.text(min);
-            settings.autoBuyArrow = min;
-          } else {
-            jInput.text(newValue * unit);
-            settings.autoBuyArrow = newValue;
-          }
-          saveSettings();
-        }
-      })(jIntervalInput, intervalMin, intervalMax, intervalStep, intervalUnit));
-      var jContent = [];
-      jContent.push(jIntervalInput);
-      jContent.push($("<div class=setting_input data-i18n='text.unit'></div>"));
-      jContent.push(jIntervalBtn);
-      appendToRow($("<div class=setting_input data-i18n='text.autoBuyArrow'></div>"), jContent);
+      }
     }
 
     function loadSettings() {
@@ -571,8 +491,6 @@
           }
         }
       }
-      loadConditionSettings();
-      loadOtherSettings();
     }
 
     function saveSettings() {
@@ -615,9 +533,9 @@
    <a id="version" class="navbar-brand"></a>
   </nav>
   <div id="container" class="container">
-    <div>支援所有螢幕解析度(請先設定為標準比例)，請將浮動視窗放在左邊中間位置</div>
-    <div>注意！快捷鍵9 為試煉副本的特殊技能按鈕</div>
-    <div>自動買物品功能，必須使用回卷能夠看到商人（會重試十次），已知威頓、肯特無法</div>
+    <div>支援所有螢幕解析度(請先設定畫面比例為基本比例)，請將浮動視窗放在左邊中間位置</div>
+    <div>注意！快捷鍵 9 為試煉副本的特殊技能按鈕</div>
+    <div>自動買物品功能，必須使用回卷能夠看到商人(會重試 10 次)，已知威頓、肯特無法</div>
     <ul id="condition" class="list-group"></ul>
     <ul id="other" class="list-group"></ul>
   </div>
