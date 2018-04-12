@@ -286,10 +286,11 @@ class RoleState {
     this.isSelfSkill = false;
     this.isAttecked = false;
     this.hasKillNumber = false;
+    this.autoPlayOffCount = 0;
   }
 
   print() {
-    console.log(`hp: ${this.hp}, mp: ${this.mp}, exp: ${this.exp}`);
+    console.log(`hp: ${this.hp}, mp: ${this.mp}`);
   }
 }
 
@@ -323,44 +324,13 @@ class LineageM {
     }
   }
 
-  loadNumberImages() {}
-
-  getImageNumber(img, numbers, maxLength = 8) {
-    if (numbers.length != 10) {
-      console.log('Error number length should be 10');
-      return 0;
+  refreshScreen() {
+    if (this._img !== 0) {
+      releaseImage(this._img);
+      this._img = 0;
     }
-    let results = [];
-    for (let i = 0; i < 10; i++) {
-      const nImg = numbers[i];
-      if (nImg == 0) {
-        console.log('Error number image is empty');
-        return 0;
-      }
-      const rs = findImages(img, nImg, 0.95, maxLength, true);
-      for (let k in rs) {
-        rs[k].number = i;
-        results.push(rs[k]);
-      }
-    }
-    results.sort((a, b) => {return b.score - a.score;});
-    results = results.slice(0, Math.min(maxLength, results.length));
-    results.sort((a, b) => {return a.x - b.x;});
-    const numberSize = getImageSize(numbers[0]);
-    const nw = numberSize.width;
-    const imgSize = getImageSize(img);
-    const iw = imgSize.width;
-    let px = 0;
-    let numberStr = '';
-    for(let i in results) {
-      const r = results[i];
-      if (r.x > p) {
-        numberStr += r.number.toString();
-        p = r.x - 2;
-      }
-    }
-    console.log('number', numberStr);
-    return numberStr;
+    this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
+    return this._img;
   }
 
   checkIsSystemPage() {
@@ -385,6 +355,60 @@ class LineageM {
     return false;
   }
 
+  checkBeAttacked() {
+    if (this.config.beAttackedRandTeleport && this.gi.beAttacked.check(this._img)) {
+      const c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
+      if (c.r > c.g + c.b) {
+        // rand teleport (7th btn)
+        console.log('Warning!! You Are Attacked!!');
+        this.gi.itemBtns[6].tap();
+        this.safeSleep(2000);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  updateGlobalState() {
+    this.rState.isDisconnect = this.gi.disconnectBtn.check(this._img);
+    this.rState.isEnter = this.gi.enterBtn.check(this._img);
+    if (this.rState.isDisconnect || this.rState.isEnter) {
+      return;
+    }
+    this.rState.isMenuOn = this.gi.menuOnBtn.check(this._img);
+    this.rState.isMenuOff = this.gi.menuOffBtn.check(this._img);
+    // console.log(this.rState.isMenuOn, this.rState.isMenuOff);
+    if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
+      return;
+    }
+    if (this.rState.isMenuOn) {
+      return;
+    }
+    this.rState.hp = this.getHpPercent();
+    if (this.rState.hp < 30 && this.rState.hp > 0.1) {
+      sleep(200);
+      this.refreshScreen();
+      this.rState.hp = this.getHpPercent();
+    }
+    this.rState.mp = this.getMpPercent();
+    // this.rState.exp = this.getExpPercent();
+    this.rState.isSafeRegion = this.isSafeRegionState();
+    this.rState.isAttecking = !this.gi.attackBtn.check(this._img);
+    this.rState.isSelfSkill = !this.gi.selfSkillBtn.check(this._img);
+    this.rState.hasKillNumber = this.gi.killNumber.check(this._img);
+    if (this.gi.autoPlayBtn.check(this._img)) {
+      this.rState.autoPlayOffCount++;
+    } else {
+      this.rState.autoPlayOffCount = 0;
+    }
+    if (this.rState.autoPlayOffCount > 4) {
+      this.rState.isAutoPlay = false;
+    } else {
+      this.rState.isAutoPlay = true;
+    }
+    this.rState.print();
+  }
+
   checkCondiction() {
     for(let i = 0; i < this.config.conditions.length && this._loop; i++) {
       const cd = this.config.conditions[i];
@@ -400,17 +424,17 @@ class LineageM {
       }
       if (cd.type === 'exp') {
         if (this.rState.exp !== this.tmpExp) {
-          this.gi.itemBtns[cd.btn].tap(1, 100);
+          this.gi.itemBtns[cd.btn].tap(1, 50);
           console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
           cd.useTime = Date.now();
-          this.safeSleep(700);
+          break;
         }
       } else if (value * cd.op > cd.value * cd.op) {
         if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
-          this.gi.itemBtns[cd.btn].tap(1, 100);
+          this.gi.itemBtns[cd.btn].tap(1, 50);
           console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
           cd.useTime = Date.now();
-          this.safeSleep(700);
+          break;
         }
       }
     }
@@ -423,20 +447,10 @@ class LineageM {
     let isBuy = false;
     let receiveTime = 0;
     while(this._loop) {
-      this.safeSleep(200);
       this.refreshScreen();
-
-      if (this.config.beAttackedRandTeleport && this.gi.beAttacked.check(this._img)) {
-        const c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
-        if (c.r > c.g + c.b) {
-          // rand teleport (7th btn)
-          console.log('Warning!! You Are Attacked!!');
-          this.gi.itemBtns[6].tap();
-          this.safeSleep(2500);
-          continue;
-        }
+      if (this.checkBeAttacked()) {
+        continue;
       }
-      
       this.updateGlobalState();
       if (this.checkIsSystemPage()) {
         continue;
@@ -444,17 +458,16 @@ class LineageM {
       if (this.rState.isMenuOn) {
         console.log('Hide Menu');
         this.gi.menuOnBtn.tap();
+        this.safeSleep(500);
         continue;
       }
-      // console.log('Check conditions');
-      this.checkCondiction();
 
       // go home (8th btn), rand teleport (7th btn)
       if (this.rState.isSafeRegion) {
         if (!isBuy && (this.config.autoBuyHp !== 0 || this.config.autoBuyArrow !== 0)) {
           this.checkAndBuyItems();
           isBuy = true;
-        } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 6000) {
+        } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
           this.gi.itemBtns[6].tap();
           useHomeTime = Date.now();
         }
@@ -468,9 +481,13 @@ class LineageM {
         if (!this.rState.isAutoPlay) {
           console.log('Click AutoPlay');
           this.gi.autoPlayBtn.tap();
+          this.rState.autoPlayOffCount = 0;
           continue;
         }
       }
+
+      // console.log('Check conditions');
+      this.checkCondiction();
 
       if (this.config.autoReceiveReward && (Date.now() - receiveTime) > 300 * 1000) {
         this.checkAndAutoGetReward();
@@ -559,7 +576,7 @@ class LineageM {
       // this.refreshScreen();
       const dXY = Utils.targetToDevice(stores[k]);
       tap(dXY.x + 5, dXY.y + 5, 50);
-      this.waitForChangeScreen(0.9);if (!this._loop) {return false;}
+      this.waitForChangeScreen(0.95, 7000);if (!this._loop) {return false;}
       this.safeSleep(1000);
       if (this.gi.storeMode.check(this._img)) {
         this.gi.storeMode.tap();
@@ -638,48 +655,6 @@ class LineageM {
     return false;
   }
 
-  updateGlobalState() {
-    this.rState.isDisconnect = this.gi.disconnectBtn.check(this._img);
-    this.rState.isEnter = this.gi.enterBtn.check(this._img);
-    if (this.rState.isDisconnect || this.rState.isEnter) {
-      return;
-    }
-    this.rState.isMenuOn = this.gi.menuOnBtn.check(this._img);
-    this.rState.isMenuOff = this.gi.menuOffBtn.check(this._img);
-    // console.log(this.rState.isMenuOn, this.rState.isMenuOff);
-    if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
-      return;
-    }
-    if (this.rState.isMenuOn) {
-      return;
-    }
-    this.rState.hp = this.getHpPercent();
-    if (this.rState.hp < 25 && this.rState.hp > 0.1) {
-      sleep(300);
-      this.refreshScreen();
-      this.rState.hp = this.getHpPercent();
-    }
-    this.rState.mp = this.getMpPercent();
-    this.rState.exp = this.getExpPercent();
-    this.rState.isSafeRegion = this.isSafeRegionState();
-    this.rState.isAttecking = !this.gi.attackBtn.check(this._img);
-    this.rState.isSelfSkill = !this.gi.selfSkillBtn.check(this._img);
-    this.rState.hasKillNumber = this.gi.killNumber.check(this._img);
-    if (this.rState.isAttecking) {
-      this.rState.isAutoPlay = true;
-    } else if (this.rState.hasKillNumber) {
-      this.rState.isAutoPlay = true;
-    } else {
-      this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
-      if (!this.rState.isAutoPlay) {
-        sleep(250);
-        this.refreshScreen();
-        this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
-      }
-    }
-    this.rState.print();
-  }
-
   checkAndAutoGetReward() {
     if (!this.gi.menuOffEvent.check(this._img)) {
       return;
@@ -721,15 +696,6 @@ class LineageM {
       this.gi.menuOnBtn.tap();
       this.waitForChangeScreen(0.95, 5000);
     }
-  }
-
-  refreshScreen() {
-    if (this._img !== 0) {
-      releaseImage(this._img);
-      this._img = 0;
-    }
-    this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
-    return this._img;
   }
 
   // HP MP EXP
@@ -915,6 +881,44 @@ class LineageM {
       console.log('find location diff', finalXY.x, finalXY.y);
     }
     return finalXY;
+  }
+
+  getImageNumber(img, numbers, maxLength = 8) {
+    if (numbers.length != 10) {
+      console.log('Error number length should be 10');
+      return 0;
+    }
+    let results = [];
+    for (let i = 0; i < 10; i++) {
+      const nImg = numbers[i];
+      if (nImg == 0) {
+        console.log('Error number image is empty');
+        return 0;
+      }
+      const rs = findImages(img, nImg, 0.95, maxLength, true);
+      for (let k in rs) {
+        rs[k].number = i;
+        results.push(rs[k]);
+      }
+    }
+    results.sort((a, b) => {return b.score - a.score;});
+    results = results.slice(0, Math.min(maxLength, results.length));
+    results.sort((a, b) => {return a.x - b.x;});
+    const numberSize = getImageSize(numbers[0]);
+    const nw = numberSize.width;
+    const imgSize = getImageSize(img);
+    const iw = imgSize.width;
+    let px = 0;
+    let numberStr = '';
+    for(let i in results) {
+      const r = results[i];
+      if (r.x > p) {
+        numberStr += r.number.toString();
+        p = r.x - 2;
+      }
+    }
+    console.log('number', numberStr);
+    return numberStr;
   }
 }
 

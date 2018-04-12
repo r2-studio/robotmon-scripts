@@ -350,12 +350,13 @@ var RoleState = function () {
     this.isSelfSkill = false;
     this.isAttecked = false;
     this.hasKillNumber = false;
+    this.autoPlayOffCount = 0;
   }
 
   _createClass(RoleState, [{
     key: 'print',
     value: function print() {
-      console.log('hp: ' + this.hp + ', mp: ' + this.mp + ', exp: ' + this.exp);
+      console.log('hp: ' + this.hp + ', mp: ' + this.mp);
     }
   }]);
 
@@ -396,52 +397,14 @@ var LineageM = function () {
       }
     }
   }, {
-    key: 'loadNumberImages',
-    value: function loadNumberImages() {}
-  }, {
-    key: 'getImageNumber',
-    value: function getImageNumber(img, numbers) {
-      var maxLength = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 8;
-
-      if (numbers.length != 10) {
-        console.log('Error number length should be 10');
-        return 0;
+    key: 'refreshScreen',
+    value: function refreshScreen() {
+      if (this._img !== 0) {
+        releaseImage(this._img);
+        this._img = 0;
       }
-      var results = [];
-      for (var i = 0; i < 10; i++) {
-        var nImg = numbers[i];
-        if (nImg == 0) {
-          console.log('Error number image is empty');
-          return 0;
-        }
-        var rs = findImages(img, nImg, 0.95, maxLength, true);
-        for (var k in rs) {
-          rs[k].number = i;
-          results.push(rs[k]);
-        }
-      }
-      results.sort(function (a, b) {
-        return b.score - a.score;
-      });
-      results = results.slice(0, Math.min(maxLength, results.length));
-      results.sort(function (a, b) {
-        return a.x - b.x;
-      });
-      var numberSize = getImageSize(numbers[0]);
-      var nw = numberSize.width;
-      var imgSize = getImageSize(img);
-      var iw = imgSize.width;
-      var px = 0;
-      var numberStr = '';
-      for (var _i in results) {
-        var r = results[_i];
-        if (r.x > p) {
-          numberStr += r.number.toString();
-          p = r.x - 2;
-        }
-      }
-      console.log('number', numberStr);
-      return numberStr;
+      this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
+      return this._img;
     }
   }, {
     key: 'checkIsSystemPage',
@@ -467,6 +430,62 @@ var LineageM = function () {
       return false;
     }
   }, {
+    key: 'checkBeAttacked',
+    value: function checkBeAttacked() {
+      if (this.config.beAttackedRandTeleport && this.gi.beAttacked.check(this._img)) {
+        var c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
+        if (c.r > c.g + c.b) {
+          // rand teleport (7th btn)
+          console.log('Warning!! You Are Attacked!!');
+          this.gi.itemBtns[6].tap();
+          this.safeSleep(2000);
+          return true;
+        }
+      }
+      return false;
+    }
+  }, {
+    key: 'updateGlobalState',
+    value: function updateGlobalState() {
+      this.rState.isDisconnect = this.gi.disconnectBtn.check(this._img);
+      this.rState.isEnter = this.gi.enterBtn.check(this._img);
+      if (this.rState.isDisconnect || this.rState.isEnter) {
+        return;
+      }
+      this.rState.isMenuOn = this.gi.menuOnBtn.check(this._img);
+      this.rState.isMenuOff = this.gi.menuOffBtn.check(this._img);
+      // console.log(this.rState.isMenuOn, this.rState.isMenuOff);
+      if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
+        return;
+      }
+      if (this.rState.isMenuOn) {
+        return;
+      }
+      this.rState.hp = this.getHpPercent();
+      if (this.rState.hp < 30 && this.rState.hp > 0.1) {
+        sleep(200);
+        this.refreshScreen();
+        this.rState.hp = this.getHpPercent();
+      }
+      this.rState.mp = this.getMpPercent();
+      // this.rState.exp = this.getExpPercent();
+      this.rState.isSafeRegion = this.isSafeRegionState();
+      this.rState.isAttecking = !this.gi.attackBtn.check(this._img);
+      this.rState.isSelfSkill = !this.gi.selfSkillBtn.check(this._img);
+      this.rState.hasKillNumber = this.gi.killNumber.check(this._img);
+      if (this.gi.autoPlayBtn.check(this._img)) {
+        this.rState.autoPlayOffCount++;
+      } else {
+        this.rState.autoPlayOffCount = 0;
+      }
+      if (this.rState.autoPlayOffCount > 4) {
+        this.rState.isAutoPlay = false;
+      } else {
+        this.rState.isAutoPlay = true;
+      }
+      this.rState.print();
+    }
+  }, {
     key: 'checkCondiction',
     value: function checkCondiction() {
       for (var i = 0; i < this.config.conditions.length && this._loop; i++) {
@@ -483,17 +502,17 @@ var LineageM = function () {
         }
         if (cd.type === 'exp') {
           if (this.rState.exp !== this.tmpExp) {
-            this.gi.itemBtns[cd.btn].tap(1, 100);
+            this.gi.itemBtns[cd.btn].tap(1, 50);
             console.log('Use ' + (cd.btn + 1) + ' btn, ' + cd.type + ', ' + cd.op + ' ' + cd.value + ' (' + value + ')');
             cd.useTime = Date.now();
-            this.safeSleep(700);
+            break;
           }
         } else if (value * cd.op > cd.value * cd.op) {
           if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
-            this.gi.itemBtns[cd.btn].tap(1, 100);
+            this.gi.itemBtns[cd.btn].tap(1, 50);
             console.log('Use ' + (cd.btn + 1) + ' btn, ' + cd.type + ', ' + cd.op + ' ' + cd.value + ' (' + value + ')');
             cd.useTime = Date.now();
-            this.safeSleep(700);
+            break;
           }
         }
       }
@@ -507,20 +526,10 @@ var LineageM = function () {
       var isBuy = false;
       var receiveTime = 0;
       while (this._loop) {
-        this.safeSleep(200);
         this.refreshScreen();
-
-        if (this.config.beAttackedRandTeleport && this.gi.beAttacked.check(this._img)) {
-          var c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
-          if (c.r > c.g + c.b) {
-            // rand teleport (7th btn)
-            console.log('Warning!! You Are Attacked!!');
-            this.gi.itemBtns[6].tap();
-            this.safeSleep(2500);
-            continue;
-          }
+        if (this.checkBeAttacked()) {
+          continue;
         }
-
         this.updateGlobalState();
         if (this.checkIsSystemPage()) {
           continue;
@@ -528,17 +537,16 @@ var LineageM = function () {
         if (this.rState.isMenuOn) {
           console.log('Hide Menu');
           this.gi.menuOnBtn.tap();
+          this.safeSleep(500);
           continue;
         }
-        // console.log('Check conditions');
-        this.checkCondiction();
 
         // go home (8th btn), rand teleport (7th btn)
         if (this.rState.isSafeRegion) {
           if (!isBuy && (this.config.autoBuyHp !== 0 || this.config.autoBuyArrow !== 0)) {
             this.checkAndBuyItems();
             isBuy = true;
-          } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 6000) {
+          } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
             this.gi.itemBtns[6].tap();
             useHomeTime = Date.now();
           }
@@ -552,9 +560,13 @@ var LineageM = function () {
           if (!this.rState.isAutoPlay) {
             console.log('Click AutoPlay');
             this.gi.autoPlayBtn.tap();
+            this.rState.autoPlayOffCount = 0;
             continue;
           }
         }
+
+        // console.log('Check conditions');
+        this.checkCondiction();
 
         if (this.config.autoReceiveReward && Date.now() - receiveTime > 300 * 1000) {
           this.checkAndAutoGetReward();
@@ -655,7 +667,7 @@ var LineageM = function () {
         // this.refreshScreen();
         var dXY = Utils.targetToDevice(stores[k]);
         tap(dXY.x + 5, dXY.y + 5, 50);
-        this.waitForChangeScreen(0.9);if (!this._loop) {
+        this.waitForChangeScreen(0.95, 7000);if (!this._loop) {
           return false;
         }
         this.safeSleep(1000);
@@ -761,49 +773,6 @@ var LineageM = function () {
       return false;
     }
   }, {
-    key: 'updateGlobalState',
-    value: function updateGlobalState() {
-      this.rState.isDisconnect = this.gi.disconnectBtn.check(this._img);
-      this.rState.isEnter = this.gi.enterBtn.check(this._img);
-      if (this.rState.isDisconnect || this.rState.isEnter) {
-        return;
-      }
-      this.rState.isMenuOn = this.gi.menuOnBtn.check(this._img);
-      this.rState.isMenuOff = this.gi.menuOffBtn.check(this._img);
-      // console.log(this.rState.isMenuOn, this.rState.isMenuOff);
-      if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
-        return;
-      }
-      if (this.rState.isMenuOn) {
-        return;
-      }
-      this.rState.hp = this.getHpPercent();
-      if (this.rState.hp < 25 && this.rState.hp > 0.1) {
-        sleep(300);
-        this.refreshScreen();
-        this.rState.hp = this.getHpPercent();
-      }
-      this.rState.mp = this.getMpPercent();
-      this.rState.exp = this.getExpPercent();
-      this.rState.isSafeRegion = this.isSafeRegionState();
-      this.rState.isAttecking = !this.gi.attackBtn.check(this._img);
-      this.rState.isSelfSkill = !this.gi.selfSkillBtn.check(this._img);
-      this.rState.hasKillNumber = this.gi.killNumber.check(this._img);
-      if (this.rState.isAttecking) {
-        this.rState.isAutoPlay = true;
-      } else if (this.rState.hasKillNumber) {
-        this.rState.isAutoPlay = true;
-      } else {
-        this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
-        if (!this.rState.isAutoPlay) {
-          sleep(250);
-          this.refreshScreen();
-          this.rState.isAutoPlay = !this.gi.autoPlayBtn.check(this._img);
-        }
-      }
-      this.rState.print();
-    }
-  }, {
     key: 'checkAndAutoGetReward',
     value: function checkAndAutoGetReward() {
       if (!this.gi.menuOffEvent.check(this._img)) {
@@ -858,16 +827,6 @@ var LineageM = function () {
         this.gi.menuOnBtn.tap();
         this.waitForChangeScreen(0.95, 5000);
       }
-    }
-  }, {
-    key: 'refreshScreen',
-    value: function refreshScreen() {
-      if (this._img !== 0) {
-        releaseImage(this._img);
-        this._img = 0;
-      }
-      this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
-      return this._img;
     }
 
     // HP MP EXP
@@ -1044,15 +1003,15 @@ var LineageM = function () {
         releaseImage(images[i]);
       }
       var finalXY = undefined;
-      for (var _i2 = 0; _i2 < findXYs.length; _i2++) {
+      for (var _i = 0; _i < findXYs.length; _i++) {
         var count = 0;
         for (var j = 0; j < findXYs.length; j++) {
-          if (Math.abs(findXYs[_i2].x - findXYs[j].x) < 30 && Math.abs(findXYs[_i2].y - findXYs[j].y) < 30) {
+          if (Math.abs(findXYs[_i].x - findXYs[j].x) < 30 && Math.abs(findXYs[_i].y - findXYs[j].y) < 30) {
             count++;
           }
         }
         if (count > 1) {
-          finalXY = findXYs[_i2];
+          finalXY = findXYs[_i];
         }
       }
       if (finalXY !== undefined) {
@@ -1060,6 +1019,51 @@ var LineageM = function () {
         console.log('find location diff', finalXY.x, finalXY.y);
       }
       return finalXY;
+    }
+  }, {
+    key: 'getImageNumber',
+    value: function getImageNumber(img, numbers) {
+      var maxLength = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 8;
+
+      if (numbers.length != 10) {
+        console.log('Error number length should be 10');
+        return 0;
+      }
+      var results = [];
+      for (var i = 0; i < 10; i++) {
+        var nImg = numbers[i];
+        if (nImg == 0) {
+          console.log('Error number image is empty');
+          return 0;
+        }
+        var rs = findImages(img, nImg, 0.95, maxLength, true);
+        for (var k in rs) {
+          rs[k].number = i;
+          results.push(rs[k]);
+        }
+      }
+      results.sort(function (a, b) {
+        return b.score - a.score;
+      });
+      results = results.slice(0, Math.min(maxLength, results.length));
+      results.sort(function (a, b) {
+        return a.x - b.x;
+      });
+      var numberSize = getImageSize(numbers[0]);
+      var nw = numberSize.width;
+      var imgSize = getImageSize(img);
+      var iw = imgSize.width;
+      var px = 0;
+      var numberStr = '';
+      for (var _i2 in results) {
+        var r = results[_i2];
+        if (r.x > p) {
+          numberStr += r.number.toString();
+          p = r.x - 2;
+        }
+      }
+      console.log('number', numberStr);
+      return numberStr;
     }
   }]);
 
