@@ -221,7 +221,7 @@
                 hotkey: "快捷鍵",
                 inHomeUseBtn: "安全區域瞬卷 (請將瞬卷放在快捷鍵 7)",
                 dangerousGoHome: "回卷 (請將回卷放在快捷鍵 8)，hp < 25%",
-                goBackInterval: "回到原點 (0: 不啟動)(目前只支援地圖中間區域與亞丁大陸)",
+                goBackInterval: "回到原點 (0: 不啟動) (僅支援地圖中間區域與亞丁大陸)",
                 beAttackedRandTeleport: "被攻擊瞬移 (請將瞬卷放在快捷鍵 7)",
                 autoBuyHp: "自動買紅水 (-1: Max)",
                 autoBuyArrow: "自動買銀箭 (-1: Max)",
@@ -262,7 +262,7 @@
 
     function appendSwitchCol(jRow, jSwitchInput) {
       var jDiv = $('<div class="pull-right"></div>');
-      var jCol = $('<div class="col-xs-3"></div>');
+      var jCol = $('<div class="col-xs-4"></div>');
       var jSwitch = $('<label class="switch pull-right"></label>');
       jSwitch.append(jSwitchInput);
       jSwitch.append('<a class="slider round"></a>');
@@ -281,7 +281,7 @@
       var jGroup = $('#' + groupKey);
       var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
       var jRow = $("<div class='row'></div>");
-      var jLeftContent = $("<div class='col-xs-9'></div>");
+      var jLeftContent = $("<div class='col-xs-8'></div>");
       jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append($('<div class=setting_input data-i18n="text.' + key + '"></div>')))));
       appendSwitchCol(jRow, jSwitchInput);
     }
@@ -308,7 +308,7 @@
       var jGroup = $('#' + groupKey);
       var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
       var jRow = $("<div class='row'></div>");
-      var jLeftContent = $("<div class='col-xs-9'></div>");
+      var jLeftContent = $("<div class='col-xs-8'></div>");
       jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append($("<div class=setting_input data-i18n='text." + key + "'></div>")))));
 
       var jRightContent = [];
@@ -319,7 +319,7 @@
       jRightContent.push($("<div class=setting_input data-i18n='" + unit + "'></div>"));
       jRightContent.push(jIntervalBtn);
       var jDiv = $('<div class="pull-right"></div>');
-      var jCol = $('<div class="col-xs-3"></div>');
+      var jCol = $('<div class="col-xs-4"></div>');
       for (var j in jRightContent) {
         jRow.append(jCol.append(jDiv.append(jRightContent[j])));
       }
@@ -433,7 +433,7 @@
         var jGroup = $('#condition');
         var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
         var jRow = $("<div class='row'></div>");
-        var jLeftContent = $("<div class='col-xs-9'></div>");
+        var jLeftContent = $("<div class='col-xs-8'></div>");
         for (var j in jContent) {
           jGroup.append(jGroupItem.append(jRow.append(jLeftContent.append(jContent[j]))));
         }

@@ -162,18 +162,20 @@ class GameInfo {
     this.zeroRect = new Rect(0, 0, 1, 1);
     this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
-    this.storeHpRect = new Rect(94, 276, 194, 376);
+    this.storeHpRect = new Rect(94, 276, 94 + 100, 276 + 100);
+    this.storeArrowRect = new Rect(215, 520, 215 + 100, 520 + 100);
 
+    this.storeOther = new Point(510, 220);
     this.store10 = new Point(670, 970);
     this.store100 = new Point(900, 970);
     this.store1000 = new Point(1100, 970);
     this.storeMax = new Point(1300, 970);
     this.storeHp = new Point(150, 330);
-    this.storeArrow = new Point(400, 820);
+    this.storeArrow = new Point(260, 560);
     this.storeBuy = new Point(1600, 970);
     this.storeBuy2 = new Point(1130, 882);
     this.getReward = new Point(1680, 320);
-    this.signAllience = new Point(1820, 252);
+    this.signAlliance = new Point(1820, 252);
 
     this.itemBtns = [
       new Point(810, 960),
@@ -311,6 +313,7 @@ class LineageM {
       normalRegion: openImage(`${this.localPath}/normalRegionType.png`),
       hpWater: openImage(`${this.localPath}/hp.png`),
       store: openImage(`${this.localPath}/store.png`),
+      arrow: openImage(`${this.localPath}/arrow.png`),
     };
     // this.gi.menuOffEvent.print(this._img);
     this.tmpExp = 0;
@@ -606,8 +609,15 @@ class LineageM {
     }
     sleep(500);if (!this._loop) {return false;}
     if (this.config.autoBuyArrow > 0) {
-      this.gi.storeArrow.tap();
-      this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
+      this.gi.storeOther.tap();
+      this.refreshScreen();
+      const testImg = this.gi.storeArrowRect.crop(this._img);
+      const s = getIdentityScore(this.images.arrow, testImg);
+      releaseImage(testImg);
+      if (s > 0.9) {
+        this.gi.storeArrow.tap();
+        this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
+      }
     }
     sleep(500);if (!this._loop) {return false;}
     if (this.config.autoBuyHp === -1) {
@@ -690,7 +700,7 @@ class LineageM {
       this.gi.menuAlliance.tap();
       this.waitForChangeScreen(0.9, 5000);
       if (!this._loop) {return;}
-      this.gi.signAllience.tap();
+      this.gi.signAlliance.tap();
       this.safeSleep(3000);
       if (!this._loop) {return;}
       this.gi.menuOnBtn.tap();
