@@ -274,6 +274,8 @@ class GameInfo {
 class RoleState {
   constructor(gi) {
     this.gi = gi;
+    this.lastHP = 0;
+    this.lastMP = 0;
     this.hp = 0;
     this.mp = 0;
     this.exp = 0;
@@ -288,10 +290,15 @@ class RoleState {
     this.isAttecked = false;
     this.hasKillNumber = false;
     this.autoPlayOffCount = 0;
+    this.isPoison = false;
   }
 
   print() {
-    console.log(`hp: ${this.hp}, mp: ${this.mp}`);
+    if (this.lastHP !== this.hp || this.lastMP !== this.mp) {
+      console.log(`血量：${this.hp}，魔量：${this.mp}`);
+      this.lastHP = this.hp;
+      this.lastMP = this.mp;
+    }
   }
 }
 
@@ -331,25 +338,29 @@ class LineageM {
       releaseImage(this._img);
       this._img = 0;
     }
+    const startTime = Date.now();
     this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
+    if (Date.now() - startTime < 100) {
+      sleep(100);
+    }
     return this._img;
   }
 
   checkIsSystemPage() {
     if (this.rState.isEnter) {
-      console.log('Enter the game, Wait 10 sec');        
+      console.log('進入遊戲，等待 10 秒');        
       this.gi.enterBtn.tap();
       this.safeSleep(10 * 1000);
       return true;
     }
     if (this.rState.isDisconnect) {
-      console.log('Disconnect. Reconnect. Wait 10 sec');
+      console.log('重新連線中，等待 10 秒');
       this.gi.disconnectBtn.tap();
       this.safeSleep(10 * 1000);
       return true;
     }
     if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
-      console.log('Unknow State, Wait 5 sec');
+      console.log('未知狀態，等待 5 秒');
       keycode('BACK', 100);
       this.safeSleep(5 * 1000);
       return true;
@@ -362,7 +373,7 @@ class LineageM {
       const c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
       if (c.r > c.g + c.b) {
         // rand teleport (7th btn)
-        console.log('Warning!! You Are Attacked!!');
+        console.log('警告！你被攻擊了，使用按鈕 7');
         this.gi.itemBtns[6].tap();
         this.safeSleep(2000);
         return true;
@@ -388,7 +399,7 @@ class LineageM {
     }
     this.rState.hp = this.getHpPercent();
     if (this.rState.hp < 30 && this.rState.hp > 0.1) {
-      sleep(200);
+      sleep(300);
       this.refreshScreen();
       this.rState.hp = this.getHpPercent();
     }
@@ -427,14 +438,14 @@ class LineageM {
       if (cd.type === 'exp') {
         if (this.rState.exp !== this.tmpExp) {
           this.gi.itemBtns[cd.btn].tap(1, 50);
-          console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
+          console.log(`使用按鈕 ${cd.btn+1}，條件 ${cd.type} ${cd.op===1?'大於':'小於'} ${cd.value} (${value})`);
           cd.useTime = Date.now();
           break;
         }
       } else if (value * cd.op > cd.value * cd.op) {
         if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
           this.gi.itemBtns[cd.btn].tap(1, 50);
-          console.log(`Use ${cd.btn+1} btn, ${cd.type}, ${cd.op} ${cd.value} (${value})`);
+          console.log(`使用按鈕 ${cd.btn+1}，條件 ${cd.type} ${cd.op===1?'大於':'小於'} ${cd.value} (${value})`);
           cd.useTime = Date.now();
           break;
         }
@@ -446,6 +457,7 @@ class LineageM {
     this._loop = true;
     let goBackTime = Date.now();
     let useHomeTime = Date.now();
+    let poisonTime = 0;
     let isBuy = false;
     let receiveTime = 0;
     while(this._loop) {
@@ -458,7 +470,7 @@ class LineageM {
         continue;
       }
       if (this.rState.isMenuOn) {
-        console.log('Hide Menu');
+        console.log('關閉選單');
         this.gi.menuOnBtn.tap();
         this.safeSleep(500);
         continue;
@@ -477,14 +489,20 @@ class LineageM {
         isBuy = false;
         if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
           this.gi.itemBtns[7].tap(1, 100);
-          console.log('Dangerous, go home, use btn 8th');
+          console.log('危險，血量少於 25%，使用按鈕 8');
           continue;
         }
         if (!this.rState.isAutoPlay) {
-          console.log('Click AutoPlay');
+          console.log('開啟自動攻擊');
           this.gi.autoPlayBtn.tap();
           this.rState.autoPlayOffCount = 0;
           continue;
+        }
+        if (this.config.poisonBtn6 && this.gi.isPoison && Date.now() - poisonTime > 1500) {
+          console.log('中毒，使用解毒劑，使用按鈕 6');
+          sleep(500);
+          this.gi.itemBtns[5].tap();
+          poisonTime = Date.now();
         }
       }
 
@@ -497,12 +515,12 @@ class LineageM {
       }
 
       if (this.rState.isSafeRegion) {
-        console.log('In safe region');
+        console.log('安全區域');
         continue;
       }
 
       if (this.config.goBackInterval != 0 && !this.isRecordLocation) {
-        console.log('Record current location');
+        console.log('記錄現在位置');
         this.goToMapPage();
         this.recordCurrentLocation();
         this.gi.menuOnBtn.tap();
@@ -512,7 +530,7 @@ class LineageM {
       
       // go back to record location
       if (this.config.goBackInterval != 0 && Date.now() - goBackTime > this.config.goBackInterval) {
-        console.log('Go back location');
+        console.log('嘗試走回紀錄點');
         this.goToMapPage();
         const diffXY = this.getDiffRecordLocation();
         this.gi.menuOnBtn.tap();
@@ -544,7 +562,7 @@ class LineageM {
     this.waitForChangeScreen();
     this.gi.mapDetailBtn.tap();
     this.waitForChangeScreen(0.8, 2000);
-    console.log('In Map Page');
+    console.log('地圖畫面');
   }
 
   stop() {
@@ -556,14 +574,14 @@ class LineageM {
   }
 
   checkAndBuyItems(tryTimes = 10) {
-    console.log('Try to buy items');
+    console.log('嘗試購買物品');
     for (let i = 0; i < tryTimes && this._loop; i++) {
       if (this.findStore()) {  
         this.buyItems();
         this.refreshScreen();
         break;
       } else if (i < tryTimes - 1) {
-        console.log('Can not found store, try again');
+        console.log('找不到商店，再試一次');
         this.gi.itemBtns[7].tap();
         this.safeSleep(4000);
         this.refreshScreen();
@@ -588,7 +606,7 @@ class LineageM {
         const s = getIdentityScore(this.images.hpWater, testHpImg);
         releaseImage(testHpImg);
         if (s > 0.9) {
-          console.log('Store Found');
+          console.log('找不到商店');
           return true;
         }
       }
@@ -631,7 +649,7 @@ class LineageM {
     this.safeSleep(500);if (!this._loop) {return false;}
     this.refreshScreen();if (!this._loop) {return false;}
     if (this.gi.storeExceed.check(this._img)) {
-      console.log('Buy Items');
+      console.log('購買物品');
       this.safeSleep(500);if (!this._loop) {return false;}
       this.gi.storeBuy.tap();
       this.safeSleep(500);if (!this._loop) {return false;}
@@ -640,7 +658,7 @@ class LineageM {
       this.gi.menuOnBtn.tap();
       return true;
     }
-    console.log('Exceed weight, not to buy');
+    console.log('超過負重，取消購買');
     this.gi.menuOnBtn.tap();
     return true;
   }
@@ -672,7 +690,7 @@ class LineageM {
     this.waitForChangeScreen(0.95, 3000);
     if (!this._loop) {return;}
     if (this.gi.menuMail.check(this._img)) {
-      console.log('Auto receive reward: mail');
+      console.log('自動收取獎勵：信箱');
       this.gi.menuMail.tap();
       this.waitForChangeScreen(0.9, 5000);
       if (!this._loop) {return;}
@@ -683,7 +701,7 @@ class LineageM {
       this.waitForChangeScreen(0.95, 5000);
     } 
     if (this.gi.menuSign.check(this._img)) {
-      console.log('Auto receive reward: sign');
+      console.log('自動收取獎勵：登入');
       this.gi.menuSign.tap();
       this.waitForChangeScreen(0.95, 5000);
       if (!this._loop) {return;}
@@ -695,7 +713,7 @@ class LineageM {
       this.waitForChangeScreen(0.95, 5000);
     }
     if (this.gi.menuAlliance.check(this._img)) {
-      console.log('Auto receive reward: Allience');
+      console.log('自動收取獎勵：血盟');
       this.gi.menuAlliance.tap();
       this.waitForChangeScreen(0.9, 5000);
       if (!this._loop) {return;}
@@ -709,7 +727,7 @@ class LineageM {
 
   // HP MP EXP
   getHpPercent() {
-    return this.getBarPercent(this.gi.hpBarRect, 70, 15);
+    return this.getBarPercent(this.gi.hpBarRect, 70, 14, true);
   }
 
   getMpPercent() {
@@ -720,7 +738,7 @@ class LineageM {
     return this.getBarPercent(this.gi.expBarRect, 70, 70);
   }
 
-  getBarPercent(barRect, b1, b2) {
+  getBarPercent(barRect, b1, b2, poison = false) {
     const bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
     const fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
     const y1 = barRect.th / 3;
@@ -738,11 +756,16 @@ class LineageM {
       }
     }
     releaseImage(bar);
-    if (fc.g - fc.r > 10) {
-      // console.log('Use second limit', b2, JSON.stringify(fc));
-      return (bright2 / barRect.tw * 100).toFixed(1);
+    if (fc.g > fc.r) {
+      if (poison) {
+        this.gi.isPoison = true;
+      }
+      return (bright2 / barRect.tw * 100).toFixed(0);
     } else {
-      return (bright1 / barRect.tw * 100).toFixed(1);
+      if (poison) {
+        this.gi.isPoison = false;
+      }
+      return (bright1 / barRect.tw * 100).toFixed(0);
     }
   }
 
@@ -764,7 +787,7 @@ class LineageM {
       timeT += Math.min((1600 * Math.abs(disY) / 10), max);
     }
     const times = Math.ceil((timeL + timeR + timeT + timeB) / 24000);
-    console.log('Left', timeL, 'Right', timeR, 'Up', timeT, 'Down', timeB, times);
+    console.log('左', timeL, '右', timeR, '上', timeT, '下', timeB, times);
     const tl = Math.ceil(timeL / times);
     const tr = Math.ceil(timeR / times);
     const tt = Math.ceil(timeT / times);
@@ -772,28 +795,28 @@ class LineageM {
     this.gi.mapController.tapDown();
     for(let t = 0; t < times && this._loop; t++) {
       if (timeL > 100) {
-        console.log('Move Left', tl);
+        console.log('往左移動', tl);
         this.gi.mapControllerL.moveTo();
         this.gi.mapControllerL.moveTo();
         this.safeSleep(tl);
         timeL -= tl;
       }
       if (timeT > 100) {
-        console.log('Move Up', tt);
+        console.log('往上移動', tt);
         this.gi.mapControllerT.moveTo();
         this.gi.mapControllerT.moveTo();
         this.safeSleep(tt);
         timeT -= tt;
       }
       if (timeR > 100) {
-        console.log('Move Right', tr);
+        console.log('往右移動', tr);
         this.gi.mapControllerR.moveTo();
         this.gi.mapControllerR.moveTo();
         this.safeSleep(tr);
         timeR -= tr;
       }
       if (timeB > 100) {
-        console.log('Move Down', tb);
+        console.log('往下移動', tb);
         this.gi.mapControllerB.moveTo();
         this.gi.mapControllerB.moveTo();
         this.safeSleep(tb);
@@ -831,7 +854,7 @@ class LineageM {
       this.refreshScreen();
     }
     if (result === undefined) {
-      console.log('Error can not find record location');
+      console.log('無法找到紀錄點');
       return {x: 0, y: 0};
     }
     return result;
@@ -848,7 +871,7 @@ class LineageM {
     const findXYs = [];
     for (let i = 0; i < images.length; i++) {
       if (images[i] === 0) {
-        console.log('Error not record map location');
+        console.log('無法記錄地圖位置');
         return;
       }
       const xy = findImage(this._img, images[i]);
@@ -887,21 +910,21 @@ class LineageM {
     }
     if (finalXY !== undefined) {
       // console.log(JSON.stringify(findXYs));
-      console.log('find location diff', finalXY.x, finalXY.y);
+      console.log(`位置相差 x：${finalXY.x}，y：${finalXY.y}`);
     }
     return finalXY;
   }
 
   getImageNumber(img, numbers, maxLength = 8) {
     if (numbers.length != 10) {
-      console.log('Error number length should be 10');
+      console.log('圖片數量應為 10');
       return 0;
     }
     let results = [];
     for (let i = 0; i < 10; i++) {
       const nImg = numbers[i];
       if (nImg == 0) {
-        console.log('Error number image is empty');
+        console.log(`圖片 ${i} 不存在`);
         return 0;
       }
       const rs = findImages(img, nImg, 0.95, maxLength, true);
@@ -926,16 +949,16 @@ class LineageM {
         p = r.x - 2;
       }
     }
-    console.log('number', numberStr);
+    console.log(`圖片大小為 ${numberStr}`);
     return numberStr;
   }
 }
 
 const DefaultConfig = {
   conditions: [
-    // {type: 'hp', op: -1, value: 60, btn: 6, interval: 5000}, // if hp < 60% use 3th button, like 瞬移
-    // {type: 'hp', op: -1, value: 30, btn: 7, interval: 10000}, // if hp < 30% use 8th button, like 回卷
-    // {type: 'hp', op: -1, value: 75, btn: 3, interval: 2000}, // if hp < 75% use 4th button, like 高治
+    {type: 'hp', op: -1, value: 80, btn: 0, interval: 1000}, // if hp < 60% use 3th button, like 瞬移
+    {type: 'mp', op: 1, value: 50, btn: 1, interval: 1000}, // if hp < 30% use 8th button, like 回卷
+    {type: 'mp', op: -1, value: 80, btn: 2, interval: 2000}, // if hp < 75% use 4th button, like 高治
     // {type: 'mp', op: -1, value: 70, btn: 4, interval: 2000}, // if mp < 70% use 5th button, like 魂體
     // {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
   ],
@@ -943,27 +966,28 @@ const DefaultConfig = {
   dangerousGoHome: true, // if hp < 25%, go home, use button 8th
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   beAttackedRandTeleport: true,
-  autoBuyHp: 0, // 1 * 100, -1 => max
+  autoBuyHp: 1, // 1 * 100, -1 => max
   autoBuyArrow: 1, // 1 * 1000, -1 => max
   autoReceiveReward: true,
+  poisonBtn6: true,
 };
-
+ 
 let lm = undefined;
 
 function start(config) {
-  console.log('START');
+  console.log('👉 啟動腳本 👈');
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
   if (lm !== undefined) {
-    console.log('Already Started');
+    console.log('👉 腳本已啟動 👈');
     return;
   }
   lm = new LineageM(config);
   lm.start();
   lm.stop();
   lm = undefined;
-  console.log('STOP');
+  console.log('👉 腳本已停止 👈');
 }
 
 function stop() {
@@ -971,7 +995,7 @@ function stop() {
     return;
   }
   lm._loop = false;
-  console.log('Stopping...');
+  console.log('👉 停止腳本中 👈');
 }
 
 // start(DefaultConfig);
