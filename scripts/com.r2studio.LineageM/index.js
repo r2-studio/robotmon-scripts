@@ -1112,6 +1112,7 @@ var LineageM = function () {
         tap(dXY.x + 5, dXY.y + 5, 50);
         sleep(1000);
         this.gi.mapFloorBtn.tap();
+        sleep(1000);
         return;
       }
       var floorXY2 = findImage(this._img, this.images.floor2);
@@ -1120,6 +1121,7 @@ var LineageM = function () {
         tap(_dXY.x + 5, _dXY.y + 5, 50);
         sleep(1000);
         this.gi.mapFloorBtn.tap();
+        sleep(1000);
         return;
       }
     }
