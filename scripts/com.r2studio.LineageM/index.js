@@ -289,18 +289,19 @@ var GameInfo = function GameInfo() {
   this.zeroRect = new Rect(0, 0, 1, 1);
   this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
   this.regionTypeRect = new Rect(1710, 470, 1816, 498);
-  this.storeHpRect = new Rect(94, 276, 194, 376);
+  this.storeHpRect = new Rect(94, 276, 94 + 100, 276 + 100);
 
+  this.storeOther = new Point(510, 220);
   this.store10 = new Point(670, 970);
   this.store100 = new Point(900, 970);
   this.store1000 = new Point(1100, 970);
   this.storeMax = new Point(1300, 970);
   this.storeHp = new Point(150, 330);
-  this.storeArrow = new Point(400, 820);
+  this.storeArrow = new Point(260, 560);
   this.storeBuy = new Point(1600, 970);
   this.storeBuy2 = new Point(1130, 882);
   this.getReward = new Point(1680, 320);
-  this.signAllience = new Point(1820, 252);
+  this.signAlliance = new Point(1820, 252);
 
   this.itemBtns = [new Point(810, 960), new Point(930, 960), new Point(1050, 960), new Point(1180, 960), new Point(1440, 960), new Point(1560, 960), new Point(1690, 960), new Point(1810, 960), new Point(1310, 960)];
 
@@ -337,6 +338,8 @@ var RoleState = function () {
     _classCallCheck(this, RoleState);
 
     this.gi = gi;
+    this.lastHP = 0;
+    this.lastMP = 0;
     this.hp = 0;
     this.mp = 0;
     this.exp = 0;
@@ -351,12 +354,17 @@ var RoleState = function () {
     this.isAttecked = false;
     this.hasKillNumber = false;
     this.autoPlayOffCount = 0;
+    this.isPoison = false;
   }
 
   _createClass(RoleState, [{
     key: 'print',
     value: function print() {
-      console.log('hp: ' + this.hp + ', mp: ' + this.mp);
+      if (this.lastHP !== this.hp || this.lastMP !== this.mp) {
+        console.log('\u8840\u91CF\uFF1A' + this.hp + '\uFF0C\u9B54\u91CF\uFF1A' + this.mp);
+        this.lastHP = this.hp;
+        this.lastMP = this.mp;
+      }
     }
   }]);
 
@@ -381,7 +389,8 @@ var LineageM = function () {
       safeRegion: openImage(this.localPath + '/safeRegionType.png'),
       normalRegion: openImage(this.localPath + '/normalRegionType.png'),
       hpWater: openImage(this.localPath + '/hp.png'),
-      store: openImage(this.localPath + '/store.png')
+      store: openImage(this.localPath + '/store.png'),
+      arrow: openImage(this.localPath + '/arrow.png')
     };
     // this.gi.menuOffEvent.print(this._img);
     this.tmpExp = 0;
@@ -403,26 +412,30 @@ var LineageM = function () {
         releaseImage(this._img);
         this._img = 0;
       }
+      var startTime = Date.now();
       this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
+      if (Date.now() - startTime < 100) {
+        sleep(100);
+      }
       return this._img;
     }
   }, {
     key: 'checkIsSystemPage',
     value: function checkIsSystemPage() {
       if (this.rState.isEnter) {
-        console.log('Enter the game, Wait 10 sec');
+        console.log('進入遊戲，等待 10 秒');
         this.gi.enterBtn.tap();
         this.safeSleep(10 * 1000);
         return true;
       }
       if (this.rState.isDisconnect) {
-        console.log('Disconnect. Reconnect. Wait 10 sec');
+        console.log('重新連線中，等待 10 秒');
         this.gi.disconnectBtn.tap();
         this.safeSleep(10 * 1000);
         return true;
       }
       if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
-        console.log('Unknow State, Wait 5 sec');
+        console.log('未知狀態，等待 5 秒');
         keycode('BACK', 100);
         this.safeSleep(5 * 1000);
         return true;
@@ -436,7 +449,7 @@ var LineageM = function () {
         var c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
         if (c.r > c.g + c.b) {
           // rand teleport (7th btn)
-          console.log('Warning!! You Are Attacked!!');
+          console.log('警告！你被攻擊了，使用按鈕 7');
           this.gi.itemBtns[6].tap();
           this.safeSleep(2000);
           return true;
@@ -463,7 +476,7 @@ var LineageM = function () {
       }
       this.rState.hp = this.getHpPercent();
       if (this.rState.hp < 30 && this.rState.hp > 0.1) {
-        sleep(200);
+        sleep(300);
         this.refreshScreen();
         this.rState.hp = this.getHpPercent();
       }
@@ -503,14 +516,14 @@ var LineageM = function () {
         if (cd.type === 'exp') {
           if (this.rState.exp !== this.tmpExp) {
             this.gi.itemBtns[cd.btn].tap(1, 50);
-            console.log('Use ' + (cd.btn + 1) + ' btn, ' + cd.type + ', ' + cd.op + ' ' + cd.value + ' (' + value + ')');
+            console.log('\u4F7F\u7528\u6309\u9215 ' + (cd.btn + 1) + '\uFF0C\u689D\u4EF6 ' + cd.type + ' ' + (cd.op === 1 ? '大於' : '小於') + ' ' + cd.value + ' (' + value + ')');
             cd.useTime = Date.now();
             break;
           }
         } else if (value * cd.op > cd.value * cd.op) {
           if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
             this.gi.itemBtns[cd.btn].tap(1, 50);
-            console.log('Use ' + (cd.btn + 1) + ' btn, ' + cd.type + ', ' + cd.op + ' ' + cd.value + ' (' + value + ')');
+            console.log('\u4F7F\u7528\u6309\u9215 ' + (cd.btn + 1) + '\uFF0C\u689D\u4EF6 ' + cd.type + ' ' + (cd.op === 1 ? '大於' : '小於') + ' ' + cd.value + ' (' + value + ')');
             cd.useTime = Date.now();
             break;
           }
@@ -523,6 +536,7 @@ var LineageM = function () {
       this._loop = true;
       var goBackTime = Date.now();
       var useHomeTime = Date.now();
+      var poisonTime = 0;
       var isBuy = false;
       var receiveTime = 0;
       while (this._loop) {
@@ -535,7 +549,7 @@ var LineageM = function () {
           continue;
         }
         if (this.rState.isMenuOn) {
-          console.log('Hide Menu');
+          console.log('關閉選單');
           this.gi.menuOnBtn.tap();
           this.safeSleep(500);
           continue;
@@ -554,14 +568,20 @@ var LineageM = function () {
           isBuy = false;
           if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
             this.gi.itemBtns[7].tap(1, 100);
-            console.log('Dangerous, go home, use btn 8th');
+            console.log('危險，血量少於 25%，使用按鈕 8');
             continue;
           }
-          if (!this.rState.isAutoPlay) {
-            console.log('Click AutoPlay');
+          if (!this.rState.isAutoPlay && this.config.autoAttack) {
+            console.log('開啟自動攻擊');
             this.gi.autoPlayBtn.tap();
             this.rState.autoPlayOffCount = 0;
             continue;
+          }
+          if (this.config.autoUseAntidote && this.gi.isPoison && Date.now() - poisonTime > 1500) {
+            console.log('中毒，使用解毒劑，使用按鈕 6');
+            sleep(500);
+            this.gi.itemBtns[5].tap();
+            poisonTime = Date.now();
           }
         }
 
@@ -574,12 +594,12 @@ var LineageM = function () {
         }
 
         if (this.rState.isSafeRegion) {
-          console.log('In safe region');
+          console.log('安全區域');
           continue;
         }
 
         if (this.config.goBackInterval != 0 && !this.isRecordLocation) {
-          console.log('Record current location');
+          console.log('記錄現在位置');
           this.goToMapPage();
           this.recordCurrentLocation();
           this.gi.menuOnBtn.tap();
@@ -589,7 +609,7 @@ var LineageM = function () {
 
         // go back to record location
         if (this.config.goBackInterval != 0 && Date.now() - goBackTime > this.config.goBackInterval) {
-          console.log('Go back location');
+          console.log('嘗試走回紀錄點');
           this.goToMapPage();
           var diffXY = this.getDiffRecordLocation();
           this.gi.menuOnBtn.tap();
@@ -626,7 +646,7 @@ var LineageM = function () {
       this.waitForChangeScreen();
       this.gi.mapDetailBtn.tap();
       this.waitForChangeScreen(0.8, 2000);
-      console.log('In Map Page');
+      console.log('地圖畫面');
     }
   }, {
     key: 'stop',
@@ -642,14 +662,14 @@ var LineageM = function () {
     value: function checkAndBuyItems() {
       var tryTimes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
 
-      console.log('Try to buy items');
+      console.log('嘗試購買物品');
       for (var i = 0; i < tryTimes && this._loop; i++) {
         if (this.findStore()) {
           this.buyItems();
           this.refreshScreen();
           break;
         } else if (i < tryTimes - 1) {
-          console.log('Can not found store, try again');
+          console.log('找不到商店，再試一次');
           this.gi.itemBtns[7].tap();
           this.safeSleep(4000);
           this.refreshScreen();
@@ -681,7 +701,7 @@ var LineageM = function () {
           var s = getIdentityScore(this.images.hpWater, testHpImg);
           releaseImage(testHpImg);
           if (s > 0.9) {
-            console.log('Store Found');
+            console.log('找不到商店');
             return true;
           }
         }
@@ -704,8 +724,17 @@ var LineageM = function () {
         return false;
       }
       if (this.config.autoBuyArrow > 0) {
-        this.gi.storeArrow.tap();
-        this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
+        this.gi.storeOther.tap();
+        sleep(500);if (!this._loop) {
+          return false;
+        }
+        this.refreshScreen();
+        var arrowPos = findImage(this._img, this.images.arrow);
+        if (arrowPos.score > 0.9) {
+          var dXY = Utils.targetToDevice(arrowPos);
+          tap(dXY.x + 5, dXY.y + 5, 50);
+          this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
+        }
       }
       sleep(500);if (!this._loop) {
         return false;
@@ -728,7 +757,7 @@ var LineageM = function () {
         return false;
       }
       if (this.gi.storeExceed.check(this._img)) {
-        console.log('Buy Items');
+        console.log('購買物品');
         this.safeSleep(500);if (!this._loop) {
           return false;
         }
@@ -743,7 +772,7 @@ var LineageM = function () {
         this.gi.menuOnBtn.tap();
         return true;
       }
-      console.log('Exceed weight, not to buy');
+      console.log('超過負重，取消購買');
       this.gi.menuOnBtn.tap();
       return true;
     }
@@ -784,7 +813,7 @@ var LineageM = function () {
         return;
       }
       if (this.gi.menuMail.check(this._img)) {
-        console.log('Auto receive reward: mail');
+        console.log('自動收取獎勵：信箱');
         this.gi.menuMail.tap();
         this.waitForChangeScreen(0.9, 5000);
         if (!this._loop) {
@@ -797,7 +826,7 @@ var LineageM = function () {
         this.waitForChangeScreen(0.95, 5000);
       }
       if (this.gi.menuSign.check(this._img)) {
-        console.log('Auto receive reward: sign');
+        console.log('自動收取獎勵：登入');
         this.gi.menuSign.tap();
         this.waitForChangeScreen(0.95, 5000);
         if (!this._loop) {
@@ -813,13 +842,13 @@ var LineageM = function () {
         this.waitForChangeScreen(0.95, 5000);
       }
       if (this.gi.menuAlliance.check(this._img)) {
-        console.log('Auto receive reward: Allience');
+        console.log('自動收取獎勵：血盟');
         this.gi.menuAlliance.tap();
         this.waitForChangeScreen(0.9, 5000);
         if (!this._loop) {
           return;
         }
-        this.gi.signAllience.tap();
+        this.gi.signAlliance.tap();
         this.safeSleep(3000);
         if (!this._loop) {
           return;
@@ -834,7 +863,7 @@ var LineageM = function () {
   }, {
     key: 'getHpPercent',
     value: function getHpPercent() {
-      return this.getBarPercent(this.gi.hpBarRect, 70, 15);
+      return this.getBarPercent(this.gi.hpBarRect, 70, 14, true);
     }
   }, {
     key: 'getMpPercent',
@@ -849,6 +878,8 @@ var LineageM = function () {
   }, {
     key: 'getBarPercent',
     value: function getBarPercent(barRect, b1, b2) {
+      var poison = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
       var bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
       var fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
       var y1 = barRect.th / 3;
@@ -866,11 +897,16 @@ var LineageM = function () {
         }
       }
       releaseImage(bar);
-      if (fc.g - fc.r > 10) {
-        // console.log('Use second limit', b2, JSON.stringify(fc));
-        return (bright2 / barRect.tw * 100).toFixed(1);
+      if (fc.g > fc.r) {
+        if (poison) {
+          this.gi.isPoison = true;
+        }
+        return (bright2 / barRect.tw * 100).toFixed(0);
       } else {
-        return (bright1 / barRect.tw * 100).toFixed(1);
+        if (poison) {
+          this.gi.isPoison = false;
+        }
+        return (bright1 / barRect.tw * 100).toFixed(0);
       }
     }
 
@@ -895,7 +931,7 @@ var LineageM = function () {
         timeT += Math.min(1600 * Math.abs(disY) / 10, max);
       }
       var times = Math.ceil((timeL + timeR + timeT + timeB) / 24000);
-      console.log('Left', timeL, 'Right', timeR, 'Up', timeT, 'Down', timeB, times);
+      console.log('左', timeL, '右', timeR, '上', timeT, '下', timeB, times);
       var tl = Math.ceil(timeL / times);
       var tr = Math.ceil(timeR / times);
       var tt = Math.ceil(timeT / times);
@@ -903,28 +939,28 @@ var LineageM = function () {
       this.gi.mapController.tapDown();
       for (var t = 0; t < times && this._loop; t++) {
         if (timeL > 100) {
-          console.log('Move Left', tl);
+          console.log('往左移動', tl);
           this.gi.mapControllerL.moveTo();
           this.gi.mapControllerL.moveTo();
           this.safeSleep(tl);
           timeL -= tl;
         }
         if (timeT > 100) {
-          console.log('Move Up', tt);
+          console.log('往上移動', tt);
           this.gi.mapControllerT.moveTo();
           this.gi.mapControllerT.moveTo();
           this.safeSleep(tt);
           timeT -= tt;
         }
         if (timeR > 100) {
-          console.log('Move Right', tr);
+          console.log('往右移動', tr);
           this.gi.mapControllerR.moveTo();
           this.gi.mapControllerR.moveTo();
           this.safeSleep(tr);
           timeR -= tr;
         }
         if (timeB > 100) {
-          console.log('Move Down', tb);
+          console.log('往下移動', tb);
           this.gi.mapControllerB.moveTo();
           this.gi.mapControllerB.moveTo();
           this.safeSleep(tb);
@@ -964,7 +1000,7 @@ var LineageM = function () {
         this.refreshScreen();
       }
       if (result === undefined) {
-        console.log('Error can not find record location');
+        console.log('無法找到紀錄點');
         return { x: 0, y: 0 };
       }
       return result;
@@ -977,7 +1013,7 @@ var LineageM = function () {
       var findXYs = [];
       for (var i = 0; i < images.length; i++) {
         if (images[i] === 0) {
-          console.log('Error not record map location');
+          console.log('無法記錄地圖位置');
           return;
         }
         var xy = findImage(this._img, images[i]);
@@ -1016,7 +1052,7 @@ var LineageM = function () {
       }
       if (finalXY !== undefined) {
         // console.log(JSON.stringify(findXYs));
-        console.log('find location diff', finalXY.x, finalXY.y);
+        console.log('\u4F4D\u7F6E\u76F8\u5DEE x\uFF1A' + finalXY.x + '\uFF0Cy\uFF1A' + finalXY.y);
       }
       return finalXY;
     }
@@ -1026,14 +1062,14 @@ var LineageM = function () {
       var maxLength = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 8;
 
       if (numbers.length != 10) {
-        console.log('Error number length should be 10');
+        console.log('圖片數量應為 10');
         return 0;
       }
       var results = [];
       for (var i = 0; i < 10; i++) {
         var nImg = numbers[i];
         if (nImg == 0) {
-          console.log('Error number image is empty');
+          console.log('\u5716\u7247 ' + i + ' \u4E0D\u5B58\u5728');
           return 0;
         }
         var rs = findImages(img, nImg, 0.95, maxLength, true);
@@ -1062,7 +1098,7 @@ var LineageM = function () {
           p = r.x - 2;
         }
       }
-      console.log('number', numberStr);
+      console.log('\u5716\u7247\u5927\u5C0F\u70BA ' + numberStr);
       return numberStr;
     }
   }]);
@@ -1071,38 +1107,36 @@ var LineageM = function () {
 }();
 
 var DefaultConfig = {
-  conditions: [
-    // {type: 'hp', op: -1, value: 60, btn: 6, interval: 5000}, // if hp < 60% use 3th button, like 瞬移
-    // {type: 'hp', op: -1, value: 30, btn: 7, interval: 10000}, // if hp < 30% use 8th button, like 回卷
-    // {type: 'hp', op: -1, value: 75, btn: 3, interval: 2000}, // if hp < 75% use 4th button, like 高治
-    // {type: 'mp', op: -1, value: 70, btn: 4, interval: 2000}, // if mp < 70% use 5th button, like 魂體
-    // {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
-  ],
-  inHomeUseBtn: true, // if in safe region use 3th button, like 瞬移.
-  dangerousGoHome: true, // if hp < 25%, go home, use button 8th
-  goBackInterval: 0, // whether to go back to origin location, check location every n min
+  conditions: [{ type: 'hp', op: -1, value: 80, btn: 0, interval: 1000 }, // if hp < 60% use 3th button, like 瞬移
+  { type: 'mp', op: 1, value: 50, btn: 1, interval: 1000 }, // if hp < 30% use 8th button, like 回卷
+  { type: 'mp', op: -1, value: 80, btn: 2, interval: 2000 }],
+  inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
   beAttackedRandTeleport: true,
-  autoBuyHp: 3, // 1 * 100, -1 => max
-  autoBuyArrow: 0, // 1 * 1000, -1 => max
-  autoReceiveReward: true
+  dangerousGoHome: true, // if hp < 25%, go home, use button 8th
+  autoAttack: true,
+  autoReceiveReward: true,
+  autoUseAntidote: false, // take an antidote for the poison, use six button
+  goBackInterval: 0, // whether to go back to origin location, check location every n min
+  autoBuyHp: 0, // 1 * 100, -1 => max
+  autoBuyArrow: 0 // 1 * 1000, -1 => max
 };
 
 var lm = undefined;
 
 function start(config) {
-  console.log('START');
+  console.log('📢 啟動腳本 📢');
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
   if (lm !== undefined) {
-    console.log('Already Started');
+    console.log('📢 腳本已啟動 📢');
     return;
   }
   lm = new LineageM(config);
   lm.start();
   lm.stop();
   lm = undefined;
-  console.log('STOP');
+  console.log('📢 腳本已停止 📢');
 }
 
 function stop() {
@@ -1110,12 +1144,13 @@ function stop() {
     return;
   }
   lm._loop = false;
-  console.log('Stopping...');
+  console.log('📢 停止腳本中 📢');
 }
 
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
 // lm._loop=true;
+// lm.buyItems();
 // lm.checkAndAutoGetReward();
 // for (var i= 0; i < 1; i++) {
 //   lm.refreshScreen();
