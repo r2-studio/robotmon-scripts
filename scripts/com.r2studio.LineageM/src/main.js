@@ -492,13 +492,13 @@ class LineageM {
           console.log('危險，血量少於 25%，使用按鈕 8');
           continue;
         }
-        if (!this.rState.isAutoPlay) {
+        if (!this.rState.isAutoPlay && this.config.autoAttack) {
           console.log('開啟自動攻擊');
           this.gi.autoPlayBtn.tap();
           this.rState.autoPlayOffCount = 0;
           continue;
         }
-        if (this.config.poisonBtn6 && this.gi.isPoison && Date.now() - poisonTime > 1500) {
+        if (this.config.autoUseAntidote && this.gi.isPoison && Date.now() - poisonTime > 1500) {
           console.log('中毒，使用解毒劑，使用按鈕 6');
           sleep(500);
           this.gi.itemBtns[5].tap();
@@ -962,32 +962,33 @@ const DefaultConfig = {
     // {type: 'mp', op: -1, value: 70, btn: 4, interval: 2000}, // if mp < 70% use 5th button, like 魂體
     // {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
   ],
-  inHomeUseBtn: true, // if in safe region use 3th button, like 瞬移.
-  dangerousGoHome: true, // if hp < 25%, go home, use button 8th
-  goBackInterval: 0, // whether to go back to origin location, check location every n min
+  inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
   beAttackedRandTeleport: true,
-  autoBuyHp: 1, // 1 * 100, -1 => max
-  autoBuyArrow: 1, // 1 * 1000, -1 => max
+  dangerousGoHome: true, // if hp < 25%, go home, use button 8th
+  autoAttack: true,
   autoReceiveReward: true,
-  poisonBtn6: true,
+  autoUseAntidote: false, // take an antidote for the poison, use six button
+  goBackInterval: 0, // whether to go back to origin location, check location every n min
+  autoBuyHp: 0, // 1 * 100, -1 => max
+  autoBuyArrow: 0, // 1 * 1000, -1 => max
 };
  
 let lm = undefined;
 
 function start(config) {
-  console.log('👉 啟動腳本 👈');
+  console.log('📢 啟動腳本 📢');
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
   if (lm !== undefined) {
-    console.log('👉 腳本已啟動 👈');
+    console.log('📢 腳本已啟動 📢');
     return;
   }
   lm = new LineageM(config);
   lm.start();
   lm.stop();
   lm = undefined;
-  console.log('👉 腳本已停止 👈');
+  console.log('📢 腳本已停止 📢');
 }
 
 function stop() {
@@ -995,7 +996,7 @@ function stop() {
     return;
   }
   lm._loop = false;
-  console.log('👉 停止腳本中 👈');
+  console.log('📢 停止腳本中 📢');
 }
 
 // start(DefaultConfig);
