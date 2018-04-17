@@ -163,6 +163,7 @@ class GameInfo {
     this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
     this.storeHpRect = new Rect(94, 276, 94 + 100, 276 + 100);
+    this.mapSelector = new Rect(56, 339, 350, 937); // h 112
 
     this.storeOther = new Point(510, 220);
     this.store10 = new Point(670, 970);
@@ -197,6 +198,8 @@ class GameInfo {
     this.mapControllerR = new Point(390, 860);
     this.mapControllerT = new Point(290, 760);
     this.mapControllerB = new Point(290, 960);
+    this.mapMoveBtn = new Point(1588, 986);
+    this.mapFloorBtn = new Point(1120, 886);
 
     this.storeMode = new PageFeature('storeMode', [
       new FeaturePoint(184, 956, 212, 192, 139, true, 32),
@@ -320,6 +323,8 @@ class LineageM {
       hpWater: openImage(`${this.localPath}/hp.png`),
       store: openImage(`${this.localPath}/store.png`),
       arrow: openImage(`${this.localPath}/arrow.png`),
+      floor1: openImage(`${this.localPath}/floor1.png`),
+      floor2: openImage(`${this.localPath}/floor2.png`),
     };
     // this.gi.menuOffEvent.print(this._img);
     this.tmpExp = 0;
@@ -484,6 +489,10 @@ class LineageM {
         } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
           this.gi.itemBtns[6].tap();
           useHomeTime = Date.now();
+        } else if (this.config.mapSelect > 0) {
+          console.log('移動到地圖', this.config.mapSelect);
+          this.goToMapPage();
+          this.slideMapSelector(this.config.mapSelect);
         }
       } else {
         isBuy = false;
@@ -547,7 +556,7 @@ class LineageM {
   waitForChangeScreen(score = 0.8, maxSleep = 10000) {
     const oriImg = clone(this._img);
     for(let i = 0; i < (maxSleep/500) && this._loop; i++) {
-      sleep(500);
+      sleep(400);
       this.refreshScreen();
       const s = getIdentityScore(this._img, oriImg);
       if (s < score) {
@@ -915,6 +924,69 @@ class LineageM {
     return finalXY;
   }
 
+  slideMapSelector(nth) {
+    const itemHeight = 112 * gRatioDevice; // dev 1920 * 1080 => device item height
+    const sDCX = (this.gi.mapSelector.x1 + this.gi.mapSelector.x2) / 2 * gRatioDevice;
+    const sDCY = (this.gi.mapSelector.y1 + this.gi.mapSelector.y2) / 2 * gRatioDevice;
+    const itemsY = [
+      this.gi.mapSelector.y1 + itemHeight * 0.5,
+      this.gi.mapSelector.y1 + itemHeight * 1.5,
+      this.gi.mapSelector.y1 + itemHeight * 2.5,
+      this.gi.mapSelector.y1 + itemHeight * 3.5,
+      this.gi.mapSelector.y1 + itemHeight * 4.5,
+    ];
+    // move to top
+    const move2Top = () => {
+      for (let i = 0; i < 3; i++) {
+        tapDown(sDCX, itemsY[0], 10);
+        tapUp(sDCX, itemsY[4], 10);
+        sleep(500);
+      }
+    };
+    const move4down = () => {
+      tapDown(sDCX, itemsY[4], 20);
+      moveTo(sDCX, itemsY[4], 20);
+      moveTo(sDCX, itemsY[3], 20);
+      moveTo(sDCX, itemsY[2], 20);
+      moveTo(sDCX, itemsY[1], 20);
+      sleep(100);
+      moveTo(sDCX, itemsY[0], 20);
+      sleep(500);
+      tapUp(sDCX, itemsY[0], 20);
+    };
+    move2Top();
+    sleep(500);
+    for (let i = 0; i < Math.floor((nth-1)/4) && this._loop; i++) {
+      move4down();
+    }
+    tap(sDCX, itemsY[(nth-1)%4], 20);
+    sleep(500);
+    
+    this.refreshScreen();
+    this.gi.mapMoveBtn.tap();
+    this.waitForChangeScreen(0.92, 5000);
+    this.safeSleep(3000); if (!this._loop) {return;}
+    this.refreshScreen();
+    const floorXY1 = findImage(this._img, this.images.floor1);
+    if (floorXY1.score > 0.8) {
+      const dXY = Utils.targetToDevice(floorXY1);
+      tap(dXY.x + 5, dXY.y + 5, 50);
+      sleep(1000);
+      this.gi.mapFloorBtn.tap();
+      sleep(1000);
+      return;
+    }
+    const floorXY2 = findImage(this._img, this.images.floor2);
+    if (floorXY2.score > 0.8) {
+      const dXY = Utils.targetToDevice(floorXY2);
+      tap(dXY.x + 5, dXY.y + 5, 50);
+      sleep(1000);
+      this.gi.mapFloorBtn.tap();
+      sleep(1000);
+      return;
+    }
+  }
+
   getImageNumber(img, numbers, maxLength = 8) {
     if (numbers.length != 10) {
       console.log('圖片數量應為 10');
@@ -971,6 +1043,7 @@ const DefaultConfig = {
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   autoBuyHp: 0, // 1 * 100, -1 => max
   autoBuyArrow: 0, // 1 * 1000, -1 => max
+  mapSelect: 5, // move to nth map in safe region
 };
  
 let lm = undefined;
@@ -1002,6 +1075,8 @@ function stop() {
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
 // lm._loop=true;
+// lm.goToMapPage();
+// lm.slideMapSelector(5);
 // lm.buyItems();
 // lm.checkAndAutoGetReward();
 // for (var i= 0; i < 1; i++) {
