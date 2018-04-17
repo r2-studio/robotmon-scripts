@@ -1069,9 +1069,9 @@ var LineageM = function () {
     key: 'slideMapSelector',
     value: function slideMapSelector(nth) {
       var itemHeight = 112 * gRatioDevice; // dev 1920 * 1080 => device item height
-      var sDCX = (this.gi.mapSelector.x1 + this.gi.mapSelector.x2) / 2 * gRatioDevice;
-      var sDCY = (this.gi.mapSelector.y1 + this.gi.mapSelector.y2) / 2 * gRatioDevice;
-      var itemsY = [this.gi.mapSelector.y1 + itemHeight * 0.5, this.gi.mapSelector.y1 + itemHeight * 1.5, this.gi.mapSelector.y1 + itemHeight * 2.5, this.gi.mapSelector.y1 + itemHeight * 3.5, this.gi.mapSelector.y1 + itemHeight * 4.5];
+      var sDCX = gGameOffsetX + (this.gi.mapSelector.x1 + this.gi.mapSelector.x2) / 2 * gRatioDevice;
+      var sDCY = gGameOffsetY + this.gi.mapSelector.y1 * gRatioDevice;
+      var itemsY = [sDCY + itemHeight * 0.5, sDCY + itemHeight * 1.5, sDCY + itemHeight * 2.5, sDCY + itemHeight * 3.5, sDCY + itemHeight * 4.5];
       // move to top
       var move2Top = function move2Top() {
         for (var i = 0; i < 3; i++) {

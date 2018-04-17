@@ -926,14 +926,14 @@ class LineageM {
 
   slideMapSelector(nth) {
     const itemHeight = 112 * gRatioDevice; // dev 1920 * 1080 => device item height
-    const sDCX = (this.gi.mapSelector.x1 + this.gi.mapSelector.x2) / 2 * gRatioDevice;
-    const sDCY = (this.gi.mapSelector.y1 + this.gi.mapSelector.y2) / 2 * gRatioDevice;
+    const sDCX = gGameOffsetX + (this.gi.mapSelector.x1 + this.gi.mapSelector.x2) / 2 * gRatioDevice;
+    const sDCY = gGameOffsetY + this.gi.mapSelector.y1 * gRatioDevice;
     const itemsY = [
-      this.gi.mapSelector.y1 + itemHeight * 0.5,
-      this.gi.mapSelector.y1 + itemHeight * 1.5,
-      this.gi.mapSelector.y1 + itemHeight * 2.5,
-      this.gi.mapSelector.y1 + itemHeight * 3.5,
-      this.gi.mapSelector.y1 + itemHeight * 4.5,
+      sDCY + itemHeight * 0.5,
+      sDCY + itemHeight * 1.5,
+      sDCY + itemHeight * 2.5,
+      sDCY + itemHeight * 3.5,
+      sDCY + itemHeight * 4.5,
     ];
     // move to top
     const move2Top = () => {

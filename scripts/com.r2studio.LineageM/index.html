@@ -172,7 +172,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 14;
+    VERSION = 15;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
@@ -232,8 +232,8 @@
                 autoUseAntidote: "自動使用解毒劑 (請將解毒劑放在快捷鍵 6)",
                 autoBuyHp: "自動買紅水 (-1: Max)",
                 autoBuyArrow: "自動買銀箭 (-1: Max)",
-                goBackInterval: "回到原點 (0: 不啟動) (僅支援地圖中間區域與亞丁大陸)",
-                mapSelect: "移動到地圖 (0: 不啟動) (僅支援亞丁大陸 1 到 68 號)",
+                goBackInterval: "回到地圖原點 (0: 不啟動) (僅支援地圖中間區域與亞丁大陸)",
+                mapSelect: "移動到指定地圖 (0: 不啟動) (僅支援亞丁大陸 1 到 68 號)",
               }
             }
           }
@@ -553,7 +553,8 @@
    <a id="version" class="navbar-brand"></a>
   </nav>
   <div id="container" class="container">
-    <div>支援所有螢幕解析度(請先設定畫面比例為基本比例)，請將浮動視窗放在左邊中間位置</div>
+    <div>請將浮動視窗放在中間上方位置(不要遮蔽住地圖選單亞丁大陸)</div>
+    <div>支援所有螢幕解析度(請先設定畫面比例為基本比例)，請將浮動視窗放在中間1位置</div>
     <div>注意！快捷鍵 9 為試煉副本的特殊技能按鈕</div>
     <div>自動買物品功能，必須使用回卷能夠看到商人(會重試 10 次)，已知威頓、肯特無法</div>
     <ul id="condition" class="list-group"></ul>
