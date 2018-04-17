@@ -163,7 +163,6 @@ class GameInfo {
     this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
     this.storeHpRect = new Rect(94, 276, 94 + 100, 276 + 100);
-    this.storeArrowRect = new Rect(215, 520, 215 + 100, 520 + 100);
 
     this.storeOther = new Point(510, 220);
     this.store10 = new Point(670, 970);
@@ -610,12 +609,12 @@ class LineageM {
     sleep(500);if (!this._loop) {return false;}
     if (this.config.autoBuyArrow > 0) {
       this.gi.storeOther.tap();
+      sleep(500);if (!this._loop) {return false;}
       this.refreshScreen();
-      const testImg = this.gi.storeArrowRect.crop(this._img);
-      const s = getIdentityScore(this.images.arrow, testImg);
-      releaseImage(testImg);
-      if (s > 0.9) {
-        this.gi.storeArrow.tap();
+      const arrowPos = findImage(this._img, this.images.arrow);
+      if (arrowPos.score > 0.9) {
+        const dXY = Utils.targetToDevice(arrowPos);
+        tap(dXY.x + 5, dXY.y + 5, 50);
         this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
       }
     }
@@ -944,8 +943,8 @@ const DefaultConfig = {
   dangerousGoHome: true, // if hp < 25%, go home, use button 8th
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   beAttackedRandTeleport: true,
-  autoBuyHp: 3, // 1 * 100, -1 => max
-  autoBuyArrow: 0, // 1 * 1000, -1 => max
+  autoBuyHp: 0, // 1 * 100, -1 => max
+  autoBuyArrow: 1, // 1 * 1000, -1 => max
   autoReceiveReward: true,
 };
 
@@ -978,6 +977,7 @@ function stop() {
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
 // lm._loop=true;
+// lm.buyItems();
 // lm.checkAndAutoGetReward();
 // for (var i= 0; i < 1; i++) {
 //   lm.refreshScreen();
