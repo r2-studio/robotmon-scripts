@@ -6,6 +6,7 @@
       border-radius: 0 !important;
       background-color: #2196F3;
       color: #FFFFFF;
+      margin-bottom: 0px !important;
     }
 
     .navbar-custom>a {
@@ -16,6 +17,10 @@
 
     .navbar-custom>a:hover {
       color: #FFFFFF;
+    }
+
+    .list-group {
+      margin-bottom: 15px !important;
     }
 
     .list-group-item {
@@ -172,7 +177,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 14;
+    VERSION = 15;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
@@ -191,9 +196,10 @@
       autoAttack: true,
       autoReceiveReward: true,
       autoUseAntidote: false, // take an antidote for the poison, use six button
-      goBackInterval: 0, // whether to go back to origin location, check location every n min
       autoBuyHp: 0, // 1 * 100, -1 => max
       autoBuyArrow: 0, // 1 * 1000, -1 => max
+      goBackInterval: 0, // whether to go back to origin location, check location every n min
+      mapSelect: 0, // move to nth map in safe region
     };
     var settings;
 
@@ -221,6 +227,7 @@
                 milliseconds: "毫秒",
                 minutes: "分鐘",
                 unit: "單位",
+                map: "地圖",
                 hotkey: "快捷鍵",
                 inHomeUseBtn: "安全區域瞬卷 (請將瞬卷放在快捷鍵 7)",
                 beAttackedRandTeleport: "被攻擊瞬移 (請將瞬卷放在快捷鍵 7)",
@@ -228,9 +235,10 @@
                 autoAttack: "自動攻擊",
                 autoReceiveReward: "自動收獎勵、簽到",
                 autoUseAntidote: "自動使用解毒劑 (請將解毒劑放在快捷鍵 6)",
-                goBackInterval: "回到原點 (0: 不啟動) (僅支援地圖中間區域與亞丁大陸)",
                 autoBuyHp: "自動買紅水 (-1: Max)",
                 autoBuyArrow: "自動買銀箭 (-1: Max)",
+                goBackInterval: "回到地圖原點 (0: 不啟動) (僅支援亞丁大陸與中間區域)",
+                mapSelect: "移動指定地圖 (0: 不啟動) (僅支援亞丁大陸1到68號)",
               }
             }
           }
@@ -290,9 +298,7 @@
       appendSwitchCol(jRow, jSwitchInput);
     }
 
-    function loadButtonSetting(groupKey, object, key, min, max, step, quantityOfStep, interval, title, unit) {
-      var jIntervalInput = $('<div class="setting_input">' + (object[key] / quantityOfStep) + '</div>');
-      var jIntervalBtn = $('<button class="btn btn-warning">+' + (step * interval) + '</button>');
+    function onIntervalButtonClick(jIntervalBtn, jInput, object, key, min, max, step, quantityOfStep, interval) {
       jIntervalBtn.click((function (jInput, min, max, step) {
         return function () {
           var currentValue = (+jInput.text());
@@ -307,7 +313,13 @@
           }
           saveSettings();
         }
-      })(jIntervalInput, min, max, step));
+      })(jInput, min, max, step));
+    }
+
+    function loadButtonSetting(groupKey, object, key, min, max, step, quantityOfStep, interval, step2, title, unit) {
+      var jIntervalInput = $('<div class="setting_input">' + (object[key] / quantityOfStep) + '</div>');
+      var jIntervalBtn = $('<button class="btn btn-warning">+' + (step * interval) + '</button>');
+      onIntervalButtonClick(jIntervalBtn, jIntervalInput, object, key, min, max, step, quantityOfStep, interval);
 
       var jGroup = $('#' + groupKey);
       var jGroupItem = $("<li class='list-group-item' style='background-color:#ffffff;margin-left:0px !important;'></li>");
@@ -322,6 +334,13 @@
       jRightContent.push(jIntervalInput);
       jRightContent.push($("<div class=setting_input data-i18n='" + unit + "'></div>"));
       jRightContent.push(jIntervalBtn);
+
+      if (step2 !== undefined) {
+        var jIntervalBtn2 = $('<button class="btn btn-warning">+' + (step2 * interval) + '</button>');
+        onIntervalButtonClick(jIntervalBtn2, jIntervalInput, object, key, min, max, step2, quantityOfStep, interval);
+        jRightContent.push(jIntervalBtn2);
+      }
+
       var jDiv = $('<div class="pull-right"></div>');
       var jCol = $('<div class="col-xs-4"></div>');
       for (var j in jRightContent) {
@@ -461,12 +480,14 @@
         if (typeof value === 'boolean') {
           loadSwitchSetting('other', settings, key);
         } else if (typeof value === 'number') {
-          if (key === 'goBackInterval') {
-            loadButtonSetting('other', settings, key, 0, 20, 1, 60000, 1, 'text.interval', 'text.minutes');
-          } else if (key === 'autoBuyHp') {
-            loadButtonSetting('other', settings, key, -1, 10, 1, 1, 100, undefined, 'text.unit');
+          if (key === 'autoBuyHp') {
+            loadButtonSetting('other', settings, key, -1, 10, 1, 1, 100, undefined, undefined, 'text.unit');
           } else if (key === 'autoBuyArrow') {
-            loadButtonSetting('other', settings, key, -1, 10, 1, 1, 1000, undefined, 'text.unit');
+            loadButtonSetting('other', settings, key, -1, 10, 1, 1, 1000, undefined, undefined, 'text.unit');
+          } else if (key === 'goBackInterval') {
+            loadButtonSetting('other', settings, key, 0, 20, 1, 60000, 1, undefined, 'text.interval', 'text.minutes');
+          } else if (key === 'mapSelect') {
+            loadButtonSetting('other', settings, key, 0, 68, 1, 1, 1, 10, 'text.map', undefined);
           }
         }
       }
@@ -537,9 +558,12 @@
    <a id="version" class="navbar-brand"></a>
   </nav>
   <div id="container" class="container">
-    <div>支援所有螢幕解析度(請先設定畫面比例為基本比例)，請將浮動視窗放在左邊中間位置</div>
-    <div>注意！快捷鍵 9 為試煉副本的特殊技能按鈕</div>
-    <div>自動買物品功能，必須使用回卷能夠看到商人(會重試 10 次)，已知威頓、肯特無法</div>
+    <div style="margin: 10px 0px;">
+      <div>1️⃣ 請將浮動視窗放在中間上方位置(不要遮蔽住地圖選單亞丁大陸)</div>
+      <div>2️⃣ 支援所有螢幕解析度(請先設定畫面比例為基本比例)</div>
+      <div>3️⃣ 自動買物品功能，必須使用回卷能夠看到商人(會重試 10 次)，已知威頓、肯特無法</div>
+      <div>4️⃣ 快捷鍵 9 為試煉副本的特殊技能按鈕</div>
+    </div>
     <ul id="condition" class="list-group"></ul>
     <ul id="other" class="list-group"></ul>
   </div>
