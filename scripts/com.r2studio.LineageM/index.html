@@ -6,6 +6,7 @@
       border-radius: 0 !important;
       background-color: #2196F3;
       color: #FFFFFF;
+      margin-bottom: 0px !important;
     }
 
     .navbar-custom>a {
@@ -16,6 +17,10 @@
 
     .navbar-custom>a:hover {
       color: #FFFFFF;
+    }
+
+    .list-group {
+      margin-bottom: 15px !important;
     }
 
     .list-group-item {
@@ -232,8 +237,8 @@
                 autoUseAntidote: "自動使用解毒劑 (請將解毒劑放在快捷鍵 6)",
                 autoBuyHp: "自動買紅水 (-1: Max)",
                 autoBuyArrow: "自動買銀箭 (-1: Max)",
-                goBackInterval: "回到地圖原點 (0: 不啟動) (僅支援地圖中間區域與亞丁大陸)",
-                mapSelect: "移動到指定地圖 (0: 不啟動) (僅支援亞丁大陸 1 到 68 號)",
+                goBackInterval: "回到地圖原點 (0: 不啟動) (僅支援亞丁大陸與中間區域)",
+                mapSelect: "移動指定地圖 (0: 不啟動) (僅支援亞丁大陸1到68號)",
               }
             }
           }
@@ -553,10 +558,12 @@
    <a id="version" class="navbar-brand"></a>
   </nav>
   <div id="container" class="container">
-    <div>請將浮動視窗放在中間上方位置(不要遮蔽住地圖選單亞丁大陸)</div>
-    <div>支援所有螢幕解析度(請先設定畫面比例為基本比例)，請將浮動視窗放在中間1位置</div>
-    <div>注意！快捷鍵 9 為試煉副本的特殊技能按鈕</div>
-    <div>自動買物品功能，必須使用回卷能夠看到商人(會重試 10 次)，已知威頓、肯特無法</div>
+    <div style="margin: 10px 0px;">
+      <div>1️⃣ 請將浮動視窗放在中間上方位置(不要遮蔽住地圖選單亞丁大陸)</div>
+      <div>2️⃣ 支援所有螢幕解析度(請先設定畫面比例為基本比例)</div>
+      <div>3️⃣ 自動買物品功能，必須使用回卷能夠看到商人(會重試 10 次)，已知威頓、肯特無法</div>
+      <div>4️⃣ 快捷鍵 9 為試煉副本的特殊技能按鈕</div>
+    </div>
     <ul id="condition" class="list-group"></ul>
     <ul id="other" class="list-group"></ul>
   </div>
