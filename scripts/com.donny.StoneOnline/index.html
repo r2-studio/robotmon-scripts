@@ -146,12 +146,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 1.35;
+      VERSION = 1.39;
 
       var settings = [
         [
           {
-            title: "1.35版，更新日期 2018.04.05，修正 領鑽/小測驗/領工藝品",
+            title: "1.39版，更新日期 2018.04.21，新增 500k/1m 地城(不限地區)、死亡判斷",
             title_zh_TW: "",
           },
           {
@@ -207,8 +207,8 @@
         ],
         [
           { title: "朋友送愛心", title_zh_TW: "", default: false},
-          { title: "看廣告拿鑽", title_zh_TW: "", default: true},
-          { title: "角色對話泡泡點擊", title_zh_TW: "", default: true},
+          { title: "看廣告拿鑽", title_zh_TW: "", default: false},
+          { title: "角色對話泡泡點擊", title_zh_TW: "", default: false},
 		  { 
             title: ['快速挖礦-藍   (0:關, 1:雨, 2:全天)'],
             default: 0,
@@ -218,7 +218,7 @@
           },
         ],
         [
-          { title: "白水晶製作(彎月)", title_zh_TW: "", default: false},
+          { title: "工藝製作(預設彎月)", title_zh_TW: "", default: false},
 		  { 
             title: ['彎月保留量(作水晶用)(0~12)'],
             default: 0,
@@ -227,10 +227,25 @@
             min: 0,
           },
         ],
+        [
+          {
+            title: "工藝品製作選擇開關(無選擇，預設白水晶)",
+            title_zh_TW: "",
+          },
+          { title: "食針作裝(工藝第1格)", title_zh_TW: "", default: false},
+          { title: "冰針作裝(工藝第2格)", title_zh_TW: "", default: false},
+        ],
         [		  
-          { title: "打水火石地城(只在礦區有效)", title_zh_TW: "", default: true},
 		  { 
-            title: ['打水火石地城票(剩餘量)(0~10)'],
+            title: ['打地城選擇 (0:關, 1:水火, 2:500k, 3:1m)'],
+            default: 0,
+            step: 1,
+            max: 3,
+            min: 0,
+          },
+		  
+		  { 
+            title: ['打地城票(剩餘量)(0~10)'],
             default: 10,
             step: 1,
             max: 10,
@@ -289,7 +304,7 @@
             title: "---===打獵圖功能設定===---",
             title_zh_TW: "",
           },
-          { title: "看廣告 <金幣2倍 && 自動重生>", title_zh_TW: "", default: true},
+          { title: "看廣告 <金幣2倍 && 自動重生>", title_zh_TW: "", default: false},
           {
             title: "看廣告金幣&重生 檢查時間(0~1200)",
             default: 15,
@@ -297,7 +312,7 @@
             max: 1200,
             min: 0,
           },
-          { title: "打圖 切換少人頻道", title_zh_TW: "", default: true},
+          { title: "打圖 切換少人頻道", title_zh_TW: "", default: false},
           {
             title: "打圖 切換少人頻道切換時間(120~1200)",
             default: 300,
@@ -310,30 +325,16 @@
           { title: "每日獎勵，自動領(無功能)", title_zh_TW: "", default: true},
           { title: "信件獎勵，自動領(無功能)", title_zh_TW: "", default: true},
         ],
-        [
-          { title: "工藝製作(項目/數量)", title_zh_TW: "", default: false},
-		  { 
-            title: ['暴食者的針 (0~3)'],
-            default: 0,
-            step: 1,
-            max: 3,
-            min: 0,
+		[
+          {
+            title: "1.38版，更新日期 2018.04.14，修正進入地圖模式",
+            title_zh_TW: "",
           },
-		  { 
-            title: ['寒冽冰針 (0~3)'],
-            default: 0,
-            step: 1,
-            max: 3,
-            min: 0,
+          {
+            title: "1.37版，更新日期 2018.04.10，新增工藝品製作 食針/冰針 作裝備",
+            title_zh_TW: "",
           },
-		  { 
-            title: ['閃亮水晶 (0~3)'],
-            default: 0,
-            step: 1,
-            max: 3,
-            min: 0,
-          },
-        ],
+		]
       ];
       function saveLocale(locale) {
         if (localStorage !== undefined) {
