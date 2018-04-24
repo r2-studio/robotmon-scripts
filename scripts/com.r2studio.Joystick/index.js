@@ -2,7 +2,58 @@ stopListenEvent();
 var TYPE_BTN = 1;
 var TYPE_ANALOG = 2;
 
+var touchId = 0;
+function genTouchId() {
+  return touchId++;
+}
+
+function BtnAnalogController(config) {
+  this.tid = genTouchId();
+  this.cx = config.center.x;
+  this.cy = config.center.y;
+  this.r = config.radius;
+  this.keyMiddle = config.keyMiddle;
+  this.keyMax = config.keyMax;
+  this.keyMin = config.keyMin;
+  this.key = config.key; // button key
+  this.xKey = config.xKey;
+  this.yKey = config.yKey;
+  this.state = 0; // 0 = up, 1 = down
+  this.x = this.cx;
+  this.y = this.cy;
+}
+
+BtnAnalogController.prototype.convertValue = function(v) {
+  var p = (v - this.keyMiddle) / (this.keyMax - this.keyMin + 1) * 2;
+  return p * (this.r);
+}
+
+BtnAnalogController.prototype.handleEvent = function(mode, code, value) {
+  if (code === this.key) {
+    if (value === 1) {
+      this.state = 1; // down
+      tapDown(this.cx, this.cy, 5, this.tid);
+      moveTo(this.cx, this.cy, 1, this.tid);
+    } else {
+      this.state = 0; // up
+      moveTo(this.cx, this.cy, 1, this.tid);
+      tapUp(this.cx, this.cy, 5, this.tid);
+    }
+    return true;
+  } else if (code === this.xKey && this.state === 1) {
+    this.x = this.cx + Math.round(this.convertValue(value));
+    moveTo(this.x, this.y, 1, this.tid);
+    return true;
+  } else if (code === this.yKey && this.state === 1) {
+    this.y = this.cy + Math.round(this.convertValue(value));
+    moveTo(this.x, this.y, 1, this.tid);
+    return true;
+  }
+  return false;
+}
+
 function AnalogController(config) {
+  this.tid = genTouchId();
   this.cx = config.center.x;
   this.cy = config.center.y;
   this.r = config.radius;
@@ -32,20 +83,22 @@ AnalogController.prototype.handleEvent = function(mode, code, value) {
     this.y = this.cy + Math.round(this.convertValue(value));
   }
   if (this.state === 0) {
-    tapDown(this.cx, this.cy, 1);
-    moveTo(this.x, this.y, 1);
+    tapDown(this.cx, this.cy, 5, this.tid);
+    moveTo(this.cx, this.cy, 1, this.tid);
+    moveTo(this.x, this.y, 1, this.tid);
     this.state = 1;
   } else if (Math.abs(this.x - this.cx) < 3 && Math.abs(this.y - this.cy) < 3) {
-    tapUp(this.cx, this.cy, 1);
+    moveTo(this.cx, this.cy, 1, this.tid);
+    tapUp(this.cx, this.cy, 5, this.tid);
     this.state = 0;
   } else {
-    moveTo(this.x, this.y, 1);
+    moveTo(this.x, this.y, 1, this.tid);
   }
-  // console.log('moveTo', this.x, this.y, this.convertValue(value));
   return true;
 }
 
 function ButtonController(config) {
+  this.tid = genTouchId();
   this.key = config.key;
   this.x = config.x;
   this.y = config.y;
@@ -54,9 +107,34 @@ function ButtonController(config) {
 ButtonController.prototype.handleEvent = function(mode, code, value) {
   if (this.key === code) {
     if (value === 1) { // down
-      tapDown(this.x, this.y, 1);
+      tapDown(this.x, this.y, 1, this.tid);
     } else {
-      tapUp(this.x, this.y, 1);
+      tapUp(this.x, this.y, 1, this.tid);
+    }
+  }
+}
+
+function DoubleButtonController() {
+  this.tid = genTouchId();
+  this.selectKey = config.selectKey;
+  this.key = config.key;
+  this.x = config.x;
+  this.y = config.x;
+  this.isSelected = false;
+};
+
+DoubleButtonController.prototype.handleEvent = function(mode, code, value) {
+  if (this.selectKey === code) {
+    if (value === 1) { // down
+      this.isSelected = true;
+    } else {
+      this.isSelected = false;
+    }
+  } else if (this.key === code && this.isSelected) {
+    if (value === 1) {
+      tapDown(this.x, this.y, 1, this.tid);
+    } else {
+      tapUp(this.x, this.y, 1, this.tid);
     }
   }
 }
