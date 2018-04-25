@@ -200,17 +200,17 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {
 			if (!config.isRunning) return false;
 			
 			sleep(100);
-			//console.log('BagOpenCheck-Unknow');
+			console.log('背包找不到，畫面檢查');
 			AttackMode(1); //檢查背包打開/自動攻擊
 			QuizRestart();
 			
 			CheckImageTap(455,  575, 180,  60, 0.9, 'exitstone.png', 680, 1280, 1, 200, 0); //Exit Grow Stone Online
-			CheckImageTap(490, 1060, 100, 160, 0.9, 'ok_button.png', 1, 1, 1, 200, 1); //OK_Button
+			CheckImageTap(490, 1060, 100, 330, 0.9, 'ok_button.png', 1, 1, 1, 200, 1); //OK_Button
 			CheckImageTap(600,  200, 470, 750, 0.9, 'closeboard.png', 1, 1, 1, 2, 1); //closeboard
 			CheckImageTap(470, 1100, 133,  95, 0.9, 'Receiveaward.png', 1, 1, 1, 200, 1); //Receiveaward
 			CheckImageTap(626,  868, 154,  51, 0.9, 'fastdig_ok.png', 430, 1130, 1, 200, 0);   //fast dig OK button
 			CheckImageTap(299,  897, 207,  39, 0.9, 'UpdataFailed.png', 540, 1120, 1, 200, 0); //wifi or lan disconnected
-			CheckImageTap(438,  825, 109,  42, 0.9, 'break_down.png', 650, 1150, 1, 200, 0);   //break down stone : cancl
+			CheckImageTap(438,  825, 109,  42, 0.9, 'break_down.png', 650, 1150, 1, 200, 0);   //break down stone : cancle
 			//CheckImageTap(441, 648, 113, 39, 0.8, 'Unlock_Stone.png', 540, 1210, 1, 200, 0); //stone lv_up : ok
 			
 			timetoRestarApp2(RestartApptimeset);
@@ -222,6 +222,7 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {
 }
 
 function AttackMode(Mode) { //攻擊模式：1:自動攻擊  2:定點攻擊  3:手動模式
+	if (!config.isRunning) return false;
 	console.log('攻擊模式切換')
 	rbm.keepScreenshotPartial(950, 1800, 950 + 90, 1800 + 90); // x1, y1, x2, y2
 	var BagClose = rbm.imageExists('BagClose_+.png', 0.9);
@@ -435,7 +436,7 @@ function AD_watch(ADtimer) {
 				break;
 			}
 			
-			console.log('廣告觀看時間 = ' + i);
+			console.log('廣告觀看計時 = ' + i);
 			keycode('BACK', 40);
 		}
 		
@@ -915,10 +916,10 @@ function friendheartcheck(Timer) { //朋友送愛心 main
 	else if (friendheartswitch > 0 && friendheartTD > 3600) {
 		friendheartswitch = 1
 	}
-	console.log('friendheartcheck over')
+	console.log('朋友送愛心，檢查完畢')
 }
 
-function WhiteCrystalMake(Timer) { //收工藝裝備，製作水晶 (彎月)
+function WhiteCrystalMake(Timer) { //收工藝裝備，製作工藝
 	if (!config.isRunning) return false;
 	console.log('收工藝裝備，製作工藝')
 	
@@ -938,11 +939,11 @@ function WhiteCrystalMake(Timer) { //收工藝裝備，製作水晶 (彎月)
 			AttackMode(3);
 		}
 		
-		for (var i = 0; i < 12; i++) {
+		for (var i = 0; i < 6; i++) {
 			CheckImageTap(947, 1688, 87, 83, 0.9, 'craftsbutton.png', 1, 1, 1, 200, 1) //craftsbutton
-			sleep(500)
+			sleep(1000)
 			
-			rbm.keepScreenshotPartial(450, 830, 620, 900); // x1, y1, x2, y2
+			rbm.keepScreenshotPartial(450, 830, 680, 940); // x1, y1, x2, y2
 			var image = rbm.imageExists('craftsmenu.png', 0.90);
 			rbm.releaseScreenshot();
 			if (image) {
@@ -952,8 +953,7 @@ function WhiteCrystalMake(Timer) { //收工藝裝備，製作水晶 (彎月)
 			}
 		}
 		
-		
-		rbm.keepScreenshotPartial(450, 830, 620, 900); // x1, y1, x2, y2
+		rbm.keepScreenshotPartial(450, 830, 680, 940); // x1, y1, x2, y2
 		var image = rbm.imageExists('craftsmenu.png', 0.97);
 		rbm.releaseScreenshot();
 		if (craftsmenu == 1) {  //CraftsOkOpen.png
@@ -973,12 +973,15 @@ function WhiteCrystalMake(Timer) { //收工藝裝備，製作水晶 (彎月)
 				var result1 = results1[index];
 				
 				if (Stonecount(0) == 0) {
-					FindStonesImages(5, 11, 0);    //合成  5  ==> 13
+					FindStonesImages(5, 11, 0);    //合成  5  ==> 11
+					CheckImageTap(947, 1688, 87, 83, 0.9, 'craftsbutton.png', 1, 1, 1, 200, 1) //craftsbutton
+					sleep(1000)
 					if (Stonecount(0) == 0) {
 						keycode('BACK', 600)
 						return false;
 					}
 				}
+
 				var x0 = 110 + result1.x + 40 - 40;
 				var y0 = 1100 + result1.y + 85 - 85;
 				sleep(300)
@@ -1088,23 +1091,17 @@ function CraftsMakeSelect(CraftsSelect){ //製作工藝，物品選擇  1:食針
 		else {
 			if (CraftsSelect == 1){
 				var craftOkButton_Y = 1580;
-				//console.log('777777',craftOkButton_Y);
 				xy_swipe(150, 780, 150, 1250, 25);
-				//console.log('666666',craftOkButton_Y);
 			}
 			else if (CraftsSelect == 2){
 				var craftOkButton_Y = 1580;
-				//console.log('2-777777',craftOkButton_Y);
 				xy_swipe(150, 750, 150, 1250, 25);
 				sleep (500);
 				xy_swipe(150, 1250, 150, 780, 25);
-				//console.log('2-666666',craftOkButton_Y);
 			}
 			else if (CraftsSelect == 3){
-				var craftOkButton_Y = 1580;
-				//console.log('3-777777',craftOkButton_Y);
+				var craftOkButton_Y = 1580
 				xy_swipe(150, 1250, 150, 750, 25);
-				//console.log('3-666666',craftOkButton_Y);
 			}
 		}
 		
@@ -1140,7 +1137,6 @@ function CraftsMakeSelect(CraftsSelect){ //製作工藝，物品選擇  1:食針
 		
 		//xy_swipe(150, 1250, 150, 780, 25);
 		sleep(800);
-		//console.log('888888')
 		ResterTimerSet = Date.now();
 	}
 	
@@ -1190,7 +1186,7 @@ function AreaChange(AreaID, Timer) {  //區域切換：AreaID= 1:頻道  2:狩�
 			rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2
 			var target1 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.90);
 			var target2 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.90);
-			console.log(target1, target2, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
+			//console.log(target1, target2, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
 			if (target1) {
 				rbm.imageClick('Travel_channels_lessperson_check.png', 0.90);
 			}
@@ -1248,7 +1244,7 @@ function AreaChange(AreaID, Timer) {  //區域切換：AreaID= 1:頻道  2:狩�
 				rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2
 				var target3 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.92);
 				var target4 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.92);
-				console.log(target3, target4, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
+				//console.log(target3, target4, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
 				if (target3) {
 					rbm.imageClick('Travel_channels_lessperson_check.png', 0.92);
 				}
@@ -1298,8 +1294,8 @@ function Map_Check(MapFc, Type) { // MapFc: 1打獵圖, 2礦區； Type: 1點擊
 }
 
 function AD_Goldx2(Timer) {  //兩倍金幣 main
-	console.log('看廣告 金幣x2 & 自動重生')
 	if (!config.isRunning || AD_Goldx2switch == 0) return false;
+	console.log('看廣告 金幣x2 & 自動重生')
 	
 	var AD_Goldx2TD = (Date.now() - AD_Goldx2Timer) / 1000
 	
@@ -1370,7 +1366,7 @@ function Dougeon_WFStone(Timer) { //打地下城
 			
 			deadcheck(50);
 			
-			rbm.keepScreenshotPartial(430, 550, 735, 600); // x1, y1, x2, y2
+			rbm.keepScreenshotPartial(410, 550, 735, 600); // x1, y1, x2, y2
 			for (var j = 10; j >= 0; j--) {  //檢查有幾張票，確認打不打
 				if (!config.isRunning || DougeonWFStoneswitch == 0) {
 					return false;
@@ -1402,26 +1398,6 @@ function Dougeon_WFStone(Timer) { //打地下城
 							Dougeon_500k1mFight()
 							break Tag_Ticket;
 						}
-						/*
-						tap (810, 1260, 120);
-						tap (810, 1440, 120);
-						tap (810, 1260, 120);
-						tap (810, 1440, 120);
-						
-						for (var i = 0; i < 40; i++) {
-							sleep(250);
-							rbm.keepScreenshotPartial(720, 540, 950, 680); // x1, y1, x2, y2
-							var target = rbm.imageExists('dungeon_addroom.png', 0.90);
-							rbm.releaseScreenshot();
-							var dungeonroomY = 630 + (DungeonRoomset - 1) * 139
-							if (target) {
-								tap(840, dungeonroomY, 120);
-								tap(840, dungeonroomY, 120);
-								rbm.releaseScreenshot();
-								break Tag_Ticket;
-							}
-						}
-						*/
 					}
 				}
 			}
@@ -1437,89 +1413,6 @@ function Dougeon_WFStone(Timer) { //打地下城
 			}
 		}
 		
-		/*
-		for (var i = 0; i < 20; i++) {   //開房間，設密碼，準備單P
-			if (!config.isRunning || DougeonWFStoneswitch == 0) {
-				return false;
-			}
-			rbm.keepScreenshotPartial(320, 870, 770, 990); // x1, y1, x2, y2
-			var target1 = rbm.imageExists('dungeon_roompw_null.png', 0.90);
-			var target2 = rbm.imageExists('dungeon_roompw_7878.png', 0.90);
-			rbm.releaseScreenshot();
-			if (target1) {                   //確認密碼空的，開始設定密碼
-				console.log('確認密碼空的，開始設定密碼')
-				tap(780, 930, 50); sleep(200);
-				tap(720, 930, 50); sleep(1000);
-				keycode(14, 50); sleep(200);
-				keycode(15, 50); sleep(200);
-				keycode(14, 50); sleep(200);
-				keycode(15, 50); sleep(200);
-				tap(780, 930, 50); sleep(200);
-			}
-			else if (target2) {              //確認密碼7878，按確認開房間
-				console.log('確認密碼7878，按確認開房間')
-				tap(410, 1200, 50); sleep(200);
-				tap(410, 1200, 50); sleep(200);
-				tap(410, 1200, 50); sleep(200);
-				break;
-			}
-			else {                          //密碼異常，清掉密碼重來
-				console.log('密碼異常，清掉密碼重來')
-				tap(780, 930, 50); sleep(200);
-				tap(720, 930, 50); sleep(200);
-				keycode('DEL', 50); sleep(200);
-				tap(780, 930, 50); sleep(200);
-			}
-			sleep(300)
-			ResterTimerSet = Date.now()
-		}
-		
-		var ticketovercount = 0;
-		var ticketusedcount = 0;
-		for (var i = 0; i < 150; i++) {   //檢查進入地城 空地區 左邊圖示
-			if (!config.isRunning || DougeonWFStoneswitch == 0) {
-				return false;
-			}
-			
-			rbm.keepScreenshotPartial(35, 755, 149, 1330); // x1, y1, x2, y2 //
-			var target1 = rbm.imageExists('dungeon_play.png', 0.90); //左邊 PLAY 是否存在
-			if (ticketusedcount < dungeonbattletimes && ticketovercount < 8) {
-				rbm.imageClick('dungeon_play.png', 0.90)  //左邊 PLAY 開幹BOSS
-				rbm.imageClick('dungeon_skip.png', 0.90)  //左邊 SKIP 跳過廢話
-				
-				var target2 = rbm.imageExists('dungeon_ticket_over.png', 0.90); //左邊 沒票
-				if (target2) {
-					ticketovercount = ticketovercount + 1
-					console.log('ticketovercount= ' + ticketovercount)
-				}
-				else {
-					ticketovercount = 0
-				}
-				rbm.releaseScreenshot();
-				
-				AttackMode(1); //檢查背包打開/自動攻擊
-				
-				rbm.keepScreenshotPartial(490, 1060, 590, 1220); // x1, y1, x2, y2
-				var target3 = rbm.imageExists('ok_button.png', 0.90);
-				if (target3) {                   //確認領石頭
-					rbm.imageClick('ok_button.png', 0.90)
-					ticketusedcount = ticketusedcount + 1
-					console.log('ticketusedcount= ' + ticketusedcount)
-				}
-				rbm.releaseScreenshot();
-			}
-			else if (target1) {
-				rbm.releaseScreenshot();
-				if (ticketovercount >= 8 || ticketusedcount >= dungeonbattletimes) {
-					console.log('沒票了 OR 票數達到了');
-					Map_Check(1, 1);
-					break;
-				}
-			}
-			
-			ResterTimerSet = Date.now()
-		}
-		*/
 		Dougeon_WFStoneTimer = Date.now() + Timer * 1000
 	}
 }
@@ -1753,7 +1646,6 @@ function EDTravel_field() {  //8龍，礦區切打獵，彎月數控制，切換
 			}
 			
 			xy_swipe(500, 1700, 500, 1400, 25);
-			//console.log('111111');
 			sleep(1000);
 			
 			if (i >= 1) {
@@ -1767,7 +1659,6 @@ function EDTravel_field() {  //8龍，礦區切打獵，彎月數控制，切換
 					//console.log('XY1', eightdragonhuntermap - Math.floor(eightdragonhuntermap/3))
 					//console.log(x1, y1)
 					tap(x1, y1)
-					//console.log('22222');
 					sleep(1000);
 			
 						rbm.keepScreenshotPartial(790, 1080, 940, 1680); // x1, y1, x2, y2
@@ -1828,7 +1719,7 @@ function StoneCompound(min, max, rainmax) { // 主流程
 	if (!config.isRunning) return false;
 
 	combinecount = 0;
-	FindStonesImages(5, 8, 0);    //合成  5  ==> 7
+	FindStonesImages(5, 8, 0);    //合成  5  ==> 8
 	
 	var Map_Check_FC1 = Map_Check(2, 0);  // MapFc: 1打獵圖, 2礦區； Type: 1點擊圖示
 	var Map_Check_FC2 = Map_Check(1, 0);  // MapFc: 1打獵圖, 2礦區； Type: 1點擊圖示
@@ -1856,7 +1747,7 @@ function StoneCompound(min, max, rainmax) { // 主流程
 		}
 		else if (eightdragonswitch == 1 && Stonecount(15) < eightdragonmoonset) {
 			console.log('8龍模式，合成6~13，彎月未滿 ' + eightdragonmoonset + ' 個')
-			FindStonesImages(6, 13, 0);    //合成  5  ==> 7
+			FindStonesImages(6, 13, 0);    //合成  5  ==> 13
 			stonecompoundnotup(14, 14); //指定金星不跳階合成
 		}
 		else if (eightdragonswitch == 1 && Stonecount(15) >= eightdragonmoonset) {
@@ -1891,10 +1782,12 @@ function StoneCompound(min, max, rainmax) { // 主流程
 		}
 		deadcheck(50);
 		
+		FindStonesImages(6, 13, 0);    //合成  5  ==> 13
 		AreaChange(6, CHLpersontimeset); // Change to channels
 		AD_Goldx2(AD_Goldx2timeset); //打獵 2倍金幣&看廣告自動重生
 		CheckImageTap(470, 1120, 610 - 470, 1170 - 1120, 0.9, 'Rebirth_Now.png', 1, 1, 1, 200, 1); //Rebirth_Now
-
+		
+		CheckImageTap(484,  1026, 107,  62, 0.9, 'deadlevetbutton.png', 1, 1, 1, 200, 1);   //dead in 1m levetbutton
 		dungeonbackcheck();  //人物在地城檢查，回礦區
 		sleep(500)
 	}
@@ -1918,8 +1811,8 @@ for(var n = 0; n <= 0; n++) {
 	RubyBoxClick = 0;
 	if (!config.isRunning) break;
 	if (n == 1) {
-		DougeonWFStoneswitch = 1;   //打水火石              0:關  1:開
-		DungeonTicketsset = 5;      //打水火石剩餘票設定   0:打光所有票  11:時間為 0:00
+		DougeonWFStoneswitch = 3;   //打水火石              0:關  1:開
+		DungeonTicketsset = 0;      //打水火石剩餘票設定   0:打光所有票  11:時間為 0:00
 		DungeonRoomset = 1;         //打水火石等級設定      0:不打     1:Beginner  2:Easy  
 									//                      3:Normal   4:Hard      5:Hell
 		Dougeon_WFStoneTimer = Date.now();  //打水火石
@@ -1930,9 +1823,9 @@ for(var n = 0; n <= 0; n++) {
 		AreaTimer5 =  Date.now() - 1000;  //強制回礦區
 	}
 	else if (n > 1) {
-		eightdragonhuntermap = 5;
-		EDTravel_field();
-		//Dougeon_WFStone(120);
+		//eightdragonhuntermap = 5;
+		//EDTravel_field();
+		Dougeon_WFStone(60);
 		
 	}
 	
