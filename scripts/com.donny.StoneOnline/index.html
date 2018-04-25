@@ -146,10 +146,14 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 1.39;
+      VERSION = 1.40;
 
       var settings = [
         [
+          {
+            title: "1.40版，更新日期 2018.04.23，修正，地城票數無法判斷，不打地城；收工藝",
+            title_zh_TW: "",
+          },
           {
             title: "1.39版，更新日期 2018.04.21，新增 500k/1m 地城(不限地區)、死亡判斷",
             title_zh_TW: "",
@@ -237,7 +241,7 @@
         ],
         [		  
 		  { 
-            title: ['打地城選擇 (0:關, 1:水火, 2:500k, 3:1m)'],
+            title: ['打地城選擇 (0:關, 1:水火, 2:500k, 3:1m )'],
             default: 0,
             step: 1,
             max: 3,
@@ -292,10 +296,10 @@
         [
           { title: "異常檢查自動重開app", title_zh_TW: "", default: true},
           {
-            title: "異常檢查自動重開時間(90~1200)",
-            default: 240,
+            title: "異常檢查自動重開時間(90~300)",
+            default: 120,
             step: 10,
-            max: 1200,
+            max: 300,
             min: 90,
           },
         ],
