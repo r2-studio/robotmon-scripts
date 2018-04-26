@@ -602,7 +602,6 @@ class LineageM {
     const stores = findImages(this._img, this.images.store, 0.89, 4, true);
     for (let k in stores) {
       if (!this._loop) {return false;}
-      // this.refreshScreen();
       const dXY = Utils.targetToDevice(stores[k]);
       tap(dXY.x + 5, dXY.y + 5, 50);
       this.waitForChangeScreen(0.95, 7000);if (!this._loop) {return false;}
@@ -615,7 +614,7 @@ class LineageM {
         const s = getIdentityScore(this.images.hpWater, testHpImg);
         releaseImage(testHpImg);
         if (s > 0.9) {
-          console.log('找不到商店');
+          console.log('找到商店');
           return true;
         }
       }
@@ -639,7 +638,7 @@ class LineageM {
       sleep(500);if (!this._loop) {return false;}
       this.refreshScreen();
       const arrowPos = findImage(this._img, this.images.arrow);
-      if (arrowPos.score > 0.9) {
+      if (arrowPos.score > 0.8) {
         const dXY = Utils.targetToDevice(arrowPos);
         tap(dXY.x + 5, dXY.y + 5, 50);
         this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);

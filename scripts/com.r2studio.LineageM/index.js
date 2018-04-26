@@ -693,7 +693,6 @@ var LineageM = function () {
         if (!this._loop) {
           return false;
         }
-        // this.refreshScreen();
         var dXY = Utils.targetToDevice(stores[k]);
         tap(dXY.x + 5, dXY.y + 5, 50);
         this.waitForChangeScreen(0.95, 7000);if (!this._loop) {
@@ -710,7 +709,7 @@ var LineageM = function () {
           var s = getIdentityScore(this.images.hpWater, testHpImg);
           releaseImage(testHpImg);
           if (s > 0.9) {
-            console.log('找不到商店');
+            console.log('找到商店');
             return true;
           }
         }
@@ -739,7 +738,7 @@ var LineageM = function () {
         }
         this.refreshScreen();
         var arrowPos = findImage(this._img, this.images.arrow);
-        if (arrowPos.score > 0.9) {
+        if (arrowPos.score > 0.8) {
           var dXY = Utils.targetToDevice(arrowPos);
           tap(dXY.x + 5, dXY.y + 5, 50);
           this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
