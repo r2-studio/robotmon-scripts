@@ -302,7 +302,7 @@
       jIntervalBtn.click((function (jInput, min, max, step) {
         return function () {
           var currentValue = (+jInput.text());
-          currentValue = currentValue <= 0 ? currentValue : currentValue / interval;
+          currentValue = currentValue <= 0 ? currentValue : currentValue * step / interval;
           var newValue = currentValue + step;
           if (newValue > max) {
             jInput.text(min);
@@ -317,7 +317,8 @@
     }
 
     function loadButtonSetting(groupKey, object, key, min, max, step, quantityOfStep, interval, step2, title, unit) {
-      var jIntervalInput = $('<div class="setting_input">' + (object[key] / quantityOfStep) + '</div>');
+      var needInterval = object[key] <= 0 ? 1 : interval;
+      var jIntervalInput = $('<div class="setting_input">' + (object[key] / quantityOfStep * needInterval) + '</div>');
       var jIntervalBtn = $('<button class="btn btn-warning">+' + (step * interval) + '</button>');
       onIntervalButtonClick(jIntervalBtn, jIntervalInput, object, key, min, max, step, quantityOfStep, interval);
 

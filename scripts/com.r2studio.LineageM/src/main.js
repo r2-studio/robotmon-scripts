@@ -449,6 +449,9 @@ class LineageM {
         }
       } else if (value * cd.op > cd.value * cd.op) {
         if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
+          if (cd.btn === 7 && this.rState.isSafeRegion) {
+            continue;
+          }
           this.gi.itemBtns[cd.btn].tap(1, 50);
           console.log(`使用按鈕 ${cd.btn+1}，條件 ${cd.type} ${cd.op===1?'大於':'小於'} ${cd.value} (${value})`);
           cd.useTime = Date.now();
