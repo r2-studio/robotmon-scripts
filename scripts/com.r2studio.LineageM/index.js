@@ -527,6 +527,9 @@ var LineageM = function () {
           }
         } else if (value * cd.op > cd.value * cd.op) {
           if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
+            if (cd.btn === 7 && this.rState.isSafeRegion) {
+              continue;
+            }
             this.gi.itemBtns[cd.btn].tap(1, 50);
             console.log('\u4F7F\u7528\u6309\u9215 ' + (cd.btn + 1) + '\uFF0C\u689D\u4EF6 ' + cd.type + ' ' + (cd.op === 1 ? '大於' : '小於') + ' ' + cd.value + ' (' + value + ')');
             cd.useTime = Date.now();
@@ -1085,9 +1088,9 @@ var LineageM = function () {
         moveTo(sDCX, itemsY[3], 20);
         moveTo(sDCX, itemsY[2], 20);
         moveTo(sDCX, itemsY[1], 20);
-        sleep(100);
+        sleep(150);
         moveTo(sDCX, itemsY[0], 20);
-        sleep(500);
+        sleep(1500);
         tapUp(sDCX, itemsY[0], 20);
       };
       move2Top();
