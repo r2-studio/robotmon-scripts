@@ -302,7 +302,7 @@
       jIntervalBtn.click((function (jInput, min, max, step) {
         return function () {
           var currentValue = (+jInput.text());
-          currentValue = currentValue <= 0 ? currentValue : currentValue * step / interval;
+          currentValue = currentValue <= 0 ? currentValue : currentValue / interval;
           var newValue = currentValue + step;
           if (newValue > max) {
             jInput.text(min);
