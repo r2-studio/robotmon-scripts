@@ -894,6 +894,7 @@ function friendheartcheck(Timer) { //朋友送愛心 main
 	if (friendheartswitch > 0 && friendheartswitch < 3 && Date.now() > friendheartTimer) {
 		sleep(2000)
 		tap(700, 480, 100);sleep(2000)
+		tap(700, 300, 100);sleep(2000)
 		tap(540, 550, 100);sleep(4000)
 		for (var i = 0; i < 18; i++) {
 			
@@ -1237,13 +1238,12 @@ function AreaChange(AreaID, Timer) {  //區域切換：AreaID= 1:頻道  2:狩�
 		
 		for (var i = 0; i < 15; i++) {
 			
-			rbm.keepScreenshotPartial(130, 460, 200, 520); // x1, y1, x2, y2
+			rbm.keepScreenshotPartial(130, 460, 200, 520); // x1, y1, x2, y2  //是否在打圖區判斷 ok
 			var target1 = rbm.imageExists('Travel_channels_lessperson_mapcheck1.png', 0.90);
 			var target2 = rbm.imageExists('Travel_channels_lessperson_mapcheck2.png', 0.90);
 			rbm.releaseScreenshot();
 			if (target1) {
-				
-				rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2
+				rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2 //判斷是否有打勾 ok
 				var target3 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.92);
 				var target4 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.92);
 				//console.log(target3, target4, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
@@ -1421,10 +1421,10 @@ function Dougeon_WFStone(Timer) { //打地下城
 
 function Dougeon_WFFight(dbtimes){  //地城 打水火石
 
-	tap (810, 1260, 120);
-	tap (810, 1440, 120);
-	tap (810, 1260, 120);
-	tap (810, 1440, 120);
+	tap (810, 1450, 120);
+	tap (810, 1630, 120);
+	tap (810, 1450, 120);
+	tap (810, 1630, 120);
 	
 	for (var i = 0; i < 40; i++) {
 		sleep(250);
