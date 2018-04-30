@@ -729,9 +729,8 @@ function findTsums(img) {
   var hsvImg = clone(img);
   smooth(hsvImg, 1, 7);
   convertColor(hsvImg, 40);
-  
-  var filter1 = outRange(hsvImg, 80, 160, 0, 0, 120, 255, 255, 255);
-  var filter2 = outRange(filter1, 80, 100, 90, 0, 120, 170, 180, 255);
+  var filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
+	var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
   var mask = bgrToGray(filter2);
   
   releaseImage(filter1);
