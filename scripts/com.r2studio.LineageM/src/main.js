@@ -255,6 +255,13 @@ class GameInfo {
       new FeaturePoint(1170, 880, 31, 20, 14, true, 20),
       new FeaturePoint(1150, 916, 31, 24, 14, true, 20),
     ]);
+    this.loginBtn = new PageFeature('login', [
+      new FeaturePoint(335, 310, 236, 175, 110, true, 20),
+      new FeaturePoint(430, 415, 161, 123, 78, true, 20),
+      new FeaturePoint(145, 900, 240, 240, 240, true, 20),
+      new FeaturePoint(175, 900, 240, 240, 240, true, 20),
+      new FeaturePoint(145, 930, 240, 240, 240, true, 20),
+    ]);
     this.enterBtn = new PageFeature('enter', [
       new FeaturePoint(1480, 990, 31, 47, 70, true, 20),
       new FeaturePoint(1750, 990, 31, 47, 70, true, 20),
@@ -283,6 +290,7 @@ class RoleState {
     this.mp = 0;
     this.exp = 0;
     this.isDisconnect = false;
+    this.isLogin = false;
     this.isEnter = false;
     this.isMenuOn = false;
     this.isMenuOff = false;
@@ -352,6 +360,12 @@ class LineageM {
   }
 
   checkIsSystemPage() {
+    if (this.rState.isLogin) {
+      console.log('登入遊戲，等待 3 秒');
+      this.gi.loginBtn.tap();
+      this.safeSleep(3 * 1000);
+      return true;
+    }
     if (this.rState.isEnter) {
       console.log('進入遊戲，等待 10 秒');        
       this.gi.enterBtn.tap();
@@ -389,8 +403,9 @@ class LineageM {
 
   updateGlobalState() {
     this.rState.isDisconnect = this.gi.disconnectBtn.check(this._img);
+    this.rState.isLogin = this.gi.loginBtn.check(this._img);
     this.rState.isEnter = this.gi.enterBtn.check(this._img);
-    if (this.rState.isDisconnect || this.rState.isEnter) {
+    if (this.rState.isDisconnect || this.rState.isLogin || this.rState.isEnter) {
       return;
     }
     this.rState.isMenuOn = this.gi.menuOnBtn.check(this._img);
@@ -449,6 +464,9 @@ class LineageM {
         }
       } else if (value * cd.op > cd.value * cd.op) {
         if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
+          if (cd.btn === 7 && this.rState.isSafeRegion) {
+            continue;
+          }
           this.gi.itemBtns[cd.btn].tap(1, 50);
           console.log(`使用按鈕 ${cd.btn+1}，條件 ${cd.type} ${cd.op===1?'大於':'小於'} ${cd.value} (${value})`);
           cd.useTime = Date.now();
@@ -602,7 +620,6 @@ class LineageM {
     const stores = findImages(this._img, this.images.store, 0.89, 4, true);
     for (let k in stores) {
       if (!this._loop) {return false;}
-      // this.refreshScreen();
       const dXY = Utils.targetToDevice(stores[k]);
       tap(dXY.x + 5, dXY.y + 5, 50);
       this.waitForChangeScreen(0.95, 7000);if (!this._loop) {return false;}
@@ -615,7 +632,7 @@ class LineageM {
         const s = getIdentityScore(this.images.hpWater, testHpImg);
         releaseImage(testHpImg);
         if (s > 0.9) {
-          console.log('找不到商店');
+          console.log('找到商店');
           return true;
         }
       }
@@ -639,7 +656,7 @@ class LineageM {
       sleep(500);if (!this._loop) {return false;}
       this.refreshScreen();
       const arrowPos = findImage(this._img, this.images.arrow);
-      if (arrowPos.score > 0.9) {
+      if (arrowPos.score > 0.8) {
         const dXY = Utils.targetToDevice(arrowPos);
         tap(dXY.x + 5, dXY.y + 5, 50);
         this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
@@ -949,9 +966,9 @@ class LineageM {
       moveTo(sDCX, itemsY[3], 20);
       moveTo(sDCX, itemsY[2], 20);
       moveTo(sDCX, itemsY[1], 20);
-      sleep(100);
+      sleep(150);
       moveTo(sDCX, itemsY[0], 20);
-      sleep(500);
+      sleep(1500);
       tapUp(sDCX, itemsY[0], 20);
     };
     move2Top();

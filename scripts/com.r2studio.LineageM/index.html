@@ -177,7 +177,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 15;
+    VERSION = 16;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
@@ -317,7 +317,8 @@
     }
 
     function loadButtonSetting(groupKey, object, key, min, max, step, quantityOfStep, interval, step2, title, unit) {
-      var jIntervalInput = $('<div class="setting_input">' + (object[key] / quantityOfStep) + '</div>');
+      var needInterval = object[key] <= 0 ? 1 : interval;
+      var jIntervalInput = $('<div class="setting_input">' + (object[key] / quantityOfStep * needInterval) + '</div>');
       var jIntervalBtn = $('<button class="btn btn-warning">+' + (step * interval) + '</button>');
       onIntervalButtonClick(jIntervalBtn, jIntervalInput, object, key, min, max, step, quantityOfStep, interval);
 

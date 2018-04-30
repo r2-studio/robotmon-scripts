@@ -331,6 +331,7 @@ var GameInfo = function GameInfo() {
   this.selfSkillBtn = new PageFeature('selfSkillOff', [new FeaturePoint(1594, 601, 141, 147, 137, true, 60), new FeaturePoint(1591, 624, 117, 128, 114, true, 60)]);
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
   this.disconnectBtn = new PageFeature('disconnect', [new FeaturePoint(840, 880, 34, 51, 79, true, 20), new FeaturePoint(1080, 880, 34, 51, 79, true, 20), new FeaturePoint(1170, 880, 31, 20, 14, true, 20), new FeaturePoint(1150, 916, 31, 24, 14, true, 20)]);
+  this.loginBtn = new PageFeature('login', [new FeaturePoint(335, 310, 236, 175, 110, true, 20), new FeaturePoint(430, 415, 161, 123, 78, true, 20), new FeaturePoint(145, 900, 240, 240, 240, true, 20), new FeaturePoint(175, 900, 240, 240, 240, true, 20), new FeaturePoint(145, 930, 240, 240, 240, true, 20)]);
   this.enterBtn = new PageFeature('enter', [new FeaturePoint(1480, 990, 31, 47, 70, true, 20), new FeaturePoint(1750, 990, 31, 47, 70, true, 20), new FeaturePoint(1690, 990, 31, 47, 70, true, 20)]);
   this.beAttacked = new PageFeature('beAttacked', [new FeaturePoint(1616, 744, 210, 90, 50, true, 45), new FeaturePoint(1676, 744, 210, 90, 50, true, 45), new FeaturePoint(1666, 756, 210, 90, 50, true, 45), new FeaturePoint(1624, 750, 210, 90, 50, true, 45), new FeaturePoint(1800, 818, 240, 160, 140, true, 30), new FeaturePoint(1634, 769, 165, 180, 170, false, 50)]);
   this.storeExceed = new PageFeature('storeExceed', [new FeaturePoint(1102, 812, 33, 23, 0, true, 40)]);
@@ -347,6 +348,7 @@ var RoleState = function () {
     this.mp = 0;
     this.exp = 0;
     this.isDisconnect = false;
+    this.isLogin = false;
     this.isEnter = false;
     this.isMenuOn = false;
     this.isMenuOff = false;
@@ -427,6 +429,12 @@ var LineageM = function () {
   }, {
     key: 'checkIsSystemPage',
     value: function checkIsSystemPage() {
+      if (this.rState.isLogin) {
+        console.log('登入遊戲，等待 3 秒');
+        this.gi.loginBtn.tap();
+        this.safeSleep(3 * 1000);
+        return true;
+      }
       if (this.rState.isEnter) {
         console.log('進入遊戲，等待 10 秒');
         this.gi.enterBtn.tap();
@@ -466,8 +474,9 @@ var LineageM = function () {
     key: 'updateGlobalState',
     value: function updateGlobalState() {
       this.rState.isDisconnect = this.gi.disconnectBtn.check(this._img);
+      this.rState.isLogin = this.gi.loginBtn.check(this._img);
       this.rState.isEnter = this.gi.enterBtn.check(this._img);
-      if (this.rState.isDisconnect || this.rState.isEnter) {
+      if (this.rState.isDisconnect || this.rState.isLogin || this.rState.isEnter) {
         return;
       }
       this.rState.isMenuOn = this.gi.menuOnBtn.check(this._img);
@@ -527,6 +536,9 @@ var LineageM = function () {
           }
         } else if (value * cd.op > cd.value * cd.op) {
           if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
+            if (cd.btn === 7 && this.rState.isSafeRegion) {
+              continue;
+            }
             this.gi.itemBtns[cd.btn].tap(1, 50);
             console.log('\u4F7F\u7528\u6309\u9215 ' + (cd.btn + 1) + '\uFF0C\u689D\u4EF6 ' + cd.type + ' ' + (cd.op === 1 ? '大於' : '小於') + ' ' + cd.value + ' (' + value + ')');
             cd.useTime = Date.now();
@@ -693,7 +705,6 @@ var LineageM = function () {
         if (!this._loop) {
           return false;
         }
-        // this.refreshScreen();
         var dXY = Utils.targetToDevice(stores[k]);
         tap(dXY.x + 5, dXY.y + 5, 50);
         this.waitForChangeScreen(0.95, 7000);if (!this._loop) {
@@ -710,7 +721,7 @@ var LineageM = function () {
           var s = getIdentityScore(this.images.hpWater, testHpImg);
           releaseImage(testHpImg);
           if (s > 0.9) {
-            console.log('找不到商店');
+            console.log('找到商店');
             return true;
           }
         }
@@ -739,7 +750,7 @@ var LineageM = function () {
         }
         this.refreshScreen();
         var arrowPos = findImage(this._img, this.images.arrow);
-        if (arrowPos.score > 0.9) {
+        if (arrowPos.score > 0.8) {
           var dXY = Utils.targetToDevice(arrowPos);
           tap(dXY.x + 5, dXY.y + 5, 50);
           this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
@@ -1086,9 +1097,9 @@ var LineageM = function () {
         moveTo(sDCX, itemsY[3], 20);
         moveTo(sDCX, itemsY[2], 20);
         moveTo(sDCX, itemsY[1], 20);
-        sleep(100);
+        sleep(150);
         moveTo(sDCX, itemsY[0], 20);
-        sleep(500);
+        sleep(1500);
         tapUp(sDCX, itemsY[0], 20);
       };
       move2Top();
