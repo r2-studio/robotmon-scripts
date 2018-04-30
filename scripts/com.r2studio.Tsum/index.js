@@ -1402,14 +1402,14 @@ Tsum.prototype.scanBoardQuick = function() {
     if (i >= this.tsumCount - 1) {
       break;
     }
-		var tc = tcs[i];
-		for (var j in tc.points) {
-			var p = tc.points[j];
+    var tc = tcs[i];
+    for (var j in tc.points) {
+      var p = tc.points[j];
       board.push({tsumIdx: i, x: p.x, y: p.y});
       if (this.debug) {
         drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);  
       }	
-		}
+    }
   }
   if (this.debug) {
     saveImage(srcImg, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
