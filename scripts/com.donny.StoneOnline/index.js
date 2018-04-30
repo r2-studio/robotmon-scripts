@@ -1100,7 +1100,7 @@ function CraftsMakeSelect(CraftsSelect){ //製作工藝，物品選擇  1:食針
 				xy_swipe(150, 1250, 150, 780, 25);
 			}
 			else if (CraftsSelect == 3){
-				var craftOkButton_Y = 1580
+				var craftOkButton_Y = 1480
 				xy_swipe(150, 1250, 150, 750, 25);
 			}
 		}
@@ -1121,15 +1121,17 @@ function CraftsMakeSelect(CraftsSelect){ //製作工藝，物品選擇  1:食針
 		}
 		*/
 		
-		rbm.keepScreenshotPartial(454, 1040, 840, 1500); // x1, y1, x2, y2
+		rbm.keepScreenshotPartial(450, 1040, 840, 1500); // x1, y1, x2, y2
 		var image1 = rbm.imageExists(CraftsMakeItem[CraftsSelect] + 'Doit_TC.png', 0.9);
 		//var image2 = rbm.imageExists(CraftsMakeItem[CraftsSelect] + 'Doit_EN.png', 0.9);
 		rbm.releaseScreenshot();
 		if (image1) {
 		//if (image1 || image2) {
-			sleep(1000)
-			tap(540, craftOkButton_Y, 300);
-			tap(540, craftOkButton_Y, 300);
+			sleep(2000)
+			CheckImageTap(470, 1100, 130, 580, 0.9, 'craftsbuttonOK.png', 1, 1, 1, 200, 1) //OK_Button
+			CheckImageTap(470, 1100, 130, 580, 0.9, 'craftsbuttonOK.png', 1, 1, 1, 200, 1) //OK_Button
+			//tap(540, craftOkButton_Y, 300);
+			//tap(540, craftOkButton_Y, 300);
 			console.log('CraftsMakeDoit')
 			sleep(2000)
 			break;
