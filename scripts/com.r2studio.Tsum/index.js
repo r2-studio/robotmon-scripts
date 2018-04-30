@@ -1388,7 +1388,7 @@ Tsum.prototype.scanBoard = function() {
   return board;
 }
 
-Tsum.prototype.scanBoard2 = function() {
+Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
   var srcImg = this.playScreenshot();
@@ -1419,41 +1419,20 @@ Tsum.prototype.scanBoard2 = function() {
   return board;
 }
 
-Tsum.prototype.taskPlayGame = function() {
+Tsum.prototype.taskPlayGameQuick = function() {
   this.isLocaleTW ? log('進入遊戲中...') : log('Starting game...');
   this.goGamePlayingPage();
-  this.isLocaleTW ? log('遊戲中') : log('In game');
-  this.sleep(500);
-  this.findMyTsum();
-  this.isLocaleTW ? log('myTsum', this.myTsum): log('我的Tsum', this.myTsum);
-  // this.sleep(500);
-  // start to run
+  this.isLocaleTW ? log('遊戲中 快速版') : log('In game');
   this.runTimes = 0;
-  var pathZero = 0;
   var clearBubbles = 0;
+  var zeroPath = 0;
   while(this.isRunning) {  
-    var board = this.scanBoard2();
+    var board = this.scanBoardQuick();
     if (board == undefined || board == null) {
       break;
     }
     log('計算連線路徑');
     var paths = calculatePaths(board);
-    if (paths.length < 2) {
-      if (pathZero > 2) {
-        pathZero = 0;
-        log('路徑數量為 0, 重新辨識...');
-        if (this.useFan) {
-          this.tap(Button.gameRand, 60);
-          this.tap(Button.gameRand, 60);
-          this.sleep(1000);
-        }
-        releaseTsumRotationImages(this.gameTsums);
-        this.gameTsums = [];
-        this.isLoadRotateTsum = false;
-        continue;
-      }
-      pathZero++;
-    }
 
     log('開始連線 數量', paths.length);
     paths = paths.splice(0, 6);
@@ -1462,20 +1441,24 @@ Tsum.prototype.taskPlayGame = function() {
       log("產生泡泡");
       clearBubbles++;
     }
-
+    if (paths.length < 3) {
+      zeroPath++;
+      if (zeroPath === 3) {
+        this.tap(Button.gameRand, 60);
+        this.tap(Button.gameRand, 60);
+        zeroPath = 0;
+      }
+    }
     // click bubbles
     if (this.clearBubbles && clearBubbles >= 2) {
       log("Clear bubbles");
       clearBubbles = 0;
       this.clearAllBubbles();
     }
-    
     if (this.useFan && this.runTimes % 4 == 3) {
-      this.tap(Button.gameRand, 100);
-      this.tap(Button.gameRand, 100);
-      // this.sleep(700);
+      this.tap(Button.gameRand, 60);
+      this.tap(Button.gameRand, 60);
     }
-    // this.sleep(300);
     if (this.useSkill(board)) {
       clearBubbles++;
       if (this.useSkill(board)) {
@@ -1501,15 +1484,13 @@ Tsum.prototype.taskPlayGame = function() {
   this.sleep(4000);
 }
 
-Tsum.prototype.taskPlayGame2 = function() {
-  log('進入遊戲中...');
+Tsum.prototype.taskPlayGame = function() {
+  this.isLocaleTW ? log('進入遊戲中...') : log('Starting game...');
   this.goGamePlayingPage();
-  log('遊戲中');
+  this.isLocaleTW ? log('遊戲中') : log('In game');
   this.sleep(500);
   this.findMyTsum();
-  log('myTsum', this.myTsum);
-  // this.sleep(500);
-  // start to run
+  this.isLocaleTW ? log('myTsum', this.myTsum): log('我的Tsum', this.myTsum);
   this.runTimes = 0;
   var pathZero = 0;
   var clearBubbles = 0;
@@ -2034,7 +2015,16 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
-  if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
+  if (!isPause && outRange !== undefined){
+    if(autoPlay){gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);}
+  } else {
+    if (!isPause) {
+      console.log("Please update Robotmon and restart service");
+      console.log("請更新Robotmon並且重新啟動Service");
+      sleep(1000);
+    }
+    if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
+  }
   sleep(500);
   gTaskController.start();
   isLocaleTW ? log("TaskController完成...") : log("TaskController finish...");
