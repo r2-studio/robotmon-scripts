@@ -1415,6 +1415,7 @@ Tsum.prototype.scanBoard2 = function() {
   if (this.debug) {
     saveImage(srcImg, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
   }
+  releaseImage(srcImg);
   console.log('辨識盤面使用時間', Date.now() - startTime, '數量', board.length);
   return board;
 }
