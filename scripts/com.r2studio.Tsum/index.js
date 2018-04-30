@@ -138,7 +138,10 @@ var Button = {
   outSendHeartEnd3: {x: 316, y: 1152 - adjY, color: {r: 55, g: 91, b: 139}},
   outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 863 - adjY},
-  skillLuke1: {x: 970, y: 1270 - adjY},
+  skillLuke1: {x: 1000, y: 1300 - adjY},
+  skillLuke2: {x: 830, y: 1330 - adjY},
+  skillLuke3: {x: 670, y: 1375 - adjY},
+  skillLuke4: {x: 960, y: 1160 - adjY},
   outReceiveNameFrom: {x: 160, y: 460 - adjY},
   outReceiveNameTo: {x: 620, y: 555 - adjY},
 };
@@ -1299,8 +1302,13 @@ Tsum.prototype.useSkill = function(board) {
       return false;
     }
   }
-  this.isLocaleTW ? log('技能已經存滿，放技能') : log('Skill is full, use skill ');
-
+  this.isLocaleTW ? log('技能已經存滿，放技能') : log('Skill is full, use skill');
+  if (this.skillType == 'block_lukej_s') {
+    this.tap(Button.skillLuke1, 30);
+    this.tap(Button.skillLuke2, 30);
+    this.tap(Button.skillLuke3, 30);
+    this.tap(Button.skillLuke4, 30);
+  }
   this.tap(Button.gameSkillOn);
   this.sleep(30);
   if (this.skillType == 'block_lukej_s') {
@@ -1321,8 +1329,12 @@ Tsum.prototype.useSkill = function(board) {
       this.tapUp({x: 850, y: 420}, 20);
       this.sleep(20);
     }
-    this.tap(Button.skillLuke1);
-    this.sleep(800);
+    this.sleep(400);
+    this.tap(Button.skillLuke1, 30);
+    this.tap(Button.skillLuke2, 30);
+    this.tap(Button.skillLuke3, 30);
+    this.tap(Button.skillLuke4, 30);
+    this.sleep(400);
   } else if (this.skillType == 'block_donald_s' || this.skillType == 'block_donaldx_s') {
     for (var i = 0; i < 3; i++) {
       for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
@@ -1405,7 +1417,7 @@ Tsum.prototype.scanBoardQuick = function() {
     var tc = tcs[i];
     for (var j in tc.points) {
       var p = tc.points[j];
-      board.push({tsumIdx: i, x: p.x, y: p.y});
+      board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
       if (this.debug) {
         drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);  
       }	
