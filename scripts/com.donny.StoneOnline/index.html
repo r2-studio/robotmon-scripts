@@ -146,20 +146,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 1.41;
+      VERSION = 1.43;
 
       var settings = [
         [
           {
-            title: "1.41版，更新日期 2018.04.26，修正，工藝白水晶無法製作(官方圖修改)",
-            title_zh_TW: "",
-          },
-          {
-            title: "1.40版，更新日期 2018.04.23，修正，地城票數無法判斷，不打地城；收工藝",
-            title_zh_TW: "",
-          },
-          {
-            title: "1.39版，更新日期 2018.04.21，新增 500k/1m 地城(不限地區)、死亡判斷",
+            title: "1.43版，更新日期 2018.04.30，修正切換少人失效及水火不打，感謝'德'協助debug",
             title_zh_TW: "",
           },
           {
@@ -184,7 +176,6 @@
                 title: "中文",
                 onclick: "saveLocale('en-US')"
               },
-
             ]
           },
           { 
@@ -323,10 +314,10 @@
           { title: "打圖 切換少人頻道", title_zh_TW: "", default: false},
           {
             title: "打圖 切換少人頻道切換時間(120~1200)",
-            default: 300,
+            default: 100,
             step: 10,
             max: 1200,
-            min: 120,
+            min: 10,
           },
         ],
         [
@@ -334,6 +325,18 @@
           { title: "信件獎勵，自動領(無功能)", title_zh_TW: "", default: true},
         ],
 		[
+          {
+            title: "1.41版，更新日期 2018.04.26，修正，工藝白水晶無法製作(官方圖修改)",
+            title_zh_TW: "",
+          },
+          {
+            title: "1.40版，更新日期 2018.04.23，修正，地城票數無法判斷，不打地城；收工藝",
+            title_zh_TW: "",
+          },
+          {
+            title: "1.39版，更新日期 2018.04.21，新增 500k/1m 地城(不限地區)、死亡判斷",
+            title_zh_TW: "",
+          },
           {
             title: "1.38版，更新日期 2018.04.14，修正進入地圖模式",
             title_zh_TW: "",
