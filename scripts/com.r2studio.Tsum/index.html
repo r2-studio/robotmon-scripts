@@ -186,7 +186,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 31;
+      VERSION = 32;
       ASC = true;
 
       var settings = [
@@ -221,8 +221,8 @@
         ],
         [
           { title: 'Auto Play Game', title_zh_TW: '自動玩遊戲', default: true},
-          { title: 'Pause(calculating)', title_zh_TW: '計算時暫停', default: true},
-          { title: 'Clear Bubbles', title_zh_TW: '自動清除泡泡', default: true},
+          { title: 'Slow Calculation(pausing)', title_zh_TW: '慢速計算(暫停)', default: false},
+          { title: 'Clear Bubbles', title_zh_TW: '自動清除泡泡', default: false},
           { title: 'Use Fan?', title_zh_TW: '使用風扇', default: false},
           { title: '5>4', title_zh_TW: '道具五變四', default: false},
           { title: '+Coin', title_zh_TW: '道具Coin', default: false},
@@ -619,8 +619,7 @@
           var startCommand = genStartCommand(settings);
           JavaScriptInterface.runScript(startCommand);
         } else if (eventType == 'OnPauseClick') {
-          JavaScriptInterface.runScript('stop();');
-          JavaScriptInterface.runScript('stop();');
+          JavaScriptInterface.runScript('stop(); sleep(100); reset();');
         } else if (eventType == 'OnSettingClick') {
           // refreshRecord();
         }

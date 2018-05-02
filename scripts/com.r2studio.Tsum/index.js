@@ -138,7 +138,10 @@ var Button = {
   outSendHeartEnd3: {x: 316, y: 1152 - adjY, color: {r: 55, g: 91, b: 139}},
   outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 863 - adjY},
-  skillLuke1: {x: 970, y: 1270 - adjY},
+  skillLuke1: {x: 1000, y: 1300 - adjY},
+  skillLuke2: {x: 830, y: 1330 - adjY},
+  skillLuke3: {x: 670, y: 1375 - adjY},
+  skillLuke4: {x: 960, y: 1160 - adjY},
   outReceiveNameFrom: {x: 160, y: 460 - adjY},
   outReceiveNameTo: {x: 620, y: 555 - adjY},
 };
@@ -725,6 +728,81 @@ function convertTo2DArray(arr, size) {
   return result;
 }
 
+function findTsums(img) {
+  var hsvImg = clone(img);
+  smooth(hsvImg, 1, 7);
+  convertColor(hsvImg, 40);
+  var filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
+	var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
+  var mask = bgrToGray(filter2);
+  
+  releaseImage(filter1);
+  releaseImage(filter2);
+
+  var points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
+  
+  smooth(hsvImg, 1, 22);
+  var results = [];
+  for (var k in points) {
+    var p = points[k];
+    var hsv1 = getImageColor(hsvImg, p.x, p.y);
+    var hsv2 = hsv1; var hsv3 = hsv1; var hsv4 = hsv1; var hsv5 = hsv1;
+    if (p.x - 1 >= 0) { hsv2 = getImageColor(hsvImg, p.x - 1, p.y); }
+    if (p.x + 1 < 200) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
+    if (p.y - 1 >= 0) { hsv4 = getImageColor(hsvImg, p.x, p.y - 1); }
+    if (p.y + 1 < 200) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
+    var avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
+    var avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
+    var avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
+    results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
+  }
+  
+  // saveImage(mask, getStoragePath() + "/tmp/mask.jpg");
+  // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg.jpg");
+  
+  releaseImage(mask);
+  releaseImage(hsvImg);
+  
+  return results;
+}
+
+function distance3D(p1, p2) {
+  var d = Math.sqrt((p1.b-p2.b)*(p1.b-p2.b) + (p1.g-p2.g)*(p1.g-p2.g) + (p1.r-p2.r)*(p1.r-p2.r));
+  if (Math.abs(p1.b - p2.b) < 20) { d -= 10; }
+  if (Math.abs(p1.g - p2.g) < 20) { d -= 10; }
+  if (p1.r < 120 && p2.r < 120) { d -= 20; }
+  return d;
+}
+
+function classifyTsums(points, tsumCount) {
+  var tcs = [];
+  if (points.length === 0) {
+    return tcs;
+  }
+  var p = points[0];
+  tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p] });
+  for (var i = 1; i < points.length; i++) {
+    var p = points[i];
+    var isSame = false;
+    for(var j in tcs) {
+      var tc = tcs[j];
+      var d = distance3D(tc, p);
+      if (d < 15) {
+        var count = tc.points.length + 1;
+        isSame = true;
+        tc.sumb += p.b; tc.sumg += p.g; tc.sumr += p.r;
+        tc.b = tc.sumb/count; tc.g = tc.sumg/count; tc.r = tc.sumr/count;
+        tc.points.push(p);
+        break;
+      }
+    }
+    if(!isSame) {
+      tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p]});
+    }
+  }
+  return tcs;
+}
+
 // Tsum struct
 
 function Tsum(isJP, detect, isLocaleTW) {
@@ -1204,6 +1282,10 @@ Tsum.prototype.useSkill = function(board) {
   if (page != 'GamePlaying' && page != 'GamePause') {
     return false;
   }
+  if (this.skillType === 'burst') {
+    this.tap(Button.gameSkillOn);
+    return false;
+  }
   for (var i = 0; i < 2; i++) {
     var img = this.screenshot();
     var isSkillOff1 = isSameColor(Button.gameSkillOff1.color, this.getColor(img, Button.gameSkillOff1), 60);
@@ -1220,8 +1302,13 @@ Tsum.prototype.useSkill = function(board) {
       return false;
     }
   }
-  this.isLocaleTW ? log('技能已經存滿，放技能') : log('Skill is full, use skill ');
-
+  this.isLocaleTW ? log('技能已經存滿，放技能') : log('Skill is full, use skill');
+  if (this.skillType == 'block_lukej_s') {
+    this.tap(Button.skillLuke1, 30);
+    this.tap(Button.skillLuke2, 30);
+    this.tap(Button.skillLuke3, 30);
+    this.tap(Button.skillLuke4, 30);
+  }
   this.tap(Button.gameSkillOn);
   this.sleep(30);
   if (this.skillType == 'block_lukej_s') {
@@ -1242,8 +1329,12 @@ Tsum.prototype.useSkill = function(board) {
       this.tapUp({x: 850, y: 420}, 20);
       this.sleep(20);
     }
-    this.tap(Button.skillLuke1);
-    this.sleep(800);
+    this.sleep(400);
+    this.tap(Button.skillLuke1, 30);
+    this.tap(Button.skillLuke2, 30);
+    this.tap(Button.skillLuke3, 30);
+    this.tap(Button.skillLuke4, 30);
+    this.sleep(400);
   } else if (this.skillType == 'block_donald_s' || this.skillType == 'block_donaldx_s') {
     for (var i = 0; i < 3; i++) {
       for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
@@ -1309,6 +1400,102 @@ Tsum.prototype.scanBoard = function() {
   return board;
 }
 
+Tsum.prototype.scanBoardQuick = function() {
+  // load game tsums
+  var startTime = Date.now();
+  var srcImg = this.playScreenshot();
+  console.log('尋找Tsum位置');
+  var points = findTsums(srcImg, 0, 235, 150, 255);
+  console.log('辨識Tsum種類');
+  var tcs = classifyTsums(points);
+  tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
+  var board = [];
+  for(var i in tcs) {
+    if (i >= this.tsumCount - 1) {
+      break;
+    }
+    var tc = tcs[i];
+    for (var j in tc.points) {
+      var p = tc.points[j];
+      board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
+      if (this.debug) {
+        drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);  
+      }	
+    }
+  }
+  if (this.debug) {
+    saveImage(srcImg, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
+  }
+  releaseImage(srcImg);
+  console.log('辨識盤面使用時間', Date.now() - startTime, '數量', board.length);
+  return board;
+}
+
+Tsum.prototype.taskPlayGameQuick = function() {
+  this.isLocaleTW ? log('進入遊戲中...') : log('Starting game...');
+  this.goGamePlayingPage();
+  this.isLocaleTW ? log('遊戲中 快速版') : log('In game');
+  this.runTimes = 0;
+  var clearBubbles = 0;
+  var zeroPath = 0;
+  while(this.isRunning) {  
+    var board = this.scanBoardQuick();
+    if (board == undefined || board == null) {
+      break;
+    }
+    log('計算連線路徑');
+    var paths = calculatePaths(board);
+
+    log('開始連線 數量', paths.length);
+    paths = paths.splice(0, 6);
+    var isBubble = this.link(paths);
+    if (isBubble) {
+      log("產生泡泡");
+      clearBubbles++;
+    }
+    if (paths.length < 3) {
+      zeroPath++;
+      if (zeroPath === 3) {
+        this.tap(Button.gameRand, 60);
+        this.tap(Button.gameRand, 60);
+        zeroPath = 0;
+      }
+    }
+    // click bubbles
+    if (this.clearBubbles && clearBubbles >= 2) {
+      log("Clear bubbles");
+      clearBubbles = 0;
+      this.clearAllBubbles();
+    }
+    if (this.useFan && this.runTimes % 4 == 3) {
+      this.tap(Button.gameRand, 60);
+      this.tap(Button.gameRand, 60);
+    }
+    if (this.useSkill(board)) {
+      clearBubbles++;
+      if (this.useSkill(board)) {
+        this.useSkill(board);
+      }
+    }
+
+    // double check
+    var page = this.findPage(1, 2500);
+    if (page != 'GamePlaying' && page != 'GamePause') {
+      this.sleep(500);
+      page = this.findPage(1, 2500);
+      if (page != 'GamePlaying' && page != 'GamePause') {
+        log('遊戲結束');
+        break;
+      }
+    }
+    this.runTimes++;
+  }
+  releaseTsumRotationImages(this.gameTsums);
+  this.gameTsums = [];
+  this.isLoadRotateTsum = false;
+  this.sleep(4000);
+}
+
 Tsum.prototype.taskPlayGame = function() {
   this.isLocaleTW ? log('進入遊戲中...') : log('Starting game...');
   this.goGamePlayingPage();
@@ -1316,8 +1503,6 @@ Tsum.prototype.taskPlayGame = function() {
   this.sleep(500);
   this.findMyTsum();
   this.isLocaleTW ? log('myTsum', this.myTsum): log('我的Tsum', this.myTsum);
-  // this.sleep(500);
-  // start to run
   this.runTimes = 0;
   var pathZero = 0;
   var clearBubbles = 0;
@@ -1842,7 +2027,16 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
-  if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
+  if (!isPause && outRange !== undefined){
+    if(autoPlay){gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);}
+  } else {
+    if (!isPause) {
+      console.log("Please update Robotmon and restart service");
+      console.log("請更新Robotmon並且重新啟動Service");
+      sleep(1000);
+    }
+    if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
+  }
   sleep(500);
   gTaskController.start();
   isLocaleTW ? log("TaskController完成...") : log("TaskController finish...");
