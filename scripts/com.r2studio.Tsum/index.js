@@ -513,20 +513,20 @@ function removeSameTsumImages(tsumMaxScores, threshold) {
   return tsumMaxScores;
 }
 
-function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug) {
+function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug, isLocaleTW) {
   // releaseRotationTsum();
   if (debug) {
     saveImage(boardImg, getStoragePath() + "/tmp/boardImg.png");
   }
   var gameTsums = findAllTsumMatchScore(allTsumImages, boardImg, myTsum);
   gameTsums = gameTsums.splice(0, 50);
-  log('total tsums', 'using tsums', gameTsums.length);
+  isLocaleTW ? log('總數tsums', '使用tsums', gameTsums.length) : log('total tsums', 'using tsums', gameTsums.length);
   if (debug) {
     printMaxScores(gameTsums);
   }
   // Remove same Tsums
   removeSameTsumImages(gameTsums, 0.92);
-  log('after remove same tsums', gameTsums.length);
+  isLocaleTW ? log('刪除相同的tsums後', gameTsums.length) : log('after remove same tsums', gameTsums.length);
   if (debug) {
     printMaxScores(gameTsums);
   }
@@ -617,7 +617,9 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug) {
       board.push(boardTsum);
     }
   }
-  log('辨識盤面Tsum成功數量', board.length, '費時', usingTimeString(startTime));
+  
+  this.isLocaleTW ? log('辨識盤面Tsum成功數量', board.length, '費時', usingTimeString(startTime)) : log('Identify the number of successful Tsum', board.length, 'Time consumed', usingTimeString(startTime));	  
+ 
   // console.log('find tsums in board', board.length, usingTimeString(startTime));
   if (debug) {
     for (var i = 0; i < board.length; i++) {
@@ -711,7 +713,7 @@ function calculatePaths(board) {
     if (a.length < b.length) { return 1; }
     return -1;
   });
-  log('計算出路徑', paths.length, '條');
+  this.isLocaleTW ? log('計算出路徑', paths.length, '條') : log('Calculating path', paths.length, 'Length');
   return paths;
 }
 
@@ -725,7 +727,7 @@ function convertTo2DArray(arr, size) {
 
 // Tsum struct
 
-function Tsum(isJP, detect) {
+function Tsum(isJP, detect, isLocaleTW) {
   this.debug = true;
   this.isRunning = true;
   this.runTimes = 0;
@@ -754,6 +756,7 @@ function Tsum(isJP, detect) {
   this.allTsumImages = {};
   this.gameTsums = [];
   this.isJP = isJP;
+  this.isLocaleTW = isLocaleTW;
   this.coinItem = false;
   this.bubbleItem = false;
   this.isPause = true;
@@ -803,13 +806,13 @@ Tsum.prototype.detect = function() {
     }
   }
   releaseImage(img);
-  log('Detect top bottom', top, bottom);
+  this.isLocaleTW ? log('檢測頂部底部', top, bottom) : log('Detect top bottom', top, bottom);
   sleep(500);
   return {top: top, bottom: bottom};
 }
 
 Tsum.prototype.init = function(detect) {
-  log('Init... calculate screen size');
+  this.isLocaleTW ? log('初始...計算屏幕大小') : log('Init... calculate screen size');
   if (detect) {
     var topBottom = this.detect();
     var h = topBottom.bottom - topBottom.top;
@@ -843,9 +846,9 @@ Tsum.prototype.init = function(detect) {
   this.isLoadAllTsum = true;
 
   if (this.debug) {
-    log('Config', this);
+	this.isLocaleTW ? log('配置', this) : log('Config', this);
     this.sleep(200);
-    log('Game OffsetXY', this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
+    this.isLocaleTW ? log('遊戲OffsetXY', this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth) : log('Game OffsetXY', this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
     this.sleep(1000);
   }
   execute("mkdir -p " + getStoragePath() + '/' + Config.recordDir);
@@ -882,7 +885,7 @@ Tsum.prototype.isAppOn = function() {
 };
 
 Tsum.prototype.startApp = function() {
-  log('Start TsumTsum App...');
+  this.isLocaleTW ? log('啟動TsumTsum應用程序...') : log('Start TsumTsum App...');
   if (this.isJP) {
     execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
   } else {
@@ -1052,7 +1055,7 @@ Tsum.prototype.goFriendPage = function() {
       this.startApp();
     }
     var page = this.findPage(2, 1000);
-    log('Current Page', page);
+    this.isLocaleTW ? log('當前頁面', page) : log('Current Page', page);
     if (page == 'FriendPage') {
       // check again
       page = this.findPage(1, 500);
@@ -1107,7 +1110,7 @@ Tsum.prototype.checkGameItem = function() {
     }
     this.sleep(500);
   }
-  log("Check bonus", isItemsOn);
+  this.isLocaleTW ? log("檢查獎金", isItemsOn) : log("Check bonus", isItemsOn);
 }
 
 Tsum.prototype.goGamePlayingPage = function() {
@@ -1116,7 +1119,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.startApp();
     }
     var page = this.findPage(2, 3000);
-    log('Current Page', page);
+    this.isLocaleTW ? log('當前頁面', page) : log('Current Page', page);
     if (page == 'FriendPage') {
       this.tap(Page[page].next);
     } else if (page == 'StartPage') {
@@ -1217,7 +1220,7 @@ Tsum.prototype.useSkill = function(board) {
       return false;
     }
   }
-  log('技能已經存滿，放技能');
+  this.isLocaleTW ? log('技能已經存滿，放技能') : log('Skill is full, use skill ');
 
   this.tap(Button.gameSkillOn);
   this.sleep(30);
@@ -1281,9 +1284,9 @@ Tsum.prototype.scanBoard = function() {
     this.tap(Button.gamePause);
   }
   if (!this.isLoadRotateTsum) {
-    log('辨識Tsum種類');
+    this.isLocaleTW ? log('辨識Tsum種類') : log('Identify specific Tsums');
     this.tap(Button.gamePause);
-    this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug);
+    this.gameTsums = recognizeGameTsums(gameImage, this.allTsumImages, this.myTsum, this.isJP, this.debug, this.isLocaleTW);
     this.isLoadRotateTsum = true;
     var page = this.findPage(2, 1000);
     if (page != 'GamePlaying' && page != 'GamePause') {
@@ -1291,7 +1294,7 @@ Tsum.prototype.scanBoard = function() {
       return;
     }
   }
-  log('辨識盤面Tsum');
+  this.isLocaleTW ? log('辨識盤面Tsum') : log('Identifying tsums board');
   var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug);
   if (this.debug) {
     saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
@@ -1307,12 +1310,12 @@ Tsum.prototype.scanBoard = function() {
 }
 
 Tsum.prototype.taskPlayGame = function() {
-  log('進入遊戲中...');
+  this.isLocaleTW ? log('進入遊戲中...') : log('Starting game...');
   this.goGamePlayingPage();
-  log('遊戲中');
+  this.isLocaleTW ? log('遊戲中') : log('In game');
   this.sleep(500);
   this.findMyTsum();
-  log('myTsum', this.myTsum);
+  this.isLocaleTW ? log('myTsum', this.myTsum): log('我的Tsum', this.myTsum);
   // this.sleep(500);
   // start to run
   this.runTimes = 0;
@@ -1323,12 +1326,12 @@ Tsum.prototype.taskPlayGame = function() {
     if (board == undefined || board == null) {
       break;
     }
-    log('計算連線路徑');
+    this.isLocaleTW ? log('計算連線路徑') : log('Calculating connections');
     var paths = calculatePaths(board);
     if (paths.length < 2) {
       if (pathZero > 2) {
         pathZero = 0;
-        log('路徑數量為 0, 重新辨識...');
+        this.isLocaleTW ? log('路徑數量為 0, 重新辨識...') : log('Connections 0, Re-calculating...');
         if (this.useFan) {
           this.tap(Button.gameRand, 60);
           this.tap(Button.gameRand, 60);
@@ -1342,17 +1345,17 @@ Tsum.prototype.taskPlayGame = function() {
       pathZero++;
     }
 
-    log('開始連線 數量', paths.length);
+    this.isLocaleTW ? log('開始連線 數量', paths.length) : log('Start following connections', paths.length);
     paths = paths.splice(0, 10);
     var isBubble = this.link(paths);
     if (isBubble) {
-      log("產生泡泡");
+      this.isLocaleTW ? log("產生泡泡") : log("Found Bubble");
       clearBubbles++;
     }
 
     // click bubbles
     if (this.clearBubbles && clearBubbles >= 2) {
-      log("Clear bubbles");
+      this.isLocaleTW ? log("清除氣泡") : log("Clear bubbles");
       clearBubbles = 0;
       this.clearAllBubbles();
     }
@@ -1376,7 +1379,7 @@ Tsum.prototype.taskPlayGame = function() {
       this.sleep(500);
       page = this.findPage(1, 2500);
       if (page != 'GamePlaying' && page != 'GamePause') {
-        log('遊戲結束');
+        this.isLocaleTW ? log('遊戲結束') : log('Game Over');
         break;
       }
     }
@@ -1389,10 +1392,10 @@ Tsum.prototype.taskPlayGame = function() {
 }
 
 Tsum.prototype.taskReceiveAllItems = function() {
-  log('前往朋友頁面');
+  this.isLocaleTW ? log('前往朋友頁面') : log('Going to friends page');
   this.goFriendPage();
   this.sleep(1000);
-  log('接收全部物品');
+  this.isLocaleTW ? log('接收全部物品') : log('Receive all items');
   this.tap(Button.outReceive);
   this.sleep(3500);
   this.tap(Button.outReceiveAll);
@@ -1403,11 +1406,11 @@ Tsum.prototype.taskReceiveAllItems = function() {
   this.sleep(1500);
   this.tap(Button.outClose);
   this.goFriendPage();
-  log('接收物品完成');
+  this.isLocaleTW ? log('接收物品完成') : log('Receiving items completed');
 }
 
 Tsum.prototype.readRecord = function() {
-  log("讀取紀錄");
+  this.isLocaleTW ? log("讀取紀錄") : log("Reading records");
   var recordDir = getStoragePath() + '/' + Config.recordDir;
   var recordFile = recordDir + '/record.txt';
   var txt = readFile(recordFile);
@@ -1422,7 +1425,7 @@ Tsum.prototype.readRecord = function() {
 }
 
 Tsum.prototype.recognizeSender = function(img) {
-  log("辨識誰送心");
+  this.isLocaleTW ? log("辨識誰送心") : log("Identify who sent heart");
   var recordDir = getStoragePath() + '/' + Config.recordDir;
   var from = this.toResizeXYs(Button.outReceiveNameFrom);
   var to = this.toResizeXYs(Button.outReceiveNameTo);
@@ -1450,12 +1453,12 @@ Tsum.prototype.recognizeSender = function(img) {
     };
     this.record[filename].receiveCounts[dayTime] = 1;
     this.recordImages[filename] = nameImg;
-    log('新朋友，儲存', recordDir + '/' + filename);
+    this.isLocaleTW ? log('新朋友，儲存', recordDir + '/' + filename) : log('New friend, store', recordDir + '/' + filename);
     saveImage(nameImg, recordDir + '/' + filename);
     this.sleep(80);
     var check = execute("ls " + recordDir + '/' + filename);
     if (check.indexOf(filename) == -1) {
-      log("Save image fail. Resave it.");
+      this.isLocaleTW ? log("保存圖像失敗。 重新保存它。") : log("Save image fail. Resave it.")
       saveImage(nameImg, recordDir + '/' + filename);
     }
   } else {
@@ -1468,7 +1471,7 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
   if (existFilename == "") {
     return;
   }
-  log("計算誰送心");
+  this.isLocaleTW ? log("計算誰送心") : log("Calculate who sent the heart");
   var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
   // found
   if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
@@ -1476,11 +1479,11 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
   }
   this.record[existFilename].receiveCounts[dayTime]++;
   this.record[existFilename].lastReceiveTime = Date.now();
-  log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆');
+  this.isLocaleTW ? log('今天此人已經收到 ' + this.record[existFilename].receiveCounts[dayTime] + '顆') : log('Today this person has sent ' + this.record[existFilename].receiveCounts[dayTime] + 'hearts');
 }
 
 Tsum.prototype.saveRecord = function() {
-  log("儲存紀錄");
+  this.isLocaleTW ? log("儲存紀錄") : log("Save record");
   var recordFile = getStoragePath() + '/' + Config.recordDir + '/record.txt';
   writeFile(recordFile, JSON.stringify(this.record));
 }
@@ -1517,11 +1520,11 @@ Tsum.prototype.isLoading = function() {
 }
 
 Tsum.prototype.taskReceiveOneItem = function() {
-  log('前往朋友頁面');
+  this.isLocaleTW ? log('前往朋友頁面') : log('Going to friends page');
   this.goFriendPage();
   this.sleep(1000)
   this.tap(Button.outReceive);;
-  log('一個一個接收物品');
+  this.isLocaleTW ? log('一個一個接收物品') : log('Receive items one by one');
   this.sleep(1000);
 
   var unknownPage = 0;
@@ -1559,7 +1562,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receiveTime = 0;
       }
     } else if (isTimeout) {
-      log('Try again... wait 1 sec');
+      this.isLocaleTW ? log('再試一次......等待1秒') : log('Try again... wait 1 sec');
       this.tap(Button.outReceiveOk);
       this.sleep(1000);
     } else if (isOk) {
@@ -1588,13 +1591,13 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.goFriendPage();
       this.sleep(500);
       if (receivedCount == 0 || receiveCheckLimit >= this.receiveCheckLimit) {
-        log('結束接收物品');
+        this.isLocaleTW ? log('結束接收物品') : log('Receiving items completed');
         break;
       } else {
         receiveCheckLimit++;
         receivedCount = 0;
         sender = "";
-        log('檢查還有沒有物品');
+        this.isLocaleTW ? log('檢查還有沒有物品') : log('No items to receive');
         this.sleep(500);
         this.tap(Button.outReceive);
         this.sleep(1500);
@@ -1612,9 +1615,9 @@ Tsum.prototype.friendPageGoTop = function() {
 }
 
 Tsum.prototype.taskSendHearts = function() {
-  log('前往朋友頁面');
+  this.isLocaleTW ? log('前往朋友頁面') : log('Going to friends page');
   this.goFriendPage();
-  log('開始送愛心');
+  this.isLocaleTW ? log('開始送愛心') : log('Start sending hearts');
   this.sleep(1000);
   if (this.sendHeartMaxDuring == 0) {
     this.friendPageGoTop();
@@ -1657,7 +1660,7 @@ Tsum.prototype.taskSendHearts = function() {
     var isEnd3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, Button.outSendHeartEnd3), 40);
     var isEnd = (!isNotEnd && isEnd2 && isEnd3);
     releaseImage(img);
-    log("Send " + heartsPos.length + " hearts, 0 score?" + isZero + " End " + isEnd);
+    this.isLocaleTW ? log("發出 " + heartsPos.length + " 心中, 0 得分?" + isZero + " 結束 " + isEnd) : log("Sending " + heartsPos.length + " hearts, 0 score?" + isZero + " End " + isEnd);
     
     if (isOk && heartsPos.length == 0) {
       this.tap(Button.outReceiveOk);
@@ -1673,7 +1676,7 @@ Tsum.prototype.taskSendHearts = function() {
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
         this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
         retry++;
-        log("沒愛心可送或零分，再檢查次數: " + retry);
+        this.isLocaleTW ? log("沒愛心可送或零分，再檢查次數: " + retry) : log("Cant send hearts, check again: " + retry);
         this.sleep(1000);
       } else {
         if (this.sendHeartMaxDuring != 0) {
@@ -1701,7 +1704,7 @@ Tsum.prototype.taskSendHearts = function() {
         }
       }
       if (heartsPos.length != 0 && rTimes == 0) {
-        log(heartsPos.length + " hearts but no hearts send.");
+        this.isLocaleTW ? log(heartsPos.length + " 但沒有心發送.") : log(heartsPos.length + " hearts but no hearts send.");
         continue;
       }
       if (this.recordReceive && heartsPos.length != 0) {
@@ -1719,7 +1722,7 @@ Tsum.prototype.taskSendHearts = function() {
       this.sleep(400);
       if (this.sendHeartMaxDuring != 0) {
         if (Date.now() - startTime > this.sendHeartMaxDuring) {
-          log("Deadline... Exit");
+          this.isLocaleTW ? log("截止日期...退出") : log("Deadline... Exit");
           break;
         }
       }
@@ -1773,7 +1776,7 @@ Tsum.prototype.sendHeart = function(btn) {
       unknownCount++;
     }
     if (unknownCount >= 15) {
-      log("未知狀態，離開");
+      this.isLocaleTW ? log("未知狀態，離開") : log("Unknown state, exiting heart sending");
       return false;
     }
     // this.sleep(150);
@@ -1796,9 +1799,9 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval) {
-  log('[Tsum Tsum] 啟動');
-  ts = new Tsum(isJP, detect);
+function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+  isLocaleTW ? log('[Tsum Tsum] 啟動') : log('[Tsum Tsum] Start up');
+  ts = new Tsum(isJP, detect, isLocaleTW);
   ts.debug = debug;
   if (isFourTsum) {
     ts.tsumCount = 4;
@@ -1842,17 +1845,17 @@ function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isF
   if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
   sleep(500);
   gTaskController.start();
-  log("TaskController finish...");
+  isLocaleTW ? log("TaskController完成...") : log("TaskController finish...");
 }
 
 function stop() {
-  log("Stop finish...Please Wait...");
+  this.isLocaleTW ? log("停止完成...請稍候...") : log("Stop finish...Please Wait...");
   sleep(500);
   if (ts != undefined) {
     ts.isRunning = false;
     sleep(2000);
     // loop stop here...
-    log('清除殘留記憶體...');
+    this.isLocaleTW ? log('清除殘留記憶體...') : log('Clearing residual memory...');
     ts.deinit();
     if (ts.recordReceive) {
       ts.releaseRecord();
@@ -1862,31 +1865,3 @@ function stop() {
   if (gTaskController != undefined) {gTaskController.stop();}
   ts = undefined;
 }
-// stop();
-// this.sleep(500);
-// ts = new Tsum(false, true);
-// ts.checkGameItem();
-//ts.readRecord();
-// log(ts.findPage(2, 1000));
-// ts.detect();
-// ts.coinItem = true;
-// ts.goGamePlayingPage();
-// ts.sentToZero = true;
-// ts.sendHeartMaxDuring = 40 * 1000;
-// ts.taskSendHearts();
-// ts.keepRuby = true;
-// ts.taskReceiveOneItem();
-// ts.isPause = false;
-// ts.clearBubbles = false;
-// ts.taskPlayGame();
-// ts.taskReceiveAllItems();
-// sleep(10);
-// console.log(page);
-// ts.goFriendPage();
-// ts.recordReceive = true;
-// ts.sentToZero = true;
-// ts.readRecord();
-// ts.taskSendHearts();
-// ts.goFriendPage();
-// start(true, false, false, false, false, false, true, true);
-// stop();
