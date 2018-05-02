@@ -256,10 +256,10 @@ class GameInfo {
       new FeaturePoint(1150, 916, 31, 24, 14, true, 20),
     ]);
     this.loginBtn = new PageFeature('login', [
-      new FeaturePoint(335, 310, 236, 175, 110, true, 20),
-      new FeaturePoint(430, 415, 161, 123, 78, true, 20),
-      new FeaturePoint(140, 145, 60, 55, 55, true, 20),
-      new FeaturePoint(280, 191, 82, 10, 10, true, 20),
+      new FeaturePoint(335, 310, 236, 175, 110, true, 40),
+      new FeaturePoint(430, 415, 161, 123, 78, true, 40),
+      new FeaturePoint(140, 145, 60, 55, 55, true, 40),
+      new FeaturePoint(280, 191, 140, 100, 90, true, 40),
     ]);
     this.enterBtn = new PageFeature('enter', [
       new FeaturePoint(1480, 990, 31, 47, 70, true, 20),
@@ -293,11 +293,12 @@ class RoleState {
     this.isEnter = false;
     this.isMenuOn = false;
     this.isMenuOff = false;
+    this.lastSafeRegion = false;
     this.isSafeRegion = false;
     this.isAutoPlay = false;
-    this.isAttecking = false;
+    this.isAttacking = false;
     this.isSelfSkill = false;
-    this.isAttecked = false;
+    this.isAttacked = false;
     this.hasKillNumber = false;
     this.autoPlayOffCount = 0;
     this.isPoison = false;
@@ -425,7 +426,7 @@ class LineageM {
     this.rState.mp = this.getMpPercent();
     // this.rState.exp = this.getExpPercent();
     this.rState.isSafeRegion = this.isSafeRegionState();
-    this.rState.isAttecking = !this.gi.attackBtn.check(this._img);
+    this.rState.isAttacking = !this.gi.attackBtn.check(this._img);
     this.rState.isSelfSkill = !this.gi.selfSkillBtn.check(this._img);
     this.rState.hasKillNumber = this.gi.killNumber.check(this._img);
     if (this.gi.autoPlayBtn.check(this._img)) {
@@ -463,7 +464,7 @@ class LineageM {
         }
       } else if (value * cd.op > cd.value * cd.op) {
         if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
-          if (cd.btn === 7 && this.rState.isSafeRegion) {
+          if (cd.btn === 7 && this.rState.isSafeRegion && !this.rState.isAttacking) {
             continue;
           }
           this.gi.itemBtns[cd.btn].tap(1, 50);
@@ -499,22 +500,34 @@ class LineageM {
       }
 
       // go home (8th btn), rand teleport (7th btn)
-      if (this.rState.isSafeRegion) {
-        if (!isBuy && (this.config.autoBuyHp !== 0 || this.config.autoBuyArrow !== 0)) {
-          this.checkAndBuyItems();
-          isBuy = true;
-        } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
-          this.gi.itemBtns[6].tap();
-          useHomeTime = Date.now();
-        } else if (this.config.mapSelect > 0) {
-          console.log('移動到地圖', this.config.mapSelect);
-          this.goToMapPage();
-          this.slideMapSelector(this.config.mapSelect);
+      if (this.rState.isSafeRegion && !this.rState.isAttacking) {
+        let isAttacking = true;
+        for (let i = 0; i < 2; i++) {
+          this.safeSleep(1000);
+          this.refreshScreen();
+          this.rState.isAttacking = !this.gi.attackBtn.check(this._img);
+          if (!this.rState.isAttacking) {
+            isAttacking = false;
+            break;
+          }
+        }
+        if (!isAttacking) {
+          if (!isBuy && (this.config.autoBuyHp !== 0 || this.config.autoBuyArrow !== 0)) {
+            this.checkAndBuyItems();
+            isBuy = true;
+          } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
+            this.gi.itemBtns[6].tap();
+            useHomeTime = Date.now();
+          } else if (this.config.mapSelect > 0 && this.rState.hp > 25) {
+            console.log('移動到地圖', this.config.mapSelect);
+            this.goToMapPage();
+            this.slideMapSelector(this.config.mapSelect);
+          }
         }
       } else {
         isBuy = false;
         if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
-          this.gi.itemBtns[7].tap(1, 100);
+          this.gi.itemBtns[7].tap(1, 1000);
           console.log('危險，血量少於 25%，使用按鈕 8');
           continue;
         }
@@ -540,8 +553,13 @@ class LineageM {
         receiveTime = Date.now();
       }
 
+      if (this.rState.lastSafeRegion != this.rState.isSafeRegion) {
+        this.rState.lastSafeRegion = this.rState.isSafeRegion;
+        if (this.rState.lastSafeRegion) {
+          console.log('安全區域');
+        }
+      }
       if (this.rState.isSafeRegion) {
-        console.log('安全區域');
         continue;
       }
 
@@ -956,7 +974,7 @@ class LineageM {
       for (let i = 0; i < 3; i++) {
         tapDown(sDCX, itemsY[0], 10);
         tapUp(sDCX, itemsY[4], 10);
-        sleep(500);
+        sleep(1000);
       }
     };
     const move4down = () => {
