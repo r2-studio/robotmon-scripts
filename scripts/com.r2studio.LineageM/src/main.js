@@ -258,9 +258,8 @@ class GameInfo {
     this.loginBtn = new PageFeature('login', [
       new FeaturePoint(335, 310, 236, 175, 110, true, 20),
       new FeaturePoint(430, 415, 161, 123, 78, true, 20),
-      new FeaturePoint(145, 900, 240, 240, 240, true, 20),
-      new FeaturePoint(175, 900, 240, 240, 240, true, 20),
-      new FeaturePoint(145, 930, 240, 240, 240, true, 20),
+      new FeaturePoint(140, 145, 60, 55, 55, true, 20),
+      new FeaturePoint(280, 191, 82, 10, 10, true, 20),
     ]);
     this.enterBtn = new PageFeature('enter', [
       new FeaturePoint(1480, 990, 31, 47, 70, true, 20),
@@ -361,9 +360,9 @@ class LineageM {
 
   checkIsSystemPage() {
     if (this.rState.isLogin) {
-      console.log('登入遊戲，等待 3 秒');
+      console.log('登入遊戲，等待 5 秒');
       this.gi.loginBtn.tap();
-      this.safeSleep(3 * 1000);
+      this.safeSleep(5 * 1000);
       return true;
     }
     if (this.rState.isEnter) {

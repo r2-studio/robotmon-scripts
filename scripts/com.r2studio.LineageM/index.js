@@ -331,7 +331,7 @@ var GameInfo = function GameInfo() {
   this.selfSkillBtn = new PageFeature('selfSkillOff', [new FeaturePoint(1594, 601, 141, 147, 137, true, 60), new FeaturePoint(1591, 624, 117, 128, 114, true, 60)]);
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
   this.disconnectBtn = new PageFeature('disconnect', [new FeaturePoint(840, 880, 34, 51, 79, true, 20), new FeaturePoint(1080, 880, 34, 51, 79, true, 20), new FeaturePoint(1170, 880, 31, 20, 14, true, 20), new FeaturePoint(1150, 916, 31, 24, 14, true, 20)]);
-  this.loginBtn = new PageFeature('login', [new FeaturePoint(335, 310, 236, 175, 110, true, 20), new FeaturePoint(430, 415, 161, 123, 78, true, 20), new FeaturePoint(145, 900, 240, 240, 240, true, 20), new FeaturePoint(175, 900, 240, 240, 240, true, 20), new FeaturePoint(145, 930, 240, 240, 240, true, 20)]);
+  this.loginBtn = new PageFeature('login', [new FeaturePoint(335, 310, 236, 175, 110, true, 20), new FeaturePoint(430, 415, 161, 123, 78, true, 20), new FeaturePoint(140, 145, 60, 55, 55, true, 20), new FeaturePoint(280, 191, 82, 10, 10, true, 20)]);
   this.enterBtn = new PageFeature('enter', [new FeaturePoint(1480, 990, 31, 47, 70, true, 20), new FeaturePoint(1750, 990, 31, 47, 70, true, 20), new FeaturePoint(1690, 990, 31, 47, 70, true, 20)]);
   this.beAttacked = new PageFeature('beAttacked', [new FeaturePoint(1616, 744, 210, 90, 50, true, 45), new FeaturePoint(1676, 744, 210, 90, 50, true, 45), new FeaturePoint(1666, 756, 210, 90, 50, true, 45), new FeaturePoint(1624, 750, 210, 90, 50, true, 45), new FeaturePoint(1800, 818, 240, 160, 140, true, 30), new FeaturePoint(1634, 769, 165, 180, 170, false, 50)]);
   this.storeExceed = new PageFeature('storeExceed', [new FeaturePoint(1102, 812, 33, 23, 0, true, 40)]);
@@ -430,9 +430,9 @@ var LineageM = function () {
     key: 'checkIsSystemPage',
     value: function checkIsSystemPage() {
       if (this.rState.isLogin) {
-        console.log('登入遊戲，等待 3 秒');
+        console.log('登入遊戲，等待 5 秒');
         this.gi.loginBtn.tap();
-        this.safeSleep(3 * 1000);
+        this.safeSleep(5 * 1000);
         return true;
       }
       if (this.rState.isEnter) {
