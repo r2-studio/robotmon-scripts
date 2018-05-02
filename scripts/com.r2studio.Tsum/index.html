@@ -351,7 +351,14 @@
             }
           }
         }
-        console.log('Load settings');
+		
+		// This is so we send the locale for logging.... we should do this better but good enough for now.
+		lang = localStorage.getItem('tsumtsumlanguage');
+		if (lang === 'zh-TW'){
+			console.log('加載設置');			
+		} else {
+			console.log('Load settings');
+		}		
       }
 
       function saveSettings(settings) {
@@ -374,7 +381,14 @@
           }
           localStorage.setItem('tsumtsumversion', VERSION);
           localStorage.setItem('tsumtsumsettings', JSON.stringify(recordSettings));
-          console.log('Save settings');
+		  
+		  lang = localStorage.getItem('tsumtsumlanguage');
+		  if (lang === 'zh-TW'){
+  			  console.log('保存設置');			
+		  } else {
+			  console.log('Save settings');			
+		  }			  
+		  
         }
       }
 
@@ -395,8 +409,17 @@
             }
           }
         }
-        command += 'undefined);'
-        console.log('Start command: ' + command);
+		
+		// This is so we send the locale to the start function
+		lang = localStorage.getItem('tsumtsumlanguage');
+		if (lang === 'zh-TW'){
+			command += 'true);';
+			console.log('啟動命令: ' + command);			
+		} else {
+			command += 'false);';
+			console.log('Start command: ' + command);			
+		}
+		
         return command;
       }
 
