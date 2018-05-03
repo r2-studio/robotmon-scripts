@@ -331,7 +331,7 @@ var GameInfo = function GameInfo() {
   this.selfSkillBtn = new PageFeature('selfSkillOff', [new FeaturePoint(1594, 601, 141, 147, 137, true, 60), new FeaturePoint(1591, 624, 117, 128, 114, true, 60)]);
   this.attackBtn = new PageFeature('attackOff', [new FeaturePoint(1634, 769, 165, 180, 170, true, 60)]);
   this.disconnectBtn = new PageFeature('disconnect', [new FeaturePoint(840, 880, 34, 51, 79, true, 20), new FeaturePoint(1080, 880, 34, 51, 79, true, 20), new FeaturePoint(1170, 880, 31, 20, 14, true, 20), new FeaturePoint(1150, 916, 31, 24, 14, true, 20)]);
-  this.loginBtn = new PageFeature('login', [new FeaturePoint(335, 310, 236, 175, 110, true, 20), new FeaturePoint(430, 415, 161, 123, 78, true, 20), new FeaturePoint(145, 900, 240, 240, 240, true, 20), new FeaturePoint(175, 900, 240, 240, 240, true, 20), new FeaturePoint(145, 930, 240, 240, 240, true, 20)]);
+  this.loginBtn = new PageFeature('login', [new FeaturePoint(335, 310, 236, 175, 110, true, 40), new FeaturePoint(430, 415, 161, 123, 78, true, 40), new FeaturePoint(140, 145, 60, 55, 55, true, 40), new FeaturePoint(280, 191, 140, 100, 90, true, 40)]);
   this.enterBtn = new PageFeature('enter', [new FeaturePoint(1480, 990, 31, 47, 70, true, 20), new FeaturePoint(1750, 990, 31, 47, 70, true, 20), new FeaturePoint(1690, 990, 31, 47, 70, true, 20)]);
   this.beAttacked = new PageFeature('beAttacked', [new FeaturePoint(1616, 744, 210, 90, 50, true, 45), new FeaturePoint(1676, 744, 210, 90, 50, true, 45), new FeaturePoint(1666, 756, 210, 90, 50, true, 45), new FeaturePoint(1624, 750, 210, 90, 50, true, 45), new FeaturePoint(1800, 818, 240, 160, 140, true, 30), new FeaturePoint(1634, 769, 165, 180, 170, false, 50)]);
   this.storeExceed = new PageFeature('storeExceed', [new FeaturePoint(1102, 812, 33, 23, 0, true, 40)]);
@@ -352,11 +352,12 @@ var RoleState = function () {
     this.isEnter = false;
     this.isMenuOn = false;
     this.isMenuOff = false;
+    this.lastSafeRegion = false;
     this.isSafeRegion = false;
     this.isAutoPlay = false;
-    this.isAttecking = false;
+    this.isAttacking = false;
     this.isSelfSkill = false;
-    this.isAttecked = false;
+    this.isAttacked = false;
     this.hasKillNumber = false;
     this.autoPlayOffCount = 0;
     this.isPoison = false;
@@ -430,9 +431,9 @@ var LineageM = function () {
     key: 'checkIsSystemPage',
     value: function checkIsSystemPage() {
       if (this.rState.isLogin) {
-        console.log('登入遊戲，等待 3 秒');
+        console.log('登入遊戲，等待 5 秒');
         this.gi.loginBtn.tap();
-        this.safeSleep(3 * 1000);
+        this.safeSleep(5 * 1000);
         return true;
       }
       if (this.rState.isEnter) {
@@ -497,7 +498,7 @@ var LineageM = function () {
       this.rState.mp = this.getMpPercent();
       // this.rState.exp = this.getExpPercent();
       this.rState.isSafeRegion = this.isSafeRegionState();
-      this.rState.isAttecking = !this.gi.attackBtn.check(this._img);
+      this.rState.isAttacking = !this.gi.attackBtn.check(this._img);
       this.rState.isSelfSkill = !this.gi.selfSkillBtn.check(this._img);
       this.rState.hasKillNumber = this.gi.killNumber.check(this._img);
       if (this.gi.autoPlayBtn.check(this._img)) {
@@ -536,7 +537,7 @@ var LineageM = function () {
           }
         } else if (value * cd.op > cd.value * cd.op) {
           if (cd.btn >= 0 && cd.btn < this.gi.itemBtns.length) {
-            if (cd.btn === 7 && this.rState.isSafeRegion) {
+            if (cd.btn === 7 && this.rState.isSafeRegion && !this.rState.isAttacking) {
               continue;
             }
             this.gi.itemBtns[cd.btn].tap(1, 50);
@@ -573,22 +574,35 @@ var LineageM = function () {
         }
 
         // go home (8th btn), rand teleport (7th btn)
-        if (this.rState.isSafeRegion) {
-          if (!isBuy && (this.config.autoBuyHp !== 0 || this.config.autoBuyArrow !== 0)) {
-            this.checkAndBuyItems();
-            isBuy = true;
-          } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
-            this.gi.itemBtns[6].tap();
-            useHomeTime = Date.now();
-          } else if (this.config.mapSelect > 0) {
-            console.log('移動到地圖', this.config.mapSelect);
-            this.goToMapPage();
-            this.slideMapSelector(this.config.mapSelect);
+        if (this.rState.isSafeRegion && !this.rState.isAttacking) {
+          var isAttacking = true;
+          for (var i = 0; i < 2; i++) {
+            this.safeSleep(1000);
+            this.refreshScreen();
+            this.rState.isAttacking = !this.gi.attackBtn.check(this._img);
+            if (!this.rState.isAttacking) {
+              isAttacking = false;
+              break;
+            }
+          }
+          if (!isAttacking) {
+            if (!isBuy && (this.config.autoBuyHp !== 0 || this.config.autoBuyArrow !== 0)) {
+              this.checkAndBuyItems();
+              isBuy = true;
+            } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
+              this.gi.itemBtns[6].tap();
+              useHomeTime = Date.now();
+            } else if (this.config.mapSelect > 0 && this.rState.hp > 40) {
+              console.log('移動到地圖', this.config.mapSelect);
+              this.goToMapPage();
+              this.slideMapSelector(this.config.mapSelect);
+            }
           }
         } else {
           isBuy = false;
           if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
             this.gi.itemBtns[7].tap(1, 100);
+            this.safeSleep(1000);
             console.log('危險，血量少於 25%，使用按鈕 8');
             continue;
           }
@@ -614,8 +628,13 @@ var LineageM = function () {
           receiveTime = Date.now();
         }
 
+        if (this.rState.lastSafeRegion != this.rState.isSafeRegion) {
+          this.rState.lastSafeRegion = this.rState.isSafeRegion;
+          if (this.rState.lastSafeRegion) {
+            console.log('安全區域');
+          }
+        }
         if (this.rState.isSafeRegion) {
-          console.log('安全區域');
           continue;
         }
 
@@ -685,6 +704,12 @@ var LineageM = function () {
 
       console.log('嘗試購買物品');
       for (var i = 0; i < tryTimes && this._loop; i++) {
+        if (i == 4) {
+          console.log('移動到燃柳村莊，確保有商人');
+          this.goToMapPage();
+          this.slideMapSelector(36);
+          this.safeSleep(4000);
+        }
         if (this.findStore()) {
           this.buyItems();
           this.refreshScreen();
@@ -1088,7 +1113,7 @@ var LineageM = function () {
         for (var i = 0; i < 3; i++) {
           tapDown(sDCX, itemsY[0], 10);
           tapUp(sDCX, itemsY[4], 10);
-          sleep(500);
+          sleep(1000);
         }
       };
       var move4down = function move4down() {
