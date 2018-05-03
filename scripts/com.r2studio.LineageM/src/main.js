@@ -518,7 +518,7 @@ class LineageM {
           } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
             this.gi.itemBtns[6].tap();
             useHomeTime = Date.now();
-          } else if (this.config.mapSelect > 0 && this.rState.hp > 25) {
+          } else if (this.config.mapSelect > 0 && this.rState.hp > 40) {
             console.log('移動到地圖', this.config.mapSelect);
             this.goToMapPage();
             this.slideMapSelector(this.config.mapSelect);
@@ -527,7 +527,8 @@ class LineageM {
       } else {
         isBuy = false;
         if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
-          this.gi.itemBtns[7].tap(1, 1000);
+          this.gi.itemBtns[7].tap(1, 100);
+          this.safeSleep(1000);
           console.log('危險，血量少於 25%，使用按鈕 8');
           continue;
         }
@@ -620,6 +621,12 @@ class LineageM {
   checkAndBuyItems(tryTimes = 10) {
     console.log('嘗試購買物品');
     for (let i = 0; i < tryTimes && this._loop; i++) {
+      if (i == 4) {
+        console.log('移動到燃柳村莊，確保有商人');
+        this.goToMapPage();
+        this.slideMapSelector(36);
+        this.safeSleep(4000);
+      }
       if (this.findStore()) {  
         this.buyItems();
         this.refreshScreen();
