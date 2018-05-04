@@ -334,7 +334,7 @@ releaseImage(img);
 
 #### `convertColor(sourceImg, code)`
 
-Same as OpenCV `cvtColor()`.
+Same as OpenCV `cvtColor()`. Not support different channels. If you want to convert to gray, please use bgrToGray.
 Note that `getScreenshot` and `getScreenshotModify` is BGR order;
 
 * `sourceImg` Integer
@@ -350,8 +350,23 @@ See more: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgpr
 ```javascript
 var img = getScreenshot();
 // Convert BGR to HSV color
-convertColor(40, img);
-releaseImage(ig);
+convertColor(img, 40);
+releaseImage(img);
+```
+
+#### `bgrToGray(sourceImg)`
+
+Convert form bgr (3 channels) to gray (1 channel).
+
+* `sourceImg` Integer
+
+Returns `Integer` - The gray image pointer
+
+```javascript
+var img = getScreenshot();
+var gray = bgrToGray(img); // gray image
+releaseImage(img);
+releaseImage(gray);
 ```
 
 #### `absDiff(sourceImg, targetImg)`
@@ -422,6 +437,118 @@ var img = getScreenshot();
 threshold(img, 100, 255);
 eroid(img, 3, 3, 1, 1);
 saveImage(img, getStoragePath() + '/test_eroid.png');
+releaseImage(img);
+```
+
+#### `dilate(sourceImg, width, height, x, y)`
+
+Same as OpenCV `dilate`.
+
+`width`, `height`, `x`, `y` is `getStructuringElement()` parameters.
+
+* `sourceImg` Integer
+* `width` Integer
+* `height` Integer
+* `x` Integer
+* `y` Integer
+
+```javascript
+var img = getScreenshot();
+threshold(img, 100, 255);
+dilate(img, 3, 3, 1, 1);
+saveImage(img, getStoragePath() + '/test_dilate.png');
+releaseImage(img);
+```
+
+#### `inRange(sourceImg, minB, minG, minR, minA, maxB, maxG, maxR, maxA)`
+
+Same as OpenCV `inRange + clone + mask`. Filter with range color and clone to new image.
+
+* `sourceImg` Integer
+* `minB` Integer
+* `minG` Integer
+* `minR` Integer
+* `minA` Integer
+* `maxB` Integer
+* `maxG` Integer
+* `maxR` Integer
+* `maxA` Integer
+
+Returns `Integer` - The filtered image pointer
+
+```javascript
+var img = getScreenshot();
+var filteredImg = inRange(img, 0, 255, 255, 255, 255, 255, 255, 255); // only keep blue color pixel
+saveImage(filteredImg, getStoragePath() + '/test_filterd.png');
+releaseImage(img);
+releaseImage(filteredImg);
+```
+
+#### `outRange(sourceImg, minB, minG, minR, minA, maxB, maxG, maxR, maxA)`
+
+Same as OpenCV `inRange + clone + not + mask`. Filter without range color and clone to new image.
+
+* `sourceImg` Integer
+* `minB` Integer
+* `minG` Integer
+* `minR` Integer
+* `minA` Integer
+* `maxB` Integer
+* `maxG` Integer
+* `maxR` Integer
+* `maxA` Integer
+
+Returns `Integer` - The filtered image pointer
+
+```javascript
+var img = getScreenshot();
+var filteredImg = outRange(img, 0, 255, 255, 255, 255, 255, 255, 255); // keep all but blue color
+saveImage(filteredImg, getStoragePath() + '/test_filterd.png');
+releaseImage(img);
+releaseImage(filteredImg);
+```
+
+#### `cloneWithMask(sourceImg, mask)`
+
+Same as OpenCV `copyTo`. Clone image with mask (only support 1 channel)
+
+* `sourceImg` Integer
+* `mask` Integer
+
+Returns `Integer` - new image pointer with mask
+
+```javascript
+var img1 = getScreenshot();
+sleep(100);
+var img2 = getScreenshot();
+var diff = absDiff(img1, img2);
+sleep(100);
+var img3 = cloneWithMask(img1, diff);
+releaseImage(img1);
+releaseImage(img2);
+releaseImage(img3);
+releaseImage(diff);
+```
+
+#### `houghCircles(sourceImg, method, dp, minDist, p1, p2, minR, maxR)`
+
+Same as OpenCV `houghCircles`. For finding circles.
+
+* `sourceImg` Integer
+* `method` Integer (3 = CV_HOUGH_GRADIENT)
+* `dp` Float (1) (ratio between input image and input params.)
+* `minDist` Float (min distance between circles)
+* `p1` Float (canny parameter)
+* `p2` Float (canny parameter)
+* `minR` Integer (min radius)
+* `maxR` Integer (max radius)
+
+Returns `Object` - Array of circles
+
+```javascript
+var img = getScreenshot();
+var points = houghCircles(img, 3, 1, 8, 4, 8, 6, 14);
+console.log(points); // {"0": {"x": 102, "y": "233", "r": 9}}
 releaseImage(img);
 ```
 
