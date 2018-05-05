@@ -1613,7 +1613,7 @@ Tsum.prototype.taskPlayGame = function() {
       break;
     }
     log(this.logs.calculationPathStart);
-    var paths = calculatePaths(board);
+    var paths = calculatePaths(board, this.logs);
     if (paths.length < 2) {
       if (pathZero > 2) {
         pathZero = 0;
