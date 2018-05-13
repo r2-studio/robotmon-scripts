@@ -70,6 +70,17 @@
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js" 
       ]
+    },
+    "com.donny.dungeonbreakers": {
+      "title": "Dungeon Breaker Heroes",
+      "versionCode": 0.13,
+      "description": "<div>Break Drongeon Heros / 突破迷宮英雄</div>",
+      "packageName": "com.linktown.dungeonbreakers",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.donny.dungeonbreakers/index.zip",
+      "dependencies": [
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
+      ]
     }
   },
   "libs": {
