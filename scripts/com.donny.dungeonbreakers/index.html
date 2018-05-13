@@ -1,0 +1,470 @@
+<html>
+  <head>
+    <style>
+      .navbar-custom {
+        border-radius: 0 !important;
+        background-color: #2196F3;
+        color: #FFFFFF;
+      }
+      .navbar-custom > a {
+        width: 100%;
+        color: #FFFFFF;
+        text-align: center;
+      }
+      .navbar-custom > a:hover {
+        color: #FFFFFF;
+      }
+
+      .list-group-item {
+        padding: 6px 10px !important;
+      }
+
+      /* The switch - the box around the slider */
+      .switch {
+        position: relative; 
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0px;
+        width: 52px;
+        height: 28px;
+      }
+
+      ul {
+        padding-left: 5px;
+      }
+
+      /* Hide default HTML checkbox */
+      .switch input {display:none;}
+
+      /* The slider */
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 2px;
+        bottom: 4px;
+        top: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(24px);
+        -ms-transform: translateX(24px);
+        transform: translateX(24px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 28px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
+      .btn {
+        margin-left: 5px;
+      }
+      .btn-plus {
+        color:#FFFFFF;
+        background-color: #2196F3;
+        border-color: #2196F3;
+      }
+      .btn-plus:hover,
+      .btn-plus:focus,
+      .btn-plus:active,
+      .btn-plus.active {
+        color:#FFFFFF !important; 
+        background-color: #0d8aee;
+        border-color: #0c7cd5;
+      }
+      .btn-plus.disabled:hover,
+      .btn-plus.disabled:focus,
+      .btn-plus.disabled:active,
+      .btn-plus.disabled.active,
+      .btn-plus[disabled]:hover,
+      .btn-plus[disabled]:focus,
+      .btn-plus[disabled]:active,
+      .btn-plus[disabled].active,
+      fieldset[disabled] .btn-plus:hover,
+      fieldset[disabled] .btn-plus:focus,
+      fieldset[disabled] .btn-plus:active,
+      fieldset[disabled] .btn-plus.active {
+        color:#FFFFFF;
+        background-color: #2196F3;
+        border-color: #2196F3;
+      }
+      .btn-plus,
+      .btn-danger {
+        min-width: 35px;
+        padding: 3px 0px 3px 0px !important;
+      }
+      .setting_input_value {
+        width: 40px;
+        text-align: center;
+      }
+      .setting_input_value[type=text] {
+        width: 80%;
+      }
+      .row {
+          display: flex;
+          align-items: center;
+      }
+      #goToTop {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+      }
+    </style>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+      VERSION = 0.13;
+
+      var settings = [
+        [
+          {
+            title: "0.13版，更新日期 2018.05.12，完成 自動回歸/廣告拿寶石/點哥布林",
+            title_zh_TW: "",
+          },
+          {
+            title: "0.01版，更新日期 2018.04.22，開始寫腳本............",
+            title_zh_TW: "",
+          },
+          {
+            title: "特別感謝 小帆seafood 硬是要一個腳本，才有此腳本誕生",
+            title_zh_TW: "",
+          },
+          {
+            title: "特別感謝 女友受傷的腎 送了可愛貼圖，加速此腳本誕生",
+            title_zh_TW: "",
+          },
+        ],
+        [
+          {
+            title: "Language",
+            title_zh_TW: "語言",
+            buttons: [
+              {
+                title: "繁中",
+                onclick: "saveLocale('en-US')"
+              },
+            ]
+          },
+        ],
+        [
+          { title: "自動回歸,指定關卡開關", title_zh_TW: "", default: false},
+		  { 
+            title: ['　指定關卡(千位) (1000~9000)'],
+            default: 0,
+            step: 1000,
+            max: 9000,
+            min: 0,
+          },
+		  { 
+            title: ['　指定關卡(百位) (100~900)'],
+            default: 0,
+            step: 100,
+            max: 900,
+            min: 0,
+          },
+		  { 
+            title: ['　指定關卡(十位) (10~90)'],
+            default: 0,
+            step: 10,
+            max: 90,
+            min: 0,
+          },
+		  { 
+            title: ['　指定關卡(個位) (1~9)'],
+            default: 1,
+            step: 1,
+            max: 9,
+            min: 0,
+          },
+		  { 
+            title: ['自動回歸,卡關時間 (0:關閉，5~30分鐘)'],
+            default: 10,
+            step: 1,
+            max: 30,
+            min: 0,
+          },
+        ],
+		
+        [
+		  { 
+            title: ['基地,等級目標(暫無功能) (30~1500)'],
+            default: 300,
+            step: 30,
+            max: 1500,
+            min: 30,
+          },
+          { title: "英雄等級升級(暫無功能)", title_zh_TW: "", default: false},
+        ],
+		
+        [
+          { title: "看廣告拿紅寶石", title_zh_TW: "", default: false},
+          {
+            title: "特別提醒：看廣告時結束回到遊戲，夜神有機率當機非腳本問題",
+            title_zh_TW: "",
+          },
+          { title: "點擊錢袋哥布林", title_zh_TW: "", default: false},
+          {
+            title: "特別提醒：點擊錢袋非100%，若需要請購買商店的'自動點擊錢袋'",
+            title_zh_TW: "",
+          },
+		  
+        ]
+      ];
+      function saveLocale(locale) {
+        if (localStorage !== undefined) {
+          localStorage.setItem('growstonelanguage', locale);
+          location.reload();
+        }
+      }
+      function loadSettings(settings) {
+        var recordSettings = {};
+        if (localStorage = undefined) {
+          return;
+        }
+        var version = +localStorage.getItem('growstoneversion');
+        if (!version || VERSION != version) {
+          return;
+        }
+        var settingsJSON = localStorage.getItem('growstonesettings');
+        if (!settingsJSON) {
+          return;
+        }
+        recordSettings = JSON.parse(settingsJSON);
+        if (!recordSettings) {
+          return;
+        }
+        for (var i in settings) {
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            if (recordSettings[id] != undefined) {
+              setting.default = recordSettings[id];
+            }
+          }
+        }
+        console.log('Load settings');
+      }
+      function saveSettings(settings) {
+        if (localStorage != undefined) {
+          var recordSettings = {};
+          for (var i in settings) {
+            for (var g in settings[i]) {
+              var id =  i + "_" + g;
+              var setting = settings[i][g];
+              if (typeof setting.default === "boolean") {
+                recordSettings[id] = $("#setting_value_" + id).is(':checked');
+              } else if (typeof setting.default === "number") {
+                recordSettings[id] = +$("#setting_value_" + id).val();
+              } else if (typeof setting.default === "string") {
+                recordSettings[id] = $("#setting_value_" + id).val();
+              }
+            }
+          }
+          localStorage.setItem('growstoneversion', VERSION);
+          localStorage.setItem('growstonesettings', JSON.stringify(recordSettings));
+          console.log('Save settings');
+        }
+      }
+      function genStartCommand(settings) {
+        var command = "start(";
+        for (var i in settings) {
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            if (typeof setting.default === "boolean") {
+              command += $("#setting_value_" + id).is(':checked') + ", ";
+            } else if (typeof setting.default === "number") {
+              command += $("#setting_value_" + id).val() + ", ";
+            } else if (typeof setting.default === "string") {
+              command += "'" + $("#setting_value_" + id).val() + "', ";
+            }
+          }
+        }
+        command += "undefined);"
+        console.log("Start command: " + command);
+        return command;
+      }
+
+      function getTitle(setting) {
+        if (localStorage === undefined) {
+          return setting.title;
+        }
+        var lang = localStorage.getItem('growstonelanguage');
+        if (!lang) {
+          return setting.title;
+        } else if (lang === "zh-TW") {
+          return setting.title_zh_TW;
+        }
+        return setting.title;
+      }
+
+      function appendTitle(jSetting, title) {
+        jSetting.append("<div class='col-xs-6'>" + title + "</div>");
+      }
+
+      function appendCol(jSetting, jContent) {
+        var jDiv = $('<div class="pull-right"></div>');
+        var jCol = $('<div class="col-xs-6"></div>');
+        if (Array.isArray(jContent)) {
+          for (var j in jContent) {
+            jDiv.append(jContent[j]);
+          }
+        } else {
+          jDiv.append(jContent);
+        }
+        jCol.append(jDiv);
+        jSetting.append(jCol);
+      }
+
+      function getSwitchButton(id, checked) {
+        var jLabel = $('<label class="switch pull-right"></label>');
+        var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='checkbox' " + (checked ? 'checked' : '') + "/>");
+        jInput.change(function() {saveSettings(settings);});
+        jLabel.append(jInput);
+        jLabel.append('<a class="slider round"></a>');
+        return jLabel;
+      }
+
+      function genSettings(jContainer, settings) {
+        for (var i in settings) {
+          var jGroup = $("<div class='list-group'></div>");
+          for (var g in settings[i]) {
+            var id =  i + "_" + g;
+            var setting = settings[i][g];
+            var title = getTitle(setting);
+            var jGroupItem = $("<div id='setting_" + id + "' class='list-group-item'></div>");
+            var jSetting = $("<div class='row'></div>");
+            if (typeof setting.default === "boolean") {
+              appendTitle(jSetting, title);
+              appendCol(jSetting, getSwitchButton(id, setting.default));
+            } else if (typeof setting.default === "number") {
+              var step = setting.step;
+              var max = setting.max;
+              var min = setting.min;
+              var jBtns = [];
+              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='number' value='" + setting.default + "' readonly/>");
+              var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
+              var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
+              jBtnP.click((function(jInput, min, max, step){
+                return function() {
+                  var newValue = (+jInput.val()) + step;
+                  if (newValue <= max) {
+                    jInput.val(newValue);
+                  }
+                  saveSettings(settings);
+                }
+              })(jInput, min, max, step));
+              jBtnM.click((function(jInput, min, max, step){
+                return function() {
+                  var newValue = (+jInput.val()) - step;
+                  if (newValue >= min) {
+                    jInput.val(newValue);
+                  }
+                  saveSettings(settings);
+                }
+              })(jInput, min, max, step));
+              jBtns.push(jInput);
+              jBtns.push(jBtnP);
+              jBtns.push(jBtnM);
+              jInput.change(function() {saveSettings(settings);});
+              appendTitle(jSetting, title);
+              appendCol(jSetting, jBtns);
+            } else if (typeof setting.default === "string") {
+              var jInput = $("<input id='setting_value_" + id + "' class='setting_input_value' type='text' value='" + setting.default + "'/>");
+              jInput.change(function() {saveSettings(settings);});
+              appendTitle(jSetting, title);
+              appendCol(jSetting, jInput);
+            } else if (setting.buttons !== undefined) {
+              var jBtns = [];
+              for (var j in setting.buttons) {
+                var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + ' class="btn btn-plus">' + setting.buttons[j].title + '</button>');
+                jBtns.push(jBtn);
+              }
+              appendTitle(jSetting, title);
+              appendCol(jSetting, jBtns);
+            } else if (title !== undefined) {
+              jSetting.append("<div class='col-xs-12'>" + title + "</div>");
+            }
+            jGroupItem.append(jSetting);
+            jGroup.append(jGroupItem);
+          }
+          jContainer.append(jGroup)
+        }
+      }
+    </script>
+
+    <script>
+      $(function() {
+        $("#version").html(" Dungeon Breaker Heroes / 突破迷宮英雄 ");
+
+        loadSettings(settings);
+        genSettings($("#settings"), settings);
+
+        $("#goToTop").click(function() {
+          window.scrollTo(0, 0);
+        });
+
+        if (localStorage !== undefined && localStorage.getItem('growstonelanguage') === "zh-TW") {
+          $("#goToTop").text("回頁面頂端");
+        } else {
+          $("#goToTop").text("Go Top");
+        }
+      });
+
+      function onEvent(eventType) {
+        if (eventType == 'OnPlayClick') {
+          var startCommand = genStartCommand(settings);
+          JavaScriptInterface.runScript(startCommand);
+        } else if (eventType == 'OnPauseClick') {
+          JavaScriptInterface.runScript('stop();');
+          JavaScriptInterface.runScript('stop();');
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-custom" role="navigation">
+      <a id="version" class="navbar-brand"></a>
+    </nav>
+    <div class="container">
+      <div id="settings"></div>
+      <button id="goToTop" class="btn btn-plus">Go Top</button>
+      <br />
+      <br />
+      <br />
+    </div>
+  </body>
+</html>
