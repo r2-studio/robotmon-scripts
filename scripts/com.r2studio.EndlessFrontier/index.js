@@ -77,15 +77,20 @@ function EndlessFrontier() {
     ButtonTaskMoney: {x: 1040, y: 1100},
     ButtonTaskMax: {x: 420, y: 1100},
     ButtonAutoTask: {x: 1040, y: 900},
-    ButtonUpdateArmy: {x: 850, y: 900},
+    ButtonArmyLevelUpAll: {x: 525, y: 900},
+    ButtonArmyLevelUpAll1: {x: 975, y: 630},
+    ButtonArmyLevelUpAll10: {x: 725, y: 630},
+    ButtonArmyLevelUpAll100: {x: 475, y: 630},
+    ButtonArmyLevelUpAll1000: {x: 225, y: 630},
     ButtonBuyArmy: {x: 760, y: 900},
+    ButtonBuyArmyRefresh: {x: 850, y: 900},
+    ButtonBuyArmyDiamondRefresh: {x: 460, y: 1220},
+    ButtonBuyArmyBuy: {x: 460, y: 1320},
     ButtonStartBattle: {x: 925, y: 1490},
     ButtonUnopenedTask: {x: 630, y: 1120},
     ButtonTooLongBack: {x: 650, y: 1450},
     ButtonDiamondFree: {x: 650, y: 1250},
     ButtonDiamondSeeAd: {x: 460, y: 1130},
-    ButtonBuyArmyOK: {x: 460, y: 1220},
-    ButtonBuyArmyBuy: {x: 460, y: 1320},
     ButtonDiamondCancel: {x: 780, y: 1130},
     ButtonDoubleSpeed: {x: 1010, y: 910},
     ButtonTaskInfoCancel: {x: 620, y: 1410},
@@ -207,14 +212,19 @@ EndlessFrontier.prototype.initButtons = function() {
   this.ButtonTaskMoney = this.getRealWHRatio(this.Const.ButtonTaskMoney);
   this.ButtonTaskMax = this.getRealWHRatio(this.Const.ButtonTaskMax);
   this.ButtonAutoTask = this.getRealWHRatio(this.Const.ButtonAutoTask);
-  this.ButtonUpdateArmy = this.getRealWHRatio(this.Const.ButtonUpdateArmy);
+  this.ButtonArmyLevelUpAll = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll);
+  this.ButtonArmyLevelUpAll1 = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll1);
+  this.ButtonArmyLevelUpAll10 = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll10);
+  this.ButtonArmyLevelUpAll100 = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll100);
+  this.ButtonArmyLevelUpAll1000 = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll1000);
   this.ButtonBuyArmy = this.getRealWHRatio(this.Const.ButtonBuyArmy);
+  this.ButtonBuyArmyRefresh = this.getRealWHRatio(this.Const.ButtonBuyArmyRefresh);
+  this.ButtonBuyArmyDiamondRefresh = this.getRealWHRatio(this.Const.ButtonBuyArmyDiamondRefresh);
+  this.ButtonBuyArmyBuy = this.getRealWHRatio(this.Const.ButtonBuyArmyBuy);
   this.ButtonUnopenedTask = this.getRealWHRatio(this.Const.ButtonUnopenedTask);
   this.ButtonTooLongBack = this.getRealWHRatio(this.Const.ButtonTooLongBack);
   this.ButtonDiamondFree = this.getRealWHRatio(this.Const.ButtonDiamondFree);
   this.ButtonDiamondSeeAd = this.getRealWHRatio(this.Const.ButtonDiamondSeeAd);
-  this.ButtonBuyArmyOK = this.getRealWHRatio(this.Const.ButtonBuyArmyOK);
-  this.ButtonBuyArmyBuy = this.getRealWHRatio(this.Const.ButtonBuyArmyBuy);
   this.ButtonDiamondCancel = this.getRealWHRatio(this.Const.ButtonDiamondCancel);
   this.ButtonDoubleSpeed = this.getRealWHRatio(this.Const.ButtonDoubleSpeed);
   this.ButtonTaskInfoCancel = this.getRealWHRatio(this.Const.ButtonTaskInfoCancel);
@@ -348,9 +358,9 @@ EndlessFrontier.prototype.checkEnabledTableButtons = function() {
   var cellHeight = this.TableCellHeight;
   var x = this.ButtonTableRightOther.x;
   var enableButtons = [];
-  var initY = this.ButtonTableTop.y + cellHeight / 4;
+  var initY = this.ButtonTableTop.y + cellHeight / 2;
   var img = this.screenshot();
-  for (var y = initY; y < this.ButtonTableBottom.y; y += cellHeight / 4) {
+  for (var y = initY; y < this.ButtonTableBottom.y; y += cellHeight / 2) {
     var isEnable1 = isSameColor(this.Const.ButtonEnableColor, getColor(img, {x: x, y: y}));
     var isEnable2 = isSameColor(this.Const.ButtonEnableColor, getColor(img, {x: x, y: y + cellHeight / 8}));
     if (isEnable1 && isEnable2) {
@@ -383,8 +393,15 @@ EndlessFrontier.prototype.checkAndClickTable = function(ignoreCount, maxCount, c
     } else {
       maxSlideTimes = i;
     }
+
+    var img = this.screenshot();
+    if (isSameColor(this.Const.ButtonEnableColor, getColor(img, this.ButtonTaskInfoCancel))) {
+      this.goBack();
+    }
+    releaseImage(img);
+
     this.swipeTableDown(2);
-    sleep(this.Const.during);
+    sleep(500);
   }
   return maxSlideTimes * 2;
 }
@@ -422,12 +439,26 @@ EndlessFrontier.prototype.taskTreasure = function() {
   var color = getColor(img, this.ButtonDiamondSeeAd);
   releaseImage(img);
   if (isSameColor(this.Const.ButtonEnableColor, color)) {
-    log('[寶箱] 是鑽石寶箱阿！！！');
+    log('💎💎💎 鑽石寶箱 💎💎💎');
     this.tap(this.ButtonDiamondSeeAd);
     sleep(2000);
     this.goToGame();
   }
 };
+
+EndlessFrontier.prototype.taskArmyLevelUpAll = function(xy) {
+  var img = this.screenshot();
+  var color = getColor(img, xy);
+  releaseImage(img);
+  while (isSameColor(this.Const.ButtonEnableColor, color) && Config.isRunning) {
+    for (var i = 0; i < 10; i++) {
+      this.tap(xy, 100);
+    }
+    img = this.screenshot();
+    color = getColor(img, xy);
+    releaseImage(img);
+  }
+}
 
 EndlessFrontier.prototype.taskArmy = function() {
   log('檢查自動升級士兵');
@@ -436,15 +467,16 @@ EndlessFrontier.prototype.taskArmy = function() {
   this.swipeTableTop();
   sleep(this.Const.during);
   
-  var enableButtons = this.checkEnabledTableButtons();
-  if (enableButtons.length == 0) {
-    return;
-  }
-  this.checkAndClickTable(0, 12 - 2, false);
+  this.tap(this.ButtonArmyLevelUpAll);
+  this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll1000);
+  this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll100);
+  this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll10);
+  this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll1);
+  this.goBack();
 }
 
 EndlessFrontier.prototype.taskTask = function() {
-  log('檢查自動做任務' + ',跳過' + this.Status.taskTaskIgnore);
+  log('檢查自動做任務' + '，跳過' + this.Status.taskTaskIgnore);
   this.goToGame();
   this.tap(this.ButtonMenuTask);
 
@@ -497,6 +529,9 @@ EndlessFrontier.prototype.taskWar = function() {
   this.tap({x: rightBtnX, y: rightBtnYs[warIdx]});
   sleep(2000);
 
+  this.swipeTableTop();
+  sleep(this.Const.during);
+
   var img = this.screenshot();
   var btnEnable1 = isSameColor(this.Const.ButtonEnableColor, getColor(img, {x: rightBtnX, y: rightBtn1Y}));
   var btnEnable2 = isSameColor(this.Const.ButtonEnableColor, getColor(img, {x: rightBtnX, y: rightBtn2Y}));
@@ -516,7 +551,7 @@ EndlessFrontier.prototype.taskWar = function() {
 }
 
 EndlessFrontier.prototype.taskRevolution = function() {
-  log('===轉世===');
+  log('😇 轉世 😇');
   this.goToGame();
   this.tap(this.ButtonRevolutionScreen);
   this.tap(this.ButtonRevolution);
@@ -535,7 +570,7 @@ EndlessFrontier.prototype.taskBuyArmy = function() {
     this.tap(this.ButtonBuyArmy);
     sleep(this.Const.during);
     var img = this.screenshot();
-    var isEnable = isSameColor(this.Const.ButtonEnableColor, getColor(img, this.ButtonBuyArmyOK));
+    var isEnable = isSameColor(this.Const.ButtonEnableColor, getColor(img, this.ButtonBuyArmyDiamondRefresh));
     releaseImage(img);
     if (isEnable) {
       this.goBack();
@@ -550,7 +585,7 @@ EndlessFrontier.prototype.taskBuyArmy = function() {
     sleep(1000);
   }
   sleep(500);
-  this.tap(this.ButtonUpdateArmy);
+  this.tap(this.ButtonBuyArmyRefresh);
   this.goToGame();
 }
 
@@ -594,14 +629,14 @@ EndlessFrontier.prototype.taskRestartApp = function() {
 var ef;
 
 function stop() {
-  log('[無盡的邊疆] 停止');
+  log('📢 無盡的邊疆 - 停止 📢');
   Config.isRunning = false;
   sleep(1000);
   gTaskController.removeAllTasks();
 }
 
 function start(virtualButton, taskRestartApp, restartAppMinutes, taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, useSkill) {
-  log('[無盡的邊疆] 啟動');
+  log('📢 無盡的邊疆 - 啟動 📢');
   Config.isRunning = true;
   Config.hasVirtualButtonBar = virtualButton;
   ef = new EndlessFrontier();
