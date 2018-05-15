@@ -84,8 +84,8 @@ function EndlessFrontier() {
     ButtonArmyLevelUpAll1000: {x: 225, y: 630},
     ButtonBuyArmy: {x: 760, y: 900},
     ButtonBuyArmyRefresh: {x: 850, y: 900},
-    ButtonBuyArmyDiamondRefresh: {x: 460, y: 1220},
-    ButtonBuyArmyBuy: {x: 460, y: 1320},
+    ButtonBuyArmyBuyAll: {x: 670, y: 900},
+    ButtonBuyArmyBuy: {x: 460, y: 1070},
     ButtonStartBattle: {x: 925, y: 1490},
     ButtonUnopenedTask: {x: 630, y: 1120},
     ButtonTooLongBack: {x: 650, y: 1450},
@@ -219,7 +219,7 @@ EndlessFrontier.prototype.initButtons = function() {
   this.ButtonArmyLevelUpAll1000 = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll1000);
   this.ButtonBuyArmy = this.getRealWHRatio(this.Const.ButtonBuyArmy);
   this.ButtonBuyArmyRefresh = this.getRealWHRatio(this.Const.ButtonBuyArmyRefresh);
-  this.ButtonBuyArmyDiamondRefresh = this.getRealWHRatio(this.Const.ButtonBuyArmyDiamondRefresh);
+  this.ButtonBuyArmyBuyAll = this.getRealWHRatio(this.Const.ButtonBuyArmyBuyAll);
   this.ButtonBuyArmyBuy = this.getRealWHRatio(this.Const.ButtonBuyArmyBuy);
   this.ButtonUnopenedTask = this.getRealWHRatio(this.Const.ButtonUnopenedTask);
   this.ButtonTooLongBack = this.getRealWHRatio(this.Const.ButtonTooLongBack);
@@ -565,26 +565,9 @@ EndlessFrontier.prototype.taskBuyArmy = function() {
   this.goToGame();
   this.tap(this.ButtonMenuArmy);
   this.tap(this.ButtonAutoTask);
-  var enableButtons = this.checkEnabledTableButtons();
-  if (enableButtons.length <= 1) {
-    this.tap(this.ButtonBuyArmy);
-    sleep(this.Const.during);
-    var img = this.screenshot();
-    var isEnable = isSameColor(this.Const.ButtonEnableColor, getColor(img, this.ButtonBuyArmyDiamondRefresh));
-    releaseImage(img);
-    if (isEnable) {
-      this.goBack();
-      return;
-    }
-    enableButtons = this.checkEnabledTableButtons();
-  }
-  
-  for (var i = 0; i < 4 && i < enableButtons.length - 2; i++) {
-    this.tap(enableButtons[i]);
-    this.tap(this.ButtonBuyArmyBuy);
-    sleep(1000);
-  }
-  sleep(500);
+  this.tap(this.ButtonBuyArmyBuyAll);
+  this.tap(this.ButtonBuyArmyBuy);
+  this.goBack();
   this.tap(this.ButtonBuyArmyRefresh);
   this.goToGame();
 }
