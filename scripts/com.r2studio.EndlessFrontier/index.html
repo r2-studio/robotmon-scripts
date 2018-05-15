@@ -150,7 +150,7 @@
 
   <script>
     TAG = "EndlessFrontier";
-    VERSION = 14;
+    VERSION = 15;
     var settings = [
       [
         {
@@ -216,7 +216,7 @@
         },
         {
           title: "Auto buy unit",
-          title_zh_TW: "自動買士兵",
+          title_zh_TW: "自動購買士兵",
           default: true
         },
         {
@@ -457,7 +457,7 @@
         var startCommand = genStartCommand(settings);
         JavaScriptInterface.runScript(startCommand);
       } else if (eventType == 'OnPauseClick') {
-        JavaScriptInterface.runScript('stop();');
+        JavaScriptInterface.runScript('stop(); sleep(100); reset();');
       } else if (eventType == 'OnReloadClick') {
         JavaScriptInterface.runScript(script);
       }
