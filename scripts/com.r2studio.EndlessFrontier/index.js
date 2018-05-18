@@ -290,10 +290,9 @@ EndlessFrontier.prototype.swipeTable = function(number, m) {
   var deltaY = m * cellHeight / 5 * number;
   tapDown(x, topY, during);
   for (var j = 0; j <= 6; j++) {
-    moveTo(x, topY + deltaY * j, during);
-    moveTo(x, topY + deltaY * j, during);
+    moveTo(x, topY + deltaY * j, 100);
   }
-  sleep(during);
+  sleep(1500);
   tapUp(x, topY + deltaY * 6, during);
 }
 
@@ -362,14 +361,12 @@ EndlessFrontier.prototype.checkEnabledTableButtons = function() {
   var img = this.screenshot();
   for (var y = initY; y < this.ButtonTableBottom.y; y += cellHeight / 2) {
     var isEnable1 = isSameColor(this.Const.ButtonEnableColor, getColor(img, {x: x, y: y}));
-    var isEnable2 = isSameColor(this.Const.ButtonEnableColor, getColor(img, {x: x, y: y + cellHeight / 8}));
+    var isEnable2 = isSameColor(this.Const.ButtonEnableColor, getColor(img, {x: x, y: y + cellHeight / 16}));
     if (isEnable1 && isEnable2) {
       enableButtons.push({x: x, y: y});
-      y += cellHeight / 4;
     }
   }
   releaseImage(img);
-  // log('enableButtons', JSON.stringify(enableButtons));
   return enableButtons;
 }
 
@@ -394,14 +391,8 @@ EndlessFrontier.prototype.checkAndClickTable = function(ignoreCount, maxCount, c
       maxSlideTimes = i;
     }
 
-    var img = this.screenshot();
-    if (isSameColor(this.Const.ButtonEnableColor, getColor(img, this.ButtonTaskInfoCancel))) {
-      this.goBack();
-    }
-    releaseImage(img);
-
+    this.goToGame();
     this.swipeTableDown(2);
-    sleep(500);
   }
   return maxSlideTimes * 2;
 }
@@ -410,9 +401,14 @@ EndlessFrontier.prototype.checkAndClickTable = function(ignoreCount, maxCount, c
 EndlessFrontier.prototype.taskDoubleSpeed = function() {
   log('檢查兩倍速度');
   this.goToGame();
+  sleep(this.Const.during);
   this.tap(this.ButtonMenuStore);
+  sleep(this.Const.during);
   this.tap(this.ButtonMenuStoreProp);
+  sleep(this.Const.during);
   this.tap(this.ButtonDoubleSpeed);
+  sleep(15000);
+  this.goToGame();
 };
 
 EndlessFrontier.prototype.taskUsingSkill= function() {
@@ -434,16 +430,21 @@ EndlessFrontier.prototype.taskTreasure = function() {
   for (var x = interval; x < this.ScreenInfo.gameWidth; x += this.ScreenInfo.gameWidth) {
     this.tap({x: x, y: this.Treasure.y}, 80);
   }
+
   // check and watch Ad
   var img = this.screenshot();
   var color = getColor(img, this.ButtonDiamondSeeAd);
   releaseImage(img);
   if (isSameColor(this.Const.ButtonEnableColor, color)) {
-    log('💎💎💎 鑽石寶箱 💎💎💎');
-    this.tap(this.ButtonDiamondSeeAd);
-    sleep(2000);
-    this.goToGame();
+    // log('💎💎💎 鑽石寶箱 💎💎💎');
+    // this.tap(this.ButtonDiamondSeeAd);
+    // sleep(10000);
+    // this.goToGame();
+    this.goBack();
   }
+
+  sleep(3000);
+  this.goToGame();
 };
 
 EndlessFrontier.prototype.taskArmyLevelUpAll = function(xy) {
@@ -464,15 +465,18 @@ EndlessFrontier.prototype.taskArmy = function() {
   log('檢查自動升級士兵');
   this.goToGame();
   this.tap(this.ButtonMenuArmy);
+  sleep(this.Const.during);
   this.swipeTableTop();
   sleep(this.Const.during);
   
   this.tap(this.ButtonArmyLevelUpAll);
+  sleep(this.Const.during);
   this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll1000);
   this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll100);
   this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll10);
   this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll1);
-  this.goBack();
+  sleep(3000);
+  this.goToGame();
 }
 
 EndlessFrontier.prototype.taskTask = function() {
@@ -554,9 +558,11 @@ EndlessFrontier.prototype.taskRevolution = function() {
   log('😇 轉世 😇');
   this.goToGame();
   this.tap(this.ButtonRevolutionScreen);
+  sleep(this.Const.during);
   this.tap(this.ButtonRevolution);
+  sleep(this.Const.during);
   this.tap(this.ButtonRevolutionTeam);
-  sleep(2000);
+  sleep(3000);
   this.goToGame();
 }
 
@@ -564,11 +570,17 @@ EndlessFrontier.prototype.taskBuyArmy = function() {
   log('檢查自動購買士兵');
   this.goToGame();
   this.tap(this.ButtonMenuArmy);
+  sleep(this.Const.during);
   this.tap(this.ButtonAutoTask);
+  sleep(this.Const.during);
   this.tap(this.ButtonBuyArmyBuyAll);
+  sleep(this.Const.during);
   this.tap(this.ButtonBuyArmyBuy);
+  sleep(this.Const.during);
   this.goBack();
+  sleep(this.Const.during);
   this.tap(this.ButtonBuyArmyRefresh);
+  sleep(3000);
   this.goToGame();
 }
 
@@ -618,7 +630,7 @@ function stop() {
   gTaskController.removeAllTasks();
 }
 
-function start(virtualButton, taskRestartApp, restartAppMinutes, taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, useSkill) {
+function start(virtualButton, taskRestartApp, restartAppMinutes, taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, useSkill, isLocaleTW) {
   log('📢 無盡的邊疆 - 啟動 📢');
   Config.isRunning = true;
   Config.hasVirtualButtonBar = virtualButton;
@@ -638,5 +650,5 @@ function start(virtualButton, taskRestartApp, restartAppMinutes, taskTreasure, t
   sleep(1000);
   gTaskController.start();
 };
-// start(true, true, true, true, true, true, true, true, 60, true, 60, false);
+// start(true, true, true, true, true, true, true, true, 60, true, 60, false, true);
 // stop();

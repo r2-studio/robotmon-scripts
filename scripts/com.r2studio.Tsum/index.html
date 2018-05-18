@@ -348,21 +348,21 @@
         }
         for (var i in settings) {
           for (var g in settings[i]) {
-            var id =  i + '_' + g;
+            var id = i + '_' + g;
             var setting = settings[i][g];
             if (recordSettings[id] != undefined) {
               setting.default = recordSettings[id];
             }
           }
         }
-		
-		// This is so we send the locale for logging.... we should do this better but good enough for now.
-		lang = localStorage.getItem('tsumtsumlanguage');
-		if (lang === 'zh-TW'){
-			console.log('加載設置');			
-		} else {
-			console.log('Load settings');
-		}		
+
+        // This is so we send the locale for logging.... we should do this better but good enough for now.
+        lang = localStorage.getItem('tsumtsumlanguage');
+        if (lang === 'zh-TW') {
+          console.log('讀取設定');
+        } else {
+          console.log('Load settings');
+        }
       }
 
       function saveSettings(settings) {
@@ -370,7 +370,7 @@
           var recordSettings = {};
           for (var i in settings) {
             for (var g in settings[i]) {
-              var id =  i + '_' + g;
+              var id = i + '_' + g;
               var setting = settings[i][g];
               if (typeof setting.default === 'boolean') {
                 recordSettings[id] = $('#setting_value_' + id).is(':checked');
@@ -385,14 +385,13 @@
           }
           localStorage.setItem('tsumtsumversion', VERSION);
           localStorage.setItem('tsumtsumsettings', JSON.stringify(recordSettings));
-		  
-		  lang = localStorage.getItem('tsumtsumlanguage');
-		  if (lang === 'zh-TW'){
-  			  console.log('保存設置');			
-		  } else {
-			  console.log('Save settings');			
-		  }			  
-		  
+
+          lang = localStorage.getItem('tsumtsumlanguage');
+          if (lang === 'zh-TW') {
+            console.log('儲存設定');
+          } else {
+            console.log('Save settings');
+          }
         }
       }
 
@@ -400,7 +399,7 @@
         var command = 'start(';
         for (var i in settings) {
           for (var g in settings[i]) {
-            var id =  i + '_' + g;
+            var id = i + '_' + g;
             var setting = settings[i][g];
             if (typeof setting.default === 'boolean') {
               command += $('#setting_value_' + id).is(':checked') + ', ';
@@ -414,16 +413,15 @@
           }
         }
 		
-		// This is so we send the locale to the start function
-		lang = localStorage.getItem('tsumtsumlanguage');
-		if (lang === 'zh-TW'){
-			command += 'true);';
-			console.log('啟動命令: ' + command);			
-		} else {
-			command += 'false);';
-			console.log('Start command: ' + command);			
-		}
-		
+        // This is so we send the locale to the start function
+        lang = localStorage.getItem('tsumtsumlanguage');
+        if (lang === 'zh-TW') {
+          command += 'true);';
+          console.log('啟動命令: ' + command);
+        } else {
+          command += 'false);';
+          console.log('Start command: ' + command);
+        }
         return command;
       }
 
@@ -471,7 +469,7 @@
         for (var i in settings) {
           var jGroup = $('<div class="list-group"></div>');
           for (var g in settings[i]) {
-            var id =  i + '_' + g;
+            var id = i + '_' + g;
             var setting = settings[i][g];
             var title = getTitle(setting);
             var jGroupItem = $('<div id="setting_' + id + '" class="list-group-item"></div>');
@@ -608,14 +606,14 @@
           $('#updateRecordDESC').text('更新(遞減)');
           $('#resetRecord').text('清除紀錄');
           $('#goToTop').text('回頁面頂端');
-		  $('#goToBottom').text('轉到底部');
+		      $('#goToBottom').text('轉到底部');
         } else {
           $('#senders').text('List of Heart Counts');
           $('#updateRecordASC').text('Update(ASC)');
           $('#updateRecordDESC').text('Update(DESC)');
           $('#resetRecord').text('Reset Record');
           $('#goToTop').text('Go to Top');
-		  $('#goToBottom').text('Go to Bottom');		  
+		      $('#goToBottom').text('Go to Bottom');
         }
       });
 
