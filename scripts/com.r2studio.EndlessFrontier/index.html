@@ -150,12 +150,16 @@
 
   <script>
     TAG = "EndlessFrontier";
-    VERSION = 17;
+    VERSION = 18;
     var settings = [
       [
         {
           title: '⚠️ Turn off the option of virtual button bar when using an Android Emulator',
           title_zh_TW: '⚠️ Android 模擬器請關閉虛擬鍵盤的選項',
+        },
+        {
+          title: '⚠️ Get gem treasure chests may crashes on Android Emulator',
+          title_zh_TW: '⚠️ Android 模擬器開鑽石寶箱有可能會閃退',
         },
       ],
       [
@@ -196,14 +200,24 @@
           default: true
         },
         {
+          title: "Auto gem treasure chests",
+          title_zh_TW: "自動開鑽石寶箱",
+          default: false
+        },
+        {
           title: "Auto quest",
           title_zh_TW: "自動完成任務",
           default: true
         },
         {
-          title: "Auto unit",
-          title_zh_TW: "自動完成士兵",
+          title: "Auto unit(all)",
+          title_zh_TW: "自動完成士兵(全體)",
           default: true
+        },
+        {
+          title: "Auto unit(one by one)",
+          title_zh_TW: "自動完成士兵(個別)",
+          default: false
         },
         {
           title: "Auto dungeon",

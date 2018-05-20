@@ -7,6 +7,9 @@ var Config = {
   resizeHeight: 0,
   virtualButtonHeight: 0, // auto detect
   hasVirtualButtonBar: false,
+  gemTreasure: false,
+  upgradeArmyAll: false,
+  upgradeArmyOneByOne: false,
   isRunning: false,
 };
 
@@ -427,8 +430,10 @@ EndlessFrontier.prototype.taskTreasure = function() {
   log('檢查自動開寶箱');
   this.goToGame();
   var interval = this.ScreenInfo.gameWidth / 5;
-  for (var x = interval; x < this.ScreenInfo.gameWidth; x += this.ScreenInfo.gameWidth) {
-    this.tap({x: x, y: this.Treasure.y}, 80);
+  for (var i = 0; i < 2; i++) {
+    for (var x = interval; x < this.ScreenInfo.gameWidth; x += this.ScreenInfo.gameWidth) {
+      this.tap({x: x, y: this.Treasure.y}, 80);
+    }
   }
 
   // check and watch Ad
@@ -436,10 +441,13 @@ EndlessFrontier.prototype.taskTreasure = function() {
   var color = getColor(img, this.ButtonDiamondSeeAd);
   releaseImage(img);
   if (isSameColor(this.Const.ButtonEnableColor, color)) {
-    // log('💎💎💎 鑽石寶箱 💎💎💎');
-    // this.tap(this.ButtonDiamondSeeAd);
-    // sleep(10000);
-    // this.goToGame();
+    if (Config.gemTreasure) {
+      log('💎💎💎 鑽石寶箱 💎💎💎');
+      this.tap(this.ButtonDiamondSeeAd);
+      sleep(10000);
+      this.goToGame();
+      return;
+    }
     this.goBack();
   }
 
@@ -469,12 +477,26 @@ EndlessFrontier.prototype.taskArmy = function() {
   this.swipeTableTop();
   sleep(this.Const.during);
   
-  this.tap(this.ButtonArmyLevelUpAll);
-  sleep(this.Const.during);
-  this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll1000);
-  this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll100);
-  this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll10);
-  this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll1);
+  if (Config.upgradeArmyAll) {
+    this.tap(this.ButtonArmyLevelUpAll);
+    sleep(this.Const.during);
+    this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll1000);
+    this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll100);
+    this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll10);
+    this.taskArmyLevelUpAll(this.ButtonArmyLevelUpAll1);
+
+    if (Config.upgradeArmyOneByOne) {
+      this.goBack();
+    }
+  }
+
+  if (Config.upgradeArmyOneByOne) {
+    var enableButtons = this.checkEnabledTableButtons();
+    if (enableButtons.length > 0) {
+      this.checkAndClickTable(0, 12 - 2, false);
+    }
+  }
+
   sleep(3000);
   this.goToGame();
 }
@@ -630,16 +652,19 @@ function stop() {
   gTaskController.removeAllTasks();
 }
 
-function start(virtualButton, taskRestartApp, restartAppMinutes, taskTreasure, taskTask, taskArmy, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, useSkill, isLocaleTW) {
+function start(virtualButton, taskRestartApp, restartAppMinutes, taskTreasure, gemTreasure, taskTask, upgradeArmyAll, upgradeArmyOneByOne, taskWar, taskDoubleSpeed, taskBattle, taskBuyArmy, taskRevolution, revolutionMinutes, useSkill, isLocaleTW) {
   log('📢 無盡的邊疆 - 啟動 📢');
   Config.isRunning = true;
   Config.hasVirtualButtonBar = virtualButton;
+  Config.gemTreasure = gemTreasure;
+  Config.upgradeArmyAll = upgradeArmyAll;
+  Config.upgradeArmyOneByOne = upgradeArmyOneByOne;
   ef = new EndlessFrontier();
   log(Config);
   gTaskController = new TaskController();
   if(taskTreasure){gTaskController.newTask('taskTreasure', ef.taskTreasure.bind(ef), 300, 0);}
   if(taskTask){gTaskController.newTask('taskTask', ef.taskTask.bind(ef), 40 * 1000, 0);}
-  if(taskArmy){gTaskController.newTask('taskArmy', ef.taskArmy.bind(ef), 120 * 1000, 0);}
+  if(upgradeArmyAll || upgradeArmyOneByOne){gTaskController.newTask('taskArmy', ef.taskArmy.bind(ef), 120 * 1000, 0);}
   if(taskWar){gTaskController.newTask('taskWar', ef.taskWar.bind(ef), 100 * 1000, 0);}
   if(taskDoubleSpeed){gTaskController.newTask('taskDoubleSpeed', ef.taskDoubleSpeed.bind(ef), 5 * 60 * 1000, 0);}
   if(taskBattle){gTaskController.newTask('taskBattle', ef.taskBattle.bind(ef), 30 * 60 * 1000, 0);}
@@ -650,5 +675,5 @@ function start(virtualButton, taskRestartApp, restartAppMinutes, taskTreasure, t
   sleep(1000);
   gTaskController.start();
 };
-// start(true, true, true, true, true, true, true, true, 60, true, 60, false, true);
+// start(true, true, 60, true, false, true, true, false, true, true, true true, true, 60, false, true);
 // stop();
