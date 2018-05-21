@@ -1048,17 +1048,17 @@ Tsum.prototype.deinit = function() {
 }
 
 Tsum.prototype.isAppOn = function() {
-  var results = execute('dumpsys activity activities').split('mFocusedActivity');
-  if (results.length < 2) {
-    return true;
-  }
-  results = results[1].split(" ");
-  if (results.length < 4) {
-    return true;
-  }
-  var result = results[3].split("/");
+  var result = execute('dumpsys window windows').split('mCurrentFocus');
   if (result.length < 2) {
-    return true;
+    return false;
+  }
+  result = result[1].split(" ");
+  if (result.length < 3) {
+    return false;
+  }
+  result = result[2].split("/");
+  if (result.length < 2) {
+    return false;
   }
   var packageName = result[0];
   var activityName = result[1];
