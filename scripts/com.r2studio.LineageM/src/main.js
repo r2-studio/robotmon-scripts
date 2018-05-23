@@ -390,8 +390,7 @@ class LineageM {
   checkBeAttacked() {
     if (this.config.beAttackedRandTeleport && this.gi.beAttacked.check(this._img)) {
       const c = getImageColor(this._img, this.gi.zeroRect.tx, this.gi.zeroRect.ty);
-      if (c.r > c.g + c.b) {
-        // rand teleport (7th btn)
+      if (c.r > (c.g + c.b) / 2) {
         console.log('警告！你被攻擊了，使用按鈕 7');
         this.gi.itemBtns[6].tap();
         this.safeSleep(2000);
