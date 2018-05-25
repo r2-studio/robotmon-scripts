@@ -105,6 +105,34 @@ function DIY_swipe(intx, inty, finax, finay, moveD) {
 	sleep(50)
 }
 
+function xy_swipe(intx, inty, finax, finay, moveD) {  //坐標位移
+	var movedistance = (finay - inty) / moveD
+	tapDown(intx, inty, 200);
+	
+	if (finay > inty) {
+		for (var i = inty; i < finay; i = i + moveD) {
+			moveTo(intx, i, 10);
+			if (!config.isRunning) {
+				tapUp(intx, i, 200);
+				break;
+			}
+		}
+	}
+	else if (finay < inty) {
+		for (var i = inty; i > finay; i = i - moveD) {
+			moveTo(intx, i, 10);
+			if (!config.isRunning) {
+				tapUp(intx, i, 200);
+				break;
+			}
+		}
+	}
+	
+	moveTo(finax, finay, 250)	
+	tapUp(finax, finay, 200)
+	sleep(200)
+}
+
 
 var rbm = new RBM(config);
 rbm.init();
@@ -204,14 +232,16 @@ function FindStonesImages(stoneslv1,stoneslv2,column) {
 			AttackMode(1); //檢查背包打開/自動攻擊
 			QuizRestart();
 			
-			CheckImageTap(455,  575, 180,  60, 0.9, 'exitstone.png', 680, 1280, 1, 200, 0); //Exit Grow Stone Online
-			CheckImageTap(490, 1060, 100, 330, 0.9, 'ok_button.png', 1, 1, 1, 200, 1); //OK_Button
+			CheckImageTap(455,  575, 180,  60, 0.9, 'exitstone.png', 680, 1280, 1, 150, 0); //Exit Grow Stone Online
+			CheckImageTap(490, 1060, 100, 330, 0.9, 'ok_button.png', 1, 1, 1, 150, 1); //OK_Button
 			CheckImageTap(600,  200, 470, 750, 0.9, 'closeboard.png', 1, 1, 1, 2, 1); //closeboard
-			CheckImageTap(470, 1100, 133,  95, 0.9, 'Receiveaward.png', 1, 1, 1, 200, 1); //Receiveaward
-			CheckImageTap(626,  868, 154,  51, 0.9, 'fastdig_ok.png', 430, 1130, 1, 200, 0);   //fast dig OK button
-			CheckImageTap(299,  897, 207,  39, 0.9, 'UpdataFailed.png', 540, 1120, 1, 200, 0); //wifi or lan disconnected
-			CheckImageTap(438,  825, 109,  42, 0.9, 'break_down.png', 650, 1150, 1, 200, 0);   //break down stone : cancle
-			//CheckImageTap(441, 648, 113, 39, 0.8, 'Unlock_Stone.png', 540, 1210, 1, 200, 0); //stone lv_up : ok
+			CheckImageTap(470, 1100, 133,  95, 0.9, 'Receiveaward.png', 1, 1, 1, 150, 1); //Receiveaward
+			CheckImageTap(626,  868, 154,  51, 0.9, 'fastdig_ok.png', 430, 1130, 1, 150, 0);   //fast dig OK button
+			CheckImageTap(299,  897, 207,  39, 0.9, 'UpdataFailed.png', 540, 1120, 1, 150, 0); //wifi or lan disconnected
+			CheckImageTap(438,  825, 109,  42, 0.9, 'break_down.png', 650, 1150, 1, 150, 0);   //break down stone : cancle
+			CheckImageTap(570, 1190, 205,  78, 0.9, 'dungeon_backtomini.png', 1, 1, 1, 150, 1); //dungeon_backtomini
+			
+			//CheckImageTap(441, 648, 113, 39, 0.8, 'Unlock_Stone.png', 540, 1210, 1, 150, 0); //stone lv_up : ok
 			
 			timetoRestarApp2(RestartApptimeset);
 		}
@@ -483,13 +513,13 @@ function QuizAnswer() { //小測驗解答判斷
 	var Character = { 
 	    'Attributes':[
 	        {'No':0,'Type':'Non','MainFile':'','AltFile':'','x':0,'y':0,'Rank':''}, 
-	        {'No':1,'Type':'Bear','MainFile':'Quiz_Main_1.png','AltFile':'Quiz_Alt_1.png','x':'','y':'','Rank':''}, 
-	        {'No':2,'Type':'Rabb','MainFile':'Quiz_Main_2.png','AltFile':'Quiz_Alt_2.png','x':'','y':'','Rank':''}, 
-	        {'No':3,'Type':'LBoy','MainFile':'Quiz_Main_3.png','AltFile':'Quiz_Alt_3.png','x':'','y':'','Rank':''}, 
-	        {'No':4,'Type':'Blue','MainFile':'Quiz_Main_4.png','AltFile':'Quiz_Alt_4.png','x':'','y':'','Rank':''}, 
-	        {'No':5,'Type':'Kaka','MainFile':'Quiz_Main_5.png','AltFile':'Quiz_Alt_5.png','x':'','y':'','Rank':''}, 
-	        {'No':6,'Type':'GNja','MainFile':'Quiz_Main_6.png','AltFile':'Quiz_Alt_6.png','x':'','y':'','Rank':''}, 
-	        {'No':7,'Type':'LGir','MainFile':'Quiz_Main_7.png','AltFile':'Quiz_Alt_7.png','x':'','y':'','Rank':''} 
+	        {'No':1,'Type':'Bear','MainFile':'Quiz_Main_1_N.png','AltFile':'Quiz_Alt_1_N.png','x':'','y':'','Rank':''}, 
+	        {'No':2,'Type':'Rabb','MainFile':'Quiz_Main_2_N.png','AltFile':'Quiz_Alt_2_N.png','x':'','y':'','Rank':''}, 
+	        {'No':3,'Type':'LBoy','MainFile':'Quiz_Main_3_N.png','AltFile':'Quiz_Alt_3_N.png','x':'','y':'','Rank':''}, 
+	        {'No':4,'Type':'Blue','MainFile':'Quiz_Main_4_N.png','AltFile':'Quiz_Alt_4_N.png','x':'','y':'','Rank':''}, 
+	        {'No':5,'Type':'Kaka','MainFile':'Quiz_Main_5_N.png','AltFile':'Quiz_Alt_5_N.png','x':'','y':'','Rank':''}, 
+	        {'No':6,'Type':'GNja','MainFile':'Quiz_Main_6_N.png','AltFile':'Quiz_Alt_6_N.png','x':'','y':'','Rank':''}, 
+	        {'No':7,'Type':'LGir','MainFile':'Quiz_Main_7_N.png','AltFile':'Quiz_Alt_7_N.png','x':'','y':'','Rank':''} 
 	    ], 
 	}; 	
 	//確認主要對象是誰
@@ -499,13 +529,13 @@ function QuizAnswer() { //小測驗解答判斷
 		//console.log('i=',i,' main check');
 		for (var j = 0; j < 3; j++) {
 			rbm.keepScreenshotPartial(470, 1060, 580, 1140);
-			var targetPic1 = rbm.imageExists(Character.Attributes[i].MainFile, 0.80)
+			var targetPic1 = rbm.imageExists(Character.Attributes[i].MainFile, 0.95)
 			rbm.releaseScreenshot();
 			if (targetPic1) {  //確認比對人物編號
 				targetmathtimes1 = targetmathtimes1 + 1
 			}
 			if (targetmathtimes1 >= 1) {
-				//rbm.log(i, Character.Attributes[i].Type,'-Main-',rbm.findImage(Character.Attributes[i].MainFile, 0.90))
+				rbm.log(i, Character.Attributes[i].Type,'-Main-',rbm.findImage(Character.Attributes[i].MainFile, 0.95))
 				targetCharacter1 = i;
 				break Tag_Main;
 			}
@@ -561,6 +591,7 @@ function QuizAnswer() { //小測驗解答判斷
 			
 			//sleep(1000);
 			//ScreenShottoPath();
+			
 			
 			rbm.keepScreenshotPartial(120, 1370, 980, 1450); // x1, y1, x2, y2
 			var QuizRankFile = 'Quiz_Rank_' + Character.Attributes[targetCharacter1].Rank + '.png'
@@ -788,34 +819,6 @@ function characterbubble() {  //角色對話泡包點擊 main
 	else if (StoneNum < 6) {
 		console.log('空格有 '+StoneNum+' 不足6個!不點角色!')
 	}
-}
-
-function xy_swipe(intx, inty, finax, finay, moveD) {  //坐標位移
-	var movedistance = (finay - inty) / moveD
-	tapDown(intx, inty, 200);
-	
-	if (finay > inty) {
-		for (var i = inty; i < finay; i = i + moveD) {
-			moveTo(intx, i, 10);
-			if (!config.isRunning) {
-				tapUp(intx, i, 200);
-				break;
-			}
-		}
-	}
-	else if (finay < inty) {
-		for (var i = inty; i > finay; i = i - moveD) {
-			moveTo(intx, i, 10);
-			if (!config.isRunning) {
-				tapUp(intx, i, 200);
-				break;
-			}
-		}
-	}
-	
-	moveTo(finax, finay, 250)	
-	tapUp(finax, finay, 200)
-	sleep(200)
 }
 
 function friendheartfind() {  //朋友送愛心尋找 藍→黃
@@ -1244,11 +1247,11 @@ function AreaChange(AreaID, Timer) {  //區域切換：AreaID= 1:頻道  2:狩�
 			rbm.releaseScreenshot();
 			if (target1) {
 				rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2 //判斷是否有打勾 ok
-				var target3 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.92);
-				var target4 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.92);
+				var target3 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.97);
+				var target4 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.97);
 				//console.log(target3, target4, rbm.imageClick('Travel_channels_lessperson_check.png', 0.90))
 				if (target3) {
-					rbm.imageClick('Travel_channels_lessperson_check.png', 0.92);
+					rbm.imageClick('Travel_channels_lessperson_check.png', 0.97);
 				}
 				else if (target4) {
 					tap(260, 580);
@@ -1680,7 +1683,7 @@ function EDTravel_field() {  //8龍，礦區切打獵，彎月數控制，切換
 								rbm.releaseScreenshot();
 								if (target3 != undefined && target3.score > 0.80) {
 									var x3 = target3.x + 50;
-									var y3 = target3.y + 20;
+									var y3 = target3.y + 20 + 580;
 									//console.log(x3, y3);
 									tap(x3, y3);			
 							
@@ -1827,8 +1830,17 @@ for(var n = 0; n <= 0; n++) {
 	else if (n > 1) {
 		//eightdragonhuntermap = 5;
 		//EDTravel_field();
-		Dougeon_WFStone(60);
+		//Dougeon_WFStone(60);
+
+		QuizRestart()
 		
+		/*
+		rbm.keepScreenshotPartial(120, 360, 400, 430); // x1, y1, x2, y2 //判斷是否有打勾 ok
+		var target3 = rbm.imageExists('Travel_channels_lessperson_no.png', 0.92);
+		var target4 = rbm.imageExists('Travel_channels_lessperson_ok.png', 0.92);
+		rbm.log('no_target3: ', target3, rbm.findImage('Travel_channels_lessperson_no.png', 0.50));
+		rbm.log('ok_target4: ', target4, rbm.findImage('Travel_channels_lessperson_ok.png', 0.50));
+		*/
 	}
 	
 	console.log('n = '+ n);
