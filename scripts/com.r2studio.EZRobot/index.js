@@ -42,7 +42,7 @@ var MoveTo = function(x, y) {
   rbm.moveTo({x: x, y: y});
 };
 var TapUp = function(x, y) {
-  rbm.moveTo({x: x, y: y});
+  rbm.tapUp({x: x, y: y});
 };
 var Swipe = function(x1, y1, x2, y2) {
   rbm.swipe({x: x1, y: y1}, {x: x2, y: y2}, 4);
