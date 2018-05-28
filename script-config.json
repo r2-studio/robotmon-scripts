@@ -40,7 +40,7 @@
     },
     "com.r2studio.EZRobot": {
       "title": "EZRobot",
-      "versionCode": 3,
+      "versionCode": 4,
       "description": "<div>Make your scripts yourself</div>",
       "packageName": "com.r2studio.robotmon",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",
