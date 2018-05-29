@@ -610,6 +610,12 @@ var GameAssistant = function () {
       // 1. Check all skill availibity
       this.checkSkills();
 
+      // 2.0 return if warCry is active
+      if (this.rState.skillsState['WC'] == SkillEnum.active) {
+        console.log('warcry alredy active, skip')
+        return;
+      }
+
       // 2. add skill if status = SkillEnum.none (not yet learn)
       // TODO: keep upgrade warcry?
       if (this.rState.skillsState['WC'] == SkillEnum.none) {
