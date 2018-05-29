@@ -483,13 +483,14 @@ var RoleState = function () {
 }();
 
 var GameAssistant = function () {
-  function GameAssistant(checkInGame, prestigeTime) {
+  function GameAssistant(debug, checkInGame, prestigeTime) {
     _classCallCheck(this, GameAssistant);
 
     // this.config = config || { conditions: [] };
     this.gInfo = new GameInfo(prestigeTime);
     this.rState = new RoleState(this.gInfo);
     this.shouldCheckInGame = checkInGame;
+    this.debug = debug;
     this.localPath = getStoragePath() + '/scripts/com.r2studio.TemplateHelper/images/';
     this._loop = false;
     this._img = 0;
@@ -548,7 +549,7 @@ var GameAssistant = function () {
           this.checkInGame();
         }
 
-        // this.checkWarCry();
+        // this.warCry2();
         // break;
 
         this.fightClanBoss();
@@ -644,7 +645,7 @@ var GameAssistant = function () {
       // 4. close master tab
       this.gInfo.masterTab.tap(1, 1200);
       this.refreshScreen();
-      if (this.gInfo.masterTab.check(this._img)) {
+      if (!this.gInfo.masterTab.check(this._img)) {
         this.gInfo.masterTab.tap(1, 900);
       }
 
@@ -794,7 +795,7 @@ var GameAssistant = function () {
       }
 
       console.log('looking for fairyNoThanks')
-      for (var i = 0; i < 6; i ++) {
+      for (var i = 0; i < 7; i ++) {
         this.refreshScreen();
         if (this.gInfo.fairyNoThanks.check(this._img)) {
           this.gInfo.fairyNoThanks.tap();
@@ -845,7 +846,7 @@ var GameAssistant = function () {
             console.log('clanBossScore:', r.score, ', retry');
           }
 
-          this.safeSleep(100);
+          this.safeSleep(150);
         }
 
         if (!foundBoss) {
@@ -853,7 +854,7 @@ var GameAssistant = function () {
           this.safeSleep(3500);
           this.gInfo.clanBossBack.tap();
         } else {
-          this.safeSleep(3500);
+          this.safeSleep(4000);
           console.log('start taping');
           for (i = 0; i < 30 && this._loop; i ++){
             for (j = 0; j < 10 && this._loop; j ++) {
@@ -865,10 +866,10 @@ var GameAssistant = function () {
           this.safeSleep(8000);
           console.log('tap back 1/3')
           this.gInfo.clanBossBack.tap();
-          sleep(3000);
+          sleep(4000);
           this.gInfo.clanBossBack.tap();
           console.log('tap back 2/3')
-          sleep(2000);
+          sleep(4000);
           this.gInfo.clanBossBack.tap();
           console.log('tap back 3/3')
         }  
@@ -960,7 +961,7 @@ function start(debug, checkInGame, prestigeTime) {
     return;
   }
   console.log('start(): ', prestigeTime)
-  assistant = new GameAssistant(checkInGame, prestigeTime);
+  assistant = new GameAssistant(debug, checkInGame, prestigeTime);
   assistant.start();
   // TODO: don't know why won't work
   // assistant.stop();
