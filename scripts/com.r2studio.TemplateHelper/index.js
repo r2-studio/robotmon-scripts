@@ -557,7 +557,9 @@ var GameAssistant = function () {
 
         this.tapFairy();
 
-        this.checkWarCry();
+        if (Math.floor((Date.now() - startTime)/1000/60) > 3) {
+          this.checkWarCry();
+        }
 
         this.tapGround();
 
@@ -689,6 +691,8 @@ var GameAssistant = function () {
         console.log('learn skill')
         skill.tap(1, 300);
       }
+
+      this.gInfo.shrinkTab.tap(1, 600);
     }
   }, {
     key: 'warCry',
