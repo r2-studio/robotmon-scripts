@@ -272,6 +272,11 @@ var FeaturePoint = function (_Point) {
       return true;
     }
   }, {
+    key: 'getColor',
+    value: function getColor(img) {
+      return getImageColor(img, this.tx, this.ty);
+    }
+  }, {
     key: 'print',
     value: function print(img) {
       var c = getImageColor(img, this.tx, this.ty);
@@ -346,50 +351,7 @@ var gGameOffsetY = 0;
 var gRatioTarget = gTargetWidth / gDevWidth;
 var gRatioDevice = gGameWidth / gDevWidth;
 
-var FeaturePoint = function (_Point) {
-  _inherits(FeaturePoint, _Point);
-
-  // need: true => should exist, false => should not exist
-  function FeaturePoint(x, y, r, g, b, need) {
-    var diff = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 25;
-
-    _classCallCheck(this, FeaturePoint);
-
-    var _this = _possibleConstructorReturn(this, (FeaturePoint.__proto__ || Object.getPrototypeOf(FeaturePoint)).call(this, x, y));
-
-    _this.r = r;
-    _this.g = g;
-    _this.b = b;
-    _this.d = diff;
-    _this.need = need;
-    return _this;
-  }
-
-  _createClass(FeaturePoint, [{
-    key: 'check',
-    value: function check(img) {
-      var c = getImageColor(img, this.tx, this.ty);
-      if (this.need && !Utils.isSameColor(c, this, this.d)) {
-        console.log('!c: ', c.r, c.g, c.b)
-        return false;
-      } else if (!this.need && Utils.isSameColor(c, this)) {
-        console.log('!c: ', c.r, c.g, c.b)
-        return false;
-      }
-      return true;
-    }
-  }, {
-    key: 'print',
-    value: function print(img) {
-      var c = getImageColor(img, this.tx, this.ty);
-      console.log('target', this.tx, this.ty, 'param', this.x + ', ' + this.y + ', ' + c.r + ', ' + c.g + ', ' + c.b + ', true');
-    }
-  }]);
-
-  return FeaturePoint;
-}(Point);
-
-var GameInfo = function GameInfo(checkInGame, prestigeTime) {
+var GameInfo = function GameInfo(prestigeTime) {
   _classCallCheck(this, GameInfo);
   this.prestigeTime = prestigeTime * 60;
 
@@ -434,6 +396,20 @@ var GameInfo = function GameInfo(checkInGame, prestigeTime) {
   this.warCrySkill = new Point(1080, 2290);
   this.warCryExpend = new FeaturePoint(1050, 1660, 250, 150, 20, true, 35);
 
+  this.skillExpend = [
+    new FeaturePoint(1050, 730, 250, 150, 20, true, 35),
+    new FeaturePoint(1050, 950, 250, 150, 20, true, 35),
+    new FeaturePoint(1050, 1170, 250, 150, 20, true, 35),
+    new FeaturePoint(1050, 1410, 250, 150, 20, true, 35),
+    new FeaturePoint(1050, 1660, 250, 150, 20, true, 35),
+    new FeaturePoint(1050, 1850, 250, 150, 20, true, 35),
+  ];
+  // this.heavenlyStrikeExpend = new FeaturePoint(1050, 730, 250, 150, 20, true, 35);
+  // this.deadlyStrikeExpend = new FeaturePoint(1050, 950, 250, 150, 20, true, 35);
+  // this.handOfMidasExpend = new FeaturePoint(1050, 1170, 250, 150, 20, true, 35);
+  // this.fireSwordExpend = new FeaturePoint(1050, 1410, 250, 150, 20, true, 35);
+  // this.shadowCloneExpend = new FeaturePoint(1050, 1850, 250, 150, 20, true, 35);
+
   this.gearRect = new Rect(0, 0, 200, 200);
 
   this.expendTab = new Point(1150, 1420);
@@ -446,8 +422,14 @@ var GameInfo = function GameInfo(checkInGame, prestigeTime) {
     new FeaturePoint(1100, 110, 80, 80, 80, true, 20),
   ])
 
-  this.skillStatus = [
-    new FeaturePoint(1080, 2200, 120, 120, 130, true, 20),
+  // Check return true when skill can be cast
+  this.skillStatusRef = [
+    new FeaturePoint(110, 2204, 250, 250, 250, true, 20),
+    new FeaturePoint(350, 2204, 250, 250, 250, true, 20),
+    new FeaturePoint(590, 2204, 250, 250, 250, true, 20),
+    new FeaturePoint(830, 2204, 250, 250, 250, true, 20),
+    new FeaturePoint(1070, 2204, 250, 250, 250, true, 20),
+    new FeaturePoint(1310, 2204, 250, 250, 250, true, 20),
   ]
 
   // Used to determine if the game still active
@@ -461,6 +443,14 @@ var GameInfo = function GameInfo(checkInGame, prestigeTime) {
   ])
 };
 
+var SkillEnum = Object.freeze({ 'none': 1, 'ok': 2, 'active': 3, 'oom': 4 })
+var SkillColor = Object.freeze({
+  'none': {r: 0, g: 0, b: 0},
+  'ok': {r: 250, g: 250, b: 250},
+  'active': {r: 250, g: 170, b: 50},
+  'oom': {r: 120, g: 120, b: 130},
+})
+
 var RoleState = function () {
   function RoleState(gInfo) {
     _classCallCheck(this, RoleState);
@@ -472,13 +462,13 @@ var RoleState = function () {
     this.isClanBossActive; // Check upper left clan boss icon
     this.isFightBoss; // Check upper right fightBoss icon
 
-    this.skillsAvaiable = {
-      'HS': null,
-      'DS': null,
-      'HOM': null,
-      'FS': null,
-      'WC': null,
-      'SC': null,
+    this.skillsState = {
+      'HS': SkillEnum.none,
+      'DS': SkillEnum.none,
+      'HOM': SkillEnum.none,
+      'FS': SkillEnum.none,
+      'WC': SkillEnum.none,
+      'SC': SkillEnum.none,
     }
   }
 
@@ -497,13 +487,12 @@ var GameAssistant = function () {
     _classCallCheck(this, GameAssistant);
 
     // this.config = config || { conditions: [] };
-    this.gInfo = new GameInfo(checkInGame, prestigeTime);
+    this.gInfo = new GameInfo(prestigeTime);
     this.rState = new RoleState(this.gInfo);
+    this.shouldCheckInGame = checkInGame;
     this.localPath = getStoragePath() + '/scripts/com.r2studio.TemplateHelper/images/';
     this._loop = false;
     this._img = 0;
-
-    // this.refreshScreen();
 
     // load images
     this.images = {
@@ -554,7 +543,13 @@ var GameAssistant = function () {
 
       while (this._loop) {
         this.refreshScreen();
-        this.checkInGame();
+
+        if (this.shouldCheckInGame){
+          this.checkInGame();
+        }
+
+        // this.checkWarCry();
+        // break;
 
         this.fightClanBoss();
 
@@ -576,22 +571,81 @@ var GameAssistant = function () {
       }
     }
   }, {
+    key: 'checkSkills',
+    value: function checkSkills() {
+      this.refreshScreen();
+      // Close all tabs
+      this.gInfo.masterTab.tap(1, 400);
+      for (var i = 0; i < 3; i ++) {
+        this.refreshScreen();
+        if (!this.gInfo.masterTab.check(this._img)) {
+          break;
+        }
+
+        this.gInfo.masterTab.tap();
+        sleep(300);
+      }
+
+      // this.refreshScreen();
+      Object.keys(this.rState.skillsState).forEach(function(name, index) {
+        var c = this.gInfo.skillStatusRef[index].getColor(this._img);
+
+        if (Utils.isSameColor(c, SkillColor.none)) {
+          this.rState.skillsState[name] = SkillEnum.none;
+        } else if (Utils.isSameColor(c, SkillColor.ok)) {
+          this.rState.skillsState[name] = SkillEnum.ok;
+        } else if (Utils.isSameColor(c, SkillColor.active)) {
+          this.rState.skillsState[name] = SkillEnum.active;
+        } else if (Utils.isSameColor(c, SkillColor.oom)) {
+          this.rState.skillsState[name] = SkillEnum.oom;
+        }
+        console.log(name, this.rState.skillsState[name]);
+      }.bind(this));
+    }
+  }, {
     key: 'warCry2',
     value: function warCry2() {
       // 1. Check all skill availibity
-      // 2. add skill if status = null
-      // 3. add other skill if OOM
+      this.checkSkills();
 
-      this.gInfo.masterTab.tap(1, 900);
+      // 2. add skill if status = SkillEnum.none (not yet learn)
+      // TODO: keep upgrade warcry?
+      if (this.rState.skillsState['WC'] == SkillEnum.none) {
+        console.log('learn warcry')
+        this.learnSkill(this.gInfo.warCryExpend);
+      }
+
+      // 3. add other skill if OOM
+      else if (this.rState.skillsState['WC'] == SkillEnum.oom) {
+        console.log('try to solve OOM');
+        this.toLearn = null;
+        Object.keys(this.rState.skillsState).forEach(function(name, index) {
+          if (this.toLearn !== null) {
+            return;
+          }
+          if (this.rState.skillsState[name] == SkillEnum.none) {
+            this.toLearn = this.gInfo.skillExpend[index];
+          }
+        }.bind(this));
+
+        if (this.toLearn !== null) {
+          this.learnSkill(this.toLearn);
+        }
+      }
+
+      // 4. close master tab
+      this.gInfo.masterTab.tap(1, 1200);
       this.refreshScreen();
       if (this.gInfo.masterTab.check(this._img)) {
         this.gInfo.masterTab.tap(1, 900);
       }
 
+      console.log('cast warcry')
+      this.gInfo.warCrySkill.tap(1, 300);
     }
   }, {
-    key: 'warCry',
-    value: function warCry() {
+    key: 'learnSkill',
+    value: function learnSkill(skill) {
       // Open master tab
       for (var i = 0; i < 3; i ++) {
         this.refreshScreen();
@@ -631,10 +685,15 @@ var GameAssistant = function () {
       // upgradeMaster
       this.gInfo.upgradeMasterExpend.tap(1, 200);
 
-      if (this.gInfo.warCryExpend.check(this._img)) {
-        console.log('tap war cry')
-        this.gInfo.warCryExpend.tap(1, 300);
+      if (skill.check(this._img)) {
+        console.log('learn skill')
+        skill.tap(1, 300);
       }
+    }
+  }, {
+    key: 'warCry',
+    value: function warCry() {
+      this.learnSkill(this.gInfo.warCryExpend);
 
       this.gInfo.shrinkTab.tap(1, 300);
       this.gInfo.masterTab.tap(1, 300);
@@ -652,7 +711,7 @@ var GameAssistant = function () {
 
       if (r.score < 0.6) {
         console.log('warcry')
-        this.warCry();
+        this.warCry2();
       }
     },
   }, {
@@ -708,8 +767,13 @@ var GameAssistant = function () {
     key: 'tapGround',
     value: function tapGround() {
       for (var i =  -5; i < 5; i ++) {
-        console.log('ground: ', this.gInfo.petGold.x + 0.1 * i * gDeviceWidth)
+        // console.log('ground: ', this.gInfo.petGold.x + 0.1 * i * gDeviceWidth)
         tap(this.gInfo.petGold.x + 0.1 * i * gDeviceWidth, this.gInfo.petGold.y, 80);
+      }
+
+      // keep hitting in case get equipment
+      for (var i = 0; i < 70 && this._loop; i ++) {
+        this.tapRandom(700, 900, 50, 50, 80);
       }
     }
   }, {
@@ -783,7 +847,7 @@ var GameAssistant = function () {
           console.log('start taping');
           for (i = 0; i < 30 && this._loop; i ++){
             for (j = 0; j < 10 && this._loop; j ++) {
-              this.tapRandom(700, 900, 50, 50, 100);
+              this.tapRandom(700, 900, 50, 50, 80);
             }
           }
   
