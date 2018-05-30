@@ -81,6 +81,13 @@
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
       ]
+    },
+    "com.r2studio.TemplateHelper": {
+      "title": "Copy this and build you own game helper!",
+      "versionCode": 1,
+      "description": "<div>Where you start to build your own bot!</div>",
+      "packageName": "com.gamehivecorp.taptitans2",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TemplateHelper/index.zip"
     }
   },
   "libs": {
