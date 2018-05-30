@@ -263,10 +263,14 @@ var FeaturePoint = function (_Point) {
     value: function check(img) {
       var c = getImageColor(img, this.tx, this.ty);
       if (this.need && !Utils.isSameColor(c, this, this.d)) {
-        console.log('!c: ', c.r, c.g, c.b)
+        if (gDebug) {
+          console.log('!c: ', c.r, c.g, c.b)
+        }
         return false;
       } else if (!this.need && Utils.isSameColor(c, this)) {
-        console.log('!c: ', c.r, c.g, c.b)
+        if (gDebug) {
+          console.log('!c: ', c.r, c.g, c.b)
+        }
         return false;
       }
       return true;
@@ -350,10 +354,12 @@ var gGameOffsetY = 0;
 // }
 var gRatioTarget = gTargetWidth / gDevWidth;
 var gRatioDevice = gGameWidth / gDevWidth;
+var gDebug = false;
 
 var GameInfo = function GameInfo(prestigeTime) {
   _classCallCheck(this, GameInfo);
   this.prestigeTime = prestigeTime * 60;
+  this.upgradeAllHeroCD = 1; //in minutes
 
   this.clanBoss = new FeaturePoint(259, 62, 120, 60, 65, true, 20)
   this.clanBoss2 = new Point(282, 2286);
@@ -457,6 +463,7 @@ var RoleState = function () {
 
     this.gInfo = gInfo;
     this.startTime = Date.now();
+    this.lastUpgradeAllHeros = Date.now();
 
     this.isInGame; // Check upper left gear icon
     this.isClanBossActive; // Check upper left clan boss icon
@@ -490,7 +497,7 @@ var GameAssistant = function () {
     this.gInfo = new GameInfo(prestigeTime);
     this.rState = new RoleState(this.gInfo);
     this.shouldCheckInGame = checkInGame;
-    this.debug = debug;
+    gDebug = debug == true ? true : false;
     this.localPath = getStoragePath() + '/scripts/com.r2studio.TemplateHelper/images/';
     this._loop = false;
     this._img = 0;
@@ -549,7 +556,7 @@ var GameAssistant = function () {
           this.checkInGame();
         }
 
-        // this.warCry2();
+        // this.upgradeAllHeros();
         // break;
 
         this.fightClanBoss();
@@ -565,6 +572,7 @@ var GameAssistant = function () {
         this.tapGround();
 
         this.upgradeHeros();
+        this.upgradeAllHeros();
 
         this.testPrestige();
 
@@ -572,6 +580,50 @@ var GameAssistant = function () {
         sleep(1500);
         // break;
       }
+    }
+  }, {
+    key: 'upgradeAllHeros',
+    value: function upgradeAllHeros() {
+      if (Date.now() - this.rState.lastUpgradeAllHeros < this.gInfo.upgradeAllHeroCD * 1000) {
+        console.log('skipping upgradeAllHeros')
+        return;
+      }
+
+      // Open Hero Tab
+      for (var i = 0; i < 3; i ++) {
+        this.refreshScreen();
+        if (this.gInfo.heroTab.check(this._img)) {
+          break;
+        }
+
+        this.gInfo.heroTab.tap();
+        sleep(300);
+      }
+
+      this.gInfo.expendTab.tap(1, 300);
+
+      for (var i = 0; i < 4; i ++) {
+        for (var y = 420 * gRatioDevice; y < 2440 * gRatioDevice; y += 200 * gRatioDevice) {
+          tap(1250, y, 100);
+        }
+
+        this.ttListSwipeUp()
+        sleep(200);
+        this.ttListSwipeUp()
+        sleep(350);
+      }
+      for (var y = 420 * gRatioDevice; y < 2440 * gRatioDevice; y += 200 * gRatioDevice) {
+        tap(1250, y, 100);
+      }
+
+      // Swipe to top
+      for(var i = 0; i < 5; i ++) {
+        this.ttListSwipeDown();
+        sleep(350);
+      }
+
+      this.gInfo.shrinkTab.tap(1, 300);
+      this.rState.lastUpgradeAllHeros = Date.now();
     }
   }, {
     key: 'checkSkills',
@@ -765,7 +817,7 @@ var GameAssistant = function () {
 
         this.gInfo.heroTab.tap();
         sleep(300);
-    }
+      }
 
       sleep(300);
       this.ttListSwipeDown();
