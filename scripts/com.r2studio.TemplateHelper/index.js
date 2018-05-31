@@ -363,8 +363,8 @@ var PageFeature = function () {
 
 var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
   _classCallCheck(this, GameInfo);
-  this.prestigeTime = prestigeTime * 60;
-  this.upgradeAllHeroCD = 1; //in minutes
+  this.prestigeTime = prestigeTime; // in minutes
+  this.upgradeAllHeroCD = upgradeAllHeroCD; //in minutes
 
   this.clanBoss = new FeaturePoint(259, 62, 120, 60, 65, true, 20)
   this.clanBoss2 = new Point(282, 2286);
@@ -552,7 +552,7 @@ var GameAssistant = function () {
     key: 'start',
     value: function start() {
       this._loop = true;
-      var startTime = Date.now();
+      this.roundStart = Date.now();
 
       while (this._loop) {
         this.refreshScreen();
@@ -587,11 +587,11 @@ var GameAssistant = function () {
         console.log('check upgradeAllHeros');
         this.upgradeAllHeros();
 
+        console.log('check testPrestige');
         this.testPrestige();
 
-        console.log('time: ', Math.floor((Date.now() - startTime)/1000/60), 'm', Math.floor(((Date.now() - startTime)/1000)%60), 's, of', this.gInfo.prestigeTime / 60, 'mins');
+        //console.log('time: ', Math.floor((Date.now() - startTime)/1000/60), 'm', Math.floor(((Date.now() - startTime)/1000)%60), 's, of', this.gInfo.prestigeTime / 60, 'mins');
         sleep(1500);
-        // break;
       }
     }
   }, {
@@ -794,7 +794,8 @@ var GameAssistant = function () {
   }, {
     key: 'testPrestige',
     value: function testPrestige() {
-      if (Date.now() - this.startTime > this.gInfo.prestigeTime * 1000) {
+      console.log('>', this.gInfo.prestigeTime, this.roundStart, this.gInfo.prestigeTime)
+      if (Date.now() - this.roundStart > this.gInfo.prestigeTime * 60 * 1000) {
         console.log('Prestige');
 
         if (!this.gInfo.masterTab.check(this._img)) {
@@ -818,6 +819,8 @@ var GameAssistant = function () {
         this.gInfo.prestige.tap(1, 50);
         this.gInfo.prestige2.tap(1, 200);
         this.gInfo.prestige3.tap(1, 300);
+      } else {
+        console.log('time: ', Math.floor((Date.now() - this.roundStart)/1000/60), 'm', Math.floor(((Date.now() - this.roundStart)/1000)%60), 's, of', this.gInfo.prestigeTime, 'mins');
       }
     }
   }, {
@@ -1017,7 +1020,7 @@ var DefaultConfig = {
 
 var assistant = undefined;
 
-function start(debug, checkInGame, prestigeTime) {
+function start(debug, checkInGame, prestigeTime, upgradeAllHeroCD) {
   console.log('📢 啟動腳本 📢');
   if (typeof config === 'string') {
     config = JSON.parse(config);
@@ -1027,7 +1030,7 @@ function start(debug, checkInGame, prestigeTime) {
     return;
   }
   console.log('start(): ', prestigeTime)
-  assistant = new GameAssistant(debug, checkInGame, prestigeTime);
+  assistant = new GameAssistant(debug, checkInGame, prestigeTime, upgradeAllHeroCD);
   assistant.start();
   // TODO: don't know why won't work
   // assistant.stop();
