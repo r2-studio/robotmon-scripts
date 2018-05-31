@@ -8,6 +8,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+// == Global variables start
+// -- screen info
+var _wh = getScreenSize();
+var gDevWidth = 1440;
+var gDevHeight = 2560;
+var gTargetWidth = 540;
+var gTargetHeight = 960;
+// var gTargetWidth = 1440;
+// var gTargetHeight = 2560;
+var gDeviceWidth = Math.min(_wh.width, _wh.height);
+var gDeviceHeight = Math.max(_wh.width, _wh.height);
+var gGameWidth = gDeviceWidth;
+var gGameHeight = gDeviceHeight;
+var gGameOffsetX = 0;
+var gGameOffsetY = 0;
+// if (gDeviceWidth / gDeviceHeight > 1.78) {
+//   gGameWidth = Math.round(gGameHeight * 1.777778);
+//   gGameOffsetX = (gDeviceWidth - gGameWidth) / 2;
+// } else if (gDeviceWidth / gDeviceHeight < 1.77) {
+//   gGameHeight = Math.round(gGameWidth / 1.777778);
+//   gGameOffsetY = (gDeviceHeight - gGameHeight) / 2;
+// }
+var gRatioTarget = gTargetWidth / gDevWidth;
+var gRatioDevice = gGameWidth / gDevWidth;
+var gDebug = false;
+
 // =============== utilities ===============
 var Utils = function () {
   function Utils() {
@@ -63,6 +89,11 @@ var Utils = function () {
     value: function fitImageSize(img) {
       var size = getImageSize(img);
       return resizeImage(img, gRatioTarget * size.width, gRatioTarget * size.height);
+    }
+  }, {
+    key: 'mTap',
+    value: function mTap(x, y, duration) {
+      tap(gGameOffsetX + x * gRatioDevice, gGameOffsetY + y * gRatioDevice, duration);
     }
   }, {
     key: 'mSwipe',
@@ -330,33 +361,7 @@ var PageFeature = function () {
   return PageFeature;
 }();
 
-// == Global variables start
-// -- screen info
-var _wh = getScreenSize();
-var gDevWidth = 1440;
-var gDevHeight = 2560;
-var gTargetWidth = 540;
-var gTargetHeight = 960;
-// var gTargetWidth = 1440;
-// var gTargetHeight = 2560;
-var gDeviceWidth = Math.min(_wh.width, _wh.height);
-var gDeviceHeight = Math.max(_wh.width, _wh.height);
-var gGameWidth = gDeviceWidth;
-var gGameHeight = gDeviceHeight;
-var gGameOffsetX = 0;
-var gGameOffsetY = 0;
-// if (gDeviceWidth / gDeviceHeight > 1.78) {
-//   gGameWidth = Math.round(gGameHeight * 1.777778);
-//   gGameOffsetX = (gDeviceWidth - gGameWidth) / 2;
-// } else if (gDeviceWidth / gDeviceHeight < 1.77) {
-//   gGameHeight = Math.round(gGameWidth / 1.777778);
-//   gGameOffsetY = (gDeviceHeight - gGameHeight) / 2;
-// }
-var gRatioTarget = gTargetWidth / gDevWidth;
-var gRatioDevice = gGameWidth / gDevWidth;
-var gDebug = false;
-
-var GameInfo = function GameInfo(prestigeTime) {
+var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
   _classCallCheck(this, GameInfo);
   this.prestigeTime = prestigeTime * 60;
   this.upgradeAllHeroCD = 1; //in minutes
@@ -490,11 +495,11 @@ var RoleState = function () {
 }();
 
 var GameAssistant = function () {
-  function GameAssistant(debug, checkInGame, prestigeTime) {
+  function GameAssistant(debug, checkInGame, prestigeTime, upgradeAllHeroCD) {
     _classCallCheck(this, GameAssistant);
 
     // this.config = config || { conditions: [] };
-    this.gInfo = new GameInfo(prestigeTime);
+    this.gInfo = new GameInfo(prestigeTime, upgradeAllHeroCD);
     this.rState = new RoleState(this.gInfo);
     this.shouldCheckInGame = checkInGame;
     gDebug = debug == true ? true : false;
@@ -556,22 +561,30 @@ var GameAssistant = function () {
           this.checkInGame();
         }
 
-        // this.upgradeAllHeros();
+        // this.testPrestige();
         // break;
 
+        console.log('check fightClanBoss');
         this.fightClanBoss();
 
+        console.log('check fightStageBoss');
         this.fightStageBoss();
 
+        console.log('check tapFairy');
         this.tapFairy();
 
+        console.log('check checkWarCry');
         if (Math.floor((Date.now() - startTime)/1000/60) > 3) {
           this.checkWarCry();
         }
 
+        console.log('check tapGround');
         this.tapGround();
 
+        console.log('check upgradeHeros');
         this.upgradeHeros();
+
+        console.log('check upgradeAllHeros');
         this.upgradeAllHeros();
 
         this.testPrestige();
@@ -584,8 +597,8 @@ var GameAssistant = function () {
   }, {
     key: 'upgradeAllHeros',
     value: function upgradeAllHeros() {
-      if (Date.now() - this.rState.lastUpgradeAllHeros < this.gInfo.upgradeAllHeroCD * 1000) {
-        console.log('skipping upgradeAllHeros')
+      if (Date.now() - this.rState.lastUpgradeAllHeros < this.gInfo.upgradeAllHeroCD * 60 * 1000) {
+        console.log('upgradeAllHeros cd: ', (Date.now() -this.rState.lastUpgradeAllHeros)/ 1000);
         return;
       }
 
@@ -603,8 +616,8 @@ var GameAssistant = function () {
       this.gInfo.expendTab.tap(1, 300);
 
       for (var i = 0; i < 4; i ++) {
-        for (var y = 420 * gRatioDevice; y < 2440 * gRatioDevice; y += 200 * gRatioDevice) {
-          tap(1250, y, 100);
+        for (var y = 420; y < 2440; y += 200) {
+          Utils.mTap(1250, y, 100);
         }
 
         this.ttListSwipeUp()
@@ -612,8 +625,8 @@ var GameAssistant = function () {
         this.ttListSwipeUp()
         sleep(350);
       }
-      for (var y = 420 * gRatioDevice; y < 2440 * gRatioDevice; y += 200 * gRatioDevice) {
-        tap(1250, y, 100);
+      for (var y = 420; y < 2440; y += 200) {
+        Utils.mTap(1250, y, 100);
       }
 
       // Swipe to top
@@ -707,6 +720,7 @@ var GameAssistant = function () {
   }, {
     key: 'learnSkill',
     value: function learnSkill(skill) {
+      console.log('learn: ', JSON.stringify(skill))
       // Open master tab
       for (var i = 0; i < 3; i ++) {
         this.refreshScreen();
@@ -744,7 +758,7 @@ var GameAssistant = function () {
 
       // TODO: only upgrade master when can't learn warcry
       // upgradeMaster
-      this.gInfo.upgradeMasterExpend.tap(1, 200);
+      this.gInfo.upgradeMasterExpend.tap(1, 500);
 
       if (skill.check(this._img)) {
         console.log('learn skill')
@@ -802,8 +816,8 @@ var GameAssistant = function () {
         }
   
         this.gInfo.prestige.tap(1, 50);
-        this.gInfo.prestige2.tap(1, 50);
-        this.gInfo.prestige3.tap(1, 50);
+        this.gInfo.prestige2.tap(1, 200);
+        this.gInfo.prestige3.tap(1, 300);
       }
     }
   }, {
@@ -830,8 +844,7 @@ var GameAssistant = function () {
     key: 'tapGround',
     value: function tapGround() {
       for (var i =  -5; i < 5; i ++) {
-        // console.log('ground: ', this.gInfo.petGold.x + 0.1 * i * gDeviceWidth)
-        tap(this.gInfo.petGold.x + 0.1 * i * gDeviceWidth, this.gInfo.petGold.y, 80);
+        Utils.mTap(this.gInfo.petGold.x + 0.1 * i * gDeviceWidth, this.gInfo.petGold.y, 80);
       }
 
       // keep hitting in case get equipment
@@ -843,17 +856,16 @@ var GameAssistant = function () {
     key: 'tapFairy',
     value: function tapFairy() {
       for (var i = 0; i < 10; i ++) {
-        tap(this.gInfo.ship.x + 0.1 * i * gDeviceWidth, this.gInfo.ship.y);
+        // console.log(gDeviceWidth, 'tap: ', this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y)
+        Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y);
       }
 
       console.log('looking for fairyNoThanks')
-      for (var i = 0; i < 7; i ++) {
+      for (var i = 0; i < 9; i ++) {
         this.refreshScreen();
         if (this.gInfo.fairyNoThanks.check(this._img)) {
           this.gInfo.fairyNoThanks.tap();
           return;
-        } else {
-          // console.log('looking for fairyNoThanks')
         }
         sleep(250);
       }
@@ -924,26 +936,28 @@ var GameAssistant = function () {
           sleep(4000);
           this.gInfo.clanBossBack.tap();
           console.log('tap back 3/3')
+          sleep(4000);
+          this.gInfo.clanBossBack.tap();
+          console.log('tap back 4')
         }  
       }
     }
   }, {
     key: 'ttListSwipeDown',
     value: function ttListSwipeDown() {
-      Utils.mSwipe(600, 1680, 600, 3600, 5);
+      Utils.mSwipe(600 * gRatioDevice, 1680 * gRatioDevice, 600 * gRatioDevice, 3600 * gRatioDevice, 5);
     }
   }, {
     key: 'ttListSwipeUp',
     value: function ttListSwipeUp() {
-      Utils.mSwipe(600, 2400, 600, 1400, 4);
+      Utils.mSwipe(600 * gRatioDevice, 2400 * gRatioDevice, 600 * gRatioDevice, 1400 * gRatioDevice, 4);
     }
   }, {
     key: 'tapRandom',
     value: function tapRandom(x, y, rangeX, rangeY, duration) {
       rangeX = Math.random() > 0.5 ? Utils.getRandomInt(rangeX) : -1 * Utils.getRandomInt(rangeX);
       rangeY = Math.random() > 0.5 ? Utils.getRandomInt(rangeY) : -1 * Utils.getRandomInt(rangeY);
-    
-      tap(x + rangeX, y + rangeY, duration);    
+      Utils.mTap(x + rangeX, y + rangeY, duration);
     }
   }, {
     key: 'checkInGame',
