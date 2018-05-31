@@ -561,8 +561,8 @@ var GameAssistant = function () {
           this.checkInGame();
         }
 
-        // this.testPrestige();
-        // break;
+        this.testPrestige();
+        break;
 
         console.log('check fightClanBoss');
         this.fightClanBoss();
@@ -574,7 +574,7 @@ var GameAssistant = function () {
         this.tapFairy();
 
         console.log('check checkWarCry');
-        if (Math.floor((Date.now() - startTime)/1000/60) > 3) {
+        if (Math.floor((Date.now() - this.roundStart)/1000/60) > 3) {
           this.checkWarCry();
         }
 
