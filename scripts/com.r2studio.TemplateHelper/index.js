@@ -561,8 +561,8 @@ var GameAssistant = function () {
           this.checkInGame();
         }
 
-        this.checkWarCry();
-        break;
+        // this.tapFairy();
+        // break;
 
         console.log('check fightClanBoss');
         this.fightClanBoss();
@@ -635,8 +635,26 @@ var GameAssistant = function () {
         sleep(350);
       }
 
-      this.gInfo.shrinkTab.tap(1, 300);
+      // Check the tab is shrinked
+      for (var i = 0; i < 5; i ++) {
+        this.refreshScreen();
+        var img = this.gInfo.gearRect.crop(this._img);
+        var r = findImage(img, this.images.gear);
+        r.score = r.score.toFixed(2);
+        console.log('r: ', JSON.stringify(r))
+        releaseImage(img);
+
+        if (r.score > 0.72) {
+          break;
+        }
+
+        this.gInfo.shrinkTab.tap();
+        sleep(500);
+      }
+
+      this.gInfo.heroTab.tap();
       this.rState.lastUpgradeAllHeros = Date.now();
+      sleep(200);
     }
   }, {
     key: 'checkSkills',
@@ -729,13 +747,14 @@ var GameAssistant = function () {
         }
 
         this.gInfo.masterTab.tap();
-        sleep(300);
+        sleep(600);
       }
 
       // expend full tab
       this.refreshScreen();
       if (!this.gInfo.expendTabPage.check(this._img)) {
         this.gInfo.expendTab.tap();
+        sleep(500);
       }
 
       // swipe to top
@@ -794,7 +813,6 @@ var GameAssistant = function () {
   }, {
     key: 'testPrestige',
     value: function testPrestige() {
-      console.log('>', this.gInfo.prestigeTime, this.roundStart, this.gInfo.prestigeTime)
       if (Date.now() - this.roundStart > this.gInfo.prestigeTime * 60 * 1000) {
         console.log('Prestige');
 
@@ -844,6 +862,10 @@ var GameAssistant = function () {
       this.gInfo.hero1.tap(1, 50);
       this.gInfo.hero2.tap(1, 50);
       this.gInfo.hero3.tap(1, 50);
+      sleep(200);
+
+      this.gInfo.heroTab.tap();
+      sleep(300);
     }
   }, {
     key: 'tapGround',
@@ -869,6 +891,7 @@ var GameAssistant = function () {
       for (var i = 0; i < 9; i ++) {
         this.refreshScreen();
         if (this.gInfo.fairyNoThanks.check(this._img)) {
+          sleep(400);
           this.gInfo.fairyNoThanks.tap();
           return;
         }
