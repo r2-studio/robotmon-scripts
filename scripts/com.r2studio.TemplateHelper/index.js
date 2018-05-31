@@ -561,7 +561,7 @@ var GameAssistant = function () {
           this.checkInGame();
         }
 
-        this.testPrestige();
+        this.checkWarCry();
         break;
 
         console.log('check fightClanBoss');
@@ -819,6 +819,8 @@ var GameAssistant = function () {
         this.gInfo.prestige.tap(1, 50);
         this.gInfo.prestige2.tap(1, 200);
         this.gInfo.prestige3.tap(1, 300);
+
+        this.roundStart = Date.now();
       } else {
         console.log('time: ', Math.floor((Date.now() - this.roundStart)/1000/60), 'm', Math.floor(((Date.now() - this.roundStart)/1000)%60), 's, of', this.gInfo.prestigeTime, 'mins');
       }
