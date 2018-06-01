@@ -87,7 +87,7 @@
       "versionCode": 1,
       "description": "<div>Make the relics rain!</div>",
       "packageName": "com.gamehivecorp.taptitans2",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TapTitans/index.zip"
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TapTitans2/index.zip"
     },
     "com.r2studio.TemplateHelper": {
       "title": "Copy this and build you own game helper!",
