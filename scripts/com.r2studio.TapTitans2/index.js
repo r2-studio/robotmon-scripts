@@ -374,8 +374,8 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
 
   this.fightStageBoss = new FeaturePoint(1290, 110, 240, 100, 20, true, 20);
   this.fairyNoThanks = new PageFeature('fairyNoThanks', [
-    new FeaturePoint(300, 1950, 250, 130, 10, true),
-    new FeaturePoint(150, 1950, 250, 130, 10, true)]);
+    new FeaturePoint(300, 1950, 250, 140, 10, true, 35),
+    new FeaturePoint(150, 1950, 250, 140, 10, true, 35)]);
   // This Rect shows fairy reward type
   this.fairyRewardRect = new Rect(70, 1600, 400, 1900);
 
@@ -888,14 +888,14 @@ var GameAssistant = function () {
       }
 
       console.log('looking for fairyNoThanks')
-      for (var i = 0; i < 9; i ++) {
+      for (var i = 0; i < 15; i ++) {
         this.refreshScreen();
         if (this.gInfo.fairyNoThanks.check(this._img)) {
-          sleep(400);
+          sleep(300);
           this.gInfo.fairyNoThanks.tap();
           return;
         }
-        sleep(250);
+        sleep(300);
       }
     }
   }, {
