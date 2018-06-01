@@ -784,7 +784,24 @@ var GameAssistant = function () {
         skill.tap(1, 300);
       }
 
-      this.gInfo.shrinkTab.tap(1, 600);
+      // Check the tab is shrinked
+      for (var i = 0; i < 5; i ++) {
+        this.refreshScreen();
+        var img = this.gInfo.gearRect.crop(this._img);
+        var r = findImage(img, this.images.gear);
+        r.score = r.score.toFixed(2);
+        console.log('r: ', JSON.stringify(r))
+        releaseImage(img);
+
+        if (r.score > 0.72) {
+          break;
+        }
+
+        this.gInfo.shrinkTab.tap();
+        sleep(500);
+      }
+
+      this.gInfo.masterTab.tap(1, 300);
     }
   }, {
     key: 'warCry',
