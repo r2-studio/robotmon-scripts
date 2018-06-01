@@ -504,7 +504,7 @@ var GameAssistant = function () {
     this.rState = new RoleState(this.gInfo);
     this.shouldCheckInGame = checkInGame;
     gDebug = debug == true ? true : false;
-    this.localPath = getStoragePath() + '/scripts/com.r2studio.TemplateHelper/images/';
+    this.localPath = getStoragePath() + '/scripts/com.r2studio.TapTitans2/images/';
     this._loop = false;
     this._img = 0;
 
