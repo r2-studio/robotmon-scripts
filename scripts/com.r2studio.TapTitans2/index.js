@@ -374,11 +374,16 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
 
   this.fightStageBoss = new FeaturePoint(1290, 110, 240, 100, 20, true, 20);
   this.fairyNoThanks = new PageFeature('fairyNoThanks', [
-    new FeaturePoint(500, 2050, 250, 140, 10, true, 35),
-    new FeaturePoint(300, 1950, 250, 140, 10, true, 35),
-    new FeaturePoint(150, 1950, 250, 140, 10, true, 35)]);
+    new FeaturePoint(500, 2050, 240, 140, 10, true, 35),
+    new FeaturePoint(300, 1950, 240, 140, 10, true, 35),
+    new FeaturePoint(150, 1950, 240, 140, 10, true, 35)]);
   // This Rect shows fairy reward type
   this.fairyRewardRect = new Rect(70, 1600, 400, 1900);
+  this.QuitGameNo = new PageFeature('QuitGameNo', [
+    new FeaturePoint(190, 1650, 240, 130, 10, true, 35),
+    new FeaturePoint(190, 1700, 240, 130, 10, true, 35),
+    new FeaturePoint(500, 1650, 240, 130, 10, true, 35),
+    new FeaturePoint(500, 1700, 240, 130, 10, true, 35)]);
 
   this.ship = new Point(140, 580);
   this.inactiveGold = new Point(100, 725);
@@ -508,6 +513,7 @@ var GameAssistant = function () {
     this._loop = false;
     this._img = 0;
 
+    console.log('this.localPath: ', this.localPath)
     // load images
     this.images = {
       clanBoss: openImage(this.localPath + 'clanBoss.png'),
@@ -998,13 +1004,37 @@ var GameAssistant = function () {
         }
         sleep(2500);
       }
-      console.log('we are not in game, stopping');
+
+      console.log('cant find gear icon, try shrink tab')
+      this.gInfo.shrinkTab.tap(1, 300);
+
+      this.refreshScreen();
+      if (this.gInfo.inGamePage.check(this._img)){
+        return;
+      }
+
+      console.log('we are not in game, try back 30 secs later');
+      sleep(30000);
+      keycode('BACK', 3500);
+      this.refreshScreen();
+      if (this.gInfo.inGamePage.check(this._img)){
+        console.log('back worked')
+        return;
+      }
+      if (this.gInfo.QuitGameNo.check(this._img)){
+        this.gInfo.QuitGameNo.tap();
+        console.log('tap quit no')
+        return;
+      }
+
+      console.log('still cant find gear icon, ')
       this.stop();
       return;
     }
   }, {
     key: 'stop',
     value: function stop() {
+      sleep(200);
       this._loop = false;
       releaseImage(this._img);
       for (var k in this.images) {
