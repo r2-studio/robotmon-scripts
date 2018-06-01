@@ -374,6 +374,7 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
 
   this.fightStageBoss = new FeaturePoint(1290, 110, 240, 100, 20, true, 20);
   this.fairyNoThanks = new PageFeature('fairyNoThanks', [
+    new FeaturePoint(500, 2050, 250, 140, 10, true, 35),
     new FeaturePoint(300, 1950, 250, 140, 10, true, 35),
     new FeaturePoint(150, 1950, 250, 140, 10, true, 35)]);
   // This Rect shows fairy reward type
@@ -561,7 +562,7 @@ var GameAssistant = function () {
           this.checkInGame();
         }
 
-        // this.tapFairy();
+        // this.testPrestige();
         // break;
 
         console.log('check fightClanBoss');
