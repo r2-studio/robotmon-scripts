@@ -897,8 +897,10 @@ var GameAssistant = function () {
         Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y);
       }
 
+      sleep(1000);
+
       console.log('looking for fairyNoThanks')
-      for (var i = 0; i < 15; i ++) {
+      for (var i = 0; i < 9; i ++) {
         this.refreshScreen();
         if (this.gInfo.fairyNoThanks.check(this._img)) {
           sleep(300);
