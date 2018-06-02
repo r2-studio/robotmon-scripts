@@ -384,6 +384,9 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
     new FeaturePoint(190, 1700, 240, 130, 10, true, 35),
     new FeaturePoint(500, 1650, 240, 130, 10, true, 35),
     new FeaturePoint(500, 1700, 240, 130, 10, true, 35)]);
+  this.fairyCollectReward = new PageFeature('fairyCollectReward', [
+    new FeaturePoint(380, 1550, 40, 160, 200, true, 35),
+    new FeaturePoint(700, 1550, 40, 160, 200, true, 35)]);
 
   this.ship = new Point(140, 580);
   this.inactiveGold = new Point(100, 725);
@@ -926,7 +929,6 @@ var GameAssistant = function () {
         this.safeSleep(300);
         this.gInfo.clanBoss2.tap();
 
-
         var foundBoss = false;
         for (var i = 0; i < 40; i ++) {
           this.refreshScreen();
@@ -1017,17 +1019,22 @@ var GameAssistant = function () {
       sleep(30000);
       keycode('BACK', 3500);
       this.refreshScreen();
-      if (this.gInfo.inGamePage.check(this._img)){
-        console.log('back worked')
+      if (this.gInfo.fairyCollectReward.check(this._img)) {
+        console.log('fairy reward collected');
+        this.gInfo.fairyCollectReward.tap();
         return;
       }
-      if (this.gInfo.QuitGameNo.check(this._img)){
+      else if (this.gInfo.inGamePage.check(this._img)){
+        console.log('back worked');
+        return;
+      }
+      else if (this.gInfo.QuitGameNo.check(this._img)){
         this.gInfo.QuitGameNo.tap();
-        console.log('tap quit no')
+        console.log('tap quit no');
         return;
       }
 
-      console.log('still cant find gear icon, ')
+      console.log('still cant find gear icon, stopping')
       this.stop();
       return;
     }
