@@ -144,6 +144,7 @@ var Button = {
   skillLuke4: {x: 960, y: 1160 - adjY},
   outReceiveNameFrom: {x: 160, y: 460 - adjY},
   outReceiveNameTo: {x: 620, y: 555 - adjY},
+  moneyInfoBox: {x: 430, y: 128 - adjY, w: 230, h: 48},
 };
 
 var Page = {
@@ -515,6 +516,32 @@ var LogsTW = {
   sendingZeroScore: '顆愛心',
   timeIsUp: '送心時間結束'
 }
+
+// Utils for sending message
+var _userPlan = -1;
+var _canSendMessage = false;
+var _topMessage = "";
+var _lastSendingTime = 0;
+function checkCanSendMessage() {
+  _userPlan = -1;
+  if (getUserPlan !== undefined && sendNormalMessage !== undefined) {
+    _userPlan = getUserPlan();
+  }
+}
+function canSendMessage() {
+  if (_userPlan == -1) { return; }
+  var during = Date.now() - _lastSendingTime;
+  if (_userPlan >= 0 && during > 60 * 60 * 1000) {
+    return true;
+  }
+}
+function sendMessage(topMsg, msg) {
+  if (canSendMessage()) {
+    _lastSendingTime = Date.now();
+    sendNormalMessage(topMsg, msg);
+  }
+}
+checkCanSendMessage();
 
 // Utils for Tsum
 
@@ -1047,6 +1074,18 @@ Tsum.prototype.deinit = function() {
   this.isLoadAllTsum = false;
 }
 
+Tsum.prototype.sendMoneyInfo = function() {
+  if (!canSendMessage()) {
+    return;
+  }
+  var w = Math.ceil(this.gameWidth * Button.moneyInfoBox.w / 1080);
+  var h = Math.ceil(this.gameHeight * Button.moneyInfoBox.h / 1620);
+  var img = getScreenshotModify(this.gameOffsetX, this.gameOffsetY, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 100);
+  var base64 = getBase64FromImage(img);
+  releaseImage(img);
+  sendMessage("Tsum Tsum", base64);
+}
+
 Tsum.prototype.isAppOn = function() {
   var result = execute('dumpsys window windows').split('mCurrentFocus');
   if (result.length < 2) {
@@ -1253,6 +1292,7 @@ Tsum.prototype.goFriendPage = function() {
     }
     this.sleep(1000);
   }
+  this.sendMoneyInfo();
 }
 
 Tsum.prototype.checkGameItem = function() { 
