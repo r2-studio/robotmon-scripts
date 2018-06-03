@@ -519,8 +519,6 @@ var LogsTW = {
 
 // Utils for sending message
 var _userPlan = -1;
-var _canSendMessage = false;
-var _topMessage = "";
 var _lastSendingTime = 0;
 function checkCanSendMessage() {
   _userPlan = -1;

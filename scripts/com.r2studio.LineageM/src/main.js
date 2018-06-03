@@ -24,7 +24,30 @@ const gRatioDevice = gGameWidth / gDevWidth;
 const gZeroColor = {r: 0, g: 0, b: 0};
 // == Global variables en
 
+// Utils for sending message
+let gUserPlan = -1;
+let gLastSendingTime = 0;
+
 class Utils {
+  static checkCanSendMessage() {
+    gUserPlan = -1;
+    if (getUserPlan !== undefined && sendNormalMessage !== undefined) {
+      gUserPlan = getUserPlan();
+    }
+  }
+  static canSendMessage() {
+    if (gUserPlan == -1) { return; }
+    const during = Date.now() - gLastSendingTime;
+    if (gUserPlan >= 0 && during > 60 * 60 * 1000) {
+      return true;
+    }
+  }
+  static sendMessage(topMsg, msg) {
+    if (Utils.canSendMessage()) {
+      gLastSendingTime = Date.now();
+      sendNormalMessage(topMsg, msg);
+    }
+  }
   static nearColor(c, c1, c2) {
     const d1 = Math.abs(c1.r - c.r) + Math.abs(c1.g - c.g) + Math.abs(c1.b - c.b);
     const d2 = Math.abs(c2.r - c.r) + Math.abs(c2.g - c.g) + Math.abs(c2.b - c.b);
@@ -56,7 +79,7 @@ class Utils {
     return {x: gGameOffsetX + xy.x * r, y: gGameOffsetY + xy.y * r};
   }
 }
-
+Utils.checkCanSendMessage();
 class Rect {
   constructor(x1, y1, x2, y2) {
     this.x1 = x1;
