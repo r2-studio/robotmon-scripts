@@ -372,7 +372,7 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
   this.clanBossBack = new Point(1290, 150);
   this.fightClanBossRect = new Rect(1130, 2100, 1390, 2400);
 
-  this.fightStageBoss = new FeaturePoint(1290, 110, 240, 100, 20, true, 20);
+  this.fightStageBoss = new FeaturePoint(1290, 110, 240, 100, 20, true, 30);
   this.fairyNoThanks = new PageFeature('fairyNoThanks', [
     new FeaturePoint(500, 2050, 240, 140, 10, true, 35),
     new FeaturePoint(300, 1950, 240, 140, 10, true, 35),
@@ -900,10 +900,11 @@ var GameAssistant = function () {
       sleep(1000);
 
       console.log('looking for fairyNoThanks')
-      for (var i = 0; i < 9; i ++) {
+      for (var i = 0; i < 16; i ++) {
         this.refreshScreen();
         if (this.gInfo.fairyNoThanks.check(this._img)) {
           sleep(300);
+          console.log('found noThanks, tapping')
           this.gInfo.fairyNoThanks.tap();
           return;
         }
