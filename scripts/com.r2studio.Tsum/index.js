@@ -144,7 +144,7 @@ var Button = {
   skillLuke4: {x: 960, y: 1160 - adjY},
   outReceiveNameFrom: {x: 160, y: 460 - adjY},
   outReceiveNameTo: {x: 620, y: 555 - adjY},
-  moneyInfoBox: {x: 430, y: 128 - adjY, w: 230, h: 48},
+  moneyInfoBox: {x: 420, y: 128 - adjY, w: 240, h: 64},
 };
 
 var Page = {
@@ -414,6 +414,7 @@ var Page = {
 var Logs = {
   start: '[TsumTsum] Start',
   stop: '[TsumTsum] Stop',
+  sendMessage: 'Send Message...',
   clearMemory: 'Clearing residual memory',
   TaskControllerStop: 'TaskController Stop',
   updateApp: 'Please update Robotmon and restart service',
@@ -467,6 +468,7 @@ var Logs = {
 var LogsTW = {
   start: '[TsumTsum] 啟動',
   stop: '[TsumTsum] 停止',
+  sendMessage: '送出訊息中...',
   clearMemory: '清除殘留記憶體',
   TaskControllerStop: 'TaskController 停止',
   updateApp: '請更新 Robotmon 並重新啟動 Service',
@@ -525,6 +527,7 @@ function checkCanSendMessage() {
   if (getUserPlan !== undefined && sendNormalMessage !== undefined) {
     _userPlan = getUserPlan();
   }
+  console.log('User Plan', _userPlan);
 }
 function canSendMessage() {
   if (_userPlan == -1) { return; }
@@ -536,7 +539,7 @@ function canSendMessage() {
 function sendMessage(topMsg, msg) {
   if (canSendMessage()) {
     _lastSendingTime = Date.now();
-    sendNormalMessage(topMsg, msg);
+    console.log(sendNormalMessage(topMsg, msg));
   }
 }
 checkCanSendMessage();
@@ -1076,11 +1079,14 @@ Tsum.prototype.sendMoneyInfo = function() {
   if (!canSendMessage()) {
     return;
   }
+  var x = Math.ceil(this.gameWidth * Button.moneyInfoBox.x / 1080);
+  var y = Math.ceil(this.gameWidth * Button.moneyInfoBox.y / 1620);
   var w = Math.ceil(this.gameWidth * Button.moneyInfoBox.w / 1080);
   var h = Math.ceil(this.gameHeight * Button.moneyInfoBox.h / 1620);
-  var img = getScreenshotModify(this.gameOffsetX, this.gameOffsetY, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 100);
+  var img = getScreenshotModify(this.gameOffsetX + x, this.gameOffsetY + y, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 80);
   var base64 = getBase64FromImage(img);
   releaseImage(img);
+  log(this.logs.sendMessage);
   sendMessage("Tsum Tsum", base64);
 }
 
@@ -1281,6 +1287,7 @@ Tsum.prototype.goFriendPage = function() {
       // check again
       page = this.findPage(1, 500);
       if (page == 'FriendPage') {
+        this.sendMoneyInfo();
         return;
       }
     } else if (page == 'unknown') {
@@ -1290,7 +1297,6 @@ Tsum.prototype.goFriendPage = function() {
     }
     this.sleep(1000);
   }
-  this.sendMoneyInfo();
 }
 
 Tsum.prototype.checkGameItem = function() { 
