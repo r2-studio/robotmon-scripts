@@ -372,7 +372,7 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
   this.clanBossBack = new Point(1290, 150);
   this.fightClanBossRect = new Rect(1130, 2100, 1390, 2400);
 
-  this.fightStageBoss = new FeaturePoint(1290, 110, 240, 100, 20, true, 30);
+  this.fightStageBoss = new FeaturePoint(1290, 110, 240, 100, 20, true, 40);
   this.fairyNoThanks = new PageFeature('fairyNoThanks', [
     new FeaturePoint(500, 2050, 240, 140, 10, true, 35),
     new FeaturePoint(300, 1950, 240, 140, 10, true, 35),
@@ -892,7 +892,7 @@ var GameAssistant = function () {
 
       // keep hitting in case get equipment
       for (var i = 0; i < 70 && this._loop; i ++) {
-        this.tapRandom(700, 900, 50, 50, 80);
+        this.tapRandom(700, 1250, 50, 50, 80);
       }
     }
   }, {
@@ -913,7 +913,7 @@ var GameAssistant = function () {
           sleep(500);
           console.log('found noThanks, tapping')
           this.gInfo.fairyNoThanks.tap();
-          return;
+          // return;
         }
         sleep(350);
       }
