@@ -377,7 +377,11 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
     new FeaturePoint(500, 2050, 240, 140, 10, true, 35),
     new FeaturePoint(300, 1950, 240, 140, 10, true, 35),
     new FeaturePoint(150, 1950, 240, 140, 10, true, 35)]);
-  // This Rect shows fairy reward type
+  this.fairyWatchAds = new PageFeature('fairyWatchAds', [
+    new FeaturePoint(820, 1950, 40, 170, 210, true, 35),
+    new FeaturePoint(1240, 1950, 40, 170, 210, true, 35),
+  ])
+    // This Rect shows fairy reward type
   this.fairyRewardRect = new Rect(70, 1600, 400, 1900);
   this.QuitGameNo = new PageFeature('QuitGameNo', [
     new FeaturePoint(190, 1650, 240, 130, 10, true, 35),
@@ -504,19 +508,19 @@ var RoleState = function () {
 }();
 
 var GameAssistant = function () {
-  function GameAssistant(debug, checkInGame, prestigeTime, upgradeAllHeroCD) {
+  function GameAssistant(debug, checkInGame, tapFairyRoute, prestigeTime, upgradeAllHeroCD) {
     _classCallCheck(this, GameAssistant);
 
     // this.config = config || { conditions: [] };
     this.gInfo = new GameInfo(prestigeTime, upgradeAllHeroCD);
     this.rState = new RoleState(this.gInfo);
     this.shouldCheckInGame = checkInGame;
+    this.shouldTapFairyRoute = tapFairyRoute === false ? false : true;
     gDebug = debug == true ? true : false;
     this.localPath = getStoragePath() + '/scripts/com.r2studio.TapTitans2/images/';
     this._loop = false;
     this._img = 0;
 
-    console.log('this.localPath: ', this.localPath)
     // load images
     this.images = {
       clanBoss: openImage(this.localPath + 'clanBoss.png'),
@@ -571,7 +575,7 @@ var GameAssistant = function () {
           this.checkInGame();
         }
 
-        // this.testPrestige();
+        // this.tapFairy();
         // break;
 
         console.log('check fightClanBoss');
@@ -580,8 +584,10 @@ var GameAssistant = function () {
         console.log('check fightStageBoss');
         this.fightStageBoss();
 
-        console.log('check tapFairy');
-        this.tapFairy();
+        if (this.shouldTapFairyRoute) {
+          console.log('check tapFairy');
+          this.tapFairy();  
+        }
 
         console.log('check checkWarCry');
         if (Math.floor((Date.now() - this.roundStart)/1000/60) > 3) {
@@ -897,18 +903,19 @@ var GameAssistant = function () {
         Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y);
       }
 
-      sleep(1000);
+      sleep(2000);
 
       console.log('looking for fairyNoThanks')
-      for (var i = 0; i < 16; i ++) {
+      for (var i = 0; i < 15; i ++) {
         this.refreshScreen();
-        if (this.gInfo.fairyNoThanks.check(this._img)) {
-          sleep(300);
+        if (this.gInfo.fairyNoThanks.check(this._img) &&
+          this.gInfo.fairyWatchAds.check(this._img)) {
+          sleep(500);
           console.log('found noThanks, tapping')
           this.gInfo.fairyNoThanks.tap();
           return;
         }
-        sleep(300);
+        sleep(350);
       }
     }
   }, {
@@ -1086,7 +1093,7 @@ var DefaultConfig = {
 
 var assistant = undefined;
 
-function start(debug, checkInGame, prestigeTime, upgradeAllHeroCD) {
+function start(debug, checkInGame, tapFairyRoute, prestigeTime, upgradeAllHeroCD) {
   console.log('📢 啟動腳本 📢');
   if (typeof config === 'string') {
     config = JSON.parse(config);
@@ -1096,7 +1103,7 @@ function start(debug, checkInGame, prestigeTime, upgradeAllHeroCD) {
     return;
   }
   console.log('start(): ', prestigeTime)
-  assistant = new GameAssistant(debug, checkInGame, prestigeTime, upgradeAllHeroCD);
+  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, prestigeTime, upgradeAllHeroCD);
   assistant.start();
   // TODO: don't know why won't work
   // assistant.stop();
