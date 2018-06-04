@@ -187,6 +187,7 @@ class GameInfo {
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
     this.storeHpRect = new Rect(94, 276, 94 + 100, 276 + 100);
     this.mapSelector = new Rect(56, 339, 350, 937); // h 112
+    this.moneyRect = new Rect(990, 40, 1150, 80);
 
     this.storeOther = new Point(510, 220);
     this.store10 = new Point(670, 970);
@@ -508,6 +509,7 @@ class LineageM {
     while(this._loop) {
       this.refreshScreen();
       if (this.checkBeAttacked()) {
+        this.sendDangerMessage('你被攻擊了，使用順卷');
         continue;
       }
       this.updateGlobalState();
@@ -552,6 +554,7 @@ class LineageM {
           this.gi.itemBtns[7].tap(1, 100);
           this.safeSleep(1000);
           console.log('危險，血量少於 25%，使用按鈕 8');
+          this.sendDangerMessage('危險，血量少於25%，回家');
           continue;
         }
         if (!this.rState.isAutoPlay && this.config.autoAttack) {
@@ -575,6 +578,8 @@ class LineageM {
         this.checkAndAutoGetReward();
         receiveTime = Date.now();
       }
+
+      this.sendMoneyInfo();
 
       if (this.rState.lastSafeRegion != this.rState.isSafeRegion) {
         this.rState.lastSafeRegion = this.rState.isSafeRegion;
@@ -637,6 +642,23 @@ class LineageM {
     releaseImage(this._img);
     for (let k in this.images) {
       releaseImage(this.images[k]);
+    }
+  }
+
+  sendDangerMessage(msg) {
+    console.log('送危險訊息中...');
+    Utils.sendMessage('天堂M 危險', msg);
+  }
+
+  sendMoneyInfo() {
+    if (Utils.canSendMessage()) {
+      console.log('送錢訊息中...');
+      const moneyImg = this.gi.moneyRect.crop(this._img);
+      const rmi = resizeImage(moneyImg, this.gi.moneyRect.w/2, this.gi.moneyRect.h/2);
+      const base64 = getBase64FromImage(rmi);
+      releaseImage(rmi);
+      releaseImage(moneyImg);
+      Utils.sendMessage('天堂M', base64);
     }
   }
 
