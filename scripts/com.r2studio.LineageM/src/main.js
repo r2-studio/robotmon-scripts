@@ -24,7 +24,30 @@ const gRatioDevice = gGameWidth / gDevWidth;
 const gZeroColor = {r: 0, g: 0, b: 0};
 // == Global variables en
 
+// Utils for sending message
+let gUserPlan = -1;
+let gLastSendingTime = 0;
+
 class Utils {
+  static checkCanSendMessage() {
+    gUserPlan = -1;
+    if (getUserPlan !== undefined && sendNormalMessage !== undefined) {
+      gUserPlan = getUserPlan();
+    }
+  }
+  static canSendMessage() {
+    if (gUserPlan == -1) { return; }
+    const during = Date.now() - gLastSendingTime;
+    if (gUserPlan >= 0 && during > 60 * 60 * 1000) {
+      return true;
+    }
+  }
+  static sendMessage(topMsg, msg) {
+    if (Utils.canSendMessage()) {
+      gLastSendingTime = Date.now();
+      sendNormalMessage(topMsg, msg);
+    }
+  }
   static nearColor(c, c1, c2) {
     const d1 = Math.abs(c1.r - c.r) + Math.abs(c1.g - c.g) + Math.abs(c1.b - c.b);
     const d2 = Math.abs(c2.r - c.r) + Math.abs(c2.g - c.g) + Math.abs(c2.b - c.b);
@@ -56,7 +79,7 @@ class Utils {
     return {x: gGameOffsetX + xy.x * r, y: gGameOffsetY + xy.y * r};
   }
 }
-
+Utils.checkCanSendMessage();
 class Rect {
   constructor(x1, y1, x2, y2) {
     this.x1 = x1;
@@ -164,6 +187,7 @@ class GameInfo {
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
     this.storeHpRect = new Rect(94, 276, 94 + 100, 276 + 100);
     this.mapSelector = new Rect(56, 339, 350, 937); // h 112
+    this.moneyRect = new Rect(990, 40, 1150, 80);
 
     this.storeOther = new Point(510, 220);
     this.store10 = new Point(670, 970);
@@ -485,6 +509,7 @@ class LineageM {
     while(this._loop) {
       this.refreshScreen();
       if (this.checkBeAttacked()) {
+        this.sendDangerMessage('你被攻擊了，使用順卷');
         continue;
       }
       this.updateGlobalState();
@@ -529,6 +554,7 @@ class LineageM {
           this.gi.itemBtns[7].tap(1, 100);
           this.safeSleep(1000);
           console.log('危險，血量少於 25%，使用按鈕 8');
+          this.sendDangerMessage('危險，血量少於25%，回家');
           continue;
         }
         if (!this.rState.isAutoPlay && this.config.autoAttack) {
@@ -552,6 +578,8 @@ class LineageM {
         this.checkAndAutoGetReward();
         receiveTime = Date.now();
       }
+
+      this.sendMoneyInfo();
 
       if (this.rState.lastSafeRegion != this.rState.isSafeRegion) {
         this.rState.lastSafeRegion = this.rState.isSafeRegion;
@@ -614,6 +642,23 @@ class LineageM {
     releaseImage(this._img);
     for (let k in this.images) {
       releaseImage(this.images[k]);
+    }
+  }
+
+  sendDangerMessage(msg) {
+    console.log('送危險訊息中...');
+    Utils.sendMessage('天堂M 危險', msg);
+  }
+
+  sendMoneyInfo() {
+    if (Utils.canSendMessage()) {
+      console.log('送錢訊息中...');
+      const moneyImg = this.gi.moneyRect.crop(this._img);
+      const rmi = resizeImage(moneyImg, this.gi.moneyRect.w/2, this.gi.moneyRect.h/2);
+      const base64 = getBase64FromImage(rmi);
+      releaseImage(rmi);
+      releaseImage(moneyImg);
+      Utils.sendMessage('天堂M', base64);
     }
   }
 

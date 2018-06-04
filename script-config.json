@@ -12,7 +12,7 @@
     },
     "com.r2studio.Tsum": {
       "title": "Tsum Tsum AutoPlay",
-      "versionCode": 34,
+      "versionCode": 35,
       "description": "<ul><li>⚠️ Should update Robotmon app and restart service\n</li><li>⭐ New Quick Play Mode(新增快速計算模式)\n</li><li>Supported more skills</li><li>Bubble item</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip"
@@ -51,7 +51,7 @@
     },
     "com.r2studio.LineageM": {
       "title": "Lineage M Helper",
-      "versionCode": 18,
+      "versionCode": 19,
       "description": "<h1>天堂M無課救星</h1><ul><li>⭐⭐⭐大幅提升腳本速度⭐⭐⭐\n</li><li>支援所有螢幕解析度\n</li><li>自動買水買銀箭\n</li><li>HP 與 MP 條件設定使用按鈕\n</li><li>回到地圖原點\n</li><li>移動到指定地圖\n</li><li>安全區域瞬移\n</li><li>被攻擊瞬移\n</li><li>使用回卷直到安全區域\n</li><li>斷線重新連線\n</li><li>自動攻擊\n</li><li>自動使用解毒劑\n</li><li>試煉副本輔助按紐\n</li></ul>",
       "packageName": "com.gamania.lineagem",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LineageM/index.zip",
