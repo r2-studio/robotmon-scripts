@@ -279,6 +279,16 @@ var Page = {
     back: {x: 190, y: 1574 - adjY},
     next: {x: 558, y: 1563 - adjY},
   },
+  StartPage3: {
+    name: 'StartPage',
+    colors: [
+      {x: 400,  y: 1600 - adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
+      {x: 680,  y: 1600 - adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
+      {x: 540,  y: 1650 - adjY, r: 235, g: 70, b: 90 , match: true, threshold: 80},
+    ],
+    back: {x: 190, y: 1574 - adjY},
+    next: {x: 558, y: 1563 - adjY},
+  },
   SettingPage: {
     name: 'SettingPage',
     colors: [
