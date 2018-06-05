@@ -797,7 +797,10 @@ var GameAssistant = function () {
 
       if (skill.check(this._img)) {
         console.log('learn skill')
-        skill.tap(1, 300);
+
+        for (var i = 0; i < 5; i ++) {
+          skill.tap(1, 300);
+        }
       }
 
       this.gInfo.shrinkTab.tap(1, 600);
@@ -898,9 +901,11 @@ var GameAssistant = function () {
   }, {
     key: 'tapFairy',
     value: function tapFairy() {
-      for (var i = 0; i < 10; i ++) {
-        // console.log(gDeviceWidth, 'tap: ', this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y)
-        Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y);
+      // Tap the fairy route 3 times
+      for (var j = 0; j < 3; j ++) {
+        for (var i = 0; i < 10; i ++) {
+          Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y);
+        }
       }
 
       sleep(2000);
@@ -921,14 +926,17 @@ var GameAssistant = function () {
   }, {
     key: 'fightStageBoss',
     value: function fightStageBoss() {
-      // var image = getScreenshotModify(1100, 60, 50, 50, 50, 50, 80);
-      // var value = getImageColor(image, 20, 15);
-      // console.log('i', JSON.stringify(value))
-
-      if (this.gInfo.fightStageBoss.check(this._img)) {
-        this.gInfo.fightStageBoss.tap();
-        console.log('tap fightStageBoss');
-      }
+      for (var i = 0; i < 5; i ++) {
+        this.refreshScreen();
+        if (this.gInfo.fightStageBoss.check(this._img)) {
+          this.gInfo.fightStageBoss.tap();
+          console.log('tap fightStageBoss');
+        } else {
+          console.log('fightStageBoss OK');
+          return;
+        }
+        sleep(300);
+      };
     },
   }, {
     key: 'fightClanBoss',
@@ -1010,6 +1018,13 @@ var GameAssistant = function () {
     key: 'checkInGame',
     value: function checkInGame(tab) {
       for (var i = 0; i < 5; i ++) {
+        var wh = getScreenSize();
+        if (wh.width > wh.height) {
+          console.log('screen is landscape, hit back and wait 3.5secs');
+          keycode('BACK', 3500);
+          continue;
+        }
+
         this.refreshScreen();
         if (this.gInfo.inGamePage.check(this._img)){
           return;
