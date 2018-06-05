@@ -798,7 +798,7 @@ var GameAssistant = function () {
       if (skill.check(this._img)) {
         console.log('learn skill')
 
-        for (var i = 0; i < 5; i ++) {
+        for (var i = 0; i < 3; i ++) {
           skill.tap(1, 300);
         }
       }
