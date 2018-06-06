@@ -793,12 +793,12 @@ var GameAssistant = function () {
 
       // TODO: only upgrade master when can't learn warcry
       // upgradeMaster
-      this.gInfo.upgradeMasterExpend.tap(1, 500);
+      this.gInfo.upgradeMasterExpend.tap(5, 500);
 
       if (skill.check(this._img)) {
         console.log('learn skill')
 
-        for (var i = 0; i < 3; i ++) {
+        for (var i = 0; i < 6; i ++) {
           skill.tap(1, 300);
         }
       }
