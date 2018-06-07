@@ -1,0 +1,1 @@
+selectStage(-1);selectFriend(32,"","絆",1);selectTeam(0);startQuest();autoAttack(3,0,1,1,0,0,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1);finishQuest()
