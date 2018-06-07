@@ -1,0 +1,1377 @@
+<html>
+<head>
+    <style>
+    .command {
+        list-style-type: none;
+        padding-left: 14px;
+    }
+    .navbar-custom {
+        border-radius: 0 !important;
+        background-color: #2196F3;
+        color: #FFFFFF;
+    }
+    .navbar-custom > a {
+        width: 100%;
+        color: #FFFFFF;
+        text-align: center;
+    }
+    .navbar-custom > a:hover {
+        color: #FFFFFF;
+    }
+
+    .list-group-item {
+        padding-bottom: 6px !important;
+        padding-top: 6px !important;
+    }
+
+    /* The switch - the box around the slider */
+    .switch {
+        position: relative; 
+        display: inline-block;
+        vertical-align: middle;
+        margin-bottom: 0px;
+        margin-top: -4px;
+        width: 52px;
+        height: 28px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {display:none;}
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 2px;
+        bottom: 4px;
+        top: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(24px);
+        -ms-transform: translateX(24px);
+        transform: translateX(24px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 28px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+    .btn-plus {
+        color:#FFFFFF;
+        background-color: #2196F3;
+        border-color: #2196F3;
+    }
+    .btn-plus:hover,
+    .btn-plus:focus,
+    .btn-plus:active,
+    .btn-plus.active {
+        color:#FFFFFF !important; 
+        background-color: #0d8aee;
+        border-color: #0c7cd5;
+    }
+    .btn-plus.disabled:hover,
+    .btn-plus.disabled:focus,
+    .btn-plus.disabled:active,
+    .btn-plus.disabled.active,
+    .btn-plus[disabled]:hover,
+    .btn-plus[disabled]:focus,
+    .btn-plus[disabled]:active,
+    .btn-plus[disabled].active,
+    fieldset[disabled] .btn-plus:hover,
+    fieldset[disabled] .btn-plus:focus,
+    fieldset[disabled] .btn-plus:active,
+    fieldset[disabled] .btn-plus.active {
+        color:#FFFFFF;
+        background-color: #2196F3;
+        border-color: #2196F3;
+    }
+    .btn-plus,
+    .btn-danger {
+        width: 35px;
+        padding: 3px 0px 3px 0px !important;
+    }
+    .select2-selection__rendered{
+        overflow: visible !important;
+    }
+    </style>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+    <script>
+    var commandId = 0;
+    var scriptCnt = 0;
+    var friendServantList = [];
+    var friendItemList = [];
+    var storagePath;
+    var servantImgPath;
+    var itemImgPath;
+    var insertDirection = 1;
+    var listenScriptMode = true;
+    $(function() {
+        JavaScriptInterface.showMenu();
+        JavaScriptInterface.runScriptCallback("initHTML();","initHTML");
+
+        $("#loopTimePlus").click(function() {
+            $("#loopTime").val(parseInt($("#loopTime").val()) + 1);
+            //console.log(getCurrentScript());
+        });
+        $("#loopTimeMinus").click(function() {
+            if ($("#loopTime").val() <= 1) {
+                return;
+            }
+            $("#loopTime").val(parseInt($("#loopTime").val()) - 1);
+        });
+        $("#getServantImage1").click(function(){
+            JavaScriptInterface.hideMenu();
+            JavaScriptInterface.setXY(3000,0);
+            JavaScriptInterface.runScriptCallback('saveFriendServantImage(1);','saveServantConfirm');
+        });
+        $("#getServantImage2").click(function(){
+            JavaScriptInterface.hideMenu();
+            JavaScriptInterface.setXY(3000,0);
+            JavaScriptInterface.runScriptCallback('saveFriendServantImage(2);','saveServantConfirm');
+        });
+        $("#getItemImage1").click(function(){
+            JavaScriptInterface.hideMenu();
+            JavaScriptInterface.setXY(3000,0);
+            JavaScriptInterface.runScriptCallback('saveFriendItemImage(1);','saveItemConfirm');
+        });
+        $("#getItemImage2").click(function(){
+            JavaScriptInterface.hideMenu();
+            JavaScriptInterface.setXY(3000,0);
+            JavaScriptInterface.runScriptCallback('saveFriendItemImage(2);','saveItemConfirm');
+        });
+        $("#saveScript").click(function(){
+            var currentScript = getCurrentScript();
+            var scriptName = $("#scriptMode").select2('data')[0].text;
+            if(scriptName != ''){
+                JavaScriptInterface.runScriptCallback('saveScript("'+scriptName+'",\''+currentScript+'\');',"saveScriptConfirm");
+            }else{
+                bootbox.prompt({
+                    title: "腳本名稱",
+                    value: "新腳本"+(scriptCnt+1),
+                    callback: function(newScriptName) {
+                        var scriptNameOK = true;
+                        if(newScriptName == null ){
+                            return;
+                        }else if(newScriptName.length <= 0 || newScriptName.includes(",") || newScriptName.includes(".")){
+                            scriptNameOK = false;
+                        }else {
+                            $('#scriptMode option').each(function() {
+                                if($(this).text() == newScriptName){
+                                    scriptNameOK = false;
+                                }
+                            });
+                        }
+                        if(scriptNameOK){
+                            JavaScriptInterface.runScriptCallback('saveScript("'+newScriptName+'",\''+currentScript+'\');',"createScriptConfirm");
+                        }else{
+                            bootbox.alert("檔名不合法");
+                        }
+                    }
+                });
+            }
+        });
+        $("#delectScript").click(function(){
+            var scriptName = $("#scriptMode").select2('data')[0].text;
+            bootbox.confirm('是否刪除 '+scriptName+' ?',
+                function(result) {
+                    if(result){
+                        if(scriptName == ''){
+                            clearScript();
+                        }else{
+                            JavaScriptInterface.runScriptCallback('deleteScript("'+scriptName+'");','deleteScriptConfirm');
+                        }
+                    }
+            });
+        });
+        $("#createScript").click(function(){
+            bootbox.prompt({
+                title: "建立新的空白腳本",
+                value: "新腳本"+(scriptCnt+1),
+                callback: function(newScriptName) {
+                    var scriptNameOK = true;
+                    if(newScriptName == null ){
+                        return;
+                    }else if(newScriptName.length <= 0 || newScriptName.includes(",") || newScriptName.includes(".")){
+                        scriptNameOK = false;
+                    }else {
+                        $('#scriptMode option').each(function() {
+                            if($(this).text() == newScriptName){
+                                scriptNameOK = false;
+                            }
+                        });
+                    }
+                    if(scriptNameOK){
+                        JavaScriptInterface.runScriptCallback('saveScript("'+newScriptName+'",\''+'\');',"createScriptConfirm");
+                    }else{
+                        bootbox.alert("檔名不合法");
+                    }
+                }
+            });
+        });
+        $("#copyScript").click(function(){
+            var oldScriptName = $("#scriptMode").select2('data')[0].text;
+            if(oldScriptName == ''){
+                return;
+            }
+            bootbox.prompt(
+            {
+                title: "腳本名稱",
+                value: oldScriptName+'_copy',
+                callback: function(newScriptName) {
+                    if(newScriptName!=null &&newScriptName.length >0){
+                        var currentScript = getCurrentScript();
+                        JavaScriptInterface.runScriptCallback('saveScript("'+newScriptName+'",\''+currentScript+'\');','copyScriptConfirm');
+                    }
+                }
+            });
+        });
+        $("#scriptMode").change(function(){
+            if(!listenScriptMode){
+                return;
+            }
+            var scriptName = $("#scriptMode").select2('data')[0].text;
+            JavaScriptInterface.runScriptCallback('readScript("'+scriptName+'");',"resetScript");
+        });
+        $("#showAll").click(function() {
+            for(var i=0;i<=commandId;i++){
+                $("#commandvalue"+i).show();
+                $("#hideItem"+i).text('隱藏');
+            }
+        });
+        $("#hideAll").click(function() {
+            for(var i=0;i<=commandId;i++){
+                $("#commandvalue"+i).hide();
+                $("#hideItem"+i).text('顯示');
+            }
+        });
+        $("#addGetFriendPoint").click(function(){
+            commandId++;
+            insertNewCommand(getGetFriendPoint(commandId));
+        });
+        $("#addGetBox").click(function(){
+            commandId++;
+            insertNewCommand(getGetBox(commandId));
+            $("#getBoxReset"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
+        $("#addSelectStage").click(function(){
+            commandId++;
+            insertNewCommand(getSelectStage(commandId));
+            $("#autoApple"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
+        $("#addSelectFriend").click(function(){
+            commandId++;
+            initFriendButton();
+        });
+        $("#addSelectTeam").click(function(){
+            commandId++;
+            insertNewCommand(getSelectTeam(commandId));
+            $("#selectTeam"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
+        $("#addStartStage").click(function(){
+            commandId++;
+            insertNewCommand(getStartStage(commandId));
+        });
+        $("#addFinish").click(function(){
+            commandId++;
+            insertNewCommand(getFinishItem(commandId));
+        });
+    
+        $("#addSkill").click(function(){
+            commandId++;
+            insertNewCommand(getUseSkillItem(commandId));
+            $("#useSkillServant"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#useSkill"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#useSkillTarget"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
+        $("#addCloth").click(function(){
+            commandId++;
+            insertNewCommand(getClothItem(commandId));
+            $("#clothSkill"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#clothSkillTarget"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#clothSkillChange"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
+        $("#addSelectEnemy").click(function(){
+            commandId++;
+            insertNewCommand(getSelectEnemy(commandId));
+            $("#selectEnemy"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
+        $("#addStartAttack").click(function(){
+            commandId++;
+            insertNewCommand(getStartAttackItem(commandId));
+        });
+        $("#addUseUlt").click(function(){
+            commandId++;
+            insertNewCommand(getUseUltItem(commandId));
+            $("#useUlt"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
+        $("#addSelectCard").click(function(){
+            commandId++;
+            insertNewCommand(getSelectCardItem(commandId));
+            $("#selectCard"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
+        $("#addAuto").click(function(){
+            commandId++;
+            insertNewCommand(getAutoItem(commandId));
+            $("#autoFightUntil"+commandId).select2({
+                minimumResultsForSearch: -1,
+                width: 'resolve', 
+                dropdownAutoWidth: true
+            });
+            $("#autoFightColor"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#autoFightSameColor"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#autoFightWeak"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#autoFightDie"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            for(var i =0;i<3;i++){
+                $("#servant"+i+"ult"+commandId).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownAutoWidth: true
+                });
+                for(var j=0;j<3;j++){
+                    $("#servant"+i+"skill"+j+commandId).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownAutoWidth: true
+                    });
+                    $("#servant"+i+"skill"+j+"target"+commandId).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownAutoWidth: true
+                    });
+                }
+            }
+        });
+        $("#insertDirection").click(function(){            
+            insertDirection = (parseInt($("#insertDirection").val()) + 1) % 2;
+            $("#insertDirection").val(insertDirection).trigger('change');
+            if(insertDirection == 1){
+                $("#insertDirection").text("後");
+            }else{
+                $("#insertDirection").text("前");
+            }
+        });
+    });
+function insertNewCommand(newCmd){
+    if(insertDirection == 1){
+        $("#skill-list").append(newCmd);   
+    }else{
+        $("#skill-list").prepend(newCmd);        
+    }
+    initCommandButton(commandId);
+}
+function initFriendButton(scriptValue){
+    var currentId = commandId;
+    insertNewCommand(getSelectFriend(currentId));
+    for(var i =0;i<friendServantList.length;i++){
+        $("#selectFriendServant"+currentId).append('<option value = "'+i+'">'+friendServantList[i]+'</option>');
+    }
+
+    $("#selectFriendServant"+currentId).change(function(){
+        if($(this).val()!=-1){
+            var path = servantImgPath+'/'+$(this).select2('data')[0].text+".png";
+            $("#selectFriendServantImg"+currentId).attr("src",path);
+        }else{
+            $("#selectFriendServantImg"+currentId).removeAttr('src').replaceWith($("#selectFriendServantImg"+currentId).clone());
+        }
+    });
+    $("#selectFriendServant"+currentId).select2({
+        minimumResultsForSearch: -1,
+        dropdownAutoWidth: true
+    });
+    for(var i =0;i<friendItemList.length;i++){
+        $("#selectFriendItem"+currentId).append('<option value = "'+i+'">'+friendItemList[i]+'</option>');
+    }
+    $("#selectFriendItem"+currentId).change(function(){
+        if($(this).val()!=-1){
+            var path = itemImgPath+'/'+$(this).select2('data')[0].text+".png";
+            $("#selectFriendItemImg"+currentId).attr("src",path);
+        }else{
+            $("#selectFriendItemImg"+currentId).removeAttr('src').replaceWith($("#selectFriendServantImg"+currentId).clone());;
+        }
+    });
+    $("#selectFriendItem"+currentId).select2({
+        minimumResultsForSearch: -1,
+        dropdownAutoWidth: true
+    });
+    $("#selectFriendItemFull"+currentId).select2({
+        minimumResultsForSearch: -1,
+        dropdownAutoWidth: true
+    });
+    if(scriptValue == undefined || scriptValue.length == 0){
+        return;
+    }
+    var t = 1;
+    for(var i=0;i<9;i++){
+        if(scriptValue[0]&t){
+            $("#selectFriend"+i+""+currentId).prop('checked', true);
+        }else{
+            $("#selectFriend"+i+""+currentId).prop('checked', false);
+        }
+        t *= 2;
+    }
+    for(var i=0;i<friendServantList.length;i++){
+        if(new String(friendServantList[i]).valueOf() == new String(scriptValue[1]).valueOf()){
+            $("#selectFriendServant"+currentId).val(i).trigger('change');
+            break;
+        }
+    }
+    for(var i=0;i<friendItemList.length;i++){
+        if(friendItemList[i] == scriptValue[2]){
+            $("#selectFriendItem"+currentId).val(i).trigger('change');
+            break;
+        }
+    }
+    $("#selectFriendItemFull"+currentId).val(scriptValue[3]).trigger('change');
+}
+function initCommandButton(currentId){
+    $("#removeItem"+currentId).click(function(){
+        $(this).parent().parent().remove();
+    });
+    $("#hideItem"+currentId).click(function(){
+        if($('#commandvalue'+currentId).is(":visible")){
+            $(this).text('顯示');
+            $('#commandvalue'+currentId).hide();
+        }else{
+            $(this).text('隱藏');
+            $('#commandvalue'+currentId).show();
+        }
+    });
+    $("#moveItemUp"+currentId).click(function(){
+        var item = $(this).parent().parent();
+        var item2 = item.prev();
+        if(item2.is('div')){
+            item2.before(item);
+        }
+    });
+    $("#moveItemDown"+currentId).click(function(){
+        var item = $(this).parent().parent();
+        var item2 = item.next();
+        if(item2.is('div')){
+            item.before(item2);
+        }
+    });
+}
+function startListenScriptSelect(){
+    listenScriptMode = true;
+}
+function stopListenScriptSelect(){
+    listenScriptMode = false;
+}
+function getCurrentScript(){
+    var newScript = "";
+    $("#skill-list").children().each(function(){
+                var itemTitle = $(this).find("label:first").text();
+                var itemId = $(this).find("label:first").attr('name');
+                switch(itemTitle){
+                    case "友抽":
+                    newScript+="getFriendPoint();";
+                    break;
+                    case "抽箱":
+                    newScript+="getBox("+$("#getBoxReset"+itemId).val()+");";
+                    break;
+                    case "選擇關卡":
+                    newScript+="selectStage("+$("#autoApple"+itemId).val()+");";
+                    break;
+                    case "選擇好友":
+                    var filter = 0;
+                    var t = 1;
+                    for(var i =0;i<9;i++){
+                        if($("#selectFriend"+i+""+itemId).is(":checked")){
+                            filter += t;
+                        }
+                        t*=2;
+                    }
+                    var servant = '';
+                    if($("#selectFriendServant"+itemId).val()!=-1){
+                        servant = $("#selectFriendServant"+itemId).select2('data')[0].text;
+                    }
+                    var item = '';
+                    if($("#selectFriendItem"+itemId).val()!=-1){
+                        item = $("#selectFriendItem"+itemId).select2('data')[0].text;
+                    }
+                    newScript+='selectFriend('+filter+',"'+servant+'","'+item+'",'+$("#selectFriendItemFull"+itemId).val()+');';
+                    break;
+                    case "選擇隊伍":
+                    newScript+="selectTeam("+$("#selectTeam"+itemId).val()+");";
+                    break;
+                    case "進入關卡":
+                    newScript+='startQuest();';
+                    break;
+                    case "結束關卡":
+                    newScript+='finishQuest();';
+                    break;
+                    case "使用技能":
+                    newScript+="useSkill("+$("#useSkillServant"+itemId).val()+","+$("#useSkill"+itemId).val()+","+$("#useSkillTarget"+itemId).val()+");";
+                    break;
+                    case "使用衣服技能":
+                    newScript+="useClothesSkill("+$("#clothSkill"+itemId).val()+","+$("#clothSkillTarget"+itemId).val()+","+$("#clothSkillChange"+itemId).val()+");";
+                    break;
+                    case "選擇敵人":
+                    newScript+="selectEnemy("+$("#selectEnemy"+itemId).val()+");";
+                    break;
+                    case "進入戰鬥":
+                    newScript+="startAttack();"
+                    break;
+                    case "使用寶具":
+                    newScript+="useUlt("+$("#useUlt"+itemId).val()+");";
+                    break;
+                    case "選擇卡片":
+                    newScript+="selectCard("+$("#selectCard"+itemId).val()+");";
+                    break;
+                    case "自動戰鬥":
+                    newScript+="autoAttack("+
+                        $("#autoFightUntil"+itemId).val()+","+
+                        $("#autoFightColor"+itemId).val()+","+
+                        $("#autoFightSameColor"+itemId).val()+","+
+                        $("#autoFightWeak"+itemId).val()+","+
+                        $("#autoFightDie"+itemId).val();
+                        for(var i =0;i<3;i++){
+                            newScript+=","+$("#servant"+i+"ult"+itemId).val();
+                            for(var j=0;j<3;j++){
+                                newScript+=","+$("#servant"+i+"skill"+j+itemId).val();
+                                newScript+=","+$("#servant"+i+"skill"+j+"target"+itemId).val();
+                            }
+                        }
+                        newScript+=");";
+                    break;
+                    default:
+                    newScript+="/*no this function*/"
+                    break;
+                }
+            });
+    return newScript;
+}
+function clearScript(){
+    $("#skill-list").empty();
+    commandId = 0;
+}
+function getGetFriendPoint(id){
+    return getCommandItem(id,'友抽','<label>請移到友抽頁面後再執行腳本</label>');
+}
+function getGetBox(id){
+    return getCommandItem(id,'抽箱',
+        '<li><label>自動重置&nbsp;&nbsp;</label>'+
+        '<select id = "getBoxReset'+id+'">'+
+        '<option value = "0" selected>否</option>'+
+        '<option value = "1">是</option></select></li><br>'+
+        '<label>注意 前五箱中獎後即會執行自動重置</label>');
+}
+function getUseSkillItem(id){
+    return getCommandItem(id,"使用技能",
+        '<li><label>從者&nbsp;&nbsp;</label>'+
+        '<select id = "useSkillServant'+id+'">'+
+        '<option value = "0" selected>從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select></li>'+
+        '<li><label>技能&nbsp;&nbsp;</label>'+
+        '<select id = "useSkill'+id+'">'+
+        '<option value = "0" selected>技能1</option>'+
+        '<option value = "1">技能2</option>'+
+        '<option value = "2">技能3</option></select></li>'+
+        '<li><label>指定對象&nbsp;&nbsp;</label>'+
+        '<select id = "useSkillTarget'+id+'">'+
+        '<option value = "-1"selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select></li>');
+}    
+function getStartAttackItem(id){
+    return getCommandItem(id,'進入戰鬥');
+}
+function getUseUltItem(id){
+    return getCommandItem(id,"使用寶具",
+        '<li><label>寶具&nbsp;&nbsp;</label>'+
+        '<select id = "useUlt'+id+'">'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select></li>');
+}    
+function getSelectCardItem(id){
+    return getCommandItem(id,"選擇卡片",
+        '<li><label>卡片&nbsp;&nbsp;</label>'+
+        '<select id = "selectCard'+id+'">'+
+        '<option value = "0">卡片1</option>'+
+        '<option value = "1">卡片2</option>'+
+        '<option value = "2">卡片3</option>'+
+        '<option value = "3">卡片4</option>'+
+        '<option value = "4">卡片5</option></select></li>'
+        );
+}    
+function getClothItem(id){
+    return getCommandItem(id,"使用衣服技能",
+        '<li><label>技能&nbsp;&nbsp;</label>'+
+        '<select id = "clothSkill'+id+'">'+
+        '<option value = "0" selected>技能1</option>'+
+        '<option value = "1">技能2</option>'+
+        '<option value = "2">技能3</option></select>'+
+        '<li><label>指定對象&nbsp;&nbsp;</label>'+
+        '<select id = "clothSkillTarget'+id+'">'+
+        '<option value = "-1"selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select>'+
+        '<li><label>換人對象&nbsp;&nbsp;</label>'+
+        '<select id = "clothSkillChange'+id+'">'+
+        '<option value = "-1"selected>無</option>'+
+        '<option value = "3">從者4</option>'+
+        '<option value = "4">從者5</option>'+
+        '<option value = "5">從者6</option></select></li>');
+}
+function getAutoItem(id){
+    return getCommandItem(id,"自動戰鬥",
+        '<label>直到&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "autoFightUntil'+id+'">'+
+        '<option value = "3" selected>關卡結束</option>'+
+        '<option value = "1">Wave 2</option>'+
+        '<option value = "2">Wave 3</option>'+
+        '<option value = "0">一回合</option></select><br>'+
+
+        '<label>優先選擇卡片顏色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "autoFightColor'+id+'">'+
+        '<option value = "0" selected>紅 Break</option>'+
+        '<option value = "1">藍 Arts</option>'+
+        '<option value = "2">綠 Quick</option></select><br>'+
+
+        '<label>同色串&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "autoFightSameColor'+id+'">'+
+        '<option value = "0">完全無視</option>'+
+        '<option value = "1" selected>基本權重</option>'+
+        '<option value = "2">同色優先</option></select><br>'+
+
+        '<label>弱點&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "autoFightWeak'+id+'">'+
+        '<option value = "0">完全無視</option>'+
+        '<option value = "1" selected>基本權重</option>'+
+        '<option value = "2">弱點優先</option></select><br>'+
+
+        '<label>後備角色上場&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "autoFightDie'+id+'">'+
+        '<option value = "0" selected>停止腳本</option>'+
+        '<option value = "1">使用技能</option>'+
+        '<option value = "2">不使用技能</option></select><br>'+
+
+        '<li><label>從者一設定&nbsp;&nbsp;&nbsp;</label><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>寶具&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant0ult'+id+'">'+
+        '<option value = "-1">不使用</option>'+
+        '<option value = "0" selected>自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能一&nbsp;&nbsp;</label>'+
+        '<select id = "servant0skill0'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant0skill0target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能二&nbsp;&nbsp;</label>'+
+        '<select id = "servant0skill1'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant0skill1target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能三&nbsp;&nbsp;</label>'+
+        '<select id = "servant0skill2'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant0skill2target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select></li><br>'+
+
+        '<li><label>從者二設定&nbsp;&nbsp;&nbsp;</label><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>寶具&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant1ult'+id+'">'+
+        '<option value = "-1">不使用</option>'+
+        '<option value = "0" selected>自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能一&nbsp;&nbsp;</label>'+
+        '<select id = "servant1skill0'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant1skill0target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能二&nbsp;&nbsp;</label>'+
+        '<select id = "servant1skill1'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant1skill1target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能三&nbsp;&nbsp;</label>'+
+        '<select id = "servant1skill2'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant1skill2target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select></li><br>'+
+
+        '<li><label>從者三設定&nbsp;&nbsp;&nbsp;</label><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>寶具&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant2ult'+id+'">'+
+        '<option value = "-1">不使用</option>'+
+        '<option value = "0" selected>自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能一&nbsp;&nbsp;</label>'+
+        '<select id = "servant2skill0'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant2skill0target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能二&nbsp;&nbsp;</label>'+
+        '<select id = "servant2skill1'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant2skill1target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>技能三&nbsp;&nbsp;</label>'+
+        '<select id = "servant2skill2'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">自動使用</option>'+
+        '<option value = "1">Wave 2開始使用</option>'+
+        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "servant2skill2target'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">從者1</option>'+
+        '<option value = "1">從者2</option>'+
+        '<option value = "2">從者3</option></select></li><br>');
+}
+function getSelectEnemy(id){
+    return getCommandItem(id,"選擇敵人",
+        '<li><label>敵人&nbsp;&nbsp;</label>'+
+        '<select id = "selectEnemy'+id+'">'+
+        '<option value = "0">敵人1</option>'+
+        '<option value = "1">敵人2</option>'+
+        '<option value = "2">敵人3</option></select></li>');
+}    
+function getFinishItem(id){
+    return getCommandItem(id,'結束關卡');
+}
+function getSelectStage(id){
+    return getCommandItem(id,'選擇關卡',
+        '<li><label>自動吃果&nbsp;&nbsp;</label>'+
+        '<select id = "autoApple'+id+'">'+
+        '<option value = "-1" selected>無</option>'+
+        '<option value = "0">銅蘋果</option>'+
+        '<option value = "1">銀蘋果</option>'+
+        '<option value = "2">金蘋果</option>'+
+        '<option value = "3">聖晶石</option></select></li>');
+}
+function getSelectFriend(id){
+    return getCommandItem(id,'選擇好友',
+        '<li><label>搜尋職階&nbsp;&nbsp;</label><br>'+
+        '<input type="checkbox" id = "selectFriend0'+id +'">全&nbsp'+
+        '<input type="checkbox" id = "selectFriend1'+id +'">劍&nbsp'+
+        '<input type="checkbox" id = "selectFriend2'+id +'">弓&nbsp'+
+        '<input type="checkbox" id = "selectFriend3'+id +'">槍&nbsp'+
+        '<input type="checkbox" id = "selectFriend4'+id +'">騎&nbsp<br>'+
+        '<input type="checkbox" id = "selectFriend5'+id +'" checked>術&nbsp'+
+        '<input type="checkbox" id = "selectFriend6'+id +'">殺&nbsp'+
+        '<input type="checkbox" id = "selectFriend7'+id +'">狂&nbsp'+
+        '<input type="checkbox" id = "selectFriend8'+id +'">特<br>'+
+        '<li><label>指定從者&nbsp;&nbsp;</label>'+
+        '<select id = "selectFriendServant'+id+'">'+
+        '<option value = "-1" selected>無</option></select>&nbsp;&nbsp;'+
+        '<img id = "selectFriendServantImg'+id+'" height = "40" width = "60"></li>' +
+        '<li><label>指定禮裝&nbsp;&nbsp;</label>'+
+        '<select id = "selectFriendItem'+id+'">'+
+        '<option value = "-1" selected>無</option></select>&nbsp;&nbsp;'+
+        '<img id = "selectFriendItemImg'+id+'" height = "20" width = "60"></li>' +
+        '<li><label>指定突滿&nbsp;&nbsp;</label>'+
+        '<select id = "selectFriendItemFull'+id+'">'+
+        '<option value = "0">不限制</option>'+
+        '<option value = "1" selected>突滿</option></select></li>'
+        );
+}
+function getSelectTeam(id){
+    return getCommandItem(id,'選擇隊伍',
+        '<li><label>隊伍&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "selectTeam'+id+'">'+
+        '<option value = "0" selected>隊伍1</option>'+
+        '<option value = "1">隊伍2</option>'+
+        '<option value = "2">隊伍3</option>'+
+        '<option value = "3">隊伍4</option>'+
+        '<option value = "4">隊伍5</option>'+
+        '<option value = "5">隊伍6</option>'+
+        '<option value = "6">隊伍7</option>'+
+        '<option value = "7">隊伍8</option>'+
+        '<option value = "8">隊伍9</option>'+
+        '<option value = "9">隊伍10</option></select></li>');
+}
+function getStartStage(id){
+    return getCommandItem(id,'進入關卡');
+}
+function getCheckSwitchStatus(id) {
+    return $(id).is(':checked');
+}
+/*
+<div class="list-group-item">'+
+    '<label>'+    name+    '</label>
+    <div class="pull-right">';    
+        '<button id="hideItem'+       id+        '" type="button">隱藏</button>';
+        '<button id="moveItemUp'+    id+    '" type="button">上移</button>'+
+        '<button id="moveItemDown'+    id+    '" type="button">下移</button>'+
+        '<button id="removeItem'+    id+    '" type="button">刪除</button>'+
+    '</div><br><br>'+
+    '<div id="commandvalue'+id+'">
+        <ul class="command">'+
+            selection+
+        '</ul>
+    </div>'+
+'</div>';
+*/
+
+function getCommandItem(id,name,selection = ''){
+    var result =  '<div class="list-group-item">'+
+    '<label name="'+id+'">'+
+    name+
+    '</label><div class="pull-right">';
+    if(selection!=''){
+        result+=
+        '<button id="hideItem'+
+        id+
+        '" type="button">隱藏</button>';
+    }
+    result+=
+    '<button id="moveItemUp'+
+    id+
+    '" type="button">上移</button>'+
+    '<button id="moveItemDown'+
+    id+
+    '" type="button">下移</button>'+
+    '<button id="removeItem'+
+    id+
+    '" type="button">刪除</button>'+
+    '</div><br><br>'+
+    '<div id="commandvalue'+id+'"><ul class="command">'+
+    selection+
+    '</ul></div>'+
+    '</div>';
+    return result;
+}
+
+//Callback------------------------------------------------------------------------------------------------------------------------
+function initHTML(result){
+    if(result == undefined){
+        return;
+    }
+    result = result.split(';')
+    if(result[1].length > 0){
+        friendServantList = result[1].split(",");
+    }
+    if(result[2].length > 0){
+        friendItemList = result[2].split(",");
+    }
+    storagePath = result[3];    
+    if(result[0] == undefined){
+        $('#scriptMode').select2({
+            minimumResultsForSearch: -1,
+            dropdownAutoWidth: true
+        });
+    }else{
+        var scriptList = result[0].split(",");
+        scriptCnt = scriptList.length;
+        for(var i =0;i<scriptList.length;i++){
+            $("#scriptMode").append('<option value = "'+i+'">'+scriptList[i]+'</option>');
+        }
+        $('#scriptMode').select2({
+            minimumResultsForSearch: -1,
+            dropdownAutoWidth: true,
+            placeholder:'請選擇腳本',
+            width:'100%'
+        });
+    }
+    servantImgPath = storagePath+'/FGO/friend_servant';
+    itemImgPath = storagePath+'/FGO/friend_item';
+    $("#errorMessage").remove();
+}
+
+function scriptFinish(){
+    JavaScriptInterface.showMenu();
+    JavaScriptInterface.showPlayButton();
+}
+
+function saveServantConfirm(time){
+    JavaScriptInterface.showMenu();
+    JavaScriptInterface.clickSettingButton();
+    bootbox.prompt(
+            {
+                title: '<img src = "'+storagePath+'/tmp_servant_'+time+'.png" width = "60" height = "40"><br>檔案名稱',
+                value: "從者"+(friendServantList.length+1),
+                callback: function(imageName) {
+                    if(imageName!=null &&imageName.length >0){
+                       friendServantList[friendServantList.length] = imageName;
+                       JavaScriptInterface.runScript('confirmSaveFriendServantImage("'+imageName+'","'+time+'");');
+                       for(var i=0;i<commandId+1;i++){
+                            if( $("#selectFriendServant"+i).length){
+                                $("#selectFriendServant"+i).append('<option value = "'+commandId+'">'+imageName+'</option>');
+                            }
+                       }
+                    }else{
+                        JavaScriptInterface.runScript('confirmSaveFriendServantImage()');
+                    }
+                }
+            });
+}
+
+function saveItemConfirm(time){
+    JavaScriptInterface.showMenu();
+    JavaScriptInterface.clickSettingButton();
+    bootbox.prompt(
+            {
+                title: '<img src = "'+storagePath+'/tmp_item_'+time+'.png" width = "60" height = "20"><br>檔案名稱',
+                value: "禮裝"+(friendItemList.length+1),
+                callback: function(imageName) {
+                    if(imageName!=null &&imageName.length >0){
+                       friendItemList[friendItemList.length] = imageName;
+                       JavaScriptInterface.runScript('confirmSaveFriendItemImage("'+imageName+'","'+time+'");');
+                       for(var i=0;i<commandId+1;i++){
+                            if( $("#selectFriendItem"+i).length){
+                                $("#selectFriendItem"+i).append('<option value = "'+commandId+'">'+imageName+'</option>');
+                            }
+                       }
+                    }else{
+                        JavaScriptInterface.runScript('confirmSaveFriendItemImage()');
+                    }
+                }
+            });
+}
+
+function createScriptConfirm(result){
+    if(result == null){
+        return;
+    }
+    bootbox.alert("建立成功");
+    scriptCnt++;
+    stopListenScriptSelect();
+    $("#scriptMode").append('<option value = "'+scriptCnt+'" selected>'+result);
+    clearScript();
+    startListenScriptSelect();
+}
+
+function saveScriptConfirm(result){
+    if(result == null){
+        return;
+    }
+    bootbox.alert("儲存成功");
+    startListenScriptSelect();
+}
+
+function deleteScriptConfirm(result){
+    clearScript();
+    $("#scriptMode option").filter(function(){
+        return $.trim($(this).text()) ==  result;
+    }).remove();
+    bootbox.alert("刪除 " +result +" 成功");
+}
+
+function copyScriptConfirm(result){
+    if(result == null){
+        return;
+    }
+    bootbox.alert("複製成功");
+    scriptCnt++;
+    stopListenScriptSelect();
+    $("#scriptMode").append('<option value = "'+scriptCnt+'" selected>'+result);
+    startListenScriptSelect();
+}
+
+function resetScript(result){
+    clearScript();
+    var scriptContentList = result.split(";");
+    scriptContentList.forEach(function(content){
+        commandId++;
+        if(content.startsWith("selectStage")){
+            content = content.replace('selectStage(','');
+            content = content.replace(')','');
+            $("#skill-list").append(getSelectStage(commandId));
+            initCommandButton(commandId);
+            $("#autoApple"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#autoApple"+commandId).val(content).trigger('change');
+        }else if(content.startsWith("getFriendPoint")){
+            $("#skill-list").append(getGetFriendPoint(commandId));
+            initCommandButton(commandId);
+        }else if(content.startsWith("getBox")){
+            content = content.replace('getBox(','');
+            content = content.replace(')','');
+            $("#skill-list").append(getBox(commandId));
+            initCommandButton(commandId);
+            $("#getBoxReset"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#getBoxReset"+commandId).val(content).trigger('change');
+        }else if(content.startsWith("selectFriend")){
+            content = content.replace('selectFriend(','');
+            content = content.replace(')','');
+            content = content.replace(/"/g,'');
+            var scriptValue = content.split(",");
+            initFriendButton(scriptValue);
+        }else if(content.startsWith("selectTeam")){
+            content = content.replace('selectTeam(','');
+            content = content.replace(')','');
+            $("#skill-list").append(getSelectTeam(commandId));
+            initCommandButton(commandId);
+            $("#selectTeam"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#selectTeam"+commandId).val(content).trigger('change');
+        }else if(content.startsWith("startQuest")){
+            $("#skill-list").append(getStartStage(commandId));
+            initCommandButton(commandId);
+        }else if(content.startsWith("finishQuest")){
+            $("#skill-list").append(getFinishItem(commandId));
+            initCommandButton(commandId);
+        }else if(content.startsWith("useSkill")){
+            content = content.replace('useSkill(','');
+            content = content.replace(')','');
+            var scriptValue = content.split(",");
+            $("#skill-list").append(getUseSkillItem(commandId));
+            initCommandButton(commandId);
+            $("#useSkillServant"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#useSkillServant"+commandId).val(scriptValue[0]).trigger('change');
+            $("#useSkill"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#useSkill"+commandId).val(scriptValue[1]).trigger('change');
+            $("#useSkillTarget"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#useSkillTarget"+commandId).val(scriptValue[2]).trigger('change');
+        }else if(content.startsWith("useClothesSkill")){
+            content = content.replace('useClothesSkill(','');
+            content = content.replace(')','');
+            var scriptValue = content.split(",");
+            $("#skill-list").append(getClothItem(commandId));
+            initCommandButton(commandId);
+            $("#clothSkill"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#clothSkill"+commandId).val(scriptValue[0]).trigger('change');
+            $("#clothSkillTarget"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#clothSkillTarget"+commandId).val(scriptValue[1]).trigger('change');
+            $("#clothSkillChange"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#clothSkillChange"+commandId).val(scriptValue[2]).trigger('change');
+        }else if(content.startsWith("selectEnemy")){
+            content = content.replace('selectEnemy(','');
+            content = content.replace(')','');
+            $("#skill-list").append(getSelectEnemy(commandId));
+            initCommandButton(commandId);
+            $("#selectEnemy"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#selectEnemy"+commandId).val(content).trigger('change');
+        }else if(content.startsWith("startAttack")){
+            $("#skill-list").append(getStartAttackItem(commandId));
+            initCommandButton(commandId);
+        }else if(content.startsWith("useUlt")){
+            content = content.replace('useUlt(','');
+            content = content.replace(')','');
+            $("#skill-list").append(getUseUltItem(commandId));
+            initCommandButton(commandId);
+            $("#useUlt"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#useUlt"+commandId).val(content).trigger('change');
+        }else if(content.startsWith("selectCard")){
+            content = content.replace('selectCard(','');
+            content = content.replace(')','');
+          $("#skill-list").append(getSelectCardItem(commandId));
+          initCommandButton(commandId);
+            $("#selectCard"+commandId).select2({
+            minimumResultsForSearch: -1,
+            dropdownAutoWidth: true
+            });
+            $("#selectCard"+commandId).val(content).trigger('change');
+        }else if(content.startsWith("autoAttack")){
+            content = content.replace('autoAttack(','');
+            content = content.replace(')','');
+            var scriptValue = content.split(",");
+            $("#skill-list").append(getAutoItem(commandId));
+            initCommandButton(commandId);
+            $("#autoFightUntil"+commandId).select2({
+                minimumResultsForSearch: -1,
+                width: 'resolve', 
+                dropdownAutoWidth: true
+            });
+            $("#autoFightUntil"+commandId).val(scriptValue[0]).trigger('change');
+            $("#autoFightColor"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#autoFightColor"+commandId).val(scriptValue[1]).trigger('change');
+            $("#autoFightSameColor"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#autoFightSameColor"+commandId).val(scriptValue[2]).trigger('change');
+            $("#autoFightWeak"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#autoFightWeak"+commandId).val(scriptValue[3]).trigger('change');
+            $("#autoFightDie"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#autoFightDie"+commandId).val(scriptValue[4]).trigger('change');
+            for(var i =0;i<3;i++){
+                $("#servant"+i+"ult"+commandId).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownAutoWidth: true
+                });
+                $("#servant"+i+"ult"+commandId).val(scriptValue[5+7*i]).trigger('change');
+                for(var j=0;j<3;j++){
+                    $("#servant"+i+"skill"+j+commandId).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownAutoWidth: true
+                    });
+                    $("#servant"+i+"skill"+j+commandId).val(scriptValue[5+7*i+1+j*2]).trigger('change');
+                    $("#servant"+i+"skill"+j+"target"+commandId).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownAutoWidth: true
+                    });
+                    $("#servant"+i+"skill"+j+"target"+commandId).val(scriptValue[5+7*i+1+j*2+1]).trigger('change');
+                }
+            }
+        }
+    });
+    bootbox.alert("讀取成功");
+}
+//Call by Android app-----------------------------------------------------------------------------------------------------
+function onEvent(eventType) {
+    if (eventType == 'OnPlayClick') {        
+        var loopTime = parseInt($("#loopTime").val());
+        var currentScript = getCurrentScript();
+        JavaScriptInterface.runScriptCallback('start('+loopTime+',\''+currentScript+'\');',"scriptFinish");
+        JavaScriptInterface.hideMenu();
+        JavaScriptInterface.setXY(3000,0);
+    } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript(`stop();`);
+    } else if (eventType == 'OnReloadClick') {
+    }
+}
+function onLog(message) {
+    console.log(message);
+}
+</script>
+</head>
+<body>
+    <nav class="navbar navbar-custom" role="navigation">
+        <a class="navbar-brand">FGO</a>
+    </nav>
+    <div class="container">
+        <li id="errorMessage">腳本開啟失敗，請確認Robotmon service狀態與檔案完整性</li>
+        <li>目前僅支援日版FGO，未來預計加入台服與B服</li>
+        <a href="https://www.facebook.com/FGOAutoScript">有任何使用上的問題，歡迎到粉絲團來發問</a><br>
+        <ul class="list-group">
+            <li class="list-group-item">
+                腳本執行次數
+                <div class="pull-right" style="margin-top:-4px">
+                    <input id="loopTime" style="width: 40px; text-align: center;" min="0" type="number" value="1" readonly>
+                    <button id="loopTimeMinus" type="button" class="btn btn-danger">-1</button>
+                    <button id="loopTimePlus" type="button" class="btn btn-plus">+1</button>
+                </div>
+            </li><br>
+            <label>好友擷取
+            </label><br>
+            <div>
+              <button id="getServantImage1" type="button">擷取好友1</button>
+              <button id="getItemImage1" type="button">擷取禮裝1</button><br><br>
+              <button id="getServantImage2" type="button">擷取好友2</button>
+              <button id="getItemImage2" type="button">擷取禮裝2</button>
+          </div><br><br>
+            <label>腳本編輯
+            </label><br>
+            <div>腳本
+                <select id = "scriptMode"><option></option></select><br><br>
+                <button id="createScript" type="button">新建</button>
+                <button id="delectScript" type="button">刪除</button>
+                <button id="copyScript" type="button">複製</button>
+                <button id="saveScript" type="button">存檔</button>
+          </div><br><br><br>
+           <label>指令
+            </label><br>
+          <div  class="pull-left" style="margin-top:-4px">
+              新增指令位置&nbsp;<button id="insertDirection" type="button" value = "1" >後</button><br><br>
+              <button id="showAll" type="button">全部展開</button>
+              <button id="hideAll" type="button">全部隱藏</button>
+          </div><br><br><br><br><br><br>
+          <div  class="pull-left" style="margin-top:-4px">
+              <button id="addGetFriendPoint" type="button">友抽</button>
+              <button id="addGetBox" type="button">抽箱</button>
+          </div><br><br>
+          <div  class="pull-left" style="margin-top:-4px">
+              <button id="addSelectStage" type="button">選擇關卡</button>
+              <button id="addSelectFriend" type="button">選擇好友</button>
+              <button id="addSelectTeam" type="button">選擇隊伍</button>
+          </div><br><br>
+          <div  class="pull-left" style="margin-top:-4px">
+              <button id="addStartStage" type="button">進入關卡</button>
+              <button id="addFinish" type="button">結束關卡</button>
+          </div><br><br><br>
+          <div  class="pull-left" style="margin-top:-4px">
+              <button id="addSkill" type="button">使用技能</button>
+              <button id="addCloth" type="button">使用衣服技能</button>
+              <button id="addSelectEnemy" type="button">選擇敵人</button>
+          </div><br><br>
+          <div  class="pull-left" style="margin-top:-4px">
+              <button id="addStartAttack" type="button">進入戰鬥</button>
+              <button id="addUseUlt" type="button">使用寶具</button>
+              <button id="addSelectCard" type="button">選擇卡片</button>
+              <button id="addAuto" type="button">自動戰鬥</button>
+          </div>
+          <br><br><br><br><br><br>
+          <div  class="list-group" id = "skill-list">
+          </div>
+      </ul>
+  </div>
+</body>
+</html>
