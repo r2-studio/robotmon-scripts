@@ -95,6 +95,13 @@
       "description": "<div>Where you start to build your own bot!</div>",
       "packageName": "com.gamehivecorp.taptitans2",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TemplateHelper/index.zip"
+    },
+    "com.cooper.FGO": {
+      "title": "Fate/Grand Order",
+      "versionCode": 1,
+      "description": "<div>Fate/Grand Order 自動周回腳本</div>",
+      "packageName": "com.xiaomeng.fategrandorder",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     }
   },
   "libs": {
