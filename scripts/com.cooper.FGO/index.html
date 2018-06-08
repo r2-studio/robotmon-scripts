@@ -929,7 +929,7 @@ function getSelectTeam(id){
         '<option value = "9">隊伍10</option></select></li>');
 }
 function getStartStage(id){
-    return getCommandItem(id,'進入關卡');
+    return getCommandItem(id,'進入關卡','<label>開啟畫面上方的任務</label>');
 }
 function getCheckSwitchStatus(id) {
     return $(id).is(':checked');
@@ -1319,7 +1319,7 @@ function onLog(message) {
         <a class="navbar-brand">FGO</a>
     </nav>
     <div class="container">
-        <li id="errorMessage">腳本開啟中，如此行文字一直存在，請確認Robotmon service狀態與檔案完整性</li>
+        <li id="errorMessage">腳本開啟中，如此行文字一直存在，請重開腳本，並確認Robotmon service狀態與檔案完整性</li>
         <li>目前僅支援日版FGO，未來預計加入台服與B服</li>
         <a href="https://www.facebook.com/FGOAutoScript">有任何使用上的問題，歡迎到粉絲團來發問</a><br>
         <ul class="list-group">
