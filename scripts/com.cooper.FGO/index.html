@@ -951,7 +951,10 @@ function getCheckSwitchStatus(id) {
 '</div>';
 */
 
-function getCommandItem(id,name,selection = ''){
+function getCommandItem(id,name,selection){
+    if(selection == undefined){
+        selection = '';
+    }
     var result =  '<div class="list-group-item">'+
     '<label name="'+id+'">'+
     name+
@@ -992,7 +995,7 @@ function initHTML(result){
     if(result[2].length > 0){
         friendItemList = result[2].split(",");
     }
-    storagePath = result[3];    
+    storagePath = result[3];
     if(result[0] == undefined){
         $('#scriptMode').select2({
             minimumResultsForSearch: -1,
@@ -1001,6 +1004,7 @@ function initHTML(result){
     }else{
         var scriptList = result[0].split(",");
         scriptCnt = scriptList.length;
+
         for(var i =0;i<scriptList.length;i++){
             $("#scriptMode").append('<option value = "'+i+'">'+scriptList[i]+'</option>');
         }
@@ -1111,7 +1115,7 @@ function resetScript(result){
     var scriptContentList = result.split(";");
     scriptContentList.forEach(function(content){
         commandId++;
-        if(content.startsWith("selectStage")){
+        if(checkstring(content,"selectStage")){
             content = content.replace('selectStage(','');
             content = content.replace(')','');
             $("#skill-list").append(getSelectStage(commandId));
@@ -1121,10 +1125,10 @@ function resetScript(result){
                 dropdownAutoWidth: true
             });
             $("#autoApple"+commandId).val(content).trigger('change');
-        }else if(content.startsWith("getFriendPoint")){
+        }else if(checkstring(content,"getFriendPoint")){
             $("#skill-list").append(getGetFriendPoint(commandId));
             initCommandButton(commandId);
-        }else if(content.startsWith("getBox")){
+        }else if(checkstring(content,"getBox")){
             content = content.replace('getBox(','');
             content = content.replace(')','');
             $("#skill-list").append(getBox(commandId));
@@ -1134,13 +1138,13 @@ function resetScript(result){
                 dropdownAutoWidth: true
             });
             $("#getBoxReset"+commandId).val(content).trigger('change');
-        }else if(content.startsWith("selectFriend")){
+        }else if(checkstring(content,"selectFriend")){
             content = content.replace('selectFriend(','');
             content = content.replace(')','');
             content = content.replace(/"/g,'');
             var scriptValue = content.split(",");
             initFriendButton(scriptValue);
-        }else if(content.startsWith("selectTeam")){
+        }else if(checkstring(content,"selectTeam")){
             content = content.replace('selectTeam(','');
             content = content.replace(')','');
             $("#skill-list").append(getSelectTeam(commandId));
@@ -1150,13 +1154,13 @@ function resetScript(result){
                 dropdownAutoWidth: true
             });
             $("#selectTeam"+commandId).val(content).trigger('change');
-        }else if(content.startsWith("startQuest")){
+        }else if(checkstring(content,"startQuest")){
             $("#skill-list").append(getStartStage(commandId));
             initCommandButton(commandId);
-        }else if(content.startsWith("finishQuest")){
+        }else if(checkstring(content,"finishQuest")){
             $("#skill-list").append(getFinishItem(commandId));
             initCommandButton(commandId);
-        }else if(content.startsWith("useSkill")){
+        }else if(checkstring(content,"useSkill")){
             content = content.replace('useSkill(','');
             content = content.replace(')','');
             var scriptValue = content.split(",");
@@ -1177,7 +1181,7 @@ function resetScript(result){
                 dropdownAutoWidth: true
             });
             $("#useSkillTarget"+commandId).val(scriptValue[2]).trigger('change');
-        }else if(content.startsWith("useClothesSkill")){
+        }else if(checkstring(content,"useClothesSkill")){
             content = content.replace('useClothesSkill(','');
             content = content.replace(')','');
             var scriptValue = content.split(",");
@@ -1198,7 +1202,7 @@ function resetScript(result){
                 dropdownAutoWidth: true
             });
             $("#clothSkillChange"+commandId).val(scriptValue[2]).trigger('change');
-        }else if(content.startsWith("selectEnemy")){
+        }else if(checkstring(content,"selectEnemy")){
             content = content.replace('selectEnemy(','');
             content = content.replace(')','');
             $("#skill-list").append(getSelectEnemy(commandId));
@@ -1208,10 +1212,10 @@ function resetScript(result){
                 dropdownAutoWidth: true
             });
             $("#selectEnemy"+commandId).val(content).trigger('change');
-        }else if(content.startsWith("startAttack")){
+        }else if(checkstring(content,"startAttack")){
             $("#skill-list").append(getStartAttackItem(commandId));
             initCommandButton(commandId);
-        }else if(content.startsWith("useUlt")){
+        }else if(checkstring(content,"useUlt")){
             content = content.replace('useUlt(','');
             content = content.replace(')','');
             $("#skill-list").append(getUseUltItem(commandId));
@@ -1221,7 +1225,7 @@ function resetScript(result){
                 dropdownAutoWidth: true
             });
             $("#useUlt"+commandId).val(content).trigger('change');
-        }else if(content.startsWith("selectCard")){
+        }else if(checkstring(content,"selectCard")){
             content = content.replace('selectCard(','');
             content = content.replace(')','');
           $("#skill-list").append(getSelectCardItem(commandId));
@@ -1231,7 +1235,7 @@ function resetScript(result){
             dropdownAutoWidth: true
             });
             $("#selectCard"+commandId).val(content).trigger('change');
-        }else if(content.startsWith("autoAttack")){
+        }else if(checkstring(content,"autoAttack")){
             content = content.replace('autoAttack(','');
             content = content.replace(')','');
             var scriptValue = content.split(",");
@@ -1286,6 +1290,12 @@ function resetScript(result){
     });
     bootbox.alert("讀取成功");
 }
+function checkstring(longStr,shortStr){
+    if(longStr.substring(0,shortStr.length) == shortStr){
+        return true;
+    }
+    return false;
+}
 //Call by Android app-----------------------------------------------------------------------------------------------------
 function onEvent(eventType) {
     if (eventType == 'OnPlayClick') {        
@@ -1295,7 +1305,7 @@ function onEvent(eventType) {
         JavaScriptInterface.hideMenu();
         JavaScriptInterface.setXY(3000,0);
     } else if (eventType == 'OnPauseClick') {
-        JavaScriptInterface.runScript(`stop();`);
+        JavaScriptInterface.runScript('stop();');
     } else if (eventType == 'OnReloadClick') {
     }
 }
@@ -1309,7 +1319,7 @@ function onLog(message) {
         <a class="navbar-brand">FGO</a>
     </nav>
     <div class="container">
-        <li id="errorMessage">腳本開啟失敗，請確認Robotmon service狀態與檔案完整性</li>
+        <li id="errorMessage">腳本開啟中，如此行文字一直存在，請確認Robotmon service狀態與檔案完整性</li>
         <li>目前僅支援日版FGO，未來預計加入台服與B服</li>
         <a href="https://www.facebook.com/FGOAutoScript">有任何使用上的問題，歡迎到粉絲團來發問</a><br>
         <ul class="list-group">
