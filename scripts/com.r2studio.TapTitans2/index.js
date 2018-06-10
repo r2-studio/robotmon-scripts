@@ -1042,7 +1042,9 @@ var GameAssistant = function () {
 
       console.log('we are not in game, try back 30 secs later');
       sleep(30000);
-      keycode('BACK', 3500);
+      console.log('hit back and check screen 10 secs later');
+      keycode('BACK', 100);
+      sleep(10000);
       this.refreshScreen();
       if (this.gInfo.fairyCollectReward.check(this._img)) {
         console.log('fairy reward collected');
