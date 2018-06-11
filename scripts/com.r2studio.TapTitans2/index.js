@@ -508,13 +508,14 @@ var RoleState = function () {
 }();
 
 var GameAssistant = function () {
-  function GameAssistant(debug, checkInGame, tapFairyRoute, prestigeTime, upgradeAllHeroCD) {
+  function GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, prestigeTime, upgradeAllHeroCD) {
     _classCallCheck(this, GameAssistant);
 
     // this.config = config || { conditions: [] };
     this.gInfo = new GameInfo(prestigeTime, upgradeAllHeroCD);
     this.rState = new RoleState(this.gInfo);
     this.shouldCheckInGame = checkInGame;
+    this.shouldRandomSleep = randomSleep;
     this.shouldTapFairyRoute = tapFairyRoute === false ? false : true;
     gDebug = debug == true ? true : false;
     this.localPath = getStoragePath() + '/scripts/com.r2studio.TapTitans2/images/';
@@ -581,12 +582,18 @@ var GameAssistant = function () {
         console.log('check fightClanBoss');
         this.fightClanBoss();
 
+        this.checkRandomSleep(3);
+
         console.log('check fightStageBoss');
         this.fightStageBoss();
+
+        this.checkRandomSleep(3);
 
         if (this.shouldTapFairyRoute) {
           console.log('check tapFairy');
           this.tapFairy();  
+
+          this.checkRandomSleep(3);
         }
 
         console.log('check checkWarCry');
@@ -594,14 +601,19 @@ var GameAssistant = function () {
           this.checkWarCry();
         }
 
+        this.checkRandomSleep(3);
+
         console.log('check tapGround');
         this.tapGround();
 
-        console.log('check upgradeHeros');
-        this.upgradeHeros();
+        this.checkRandomSleep(3);
 
-        console.log('check upgradeAllHeros');
-        this.upgradeAllHeros();
+        console.log('check upgradeHeros');
+        if (!this.upgradeAllHeros()) {
+          this.upgradeHeros();
+        }
+
+        this.checkRandomSleep(3);
 
         console.log('check testPrestige');
         this.testPrestige();
@@ -614,9 +626,11 @@ var GameAssistant = function () {
     key: 'upgradeAllHeros',
     value: function upgradeAllHeros() {
       if (Date.now() - this.rState.lastUpgradeAllHeros < this.gInfo.upgradeAllHeroCD * 60 * 1000) {
-        console.log('upgradeAllHeros cd: ', (Date.now() -this.rState.lastUpgradeAllHeros)/ 1000);
-        return;
+        console.log('upgradeAllHeros cd: ', (Date.now() - this.rState.lastUpgradeAllHeros)/ 1000);
+        return false;
       }
+
+      console.log('time to upgrade all heros');
 
       // Open Hero Tab
       for (var i = 0; i < 3; i ++) {
@@ -671,6 +685,8 @@ var GameAssistant = function () {
       this.gInfo.heroTab.tap(1, 300);
       this.rState.lastUpgradeAllHeros = Date.now();
       sleep(200);
+
+      return true;
     }
   }, {
     key: 'checkSkills',
@@ -739,6 +755,7 @@ var GameAssistant = function () {
         if (this.toLearn !== null) {
           this.learnSkill(this.toLearn);
         }
+        sleep(600);
       }
 
       // 4. close master tab
@@ -749,7 +766,7 @@ var GameAssistant = function () {
       }
 
       console.log('cast warcry')
-      this.gInfo.warCrySkill.tap(1, 300);
+      this.gInfo.warCrySkill.tap(1, 600);
     }
   }, {
     key: 'learnSkill',
@@ -798,12 +815,12 @@ var GameAssistant = function () {
       if (skill.check(this._img)) {
         console.log('learn skill')
 
-        for (var i = 0; i < 6; i ++) {
+        for (var i = 0; i < 9; i ++) {
           skill.tap(1, 300);
         }
       }
 
-      this.gInfo.shrinkTab.tap(1, 600);
+      this.gInfo.shrinkTab.tap(1, 300);
     }
   }, {
     key: 'warCry',
@@ -889,6 +906,8 @@ var GameAssistant = function () {
   }, {
     key: 'tapGround',
     value: function tapGround() {
+      this.gInfo.petEggs.tap(1, 300);
+      this.gInfo.inactiveGold.tap(1, 300);
       for (var i =  -5; i < 5; i ++) {
         Utils.mTap(this.gInfo.petGold.x + 0.1 * i * gDeviceWidth, this.gInfo.petGold.y, 80);
       }
@@ -908,10 +927,10 @@ var GameAssistant = function () {
         }
       }
 
-      sleep(2000);
+      sleep(1500);
 
-      console.log('looking for fairyNoThanks')
-      for (var i = 0; i < 15; i ++) {
+      console.log('looking for fairyNoThanks, may take 6 secs')
+      for (var i = 0; i < 16; i ++) {
         this.refreshScreen();
         if (this.gInfo.fairyNoThanks.check(this._img) &&
           this.gInfo.fairyWatchAds.check(this._img)) {
@@ -998,6 +1017,17 @@ var GameAssistant = function () {
       }
     }
   }, {
+    key: 'checkRandomSleep',
+    value: function checkRandomSleep(maxSeconds) {
+      if (!this.shouldRandomSleep) {
+        return;
+      }
+
+      var duration = Utils.getRandomInt(maxSeconds * 1000);
+      console.log('sleep ' + duration + ' ms (max ' + maxSeconds + ' secs)')
+      this.safeSleep(duration);
+    }
+  }, {
     key: 'ttListSwipeDown',
     value: function ttListSwipeDown() {
       Utils.mSwipe(600 * gRatioDevice, 1680 * gRatioDevice, 600 * gRatioDevice, 3600 * gRatioDevice, 5);
@@ -1042,16 +1072,22 @@ var GameAssistant = function () {
 
       console.log('we are not in game, try back 30 secs later');
       sleep(30000);
-      console.log('hit back and check screen 10 secs later');
+      console.log('hit back and check screen for 1.5 min for fairy reward');
       keycode('BACK', 100);
-      sleep(10000);
-      this.refreshScreen();
-      if (this.gInfo.fairyCollectReward.check(this._img)) {
-        console.log('fairy reward collected');
-        this.gInfo.fairyCollectReward.tap();
-        return;
+
+      sleep(3000);
+      for (var i = 0; i < 15; i ++) {
+        this.refreshScreen();
+
+        if (this.gInfo.fairyCollectReward.check(this._img)) {
+          console.log('fairy reward collected');
+          this.gInfo.fairyCollectReward.tap();
+          return;
+        }
+        sleep(1000);
       }
-      else if (this.gInfo.inGamePage.check(this._img)){
+
+      if (this.gInfo.inGamePage.check(this._img)){
         console.log('back worked');
         return;
       }
@@ -1061,7 +1097,7 @@ var GameAssistant = function () {
         return;
       }
 
-      console.log('still cant find gear icon, stopping')
+      console.log('still cant find gear icon, stopping, exec time: ' + Date.now() - this.roundStart);
       this.stop();
       return;
     }
@@ -1110,7 +1146,7 @@ var DefaultConfig = {
 
 var assistant = undefined;
 
-function start(debug, checkInGame, tapFairyRoute, prestigeTime, upgradeAllHeroCD) {
+function start(debug, checkInGame, tapFairyRoute, randomSleep, prestigeTime, upgradeAllHeroCD) {
   console.log('📢 啟動腳本 📢');
   if (typeof config === 'string') {
     config = JSON.parse(config);
@@ -1120,7 +1156,7 @@ function start(debug, checkInGame, tapFairyRoute, prestigeTime, upgradeAllHeroCD
     return;
   }
   console.log('start(): ', prestigeTime)
-  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, prestigeTime, upgradeAllHeroCD);
+  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, prestigeTime, upgradeAllHeroCD);
   assistant.start();
   // TODO: don't know why won't work
   // assistant.stop();
