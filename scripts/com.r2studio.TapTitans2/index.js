@@ -935,7 +935,6 @@ var GameAssistant = function () {
         var sleepTime = 40 + Utils.getRandomInt(40);
 
         this.tapRandom(700, 1250, 50, 50, sleepTime);
-        sleep(sleepTime);
         i += sleepTime;
       }
     }
