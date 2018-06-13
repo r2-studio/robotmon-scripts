@@ -389,8 +389,8 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
     new FeaturePoint(500, 1650, 240, 130, 10, true, 35),
     new FeaturePoint(500, 1700, 240, 130, 10, true, 35)]);
   this.fairyCollectReward = new PageFeature('fairyCollectReward', [
-    new FeaturePoint(380, 1530, 40, 160, 200, true, 40),
-    new FeaturePoint(700, 1600, 40, 160, 200, true, 40)]);
+    new FeaturePoint(500, 1940, 40, 160, 200, true, 40),
+    new FeaturePoint(940, 2030, 40, 160, 200, true, 40)]);
 
   this.ship = new Point(140, 580);
   this.inactiveGold = new Point(100, 725);
