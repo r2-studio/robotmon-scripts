@@ -295,7 +295,7 @@ var FeaturePoint = function (_Point) {
       var c = getImageColor(img, this.tx, this.ty);
       if (this.need && !Utils.isSameColor(c, this, this.d)) {
         if (gDebug) {
-          console.log('!c: ', c.r, c.g, c.b)
+          console.log('!c, (x, y, r, g, b):', this.tx, this.ty, c.r, c.g, c.b)
         }
         return false;
       } else if (!this.need && Utils.isSameColor(c, this)) {
@@ -389,8 +389,8 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
     new FeaturePoint(500, 1650, 240, 130, 10, true, 35),
     new FeaturePoint(500, 1700, 240, 130, 10, true, 35)]);
   this.fairyCollectReward = new PageFeature('fairyCollectReward', [
-    new FeaturePoint(380, 1550, 40, 160, 200, true, 35),
-    new FeaturePoint(700, 1550, 40, 160, 200, true, 35)]);
+    new FeaturePoint(380, 1530, 40, 160, 200, true, 40),
+    new FeaturePoint(700, 1600, 40, 160, 200, true, 40)]);
 
   this.ship = new Point(140, 580);
   this.inactiveGold = new Point(100, 725);
