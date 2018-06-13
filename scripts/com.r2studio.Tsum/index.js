@@ -540,11 +540,14 @@ function checkCanSendMessage() {
   console.log('User Plan', _userPlan);
 }
 function canSendMessage() {
-  if (_userPlan == -1) { return; }
+  if (_userPlan == -1) {
+    return false;
+  }
   var during = Date.now() - _lastSendingTime;
   if (_userPlan >= 0 && during > 60 * 60 * 1000) {
     return true;
   }
+  return false;
 }
 function sendMessage(topMsg, msg) {
   if (canSendMessage()) {
@@ -1363,6 +1366,7 @@ Tsum.prototype.goGamePlayingPage = function() {
     } else if (page == 'StartPage') {
       this.sleep(500);
       this.checkGameItem();
+      this.sendMoneyInfo();
       this.tap(Button.outStart2);
     } else if (page == 'GamePlaying') {
       // check again
