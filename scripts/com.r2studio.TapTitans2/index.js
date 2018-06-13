@@ -456,7 +456,7 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
     new FeaturePoint(1310, 2204, 250, 250, 250, true, 20),
   ]
 
-  // Used to determine if the game still active
+  // Used to determine if the game still active by checking all bottom tabs
   this.inGamePage = new PageFeature('inGamePage', [
     new FeaturePoint(200, 2540, 240, 100, 60, true, 30),
     new FeaturePoint(440, 2540, 60, 140, 170, true, 30),
@@ -508,7 +508,7 @@ var RoleState = function () {
 }();
 
 var GameAssistant = function () {
-  function GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, prestigeTime, upgradeAllHeroCD) {
+  function GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, prestigeTime, upgradeAllHeroCD) {
     _classCallCheck(this, GameAssistant);
 
     // this.config = config || { conditions: [] };
@@ -517,6 +517,7 @@ var GameAssistant = function () {
     this.shouldCheckInGame = checkInGame;
     this.shouldRandomSleep = randomSleep;
     this.shouldTapFairyRoute = tapFairyRoute === false ? false : true;
+    this.isVipEnabled = vipEnabled;
     gDebug = debug == true ? true : false;
     this.localPath = getStoragePath() + '/scripts/com.r2studio.TapTitans2/images/';
     this._loop = false;
@@ -573,7 +574,13 @@ var GameAssistant = function () {
         this.refreshScreen();
 
         if (this.shouldCheckInGame){
+          console.log('check checkInGame');
           this.checkInGame();
+
+          if (!this._loop) {
+            console.log('Cant find the game tabs, quiting script')
+            return;
+          }
         }
 
         // this.tapFairy();
@@ -656,7 +663,7 @@ var GameAssistant = function () {
         sleep(350);
       }
       for (var y = 420; y < 2440; y += 200) {
-        Utils.mTap(1250, y, 100);
+        Utils.mTap(1250, y, 150);
       }
 
       // Swipe to top
@@ -932,12 +939,18 @@ var GameAssistant = function () {
       console.log('looking for fairyNoThanks, may take 6 secs')
       for (var i = 0; i < 16; i ++) {
         this.refreshScreen();
+
         if (this.gInfo.fairyNoThanks.check(this._img) &&
           this.gInfo.fairyWatchAds.check(this._img)) {
           sleep(500);
-          console.log('found noThanks, tapping')
-          this.gInfo.fairyNoThanks.tap();
-          // return;
+
+          if (this.isVipEnabled) {
+            console.log('we are VIPs, collecting awards');
+            this.gInfo.fairyWatchAds.tap();
+          } else {
+            console.log('found noThanks, tapping');
+            this.gInfo.fairyNoThanks.tap();
+          }
         }
         sleep(350);
       }
@@ -1047,7 +1060,7 @@ var GameAssistant = function () {
   }, {
     key: 'checkInGame',
     value: function checkInGame(tab) {
-      for (var i = 0; i < 5; i ++) {
+      for (var i = 0; i < 4; i ++) {
         var wh = getScreenSize();
         if (wh.width > wh.height) {
           console.log('screen is landscape, hit back and wait 3.5secs');
@@ -1097,7 +1110,7 @@ var GameAssistant = function () {
         return;
       }
 
-      console.log('still cant find gear icon, stopping, exec time: ' + Date.now() - this.roundStart);
+      console.log('still cant find gear icon, stopping, exec time: ' + (Date.now() - this.roundStart)/1000 + ' secs');
       this.stop();
       return;
     }
@@ -1146,7 +1159,7 @@ var DefaultConfig = {
 
 var assistant = undefined;
 
-function start(debug, checkInGame, tapFairyRoute, randomSleep, prestigeTime, upgradeAllHeroCD) {
+function start(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, prestigeTime, upgradeAllHeroCD) {
   console.log('📢 啟動腳本 📢');
   if (typeof config === 'string') {
     config = JSON.parse(config);
@@ -1155,8 +1168,8 @@ function start(debug, checkInGame, tapFairyRoute, randomSleep, prestigeTime, upg
     console.log('📢 腳本已啟動 📢');
     return;
   }
-  console.log('start(): ', prestigeTime)
-  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, prestigeTime, upgradeAllHeroCD);
+
+  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, prestigeTime, upgradeAllHeroCD);
   assistant.start();
   // TODO: don't know why won't work
   // assistant.stop();
@@ -1175,5 +1188,5 @@ function stop() {
   assistant = undefined;
 }
 
-console.log('updated')
+// console.log('updated')
 // start();
