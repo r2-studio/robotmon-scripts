@@ -1075,6 +1075,14 @@ var GameAssistant = function () {
   }, {
     key: 'checkInGame',
     value: function checkInGame(tab) {
+
+      this.refreshScreen();
+      if (this.gInfo.fairyCollectReward.check(this._img)) {
+        console.log('fairy reward collected');
+        this.gInfo.fairyCollectReward.tap();
+        return;
+      }
+
       for (var i = 0; i < 5; i ++) {
         this.refreshScreen();
         var wh = getScreenSize();
