@@ -650,11 +650,16 @@ var GameAssistant = function () {
         sleep(300);
       }
 
-      this.gInfo.expendTab.tap(1, 300);
+      // expend full tab
+      this.refreshScreen();
+      if (!this.gInfo.expendTabPage.check(this._img)) {
+        this.gInfo.expendTab.tap();
+        sleep(500);
+      }
 
       for (var i = 0; i < 4; i ++) {
         for (var y = 420; y < 2440; y += 200) {
-          Utils.mTap(1250, y, 100);
+          Utils.mTap(1250, y, 150);
         }
 
         this.ttListSwipeUp()
@@ -673,7 +678,7 @@ var GameAssistant = function () {
       }
 
       // Check the tab is shrinked
-      for (var i = 0; i < 5; i ++) {
+      for (var i = 0; i < 6; i ++) {
         this.refreshScreen();
         var img = this.gInfo.gearRect.crop(this._img);
         var r = findImage(img, this.images.gear);
@@ -920,8 +925,18 @@ var GameAssistant = function () {
       }
 
       // keep hitting in case get equipment
-      for (var i = 0; i < 70 && this._loop; i ++) {
-        this.tapRandom(700, 1250, 50, 50, 80);
+      this.idleTap(5000);
+    }
+  }, {
+    key: 'idleTap',
+    value: function idleTap(duration) {
+      var i = 0;
+      while(i < duration) {
+        var sleepTime = 40 + Utils.getRandomInt(40);
+
+        this.tapRandom(700, 1250, 50, 50, sleepTime);
+        sleep(sleepTime);
+        i += sleepTime;
       }
     }
   }, {
@@ -934,15 +949,15 @@ var GameAssistant = function () {
         }
       }
 
-      sleep(1500);
+      this.idleTap(1500);
 
       console.log('looking for fairyNoThanks, may take 6 secs')
-      for (var i = 0; i < 16; i ++) {
+      for (var i = 0; i < 20; i ++) {
         this.refreshScreen();
 
         if (this.gInfo.fairyNoThanks.check(this._img) &&
           this.gInfo.fairyWatchAds.check(this._img)) {
-          sleep(500);
+            this.idleTap(500);
 
           if (this.isVipEnabled) {
             console.log('we are VIPs, collecting awards');
@@ -952,7 +967,7 @@ var GameAssistant = function () {
             this.gInfo.fairyNoThanks.tap();
           }
         }
-        sleep(350);
+        this.idleTap(350);
       }
     }
   }, {
@@ -1060,27 +1075,21 @@ var GameAssistant = function () {
   }, {
     key: 'checkInGame',
     value: function checkInGame(tab) {
-      for (var i = 0; i < 4; i ++) {
+      for (var i = 0; i < 5; i ++) {
+        this.refreshScreen();
         var wh = getScreenSize();
         if (wh.width > wh.height) {
           console.log('screen is landscape, hit back and wait 3.5secs');
-          keycode('BACK', 3500);
+          keycode('BACK', 200);
+          sleep(3500);
           continue;
         }
 
-        this.refreshScreen();
         if (this.gInfo.inGamePage.check(this._img)){
           return;
         }
-        sleep(2500);
-      }
-
-      console.log('cant find gear icon, try shrink tab')
-      this.gInfo.shrinkTab.tap(1, 300);
-
-      this.refreshScreen();
-      if (this.gInfo.inGamePage.check(this._img)){
-        return;
+        sleep(2000);
+        // this.idleTap(2000);
       }
 
       console.log('we are not in game, try back 30 secs later');
@@ -1089,7 +1098,7 @@ var GameAssistant = function () {
       keycode('BACK', 100);
 
       sleep(3000);
-      for (var i = 0; i < 15; i ++) {
+      for (var i = 0; i < 90; i ++) {
         this.refreshScreen();
 
         if (this.gInfo.fairyCollectReward.check(this._img)) {
@@ -1104,7 +1113,7 @@ var GameAssistant = function () {
         console.log('back worked');
         return;
       }
-      else if (this.gInfo.QuitGameNo.check(this._img)){
+      if (this.gInfo.QuitGameNo.check(this._img)){
         this.gInfo.QuitGameNo.tap();
         console.log('tap quit no');
         return;
@@ -1131,31 +1140,11 @@ var GameAssistant = function () {
       saveImage(img, this.localPath + '/lineageM/' + filename);
       releaseImage(img);
     }
-
-    // globalState
   }
   ]);
 
   return GameAssistant;
 }();
-
-var DefaultConfig = {
-  conditions: [
-    { type: 'hp', op: -1, value: 80, btn: 0, interval: 1000 }, // if hp < 60% use 3th button, like 瞬移
-    { type: 'mp', op: 1, value: 50, btn: 1, interval: 1000 }, // if hp < 30% use 8th button, like 回卷
-    { type: 'mp', op: -1, value: 80, btn: 2, interval: 2000 }
-  ],
-  inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
-  beAttackedRandTeleport: true,
-  dangerousGoHome: true, // if hp < 25%, go home, use button 8th
-  autoAttack: true,
-  autoReceiveReward: true,
-  autoUseAntidote: false, // take an antidote for the poison, use six button
-  goBackInterval: 0, // whether to go back to origin location, check location every n min
-  autoBuyHp: 0, // 1 * 100, -1 => max
-  autoBuyArrow: 0, // 1 * 1000, -1 => max
-  mapSelect: 5 // move to nth map in safe region
-};
 
 var assistant = undefined;
 
