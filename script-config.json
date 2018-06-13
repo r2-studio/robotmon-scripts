@@ -84,7 +84,7 @@
     },
     "com.r2studio.TapTitans2": {
       "title": "TapTitans2 automated",
-      "versionCode": 9,
+      "versionCode": 9.1,
       "description": "<div>Make the relics rain! / 自動愛心農場!</div>",
       "packageName": "com.gamehivecorp.taptitans2",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TapTitans2/index.zip"
