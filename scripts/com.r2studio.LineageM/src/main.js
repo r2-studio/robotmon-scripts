@@ -42,10 +42,14 @@ class Utils {
       return true;
     }
   }
-  static sendMessage(topMsg, msg) {
-    if (Utils.canSendMessage()) {
+  static sendMessage(topMsg, msg, force) {
+    if (force || Utils.canSendMessage()) {
       gLastSendingTime = Date.now();
-      sendNormalMessage(topMsg, msg);
+      if (force) {
+        console.log(sendUrgentMessage(topMsg, msg));
+      } else {
+        console.log(sendNormalMessage(topMsg, msg));
+      }
     }
   }
   static nearColor(c, c1, c2) {
@@ -188,6 +192,7 @@ class GameInfo {
     this.storeHpRect = new Rect(94, 276, 94 + 100, 276 + 100);
     this.mapSelector = new Rect(56, 339, 350, 937); // h 112
     this.moneyRect = new Rect(990, 40, 1150, 80);
+    this.centerRect = new Rect(600, 200, 1400, 800);
 
     this.storeOther = new Point(510, 220);
     this.store10 = new Point(670, 970);
@@ -647,7 +652,12 @@ class LineageM {
 
   sendDangerMessage(msg) {
     console.log('送危險訊息中...');
-    Utils.sendMessage('天堂M 危險', msg);
+    const centerImg = this.gi.centerRect.crop(this._img);
+    const rmi = resizeImage(centerImg, this.gi.centerRect.w/2, this.gi.centerRect.h/2);
+    const base64 = getBase64FromImage(rmi);
+    releaseImage(rmi);
+    releaseImage(centerImg);
+    Utils.sendMessage('天堂M 危險', base64, true);
   }
 
   sendMoneyInfo() {
@@ -1113,22 +1123,22 @@ class LineageM {
 
 const DefaultConfig = {
   conditions: [
-    {type: 'hp', op: -1, value: 80, btn: 0, interval: 1000}, // if hp < 60% use 3th button, like 瞬移
-    {type: 'mp', op: 1, value: 50, btn: 1, interval: 1000}, // if hp < 30% use 8th button, like 回卷
-    {type: 'mp', op: -1, value: 80, btn: 2, interval: 2000}, // if hp < 75% use 4th button, like 高治
+    // {type: 'hp', op: -1, value: 80, btn: 0, interval: 1000}, // if hp < 60% use 3th button, like 瞬移
+    // {type: 'mp', op: 1, value: 50, btn: 1, interval: 1000}, // if hp < 30% use 8th button, like 回卷
+    // {type: 'mp', op: -1, value: 80, btn: 2, interval: 2000}, // if hp < 75% use 4th button, like 高治
     // {type: 'mp', op: -1, value: 70, btn: 4, interval: 2000}, // if mp < 70% use 5th button, like 魂體
     // {type: 'mp', op:  1, value: 50, btn: 1, interval: 8000}, // if mp > 80% use th button, like 三重矢, 光箭, 火球等
   ],
   inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
   beAttackedRandTeleport: true,
   dangerousGoHome: true, // if hp < 25%, go home, use button 8th
-  autoAttack: true,
-  autoReceiveReward: true,
+  autoAttack: false,
+  autoReceiveReward: false,
   autoUseAntidote: false, // take an antidote for the poison, use six button
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   autoBuyHp: 0, // 1 * 100, -1 => max
   autoBuyArrow: 0, // 1 * 1000, -1 => max
-  mapSelect: 5, // move to nth map in safe region
+  mapSelect: 0, // move to nth map in safe region
 };
  
 let lm = undefined;
