@@ -15,7 +15,10 @@
       "versionCode": 37,
       "description": "<ul><li>⚠️ Should update Robotmon app and restart service\n</li><li>⭐ New Quick Play Mode(新增快速計算模式)\n</li><li>Supported more skills</li><li>Bubble item</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip"
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
+      "dependencies": [
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
+      ]
     },
     "com.r2studio.MarvelFutureFight": {
       "title": "Marvel Future Fight AutoPlay",
