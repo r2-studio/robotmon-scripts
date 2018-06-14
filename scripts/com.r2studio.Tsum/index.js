@@ -82,7 +82,7 @@ var Config = {
 };
 
 // 1776 * 1920 (y - 78)
-var adjY = 72.5;
+var adjY = 74;
 var Button = {
   gameBubblesFrom: {x: 100, y: 560 + adjY},
   gameBubblesTo: {x: 1000, y: 1460 + adjY},
@@ -325,8 +325,8 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 982, y: 194  + adjY, r: 236, g: 192, b: 5, match: true, threshold: 80},
-      {x: 986, y: 1563 + adjY, r: 236, g: 191, b: 2, match: true, threshold: 80},
+      {x: 916, y:  246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80},
+      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80},
     ],
     back: {x: 986, y: 201 + adjY},
     next: {x: 986, y: 201 + adjY},
@@ -1042,13 +1042,13 @@ Tsum.prototype.init = function(detect) {
   if (realWidth > this.screenWidth) {
     this.gameWidth = realWidth;
     this.gameHeight = this.screenHeight;
-    this.gameOffsetX = Math.floor((this.gameWidth - this.screenWidth));
+    this.gameOffsetX = Math.floor((this.gameWidth - this.screenWidth) / 2);
     this.gameOffsetY = 0;
   } else if (realWidth < this.screenWidth) {
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.screenWidth / 9 * 16;
     this.gameOffsetX = 0;
-    this.gameOffsetY = Math.floor((this.gameHeight - this.screenHeight));
+    this.gameOffsetY = Math.floor((this.gameHeight - this.screenHeight) / 2);
   } else {
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.screenHeight;
@@ -1153,10 +1153,8 @@ Tsum.prototype.playScreenshot = function() {
 }
 
 Tsum.prototype.toResizeXY = function(x, y) {
-  x -= this.gameOffsetX;
-  y -= this.gameOffsetY; 
-  var rx = Math.floor(x * this.captureGameRatio / this.resizeRatio);
-  var ry = Math.floor(y * this.captureGameRatio / this.resizeRatio);
+  var rx = Math.floor((x * this.captureGameRatio - this.gameOffsetX) / this.resizeRatio);
+  var ry = Math.floor((y * this.captureGameRatio - this.gameOffsetY) / this.resizeRatio);
   return {x: rx, y: ry};
 }
 
@@ -1170,10 +1168,8 @@ Tsum.prototype.getColor = function(img, xy) {
 }
 
 Tsum.prototype.toRealXY = function(x, y) {
-  x -= this.gameOffsetX;
-  y -= this.gameOffsetY; 
-  var rx = Math.floor(x * this.captureGameRatio);
-  var ry = Math.floor(y * this.captureGameRatio);
+  var rx = Math.floor(x * this.captureGameRatio - this.gameOffsetX);
+  var ry = Math.floor(y * this.captureGameRatio - this.gameOffsetY);
   return {x: rx, y: ry};
 }
 
