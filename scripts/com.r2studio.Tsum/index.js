@@ -775,12 +775,12 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug, logs) {
   log(logs.recognizedTsums, board.length);
   sleep(30);
   log(logs.recognitionTime, usingTimeString(startTime));
-  if (debug) {
-    for (var i = 0; i < board.length; i++) {
-      var boardTsum = board[i];
-      drawCircle(boardImg, boardTsum.x + Config.tsumWidth/2, boardTsum.y + Config.tsumWidth/2, 1, Config.colors[boardTsum.tsumIdx][0], Config.colors[boardTsum.tsumIdx][1], Config.colors[boardTsum.tsumIdx][2], 0);
-    }
-  }
+  // if (debug) {
+  //   for (var i = 0; i < board.length; i++) {
+  //     var boardTsum = board[i];
+  //     drawCircle(boardImg, boardTsum.x + Config.tsumWidth/2, boardTsum.y + Config.tsumWidth/2, 1, Config.colors[boardTsum.tsumIdx][0], Config.colors[boardTsum.tsumIdx][1], Config.colors[boardTsum.tsumIdx][2], 0);
+  //   }
+  // }
   return board;
 }
 
@@ -961,6 +961,7 @@ function Tsum(isJP, detect, logs) {
   this.isRunning = true;
   this.runTimes = 0;
   this.myTsum = '';
+  this.storagePath = getStoragePath();
   // screen size config
   var size = getScreenSize();
   this.screenHeight = size.height - getVirtualButtonHeight();
@@ -1064,17 +1065,17 @@ Tsum.prototype.init = function(detect) {
   this.playWidth = this.screenWidth;
   this.playHeight = this.screenWidth;
   this.playOffsetX = 0;
-  this.playOffsetY = 380 * this.captureGameRatio - this.gameOffsetY; // (top, center, bottom) = (380, 1160,380)
+  this.playOffsetY = 465 * this.captureGameRatio - this.gameOffsetY; // (top, center, bottom) = (380, 1160,380)
 
   this.allTsumImages = loadTsumImages(this.isJP);
   this.isLoadAllTsum = true;
 
-  if (this.debug) {
-    this.sleep(200);
-    log(this.logs.offset, this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
-    this.sleep(500);
-  }
-  execute("mkdir -p " + getStoragePath() + '/' + Config.recordDir);
+  this.sleep(200);
+  log(this.logs.offset, this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
+  this.sleep(200);
+  execute("mkdir -p " + this.storagePath + '/tmp');
+  this.sleep(200);
+  execute("mkdir -p " + this.storagePath + '/' + Config.recordDir);
 }
 
 Tsum.prototype.deinit = function() {
@@ -1402,9 +1403,9 @@ Tsum.prototype.findMyTsum = function() {
   );
   smooth(myTsumImage, 1, 2);
   var allScores = findAllTsumMatchScore(this.allTsumImages, myTsumImage, '');
-  if (this.debug) {
-    saveImage(myTsumImage, getStoragePath() + "/tmp/mytsum.jpg");
-  }
+  // if (this.debug) {
+  //   saveImage(myTsumImage, this.storagePath + "/tmp/mytsum.jpg");
+  // }
   releaseImage(myTsumImage);
   this.myTsum = allScores[0].key;
 }
@@ -1551,9 +1552,9 @@ Tsum.prototype.scanBoard = function() {
   }
   log(this.logs.recognizingTsums);
   var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug, this.logs);
-  if (this.debug) {
-    saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
-  }
+  // if (this.debug) {
+  //   saveImage(gameImage, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
+  // }
   releaseImage(gameImage);
 
   this.tap(Button.gameContinue);
@@ -1581,14 +1582,14 @@ Tsum.prototype.scanBoardQuick = function() {
     for (var j in tc.points) {
       var p = tc.points[j];
       board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
-      if (this.debug) {
-        drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);  
-      }	
+      // if (this.debug) {
+      //   drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);
+      // }
     }
   }
-  if (this.debug) {
-    saveImage(srcImg, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
-  }
+  // if (this.debug) {
+  //   saveImage(srcImg, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
+  // }
   releaseImage(srcImg);
   log(this.logs.recognizedTsums, board.length);
   sleep(30);
@@ -1653,10 +1654,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
     this.runTimes++;
   }
-  releaseTsumRotationImages(this.gameTsums);
+  // releaseTsumRotationImages(this.gameTsums);
   this.gameTsums = [];
   this.isLoadRotateTsum = false;
-  this.sleep(4000);
 }
 
 Tsum.prototype.taskPlayGame = function() {
@@ -1758,7 +1758,7 @@ Tsum.prototype.taskReceiveAllItems = function() {
 
 Tsum.prototype.readRecord = function() {
   log(this.logs.readRecords);
-  var recordDir = getStoragePath() + '/' + Config.recordDir;
+  var recordDir = this.storagePath + '/' + Config.recordDir;
   var recordFile = recordDir + '/record.txt';
   var txt = readFile(recordFile);
   if (txt != undefined && txt != "") {
@@ -1773,7 +1773,7 @@ Tsum.prototype.readRecord = function() {
 
 Tsum.prototype.recognizeSender = function(img) {
   log(this.logs.recognizingHeartSender);
-  var recordDir = getStoragePath() + '/' + Config.recordDir;
+  var recordDir = this.storagePath + '/' + Config.recordDir;
   var from = this.toResizeXYs(Button.outReceiveNameFrom);
   var to = this.toResizeXYs(Button.outReceiveNameTo);
   var nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
@@ -1832,7 +1832,7 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
 
 Tsum.prototype.saveRecord = function() {
   log(this.logs.saveRecords);
-  var recordFile = getStoragePath() + '/' + Config.recordDir + '/record.txt';
+  var recordFile = this.storagePath + '/' + Config.recordDir + '/record.txt';
   writeFile(recordFile, JSON.stringify(this.record));
 }
 
