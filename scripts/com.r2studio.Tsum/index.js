@@ -531,9 +531,13 @@ var LogsTW = {
 // Utils for sending message
 var _userPlan = -1;
 var _lastSendingTime = 0;
+
+function checkFunction(f) {
+  return typeof(f) == 'function'
+}
 function checkCanSendMessage() {
   _userPlan = -1;
-  if (getUserPlan !== undefined && sendNormalMessage !== undefined) {
+  if (getUserPlan !== undefined && checkFunction(sendNormalMessage)) {
     _userPlan = getUserPlan();
   }
   console.log('User Plan', _userPlan);
@@ -1086,15 +1090,15 @@ Tsum.prototype.sendMoneyInfo = function() {
   if (!canSendMessage()) {
     return;
   }
-  // var x = Math.ceil(Button.moneyInfoBox.x * this.captureGameRatio) - this.gameOffsetX;
-  // var y = Math.ceil(Button.moneyInfoBox.y * this.captureGameRatio) - this.gameOffsetY;
-  // var w = Math.ceil(Button.moneyInfoBox.w * this.captureGameRatio);
-  // var h = Math.ceil(Button.moneyInfoBox.h * this.captureGameRatio);
-  // var img = getScreenshotModify(x, y, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 80);
-  // var base64 = getBase64FromImage(img);
-  // releaseImage(img);
-  // log(this.logs.sendMessage);
-  // sendMessage("Tsum Tsum", base64);
+  var x = Math.ceil(Button.moneyInfoBox.x * this.captureGameRatio) - this.gameOffsetX;
+  var y = Math.ceil(Button.moneyInfoBox.y * this.captureGameRatio) - this.gameOffsetY;
+  var w = Math.ceil(Button.moneyInfoBox.w * this.captureGameRatio);
+  var h = Math.ceil(Button.moneyInfoBox.h * this.captureGameRatio);
+  var img = getScreenshotModify(x, y, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 80);
+  var base64 = getBase64FromImage(img);
+  releaseImage(img);
+  log(this.logs.sendMessage);
+  sendMessage("Tsum Tsum", base64);
 }
 
 Tsum.prototype.isAppOn = function() {
