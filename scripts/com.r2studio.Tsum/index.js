@@ -143,7 +143,7 @@ var Button = {
   skillLuke4: {x: 960, y: 1160 + adjY},
   outReceiveNameFrom: {x: 160, y: 460 + adjY},
   outReceiveNameTo: {x: 620, y: 555 + adjY},
-  moneyInfoBox: {x: 420, y: 128 + adjY, w: 240, h: 64},
+  moneyInfoBox: {x: 430, y: 116 + adjY, w: 230, h: 56},
 };
 
 var Page = {
@@ -1091,10 +1091,10 @@ Tsum.prototype.sendMoneyInfo = function() {
   if (!canSendMessage()) {
     return;
   }
-  var x = Math.ceil(Button.moneyInfoBox.x * this.captureGameRatio) - this.gameOffsetX;
-  var y = Math.ceil(Button.moneyInfoBox.y * this.captureGameRatio) - this.gameOffsetY;
-  var w = Math.ceil(Button.moneyInfoBox.w * this.captureGameRatio);
-  var h = Math.ceil(Button.moneyInfoBox.h * this.captureGameRatio);
+  var x = Math.floor(Button.moneyInfoBox.x * this.captureGameRatio - this.gameOffsetX);
+  var y = Math.floor(Button.moneyInfoBox.y * this.captureGameRatio - this.gameOffsetY);
+  var w = Math.floor(Button.moneyInfoBox.w * this.captureGameRatio);
+  var h = Math.floor(Button.moneyInfoBox.h * this.captureGameRatio);
   var img = getScreenshotModify(x, y, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 80);
   var base64 = getBase64FromImage(img);
   releaseImage(img);
