@@ -773,12 +773,12 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug, logs) {
   log(logs.recognizedTsums, board.length);
   sleep(30);
   log(logs.recognitionTime, usingTimeString(startTime));
-  // if (debug) {
-  //   for (var i = 0; i < board.length; i++) {
-  //     var boardTsum = board[i];
-  //     drawCircle(boardImg, boardTsum.x + Config.tsumWidth/2, boardTsum.y + Config.tsumWidth/2, 1, Config.colors[boardTsum.tsumIdx][0], Config.colors[boardTsum.tsumIdx][1], Config.colors[boardTsum.tsumIdx][2], 0);
-  //   }
-  // }
+  if (debug) {
+    for (var i = 0; i < board.length; i++) {
+      var boardTsum = board[i];
+      drawCircle(boardImg, boardTsum.x + Config.tsumWidth/2, boardTsum.y + Config.tsumWidth/2, 1, Config.colors[boardTsum.tsumIdx][0], Config.colors[boardTsum.tsumIdx][1], Config.colors[boardTsum.tsumIdx][2], 0);
+    }
+  }
   return board;
 }
 
@@ -954,7 +954,7 @@ function classifyTsums(points, tsumCount) {
 
 // Tsum struct
 
-function Tsum(isJP, detect, logs) {
+function Tsum(isJP, logs) {
   this.debug = true;
   this.isRunning = true;
   this.runTimes = 0;
@@ -1011,35 +1011,10 @@ function Tsum(isJP, detect, logs) {
   this.recordImages = {};
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
-  this.init(detect);
+  this.init();
 }
 
-Tsum.prototype.detect = function() {
-  var size = getScreenSize();
-  var img = getScreenshot();
-  var top = 0;
-  var bottom = size.height - getVirtualButtonHeight();
-  for (var y = 0; y < size.height; y++) {
-    var color = getImageColor(img, size.width - 2, y);
-    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
-      top = y;
-      break;
-    }
-  }
-  for (var y = bottom - 1; y > 0; y--) {
-    var color = getImageColor(img, size.width - 2, y);
-    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
-      bottom = y+1;
-      break;
-    }
-  }
-  releaseImage(img);
-  log(this.logs.detectScreen, top, bottom);
-  sleep(500);
-  return {top: top, bottom: bottom};
-}
-
-Tsum.prototype.init = function(detect) {
+Tsum.prototype.init = function() {
   log(this.logs.calculateScreenSize);
   var realWidth = this.screenHeight / 16 * 9;
   if (realWidth > this.screenWidth) {
@@ -1063,7 +1038,7 @@ Tsum.prototype.init = function(detect) {
   this.playWidth = this.screenWidth;
   this.playHeight = this.screenWidth;
   this.playOffsetX = 0;
-  this.playOffsetY = 465 * this.captureGameRatio - this.gameOffsetY; // (top, center, bottom) = (380, 1160,380)
+  this.playOffsetY = 465 * this.captureGameRatio - this.gameOffsetY;
 
   this.allTsumImages = loadTsumImages(this.isJP);
   this.isLoadAllTsum = true;
@@ -1400,9 +1375,9 @@ Tsum.prototype.findMyTsum = function() {
   );
   smooth(myTsumImage, 1, 2);
   var allScores = findAllTsumMatchScore(this.allTsumImages, myTsumImage, '');
-  // if (this.debug) {
-  //   saveImage(myTsumImage, this.storagePath + "/tmp/mytsum.jpg");
-  // }
+  if (this.debug) {
+    saveImage(myTsumImage, this.storagePath + "/tmp/mytsum.jpg");
+  }
   releaseImage(myTsumImage);
   this.myTsum = allScores[0].key;
 }
@@ -1549,9 +1524,9 @@ Tsum.prototype.scanBoard = function() {
   }
   log(this.logs.recognizingTsums);
   var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug, this.logs);
-  // if (this.debug) {
-  //   saveImage(gameImage, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
-  // }
+  if (this.debug) {
+    saveImage(gameImage, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
+  }
   releaseImage(gameImage);
 
   this.tap(Button.gameContinue);
@@ -1579,14 +1554,14 @@ Tsum.prototype.scanBoardQuick = function() {
     for (var j in tc.points) {
       var p = tc.points[j];
       board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
-      // if (this.debug) {
-      //   drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);
-      // }
+      if (this.debug) {
+        drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);
+      }
     }
   }
-  // if (this.debug) {
-  //   saveImage(srcImg, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
-  // }
+  if (this.debug) {
+    saveImage(srcImg, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
+  }
   releaseImage(srcImg);
   log(this.logs.recognizedTsums, board.length);
   sleep(30);
@@ -2139,10 +2114,10 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
-  ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
+function start(isJP, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+  ts = new Tsum(isJP, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
-  ts.debug = debug;
+  ts.debug = false;
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
