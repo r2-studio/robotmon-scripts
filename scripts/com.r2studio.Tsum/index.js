@@ -114,7 +114,7 @@ var Button = {
   outReceiveAll: {x: 800, y: 1350 + adjY},
   outReceiveOk: {x: 835, y: 1020 + adjY, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveClose: {x: 530, y: 1300 + adjY},
-  outReceiveOne: {x: 840, y: 497 + adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
+  outReceiveOne: {x: 840, y: 497 + adjY, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {"a":0,"b":146,"g":65,"r":214}},
   outReceiveOneCoin: {x: 291, y: 579 + adjY, color: {r: 232, g: 229, b: 38}},
   outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
@@ -1168,8 +1168,8 @@ Tsum.prototype.toResizeXYs = function(xy) {
 }
 
 Tsum.prototype.getColor = function(img, xy) {
-  xy = this.toResizeXYs(xy);
-  return getImageColor(img, xy.x, xy.y);
+  var rxy = this.toResizeXYs(xy);
+  return getImageColor(img, rxy.x, rxy.y);
 }
 
 Tsum.prototype.toRealXY = function(x, y) {
@@ -1186,32 +1186,32 @@ Tsum.prototype.tap = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var xy = this.toRealXYs(xy);
-  tap(xy.x, xy.y, during);
+  var rxy = this.toRealXYs(xy);
+  tap(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.tapDown = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var xy = this.toRealXYs(xy);
-  tapDown(xy.x, xy.y, during);
+  var rxy = this.toRealXYs(xy);
+  tapDown(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.moveTo = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var xy = this.toRealXYs(xy);
-  moveTo(xy.x, xy.y, during);
+  var rxy = this.toRealXYs(xy);
+  moveTo(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.tapUp = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var xy = this.toRealXYs(xy);
-  tapUp(xy.x, xy.y, during);
+  var rxy = this.toRealXYs(xy);
+  tapUp(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.linkTsums = function(path) {
@@ -1875,7 +1875,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
   log(this.logs.receiveGiftsOneByOne);
   this.sleep(1000);
 
-  var unknownPage = 0;
   var receivedCount = 0;
   var receiveCheckLimit = 1;
 
@@ -1883,12 +1882,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var receiveTime = Date.now();
   while (this.isRunning) {
     var img = this.screenshot();
-    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
+    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 24);
-    // var isHeart = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 30);
-    // var isCoin = isSameColor(Button.outReceiveOneCoin.color, this.getColor(img, Button.outReceiveOneCoin), 40);
-    // var isTicket1 = isSameColor(Button.outReceiveOneTicket1.color, this.getColor(img, Button.outReceiveOneTicket1), 35);
-    // var isTicket2 = isSameColor(Button.outReceiveOneTicket2.color, this.getColor(img, Button.outReceiveOneTicket2), 35);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
