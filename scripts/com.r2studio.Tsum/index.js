@@ -424,7 +424,6 @@ var Logs = {
   start: '[TsumTsum] Start',
   stop: '[TsumTsum] Stop',
   sendMessage: 'Send Message...',
-  clearMemory: 'Clearing residual memory',
   TaskControllerStop: 'TaskController Stop',
   updateApp: 'Please update Robotmon and restart service',
   UnknownState: 'Unknown state, Exiting',
@@ -442,7 +441,7 @@ var Logs = {
   recalculatingPath: 'Connections 0, Recalculating path',
   useSkill: 'Use skill',
   gameStart: 'Game Start',
-  gaming: 'Gaming',
+  gaming: 'Gaming (Slow version)',
   fastGaming: 'Gaming (Fast version)',
   gameOver: 'Game Over',
   detectScreen: 'Detecting screen (top and bosttom)',
@@ -478,7 +477,6 @@ var LogsTW = {
   start: '[TsumTsum] 啟動',
   stop: '[TsumTsum] 停止',
   sendMessage: '送出訊息中...',
-  clearMemory: '清除殘留記憶體',
   TaskControllerStop: 'TaskController 停止',
   updateApp: '請更新 Robotmon 並重新啟動 Service',
   UnknownState: '未知狀態，離開',
@@ -496,7 +494,7 @@ var LogsTW = {
   recalculatingPath: '路徑數量為 0, 重新辨識',
   useSkill: '使用技能',
   gameStart: '遊戲開始',
-  gaming: '遊戲中',
+  gaming: '遊戲中 (慢速版)',
   fastGaming: '遊戲中 (快速版)',
   gameOver: '遊戲結束',
   detectScreen: '偵測畫面 (頂部與底部)',
@@ -1364,7 +1362,7 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
-    var page = this.findPage(2, 3000);
+    var page = this.findPage(2, 2000);
     log(this.logs.currentPage, page);
     if (page == 'FriendPage') {
       this.tap(Page[page].next);
@@ -1386,7 +1384,6 @@ Tsum.prototype.goGamePlayingPage = function() {
     } else {
       this.tap(Page[page].back);
     }
-    this.sleep(1000);
   }
 }
 
@@ -1964,6 +1961,7 @@ Tsum.prototype.taskSendHearts = function() {
   this.sleep(1000);
   if (this.sendHeartMaxDuring == 0) {
     this.friendPageGoTop();
+    tap(0, 0); // Avoid overlap between zero score and pointer location
   }
 
   var startTime = Date.now();
@@ -2205,7 +2203,6 @@ function stop() {
     ts.isRunning = false;
     sleep(2000);
     // loop stop here...
-    log(ts.logs.clearMemory);
     ts.deinit();
     if (ts.recordReceive) {
       ts.releaseRecord();
