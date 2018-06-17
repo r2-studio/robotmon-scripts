@@ -325,8 +325,17 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 916, y:  246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80},
-      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80},
+      {x: 916, y:  246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below fan
+    ],
+    back: {x: 986, y: 201 + adjY},
+    next: {x: 986, y: 201 + adjY},
+  },
+  GamePlaying2: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 980, y:  186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
+      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below fan
     ],
     back: {x: 986, y: 201 + adjY},
     next: {x: 986, y: 201 + adjY},
