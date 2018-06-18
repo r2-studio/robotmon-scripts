@@ -1,1 +1,390 @@
-2UqFmH3GImq8S3bWORryQK88o/k+Srde+8ZyAH47yce0Z0O5NA1+Adyiu/lWQBNuLaSC+EbTq9r9KN2CcGGZ+pzYg6fifvgz8Ej6vVPudsogwuiHM4KfUIkm89Kq4MNkkdmbdZ8Sg3eVFUmIh/f1uAEUo4RCi+jNfRV66/oJ/DPuXtyJeU1ZKtBuu7LjAzYvwzDSElLfgfPzn7gTP8/lHft+agQjXJ+EY1CyRSJK+2pZUH7tp0xq//xTe0GKdlQFo3zCHfm9dI5eK8FGEItcGS9L/IAvV4uiUr86xJ8IILTmv+MDnsYKgFfceLfhbJafC7OFMr5benAWm+nxUVAyLIr3Wh2rV9ymFjjk8ETe184TTkE7pDfhve1fSzVt7sws9kfo7+sBux5GAP/281O6Q2O1SvOqk4+dFd8QUcIuyRa6Qwr+Y2pQSVtlN8dcbHvBEBjwA01VlS/BvBFeVucX5LcWUiDqlmsfuOc4zAT9NoSsJi6ujt61V7yLMaRSf8cVsPBIexBQ7xESLXCPLnJnmowyrmKjWyUjCAJYrVkzdPYaf7LCyQFF4UwCvp9VRgh9maacMezCKAW45KyLKTtRsYa6Ue1F3lmBbyShNyqPBbmx6AHpVpvsT5zofR+YKSuTZwlSMqVhAjh5X2LmxJI0LVI8qnR+mtyGwq+U9DfQ6hV4BqA0cT8BewuhsbEKbK5CL/rNvvTAyjnL9T1yryeopzh6yZCtaM9R6W4Uv+vqlVh1NMxm391/HxwfFTOwIszt6Oa7Lx71KYK4EJgp4wzsdSBuGNrXAeTySZk/gF37nleFbGqrUmk7QdbtgLBSSZo1kUp/WLYsaK7rGSZga511/lCf09ahqnM2XATTcUhuW4hOyoLpJtXuI67UP9+GiBntp3OvaPGNkANLWWIyT5oalf+gsppAzz9D8LlqCWdHrKRAA/miVzlJJBnPg+FDii22nqfo2xHpsxCWIGJs/LJnvyxt5/TSBuagcOeloXTb8v6vatUwVh1IS101fQWEVyDzPwB6FrvOgu51FdXi776SbNoIR9HBJD/B0aepuXcUoWncjoZm/WtMLxqBsHwn0g85MUxz3YT9ntk4u2XDj2zIE1HdSq2bEFfHS7z5PNG6ZvzdJ6XC1HZD2mFaAywZg0u2UCl1j3m2CwWVHCyk55nlPxGod1GYRnzQSlV83W6JCHsWPzbti8W7pFhIuaXLCJpp3aO+AWcZ6sZeErZllI/tqZGtpLIaMZiqT6FCCJduizcoCUu7KQ51r9ALhbY7uhrthY+DpccT5TM+/w8hJWaESWng6V8Kw75bvvL2E+SgdJZhVm4I2Oq+kM/Q1p5xiD/aMIx1gnnyeIYyKFeAsa9SpfgPRBBt3vjTJYocPlfKWdSnD/AbHlD0zppRRsxoXxnc14UX/Nt08qLP09Sqe3DatET8ieJXOjkkW5aPPEHwjOe07Q4c9KAVT3ueIG/aNHOQBCpj3DF3etTfNQixLEFO/MKcl+FbZ6Z3ADhGKGWrZCIUpP8RxthZyejzyhEC8DtftftYPcXqliusnEVNS+roh3vZfa9aGiwuYo111r5pah/BMCr2xj9wByRQ5uEIPj9XOl6NX/iZ1kbbqMgKelmYD3c8cYbYQIpD9jWakgy3ivrpyHC75KLqgJSuQk9/DnFVX3C0yQLj3JOyaWJbdwiFemBlM3x/E4vyLfyURanR6g1UiV6Fq9qlY3ezk1yA7Wm2RtSUKdg/pIgNv/CezkGgBkAnPIpk2lUfi6aV6YcUiX1zQ8iQKCDUxEfdLLo57xWKGMA8veHIvALdgAuRHa+kohmv2kIahNfLBZ1N6dTkFcBdvblfWIN+cj8Ler1YEUqhsJn9nGlKXK55TsOW4OrpKtmeYtstv0TWfkMETKOX7Mg4O7oUNx7nTF2/LNLmmqxoeI81Stla/UOSzSS3s5j1/ESbocxnCJGtdUmPqtq166TPyptQgFaueot1AuJhshZtqX1ABMOQQyjeVl49w8EKxPkvLBnLlOrZMgjgudXMFLiWKk+CAAfJzUmrE82Xa+QjnrJ5TVtBdpSLo2ZNF94yTBEXo66OsTQVnnI90aNAw7FsRlRNxZa/7VJHtXuO53MnGQt2unQsGNZPN8Jn6nsAJ8fIkalA9cH86FR5VpQ4+m2+xFWDz1hRSGORdynSPtCe8lyiJahYvpzxNvnlcnR7AhjgTBQ0o3FQ+RJ+ejqPiENFdCp9tKc3/KVeZHudW4OSOEd86PnIgGA6VwWXZ4t5ezrsvKBRHSonCtp9bn0fgzisrSZ3+6U4onCcvUEZqEnfZ+R50ok9NcQ/kNgvnNuhpO3KnkbQf4GhjSxzz7ERqqu1RCtaxumag1sWrlzWg/Weck7p9fUJzejNH/NRrPtcYrWmBJUpG7CEVnnMNZ2WJKb97v43SCn69MO8hrunKFOtSVtse/daLfYzZxrfy0YO8P+9QBQ00vYuovNvNnCTstahfUkVLryK/Ju1tVXUqU8KBqI0/p3R6bjDa+lIypNlOy1TZ6n3wkR2v61binc0FAX8QH+6JITWMoWZmVxlSVN5fWPFFE96oidD9+LIgBZCZWJDfAn3izh+ixErALQElGFet5G80DpA10ENz3zUuaTWzWSZWykDrPDfd7F1VxzYH7kI+lUAsynqqxtvQ6yBOJ8hJGICHmsm1488J1WCDO+77toD2GgRczX3VIIIb6XKmXPAM29jdcWJAtO0tI+/3Li3CuP2m9l+CEO2k+k0BJ9NL7/jq3ZlKqo1xuF9QllYCIpy61qKuCKAceRpiUMmyLfGpYluV7Lg6lXHOV73Kfy/V0xx0xc+ZNoG+/6wWn84rhizuG/pX2Wu9l/wmuQFXekRsBdh8YtMG1SVvKA3h2UClyYFZxY+60sBVC2nsPlZ8woPQOgLSOl0vsb8fLjVJBSVTy+YT7xWBu7cFLaDRk0E6G2f0j0sfnsC1pi6TdXFWdZsgM715klDIXmOVv+Rge3ZPZCA1mM1w/Q2GvKbSZRsslMVKvl26o4HsgwaYLW4IA6+w6Zk5+XEhJIIIlXfK7QpcHixMYPp1PKXTol31KW3MUZ4dY4zDxcNQu7YAfkKm+banidILP1jlqQ0bu5uYme6uRFEkg2N4/J7vXics8zYckP1aayPgZdAA8AP5cqXPKP78GJBFzh3o8VQ3oElV7SV1KH6nTxsElExNI0kXNUyfgnNNifthqNcn/6gqUxj3m3YsW429hZ+vavDKW42wA5kHj3NjjY9LryDxyBa3f+kXbtoPsPJV55wyOFCf9ObdiCbSysF94nEKu7q19g9r2vov8v7kyxy+LD09vKouhVEO2k8gxB35+5QaQBa3hhHYXAhcHJ/7pMPL+HvtGenbUniFiXOWmCMLC63t2hHdIUmD+51qjInmRShVGS2IwC44ZlZPmDR1Jqzggl7u+x0SNDB9xxg2wU7jR8OMOLgNBfmU42onuxaWJKGDV1k4XagpRsRIIJbmB17C54ae738KlV++8LGUTo8OyAAPK2YnTh7MPrb9v/tywC1Fk1BLhWpaP189zDE/usj6ZHh8rYfg5Ww/BkcPIsUe4lc3wuad9nJJhhqr6esXyjl+VyHCYcqrdtGJF+dcwh9Q1Gy+c6HgpXYg9OlBAZ8jixJVkgeKhPx3LI8Ym3jAcoEonKWpZWZqC3jObuRQa+grlZn5rlYGK5Pc2eeVPWeIOXK4HhF8VCLoQHY+NMa4wGEnBOonWDf1q2C7Em7Y73nItke0+pc5BM8V2mUpGe6dsDFLKrgU7IfLFs0p4QelYDdp/J/G1BEpQUWiDHQ3Gs2Js3L7pztf0rMDdBUyKoOe2loeXEnPtR7NKM7iZcm0akwVBM4A73aljw9hOTUuxLd3Sdb4MOWzytPomqPTVOjYKv0Lo/raNDL4D3ojoI4wZAz88Fm8964o1UVaI1qWD3Yx3Cu/yQGwxOS9gWyfsBj3Ko8keR3t8DYvOt0AmCPlLQs8+raDq6cA9+eM1folBM4QdiPp+lv+n/pOQ4kmmvDT4sc9BH1MDvmMiswynVFQrbeofbQSUFPZVqvOSctyDMYtL66znF7ZRC/XiBMtfnFknI1b3XjywQoD4G/HOKslcaE8ahoKh/YtjQ4v1R1cKau72MsQf7UhCsQ8baJCmrBmFphTuGUWyhxbcgJ8u/lQ1Ej3LBF4oNeb27PvePm6+fOIvmwGKwmh3iN0s1K+NsZlPYd3hIgnHp+a0lKkN3DILZt0dns4einYo51WhvFrehW2gVrTQe0G4/PNLnsKejtLf4iDT/2JQCInTalUZg21NgNFZ8rNVqqXIzrBQYrE9P++amb85KrtEXOWm0JotoXaUyIVNn7x/aCHv8B9q7QE/ghmenv/J9ZI7/aaRyrx9KQbdszf9Ujf1Ej0nEtifH0Dn5EtamHN5L63rF1+SlchzJ2WVP2IXzbmDVpUPkzFPRTEhJf0Udjb5nbVRqk5eOzeEbbljtgvSXGKzDTx0ueUkyZTr4OSKzCgAmOdg6MQuE/Q4/tZTR8Xa+XoHC/QAo3WY+yNTzRYeYodIKyd873xavBoLrYOuWJsA7ocNAFj+iAkiWQuHrYBFipCVbeYiWm1jDyKRUbu9hwCWQG78E7Uk1Ju5m7kA4jQAsVsuV+jhijyLXj7KRUSuM3cZrSvxmqu4sEkv5E5cBDNpXfEdgWqrUOXETrkBb+l1oVgQfuOj0JKZebYLjmE1HDWBNzwuPuWifOZ4CRk84vZZNA6WWFtC06zQJhz2ol2JBas+0c1hejE1TS/Z+O/fIBoxUg699KifksnWWmspHcZDWudEg8539NCnpU5ouXXsXuD5/bpekxAsC/YL4FBcVi4BPoTsuWSg9a4A6/D7q44zhOQj3nOMoEf1idCAznVTT3Q8TglzeVvh9XAP/E/wJGbFo3Hh2dmn/gzT0q/lxnDzhmCuBs1tbc/f3KqTHVMH7lrYeXI5nQhITyCYTkBUaPUCriGx/u0dP6a/lgocsXGg0I//asoeHe4DfQxHKY9T30BUaTKTNnoyvW/+BUeVFffaAYUP9q0D1mjywcd+Va92lq6pcVW0Dzy5Qzs3gbOe8E//szYqMYBp/dWcfau7DpBV8YDqewtQnwGAHPvx9xkpQMhg3hqf1aFDDe2qn70q5Y+q9U9fR2aT+JWap1588Q1xH+Ali6UFMvcmt85XV1kRPu2yaKp/C/kW01y5xMXTi+r+DutDBgAc9yTieV/uLew6ZYJRvhalbsxIEqmaq6quMfY2pcpykuqQVbqkndqTDrn0Yndv9T/1lr8aNinHf9sYBYPPqXVjjvX/elEh4qvOOfibRi4WD2T07ifO7NMLT/ftqBH+fHkwYjJRK8QROUAUfOshfvCuSAMb1vCqDdcjgd+SX3Kt9tJcBJahglyOVKH+3Li3G9ZaPYxXN4Q5chUZ6IYDo/SDr8SrVjdnSSG93VcZi7Ok3FSmcGiS7WYk9LEJu64Kd/102XIwR231NE0BgiLO8UoRJY+S2LmiJVJ2fNsmI/swF2t4YFBpQjRybHKCUywPiGLvyx82pumGKCr9itH+HcTfJ8vF7ai5cb0J6uJowemEGJfjumr/GBt7Ew64dJHf6iEddrFa0tQG8e+HBEHJeKO9R7vwwihmwD1BCG4g9lDZ83vZ/JhGPtDhHrLexSP3IUmRkmLmfumylznyJddsTDKYVi2qGApmiI4Hp7zgF8oV/OesWjlDPB6kzYVDo0KFixTcnycKaRo8TeIt/Un51nMj1ISXS8sF5hKmZ0TtHkaq/SsnlANru/wVhThYQrLEBKE0zZ85YkEZuvTRarz7iGCYqTcAELbX3Tc3MCRfH3ccKPoeLBxMkKoPtBY+MAbj73IUynYah5QTO5hEGtkLGu3BgXfeBbEst8Wqu+3UHp3bvicnBKItyJfWdgGmCMHJFUC5Usa7Yjmjz6qGCJvF24IDV4IfuZM3gutJWDIfqWxEOKkoUDfD7Yqc1NL1Ggwb8tp6yFfuXFQMVVv3z7ObjSyzptwFB0BcH5/VeH20D1sxYtoUY/yOVzCCZa4tmSNyh2Ss76tFskbPLqEZ5INns+er3SuxLF5rVq3NTS3dpaEyWfOn+yIIl80nAY8JabHx48PRudwr8KY4scjD5xIt2j0wFkJym/YBhZlIQDIC37gz3kzB7zCVPYD7xuZ8xvbf8rE2kdIa30Qix754L3NUYrqjTVK+BB7/NmD2c6JxqCl+Q6drXacWbitChq6CCjgyDjfMjXFZvUSH19yB5VqqnMTgovLbechpNjSGvxWfUL3YYwpILeakrfv97uTIt7IEWoLgizn151O4I4CHixLlFYVrg9xBwUhJAyrIr1Xx/52ISDVnrf9HHD2WgFOZo3OvFzfdsIeCJHGLY6ox+3hbQnSRxKolkn6ItdmLQZWCR5lSOdLsk7NQ/bbBg4ukWC9ABxzEzqiD4nzAfcsaBH65fr96oRDW2pSLgg3/lMw/SesrUK9GjM9aw8b3TOJTJ3UQvcHWgFEz0h175JjcCYgwvMT0CAhkI37NrjfddNje2/0v7qghngIUeoA3LGWeLoifNkXQe60j5/KOnYZCW8/Dyy4w50nRjgqwSOMP6rfGXRk1lpZ06o7wVXSgsN/1X8NpP/qY5sX7vFHmF2jBtE2tEDtA+BIG0ZJKOMuTXRUhIv0564hnybII6fM6ZJnFzY2aTTNaCt8CJ3bpE0N+SIdBuIQA3nmmTEBI7/H+SX8ISCDVMpd60qMm/0DYvm4F8rAq4XCGjDFMXuz6/UG62v6YkLrWaHLvcDdKJOVbZKFAKD4fcRia++cCKdwwfdRc5HKPY1Ru/Zs1tRmJvS2oYZEWc0qritaa6WRQuIWUfc0tuas3ClrDyj/RV7LX6lYf1//DNEZCx5MZPNfDo7+kxhKg1KME4XVrt71jDkCuXmYruRfXZwsNxjIYzwOp86aITt8ArDXr+3ZAooUkOX2zDxS5wgcgYel2I7DDU7VURy4Wp6jiO2u1VRC6Ln8ew+HZTdsl/bZqYweQKEsvALSkMhd5OLguwNZ6CQGf2jgH59YneaPHlYcJkYr+veupM/nZOdoyIn81TlTCCOCetx9KT64IfR7rKKSoTfahy6q0zm+mUfP8XU8JGba0vNTvh552Gf9PjZDPue1i7JiKG9Bm+1LM19wuPxf42Ei+o/ZXGbWg84iYDLYHTiSTCTry++ZJMBythF7oQ+t8HpRELxa3Vexp5siJM9HWDMgwewczDRPn9BsRZ+lVPUF7l46ekuOO4MESzFsDxcD1uj7FVGRhyqVZ/Qx4Rni8Fhj7J5040MXB5PqfFtdm+rOc7s0iI+JdDW5Ywfyh+AgR1sVHii/G7OqR+O6YfT3CotV+2aEL5jEcD4q/r7fW3s1bgPa/ePg2oOJ45Ox8ntU5fMYuHYk1P1FkWUQyqQBwzCSTKCYIMtJvQ5iKJMgWLFl418LdyXvfcp5/tceYq47CwLS2Oj3e6+RaxAEu+czMZrn/htekm9sQ12sE2Tys4xnS3ZDlk1/41O8rGmdK4LntYzkKLwstfAcxouzEdjEt8NyQ+fHarnuhkVURjGm8dNTfUHHGvzk5Iu6q2VbU4D4R+fwtX4oMyVLa7++GIs0majIvdmn54QhY4TvZ7KiCArHO1EzPRMOoIF1vlpjIHgY+Jn4RjfxFGBCl++RTeCmEYKR2fcxe+AugYT5V0hSJTVsULYCokUQqCcMuvdXA9VDLWuay84OwE78n7q3nGY7gehwD67mqbA6/oPgncZVgu2B8dvb/gZHs5wJozOMO+QM7BgKLpVlZjBMxO2WtDMtemZuHHLvoh0NHkgtvs17VxY1nWptDoeSkp7Esq8kSZbvYGvUd9/WCVnJWjBvmfBjMidWBZKbxyXUatq/RY1nWvpO3HaB6ElBGa94yB7WRjhPFsn9uDUZ2W+Cq8zHlGAduKhNwrcBRCjhZ5YUKfYAO4K+AIrMhA2otmoBns0pOVj18MQ8Wt9oQjfZX7DIiipulCyi7Sw8bM45SgC6WtAoKOfHFr05nT/xdM6IxpbxDDHz/t8cMouYxjG7IhaSEaAFW79i+yJ092dKP8l0azk+FMzbY9nkG7RLr7FyYMSqDuAQuJsClQDwg4kgzzWWT0Qsbjb5fM2r9kOrIdOyxI+BBK00WAxZCqWzj4BZ22BNMX49MH8Cd/ekXZkZpiH6/S+Y9EZmu1qY7b7UBkEd2B9qk2jA3BX1eZPXi2bSXyY1yMnsdjRdbDqb0vY2vD3B0uLBVvu/E+Cpc+KFiPzMvAoCcd7eFrz/iuXXthchuTYvYvuVQ2NizkfESgj7PRze8UgG8VvbYoIS+PWYNyFdoNG/S5WpYSTcKC+y38bqDJ4gPhOCPCT5oPOsJ/1JZs+ExKQ+4r6jGPPI1ErWipaIpiSVnNAz12PXT+hsJSARdkdsF/1az3ATXZaoqGcuOQpxJ9GnDWYO6qepgwzOaTZazj3RLQtpKwNLoAmlLLkCrzEFp7hqkgBTO2I6r9xGDI9pBbBlCTEm+WcpKnQnbt+atM32URao7tDKxaOl1leUVw3xGdQkcIsQLcjNh/wCipyufmliAnw7U0ulKtB1mcMbpxjEEWKK7HwOUp4PpPlkcUUM8MM1fVDsRJNsZB4AiMwL5eLUNwj8uyftifqD3swhArokNnmAsMoLt9ofCuY7eggmn/CeEsyPh2+U6+TSvlklYy1CtG2oJDCcF9FBjk9WfXDuuXT7BwNjDVoqrepUohScCiQ3BxVytJjvSiqY+Sl1/j91HtA2JhMB2tHXVvMjou2jb03pahdTvd2pYHq4QKybdTtNH3hhnq3okkVx1zKdaOmv203ejbc3EB6gpd5GQ21vJsnO9SEZGWCCPGuVNJOnEy+PxuhC4mIhKrhwHYYPVCUIRXVAFetRTXl38noYzhpSU9apDYnZX9coJVL5FxvasUJ1ede3zQhF/XSBoQnviGwREDN8oM+6G/0Kbaj+EAFgVGAzIFwmEwmX2JtkOAUBzDoQp498R/20IArV3Cu5Yse3bUhudCu/KHR1SzqW4k5FSt5YUS1xLZnS1rtrzVSj1icrIzUZTxMAwAAHsLoI5Hz2s8G7doHEXF2N/Y/HnA7YF65ZbNtRcaWcimeumgGh8uHr5mSkyf/2O2rZjxozqSjEI8GJxB9l08tRGRG8NGJ1yqaNbns1Ahb4QyJ6dezR5sOLctbyQ99M7SCY7aHEEHzT1aZF/MwoXRCd/pFyx7Z9r6Xzw44FXLg0jAK0eYc8b/TR5k0lF1D1LRXpeOP+o4g6YLG6ssnpxGWJyBkSlm6JymcgpULatn2or578cl13TBWqhYRzCWQgiErouf2Ki8BQwP0gBFSwD2ot+opXy/7lnKEcuAhXTtlCNoz7jzro3aDhShomnwaj5+nGoBzB2GhAxQenCurgitNdWlipLLpJNqz/vhCTFcY/nU6TU6ARfITxhYtiSXmT7opUd1+TtkpY4vd9GeGvDTtEZMJxqVOXiRdCb7vnU5biquhw17pauUIdFRqVaD1bkiUiEbumSbZQ/5nfHvnDtc8gXqnf887ryWaJXGK9D2aDXytbOpULWB7ptQW01kPOnsFsjzodWZBl/KB4itvfyPm7IRcKapQ7d2aeWa5V6SkHsFrKJRJeRkFjYosnht4VoEQm4GwVCRPBAef0BN2XASCeOMntz9+keqn5ykkfrlgX/fONW+j4H7aVT8ED/j3IazBh9MxgZ4GFNsrK6dByTkLl5J7fAmGZ1z643MT9MENz+iYq9C5MNZL2CW/jByW/3lFgMvpKc47vbuqw+pF6pBxzQ/PE1GEwHL4ojP0UPu72uy2FJ4N8Kt+uh7pS6L8LVHUiy6du5Uyp1GkuNG3rT4bYIucyly3Bd7FsJsqVn3gHnr1/fPO8Zv5/VMQ/W+/BLbVbhLJJbN7tesJ0xV3aXR3a/CvJl4Gg7lKb/52XLXNIbV4rFWDyJSqxoUXjMel07xOaGX+Zp1G+bsHL+6kHhn8f2ebjevDLYZd6RZuF/IqKU/c2/XVHKZW3sShIdV8MX9xg3WzsdvmYGPGy4aRgS7DJk2c6vJNrVATixPeMc82b5YUoXX63Asykrxcjg1amD/JIqCgqsutrwBtSYHpaXWYzuJTRsyaLzC9TTxOenfuLBqVj7kbfWBtRzNMoBolOPD8AHPrzBfiDjRXEbUr8e3GZuKq6cMdH+rTdkZvhKTCAEr+1uM58nYvRFS71f25GPnItemu9Zz35bfhZiZeErJHHyuSglSzr0rzs4TSF243c2tc009fjJGyxVw2QzoOzOS/U3rvQZxBvDFbCsowJgysfDyNGMYKnk37MRCLegJx0olGjP30482ngq6Ppi5GkNwLq5rGC9eAVGEWxJRYV486YX75fNv2l+ouWphb79t/s0tzjyCzUxowOxd7MVbozNSmPT/CsKT6/PpZ0X9fOenijko7fXWiX4cSD2C6C0ysWdE1Hm/WmOMFjJc2nzuPENb48X9zuhBS6lZsB0aCpyw7vXNuitKqUc2VQP1tYTkl5BuJyB2Zm9g25qWZ3c6RD19Js5Nt133PfiOGvtaexCvcF1DzPW3n6la05m86i14KdT9s04MGI+sj+2iUvAR19cgBqDGodvwkc3IWRlRyckOR+oVNGBvxIMcncQEhS6pSptRMRhp2yfxes9S4IwICtnFkGZIvSC4Dl5n2+dboc4rSueKEiooS1B7VvKcwv7xv3QQu9C6J563nYiwX5Vwcy6kr1NyuYvhflFDsyxyILUCg+2BQKQmaVR/60YuQtV3vLPel6wdFIWP8jSgnbFYLFKY9TG4o9j5LfMVhqhl/8Wxh13tNCTU1/8JPkhkbzTEyVcYo6gBe5u/lpXsfdwA2AhG2Tqt15O48Bqn/3w4sg2Gqp+npe2iUKjL2YD7cJ7ma2ykyN9DKchOurjWQ8PYxFO8wqrn1ZFEpikyzQ2SaqUxWi8LU3WrbNkMWpcF9mGtuXFIQzyDqu9i32GvIA9Tdk567xcC/0zLjEtQL0XZjlKPaIC5QXbNQbb+XkAInisS03R42wntPENK1ChqVJ1OcOfWNCRp4EmD95TR3MEw73S2BdUQE9tz6PmRiYXySGoUrf62SDdz1wKYLMDaY8XNosTznYyv2yDrtV2H1FDuGizPihOnGtoXHKhxXUxA85ggXO/7SLPCEpgVh+dN9Wrrh4xpeE4n+QgGnWck0mM31aiZSYhGbhAooc86xhhkLMh1Pr94T2bLkcEJe179ev2NdZfrq/GPra10HTZIlY1ecbjFKm+hmdgqM04K7Uqj55b+XD6J4T5Ewp2jNrWfwHa6lYEwHBqAM59uuGrUPWOqXz/eSCL9hwUqi6fwV5Njmb/q0eQm3fSzouaui9/PhZ05TEE0f71jMqlf6hTnKQYYOGooUfetHP13Kuksf+fLxKXEiDU8VGQILGoOk27XxzfOtb+c3w+OyuoQhonb0/ZbJT8Z5v3tVAW8i8mj/3AHwuhBcIF+YV4c0+g4KVXy/WrRTBKRHn+2ecNQJzNb5YfgJOl9kiX3BCWUwhI1Dy2ULHL2GswHfZ2DsevTmYsRJHe8yzp2NOAeK+irTecm7z8+sqQs2/1M4VY9zJTQv+MWhqSRA9HzHx5VH1vRA2fNmjsTjKsVr3DkQLqEX9PVJrDxxGbYaI0evSh8oHHMwNVnHnv5Quv5iRFIprdbXfBAJkobFdpZ5fEJCsIpq9flvfDjGxnaIWe/D4qIn90I9gI30wGOU09X7DEWJqwEfdR5TbWjHL0x4CAcMG+EryuIv6e3HHc2fBAYq9SFCO6cvgbHBYdvpi9nP4eDyL4nR8SgZFgOiU/eZHQ+X/2c6+QXg/pSqMDgtHaqfwyxiIUgqXkK7H7YbGIt7PGpalUaixG6QXxkdZerioaaQGfBnCVp9zgQoZ7+W6XimNlinJO7kY/8ef2k/5/WzjUji1kfysPGgyV6J1XiRVROrr6D2fhGr7s/DDdFQzvosODngka6FrYIfJIiosLI7qzLPPzhhaxBI0INrKme5yO2+ZC0X33wdYVtKPDWhLbu2QlMFG90Oc50cKvJjUuc/i9TN0C4c+c3ZalrbS4Klkhr8gAWEtnEL5xaB8zfAmsb8wPwNSRsDG1GdGCK8S+kn74dlVqtUz6TNfsS9g3qMp6J8hh/MmnmPNZmkI1Uwd1alLmdahh/xVNs01waJ9bVQbQ7/1Uk+NVdik0W5QsmWK2FycYlUH0xJFCICA3BO0/M0IawOqoJL8J+f69kfyyuRw7vXhoTRjzUOohGvDSR7DuO0gAEGfZwdmvp6akAIkZHvBKJmM/SwW7z1/vOXnYLPULZwGeFXdhhVRHR7pX3dt0OKlZqcMHUueU6nDCLaahdJB7dmjxJ98uneKnoyI5w+cjGHdBDj8TER96D75p8uqPOS3SZjeFIrynoXDY7CbJ5HGRPhr20FNrp3F/tswcX4Lrjzi/UJv9v8o2X8UFpT086a/LxP4hs+Jgbcsfl+ivZhFKN5NCt9ESR39keHn1Q9/Yb+WQx315UrS10b+YzsLazwq5hO1p61xq67UZLuqzrmVtNAEq1QLFMjEu0N1OmDNiKtPizWbJs0/UD2DPJZ8X9sqAd7elg+r88QafUwPF2eJfn0NnvouI6jXlgpsfi+D5GkSzi/c7ZaBam1BbiFbTT/dM88zoKVb+j5hUzrNFiBnPXmF+2FARTuMwDN+p6blt6v4IBla6/7vOyjUipJ7voXICq4vIlPecfpKV6emsbIfDaRU87m4rVkpixLBiA2v6R7qQBg7yJXNqGeA5tZ0yEjrodLUD9Ch0OqQrAquxA1m/Btaigaa2gnfYz7MIVtdMahTMaqYgZBF9wUkYAnw/pg/eywgOm82sHLAiPMoMKkpChnfWT5ctd/e/aJZCREXdunuZH8bGNPaHGYaodilcfrNxIXiH03yITtH5XTzU3e3My6PI8nttQH8YHtvxApT1UPIKBU5c5AdzzeDWPvagK9pkAgpRCXOUNnkL8THAYH3zPSN4Ll+FMShP8PdpvMeKsYhZU0k3bHkVt34eITG0FSco/csgLO2WOM/A5fOQEZLiAMOQTyEJj0Edc3Kg2Jjkh7jLovcdjF2cbT6cHm0XSWhX5dR7x4Ft4QQZdBa2NPeiSIvLeiH4ILOrnVWJjnWV1yEaJM3MDIEtcsgUKj9yjACZrRHebbYdotZd57ArWRBB7wuRdlnzJfo2NRrQzz80qzw5A0lZ4qbY/tT90dv8YK5EFOgrusnahnmM3FC3QUVFbeZ6PlQgiT4hiREJY95XsMaWPk0Al7CY9x2Xi2EsOgi/pEKYFMuEMe9SrQHqMsJn6l48OQhx0TzGwiLv71E5vcZWkFwulL7tQLmJ7Xir3gZHBcajQ12sxJoDtu7lDIjimvHZ5sOhATNnb7JSUoY7+6eTvVFG6y9Pk/qpq6OZ8AIoJT03M1FW+e1YNRMnV+jrze+e65LFpEp1iQlElWrIPH2fdGtl16rS2uw9Qx1UUdC8697aq+EVrqNsD146BhyFe+0Arev9kCImnY9KZNbfcqIflNY9yPSH0m+IKt2nuxOLDsbfrE6VLP2KhzrERo0j4Hp5R/D5N6c/u6eSlko+H9pqtbrY2mpM9SFd8Ncr137e8uvPf4n4EiZ2nLO9sYFe6GP+KqYJJDuZVNKf/EYDhQhW2NNfall3c0McXtFmuOp7u9JVZL444T4UfbHJ6zcIkeAhVhRGyRFwDPpKf9yzJF//OtMnwc5rK5B6BrDSiWuseaz5PXxBV4VFzGP1IxOU49n8Qn3j7/N5jkT+PvQ9Lj2F3gTQT2SLi4vjAY2ms4fYkA9AkLzQrYQ3p8ceeB7jQSoxQM7GaVn9410UD1SD7BA+bP23L0t3cYnL09EUF+hGz2dDFUzo4szCC/YlnDx4RjmUMa+pmx3gjEyn0IRb+xyLCzBvLAY2FCs0dN229BmRH4SM0tm4Rhxe+q1aqbK3BQpwhekhCtM7w7GaoI3LUAJwYO1jBG6ZXgFOhLomkkm+aTkSymMLDryo4M1UM+PE75zAfcgvcNP9Eygk5H5chRx034GzH4fH+NbSiY4kLFp+SdDloqV/VkYM+9nlL/XFaD7orr+WQGKr7H38pF+11D/Hl1YSGdBWeDHWouLN156yiD1vQPEWJKaDD+udTVJY4RzxhwvQeUZgdxv15wpnWwyWwCNMZp7HkK5KExJD7b89bbZOxcJ3KYXpcfIVrT4Mfk1oxea4HkEg4JkeAIJsjrEjdlnba3a1Y+3VpQAYrxT/VtWjz87nO49ojAU2quoLkryRRZffAUit/rJL4l
+var initServant = [];
+var initUlt = [];
+var ultList = [];
+var cardList = [];
+var cardStatus = []; // -1:null 0:disable 1:weak 2:resist
+var servantInited;
+var ultCheckX = [682,1146,1620];
+var ultCheckY = 420;
+var allServentDieFlag = false;
+
+//autoAttack(3,0,1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1);
+function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1,p0s2,p0t2,p1ult,p1s0,p1t0,p1s1,p1t1,p1s2,p1t2,p2ult,p2s0,p2t0,p2s1,p2t1,p2s2,p2t2){
+    if(isDebug){
+        until = 2;
+        mainColor = 0;
+        sameColor = 1;
+        die = 0;
+        p0ult = 0;
+        p0s0 = -1;
+        p0t0 = -1;
+        p0s1 = -1;
+        p0t1 = -1;
+        p0s2 = -1;
+        p0t2 = -1;
+        p1ult = 0;
+        p1s0 = -1;
+        p1t0 = -1;
+        p1s1 = -1;
+        p1t1 = -1;
+        p1s2 = -1;
+        p1t2 = -1;
+        p2ult = 0;
+        p2s0 = -1;
+        p2t0 = -1;
+        p2s1 = -1;
+        p2t1 = -1;
+        p2s2 = -1;
+        p2t2 = -1;
+    }
+    servantInited = false;
+    var ult = [];
+    ult[0] = p0ult;
+    ult[1] = p1ult;
+    ult[2] = p2ult;
+    var ps0 = [];
+    ps0[0] = p0s0;
+    ps0[1] = p0s1;
+    ps0[2] = p0s2;
+    var ps1 = [];
+    ps1[0] = p1s0;
+    ps1[1] = p1s1;
+    ps1[2] = p1s2;
+    var ps2 = [];
+    ps2[0] = p2s0;
+    ps2[1] = p2s1;
+    ps2[2] = p2s2;
+
+    var pt0 = [];
+    pt0[0] = p0t0;
+    pt0[1] = p0t1;
+    pt0[2] = p0t2;
+    var pt1 = [];
+    pt1[0] = p1t0;
+    pt1[1] = p1t1;
+    pt1[2] = p1t2;
+    var pt2 = [];
+    pt2[0] = p2t0;
+    pt2[1] = p2t1;
+    pt2[2] = p2t2;
+
+    var p0 = [];
+    p0[0] = ps0;
+    p0[1] = pt0;
+    var p1 = [];
+    p1[0] = ps1;
+    p1[1] = pt1;
+    var p2 = [];
+    p2[0] = ps2;
+    p2[1] = pt2;
+
+    var skill = [];
+    skill[0] = p0;
+    skill[1] = p1;
+    skill[2] = p2;
+    waitUntilPlayerCanMove();
+    initServant = getCurrentServant();
+    while(true){
+        if(!isScriptRunning){
+            break;
+        }
+        sleep(500);
+        /*
+        var screenShot = getScreenshot();
+        if(checkImage(screenShot,selectBackImage,2300,1340,180,50)){
+            tapScale(2390,1350,100);
+        }
+        releaseImage(screenShot);
+        */
+        var currentStage = getCurrentStage();
+        if(until!=0 && until <= currentStage){
+            break;
+        }else if(isQuestFinish() >= 0){
+            console.log("Quest Finish");
+            break;
+        }else{
+            console.log("AutoAttack start new turn");
+            attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage);
+        }
+        if(until == 0){
+            break;
+        }
+        sleep(5000);
+        waitUntilPlayerCanMoveOrFinish();
+    }
+    for(var i=0;i<3;i++){
+        releaseImage(initServant[i]);
+    }
+}
+
+function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
+    var screenShot = getScreenshot();
+    var servantAlive = [true,true,true];
+    if(!servantInited){
+        servantInited = true;
+        initServant = getCurrentServant(screenShot);
+        for(var i=0;i<3;i++){
+            servantAlive[i] = true;
+        }
+    }else{
+        var currentServant = getCurrentServant(screenShot);
+        for(var i=0;i<3;i++){
+            if(getIdentityScore(initServant[i],currentServant[i])>0.85){
+                servantAlive[i] = true;
+            }else{
+                console.log("servant "+i+" died");
+                servantAlive[i] = false;
+            }
+            releaseImage(currentServant[i]);
+        }
+        if(!(servantAlive[0] || servantAlive[1] || servantAlive[2])){
+            if(!allServentDieFlag){
+                allServentDieFlag = true;
+                return;
+            }
+            console.log("All servant die bug?");
+        /*
+            var path = getStoragePath();
+            var currentdate = new Date();
+            var time = currentdate.getTime();
+            saveImage(screenShot,path+"/AllDieBug_"+time+".png");
+            for(var j=0;j<3;j++){ 
+                saveImage(currentServant[j],path+"/AllDieBug_current"+j+"_"+time+".png");                
+                saveImage(initServant[j],path+"/AllDieBug_init"+j+"_"+time+".png");
+            }
+        */
+        }
+    }
+    allServentDieFlag = false;
+    for(var i=0;i<3;i++){
+        if(initUlt[i] != undefined){
+            releaseImage(initUlt[i]);
+        }
+        initUlt[i] = cropImage(screenShot,ultCheckX[i]* screenScale[0],ultCheckY* screenScale[1],300 * screenScale[0],180* screenScale[1]);
+    }
+    var skillUsed = [];
+    var m = 'skill_used:';
+    for(var i=0;i<9;i++){
+        skillUsed[i] = checkImage(screenShot,skillUsedImage,skillPositionX[i],skillPositionY,skillPositionW,skillPositionH);
+        m+=skillUsed[i]+",";
+    }
+    releaseImage(screenShot);
+    console.log(m);
+    for(var i =0;i<3;i++){
+        for(var j=2;j>=0;j--){
+            if(!isScriptRunning){
+                break;
+            }
+            if(!servantAlive[i]){
+                switch(die){
+                    case 0:
+                        isScriptRunning = false;
+                    return;
+                    case 1:
+                        if(!skillUsed[i*3+j]){
+                            useSkill(i,j,skill[i][1][j],false); 
+                        }
+                    break;
+                    case 2:
+                    break;
+                }
+            }
+            else if(skill[i][0][j] >= 0 && currentStage >= skill[i][0][j] && !skillUsed[i*3+j]){
+                useSkill(i,j,skill[i][1][j],false);
+            }
+        }
+    }
+    console.log("skill use finish");
+    startAttack();
+    console.log("startAttack finish");
+    updateCardList();
+    console.log("updateCardList finish");
+    updateUltList();
+    console.log("updateUltList finish");
+
+    var cardScore = [0,0,0,0,0];
+    var sameColorCnt=[0,0,0];
+    var sameColorScore = 1.5;
+    var mainColorScore = 0.3;
+    if(sameColor == 0){
+        sameColorScore = 0;
+    }else if(sameColor == 2){
+        sameColorScore = 5.5;
+    }
+    var weakScore = 1;
+    if(weak == 0){
+        weakScore = 0;
+    }else if(weak == 2){
+        weakScore = 5;
+    }
+    var usedColor = [0,0,0];
+    for(var i = 0;i<3;i++){
+        if(ult[i] >= 0 && currentStage >= ult[i] && ultList[i] >= 0){
+            usedColor[ultList[i]]++;
+            sameColorCnt[ultList[i]]++;
+        }
+    }
+    for(var i =0;i<5;i++){
+        sameColorCnt[cardList[i]]++;
+    }
+    if((usedColor[0]>0 && usedColor[1] > 0)||(usedColor[0]>0 && usedColor[2] > 0)||(usedColor[1]>0 && usedColor[2] > 0)){
+        sameColorCnt = [0,0,0];
+    }else if(usedColor[0]>0){
+        sameColorCnt[1] = 0;
+        sameColorCnt[2] = 0;
+    }else if(usedColor[1]>0){
+        sameColorCnt[0] = 0;
+        sameColorCnt[2] = 0;        
+    }else if(usedColor[2]>0){
+        sameColorCnt[0] = 0;
+        sameColorCnt[1] = 0;        
+    }
+    for(var i=0;i<5;i++){
+        if(sameColorCnt[cardList[i]] >= 3){
+            cardScore[i] += sameColorScore;
+        }
+        switch(cardStatus[i]){
+            case 0:
+                cardScore[i] -= 100;
+            break;
+            case 1:
+                cardScore[i] += weakScore;
+            break;
+            case 2:
+                cardScore[i] -= weakScore;
+            break;
+        }
+        if(cardList[i] == mainColor){
+            cardScore[i] += mainColorScore;
+        }
+    }
+    console.log("Ult:"+ultList);
+    console.log("Card:"+cardList);
+    console.log("Status:"+cardStatus);
+    for(var i =0;i<3;i++){
+        if(ult[i] >= 0 && currentStage >= ult[i] && ultList[i] >= 0){
+            useUlt(i);
+        }
+    }
+    while(true){
+        if(!isScriptRunning){
+            break;
+        }
+        var max = -10000;
+        var id = -1;
+        for(var i =0;i<5;i++){
+            if(cardScore[i] > max){
+                id = i;
+                max = cardScore[i];
+            }
+        }
+        if(id >= 0){
+            selectCard(id);
+            cardScore[id] = -15000;
+        }else{
+            return;
+        }
+    }
+    sleep(5000);
+}
+
+function updateUltList(){
+    var edgeX = [696,1159,1622];
+    var edgeY = [270,570];
+    var screenShot = getScreenshot();
+    for(var i=0;i<3;i++){
+        var card = cropImage(screenShot,ultCheckX[i]* screenScale[0],ultCheckY* screenScale[1],300 * screenScale[0],180* screenScale[1]);
+        var score1 = getImageLightness(card,5);
+        var score2 = getIdentityScore(card,initUlt[i]);
+        if((score1 >= 120 && score2 < 0.6) ||(score1 >= 100 && score2 < 0.5) || (score1 >= 80 &&score2 < 0.3)){
+            var r=0,g=0,b=0;
+            for(var ey=edgeY[0];ey<edgeY[1];ey++){
+                var color = getImageColor(screenShot,edgeX[i]* screenScale[0],ey* screenScale[1]);
+                if(color.r > (color.g + color.b)){
+                    r++;
+                }
+                if(color.g > (color.r + color.b)){
+                    g++;
+                }
+                if(color.b > (color.r + color.g)){
+                    b++;
+                }
+            }
+            if(r >= g && r >= b){
+                 ultList[i] = 0;
+            }
+            else if(b >= r && b >= g){
+                ultList[i] = 1;
+            }
+            else if(g >= r && g >= b){
+                ultList[i] = 2;
+            }
+        }else{
+            ultList[i] = -1;
+        }
+        releaseImage(card);
+    }
+    releaseImage(screenShot);
+}
+
+function updateCardList(){
+    var cardImageScore = [];
+    var screenShot = getScreenshot();
+
+    var offsetDisableX = [110,260];
+    var offsetDisableY = -90;
+    var disableW = [65,60];
+    var disableH = 65;
+
+    var weakW = 100;
+    var weakH = 30;
+    //get card color
+    for(var i=0;i<5;i++){
+        for(var j =0;j<2;j++){
+            var card = cropImage(screenShot,updateCardListX[i]* screenScale[0],updateCardListY[j]* screenScale[1],300 * screenScale[0],100* screenScale[1]);
+            for(var k=0;k<3;k++){
+                var resizeCard = resizeImage(cardListImage[k],300 * screenScale[0],100* screenScale[1]);
+                var score = getIdentityScore(card,resizeCard);
+                if(cardImageScore[i] == undefined || score > cardImageScore[i]){
+                    cardImageScore[i] = score;
+                    cardList[i] = k;
+                }
+                releaseImage(resizeCard);
+            }
+            releaseImage(card);
+        }
+    }
+    //get card status
+    for(var i=0;i<5;i++){
+        cardStatus[i] = -1;
+        for(var checkY = updateCardListY[0];checkY < updateCardListY[1];checkY+=2){
+            if(checkImage(screenShot,cardDisableImage[0],updateCardListX[i] + offsetDisableX[0],updateCardListY[j] + offsetDisableY,disableW[0], disableH) 
+                && checkImage(screenShot,cardDisableImage[1],updateCardListX[i] + offsetDisableX[1],checkY + offsetDisableY,disableW[1], disableH)){
+                cardStatus[i] = 0;
+                break;
+            }else if(checkImage(screenShot,cardWeakImage[0],updateCardListX[i] + updateCardListOffsetWeakX, checkY + updateCardListOffsetWeakY[0], weakW,weakH)){
+                cardStatus[i] = 1;
+                break;
+            }else if(checkImage(screenShot,cardWeakImage[1],updateCardListX[i] + updateCardListOffsetWeakX, checkY + updateCardListOffsetWeakY[1], weakW,weakH)){
+                cardStatus[i] = 2;
+                break;
+            }
+        }
+    }
+    releaseImage(screenShot);
+}
+
+function getCurrentServant(screenShot){
+    var x = [200,830,1470];
+    var y = 850;
+    var servant = [];
+    var screenShot = getScreenshot();
+    for(var i=0;i<3;i++){
+        servant[i] = cropImage(screenShot,x[i]* screenScale[0],y* screenScale[1],300* screenScale[0],200* screenScale[1]);
+    }
+    releaseImage(screenShot);
+    return servant;
+}
+
+
+console.log("Load auto attack api finish");
