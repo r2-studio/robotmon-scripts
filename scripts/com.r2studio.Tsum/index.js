@@ -58,7 +58,6 @@ function log() {
 // ============================TSUM=============================== //
 
 var Config = {
-  captureGameWidth: 1080,
   recordDir: 'tsum_record',
   tsumDir: 'scripts/com.r2studio.Tsum/tsums_16',
   tsumJpDir: 'scripts/com.r2studio.Tsum/tsums_jp_16',
@@ -83,77 +82,77 @@ var Config = {
 };
 
 // 1776 * 1920 (y - 78)
-var adjY = 78;
+var adjY = 74;
 var Button = {
-  gameBubblesFrom: {x: 100, y: 560 - adjY},
-  gameBubblesTo: {x: 1000, y: 1460 - adjY},
-  gameMyTsum: {x: 100, y: 1450 - adjY},
-  gameQuestionCancel: {x: 400, y: 1280 - adjY},
-  gameQuestionCancel2: {x: 400, y: 1000 - adjY},
-  gameStop: {x: 440, y: 1000 - adjY},
-  gameSkillOn: {x: 160, y: 1490 - adjY, color: {"a":0,"b":0,"g":220,"r":238}},
-  gameSkillOff1: {x: 160, y: 1630 - adjY, color: {"a":0,"b":157,"g":112,"r":85}},
-  gameSkillOff2: {x: 160, y: 1630 - adjY, color: {"a":0,"b":181,"g":139,"r":72}},
-  gameSkillOff3: {x: 160, y: 1630 - adjY, color: {"a":0,"b":128,"g":73,"r":16}},
-  gameSkillOff4: {x: 160, y: 1630 - adjY, color: {"a":0,"b":178,"g":153,"r":3}},
-  gameRand: {x: 985, y: 1580 - adjY, color: {"a":0,"b":6,"g":180,"r":232}},
-  gamePause: {x: 983, y: 250 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue: {x: 540, y: 1270 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameContinue1: {x: 461, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue2: {x: 911, y: 980 - adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameMagicalTime1: {x: 320, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime2: {x: 750, y: 1255 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime3: {x: 320, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime4: {x: 750, y: 1130 - adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  outGameItems: [{x: 205, y: 817-adjY},{x: 435, y: 821-adjY},{x: 651, y: 817-adjY},{x: 871, y: 821-adjY},{x: 201, y: 1095-adjY},{x: 424, y: 1098-adjY}],
-  outGameEnd: {x: 890, y: 1520 - adjY, color: {"a":0,"b":15,"g":140,"r":245}},
-  outStart1: {x: 500, y: 1520 - adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
-  outStart2: {x: 500, y: 1520 - adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
-  outClose: {x: 500, y: 1520 - adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
-  outClose2: {x: 300, y: 1520 - adjY}, // 關閉
-  outReceive: {x: 910, y: 350 - adjY},
-  outReceiveAll: {x: 800, y: 1350 - adjY},
-  outReceiveOk: {x: 835, y: 1020 - adjY, color: {"a":0,"b":6,"g":175,"r":236}},
-  outReceiveClose: {x: 530, y: 1300 - adjY},
-  outReceiveOne: {x: 840, y: 497 - adjY, color: {"a":0,"b":11,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOneHeart: {x: 290, y: 585 - adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outReceiveOneCoin: {x: 291, y: 579 - adjY, color: {r: 232, g: 229, b: 38}},
-  outReceiveOneRuby: {x: 295, y: 579 - adjY, color: {r: 224, g: 93, b: 101}}, // ruby
-  outReceiveOneTicket1: {x: 298, y: 569 - adjY, color: {r: 125, g: 188, b: 177}}, // green
-  outReceiveOneTicket2: {x: 316, y: 576 - adjY, color: {r: 248, g: 255, b: 253}}, // white
-  outIsLoading1: {x: 540, y: 720 - adjY, color: {"a":0,"b":255,"g":255,"r":255}},
-  outIsLoading2: {x: 540, y: 910 - adjY, color: {"a":0,"b":255,"g":255,"r":255}},
-  outReceiveTimeout: {x: 600, y: 1020 - adjY, color: {"a":0,"b":11,"g":171,"r":235}},
-  outDisconnected: {x:  147, y: 1008 - adjY, color: {r: 243, g: 89, b: 117}},
-  outSendHeartTop: {x: 910, y: 430 - adjY},
-  outSendHeart0: {x: 910, y: 626 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart1: {x: 910, y: 823 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart2: {x: 910, y: 1030 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart3: {x: 910, y: 1232 - adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeartClose: {x: 666, y: 1354 - adjY, color: {r: 236, g: 178, b: 9}},
-  outSendHeartFrom: {x: 910, y: 530 - adjY},
-  outSendHeartTo: {x: 910, y: 1250 - adjY},
-  outSendHeartEnd: {x: 328, y: 1194 - adjY, color: {"a":0,"b":132,"g":85,"r":47}},
-  outSendHeartEnd2: {x: 227, y: 1190 - adjY, color: {"a":0,"b":123,"g":78,"r":44}},
-  outSendHeartEnd3: {x: 316, y: 1152 - adjY, color: {r: 55, g: 91, b: 139}},
-  outFriendScoreFrom: {x: 550, y: 863 - adjY, color: {"a":0,"b":140,"g":93,"r":55}},
-  outFriendScoreTo: {x: 760, y: 863 - adjY},
-  skillLuke1: {x: 1000, y: 1300 - adjY},
-  skillLuke2: {x: 830, y: 1330 - adjY},
-  skillLuke3: {x: 670, y: 1375 - adjY},
-  skillLuke4: {x: 960, y: 1160 - adjY},
-  outReceiveNameFrom: {x: 160, y: 460 - adjY},
-  outReceiveNameTo: {x: 620, y: 555 - adjY},
-  moneyInfoBox: {x: 420, y: 128 - adjY, w: 240, h: 64},
+  gameBubblesFrom: {x: 100, y: 560 + adjY},
+  gameBubblesTo: {x: 1000, y: 1460 + adjY},
+  gameMyTsum: {x: 100, y: 1450 + adjY},
+  gameQuestionCancel: {x: 400, y: 1280 + adjY},
+  gameQuestionCancel2: {x: 400, y: 1000 + adjY},
+  gameStop: {x: 440, y: 1000 + adjY},
+  gameSkillOn: {x: 160, y: 1490 + adjY, color: {"a":0,"b":0,"g":220,"r":238}},
+  gameSkillOff1: {x: 160, y: 1630 + adjY, color: {"a":0,"b":157,"g":112,"r":85}},
+  gameSkillOff2: {x: 160, y: 1630 + adjY, color: {"a":0,"b":181,"g":139,"r":72}},
+  gameSkillOff3: {x: 160, y: 1630 + adjY, color: {"a":0,"b":128,"g":73,"r":16}},
+  gameSkillOff4: {x: 160, y: 1630 + adjY, color: {"a":0,"b":178,"g":153,"r":3}},
+  gameRand: {x: 985, y: 1580 + adjY, color: {"a":0,"b":6,"g":180,"r":232}},
+  gamePause: {x: 983, y: 250 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
+  gameContinue: {x: 540, y: 1270 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameContinue1: {x: 461, y: 980 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
+  gameContinue2: {x: 911, y: 980 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
+  gameMagicalTime1: {x: 320, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime2: {x: 750, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime3: {x: 320, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameMagicalTime4: {x: 750, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  outGameItems: [{x: 205, y: 817 + adjY},{x: 435, y: 821 + adjY},{x: 651, y: 817 + adjY},{x: 871, y: 821 + adjY},{x: 201, y: 1095 + adjY},{x: 424, y: 1098 + adjY}],
+  outGameEnd: {x: 890, y: 1520 + adjY, color: {"a":0,"b":15,"g":140,"r":245}},
+  outStart1: {x: 500, y: 1520 + adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
+  outStart2: {x: 500, y: 1520 + adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
+  outClose: {x: 500, y: 1520 + adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
+  outClose2: {x: 300, y: 1520 + adjY}, // 關閉
+  outReceive: {x: 910, y: 350 + adjY},
+  outReceiveAll: {x: 800, y: 1350 + adjY},
+  outReceiveOk: {x: 835, y: 1020 + adjY, color: {"a":0,"b":6,"g":175,"r":236}},
+  outReceiveClose: {x: 530, y: 1300 + adjY},
+  outReceiveOne: {x: 840, y: 497 + adjY, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
+  outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {"a":0,"b":146,"g":65,"r":214}},
+  outReceiveOneCoin: {x: 291, y: 579 + adjY, color: {r: 232, g: 229, b: 38}},
+  outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
+  outReceiveOneTicket1: {x: 298, y: 569 + adjY, color: {r: 125, g: 188, b: 177}}, // green
+  outReceiveOneTicket2: {x: 316, y: 576 + adjY, color: {r: 248, g: 255, b: 253}}, // white
+  outIsLoading1: {x: 540, y: 720 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
+  outIsLoading2: {x: 540, y: 910 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
+  outReceiveTimeout: {x: 600, y: 1020 + adjY, color: {"a":0,"b":11,"g":171,"r":235}},
+  outDisconnected: {x:  147, y: 1008 + adjY, color: {r: 243, g: 89, b: 117}},
+  outSendHeartTop: {x: 910, y: 430 + adjY},
+  outSendHeart0: {x: 910, y: 626 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart1: {x: 910, y: 823 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart2: {x: 910, y: 1030 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart3: {x: 910, y: 1232 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeartClose: {x: 666, y: 1354 + adjY, color: {r: 236, g: 178, b: 9}},
+  outSendHeartFrom: {x: 910, y: 530 + adjY},
+  outSendHeartTo: {x: 910, y: 1250 + adjY},
+  outSendHeartEnd: {x: 328, y: 1194 + adjY, color: {"a":0,"b":132,"g":85,"r":47}},
+  outSendHeartEnd2: {x: 227, y: 1190 + adjY, color: {"a":0,"b":123,"g":78,"r":44}},
+  outSendHeartEnd3: {x: 316, y: 1152 + adjY, color: {r: 55, g: 91, b: 139}},
+  outFriendScoreFrom: {x: 550, y: 863 + adjY, color: {"a":0,"b":140,"g":93,"r":55}},
+  outFriendScoreTo: {x: 760, y: 863 + adjY},
+  skillLuke1: {x: 1000, y: 1300 + adjY},
+  skillLuke2: {x: 830, y: 1330 + adjY},
+  skillLuke3: {x: 670, y: 1375 + adjY},
+  skillLuke4: {x: 960, y: 1160 + adjY},
+  outReceiveNameFrom: {x: 160, y: 460 + adjY},
+  outReceiveNameTo: {x: 620, y: 555 + adjY},
+  moneyInfoBox: {x: 430, y: 116 + adjY, w: 230, h: 56},
 };
 
 var Page = {
   TodayMission: {
     name: 'TodayMission',
     colors: [
-      {x: 540, y: 1408 - adjY, r: 238, g: 181, b: 12 , match: true, threshold: 80},
-      {x: 975, y: 428  - adjY, r: 161, g: 224, b: 231, match: true, threshold: 80},
-      {x: 554, y: 1260 - adjY, r: 24 , g: 189, b: 219, match: true, threshold: 80},
+      {x: 540, y: 1408 + adjY, r: 238, g: 181, b: 12 , match: true, threshold: 80},
+      {x: 975, y: 428  + adjY, r: 161, g: 224, b: 231, match: true, threshold: 80},
+      {x: 554, y: 1260 + adjY, r: 24 , g: 189, b: 219, match: true, threshold: 80},
     ],
     back: {x: 558, y: 1473},
     next: {x: 558, y: 1473},
@@ -161,263 +160,272 @@ var Page = {
   ScorePage: {
     name: 'ScorePage',
     colors: [
-      {x: 302, y: 1509 - adjY, r: 235, g: 184, b: 7  , match: true, threshold: 80},
-      {x: 777, y: 1516 - adjY, r: 248, g: 142, b: 20 , match: true, threshold: 80},
-      {x: 774, y: 428  - adjY, r: 243, g: 248, b: 242, match: true, threshold: 80},
+      {x: 302, y: 1509 + adjY, r: 235, g: 184, b: 7  , match: true, threshold: 80},
+      {x: 777, y: 1516 + adjY, r: 248, g: 142, b: 20 , match: true, threshold: 80},
+      {x: 774, y: 428  + adjY, r: 243, g: 248, b: 242, match: true, threshold: 80},
     ],
-    back: {x: 309, y: 1581 - adjY},
-    next: {x: 784, y: 1581 - adjY},
+    back: {x: 309, y: 1581 + adjY},
+    next: {x: 784, y: 1581 + adjY},
   },
   FriendPage: {
     name: 'FriendPage',
     colors: [
-      {x: 547, y: 1520 - adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
-      {x: 187, y: 1527 - adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
-      {x: 860, y: 1505 - adjY, r: 238, g: 189, b: 11 , match: true, threshold: 80},
-      {x: 698, y: 392  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 547, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
+      {x: 860, y: 1505 + adjY, r: 238, g: 189, b: 11 , match: true, threshold: 80},
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
     ],
-    back: {x: 547, y: 1581 - adjY},
-    next: {x: 547, y: 1581 - adjY},
+    back: {x: 547, y: 1581 + adjY},
+    next: {x: 547, y: 1581 + adjY},
   },
   FriendPage2: {
     name: 'FriendPage',
     colors: [
-      {x: 547, y: 1520 - adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
-      {x: 187, y: 1527 - adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
-      {x: 799, y: 1581 - adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80},
-      {x: 698, y: 392  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 547, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
+      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80},
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
     ],
-    back: {x: 547, y: 1581 - adjY},
-    next: {x: 547, y: 1581 - adjY},
+    back: {x: 547, y: 1581 + adjY},
+    next: {x: 547, y: 1581 + adjY},
   },
   GiftHeart: {
     name: 'GiftHeart',
     colors: [
-      {x: 216, y: 1012 - adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
-      {x: 673, y: 1008 - adjY, r: 235, g: 174, b: 8  , match: true, threshold: 80},
-      {x: 468, y: 731  - adjY, r: 214, g: 61 , b: 143, match: true, threshold: 100},
-      {x: 572, y: 489  - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 583, y: 1123 - adjY, r: 28 , g: 186, b: 221, match: true, threshold: 80},
+      {x: 216, y: 1012 + adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
+      {x: 673, y: 1008 + adjY, r: 235, g: 174, b: 8  , match: true, threshold: 80},
+      {x: 468, y: 731  + adjY, r: 214, g: 61 , b: 143, match: true, threshold: 100},
+      {x: 572, y: 489  + adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
+      {x: 583, y: 1123 + adjY, r: 28 , g: 186, b: 221, match: true, threshold: 80},
     ],
-    back: {x: 774, y: 1023 - adjY},
-    next: {x: 320, y: 1019 - adjY},
+    back: {x: 774, y: 1023 + adjY},
+    next: {x: 320, y: 1019 + adjY},
   },
   MailBox: {
     name: 'MailBox',
     colors: [
-      {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 604, y: 1347 - adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80},
+      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 604, y: 1347 + adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80},
     ],
-    back: {x: 561, y: 1581 - adjY},
-    next: {x: 561, y: 1581 - adjY},
+    back: {x: 561, y: 1581 + adjY},
+    next: {x: 561, y: 1581 + adjY},
   },
   MailBox2: {
     name: 'MailBox',
     colors: [
-      {x: 738, y: 342  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 - adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 619, y: 1354 - adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80},
+      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 619, y: 1354 + adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80},
     ],
-    back: {x: 561, y: 1581 - adjY},
-    next: {x: 561, y: 1581 - adjY},
+    back: {x: 561, y: 1581 + adjY},
+    next: {x: 561, y: 1581 + adjY},
   },
   ReceiveHeart: {
     name: 'ReceiveHeart',
     colors: [
-      {x: 208, y: 1008 - adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
-      {x: 662, y: 1008 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
-      {x: 561, y: 482  - adjY, r: 28 , g: 191, b: 222, match: true, threshold: 80},
-      {x: 565, y: 1138 - adjY, r: 30 , g: 195, b: 225, match: true, threshold: 80},
-      {x: 334, y: 745  - adjY, r: 213, g: 62 , b: 143, match: true, threshold: 90},
-      {x: 586, y: 749  - adjY, r: 248, g: 249, b: 51 , match: true, threshold: 100},
+      {x: 208, y: 1008 + adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
+      {x: 662, y: 1008 + adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+      {x: 561, y: 482  + adjY, r: 28 , g: 191, b: 222, match: true, threshold: 80},
+      {x: 565, y: 1138 + adjY, r: 30 , g: 195, b: 225, match: true, threshold: 80},
+      {x: 334, y: 745  + adjY, r: 213, g: 62 , b: 143, match: true, threshold: 90},
+      {x: 586, y: 749  + adjY, r: 248, g: 249, b: 51 , match: true, threshold: 100},
     ],
-    back: {x: 774, y: 1023 - adjY},
-    next: {x: 320, y: 1019 - adjY},
+    back: {x: 774, y: 1023 + adjY},
+    next: {x: 320, y: 1019 + adjY},
   },
   Received: {
     name: 'Received',
     colors: [
-      {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 806, y: 817 - adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
-      {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
+      {x: 799, y: 644 + adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
+      {x: 806, y: 817 + adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
+      {x: 799, y: 976 + adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
     ],
-    back: {x: 774, y: 1023 - adjY},
-    next: {x: 320, y: 1019 - adjY},
+    back: {x: 774, y: 1023 + adjY},
+    next: {x: 320, y: 1019 + adjY},
   },
   Received2: {
     name: 'Received',
     colors: [
-      {x: 799, y: 644 - adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 889, y: 752 - adjY, r: 40, g: 72 , b: 111, match: true, threshold: 80},
-      {x: 799, y: 976 - adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
+      {x: 799, y: 644 + adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
+      {x: 889, y: 752 + adjY, r: 40, g: 72 , b: 111, match: true, threshold: 80},
+      {x: 799, y: 976 + adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
     ],
-    back: {x: 774, y: 1023 - adjY},
-    next: {x: 320, y: 1019 - adjY},
+    back: {x: 774, y: 1023 + adjY},
+    next: {x: 320, y: 1019 + adjY},
   },
   StartPage: {
     name: 'StartPage',
     colors: [
-      {x: 752, y: 399  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
-      {x: 856, y: 1358 - adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 169, y: 1509 - adjY, r: 239, g: 188, b: 11 , match: true, threshold: 80},
-      {x: 547, y: 1509 - adjY, r: 235, g: 118, b: 134, match: true, threshold: 80},
-      {x: 792, y: 1588 - adjY, r: 234, g: 171, b: 8  , match: true, threshold: 100},
+      {x: 752, y: 399  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 856, y: 1358 + adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
+      {x: 169, y: 1509 + adjY, r: 239, g: 188, b: 11 , match: true, threshold: 80},
+      {x: 547, y: 1509 + adjY, r: 235, g: 118, b: 134, match: true, threshold: 80},
+      {x: 792, y: 1588 + adjY, r: 234, g: 171, b: 8  , match: true, threshold: 100},
     ],
-    back: {x: 190, y: 1574 - adjY},
-    next: {x: 558, y: 1563 - adjY},
+    back: {x: 190, y: 1574 + adjY},
+    next: {x: 558, y: 1563 + adjY},
   },
   StartPage2: {
     name: 'StartPage',
     colors: [
-      {x: 820,  y: 443  - adjY, r: 245, g: 250, b: 244, match: true, threshold: 80},
-      {x: 954,  y: 1354 - adjY, r: 31 , g: 190, b: 220, match: true, threshold: 80},
-      {x: 180,  y: 1512 - adjY, r: 235, g: 182, b: 8  , match: true, threshold: 80},
-      {x: 540,  y: 1512 - adjY, r: 238, g: 115, b: 133, match: true, threshold: 80},
-      {x: 1011, y: 1603 - adjY, r: 229, g: 166, b: 11 , match: true, threshold: 100},
+      {x: 820,  y: 443  + adjY, r: 245, g: 250, b: 244, match: true, threshold: 80},
+      {x: 954,  y: 1354 + adjY, r: 31 , g: 190, b: 220, match: true, threshold: 80},
+      {x: 180,  y: 1512 + adjY, r: 235, g: 182, b: 8  , match: true, threshold: 80},
+      {x: 540,  y: 1512 + adjY, r: 238, g: 115, b: 133, match: true, threshold: 80},
+      {x: 1011, y: 1603 + adjY, r: 229, g: 166, b: 11 , match: true, threshold: 100},
     ],
-    back: {x: 190, y: 1574 - adjY},
-    next: {x: 558, y: 1563 - adjY},
+    back: {x: 190, y: 1574 + adjY},
+    next: {x: 558, y: 1563 + adjY},
   },
   StartPage3: {
     name: 'StartPage',
     colors: [
-      {x: 400,  y: 1600 - adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
-      {x: 680,  y: 1600 - adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
-      {x: 540,  y: 1650 - adjY, r: 235, g: 70, b: 90 , match: true, threshold: 80},
+      {x: 400,  y: 1600 + adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
+      {x: 680,  y: 1600 + adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
+      {x: 540,  y: 1650 + adjY, r: 235, g: 70, b: 90 , match: true, threshold: 80},
     ],
-    back: {x: 190, y: 1574 - adjY},
-    next: {x: 558, y: 1563 - adjY},
+    back: {x: 190, y: 1574 + adjY},
+    next: {x: 558, y: 1563 + adjY},
   },
   SettingPage: {
     name: 'SettingPage',
     colors: [
-      {x: 741, y: 345  - adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 363, y: 504  - adjY, r: 21 , g: 184, b: 219, match: true, threshold: 80},
-      {x: 464, y: 1084 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
-      {x: 903, y: 1228 - adjY, r: 237, g: 176, b: 10 , match: true, threshold: 80},
-      {x: 554, y: 1516 - adjY, r: 236, g: 180, b: 9  , match: true, threshold: 80},
+      {x: 741, y: 345  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 363, y: 504  + adjY, r: 21 , g: 184, b: 219, match: true, threshold: 80},
+      {x: 464, y: 1084 + adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
+      {x: 903, y: 1228 + adjY, r: 237, g: 176, b: 10 , match: true, threshold: 80},
+      {x: 554, y: 1516 + adjY, r: 236, g: 180, b: 9  , match: true, threshold: 80},
     ],
-    back: {x: 565, y: 1577 - adjY},
-    next: {x: 565, y: 1577 - adjY},
+    back: {x: 565, y: 1577 + adjY},
+    next: {x: 565, y: 1577 + adjY},
   },
   TsumsPage: {
     name: 'TsumsPage',
     colors: [
-      {x: 514, y: 842  - adjY, r: 41, g: 177, b: 203 , match: true, threshold: 80},
-      {x: 180, y: 1520 - adjY, r: 238, g: 180, b: 11 , match: true, threshold: 100},
-      {x: 817, y: 1516 - adjY, r: 238, g: 191, b: 13 , match: true, threshold: 80},
+      {x: 514, y: 842  + adjY, r: 41, g: 177, b: 203 , match: true, threshold: 80},
+      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11 , match: true, threshold: 100},
+      {x: 817, y: 1516 + adjY, r: 238, g: 191, b: 13 , match: true, threshold: 80},
     ],
-    back: {x: 176, y: 1520 - adjY},
-    next: {x: 176, y: 1520 - adjY},
+    back: {x: 176, y: 1520 + adjY},
+    next: {x: 176, y: 1520 + adjY},
   },
   GamePause: {
     name: 'GamePause',
     colors: [
-      {x: 165, y: 1005 - adjY, r: 234, g: 173, b: 7  , match: true, threshold: 80},
-      {x: 594, y: 1001 - adjY, r: 233, g: 171, b: 8  , match: true, threshold: 80},
-      {x: 367, y: 702  - adjY, r: 24 , g: 191, b: 225, match: true, threshold: 80},
-      {x: 738, y: 540  - adjY, r: 248, g: 244, b: 245, match: true, threshold: 80},
-      {x: 550, y: 1264 - adjY, r: 236, g: 182, b: 11 , match: true, threshold: 80},
+      {x: 165, y: 1005 + adjY, r: 234, g: 173, b: 7  , match: true, threshold: 80},
+      {x: 594, y: 1001 + adjY, r: 233, g: 171, b: 8  , match: true, threshold: 80},
+      {x: 367, y: 702  + adjY, r: 24 , g: 191, b: 225, match: true, threshold: 80},
+      {x: 738, y: 540  + adjY, r: 248, g: 244, b: 245, match: true, threshold: 80},
+      {x: 550, y: 1264 + adjY, r: 236, g: 182, b: 11 , match: true, threshold: 80},
     ],
-    back: {x: 331, y: 1008 - adjY},
-    next: {x: 561, y: 1350 - adjY},
+    back: {x: 331, y: 1008 + adjY},
+    next: {x: 561, y: 1350 + adjY},
   },
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 982, y: 194  - adjY, r: 236, g: 192, b: 5, match: true, threshold: 80},
-      {x: 986, y: 1563 - adjY, r: 236, g: 191, b: 2, match: true, threshold: 80},
+      {x: 916, y:  246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below fan
     ],
-    back: {x: 986, y: 201 - adjY},
-    next: {x: 986, y: 201 - adjY},
+    back: {x: 986, y: 201 + adjY},
+    next: {x: 986, y: 201 + adjY},
+  },
+  GamePlaying2: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 980, y:  186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
+      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below fan
+    ],
+    back: {x: 986, y: 201 + adjY},
+    next: {x: 986, y: 201 + adjY},
   },
   MagicalTime: {
     name: 'MagicalTime',
     colors: [
-      {x: 817, y: 435  - adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
-      {x: 594, y: 785  - adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
-      {x: 208, y: 1145 - adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
-      {x: 662, y: 1141 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+      {x: 817, y: 435  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 594, y: 785  + adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
+      {x: 208, y: 1145 + adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
+      {x: 662, y: 1141 + adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
     ],
-    back: {x: 381, y: 1149 - adjY},
-    next: {x: 856, y: 1149 - adjY},
+    back: {x: 381, y: 1149 + adjY},
+    next: {x: 856, y: 1149 + adjY},
   },
   NetworkDisable: {
     name: 'NetworkDisable',
     colors: [
-      {x: 478, y: 1008 - adjY, r: 236, g: 94 , b: 116, match: true, threshold: 80},
-      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+      {x: 478, y: 1008 + adjY, r: 236, g: 94 , b: 116, match: true, threshold: 80},
+      {x: 932, y: 1005 + adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
     ],
-    back: {x: 885, y: 1008 - adjY},
-    next: {x: 885, y: 1012 - adjY},
+    back: {x: 885, y: 1008 + adjY},
+    next: {x: 885, y: 1012 + adjY},
   },
   NetworkTimeout: {
     name: 'NetworkTimeout',
     colors: [
-      {x: 478, y: 1008 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
-      {x: 932, y: 1005 - adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 478, y: 1008 + adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 932, y: 1005 + adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
     ],
-    back: {x: 885, y: 1012 - adjY},
-    next: {x: 885, y: 1012 - adjY},
+    back: {x: 885, y: 1012 + adjY},
+    next: {x: 885, y: 1012 + adjY},
   },
   HighScore: {
     name: 'HighScore',
     colors: [
-      {x: 298, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
-      {x: 810, y: 1253 - adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
+      {x: 298, y: 1253 + adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
+      {x: 810, y: 1253 + adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
     ],
-    back: {x: 298, y: 1253 - adjY},
-    next: {x: 810, y: 1253 - adjY},
+    back: {x: 298, y: 1253 + adjY},
+    next: {x: 810, y: 1253 + adjY},
   },
   RankUp: {
     name: 'RankUp',
     colors: [
-      {x: 327, y: 1458 - adjY, r: 236, g: 175, b: 9, match: true, threshold: 80},
-      {x: 792, y: 1455 - adjY, r: 234, g: 173, b: 5, match: true, threshold: 80},
+      {x: 327, y: 1458 + adjY, r: 236, g: 175, b: 9, match: true, threshold: 80},
+      {x: 792, y: 1455 + adjY, r: 234, g: 173, b: 5, match: true, threshold: 80},
     ],
-    back: {x: 327, y: 1458 - adjY},
-    next: {x: 792, y: 1455 - adjY},
+    back: {x: 327, y: 1458 + adjY},
+    next: {x: 792, y: 1455 + adjY},
   },
   InvitePage: {
     name: 'InvitePage',
     colors: [
-      {x: 342, y: 835  - adjY, r: 58 , g: 87 , b: 145, match: true, threshold: 80},
-      {x: 669, y: 832  - adjY, r: 0  , g: 181, b: 1  , match: true, threshold: 80},
-      {x: 536, y: 1271 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
+      {x: 342, y: 835  + adjY, r: 58 , g: 87 , b: 145, match: true, threshold: 80},
+      {x: 669, y: 832  + adjY, r: 0  , g: 181, b: 1  , match: true, threshold: 80},
+      {x: 536, y: 1271 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
     ],
-    back: {x: 576, y: 1314 - adjY},
-    next: {x: 576, y: 1314 - adjY},
+    back: {x: 576, y: 1314 + adjY},
+    next: {x: 576, y: 1314 + adjY},
   },
   EventPage: {
     name: 'EventPage',
     colors: [
-      {x: 554, y: 1509 - adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
-      {x: 997, y: 1617 - adjY, r: 230, g: 169, b: 3 , match: true, threshold: 80},
+      {x: 554, y: 1509 + adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
+      {x: 997, y: 1617 + adjY, r: 230, g: 169, b: 3 , match: true, threshold: 80},
     ],
-    back: {x: 554, y: 1509 - adjY},
-    next: {x: 554, y: 1509 - adjY},
+    back: {x: 554, y: 1509 + adjY},
+    next: {x: 554, y: 1509 + adjY},
   },
   FriendInfo: {
     name: 'FriendInfo',
     colors: [
-      {x: 565, y: 504   - adjY, r: 31, g: 190, b: 220, match: true, threshold: 80},
-      {x: 547, y: 1123  - adjY, r: 27, g: 192, b: 222, match: true, threshold: 80},
-      {x: 554, y: 1260  - adjY, r: 238, g: 186, b: 12, match: true, threshold: 80},
+      {x: 565, y: 504   + adjY, r: 31, g: 190, b: 220, match: true, threshold: 80},
+      {x: 547, y: 1123  + adjY, r: 27, g: 192, b: 222, match: true, threshold: 80},
+      {x: 554, y: 1260  + adjY, r: 238, g: 186, b: 12, match: true, threshold: 80},
     ],
-    back: {x: 576, y: 1336 - adjY},
-    next: {x: 576, y: 1336 - adjY},
+    back: {x: 576, y: 1336 + adjY},
+    next: {x: 576, y: 1336 + adjY},
   },
   MyInfo: {
     name: 'MyInfo',
     colors: [
-      {x: 734, y: 284  - adjY, r: 29 , g: 189, b: 223, match: true, threshold: 80},
-      {x: 802, y: 381  - adjY, r: 241, g: 246, b: 240, match: true, threshold: 80},
-      {x: 766, y: 1347 - adjY, r: 31 , g: 190, b: 222, match: true, threshold: 80},
-      {x: 691, y: 1584 - adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
+      {x: 734, y: 284  + adjY, r: 29 , g: 189, b: 223, match: true, threshold: 80},
+      {x: 802, y: 381  + adjY, r: 241, g: 246, b: 240, match: true, threshold: 80},
+      {x: 766, y: 1347 + adjY, r: 31 , g: 190, b: 222, match: true, threshold: 80},
+      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
     ],
-    back: {x: 576, y: 1588 - adjY},
-    next: {x: 576, y: 1588 - adjY},
+    back: {x: 576, y: 1588 + adjY},
+    next: {x: 576, y: 1588 + adjY},
   },
 };
 
@@ -425,7 +433,6 @@ var Logs = {
   start: '[TsumTsum] Start',
   stop: '[TsumTsum] Stop',
   sendMessage: 'Send Message...',
-  clearMemory: 'Clearing residual memory',
   TaskControllerStop: 'TaskController Stop',
   updateApp: 'Please update Robotmon and restart service',
   UnknownState: 'Unknown state, Exiting',
@@ -443,7 +450,7 @@ var Logs = {
   recalculatingPath: 'Connections 0, Recalculating path',
   useSkill: 'Use skill',
   gameStart: 'Game Start',
-  gaming: 'Gaming',
+  gaming: 'Gaming (Slow version)',
   fastGaming: 'Gaming (Fast version)',
   gameOver: 'Game Over',
   detectScreen: 'Detecting screen (top and bosttom)',
@@ -479,7 +486,6 @@ var LogsTW = {
   start: '[TsumTsum] 啟動',
   stop: '[TsumTsum] 停止',
   sendMessage: '送出訊息中...',
-  clearMemory: '清除殘留記憶體',
   TaskControllerStop: 'TaskController 停止',
   updateApp: '請更新 Robotmon 並重新啟動 Service',
   UnknownState: '未知狀態，離開',
@@ -497,7 +503,7 @@ var LogsTW = {
   recalculatingPath: '路徑數量為 0, 重新辨識',
   useSkill: '使用技能',
   gameStart: '遊戲開始',
-  gaming: '遊戲中',
+  gaming: '遊戲中 (慢速版)',
   fastGaming: '遊戲中 (快速版)',
   gameOver: '遊戲結束',
   detectScreen: '偵測畫面 (頂部與底部)',
@@ -532,9 +538,13 @@ var LogsTW = {
 // Utils for sending message
 var _userPlan = -1;
 var _lastSendingTime = 0;
+
+function checkFunction(f) {
+  return typeof(f) == 'function'
+}
 function checkCanSendMessage() {
   _userPlan = -1;
-  if (getUserPlan !== undefined && sendNormalMessage !== undefined) {
+  if (getUserPlan !== undefined && checkFunction(sendNormalMessage)) {
     _userPlan = getUserPlan();
   }
   console.log('User Plan', _userPlan);
@@ -953,11 +963,12 @@ function classifyTsums(points, tsumCount) {
 
 // Tsum struct
 
-function Tsum(isJP, detect, logs) {
+function Tsum(isJP, logs) {
   this.debug = true;
   this.isRunning = true;
   this.runTimes = 0;
   this.myTsum = '';
+  this.storagePath = getStoragePath();
   // screen size config
   var size = getScreenSize();
   this.screenHeight = size.height - getVirtualButtonHeight();
@@ -1009,74 +1020,44 @@ function Tsum(isJP, detect, logs) {
   this.recordImages = {};
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
-  this.init(detect);
+  this.init();
 }
 
-Tsum.prototype.detect = function() {
-  var size = getScreenSize();
-  var img = getScreenshot();
-  var top = 0;
-  var bottom = size.height - getVirtualButtonHeight();
-  for (var y = 0; y < size.height; y++) {
-    var color = getImageColor(img, size.width - 2, y);
-    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
-      top = y;
-      break;
-    }
-  }
-  for (var y = bottom - 1; y > 0; y--) {
-    var color = getImageColor(img, size.width - 2, y);
-    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
-      bottom = y+1;
-      break;
-    }
-  }
-  releaseImage(img);
-  log(this.logs.detectScreen, top, bottom);
-  sleep(500);
-  return {top: top, bottom: bottom};
-}
-
-Tsum.prototype.init = function(detect) {
+Tsum.prototype.init = function() {
   log(this.logs.calculateScreenSize);
-  if (detect) {
-    var topBottom = this.detect();
-    var h = topBottom.bottom - topBottom.top;
-    this.gameWidth = this.screenWidth;
-    this.gameHeight = this.gameWidth * 1.5;
-    this.gameOffsetX = 0;
-    this.gameOffsetY = topBottom.top + (h - this.gameHeight) / 2;
-  } else if (this.screenHeight / this.screenWidth > 1.78) {
-    // currently support for note 8
-    this.gameWidth = this.screenWidth;
-    this.gameHeight = this.gameWidth * 1.5;
-    var gameFullHeight = this.gameWidth * 1.84444;
-    var gameMarginTop = (gameFullHeight - this.gameHeight) / 2;
-    this.gameOffsetY = (this.screenHeight - gameFullHeight) + gameMarginTop;
-  } else if (this.screenHeight / this.screenWidth > 1.5) {
-    this.gameWidth = this.screenWidth;
-    this.gameHeight = this.gameWidth * 1.5;
-    this.gameOffsetY = (this.screenHeight - this.gameHeight) / 2;
-  } else {
+  var realWidth = this.screenHeight / 16 * 9;
+  if (realWidth > this.screenWidth) {
+    this.gameWidth = realWidth;
     this.gameHeight = this.screenHeight;
-    this.gameWidth = this.gameHeight / 1.5;
-    this.gameOffsetX = (this.screenWidth - this.gameWidth) / 2;
+    this.gameOffsetX = Math.floor((this.gameWidth - this.screenWidth) / 2);
+    this.gameOffsetY = 0;
+  } else if (realWidth < this.screenWidth) {
+    this.gameWidth = this.screenWidth;
+    this.gameHeight = this.screenWidth / 9 * 16;
+    this.gameOffsetX = 0;
+    this.gameOffsetY = Math.floor((this.gameHeight - this.screenHeight) / 2);
+  } else {
+    this.gameWidth = this.screenWidth;
+    this.gameHeight = this.screenHeight;
+    this.gameOffsetX = 0;
+    this.gameOffsetY = 0;
   }
-  this.captureGameRatio = Config.captureGameWidth / this.gameWidth;
-  this.playWidth = this.gameWidth;
-  this.playHeight = this.gameWidth;
-  this.playOffsetX = this.gameOffsetX;
-  this.playOffsetY = this.gameOffsetY + (this.gameHeight - this.playHeight) * 0.6;
+
+  this.captureGameRatio = this.gameWidth / 1080;
+  this.playWidth = this.screenWidth;
+  this.playHeight = this.screenWidth;
+  this.playOffsetX = 0;
+  this.playOffsetY = 465 * this.captureGameRatio - this.gameOffsetY;
 
   this.allTsumImages = loadTsumImages(this.isJP);
   this.isLoadAllTsum = true;
 
-  if (this.debug) {
-    this.sleep(200);
-    log(this.logs.offset, this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
-    this.sleep(1000);
-  }
-  execute("mkdir -p " + getStoragePath() + '/' + Config.recordDir);
+  this.sleep(200);
+  log(this.logs.offset, this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
+  this.sleep(200);
+  execute("mkdir -p " + this.storagePath + '/tmp');
+  this.sleep(200);
+  execute("mkdir -p " + this.storagePath + '/' + Config.recordDir);
 }
 
 Tsum.prototype.deinit = function() {
@@ -1092,11 +1073,11 @@ Tsum.prototype.sendMoneyInfo = function() {
   if (!canSendMessage()) {
     return;
   }
-  var x = Math.ceil(this.gameWidth * Button.moneyInfoBox.x / 1080);
-  var y = Math.ceil(this.gameWidth * Button.moneyInfoBox.y / 1620);
-  var w = Math.ceil(this.gameWidth * Button.moneyInfoBox.w / 1080);
-  var h = Math.ceil(this.gameHeight * Button.moneyInfoBox.h / 1620);
-  var img = getScreenshotModify(this.gameOffsetX + x, this.gameOffsetY + y, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 80);
+  var x = Math.floor(Button.moneyInfoBox.x * this.captureGameRatio - this.gameOffsetX);
+  var y = Math.floor(Button.moneyInfoBox.y * this.captureGameRatio - this.gameOffsetY);
+  var w = Math.floor(Button.moneyInfoBox.w * this.captureGameRatio);
+  var h = Math.floor(Button.moneyInfoBox.h * this.captureGameRatio);
+  var img = getScreenshotModify(x, y, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 80);
   var base64 = getBase64FromImage(img);
   releaseImage(img);
   log(this.logs.sendMessage);
@@ -1136,12 +1117,12 @@ Tsum.prototype.startApp = function() {
 
 Tsum.prototype.screenshot = function() {
   return getScreenshotModify(
-    this.gameOffsetX, 
-    this.gameOffsetY, 
-    this.gameWidth, 
-    this.gameHeight, 
-    this.gameWidth / this.resizeRatio, 
-    this.gameHeight / this.resizeRatio,
+    0, 
+    0, 
+    this.screenWidth, 
+    this.screenHeight, 
+    this.screenWidth / this.resizeRatio, 
+    this.screenHeight / this.resizeRatio,
     80
   );
 }
@@ -1158,55 +1139,61 @@ Tsum.prototype.playScreenshot = function() {
   );
 }
 
+Tsum.prototype.toResizeXY = function(x, y) {
+  var rx = Math.floor((x * this.captureGameRatio - this.gameOffsetX) / this.resizeRatio);
+  var ry = Math.floor((y * this.captureGameRatio - this.gameOffsetY) / this.resizeRatio);
+  return {x: rx, y: ry};
+}
+
 Tsum.prototype.toResizeXYs = function(xy) {
   return this.toResizeXY(xy.x, xy.y);
 }
 
-Tsum.prototype.toResizeXY = function(x, y) {
-  var rx = Math.floor(x / this.resizeRatio / this.captureGameRatio);
-  var ry = Math.floor(y / this.resizeRatio / this.captureGameRatio);
+Tsum.prototype.getColor = function(img, xy) {
+  var rxy = this.toResizeXYs(xy);
+  return getImageColor(img, rxy.x, rxy.y);
+}
+
+Tsum.prototype.toRealXY = function(x, y) {
+  var rx = Math.floor(x * this.captureGameRatio - this.gameOffsetX);
+  var ry = Math.floor(y * this.captureGameRatio - this.gameOffsetY);
   return {x: rx, y: ry};
 }
 
-Tsum.prototype.getColor = function(img, xy) {
-  var xy = this.toResizeXYs(xy);
-  return getImageColor(img, xy.x, xy.y);
+Tsum.prototype.toRealXYs = function(xy) {
+  return this.toRealXY(xy.x, xy.y);
 }
 
 Tsum.prototype.tap = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
-  var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
-  tap(Math.round(x), Math.round(y), during);
+  var rxy = this.toRealXYs(xy);
+  tap(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.tapDown = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
-  var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
-  tapDown(Math.round(x), Math.round(y), during);
+  var rxy = this.toRealXYs(xy);
+  tapDown(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.moveTo = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
-  var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
-  moveTo(Math.round(x), Math.round(y), during);
+  var rxy = this.toRealXYs(xy);
+  moveTo(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.tapUp = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var x = this.gameOffsetX + (xy.x * this.gameWidth / 1080);
-  var y = this.gameOffsetY + (xy.y * this.gameHeight / 1620);
-  tapUp(Math.round(x), Math.round(y), during);
+  var rxy = this.toRealXYs(xy);
+  tapUp(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.linkTsums = function(path) {
@@ -1359,7 +1346,7 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
-    var page = this.findPage(2, 3000);
+    var page = this.findPage(2, 2000);
     log(this.logs.currentPage, page);
     if (page == 'FriendPage') {
       this.tap(Page[page].next);
@@ -1381,7 +1368,6 @@ Tsum.prototype.goGamePlayingPage = function() {
     } else {
       this.tap(Page[page].back);
     }
-    this.sleep(1000);
   }
 }
 
@@ -1399,7 +1385,7 @@ Tsum.prototype.findMyTsum = function() {
   smooth(myTsumImage, 1, 2);
   var allScores = findAllTsumMatchScore(this.allTsumImages, myTsumImage, '');
   if (this.debug) {
-    saveImage(myTsumImage, getStoragePath() + "/tmp/mytsum.jpg");
+    saveImage(myTsumImage, this.storagePath + "/tmp/mytsum.jpg");
   }
   releaseImage(myTsumImage);
   this.myTsum = allScores[0].key;
@@ -1548,7 +1534,7 @@ Tsum.prototype.scanBoard = function() {
   log(this.logs.recognizingTsums);
   var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug, this.logs);
   if (this.debug) {
-    saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
+    saveImage(gameImage, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
   }
   releaseImage(gameImage);
 
@@ -1564,7 +1550,7 @@ Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
   var srcImg = this.playScreenshot();
-  var points = findTsums(srcImg, 0, 235, 150, 255);
+  var points = findTsums(srcImg);
   log(this.logs.recognitionStart);
   var tcs = classifyTsums(points);
   tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
@@ -1578,12 +1564,12 @@ Tsum.prototype.scanBoardQuick = function() {
       var p = tc.points[j];
       board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
       if (this.debug) {
-        drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);  
-      }	
+        drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);
+      }
     }
   }
   if (this.debug) {
-    saveImage(srcImg, getStoragePath() + "/tmp/boardImg-" + this.runTimes + ".jpg");
+    saveImage(srcImg, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
   }
   releaseImage(srcImg);
   log(this.logs.recognizedTsums, board.length);
@@ -1649,10 +1635,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
     this.runTimes++;
   }
-  releaseTsumRotationImages(this.gameTsums);
+  // releaseTsumRotationImages(this.gameTsums);
   this.gameTsums = [];
   this.isLoadRotateTsum = false;
-  this.sleep(4000);
 }
 
 Tsum.prototype.taskPlayGame = function() {
@@ -1754,7 +1739,7 @@ Tsum.prototype.taskReceiveAllItems = function() {
 
 Tsum.prototype.readRecord = function() {
   log(this.logs.readRecords);
-  var recordDir = getStoragePath() + '/' + Config.recordDir;
+  var recordDir = this.storagePath + '/' + Config.recordDir;
   var recordFile = recordDir + '/record.txt';
   var txt = readFile(recordFile);
   if (txt != undefined && txt != "") {
@@ -1769,7 +1754,7 @@ Tsum.prototype.readRecord = function() {
 
 Tsum.prototype.recognizeSender = function(img) {
   log(this.logs.recognizingHeartSender);
-  var recordDir = getStoragePath() + '/' + Config.recordDir;
+  var recordDir = this.storagePath + '/' + Config.recordDir;
   var from = this.toResizeXYs(Button.outReceiveNameFrom);
   var to = this.toResizeXYs(Button.outReceiveNameTo);
   var nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
@@ -1828,7 +1813,7 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
 
 Tsum.prototype.saveRecord = function() {
   log(this.logs.saveRecords);
-  var recordFile = getStoragePath() + '/' + Config.recordDir + '/record.txt';
+  var recordFile = this.storagePath + '/' + Config.recordDir + '/record.txt';
   writeFile(recordFile, JSON.stringify(this.record));
 }
 
@@ -1871,7 +1856,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
   log(this.logs.receiveGiftsOneByOne);
   this.sleep(1000);
 
-  var unknownPage = 0;
   var receivedCount = 0;
   var receiveCheckLimit = 1;
 
@@ -1879,12 +1863,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var receiveTime = Date.now();
   while (this.isRunning) {
     var img = this.screenshot();
-    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
+    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 24);
-    // var isHeart = isSameColor(Button.outReceiveOneHeart.color, this.getColor(img, Button.outReceiveOneHeart), 30);
-    // var isCoin = isSameColor(Button.outReceiveOneCoin.color, this.getColor(img, Button.outReceiveOneCoin), 40);
-    // var isTicket1 = isSameColor(Button.outReceiveOneTicket1.color, this.getColor(img, Button.outReceiveOneTicket1), 35);
-    // var isTicket2 = isSameColor(Button.outReceiveOneTicket2.color, this.getColor(img, Button.outReceiveOneTicket2), 35);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
@@ -1965,6 +1945,7 @@ Tsum.prototype.taskSendHearts = function() {
   this.sleep(1000);
   if (this.sendHeartMaxDuring == 0) {
     this.friendPageGoTop();
+    tap(0, 0); // Avoid overlap between zero score and pointer location
   }
 
   var startTime = Date.now();
@@ -2142,10 +2123,10 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, debug, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
-  ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
+function start(isJP, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+  ts = new Tsum(isJP, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
-  ts.debug = debug;
+  ts.debug = false;
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
@@ -2206,7 +2187,6 @@ function stop() {
     ts.isRunning = false;
     sleep(2000);
     // loop stop here...
-    log(ts.logs.clearMemory);
     ts.deinit();
     if (ts.recordReceive) {
       ts.releaseRecord();

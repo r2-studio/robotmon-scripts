@@ -118,7 +118,8 @@
         border-color: #2196F3;
       }
       .btn-plus,
-      .btn-danger {
+      .btn-danger,
+      .btn-warning {
         min-width: 35px;
         padding: 3px 0px 3px 0px !important;
       }
@@ -138,7 +139,7 @@
         bottom: 10px;
         right: 10px;
       }
-	  #goToBottom {
+	    #goToBottom {
         position: fixed;
         bottom: 10px;
         left: 10px;
@@ -190,7 +191,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 37;
+      VERSION = 38;
       ASC = true;
 
       var settings = [
@@ -220,8 +221,6 @@
             ]
           },
           { title: 'Japan Version?', title_zh_TW: '日本版?', default: false},
-          { title: 'Debug', title_zh_TW: '偵錯', default: true},
-          { title: 'Special Screen Ratio', title_zh_TW: '特殊螢幕比例', default: false},
         ],
         [
           { title: 'Auto Play Game', title_zh_TW: '自動玩遊戲', default: true},
@@ -588,10 +587,18 @@
         $('#resetRecord').click(function() {
           if (protect) {
             protect = false;
-            $('#resetRecord').html('Are you sure?');
+            if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
+              $('#resetRecord').text('確定要清除紀錄嗎？');
+            } else {
+              $('#resetRecord').text('Are you sure?');
+            }
           } else {
             protect = true;
-            $('#resetRecord').html('Reset Record?');
+            if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
+              $('#resetRecord').text('清除紀錄');
+            } else {
+              $('#resetRecord').text('Reset Record');
+            }
             JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
             $('#record').html('');
           }
@@ -606,14 +613,18 @@
           $('#updateRecordDESC').text('更新(遞減)');
           $('#resetRecord').text('清除紀錄');
           $('#goToTop').text('回頁面頂端');
-		      $('#goToBottom').text('轉到底部');
+		      $('#goToBottom').text('回頁面底端');
+          $('#exportInfo').text('點選更新後請等待圖片的讀取，完成後再點選輸出 HTML');
+          $('#exportRecord').text('輸出 HTML');
         } else {
           $('#senders').text('List of Heart Counts');
           $('#updateRecordASC').text('Update(ASC)');
           $('#updateRecordDESC').text('Update(DESC)');
           $('#resetRecord').text('Reset Record');
           $('#goToTop').text('Go to Top');
-		      $('#goToBottom').text('Go to Bottom');
+          $('#goToBottom').text('Go to Bottom');
+          $('#exportInfo').text('Click Update and wait for loading all images, then click Export HTML');
+          $('#exportRecord').text('Export HTML');
         }
       });
 
@@ -719,14 +730,22 @@
         $('#record').html(html);
       }
       function exportHTML() {
-        $('#exportRecord').html('Exporting');
+        if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
+          $('#exportRecord').text('輸出中');
+        } else {
+          $('#exportRecord').text('Exporting');
+        }
         var html = $('#record').html();
         html = html.replace(/\n/g, '');
         var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>'+ html+ '</body>\');';
         JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
       }
       function exportSuccess() {
-        $('#exportRecord').html('Export HTML');
+        if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
+          $('#exportRecord').text('輸出 HTML');
+        } else {
+          $('#exportRecord').text('Export HTML');
+        }
       }
     </script>
   </head>
@@ -741,7 +760,7 @@
       <button id='updateRecordDESC' class='btn btn-plus'>Update(DESC)</button>
       <button id='resetRecord' style='float:right;' class='btn btn-danger'>Reset Record</button>
       <button id='exportRecord' style='float:right;' class='btn btn-warning'>Export HTML</button>
-      <div>Click Update and wait for loading all images, then click Export HTML</div>
+      <div id='exportInfo' style='padding-top:5px;'>Click Update and wait for loading all images, then click Export HTML</div>
       <br />
       <div id='record'>
       </div>
