@@ -4,6 +4,11 @@ function Robotmon() {
   this._screenshot = 0;
 }
 
+Robotmon.prototype.registObject = function(obj) {
+  obj.context = this.context;
+  return obj;
+}
+
 Robotmon.prototype.addPage = function(page) {
   if (page.name === undefined || page.name === "") {
     this.context.debug('Page.name is not set');

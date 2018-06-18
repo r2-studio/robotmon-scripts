@@ -65,15 +65,34 @@ Context.prototype.exitPage = function() {
   }
 }
 
-Context.prototype.waitForChange = function() {}
+Context.prototype.waitForChange = function(score, max) {
+  if (this.currentPage === undefined) {
+    return;
+  }
+  var t = Date.now();
+  var originImg = this.currentPage.onScreenshot();
+  while(true) {
+    this.sleep(300);
+    var img = this.currentPage.onScreenshot();
+    var s = getIdentityScore(originImg, img);
+    releaseImage(img);
+    if (s < score) {
+      break;
+    }
+    if (Date.now() - t > max) {
+      break;
+    }
+  }
+  releaseImage(originImg);
+}
 
 Context.prototype.getScreenshot = function(update) {
   if (this.screenshot !== 0 && update) {
     releaseImage(this.screenshot);
     this.screenshot = 0;
-    if (this.currentPage !== undefined) {
-      this.screenshot = this.currentPage.onScreenshot();
-    }
+  }
+  if (this.currentPage !== undefined) {
+    this.screenshot = this.currentPage.onScreenshot();
   }
   return this.screenshot;
 }
