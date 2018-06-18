@@ -54,18 +54,24 @@ function initHTML(serverString){
     var firstTime = execute("ls "+itemPath);
     if(firstTime.length == 0){
         console.log("First time run script, init basic item");
-        sleep(500);
         execute("mkdir "+itemPath);
         execute("mkdir "+itemPath+"script");
         execute("mkdir "+itemPath+"friend_servant");
         execute("mkdir "+itemPath+"friend_item");
         execute("cp "+packagePath+"BasicItem/script3.js "+itemPath+"script/自動戰鬥.js");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/script2.js "+itemPath+"script/抽箱.js");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/script1.js "+itemPath+"script/友抽.js");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/friend1.png "+itemPath+"friend_servant/孔明.png");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/friend2.png "+itemPath+"friend_servant/梅林.png");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/item1.png "+itemPath+"friend_item/絆.png");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/item2.png "+itemPath+"friend_item/QP.png");
+        sleep(500);
     }
     var scriptList = execute("ls "+itemPath+"script").replace(/.js/g,'').replace(/ /g,'').replace(/\r\n|\n/g,",");
     if(scriptList.slice(-1)==','){
