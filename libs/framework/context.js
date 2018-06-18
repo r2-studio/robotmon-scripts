@@ -91,7 +91,7 @@ Context.prototype.getScreenshot = function(update) {
     releaseImage(this.screenshot);
     this.screenshot = 0;
   }
-  if (this.currentPage !== undefined) {
+  if (this.currentPage !== undefined && this.screenshot === 0) {
     this.screenshot = this.currentPage.onScreenshot();
   }
   return this.screenshot;

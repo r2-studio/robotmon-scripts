@@ -63,12 +63,12 @@ Point.prototype.moveTo = function() {
 
 Point.prototype.checkColor = function() {
   if (!this._check()) {
-    return;
+    return false;
   }
   var xy = this.context.currentPage.onDevToResizeXY(this.x, this.y);
   var img = this.context.getScreenshot(false);
   if (this.context.config.debug) {
-    var imgSize = getImageSize();
+    var imgSize = getImageSize(img);
     if (xy.x < 0 || xy.x > imgSize.width || xy.y < 0 || xy.y > imgSize.height) {
       this.context.debug("Error: Point checkColor exceed image size");
       sleep(1000);
@@ -77,8 +77,10 @@ Point.prototype.checkColor = function() {
   }
   const c = getImageColor(img, xy.x, xy.y);
   if (this.need && !Colors.isSameColor(c, this, this.d)) {
+    this.context.debug("Is Not Same Color, but need: " + JSON.stringify(c) + " " + JSON.stringify(this));
     return false;
   } else if (!this.need && Colors.isSameColor(c, this)) {
+    this.context.debug("Is Same Color, but not need: " + JSON.stringify(c) + " " + JSON.stringify(this));
     return false;
   }
   return true;
