@@ -1,1 +1,1 @@
-selectStage(-1);selectFriend(1,"","",1);selectTeam(0);startQuest();autoAttack(3,0,1,1,0,0,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1);finishQuest()
+selectStage(-1);selectFriend(1,"","",0);selectTeam(0);startQuest(-1);autoAttack(3,0,1,1,0,0,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1);finishQuest()

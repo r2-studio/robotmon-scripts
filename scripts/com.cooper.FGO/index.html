@@ -135,6 +135,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
     <script>
+    var server = "JP"
     var commandId = 0;
     var scriptCnt = 0;
     var friendServantList = [];
@@ -146,7 +147,7 @@
     var listenScriptMode = true;
     $(function() {
         JavaScriptInterface.showMenu();
-        JavaScriptInterface.runScriptCallback("initHTML();","initHTML");
+        JavaScriptInterface.runScriptCallback('initHTML("'+server+'");',"initHTML");
 
         $("#loopTimePlus").click(function() {
             $("#loopTime").val(parseInt($("#loopTime").val()) + 1);
@@ -315,9 +316,9 @@
                 dropdownAutoWidth: true
             });
         });
-        $("#addStartStage").click(function(){
+        $("#addStartQuest").click(function(){
             commandId++;
-            insertNewCommand(getStartStage(commandId));
+            insertNewCommand(getStartQuest(commandId));
         });
         $("#addFinish").click(function(){
             commandId++;
@@ -452,7 +453,7 @@ function initFriendButton(scriptValue){
 
     $("#selectFriendServant"+currentId).change(function(){
         if($(this).val()!=-1){
-            var path = servantImgPath+'/'+$(this).select2('data')[0].text+".png";
+            var path = servantImgPath+$(this).select2('data')[0].text+".png";
             $("#selectFriendServantImg"+currentId).attr("src",path);
         }else{
             $("#selectFriendServantImg"+currentId).removeAttr('src').replaceWith($("#selectFriendServantImg"+currentId).clone());
@@ -467,7 +468,7 @@ function initFriendButton(scriptValue){
     }
     $("#selectFriendItem"+currentId).change(function(){
         if($(this).val()!=-1){
-            var path = itemImgPath+'/'+$(this).select2('data')[0].text+".png";
+            var path = itemImgPath+$(this).select2('data')[0].text+".png";
             $("#selectFriendItemImg"+currentId).attr("src",path);
         }else{
             $("#selectFriendItemImg"+currentId).removeAttr('src').replaceWith($("#selectFriendServantImg"+currentId).clone());;
@@ -579,7 +580,7 @@ function getCurrentScript(){
                     newScript+="selectTeam("+$("#selectTeam"+itemId).val()+");";
                     break;
                     case "進入關卡":
-                    newScript+='startQuest();';
+                    newScript+="startQuest("+$("#useItem"+itemId).val()+");";
                     break;
                     case "結束關卡":
                     newScript+='finishQuest();';
@@ -638,7 +639,7 @@ function getGetBox(id){
         '<select id = "getBoxReset'+id+'">'+
         '<option value = "0" selected>否</option>'+
         '<option value = "1">是</option></select></li><br>'+
-        '<label>注意 前五箱中獎後即會執行自動重置</label>');
+        '<label>注意 箱子中獎後會立刻重置</label>');
 }
 function getUseSkillItem(id){
     return getCommandItem(id,"使用技能",
@@ -879,6 +880,7 @@ function getFinishItem(id){
 }
 function getSelectStage(id){
     return getCommandItem(id,'選擇關卡',
+        '<label>開啟畫面上方的任務</label><br>'+
         '<li><label>自動吃果&nbsp;&nbsp;</label>'+
         '<select id = "autoApple'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -889,6 +891,7 @@ function getSelectStage(id){
 }
 function getSelectFriend(id){
     return getCommandItem(id,'選擇好友',
+        '<label>辨識準確度持續改進中</label><br>'+
         '<li><label>搜尋職階&nbsp;&nbsp;</label><br>'+
         '<input type="checkbox" id = "selectFriend0'+id +'">全&nbsp'+
         '<input type="checkbox" id = "selectFriend1'+id +'">劍&nbsp'+
@@ -928,8 +931,16 @@ function getSelectTeam(id){
         '<option value = "8">隊伍9</option>'+
         '<option value = "9">隊伍10</option></select></li>');
 }
-function getStartStage(id){
-    return getCommandItem(id,'進入關卡','<label>開啟畫面上方的任務</label>');
+function getStartQuest(id){
+    return getCommandItem(id,'進入關卡',
+        '<li><label>使用活動道具(日服尚未支援)&nbsp;&nbsp;</label>'+
+        '<select id = "useItem'+id+'">'+
+        '<option value = "-1" selected>不使用</option>'+
+        '<option value = "0">一</option>'+
+        '<option value = "1">二</option>'+
+        '<option value = "2">三</option>'+
+        '<option value = "3">四</option>'+
+        '<option value = "3">五</option></select></li>');
 }
 function getCheckSwitchStatus(id) {
     return $(id).is(':checked');
@@ -995,7 +1006,6 @@ function initHTML(result){
     if(result[2].length > 0){
         friendItemList = result[2].split(",");
     }
-    storagePath = result[3];
     if(result[0] == undefined){
         $('#scriptMode').select2({
             minimumResultsForSearch: -1,
@@ -1015,9 +1025,14 @@ function initHTML(result){
             width:'100%'
         });
     }
-    servantImgPath = storagePath+'/FGO/friend_servant';
-    itemImgPath = storagePath+'/FGO/friend_item';
-    $("#errorMessage").remove();
+    storagePath = result[3];
+    servantImgPath = storagePath+'friend_servant/';
+    itemImgPath = storagePath+'friend_item/';
+    if(server == "JP"){
+        $("#serverMessage").text("日服-需要其他伺服器版本請至腳本商店下載");
+    }else if(server == "TW"){
+        $("#serverMessage").text("台服-需要其他伺服器版本請至腳本商店下載");
+    }
 }
 
 function scriptFinish(){
@@ -1030,7 +1045,7 @@ function saveServantConfirm(time){
     JavaScriptInterface.clickSettingButton();
     bootbox.prompt(
             {
-                title: '<img src = "'+storagePath+'/tmp_servant_'+time+'.png" width = "60" height = "40"><br>檔案名稱',
+                title: '<img src = "'+storagePath+'tmp_servant_'+time+'.png" width = "60" height = "40"><br>檔案名稱',
                 value: "從者"+(friendServantList.length+1),
                 callback: function(imageName) {
                     if(imageName!=null &&imageName.length >0){
@@ -1053,7 +1068,7 @@ function saveItemConfirm(time){
     JavaScriptInterface.clickSettingButton();
     bootbox.prompt(
             {
-                title: '<img src = "'+storagePath+'/tmp_item_'+time+'.png" width = "60" height = "20"><br>檔案名稱',
+                title: '<img src = "'+storagePath+'tmp_item_'+time+'.png" width = "60" height = "20"><br>檔案名稱',
                 value: "禮裝"+(friendItemList.length+1),
                 callback: function(imageName) {
                     if(imageName!=null &&imageName.length >0){
@@ -1131,7 +1146,7 @@ function resetScript(result){
         }else if(checkstring(content,"getBox")){
             content = content.replace('getBox(','');
             content = content.replace(')','');
-            $("#skill-list").append(getBox(commandId));
+            $("#skill-list").append(getGetBox(commandId));
             initCommandButton(commandId);
             $("#getBoxReset"+commandId).select2({
                 minimumResultsForSearch: -1,
@@ -1155,8 +1170,22 @@ function resetScript(result){
             });
             $("#selectTeam"+commandId).val(content).trigger('change');
         }else if(checkstring(content,"startQuest")){
-            $("#skill-list").append(getStartStage(commandId));
+
+
+            content = content.replace('startQuest(','');
+            content = content.replace(')','');
+            $("#skill-list").append(getStartQuest(commandId));
             initCommandButton(commandId);
+            $("#useItem"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            if(content.length == 0){
+                content = -1;
+            }
+            $("#useItem"+commandId).val(content).trigger('change');
+
+
         }else if(checkstring(content,"finishQuest")){
             $("#skill-list").append(getFinishItem(commandId));
             initCommandButton(commandId);
@@ -1319,8 +1348,7 @@ function onLog(message) {
         <a class="navbar-brand">FGO</a>
     </nav>
     <div class="container">
-        <li id="errorMessage">腳本開啟中，如此行文字一直存在，請重開腳本，並確認Robotmon service狀態與檔案完整性</li>
-        <li>目前僅支援日版FGO，未來預計加入台服與B服</li>
+        <li id="serverMessage">腳本開啟中，如此行文字一直存在，請重開腳本，並確認Robotmon service狀態與檔案完整性</li>
         <a href="https://www.facebook.com/FGOAutoScript">有任何使用上的問題，歡迎到粉絲團來發問</a><br>
         <ul class="list-group">
             <li class="list-group-item">
@@ -1365,7 +1393,7 @@ function onLog(message) {
               <button id="addSelectTeam" type="button">選擇隊伍</button>
           </div><br><br>
           <div  class="pull-left" style="margin-top:-4px">
-              <button id="addStartStage" type="button">進入關卡</button>
+              <button id="addStartQuest" type="button">進入關卡</button>
               <button id="addFinish" type="button">結束關卡</button>
           </div><br><br><br>
           <div  class="pull-left" style="margin-top:-4px">

@@ -1,1 +1,101 @@
-qVO7sis6d/zgIRDeVynWHdq51PBYfbdeUH3N1D7UHOQtQQBeD7PdAkuecqz1GfVZa30lqmiAzimeBLhYbkiD8hRogKMCeQ75URiTGcd9QSca/Gccz0YqNJbtui3+Iz7YVvTPwkp5hj/x6STzVKoz5EmpicvHmwbCw94Y45o/p7InY9YGXCypT4+LFyOrm2vx2HV89YykIabk5oh3Uuc7xJIaTjy3xkNpiP6zNi/YHsC3s/97aYBRxd8zeDOIhp0/KGnayaG/HhyVSRzrc5cnDrRDOt6Aw56EBqJckwqgqiP8EpNrg7x8J52ZqBorCbmWdkkLrPh+wyPL/M7HBQRk5u4w19mHRt9M22zebQHzGdxvaKnw9o6FoYSQKkFx/9gz+12/xOwKOA1RDlFDUO2yo2iAB2ureo/8CLap7wrVpxs8sE+ozDUaIEEzELkQ4HNd2PjQkmCVRjv4R22K0hU5rWrCB1a1iwMhdvths+o7B9SIrzVpkLbshlWyU0agZX2VxFhDdmXeowVNOOi3NEHZJRFa+aug1YvL6Y18EGSCU5nl6s1nkFAtM8F0ZglVBNsrzvow5Ed6lNNr3EcNnDbj5+BmAdxL7+gfBmYWEPMkTGYMKxkpSubMWni8wz1BiOtdglNWXBqXwuGDiXweSiQrQhKQjSPk3vGKhiw3r5HXnrYY3ZLa6VjssDmejUJuwzXtl2EDfwhp6oWte11/cdtzAyXE6diiaO0MZxYyDERhF0gST0HKf/phARGOcNjD70ncTfai9/ZAUfgv2Tk5eDf8XWf0KrNWxOUolvrw+4nxY58PnrM64NxAaZazk8bHNln8XzBhI+58UBS9VsfYTphadIMAF1tYUbhm9eJA3OoVCuNnxCMiqdzaAYEVvWhOvE7M8rbE/pnUeMsEndWD4ImpZkcjLxJeg+CY0R/d2STqg5KHB98NbLOmGsS3cC01ph6fJU1C3R/aqF2+ysqDdzmbm6YH5BHQNY0xjFRyxTwr5DEVNdm9UAQszCgOywXUSjGwbz7el7aq9Z25mkXHmlgh6l2FlcSIBTC1cFRy/3FMEUA70o+oW93t3zhoYS6Yd3/jh1JnQbO/erYDcNZT4YtqmKAj0qFiqLXZppqq404iQdLMj7aWKDe7qvu3ejAl6D33R2ZUitgFk3wMIf50a1K/go/s8osfUTGeWxub6V7kTjAh6WdmBHtIlH1yNkPLAwxfRilLpddFUOU5UjbGIbBucuP46siAhmuJzCxHaUoi5mvBcFSTcanqGnIlFb1XnJLfNnbH0CwV9OsXEnQdIEL3DvHEbjOkjDRtkSdKTY9ARGw/AdLW3rcDDn5oH0N7JLEm5cFWtF2d/e5LaQ9C4aUPnOSr38GkyMeMzK1o2z3YwXfDOpnGP1+67fT6p2L0kxZ9cB13h9jGHm36c1PX4iXF4zX1aAsthWr+xx8xO4sxuPvxKKcC2HTzM1Nh1nmkeaCaJP9TaW19Atvy2p9u147U/bZELOoXgHlIBwhK7YNeabhulbfQmXX3IJOoplC9hkSOMxW65XVOc5t7gj2nabrKBceUEWr6xk293M0bR+KtkE9P+oR29wXut/wblmGRP00moyAVHX6291Ja6Apr83toBl9prHdaPj8pYinb7TnGIH8xJO1CQuMBY0Bmc1uql85lVxf0VDms93fjEbPQ6et4LRHj5r3SAmXnSrLSj7vZsVMbHeJ2SpfybgWMWP7c6cTNlomt+RK736ipI5zpw5Q2W2T7KucT0fYCWbaLgiVXINrkwzY+atPam5XI4z9xFsa6B3BpibdTqJCoZfbrcNDZJxZpDNC8lmPHvtfo3RypTQgzZDCo/NiOt1NjnF3KxiEtFtF+OZy9pYNKlFhuj7qCtYnEj41Ij6VA9lpi50E0S5nn6QZAD+m4GnWwehBeVmWyhqJLqqeWH9ZFY0Bp1AoYhXSc5hngeajqqJnV5jB/HStPkJLWp+pP3M75gmwFpnY2ET2eg5nsfMCyOPbrPnF+3My3sO+Gt/2svbftcj4TJQMBCKCySoFapiuD9ex46fYbwBrLuIOcCyGHtU2/gHJCXyPyld5pVcXw1A77QXvDlfVs6PVE/HePF36/No07+1MW0fXHjHY+bIFz6+pj8OOW4GQN4b/YAQvJkusLmJLiTRVaWpvKrR8Xupp5JufAGGgoiOlvuhdKLz27Le0D+iLCvo1yxsSb0+gSpk5wxB4Z7iDWD3t/dewS8ELjI/2Xg4LEPkluoiEKd2Lqagiy8u7/hUsOZvoY9tje5NbcnjDKDOgKuXuDDmvKAGbHCMuDABjlBqshzYXvG4vvqT5YApi55/lTKREfJMaIo2vg8AQIg3apMwN+6vHdZBR89vI/a+37+IEzwFjuuQ5T5r62MnhPPunkD5IU+/j9hWYxFVoiPL7sZT/9Lnn+IsGxMJQzKMqzZ2AZjUEjsdqJqCVZ0EizSOQILpubkyeH+6ay695l6Ke3hprTkUUcJZXvd6uEfkJk3QyCpbFeTigA9Pz+BKMJ9KTZgXdkDra6xOweUlqFbb2nIaauKrK9qZDboAo2K7ZraodK6CzwOb3ICS8BbmBoZBhjJm+j0VmgxVYh/U06QlyM6Dds1gTA0fZiuM7qKbtGyxrGkwBhh1Id2iNB09pW4rATDSnFb9qB0silXCbQlOwn+oHJ30v8SJVZDDrwO+Uf2NxPJeHbzqMMZLb37zC08HeMYjPq0Mwf/CW8W3ORHK4HQlecbI/5hrBVpBmuGPHp5IH0Xg8ZKQIZcZTs/YzHfARwUbyDz7I3Qf3THkPPbQ5PBR8Kerk8YojBn/COmyfLIOovwhJTMojMF0mXdffn7aV/lt+ZbTMgrzF+URPUE9Kp/2Bs1ZuVG45ZPdVThqKtBEJ8ncTMlRqPlehXd5nvi9WxIluXy236xG+oP/S9B4tGoEoX8M+BbNEy5cxuI4wluZESm4nLN7W6LEO3urR6YWkoyBHc/pgkYCyl66Su8VngA5+JRxhGlcERdNnIuAYS1BrAo6nvynMrZts1MMPluQ5VQufZ3m6HnL+5dh20BaXmjqvR3mbwlEA/tgka/EbunqtDRI0NguGbW8ZZU4FjHyNUkNDYg+/ducpIRqCV4jRzG9Hm8w1LnUeDjC5BXTuW7W3cKQFFr805n7MDXrQoN0AUeDnIoqzCRri13740zDigguiD60cy/QCDZExgCTk4dAWnAkfPgrwCdsecknL2NPCZCyYLFGRF0SlDac7gSd5trD1jh46A2JVES6GRupv5KkKtfkGt4vz9NFCrdl5E8McKjFP0JqLK/AJNk1gxRXoV7W/u0BJ2hecVyf4sY1i14h8G7kUeHZDDLIg8U70tQcm/isfqDPFyQ6Fa6Bvarntz1FEvLuWcedVqWaJLD4T3NblPv5iMPnO6uWfFv2VHWaaMMqGia+DsqnZRRbh7WxCZuwCyySKCqxzaz3s7geEvOuT0T+cGpy+kWIrt+5GXnRGMq84JwbFqi9gY2zLJnHCHz0hzcNHkv1XhGuugirzn+D3y6/cq4cDl3WFL6MXjvW8xjBhpcZIDfG7kBmjXjMBQgYsU1S+3ze7cv/rgGC/jd8buPJtQe7TQwFqytvf654IY8tD4dWmc4QK31dkNyr3OAKpLirnkyr3jrmjBH5Rd8W5VCnkgFsRgEoOcsbVwsa1AtWP/BPzFuzG/RMxpUmJWYCCquE+Y12DyGZ6Ouu3ADls=
+function getBox(newBox){
+    if(newBox == 1 && checkIsBoxFinish()){
+        resetBox();
+    }
+    var clickCnt = 0;
+    while(true){
+        if(!isScriptRunning){
+            return;
+        }
+        if(clickCnt % 10 == 0 && checkIsBoxFinish()){
+            return;
+        }
+        clickCnt++;
+        if(clickCnt > 200){
+            return;
+        }
+        tapScale(800,955,1000);
+        sleep(1000);
+    }
+}
+
+function getFriendPoint(){
+    while(true){
+        if(!isScriptRunning){
+            return;
+        }
+        var screenShot = getScreenshot();
+        if(!checkImage(screenShot,friendPointCheckImage,750,750,1100,145)){
+            console.log("not in friend point page");
+            sleep(10000);
+            continue;
+        }
+        if(checkImage(screenShot,friendPointTenImage,1500,1050,320,100)){
+            tapScale(1600,1100,100);
+        }
+        else if(checkImage(screenShot,friendPointFreeImage,1050,1050,450,100)){
+            tapScale(1250,1100,100);
+        }else{
+            releaseImage(screenShot);
+            return;
+        }
+        releaseImage(screenShot);
+        sleep(1000);
+
+        var screenShot2 = getScreenshot();
+        if(checkImage(screenShot2,friendPointFullImage,650,300,1200,250)){
+            console.log("item box full");
+            releaseImage(screenShot2);
+            return;
+        }else if(checkImage(screenShot2,friendPointFullImage2,650,300,1200,250)){
+            console.log("item box full");
+            releaseImage(screenShot2);
+            return;
+        }
+        releaseImage(screenShot2);
+
+        tapScale(1700,1135,100);
+        sleep(1000);
+
+        while(true){
+            if(!isScriptRunning){
+                return;
+            }
+            var screenShot3 = getScreenshot();
+            if(checkImage(screenShot3,friendPointReloadImage,1400,1300,250,85)){
+                tapScale(1500,1300,100);
+                sleep(3000);
+                releaseImage(screenShot3);
+                break;
+            }else if(checkImage(screenShot3,friendPointNew,2030,1300,300,100)){
+                tapScale(2180,1350,100);
+                sleep(5000);
+            }else if(checkImage(screenShot3,friendPointBack,60,25,60,115)){
+                tapScale(90,80,100);
+                sleep(5000);
+            }else{
+                tapScale(1700,1135,100);
+                sleep(3000);    
+            }
+            releaseImage(screenShot3);
+        }
+    }
+}
+
+function checkIsBoxFinish(){
+    return checkPixel(2100,500,74,125,172);
+}
+
+function resetBox(){
+    console.log("reset box");
+    tapScale(2100,510,100);
+    sleep(1000);
+    tapScale(1700,1135,100);
+    waitLoading();
+    sleep(1000);
+    tapScale(1250,1135,100);
+    sleep(1000);
+}
+
+
+console.log("Load get box api finish");
