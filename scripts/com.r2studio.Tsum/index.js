@@ -1122,7 +1122,7 @@ Tsum.prototype.sendMoneyInfo = function() {
 
 Tsum.prototype.isAppOn = function() {
   if (!this.autoLaunch) {
-    return false;
+    return true;
   }
   var result = execute('dumpsys window windows').split('mCurrentFocus');
   if (result.length < 2) {
@@ -1146,7 +1146,7 @@ Tsum.prototype.isAppOn = function() {
 
 Tsum.prototype.startApp = function() {
   if (!this.autoLaunch) {
-    return false;
+    return;
   }
   log(this.logs.startTsumTsumApp);
   if (this.isJP) {
@@ -2203,6 +2203,11 @@ function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan
       receivedCount: 0,
       sentCount: 0,
     };
+  }
+  
+  if (!checkFunction(TaskController)) {
+    console.log("File lose...");
+    return;
   }
 
   gTaskController = new TaskController();
