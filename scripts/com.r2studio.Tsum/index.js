@@ -82,7 +82,7 @@ var Config = {
 };
 
 // 1776 * 1920 (y - 78)
-var adjY = 74;
+var adjY = 72;
 var Button = {
   gameBubblesFrom: {x: 100, y: 560 + adjY},
   gameBubblesTo: {x: 1000, y: 1460 + adjY},
@@ -963,8 +963,9 @@ function classifyTsums(points, tsumCount) {
 
 // Tsum struct
 
-function Tsum(isJP, logs) {
-  this.debug = true;
+function Tsum(isJP, detect, logs) {
+  this.debug = false;
+  this.autoLaunch = false;
   this.isRunning = true;
   this.runTimes = 0;
   this.myTsum = '';
@@ -1020,11 +1021,45 @@ function Tsum(isJP, logs) {
   this.recordImages = {};
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
-  this.init();
+  this.init(detect);
 }
 
-Tsum.prototype.init = function() {
+Tsum.prototype.detect = function() {
+  var size = getScreenSize();
+  var img = getScreenshot();
+  var top = 0;
+  var bottom = size.height - getVirtualButtonHeight();
+  for (var y = 0; y < size.height; y++) {
+    var color = getImageColor(img, size.width - 2, y);
+    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
+      top = y;
+      break;
+    }
+  }
+  for (var y = bottom - 1; y > 0; y--) {
+    var color = getImageColor(img, size.width - 2, y);
+    if (!isSameColor({r: 0, g: 0, b: 0}, color, 5)) {
+      bottom = y+1;
+      break;
+    }
+  }
+  releaseImage(img);
+  log(this.logs.detectScreen, top, bottom);
+  sleep(1000);
+  return {top: top, bottom: bottom};
+}
+
+Tsum.prototype.init = function(detect) {
   log(this.logs.calculateScreenSize);
+  
+  var extraOffsetY = 0; 
+  if (detect) {
+    var topBottom = this.detect();
+    var h = topBottom.bottom - topBottom.top;
+    this.screenHeight = h;
+    extraOffsetY = topBottom.top;
+  }
+
   var realWidth = this.screenHeight / 16 * 9;
   if (realWidth > this.screenWidth) {
     this.gameWidth = realWidth;
@@ -1042,6 +1077,7 @@ Tsum.prototype.init = function() {
     this.gameOffsetX = 0;
     this.gameOffsetY = 0;
   }
+  this.gameOffsetY -= extraOffsetY;
 
   this.captureGameRatio = this.gameWidth / 1080;
   this.playWidth = this.screenWidth;
@@ -1054,7 +1090,7 @@ Tsum.prototype.init = function() {
 
   this.sleep(200);
   log(this.logs.offset, this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
-  this.sleep(200);
+  this.sleep(1000);
   execute("mkdir -p " + this.storagePath + '/tmp');
   this.sleep(200);
   execute("mkdir -p " + this.storagePath + '/' + Config.recordDir);
@@ -1085,6 +1121,9 @@ Tsum.prototype.sendMoneyInfo = function() {
 }
 
 Tsum.prototype.isAppOn = function() {
+  if (!this.autoLaunch) {
+    return true;
+  }
   var result = execute('dumpsys window windows').split('mCurrentFocus');
   if (result.length < 2) {
     return false;
@@ -1106,6 +1145,9 @@ Tsum.prototype.isAppOn = function() {
 };
 
 Tsum.prototype.startApp = function() {
+  if (!this.autoLaunch) {
+    return;
+  }
   log(this.logs.startTsumTsumApp);
   if (this.isJP) {
     execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
@@ -2123,13 +2165,14 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
-  ts = new Tsum(isJP, isLocaleTW ? LogsTW : Logs);
+function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+  ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
+  ts.autoLaunch = autoLaunch;
   ts.coinItem = coinItem;
   ts.bubbleItem = bubbleItem;
   ts.isPause = isPause;
@@ -2160,6 +2203,11 @@ function start(isJP, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinIt
       receivedCount: 0,
       sentCount: 0,
     };
+  }
+  
+  if (!checkFunction(TaskController)) {
+    console.log("File lose...");
+    return;
   }
 
   gTaskController = new TaskController();
