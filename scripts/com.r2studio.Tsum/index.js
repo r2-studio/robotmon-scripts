@@ -964,7 +964,8 @@ function classifyTsums(points, tsumCount) {
 // Tsum struct
 
 function Tsum(isJP, detect, logs) {
-  this.debug = true;
+  this.debug = false;
+  this.autoLaunch = false;
   this.isRunning = true;
   this.runTimes = 0;
   this.myTsum = '';
@@ -1120,6 +1121,9 @@ Tsum.prototype.sendMoneyInfo = function() {
 }
 
 Tsum.prototype.isAppOn = function() {
+  if (!this.autoLaunch) {
+    return false;
+  }
   var result = execute('dumpsys window windows').split('mCurrentFocus');
   if (result.length < 2) {
     return false;
@@ -1141,6 +1145,9 @@ Tsum.prototype.isAppOn = function() {
 };
 
 Tsum.prototype.startApp = function() {
+  if (!this.autoLaunch) {
+    return false;
+  }
   log(this.logs.startTsumTsumApp);
   if (this.isJP) {
     execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
@@ -2158,13 +2165,14 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, detect, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
   if (isFourTsum) {
     ts.tsumCount = 4;
   }
+  ts.autoLaunch = autoLaunch;
   ts.coinItem = coinItem;
   ts.bubbleItem = bubbleItem;
   ts.isPause = isPause;
