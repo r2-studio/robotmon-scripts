@@ -201,26 +201,6 @@ var Page = {
     back: {x: 774, y: 1023 + adjY},
     next: {x: 320, y: 1019 + adjY},
   },
-  MailBox: {
-    name: 'MailBox',
-    colors: [
-      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 604, y: 1347 + adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80},
-    ],
-    back: {x: 561, y: 1581 + adjY},
-    next: {x: 561, y: 1581 + adjY},
-  },
-  MailBox2: {
-    name: 'MailBox',
-    colors: [
-      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 619, y: 1354 + adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80},
-    ],
-    back: {x: 561, y: 1581 + adjY},
-    next: {x: 561, y: 1581 + adjY},
-  },
   ReceiveHeart: {
     name: 'ReceiveHeart',
     colors: [
@@ -287,18 +267,6 @@ var Page = {
     ],
     back: {x: 190, y: 1574 + adjY},
     next: {x: 558, y: 1563 + adjY},
-  },
-  SettingPage: {
-    name: 'SettingPage',
-    colors: [
-      {x: 741, y: 345  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 363, y: 504  + adjY, r: 21 , g: 184, b: 219, match: true, threshold: 80},
-      {x: 464, y: 1084 + adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
-      {x: 903, y: 1228 + adjY, r: 237, g: 176, b: 10 , match: true, threshold: 80},
-      {x: 554, y: 1516 + adjY, r: 236, g: 180, b: 9  , match: true, threshold: 80},
-    ],
-    back: {x: 565, y: 1577 + adjY},
-    next: {x: 565, y: 1577 + adjY},
   },
   TsumsPage: {
     name: 'TsumsPage',
@@ -387,25 +355,6 @@ var Page = {
     back: {x: 327, y: 1458 + adjY},
     next: {x: 792, y: 1455 + adjY},
   },
-  InvitePage: {
-    name: 'InvitePage',
-    colors: [
-      {x: 342, y: 835  + adjY, r: 58 , g: 87 , b: 145, match: true, threshold: 80},
-      {x: 669, y: 832  + adjY, r: 0  , g: 181, b: 1  , match: true, threshold: 80},
-      {x: 536, y: 1271 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
-    ],
-    back: {x: 576, y: 1314 + adjY},
-    next: {x: 576, y: 1314 + adjY},
-  },
-  EventPage: {
-    name: 'EventPage',
-    colors: [
-      {x: 554, y: 1509 + adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
-      {x: 997, y: 1617 + adjY, r: 230, g: 169, b: 3 , match: true, threshold: 80},
-    ],
-    back: {x: 554, y: 1509 + adjY},
-    next: {x: 554, y: 1509 + adjY},
-  },
   FriendInfo: {
     name: 'FriendInfo',
     colors: [
@@ -416,16 +365,21 @@ var Page = {
     back: {x: 576, y: 1336 + adjY},
     next: {x: 576, y: 1336 + adjY},
   },
-  MyInfo: {
-    name: 'MyInfo',
+  ClosePage: { // including EventPage, MyInfo, MailBox, SettingPage, others
+    name: 'ClosePage', // the close button at center bottom
     colors: [
-      {x: 734, y: 284  + adjY, r: 29 , g: 189, b: 223, match: true, threshold: 80},
-      {x: 802, y: 381  + adjY, r: 241, g: 246, b: 240, match: true, threshold: 80},
-      {x: 766, y: 1347 + adjY, r: 31 , g: 190, b: 222, match: true, threshold: 80},
-      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
+      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // top right of the close button
     ],
     back: {x: 576, y: 1588 + adjY},
     next: {x: 576, y: 1588 + adjY},
+  },
+  InvitePage: {
+    name: 'InvitePage', // the close button at left bottom
+    colors: [
+      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11 , match: true, threshold: 80},
+    ],
+    back: {x: 176, y: 1520 + adjY},
+    next: {x: 176, y: 1520 + adjY},
   },
 };
 
@@ -1398,6 +1352,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.checkGameItem();
       this.sendMoneyInfo();
       this.tap(Button.outStart2);
+      this.sleep(3000); // avoid checking items again!
     } else if (page == 'GamePlaying') {
       // check again
       page = this.findPage(1, 500);
@@ -2137,8 +2092,8 @@ Tsum.prototype.sendHeart = function(btn) {
       }
     } else if (page == "FriendInfo") {
       this.tap(Page.FriendInfo.back);
-    } else if (page == "MyInfo") {
-      this.tap(Page.MyInfo.back);
+    } else if (page == "ClosePage") {
+      this.tap(Page.ClosePage.back);
     } else {
       unknownCount++;
     }
