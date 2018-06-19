@@ -1,3 +1,4 @@
+var version = "V1.11";
 var isDebug = false;
 
 var noApImage;
@@ -7,6 +8,7 @@ var selectFriendImage;
 var selectFriendImage2;
 var selectTeamImage;
 var finishStageImage = [];
+var whiteImage;
 var currentStageImage = [];
 var cardListImage = [];
 var cardDisableImage = [];
@@ -82,6 +84,7 @@ function loadImage(){
     for(var i=0;i<11;i++){
         finishStageImage[i] = openImage(imagePath+"FinishStage"+i+".png");
     }
+    whiteImage = openImage(imagePath+"White.png");
 
     for(var i=0;i<3;i++){
         currentStageImage[i] = openImage(imagePath+"CurrentStage"+i+".png");
@@ -136,6 +139,7 @@ function releaseAllImage(){
     for(var i=0;i<11;i++){
         releaseImage(finishStageImage[i]);
     }
+    releaseImage(whiteImage);
 
     for(var i=0;i<3;i++){
         releaseImage(currentStageImage[i]);        

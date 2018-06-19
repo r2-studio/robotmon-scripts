@@ -101,14 +101,14 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 1.1,
+      "versionCode": 1.11,
       "description": "<div>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、選隊伍、自動戰鬥施放技能與寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 1.1,
+      "versionCode": 1.11,
       "description": "<div>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、選隊伍、自動戰鬥施放技能與寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"

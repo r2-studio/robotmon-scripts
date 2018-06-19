@@ -21,10 +21,6 @@ function checkPlayerCanMove(){
             return false;
         }
     }
-    if(isDebug){
-        var path = getStoragePath();
-        saveImage(screenShot,path+"/last_can_move.png");
-    }
     releaseImage(screenShot);
     return true;
 }
@@ -166,7 +162,7 @@ function useSkill(player,skill,target,checkUsed){
         selectSkillTarget(target);
     }
     releaseImage(screenShot2);
-    sleep(1000);
+    sleep(3000);
 }
 
 function selectSkillTarget(player){
@@ -204,6 +200,7 @@ function useClothesSkill(skill,target1,target2){
     }else if(target1!=undefined && target2 !=undefined){
         changePlayer(target1,target2);
     }
+    sleep(3000);
 }
 
 function selectEnemy(enemy){
@@ -288,6 +285,10 @@ function isQuestFinish(){
     var screenShot = getScreenshot();
     for(var i = 0;i<11;i++){
         if(checkImage(screenShot,finishStageImage[i],positionX[i],positionY[i],positionW[i],positionH[i])){
+            if(checkImage(screenShot,whiteImage,500,500,500,500)){
+                releaseImage(screenShot);
+                return -1;
+            }
             releaseImage(screenShot);
             if(i<2){
                 return i;

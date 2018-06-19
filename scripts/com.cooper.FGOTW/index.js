@@ -85,7 +85,7 @@ function initHTML(serverString){
     if(itemList.slice(-1)==','){
       itemList = itemList.slice(0,-1);
     }
-    return scriptList+';'+servantList+';'+itemList+';'+itemPath;
+    return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version;
 }
 
 function initServer(){
@@ -100,7 +100,7 @@ function initServer(){
         skillPositionW = 37;
         skillPositionH = 33;
 
-        updateCardListX = [126,638,1146,1664,2184];
+        updateCardListX = [126,638,1148,1664,2184];
         updateCardListY = [1070,1100];
         updateCardListOffsetWeakX = 230;
         updateCardListOffsetWeakY = [-310,-340];
@@ -122,7 +122,7 @@ function initServer(){
 
         updateCardListX = [126,638,1148,1664,2184];
         updateCardListY = [1070,1100];
-        updateCardListOffsetWeakX = 225;
+        updateCardListOffsetWeakX = 224;
         updateCardListOffsetWeakY = [-310,-340];
 
         currentStageX = 1700;

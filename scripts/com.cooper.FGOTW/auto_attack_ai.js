@@ -83,7 +83,6 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
     skill[1] = p1;
     skill[2] = p2;
     waitUntilPlayerCanMove();
-    initServant = getCurrentServant();
     while(true){
         if(!isScriptRunning){
             break;
@@ -121,6 +120,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
     var screenShot = getScreenshot();
     var servantAlive = [true,true,true];
     if(!servantInited){
+        console.log("Init servant image");
         servantInited = true;
         initServant = getCurrentServant(screenShot);
         for(var i=0;i<3;i++){
@@ -135,15 +135,9 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
                 console.log("servant "+i+" died");
                 servantAlive[i] = false;
             }
-            releaseImage(currentServant[i]);
         }
         if(!(servantAlive[0] || servantAlive[1] || servantAlive[2])){
-            if(!allServentDieFlag){
-                allServentDieFlag = true;
-                return;
-            }
-            console.log("All servant die bug?");
-        /*
+            /*
             var path = getStoragePath();
             var currentdate = new Date();
             var time = currentdate.getTime();
@@ -151,8 +145,16 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
             for(var j=0;j<3;j++){ 
                 saveImage(currentServant[j],path+"/AllDieBug_current"+j+"_"+time+".png");                
                 saveImage(initServant[j],path+"/AllDieBug_init"+j+"_"+time+".png");
+            }*/
+            console.log("All servant die bug?");
+            if(!allServentDieFlag){
+                allServentDieFlag = true;
+                releaseImage(screenShot);
+                return;
             }
-        */
+        }
+        for(var i = 0;i<3;i++){            
+            releaseImage(currentServant[i]);
         }
     }
     allServentDieFlag = false;
@@ -160,7 +162,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
         if(initUlt[i] != undefined){
             releaseImage(initUlt[i]);
         }
-        initUlt[i] = cropImage(screenShot,ultCheckX[i]* screenScale[0],ultCheckY* screenScale[1],300 * screenScale[0],180* screenScale[1]);
+        initUlt[i] = cropImage(screenShot,ultCheckX[i]* screenScale[0] + screenOffset[0],ultCheckY* screenScale[1] + screenOffset[1],300 * screenScale[0],180* screenScale[1]);
     }
     var skillUsed = [];
     var m = 'skill_used:';
@@ -293,13 +295,13 @@ function updateUltList(){
     var edgeY = [270,570];
     var screenShot = getScreenshot();
     for(var i=0;i<3;i++){
-        var card = cropImage(screenShot,ultCheckX[i]* screenScale[0],ultCheckY* screenScale[1],300 * screenScale[0],180* screenScale[1]);
+        var card = cropImage(screenShot,ultCheckX[i]* screenScale[0] + screenOffset[0],ultCheckY* screenScale[1] + screenOffset[1],300 * screenScale[0],180* screenScale[1]);
         var score1 = getImageLightness(card,5);
         var score2 = getIdentityScore(card,initUlt[i]);
         if((score1 >= 120 && score2 < 0.6) ||(score1 >= 100 && score2 < 0.5) || (score1 >= 80 &&score2 < 0.3)){
             var r=0,g=0,b=0;
             for(var ey=edgeY[0];ey<edgeY[1];ey++){
-                var color = getImageColor(screenShot,edgeX[i]* screenScale[0],ey* screenScale[1]);
+                var color = getImageColor(screenShot,edgeX[i]* screenScale[0] + screenOffset[0],ey* screenScale[1] + screenOffset[1]);
                 if(color.r > (color.g + color.b)){
                     r++;
                 }
@@ -341,7 +343,7 @@ function updateCardList(){
     //get card color
     for(var i=0;i<5;i++){
         for(var j =0;j<2;j++){
-            var card = cropImage(screenShot,updateCardListX[i]* screenScale[0],updateCardListY[j]* screenScale[1],300 * screenScale[0],100* screenScale[1]);
+            var card = cropImage(screenShot,updateCardListX[i]* screenScale[0] + screenOffset[0],updateCardListY[j]* screenScale[1] + screenOffset[1],300 * screenScale[0],100* screenScale[1]);
             for(var k=0;k<3;k++){
                 var resizeCard = resizeImage(cardListImage[k],300 * screenScale[0],100* screenScale[1]);
                 var score = getIdentityScore(card,resizeCard);
@@ -358,16 +360,18 @@ function updateCardList(){
     for(var i=0;i<5;i++){
         cardStatus[i] = -1;
         for(var checkY = updateCardListY[0];checkY < updateCardListY[1];checkY+=2){
-            if(checkImage(screenShot,cardDisableImage[0],updateCardListX[i] + offsetDisableX[0],updateCardListY[j] + offsetDisableY,disableW[0], disableH) 
-                && checkImage(screenShot,cardDisableImage[1],updateCardListX[i] + offsetDisableX[1],checkY + offsetDisableY,disableW[1], disableH)){
-                cardStatus[i] = 0;
-                break;
-            }else if(checkImage(screenShot,cardWeakImage[0],updateCardListX[i] + updateCardListOffsetWeakX, checkY + updateCardListOffsetWeakY[0], weakW,weakH)){
-                cardStatus[i] = 1;
-                break;
-            }else if(checkImage(screenShot,cardWeakImage[1],updateCardListX[i] + updateCardListOffsetWeakX, checkY + updateCardListOffsetWeakY[1], weakW,weakH)){
-                cardStatus[i] = 2;
-                break;
+            for(var ox = -2;ox<3;ox++){
+                if(checkImage(screenShot,cardDisableImage[0],updateCardListX[i] + offsetDisableX[0]+ox,updateCardListY[j] + offsetDisableY,disableW[0], disableH) 
+                    && checkImage(screenShot,cardDisableImage[1],updateCardListX[i] + offsetDisableX[1]+ox,checkY + offsetDisableY,disableW[1], disableH)){
+                    cardStatus[i] = 0;
+                    break;
+                }else if(checkImage(screenShot,cardWeakImage[0],updateCardListX[i] + updateCardListOffsetWeakX+ox, checkY + updateCardListOffsetWeakY[0], weakW,weakH)){
+                    cardStatus[i] = 1;
+                    break;
+                }else if(checkImage(screenShot,cardWeakImage[1],updateCardListX[i] + updateCardListOffsetWeakX+ox, checkY + updateCardListOffsetWeakY[1], weakW,weakH)){
+                    cardStatus[i] = 2;
+                    break;
+                }
             }
         }
     }
@@ -376,13 +380,11 @@ function updateCardList(){
 
 function getCurrentServant(screenShot){
     var x = [200,830,1470];
-    var y = 850;
+    var y = 800;
     var servant = [];
-    var screenShot = getScreenshot();
     for(var i=0;i<3;i++){
-        servant[i] = cropImage(screenShot,x[i]* screenScale[0],y* screenScale[1],300* screenScale[0],200* screenScale[1]);
+        servant[i] = cropImage(screenShot,x[i]* screenScale[0] + screenOffset[0],y* screenScale[1] + screenOffset[1],300* screenScale[0],200* screenScale[1]);
     }
-    releaseImage(screenShot);
     return servant;
 }
 
