@@ -54,18 +54,24 @@ function initHTML(serverString){
     var firstTime = execute("ls "+itemPath);
     if(firstTime.length == 0){
         console.log("First time run script, init basic item");
-        sleep(500);
         execute("mkdir "+itemPath);
         execute("mkdir "+itemPath+"script");
         execute("mkdir "+itemPath+"friend_servant");
         execute("mkdir "+itemPath+"friend_item");
         execute("cp "+packagePath+"BasicItem/script3.js "+itemPath+"script/自動戰鬥.js");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/script2.js "+itemPath+"script/抽箱.js");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/script1.js "+itemPath+"script/友抽.js");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/friend1.png "+itemPath+"friend_servant/孔明.png");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/friend2.png "+itemPath+"friend_servant/梅林.png");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/item1.png "+itemPath+"friend_item/絆.png");
+        sleep(500);
         execute("cp "+packagePath+"BasicItem/item2.png "+itemPath+"friend_item/QP.png");
+        sleep(500);
     }
     var scriptList = execute("ls "+itemPath+"script").replace(/.js/g,'').replace(/ /g,'').replace(/\r\n|\n/g,",");
     if(scriptList.slice(-1)==','){
@@ -79,7 +85,7 @@ function initHTML(serverString){
     if(itemList.slice(-1)==','){
       itemList = itemList.slice(0,-1);
     }
-    return scriptList+';'+servantList+';'+itemList+';'+itemPath;
+    return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version;
 }
 
 function initServer(){
@@ -94,7 +100,7 @@ function initServer(){
         skillPositionW = 37;
         skillPositionH = 33;
 
-        updateCardListX = [126,638,1146,1664,2184];
+        updateCardListX = [126,638,1148,1664,2184];
         updateCardListY = [1070,1100];
         updateCardListOffsetWeakX = 230;
         updateCardListOffsetWeakY = [-310,-340];
@@ -116,7 +122,7 @@ function initServer(){
 
         updateCardListX = [126,638,1148,1664,2184];
         updateCardListY = [1070,1100];
-        updateCardListOffsetWeakX = 225;
+        updateCardListOffsetWeakX = 224;
         updateCardListOffsetWeakY = [-310,-340];
 
         currentStageX = 1700;

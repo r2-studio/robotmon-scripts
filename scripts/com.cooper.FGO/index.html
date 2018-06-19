@@ -146,9 +146,6 @@
     var insertDirection = 1;
     var listenScriptMode = true;
     $(function() {
-        JavaScriptInterface.showMenu();
-        JavaScriptInterface.runScriptCallback('initHTML("'+server+'");',"initHTML");
-
         $("#loopTimePlus").click(function() {
             $("#loopTime").val(parseInt($("#loopTime").val()) + 1);
             //console.log(getCurrentScript());
@@ -435,6 +432,8 @@
                 $("#insertDirection").text("前");
             }
         });
+        JavaScriptInterface.showMenu();
+        JavaScriptInterface.runScriptCallback('initHTML("'+server+'");',"initHTML");
     });
 function insertNewCommand(newCmd){
     if(insertDirection == 1){
@@ -999,7 +998,12 @@ function initHTML(result){
     if(result == undefined){
         return;
     }
-    result = result.split(';')
+    result = result.split(';');
+    if(result[4] == undefined){
+        $("#serverMessage").text("請重新開啟腳本以完成更新");
+        return;
+    }
+    var v = result[4];
     if(result[1].length > 0){
         friendServantList = result[1].split(",");
     }
@@ -1029,9 +1033,9 @@ function initHTML(result){
     servantImgPath = storagePath+'friend_servant/';
     itemImgPath = storagePath+'friend_item/';
     if(server == "JP"){
-        $("#serverMessage").text("日服-需要其他伺服器版本請至腳本商店下載");
+        $("#serverMessage").text("日服 "+v+"-需要其他伺服器版本請至腳本商店下載");
     }else if(server == "TW"){
-        $("#serverMessage").text("台服-需要其他伺服器版本請至腳本商店下載");
+        $("#serverMessage").text("台服 "+v+"-需要其他伺服器版本請至腳本商店下載");
     }
 }
 
