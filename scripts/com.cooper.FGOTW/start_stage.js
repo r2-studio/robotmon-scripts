@@ -289,7 +289,7 @@ function finishQuest(){
         var r = isQuestFinish();
         switch(r){
             case 0:
-                console.log("Quest finish");
+                console.log("Back to main screen");
                 return;
             case 1:
                 tapScale(650,1200,100);

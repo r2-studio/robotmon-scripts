@@ -4,39 +4,15 @@ var ultList = [];
 var cardList = [];
 var cardStatus = []; // -1:null 0:disable 1:weak 2:resist
 var servantInited;
-var ultCheckX = [682,1146,1620];
-var ultCheckY = 420;
+var ultCheckX = [682,1146,1612];
+var ultCheckY = 285;
+var ultWidth = 280;
+var ultHeight = 300;
+var ultLightnessOffset = 140;
 var allServentDieFlag = false;
 
 //autoAttack(3,0,1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1);
 function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1,p0s2,p0t2,p1ult,p1s0,p1t0,p1s1,p1t1,p1s2,p1t2,p2ult,p2s0,p2t0,p2s1,p2t1,p2s2,p2t2){
-    if(isDebug){
-        until = 2;
-        mainColor = 0;
-        sameColor = 1;
-        die = 0;
-        p0ult = 0;
-        p0s0 = -1;
-        p0t0 = -1;
-        p0s1 = -1;
-        p0t1 = -1;
-        p0s2 = -1;
-        p0t2 = -1;
-        p1ult = 0;
-        p1s0 = -1;
-        p1t0 = -1;
-        p1s1 = -1;
-        p1t1 = -1;
-        p1s2 = -1;
-        p1t2 = -1;
-        p2ult = 0;
-        p2s0 = -1;
-        p2t0 = -1;
-        p2s1 = -1;
-        p2t1 = -1;
-        p2s2 = -1;
-        p2t2 = -1;
-    }
     servantInited = false;
     var ult = [];
     ult[0] = p0ult;
@@ -99,8 +75,12 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
         if(until!=0 && until <= currentStage){
             break;
         }else if(isQuestFinish() >= 0){
-            console.log("Quest Finish");
-            break;
+            sleep(1000);
+            if(isQuestFinish() >= 0){
+                //double check
+                console.log("Quest Finish");
+                break;
+            }
         }else{
             console.log("AutoAttack start new turn");
             attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage);
@@ -161,8 +141,8 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
     for(var i=0;i<3;i++){
         if(initUlt[i] != undefined){
             releaseImage(initUlt[i]);
-        }
-        initUlt[i] = cropImage(screenShot,ultCheckX[i]* screenScale[0] + screenOffset[0],ultCheckY* screenScale[1] + screenOffset[1],300 * screenScale[0],180* screenScale[1]);
+        }        
+        initUlt[i] = cropImage(screenShot, ultCheckX[i]* screenScale[0] + screenOffset[0], ultCheckY * screenScale[1] + screenOffset[1], ultWidth * screenScale[0], ultHeight* screenScale[1]);
     }
     var skillUsed = [];
     var m = 'skill_used:';
@@ -293,40 +273,69 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
 function updateUltList(){
     var edgeX = [696,1159,1622];
     var edgeY = [270,570];
-    var screenShot = getScreenshot();
-    for(var i=0;i<3;i++){
-        var card = cropImage(screenShot,ultCheckX[i]* screenScale[0] + screenOffset[0],ultCheckY* screenScale[1] + screenOffset[1],300 * screenScale[0],180* screenScale[1]);
-        var score1 = getImageLightness(card,5);
-        var score2 = getIdentityScore(card,initUlt[i]);
-        if((score1 >= 120 && score2 < 0.6) ||(score1 >= 100 && score2 < 0.5) || (score1 >= 80 &&score2 < 0.3)){
-            var r=0,g=0,b=0;
-            for(var ey=edgeY[0];ey<edgeY[1];ey++){
-                var color = getImageColor(screenShot,edgeX[i]* screenScale[0] + screenOffset[0],ey* screenScale[1] + screenOffset[1]);
-                if(color.r > (color.g + color.b)){
-                    r++;
+    var ultUpdateFailed = true;
+    var errorCnt = 0;
+    while(ultUpdateFailed){
+        ultUpdateFailed = false;
+        var screenShot = getScreenshot();
+        for(var i=0;i<3;i++){
+            var card = cropImage(screenShot, ultCheckX[i]* screenScale[0] + screenOffset[0], ultCheckY * screenScale[1] + screenOffset[1], ultWidth * screenScale[0], ultHeight* screenScale[1]);
+            var lightCard = cropImage(screenShot, ultCheckX[i]* screenScale[0] + screenOffset[0], (ultCheckY +ultLightnessOffset)* screenScale[1] + screenOffset[1], ultWidth * screenScale[0], (ultHeight-ultLightnessOffset)* screenScale[1]);
+            var score1 = getImageLightness(lightCard,5);
+            var score2 = getIdentityScore(card,initUlt[i]);
+            var isUlt = false;
+            if(score1 < 80 || score2 > 0.75){
+              isUlt = false;
+            }else if(score1 > 140 || score2 < 0.6){
+                isUlt = true;
+            }else{
+                //can not handle s1 80~140 score2 0.6~0.75, retry
+                if(errorCnt < 10){
+                    //recheck
+                    errorCnt++;
+                    ultUpdateFailed = true;
+                    releaseImage(card);
+                    sleep(100);
+                    break;
+                }else{
+                    if(score1 < 120 && score2 < 0.7){
+                        isUlt = true;
+                    }else{
+                        isUlt = false;
+                    }
                 }
-                if(color.g > (color.r + color.b)){
-                    g++;
+            }
+            if(isUlt){
+                var r=0,g=0,b=0;
+                for(var ey=edgeY[0];ey<edgeY[1];ey++){
+                    var color = getImageColor(screenShot,edgeX[i]* screenScale[0] + screenOffset[0],ey* screenScale[1] + screenOffset[1]);
+                    if(color.r > (color.g + color.b)){
+                        r++;
+                    }
+                    if(color.g > (color.r + color.b)){
+                        g++;
+                    }
+                    if(color.b > (color.r + color.g)){
+                        b++;
+                    }
                 }
-                if(color.b > (color.r + color.g)){
-                    b++;
+                if(r >= g && r >= b){
+                    ultList[i] = 0;
                 }
+                else if(b >= r && b >= g){
+                    ultList[i] = 1;
+                }
+                else if(g >= r && g >= b){
+                    ultList[i] = 2;
+                }
+            }else{
+                ultList[i] = -1;
             }
-            if(r >= g && r >= b){
-                 ultList[i] = 0;
-            }
-            else if(b >= r && b >= g){
-                ultList[i] = 1;
-            }
-            else if(g >= r && g >= b){
-                ultList[i] = 2;
-            }
-        }else{
-            ultList[i] = -1;
+            releaseImage(card);
+            releaseImage(lightCard);
         }
-        releaseImage(card);
+        releaseImage(screenShot);
     }
-    releaseImage(screenShot);
 }
 
 function updateCardList(){
