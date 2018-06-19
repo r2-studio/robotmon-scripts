@@ -355,6 +355,15 @@ var Page = {
     back: {x: 327, y: 1458 + adjY},
     next: {x: 792, y: 1455 + adjY},
   },
+  LevelUp: {
+    name: 'LevelUp',
+    colors: [
+      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the close button at left bottom
+      {x: 626, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the share button at right bottom
+    ],
+    back: {x: 300, y: 1588 + adjY},
+    next: {x: 300, y: 1588 + adjY},
+  },
   FriendInfo: {
     name: 'FriendInfo',
     colors: [
