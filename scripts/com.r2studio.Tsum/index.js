@@ -1244,11 +1244,12 @@ Tsum.prototype.linkTsums = function(path) {
     var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth / 2) * this.playWidth / this.playResizeWidth);
     var y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth / 2) * this.playHeight / this.playResizeHeight);
     if (j == 0) {
-      tapDown(x, y, 10);
+      tapDown(x, y, 15);
     }
-    moveTo(x, y, 10);
+    moveTo(x, y, 15);
     if (j == path.length - 1) {
-      tapUp(x, y, 10);
+      moveTo(x, y, 30);
+      tapUp(x, y, 15);
     }
   }
 }
