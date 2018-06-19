@@ -960,7 +960,8 @@ function Tsum(isJP, detect, logs) {
   this.logs = logs;
   this.coinItem = false;
   this.bubbleItem = false;
-  this.isPause = true;
+  this.isSlowCalculation = false;
+  this.isPause = false;
   this.receiveOneItem = false;
   this.sentToZero = false;
   this.recordReceive = true;
@@ -1522,11 +1523,13 @@ Tsum.prototype.scanBoard = function() {
   // load game tsums
   var gameImage = this.playScreenshot();
   smooth(gameImage, 1, 2);
+
   if (this.isPause) {
     this.tap(Button.gamePause);
     this.sleep(20);
     this.tap(Button.gamePause);
   }
+
   if (!this.isLoadRotateTsum) {
     log(this.logs.recognitionStart);
     this.tap(Button.gamePause);
@@ -1545,6 +1548,13 @@ Tsum.prototype.scanBoard = function() {
   }
   releaseImage(gameImage);
 
+  if (this.isPause) {
+    this.tap(Button.gameContinue);
+    this.sleep(Config.gameContinueDelay / 2);
+    this.tap(Button.gameContinue);
+    this.sleep(Config.gameContinueDelay / 2);
+  }
+
   this.tap(Button.gameContinue);
   if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
   this.tap(Button.gameContinue);
@@ -1557,6 +1567,13 @@ Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
   var srcImg = this.playScreenshot();
+
+  if (this.isPause) {
+    this.tap(Button.gamePause);
+    this.sleep(20);
+    this.tap(Button.gamePause);
+  }
+
   var points = findTsums(srcImg);
   log(this.logs.recognitionStart);
   var tcs = classifyTsums(points);
@@ -1582,6 +1599,15 @@ Tsum.prototype.scanBoardQuick = function() {
   log(this.logs.recognizedTsums, board.length);
   sleep(30);
   log(this.logs.recognitionTime, usingTimeString(startTime));
+
+  if (this.isPause) {
+    this.sleep(Config.gameContinueDelay / 2);
+    this.tap(Button.gameContinue);
+    this.sleep(Config.gameContinueDelay / 2);
+    this.tap(Button.gameContinue);
+    this.sleep(Config.gameContinueDelay / 2);
+  }
+
   return board;
 }
 
@@ -1589,6 +1615,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
   log(this.logs.gameStart);
   this.goGamePlayingPage();
   log(this.logs.fastGaming);
+  this.sleep(500);
   this.runTimes = 0;
   var clearBubbles = 0;
   var zeroPath = 0;
@@ -2130,7 +2157,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
@@ -2140,6 +2167,7 @@ function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan
   ts.autoLaunch = autoLaunch;
   ts.coinItem = coinItem;
   ts.bubbleItem = bubbleItem;
+  ts.isSlowCalculation = isSlowCalculation;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
@@ -2179,10 +2207,10 @@ function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan
   if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
-  if (!isPause && outRange !== undefined){
+  if (!isSlowCalculation && checkFunction(outRange)) {
     if(autoPlay){gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);}
   } else {
-    if (!isPause) {
+    if (!isSlowCalculation) {
       log(ts.logs.updateApp);
       sleep(1000);
     }
