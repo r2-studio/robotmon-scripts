@@ -45,7 +45,7 @@ function selectStage(useApple){
         sleep(1000);
         var screenShot2 = getScreenshot();
         var size = getImageSize(screenShot2);
-        if(checkImage(screenShot,screenShot2,0,0,size.width,size.height)){
+        if(getIdentityScore(screenShot,screenShot2)>0.8){
             console.log("no apple");
             releaseImage(screenShot);
             releaseImage(screenShot2);
