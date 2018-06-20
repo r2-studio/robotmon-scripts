@@ -355,15 +355,6 @@ var Page = {
     back: {x: 327, y: 1458 + adjY},
     next: {x: 792, y: 1455 + adjY},
   },
-  LevelUp: {
-    name: 'LevelUp',
-    colors: [
-      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the close button at left bottom
-      {x: 626, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the share button at right bottom
-    ],
-    back: {x: 300, y: 1588 + adjY},
-    next: {x: 300, y: 1588 + adjY},
-  },
   FriendInfo: {
     name: 'FriendInfo',
     colors: [
@@ -381,6 +372,15 @@ var Page = {
     ],
     back: {x: 576, y: 1588 + adjY},
     next: {x: 576, y: 1588 + adjY},
+  },
+  LevelUp: {
+    name: 'LevelUp',
+    colors: [
+      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the close button at left bottom
+      {x: 626, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the share button at right bottom
+    ],
+    back: {x: 300, y: 1588 + adjY},
+    next: {x: 300, y: 1588 + adjY},
   },
   InvitePage: {
     name: 'InvitePage', // the close button at left bottom
@@ -1208,12 +1208,11 @@ Tsum.prototype.linkTsums = function(path) {
     var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth / 2) * this.playWidth / this.playResizeWidth);
     var y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth / 2) * this.playHeight / this.playResizeHeight);
     if (j == 0) {
-      tapDown(x, y, 15);
+      tapDown(x, y, 10);
     }
-    moveTo(x, y, 15);
+    moveTo(x, y, 10);
     if (j == path.length - 1) {
-      moveTo(x, y, 30);
-      tapUp(x, y, 15);
+      tapUp(x, y, 10);
     }
   }
 }
@@ -1540,6 +1539,8 @@ Tsum.prototype.scanBoard = function() {
       log(this.logs.gameOver);
       return;
     }
+    this.sleep(Config.gameContinueDelay);
+    this.tap(Button.gameContinue);
   }
   log(this.logs.recognizingTsums);
   var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug, this.logs);
@@ -1549,16 +1550,12 @@ Tsum.prototype.scanBoard = function() {
   releaseImage(gameImage);
 
   if (this.isPause) {
+    this.sleep(Config.gameContinueDelay);
     this.tap(Button.gameContinue);
     this.sleep(Config.gameContinueDelay / 2);
     this.tap(Button.gameContinue);
     this.sleep(Config.gameContinueDelay / 2);
   }
-
-  this.tap(Button.gameContinue);
-  if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
-  this.tap(Button.gameContinue);
-  if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
 
   return board;
 }
@@ -1601,7 +1598,7 @@ Tsum.prototype.scanBoardQuick = function() {
   log(this.logs.recognitionTime, usingTimeString(startTime));
 
   if (this.isPause) {
-    this.sleep(Config.gameContinueDelay / 2);
+    this.sleep(Config.gameContinueDelay);
     this.tap(Button.gameContinue);
     this.sleep(Config.gameContinueDelay / 2);
     this.tap(Button.gameContinue);
@@ -1615,7 +1612,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
   log(this.logs.gameStart);
   this.goGamePlayingPage();
   log(this.logs.fastGaming);
-  this.sleep(500);
+  if (this.isPause) {
+    this.sleep(350);
+  }
   this.runTimes = 0;
   var clearBubbles = 0;
   var zeroPath = 0;
@@ -1650,6 +1649,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
       this.tap(Button.gameRand, 60);
       this.tap(Button.gameRand, 60);
     }
+    if (this.isPause) {
+      this.sleep(300);
+    }
     if (this.useSkill(board)) {
       clearBubbles++;
       if (this.useSkill(board)) {
@@ -1658,13 +1660,15 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
 
     // double check
-    var page = this.findPage(1, 2500);
-    if (page != 'GamePlaying' && page != 'GamePause') {
-      this.sleep(500);
-      page = this.findPage(1, 2500);
+    if (this.runTimes % 4 == 0) {
+      var page = this.findPage(1, 2500);
       if (page != 'GamePlaying' && page != 'GamePause') {
-        log(this.logs.gameOver);
-        break;
+        this.sleep(500);
+        page = this.findPage(1, 2500);
+        if (page != 'GamePlaying' && page != 'GamePause') {
+          log(this.logs.gameOver);
+          break;
+        }
       }
     }
     this.runTimes++;
