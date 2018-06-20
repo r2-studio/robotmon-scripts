@@ -346,14 +346,16 @@ var Page = {
     back: {x: 298, y: 1253 + adjY},
     next: {x: 810, y: 1253 + adjY},
   },
-  RankUp: {
-    name: 'RankUp',
+  LevelUp: { // LevelUp and RankUp
+    name: 'LevelUp',
     colors: [
-      {x: 327, y: 1458 + adjY, r: 236, g: 175, b: 9, match: true, threshold: 80},
-      {x: 792, y: 1455 + adjY, r: 234, g: 173, b: 5, match: true, threshold: 80},
+      {x: 140, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // left of the close button
+      {x: 450, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // right of the close button
+      {x: 620, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // left of the share button
+      {x: 930, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // right of the share button
     ],
-    back: {x: 327, y: 1458 + adjY},
-    next: {x: 792, y: 1455 + adjY},
+    back: {x: 300, y: 1588 + adjY},
+    next: {x: 300, y: 1588 + adjY},
   },
   FriendInfo: {
     name: 'FriendInfo',
