@@ -75,7 +75,7 @@ Point.prototype.checkColor = function() {
       return false;
     }
   }
-  const c = getImageColor(img, xy.x, xy.y);
+  var c = getImageColor(img, xy.x, xy.y);
   if (this.need && !Colors.isSameColor(c, this, this.d)) {
     this.context.debug("Is Not Same Color, but need: " + JSON.stringify(c) + " " + JSON.stringify(this));
     return false;

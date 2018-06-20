@@ -33,7 +33,7 @@ Colors.identityScore = function(e1, e2) {
 }
 
 Colors.minMaxDiff = function (c) {
-  const max = Math.max(Math.max(c.r, c.g), c.b);
-  const min = Math.min(Math.min(c.r, c.g), c.b);
+  var max = Math.max(Math.max(c.r, c.g), c.b);
+  var min = Math.min(Math.min(c.r, c.g), c.b);
   return max - min;
 }
