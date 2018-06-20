@@ -201,26 +201,6 @@ var Page = {
     back: {x: 774, y: 1023 + adjY},
     next: {x: 320, y: 1019 + adjY},
   },
-  MailBox: {
-    name: 'MailBox',
-    colors: [
-      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 604, y: 1347 + adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80},
-    ],
-    back: {x: 561, y: 1581 + adjY},
-    next: {x: 561, y: 1581 + adjY},
-  },
-  MailBox2: {
-    name: 'MailBox',
-    colors: [
-      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 619, y: 1354 + adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80},
-    ],
-    back: {x: 561, y: 1581 + adjY},
-    next: {x: 561, y: 1581 + adjY},
-  },
   ReceiveHeart: {
     name: 'ReceiveHeart',
     colors: [
@@ -287,18 +267,6 @@ var Page = {
     ],
     back: {x: 190, y: 1574 + adjY},
     next: {x: 558, y: 1563 + adjY},
-  },
-  SettingPage: {
-    name: 'SettingPage',
-    colors: [
-      {x: 741, y: 345  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 363, y: 504  + adjY, r: 21 , g: 184, b: 219, match: true, threshold: 80},
-      {x: 464, y: 1084 + adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
-      {x: 903, y: 1228 + adjY, r: 237, g: 176, b: 10 , match: true, threshold: 80},
-      {x: 554, y: 1516 + adjY, r: 236, g: 180, b: 9  , match: true, threshold: 80},
-    ],
-    back: {x: 565, y: 1577 + adjY},
-    next: {x: 565, y: 1577 + adjY},
   },
   TsumsPage: {
     name: 'TsumsPage',
@@ -387,25 +355,6 @@ var Page = {
     back: {x: 327, y: 1458 + adjY},
     next: {x: 792, y: 1455 + adjY},
   },
-  InvitePage: {
-    name: 'InvitePage',
-    colors: [
-      {x: 342, y: 835  + adjY, r: 58 , g: 87 , b: 145, match: true, threshold: 80},
-      {x: 669, y: 832  + adjY, r: 0  , g: 181, b: 1  , match: true, threshold: 80},
-      {x: 536, y: 1271 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
-    ],
-    back: {x: 576, y: 1314 + adjY},
-    next: {x: 576, y: 1314 + adjY},
-  },
-  EventPage: {
-    name: 'EventPage',
-    colors: [
-      {x: 554, y: 1509 + adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
-      {x: 997, y: 1617 + adjY, r: 230, g: 169, b: 3 , match: true, threshold: 80},
-    ],
-    back: {x: 554, y: 1509 + adjY},
-    next: {x: 554, y: 1509 + adjY},
-  },
   FriendInfo: {
     name: 'FriendInfo',
     colors: [
@@ -416,16 +365,30 @@ var Page = {
     back: {x: 576, y: 1336 + adjY},
     next: {x: 576, y: 1336 + adjY},
   },
-  MyInfo: {
-    name: 'MyInfo',
+  ClosePage: { // including EventPage, MyInfo, MailBox, SettingPage, others
+    name: 'ClosePage', // the close button at center bottom
     colors: [
-      {x: 734, y: 284  + adjY, r: 29 , g: 189, b: 223, match: true, threshold: 80},
-      {x: 802, y: 381  + adjY, r: 241, g: 246, b: 240, match: true, threshold: 80},
-      {x: 766, y: 1347 + adjY, r: 31 , g: 190, b: 222, match: true, threshold: 80},
-      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80},
+      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // top right of the close button
     ],
     back: {x: 576, y: 1588 + adjY},
     next: {x: 576, y: 1588 + adjY},
+  },
+  LevelUp: {
+    name: 'LevelUp',
+    colors: [
+      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the close button at left bottom
+      {x: 626, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the share button at right bottom
+    ],
+    back: {x: 300, y: 1588 + adjY},
+    next: {x: 300, y: 1588 + adjY},
+  },
+  InvitePage: {
+    name: 'InvitePage', // the close button at left bottom
+    colors: [
+      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11 , match: true, threshold: 80},
+    ],
+    back: {x: 176, y: 1520 + adjY},
+    next: {x: 176, y: 1520 + adjY},
   },
 };
 
@@ -997,7 +960,8 @@ function Tsum(isJP, detect, logs) {
   this.logs = logs;
   this.coinItem = false;
   this.bubbleItem = false;
-  this.isPause = true;
+  this.isSlowCalculation = false;
+  this.isPause = false;
   this.receiveOneItem = false;
   this.sentToZero = false;
   this.recordReceive = true;
@@ -1397,6 +1361,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.checkGameItem();
       this.sendMoneyInfo();
       this.tap(Button.outStart2);
+      this.sleep(3000); // avoid checking items again!
     } else if (page == 'GamePlaying') {
       // check again
       page = this.findPage(1, 500);
@@ -1557,11 +1522,13 @@ Tsum.prototype.scanBoard = function() {
   // load game tsums
   var gameImage = this.playScreenshot();
   smooth(gameImage, 1, 2);
+
   if (this.isPause) {
     this.tap(Button.gamePause);
     this.sleep(20);
     this.tap(Button.gamePause);
   }
+
   if (!this.isLoadRotateTsum) {
     log(this.logs.recognitionStart);
     this.tap(Button.gamePause);
@@ -1572,6 +1539,8 @@ Tsum.prototype.scanBoard = function() {
       log(this.logs.gameOver);
       return;
     }
+    this.sleep(Config.gameContinueDelay);
+    this.tap(Button.gameContinue);
   }
   log(this.logs.recognizingTsums);
   var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug, this.logs);
@@ -1580,10 +1549,13 @@ Tsum.prototype.scanBoard = function() {
   }
   releaseImage(gameImage);
 
-  this.tap(Button.gameContinue);
-  if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
-  this.tap(Button.gameContinue);
-  if (this.isPause) {this.sleep(Config.gameContinueDelay / 2);}
+  if (this.isPause) {
+    this.sleep(Config.gameContinueDelay);
+    this.tap(Button.gameContinue);
+    this.sleep(Config.gameContinueDelay / 2);
+    this.tap(Button.gameContinue);
+    this.sleep(Config.gameContinueDelay / 2);
+  }
 
   return board;
 }
@@ -1592,6 +1564,13 @@ Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
   var srcImg = this.playScreenshot();
+
+  if (this.isPause) {
+    this.tap(Button.gamePause);
+    this.sleep(20);
+    this.tap(Button.gamePause);
+  }
+
   var points = findTsums(srcImg);
   log(this.logs.recognitionStart);
   var tcs = classifyTsums(points);
@@ -1617,6 +1596,15 @@ Tsum.prototype.scanBoardQuick = function() {
   log(this.logs.recognizedTsums, board.length);
   sleep(30);
   log(this.logs.recognitionTime, usingTimeString(startTime));
+
+  if (this.isPause) {
+    this.sleep(Config.gameContinueDelay);
+    this.tap(Button.gameContinue);
+    this.sleep(Config.gameContinueDelay / 2);
+    this.tap(Button.gameContinue);
+    this.sleep(Config.gameContinueDelay / 2);
+  }
+
   return board;
 }
 
@@ -1624,6 +1612,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
   log(this.logs.gameStart);
   this.goGamePlayingPage();
   log(this.logs.fastGaming);
+  if (this.isPause) {
+    this.sleep(350);
+  }
   this.runTimes = 0;
   var clearBubbles = 0;
   var zeroPath = 0;
@@ -1658,6 +1649,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
       this.tap(Button.gameRand, 60);
       this.tap(Button.gameRand, 60);
     }
+    if (this.isPause) {
+      this.sleep(300);
+    }
     if (this.useSkill(board)) {
       clearBubbles++;
       if (this.useSkill(board)) {
@@ -1666,13 +1660,15 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
 
     // double check
-    var page = this.findPage(1, 2500);
-    if (page != 'GamePlaying' && page != 'GamePause') {
-      this.sleep(500);
-      page = this.findPage(1, 2500);
+    if (this.runTimes % 4 == 0) {
+      var page = this.findPage(1, 2500);
       if (page != 'GamePlaying' && page != 'GamePause') {
-        log(this.logs.gameOver);
-        break;
+        this.sleep(500);
+        page = this.findPage(1, 2500);
+        if (page != 'GamePlaying' && page != 'GamePause') {
+          log(this.logs.gameOver);
+          break;
+        }
       }
     }
     this.runTimes++;
@@ -2136,8 +2132,8 @@ Tsum.prototype.sendHeart = function(btn) {
       }
     } else if (page == "FriendInfo") {
       this.tap(Page.FriendInfo.back);
-    } else if (page == "MyInfo") {
-      this.tap(Page.MyInfo.back);
+    } else if (page == "ClosePage") {
+      this.tap(Page.ClosePage.back);
     } else {
       unknownCount++;
     }
@@ -2165,7 +2161,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
@@ -2175,6 +2171,7 @@ function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan
   ts.autoLaunch = autoLaunch;
   ts.coinItem = coinItem;
   ts.bubbleItem = bubbleItem;
+  ts.isSlowCalculation = isSlowCalculation;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
   ts.recordReceive = recordReceive;
@@ -2214,10 +2211,10 @@ function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan
   if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
   if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
   if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
-  if (!isPause && outRange !== undefined){
+  if (!isSlowCalculation && checkFunction(outRange)) {
     if(autoPlay){gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);}
   } else {
-    if (!isPause) {
+    if (!isSlowCalculation) {
       log(ts.logs.updateApp);
       sleep(1000);
     }
