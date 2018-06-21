@@ -1026,8 +1026,15 @@ Tsum.prototype.init = function(detect) {
     extraOffsetY = topBottom.top;
   }
 
+  var isFat = false;
   var realWidth = this.screenHeight / 16 * 9;
-  if (realWidth > this.screenWidth) {
+  if (this.screenHeight / this.screenWidth < 1.5) {
+    isFat = true;
+    this.gameHeight = this.screenHeight;
+    this.gameWidth = this.screenHeight / 1.5;
+    this.gameOffsetY = Math.floor((this.gameWidth * 16 / 9 - this.gameHeight) / 2);
+    this.gameOffsetX = Math.floor((this.gameWidth - this.screenWidth) / 2);
+  } else if (realWidth > this.screenWidth) {
     this.gameWidth = realWidth;
     this.gameHeight = this.screenHeight;
     this.gameOffsetX = Math.floor((this.gameWidth - this.screenWidth) / 2);
@@ -1046,9 +1053,14 @@ Tsum.prototype.init = function(detect) {
   this.gameOffsetY -= extraOffsetY;
 
   this.captureGameRatio = this.gameWidth / 1080;
-  this.playWidth = this.screenWidth;
-  this.playHeight = this.screenWidth;
-  this.playOffsetX = 0;
+  if (isFat) {
+    this.playWidth = this.gameWidth;
+    this.playOffsetX = Math.max(-this.gameOffsetX, 0);
+  } else {
+    this.playWidth = this.screenWidth;
+    this.playOffsetX = 0;
+  }
+  this.playHeight = this.playWidth;
   this.playOffsetY = 465 * this.captureGameRatio - this.gameOffsetY;
 
   this.allTsumImages = loadTsumImages(this.isJP);
