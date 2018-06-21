@@ -1,9 +1,7 @@
 // many points
-function Feature() {
-  this.points = [];
-  for(var i in arguments) {
-    this.points.push(arguments[i]);
-  }
+function Feature(name, points) {
+  this.name = name;
+  this.points = points;
   if (this.points.length === 0) {
     this.context.debug("Warning: Feature has no points");
   }
