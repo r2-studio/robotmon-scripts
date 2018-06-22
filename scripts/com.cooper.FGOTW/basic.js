@@ -1,4 +1,4 @@
-var version = "V1.13";
+var version = "V1.14";
 var isDebug = false;
 
 var noApImage;
@@ -183,12 +183,14 @@ function initScreenSize(){
         h = w;
         w = tmp;
     }
+    var ho = h;
+    var wo = w;
     if(w * 9 < h * 16){
-        h = w * 9 / 16;
-        screenOffset[1] = (size.height - h) / 2;
+        h = wo * 9 / 16;
+        screenOffset[1] = (ho - h) / 2;
     }else if(w * 9 > h * 16){
-        w = h * 16 / 9;
-        screenOffset[0] = (size.width - w) / 2;
+        w = ho * 16 / 9;
+        screenOffset[0] = (wo - w) / 2;
     }
     screenScale[0] = w / defaultScreenSize[0];
     screenScale[1] = h / defaultScreenSize[1];
@@ -439,6 +441,7 @@ function confirmSaveFriendServantImage(imageName,time){
     }else{
         execute('mv '+itemPath+"tmp_servant_"+time+".png " +itemPath+"friend_servant/"+imageName+".png");
     }
+    return imageName;
 }
 
 function confirmSaveFriendItemImage(imageName,time){
@@ -447,6 +450,7 @@ function confirmSaveFriendItemImage(imageName,time){
     }else{
         execute('mv '+itemPath+"tmp_item_"+time+".png " +itemPath+"friend_item/"+imageName+".png");
     }
+    return imageName;
 }
 
 console.log("Load basic api finish");

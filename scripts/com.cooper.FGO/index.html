@@ -189,7 +189,8 @@
                         var scriptNameOK = true;
                         if(newScriptName == null ){
                             return;
-                        }else if(newScriptName.length <= 0 || newScriptName.includes(",") || newScriptName.includes(".")){
+                        }else if(newScriptName.length <= 0 
+                            || newScriptName.indexOf(",")>=0|| newScriptName.indexOf(".")>=0 || newScriptName.indexOf(";")>=0){
                             scriptNameOK = false;
                         }else {
                             $('#scriptMode option').each(function() {
@@ -228,7 +229,8 @@
                     var scriptNameOK = true;
                     if(newScriptName == null ){
                         return;
-                    }else if(newScriptName.length <= 0 || newScriptName.includes(",") || newScriptName.includes(".")){
+                    }else if(newScriptName.length <= 0 
+                            || newScriptName.indexOf(",")>=0|| newScriptName.indexOf(".")>=0 || newScriptName.indexOf(";")>=0){
                         scriptNameOK = false;
                     }else {
                         $('#scriptMode option').each(function() {
@@ -1052,15 +1054,19 @@ function saveServantConfirm(time){
                 title: '<img src = "'+storagePath+'tmp_servant_'+time+'.png" width = "60" height = "40"><br>檔案名稱',
                 value: "從者"+(friendServantList.length+1),
                 callback: function(imageName) {
-                    if(imageName!=null &&imageName.length >0){
+                    if(imageName == null){
+                        return;
+                    }
+                    var imageNameOK = true;
+                    if(imageName.length <= 0 || imageName.indexOf(",")>=0 || imageName.indexOf(".")>=0 || imageName.indexOf(";")>=0){
+                        imageNameOK = false;
+                    }
+                    if(imageNameOK){
                        friendServantList[friendServantList.length] = imageName;
-                       JavaScriptInterface.runScript('confirmSaveFriendServantImage("'+imageName+'","'+time+'");');
-                       for(var i=0;i<commandId+1;i++){
-                            if( $("#selectFriendServant"+i).length){
-                                $("#selectFriendServant"+i).append('<option value = "'+commandId+'">'+imageName+'</option>');
-                            }
-                       }
+                       JavaScriptInterface.runScriptCallback('confirmSaveFriendServantImage("'+imageName+'","'+time+'");','saveFriendServantConfirm');
                     }else{
+                        bootbox.alert("檔名不合法");
+                        // remove tmp file
                         JavaScriptInterface.runScript('confirmSaveFriendServantImage()');
                     }
                 }
@@ -1075,15 +1081,19 @@ function saveItemConfirm(time){
                 title: '<img src = "'+storagePath+'tmp_item_'+time+'.png" width = "60" height = "20"><br>檔案名稱',
                 value: "禮裝"+(friendItemList.length+1),
                 callback: function(imageName) {
-                    if(imageName!=null &&imageName.length >0){
+                    if(imageName == null){
+                        return;
+                    }
+                    var imageNameOK = true;
+                    if(imageName.length <= 0 || imageName.indexOf(",")>=0 || imageName.indexOf(".")>=0 || imageName.indexOf(";")>=0){
+                        imageNameOK = false;
+                    }
+                    if(imageNameOK){
                        friendItemList[friendItemList.length] = imageName;
-                       JavaScriptInterface.runScript('confirmSaveFriendItemImage("'+imageName+'","'+time+'");');
-                       for(var i=0;i<commandId+1;i++){
-                            if( $("#selectFriendItem"+i).length){
-                                $("#selectFriendItem"+i).append('<option value = "'+commandId+'">'+imageName+'</option>');
-                            }
-                       }
+                       JavaScriptInterface.runScriptCallback('confirmSaveFriendItemImage("'+imageName+'","'+time+'");','saveFriendItemConfirm');
                     }else{
+                        bootbox.alert("檔名不合法");
+                        // remove tmp file
                         JavaScriptInterface.runScript('confirmSaveFriendItemImage()');
                     }
                 }
@@ -1127,6 +1137,38 @@ function copyScriptConfirm(result){
     stopListenScriptSelect();
     $("#scriptMode").append('<option value = "'+scriptCnt+'" selected>'+result);
     startListenScriptSelect();
+}
+
+function saveFriendServantConfirm(result){
+    if(result == null){
+        return;
+    }    
+    for(var i=0;i<commandId+1;i++){
+        if( $("#selectFriendServant"+i).length){
+            $("#selectFriendServant"+i).append('<option value = "'+commandId+'">'+result+'</option>');
+            $("#selectFriendServant"+i).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        }
+    }
+    bootbox.alert("從者儲存成功");
+}
+
+function saveFriendItemConfirm(result){
+    if(result == null){
+        return;
+    }
+    bootbox.alert("禮裝儲存成功");
+     for(var i=0;i<commandId+1;i++){
+        if( $("#selectFriendItem"+i).length){
+            $("#selectFriendItem"+i).append('<option value = "'+commandId+'">'+result+'</option>');
+            $("#selectFriendItem"+i).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        }
+    }
 }
 
 function resetScript(result){
