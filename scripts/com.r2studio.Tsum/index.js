@@ -346,17 +346,6 @@ var Page = {
     back: {x: 298, y: 1253 + adjY},
     next: {x: 810, y: 1253 + adjY},
   },
-  LevelUp: { // LevelUp and RankUp
-    name: 'LevelUp',
-    colors: [
-      {x: 140, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // left of the close button
-      {x: 450, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // right of the close button
-      {x: 620, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // left of the share button
-      {x: 930, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // right of the share button
-    ],
-    back: {x: 300, y: 1588 + adjY},
-    next: {x: 300, y: 1588 + adjY},
-  },
   FriendInfo: {
     name: 'FriendInfo',
     colors: [
@@ -375,11 +364,13 @@ var Page = {
     back: {x: 576, y: 1588 + adjY},
     next: {x: 576, y: 1588 + adjY},
   },
-  LevelUp: {
+  LevelUp: { // LevelUp and RankUp
     name: 'LevelUp',
     colors: [
-      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the close button at left bottom
-      {x: 626, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // the share button at right bottom
+      {x: 140, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // left of the close button
+      {x: 450, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // right of the close button
+      {x: 620, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // left of the share button
+      {x: 930, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // right of the share button
     ],
     back: {x: 300, y: 1588 + adjY},
     next: {x: 300, y: 1588 + adjY},
