@@ -1658,7 +1658,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
     if (paths.length < 3) {
       zeroPath++;
-      if (zeroPath === 3) {
+      if (zeroPath === 6) {
         this.tap(Button.gameRand, 60);
         this.tap(Button.gameRand, 60);
         zeroPath = 0;
