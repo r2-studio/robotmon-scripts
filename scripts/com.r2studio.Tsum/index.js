@@ -201,6 +201,26 @@ var Page = {
     back: {x: 774, y: 1023 + adjY},
     next: {x: 320, y: 1019 + adjY},
   },
+  MailBox: {
+    name: 'MailBox',
+    colors: [
+      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 604, y: 1347 + adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80},
+    ],
+    back: {x: 561, y: 1581 + adjY},
+    next: {x: 561, y: 1581 + adjY},
+  },
+  MailBox2: {
+    name: 'MailBox',
+    colors: [
+      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 619, y: 1354 + adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80},
+    ],
+    back: {x: 561, y: 1581 + adjY},
+    next: {x: 561, y: 1581 + adjY},
+  },
   ReceiveHeart: {
     name: 'ReceiveHeart',
     colors: [
@@ -356,7 +376,7 @@ var Page = {
     back: {x: 576, y: 1336 + adjY},
     next: {x: 576, y: 1336 + adjY},
   },
-  ClosePage: { // including EventPage, MyInfo, MailBox, SettingPage, others
+  ClosePage: { // including EventPage, MyInfo, SettingPage, others
     name: 'ClosePage', // the close button at center bottom
     colors: [
       {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // top right of the close button
