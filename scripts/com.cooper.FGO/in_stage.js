@@ -58,7 +58,7 @@ function selectCard(card){
     if(!isScriptRunning){
         return;
     }
-    console.log("selectCard "+card);
+    //console.log("selectCard "+card);
     if(card == 0){
         tapScale(250,1035,100);
     }else if(card == 1){
@@ -301,5 +301,5 @@ function isQuestFinish(){
     return -1;
 }
 
-
+loadApiCnt++;
 console.log("Load in stage api finish");

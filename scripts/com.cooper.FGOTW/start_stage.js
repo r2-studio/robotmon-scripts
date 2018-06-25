@@ -86,6 +86,7 @@ function selectFriend(filter,servant,item,star){
             continue;
         }
         releaseImage(screenShot2);
+        sleep(1000);
         var t = 1;
         for(var i = 0;i < selectFriendPosition.length;i++){//loop for filter
             if(!isScriptRunning){
@@ -204,7 +205,7 @@ function reloadFriend(){
 }
 
 function scrollFriendList(){
-    swipeScale(800,1000,800,201,50);
+    swipeScale(800,1000,800,202,50);
 }
 
 //-----------------------------------------------------team menu
@@ -251,14 +252,16 @@ function startQuest(useItem){
     if(checkImage(screenShot2,useItemImage,800,160,950,60)){
         if(useItem == undefined || useItem == -1){
             tapScale(1640,1300,100);
+            releaseImage(screenShot2);
+            return;
         }else{
             var itemPositionY = [400,700,1000];
             var y;
             if(useItem > 2){
                 y = 1000;
                 for(var i = 0; i < useItem - 2; i++){
-                    swipeScale(800,1000,800,650,20);
-                    sleep(500);
+                    swipeScale(800,1000,800,600,20);
+                    sleep(1000);
                 }
             }else{
                 y = itemPositionY[useItem];
@@ -268,14 +271,15 @@ function startQuest(useItem){
             tapScale(1655,1110,100);
         }
         releaseImage(screenShot2);
-        sleep(3000);
-        
+        sleep(5000);        
         var screenShot3 = getScreenshot();
         if(checkImage(screenShot3,useItemImage,800,160,950,60)){
             isScriptRunning = false;
-            console.log("No item");
+            console.log("Use item failed");
         }
         releaseImage(screenShot3);
+    }else{
+        releaseImage(screenShot2);
     }
 }
 
@@ -304,5 +308,5 @@ function finishQuest(){
     console.log("Wait for quest finish timeout");
 }
 
-
+loadApiCnt++;
 console.log("Load start stage api finish");
