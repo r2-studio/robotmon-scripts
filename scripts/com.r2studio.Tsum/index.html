@@ -187,11 +187,11 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 41;
+      VERSION = 42;
       ASC = true;
 
       var settings = [
@@ -609,6 +609,10 @@
         $('#exportRecord').click(function(){
           exportHTML();
         });
+        $('#exportTable').click(function(){
+          $("#genTableResult").html("Please wait...");
+          JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
+        });
 
         if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
           $('#senders').text('誰送你心');
@@ -617,8 +621,9 @@
           $('#resetRecord').text('清除紀錄');
           $('#goToTop').text('回頁面頂端');
 		      $('#goToBottom').text('回頁面底端');
-          $('#exportInfo').text('點選更新後請等待圖片的讀取，完成後再點選輸出 HTML');
+          // $('#exportInfo').text('點選更新後請等待圖片的讀取，完成後再點選輸出 HTML');
           $('#exportRecord').text('輸出 HTML');
+          $('#exportTable').text('輸出表格 (複製到Excel)');
         } else {
           $('#senders').text('List of Heart Counts');
           $('#updateRecordASC').text('Update(ASC)');
@@ -626,8 +631,9 @@
           $('#resetRecord').text('Reset Record');
           $('#goToTop').text('Go to Top');
           $('#goToBottom').text('Go to Bottom');
-          $('#exportInfo').text('Click Update and wait for loading all images, then click Export HTML');
+          // $('#exportInfo').text('Click Update and wait for loading all images, then click Export HTML');
           $('#exportRecord').text('Export HTML');
+          $('#exportTable').text('Export Table (Copy to Excel)');
         }
       });
 
@@ -681,6 +687,9 @@
       function getRecordFilename() {
         var d = new Date();
         return 'record_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
+      }
+      function genRecordTable(path) {
+        $("#genTableResult").html(path);
       }
       function genRecord(record) {
         if (record == undefined || record == 'undefined' || record == '') {
@@ -762,10 +771,12 @@
       <button id='updateRecordASC' class='btn btn-plus' style='margin-left:0px;'>Update(ASC)</button>
       <button id='updateRecordDESC' class='btn btn-plus'>Update(DESC)</button>
       <button id='resetRecord' style='float:right;' class='btn btn-danger'>Reset Record</button>
-      <button id='exportRecord' style='float:right;' class='btn btn-warning'>Export HTML</button>
-      <div id='exportInfo' style='padding-top:5px;'>Click Update and wait for loading all images, then click Export HTML</div>
+      <button id='exportRecord' style='float:right; display: none;' class='btn btn-warning'>Export HTML</button>
+      <button id='exportTable' style='float:right;' class='btn btn-warning'>Export Table</button>
+      <div id="genTableResult" style='padding-top:5px;'></div>
+      <!-- <div id='exportInfo' style='padding-top:5px;'>Click Update and wait for loading all images, then click Export HTML</div> -->
       <br />
-      <div id='record'>
+      <div id='record' style='padding-top:5px;'>
       </div>
       <br />
       <button id='goToTop' class='btn btn-plus'>Go to Top</button>

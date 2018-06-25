@@ -2266,3 +2266,83 @@ function stop() {
   if (gTaskController != undefined) {gTaskController.stop();}
   ts = undefined;
 }
+
+function genRecordTable() {
+  console.log("Generate Record...");
+  var recordFile = getStoragePath() + "/tsum_record/record.txt";
+  var txt = readFile(recordFile);
+  var record = {};
+  if (txt != undefined && txt != "") {
+    try {
+      record = JSON.parse(txt);
+    } catch(e) {
+      return "Can not parse record.txt " + JSON.stringify(e);
+    }
+  } else {
+    return "Can not read record.txt";
+  }
+
+  var html = "<html><body>";
+  html += "<table>";
+  html += "<tr><td>UserImage</td><td>All</td><td>Avg</td><td>Day</td></tr>";
+  var dayMapCount = {};
+  for (var filename in record) {
+    if (filename == "hearts_count") {
+      continue;
+    }
+    html += "<tr>";
+    // user image
+    html += "<td><img src='./" + filename + "' /></td>";
+    
+    var totalDay = 0;
+    var totalCount = 0;
+    var tmpHtml = "";
+    for (var day in record[filename].receiveCounts) {
+      var dayTime = new Date(+day * 86400000);
+      var dayStr = getDayTimeString(dayTime);
+      var dayCount = record[filename].receiveCounts[day];
+
+      if (dayMapCount[+day] === undefined) {dayMapCount[+day] = 0;}
+      dayMapCount[+day] += dayCount;
+
+      tmpHtml += "<td>" + dayStr + ":" + dayCount + "</td>";
+      totalDay++;
+      totalCount += dayCount;
+    }
+    var avg = 0;
+    if (dayCount !== 0) {
+      avg = (totalCount/dayCount).toFixed(1);
+    }
+    html += "<td>" + totalCount + "</td>";
+    html += "<td>" + avg + "</td>";
+    html += tmpHtml;
+    html += "</tr>";
+  }
+  html += "</table>";
+  html += "<br /> <br />";
+  // day count
+  html += "<table>";
+  html += "<tr><td>Date</td><td>Hearts</td></tr>";
+  for (var day in dayMapCount) {
+    var dayTime = new Date(+day * 86400000);
+    html += "<tr>";
+    html += "<td>" + getDayTimeString(dayTime) + "</td>";
+    html += "<td>" + dayMapCount[day] + "</td>";
+    html += "</tr>";
+  }
+  html += "</table>";
+  html += "</body></html>";
+  var recordName = getRecordFilename();
+  var oPath = getStoragePath() + "/tsum_record/" + recordName;
+  writeFile(oPath, html);
+  return "Download: " + getStoragePath()+"/tsum_record to PC" + "<br />Open: " + recordName;
+}
+
+function getDayTimeString(d) {
+  return (d.getMonth()+1) + '/' + d.getDate();
+}
+
+function getRecordFilename() {
+  var d = new Date();
+  return 'recordTable_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
+}
