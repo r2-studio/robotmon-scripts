@@ -2266,3 +2266,88 @@ function stop() {
   if (gTaskController != undefined) {gTaskController.stop();}
   ts = undefined;
 }
+
+function genRecordTable() {
+  console.log("Generate Record...");
+  var recordFilePath = getStoragePath() + "/tsum_record/record.txt";
+  var txt = readFile(recordFile);
+  var record = {};
+  if (txt != undefined && txt != "") {
+    try {
+      record = JSON.parse(txt);
+    } catch(e) {
+      return "Can not parse record.txt " + JSON.stringify(e);
+    }
+  } else {
+    return "Can not read record.txt";
+  }
+
+  var html = "<html><body>";
+  html += "<table>";
+  html += "<th><td>UserImage</td><td>All</td><td>Avg</td><td>Day</td></th>";
+  var dayMapCount = {};
+  for (var filename in record) {
+    if (filename == "hearts_count") {
+      continue;
+    }
+    var base64Image = "";
+    var userImage = openImage(getStoragePath()+"/tsum_record/" + filename);
+    if (userImage !== undefined && userImage !== 0) {
+      base64Image = getBase64FromImage(userImage);
+      releaseImage(userImage);
+    }
+    html += "<tr>";
+    // user image
+    html += "<td>" + (base64Image === "" ? "unknown" : "<img src='data:image/png;base64," + base64Image + "' />")  + "</td>";
+    
+    var totalDay = 0;
+    var totalCount = 0;
+    var tmpHtml = "";
+    for (var day in record[filename].receiveCounts) {
+      var dayTime = new Date(+day * 86400000);
+      var dayStr = getDayTimeString(dayTime);
+      var dayCount = record[filename].receiveCounts[day];
+
+      if (dayMapCount[+day] === undefined) {dayMapCount[+day] = 0;}
+      dayMapCount[+day] += dayCount;
+
+      tmpHtml += "<td>" + dayStr + ":" + dayCount + "</td>";
+      totalDay++;
+      totalCount += dayCount;
+    }
+    var avg = 0;
+    if (dayCount !== 0) {
+      avg = (totalCount/dayCount).toFixed(1);
+    }
+    html += "<td>" + totalCount + "</td>";
+    html += "<td>" + avg + "</td>";
+    html += tmpHtml;
+    html += "</tr>";
+  }
+  html += "</table>";
+  html += "<br /> <br />";
+  // day count
+  html += "<table>";
+  html += "<th><td>day</td><td>hearts</td></th>";
+  for (var day in dayMapCount) {
+    var dayTime = new Date(+day * 86400000);
+    html += "<tr>";
+    html += "<td>" +dayTime+ "</td>";
+    html += "<td>" +dayMapCount[day]+ "</td>";
+    html += "</tr>";
+  }
+  html += "</table>";
+  html += "</body></html>";
+  var oPath = getStoragePath()+"/tsum_record/"+getRecordFilename();
+  writeFile(oPath, html);
+  return oPath;
+}
+
+function getDayTimeString(d) {
+  return (d.getMonth()+1) + '/' + d.getDate();
+}
+
+function getRecordFilename() {
+  var d = new Date();
+  return 'recordTable_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
+}
