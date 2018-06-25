@@ -434,8 +434,10 @@
                 $("#insertDirection").text("前");
             }
         });
+        setTimeout(function(){
         JavaScriptInterface.showMenu();
         JavaScriptInterface.runScriptCallback('initHTML("'+server+'");',"initHTML");
+        }, 500);
     });
 function insertNewCommand(newCmd){
     if(insertDirection == 1){
