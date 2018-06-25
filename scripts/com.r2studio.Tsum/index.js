@@ -331,10 +331,10 @@ var Page = {
   MagicalTime: {
     name: 'MagicalTime',
     colors: [
-      {x: 817, y: 435  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
-      {x: 594, y: 785  + adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
-      {x: 208, y: 1145 + adjY, r: 236, g: 175, b: 9  , match: true, threshold: 80},
-      {x: 662, y: 1141 + adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+      {x: 817, y:  435 + adjY, r: 244, g: 249, b: 243, match: true, threshold:  80},
+      {x: 594, y:  785 + adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
+      {x: 208, y: 1145 + adjY, r: 236, g: 175, b:   9, match: true, threshold:  80},
+      {x: 662, y: 1141 + adjY, r: 232, g: 171, b:   5, match: true, threshold:  80},
     ],
     back: {x: 381, y: 1149 + adjY},
     next: {x: 856, y: 1149 + adjY},
@@ -342,8 +342,8 @@ var Page = {
   NetworkDisable: {
     name: 'NetworkDisable',
     colors: [
-      {x: 478, y: 1008 + adjY, r: 236, g: 94 , b: 116, match: true, threshold: 80},
-      {x: 932, y: 1005 + adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+      {x: 478, y: 1008 + adjY, r: 236, g:  94, b: 116, match: true, threshold: 80},
+      {x: 932, y: 1005 + adjY, r: 232, g: 171, b:   5, match: true, threshold: 80},
     ],
     back: {x: 885, y: 1008 + adjY},
     next: {x: 885, y: 1012 + adjY},
@@ -357,6 +357,35 @@ var Page = {
     back: {x: 885, y: 1012 + adjY},
     next: {x: 885, y: 1012 + adjY},
   },
+  FriendInfo: { // FriendInfo of Friend Page, SocailAccount of Setting Page
+    name: 'FriendInfo',
+    colors: [
+      {x: 565, y:  504 + adjY, r:  31, g: 190, b: 220, match: true, threshold: 80},
+      {x: 547, y: 1123 + adjY, r:  27, g: 192, b: 222, match: true, threshold: 80},
+      {x: 554, y: 1260 + adjY, r: 238, g: 186, b:  12, match: true, threshold: 80},
+    ],
+    back: {x: 576, y: 1336 + adjY},
+    next: {x: 576, y: 1336 + adjY},
+  },
+  LevelUp: { // LevelUp and RankUp
+    name: 'LevelUp',
+    colors: [
+      {x: 140, y: 1584 + adjY, r: 233, g: 175, b: 6, match: true, threshold: 80}, // left of the close button
+      {x: 450, y: 1584 + adjY, r: 233, g: 175, b: 6, match: true, threshold: 80}, // right of the close button
+      {x: 620, y: 1584 + adjY, r: 233, g: 175, b: 6, match: true, threshold: 80}, // left of the share button
+      {x: 930, y: 1584 + adjY, r: 233, g: 175, b: 6, match: true, threshold: 80}, // right of the share button
+    ],
+    back: {x: 300, y: 1588 + adjY},
+    next: {x: 300, y: 1588 + adjY},
+  },
+  ClosePage: { // including EventPage, MyInfo, SettingPage, others
+    name: 'ClosePage', // the close button at center bottom
+    colors: [
+      {x: 540, y: 1516 + adjY, r: 233, g: 180, b: 10, match: true, threshold: 80}, // top right of the close button
+    ],
+    back: {x: 576, y: 1588 + adjY},
+    next: {x: 576, y: 1588 + adjY},
+  },
   HighScore: {
     name: 'HighScore',
     colors: [
@@ -366,39 +395,10 @@ var Page = {
     back: {x: 298, y: 1253 + adjY},
     next: {x: 810, y: 1253 + adjY},
   },
-  FriendInfo: {
-    name: 'FriendInfo',
-    colors: [
-      {x: 565, y: 504   + adjY, r: 31, g: 190, b: 220, match: true, threshold: 80},
-      {x: 547, y: 1123  + adjY, r: 27, g: 192, b: 222, match: true, threshold: 80},
-      {x: 554, y: 1260  + adjY, r: 238, g: 186, b: 12, match: true, threshold: 80},
-    ],
-    back: {x: 576, y: 1336 + adjY},
-    next: {x: 576, y: 1336 + adjY},
-  },
-  ClosePage: { // including EventPage, MyInfo, SettingPage, others
-    name: 'ClosePage', // the close button at center bottom
-    colors: [
-      {x: 691, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // top right of the close button
-    ],
-    back: {x: 576, y: 1588 + adjY},
-    next: {x: 576, y: 1588 + adjY},
-  },
-  LevelUp: { // LevelUp and RankUp
-    name: 'LevelUp',
-    colors: [
-      {x: 140, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // left of the close button
-      {x: 450, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // right of the close button
-      {x: 620, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // left of the share button
-      {x: 930, y: 1584 + adjY, r: 233, g: 175, b: 6  , match: true, threshold: 80}, // right of the share button
-    ],
-    back: {x: 300, y: 1588 + adjY},
-    next: {x: 300, y: 1588 + adjY},
-  },
   InvitePage: {
     name: 'InvitePage', // the close button at left bottom
     colors: [
-      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11 , match: true, threshold: 80},
+      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11, match: true, threshold: 80},
     ],
     back: {x: 176, y: 1520 + adjY},
     next: {x: 176, y: 1520 + adjY},
