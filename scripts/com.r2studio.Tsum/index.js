@@ -2269,7 +2269,7 @@ function stop() {
 
 function genRecordTable() {
   console.log("Generate Record...");
-  var recordFilePath = getStoragePath() + "/tsum_record/record.txt";
+  var recordFile = getStoragePath() + "/tsum_record/record.txt";
   var txt = readFile(recordFile);
   var record = {};
   if (txt != undefined && txt != "") {
@@ -2284,21 +2284,15 @@ function genRecordTable() {
 
   var html = "<html><body>";
   html += "<table>";
-  html += "<th><td>UserImage</td><td>All</td><td>Avg</td><td>Day</td></th>";
+  html += "<tr><td>UserImage</td><td>All</td><td>Avg</td><td>Day</td></tr>";
   var dayMapCount = {};
   for (var filename in record) {
     if (filename == "hearts_count") {
       continue;
     }
-    var base64Image = "";
-    var userImage = openImage(getStoragePath()+"/tsum_record/" + filename);
-    if (userImage !== undefined && userImage !== 0) {
-      base64Image = getBase64FromImage(userImage);
-      releaseImage(userImage);
-    }
     html += "<tr>";
     // user image
-    html += "<td>" + (base64Image === "" ? "unknown" : "<img src='data:image/png;base64," + base64Image + "' />")  + "</td>";
+    html += "<td><img src='./" + filename + "' /></td>";
     
     var totalDay = 0;
     var totalCount = 0;
@@ -2328,19 +2322,20 @@ function genRecordTable() {
   html += "<br /> <br />";
   // day count
   html += "<table>";
-  html += "<th><td>day</td><td>hearts</td></th>";
+  html += "<tr><td>Date</td><td>Hearts</td></tr>";
   for (var day in dayMapCount) {
     var dayTime = new Date(+day * 86400000);
     html += "<tr>";
-    html += "<td>" +dayTime+ "</td>";
-    html += "<td>" +dayMapCount[day]+ "</td>";
+    html += "<td>" + getDayTimeString(dayTime) + "</td>";
+    html += "<td>" + dayMapCount[day] + "</td>";
     html += "</tr>";
   }
   html += "</table>";
   html += "</body></html>";
-  var oPath = getStoragePath()+"/tsum_record/"+getRecordFilename();
+  var recordName = getRecordFilename();
+  var oPath = getStoragePath() + "/tsum_record/" + recordName;
   writeFile(oPath, html);
-  return oPath;
+  return "Download: " + getStoragePath()+"/tsum_record to PC" + "<br />Open: " + recordName;
 }
 
 function getDayTimeString(d) {
