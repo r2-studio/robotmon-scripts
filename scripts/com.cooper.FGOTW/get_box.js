@@ -97,5 +97,5 @@ function resetBox(){
     sleep(1000);
 }
 
-
+loadApiCnt++;
 console.log("Load get box api finish");

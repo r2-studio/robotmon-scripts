@@ -100,6 +100,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
     var screenShot = getScreenshot();
     var servantAlive = [true,true,true];
     if(!servantInited){
+        sleep(3000);
         console.log("Init servant image");
         servantInited = true;
         initServant = getCurrentServant(screenShot);
@@ -248,6 +249,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
             useUlt(i);
         }
     }
+    var m = "Select card ";
     while(true){
         if(!isScriptRunning){
             break;
@@ -261,9 +263,11 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
             }
         }
         if(id >= 0){
+            m=m+id+" ";
             selectCard(id);
             cardScore[id] = -15000;
         }else{
+            console.log(m);
             return;
         }
     }
@@ -351,37 +355,49 @@ function updateCardList(){
     var weakH = 30;
     //get card color
     for(var i=0;i<5;i++){
-        for(var j =0;j<2;j++){
-            var card = cropImage(screenShot,updateCardListX[i]* screenScale[0] + screenOffset[0],updateCardListY[j]* screenScale[1] + screenOffset[1],300 * screenScale[0],100* screenScale[1]);
-            for(var k=0;k<3;k++){
-                var resizeCard = resizeImage(cardListImage[k],300 * screenScale[0],100* screenScale[1]);
-                var score = getIdentityScore(card,resizeCard);
-                if(cardImageScore[i] == undefined || score > cardImageScore[i]){
-                    cardImageScore[i] = score;
-                    cardList[i] = k;
-                }
-                releaseImage(resizeCard);
+        var card = cropImage(screenShot,updateCardListX[i]* screenScale[0] + screenOffset[0],updateCardListY* screenScale[1] + screenOffset[1],300 * screenScale[0],130* screenScale[1]);
+        for(var k=0;k<3;k++){
+            var resizeCard = resizeImage(cardListImage[k],300 * screenScale[0],100* screenScale[1]);
+            var find = findImage(card,resizeCard);
+            if(cardImageScore[i] == undefined || find.score > cardImageScore[i]){
+                cardImageScore[i] = find.score;
+                cardList[i] = k;
             }
-            releaseImage(card);
+            releaseImage(resizeCard);
         }
+        releaseImage(card);
     }
     //get card status
     for(var i=0;i<5;i++){
         cardStatus[i] = -1;
-        for(var checkY = updateCardListY[0];checkY < updateCardListY[1];checkY+=2){
-            for(var ox = -2;ox<3;ox++){
-                if(checkImage(screenShot,cardDisableImage[0],updateCardListX[i] + offsetDisableX[0]+ox,updateCardListY[j] + offsetDisableY,disableW[0], disableH) 
-                    && checkImage(screenShot,cardDisableImage[1],updateCardListX[i] + offsetDisableX[1]+ox,checkY + offsetDisableY,disableW[1], disableH)){
-                    cardStatus[i] = 0;
-                    break;
-                }else if(checkImage(screenShot,cardWeakImage[0],updateCardListX[i] + updateCardListOffsetWeakX+ox, checkY + updateCardListOffsetWeakY[0], weakW,weakH)){
-                    cardStatus[i] = 1;
-                    break;
-                }else if(checkImage(screenShot,cardWeakImage[1],updateCardListX[i] + updateCardListOffsetWeakX+ox, checkY + updateCardListOffsetWeakY[1], weakW,weakH)){
-                    cardStatus[i] = 2;
-                    break;
-                }
-            }
+        var cropDisable = [];
+        var cropWeak = [];
+        cropDisable[0] = cropImage(screenShot,
+            (updateCardListX[i] + offsetDisableX[0])*screenScale[0]+screenOffset[0] - 2,
+            (updateCardListY + offsetDisableY)*screenScale[1]+screenOffset[1],
+            (disableW[0]+4)*screenScale[0],
+            (disableH+30)*screenScale[1]);
+        cropDisable[1] = cropImage(screenShot,
+            (updateCardListX[i] + offsetDisableX[1])*screenScale[0]+screenOffset[0] - 2,
+            (updateCardListY + offsetDisableY)*screenScale[1]+screenOffset[1],
+            (disableW[1]+4)*screenScale[0],
+            (disableH+30)*screenScale[1]);
+        cropWeak[0] = cropImage(screenShot,
+            (updateCardListX[i] + updateCardListOffsetWeakX)*screenScale[0]+screenOffset[0] - 2,
+            (updateCardListY + updateCardListOffsetWeakY[0])*screenScale[1]+screenOffset[1],
+            (weakW+4)*screenScale[0],
+            (weakH+30)*screenScale[1]);
+        cropWeak[1] = cropImage(screenShot,
+            (updateCardListX[i] + updateCardListOffsetWeakX)*screenScale[0]+screenOffset[0] - 2,
+            (updateCardListY + updateCardListOffsetWeakY[1])*screenScale[1]+screenOffset[1],
+            (weakW+4)*screenScale[0],
+            (weakH+30)*screenScale[1]);
+        if(findImageResize(cropDisable[0],cardDisableImage[0]) && findImageResize(cropDisable[1],cardDisableImage[1])) {
+            cardStatus[i] = 0;
+        }else if(findImageResize(cropWeak[0],cardWeakImage[0])){
+            cardStatus[i] = 1;
+        }else if(findImageResize(cropWeak[1],cardWeakImage[1])){
+            cardStatus[i] = 2;
         }
     }
     releaseImage(screenShot);
@@ -397,5 +413,5 @@ function getCurrentServant(screenShot){
     return servant;
 }
 
-
+loadApiCnt++;
 console.log("Load auto attack api finish");

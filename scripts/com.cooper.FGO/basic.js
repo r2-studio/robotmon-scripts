@@ -1,6 +1,6 @@
-var version = "V1.14";
+var version = "V1.15";
 var isDebug = false;
-
+//image
 var noApImage;
 var stageFullImage;
 var stageFullImage2;
@@ -31,6 +31,19 @@ var useItemImage;
 var selectStartImage = [];
 var selectBackImage;
 
+//position
+var skillPositionX;
+var skillPositionY;
+var skillPositionW;
+var skillPositionH;
+var updateCardListX;
+var updateCardListY;
+var updateCardListOffsetWeakX;
+var updateCardListOffsetWeakY;
+var currentStageX;
+var currentStageY;
+var selectFriendPosition;
+
 var skillColor = [];
 var resetFriendCnt;
 var isImageInit = false;
@@ -39,6 +52,7 @@ var isScriptRunning = false;
 var defaultScreenSize = [2560,1440];
 var screenScale = [];
 var screenOffset = [];
+var realScreenSize = [];
 
 function startScript(loopTime,script){
     loadImage();
@@ -64,11 +78,11 @@ function initIDE(serverString){
     server = serverString;
     isImageInit = false;
     isDebug = true;
-    isScriptRunning = true;
     initServer();
     loadApi();
     loadImage();
     initScreenSize();
+    isScriptRunning = true;
 }
 
 function loadImage(){
@@ -183,8 +197,8 @@ function initScreenSize(){
         h = w;
         w = tmp;
     }
-    var ho = h;
     var wo = w;
+    var ho = h;
     if(w * 9 < h * 16){
         h = wo * 9 / 16;
         screenOffset[1] = (ho - h) / 2;
@@ -194,6 +208,44 @@ function initScreenSize(){
     }
     screenScale[0] = w / defaultScreenSize[0];
     screenScale[1] = h / defaultScreenSize[1];
+    realScreenSize[0] = w;
+    realScreenSize[1] = h;
+}
+
+function initPosition(){
+    if(server == "JP"){
+        skillPositionX =[62,249,436,696,884,1071,1335,1523,1710];
+        skillPositionY = 1200;
+        skillPositionW = 37;
+        skillPositionH = 33;
+
+        updateCardListX = [126,638,1148,1664,2184];
+        updateCardListY = 1070;
+        updateCardListOffsetWeakX = 230;
+        updateCardListOffsetWeakY = [-310,-340];
+
+        currentStageX = 1720;
+        currentStageY = 25;
+
+        selectFriendPosition = [180,315,450,585,725,860,995,1130,1265];
+    }
+    else if(server == "TW"){
+        skillPositionX =[47,236,427,682,871,1062,1320,1509,1700];
+        skillPositionY = 1185;
+        skillPositionW = 32;
+        skillPositionH = 32;
+        
+        updateCardListX = [129,641,1152,1664,2186];
+        updateCardListY = 1070;
+        updateCardListOffsetWeakX = 224;
+        updateCardListOffsetWeakY = [-310,-340];
+
+        currentStageX = 1700;
+        currentStageY = 25;
+
+        selectFriendPosition = [315,450,585,725,860,995,1130,1265];
+    }
+
 }
 
 function saveScript(scriptName,scriptContent){
@@ -233,28 +285,69 @@ function checkPixel(x,y,r,g,b){
     return false;
 }
 
-function checkImage(imageBig,imageSmall,x,y,width,height,threshold){
-    var size = getScreenSize();
+function checkImage(screenShot,imageSmall,x,y,width,height,threshold){
+    var size = getImageSize(screenShot);
     if(size.width < size.height){
-        console.log("screen size error");
+        console.log("screen orientation wrong");
         return false;
     }
     if(threshold == undefined){
         threshold = 0.85;
     }
-    x = x * screenScale[0] + screenOffset[0];
-    y = y * screenScale[1] + screenOffset[1];
+    
+    var realScreen = screenShot;
+    if(size.width > realScreenSize[0] || size.width > realScreenSize[1]){
+        realScreen = cropImage(screenShot,screenOffset[0],screenOffset[1],realScreenSize[0],realScreenSize[1]);
+    }
     width = width * screenScale[0];
     height = height * screenScale[1];
     var resizeSmall = resizeImage(imageSmall,width,height);
-    var crop = cropImage(imageBig,x,y,width,height);
-    var score = getIdentityScore(crop,resizeSmall);
+
+
+    x = x * screenScale[0] - 1;
+    y = y * screenScale[1] - 1;
+    if(x < 0){
+        x = 0;
+    }
+    if(y < 0){
+        y = 0;
+    }
+    var cropWidth = width + 2;
+    var cropHeight = height + 2;
+    if(x + cropWidth > realScreenSize[0]){
+        cropWidth = realScreenSize[0] - x;
+    }
+    if(y + cropHeight > realScreenSize[1]){
+        cropHeight = realScreenSize[1] - y;
+    }
+    var crop = cropImage(realScreen,x,y,cropWidth,cropHeight);
+    var find = findImage(crop,resizeSmall);
     releaseImage(crop);
     releaseImage(resizeSmall);
-    if(isDebug){
-        console.log("check image score "+score);
+    releaseImage(realScreen);
+    if(find.score > threshold){
+        return true;
+    }else{
+        return false;
     }
-    if(score > threshold){
+}
+
+function findImageResize(imageBig,imageSmall,threshold){
+    if(threshold == undefined){
+        threshold = 0.85;
+    }
+    var imageSizeBig = getImageSize(imageBig);
+    var imageSize = getImageSize(imageSmall);
+    var width = imageSize.width * screenScale[0];
+    var height = imageSize.height * screenScale[1];
+    if(imageBig.width<width||imageSize.height<height){
+        console.log("image size bug");
+        return false;
+    }
+    var resizeSmall = resizeImage(imageSmall,width,height);
+    var find = findImage(imageBig,resizeSmall);
+    releaseImage(resizeSmall);
+    if(find.score > threshold){
         return true;
     }else{
         return false;
@@ -453,4 +546,5 @@ function confirmSaveFriendItemImage(imageName,time){
     return imageName;
 }
 
+loadApiCnt++;
 console.log("Load basic api finish");
