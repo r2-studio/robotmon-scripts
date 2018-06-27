@@ -434,6 +434,7 @@
                 $("#insertDirection").text("前");
             }
         });
+        
         setTimeout(function(){
         JavaScriptInterface.showMenu();
         JavaScriptInterface.runScriptCallback('initHTML("'+server+'");',"initHTML");
@@ -936,7 +937,7 @@ function getSelectTeam(id){
 }
 function getStartQuest(id){
     return getCommandItem(id,'進入關卡',
-        '<li><label>使用活動道具(日服尚未支援)&nbsp;&nbsp;</label>'+
+        '<li><label>使用活動道具&nbsp;&nbsp;</label>'+
         '<select id = "useItem'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">一</option>'+
@@ -1037,9 +1038,9 @@ function initHTML(result){
     servantImgPath = storagePath+'friend_servant/';
     itemImgPath = storagePath+'friend_item/';
     if(server == "JP"){
-        $("#serverMessage").text("日服 "+v+"-需要其他伺服器版本請至腳本商店下載");
+        $("#serverMessage").text("日服 "+v+" - 其他伺服器版本請至腳本商店下載");
     }else if(server == "TW"){
-        $("#serverMessage").text("台服 "+v+"-需要其他伺服器版本請至腳本商店下載");
+        $("#serverMessage").text("台服 "+v+" - 其他伺服器版本請至腳本商店下載");
     }
 }
 

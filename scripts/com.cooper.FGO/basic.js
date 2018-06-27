@@ -1,4 +1,4 @@
-var version = "V1.15";
+var version = "V1.16";
 var isDebug = false;
 //image
 var noApImage;
@@ -30,6 +30,11 @@ var useItemImage;
 
 var selectStartImage = [];
 var selectBackImage;
+
+var swimMark;
+var swimStage;
+var swimMap;
+var swimLogo;
 
 //position
 var skillPositionX;
@@ -139,6 +144,15 @@ function loadImage(){
     
     starImage = openImage(imagePath+"Star.png");
     useItemImage = openImage(imagePath+"UseItem.png");
+
+
+    swimMark = openImage(imagePath+"SwimMark.png");
+    swimStage = openImage(imagePath+"SwimStage.png");
+    swimMap = openImage(imagePath+"SwimMap.png");
+    swimLogo = openImage(imagePath+"SwimLogo.png");
+
+
+
     isImageInit = true;
 }
 
@@ -183,6 +197,12 @@ function releaseAllImage(){
 
     releaseImage(starImage);
     releaseImage(useItemImage);
+
+    releaseImage(swimMark);
+    releaseImage(swimStage);
+    releaseImage(swimMap);
+    releaseImage(swimLogo);
+
 }
 
 function initScreenSize(){
