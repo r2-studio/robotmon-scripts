@@ -259,7 +259,7 @@
     }
 
     TAG = "EZRobot";
-    VERSION = 4;
+    VERSION = 5;
     var setting = [];
     var noSetting = 'No Setting';
 
@@ -296,7 +296,8 @@
                 script: "Script",
                 milliseconds: "Milliseconds:",
                 setting: "Setting",
-                times: "Times"
+                times: "Times",
+                ifColor: "if is/not color, then do ..."
               }
             }
           },
@@ -316,7 +317,8 @@
                 action: "動作:",
                 milliseconds: "毫秒:",
                 setting: "設定",
-                times: "次數"
+                times: "次數",
+                ifColor: "顏色符合/不符合，做..."
               }
             }
           }
@@ -354,7 +356,7 @@
     }
 
     function initActionDropdown() {
-      var names = ['loop', 'Click', 'TapDown', 'MoveTo', 'TapUp', 'Swipe', 'safeSleep', 'Home', 'Back', 'Screenshot'];
+      var names = ['loop', 'ifColor', 'Click', 'TapDown', 'MoveTo', 'TapUp', 'Swipe', 'safeSleep', 'Home', 'Back', 'Screenshot', 'PrintColor'];
       for (var i = 0; i < names.length; i++) {
         var name = names[i].replace('rbm.', '');
         $("#action-dropdown").append('<a href="#' + names[i] + '" class="action-dropdown-item">' + name + '</a>');
@@ -402,6 +404,11 @@
       if (element.action == 'loop') {
         action = element.action + ' ' + element.times;
         args = element.times;
+      } else if (element.action == 'ifColor') {
+        action = element.action + ' ' + (element.is ? '==' : '!=');
+        action += ' x ' + element.x + ' y ' + element.y + ' diff ' + element.diff;;
+        action += ' r ' + element.r + ' g ' + element.g + ' b ' + element.b;
+        args = element.is;
       } else {
         args = element.args;
         action = element.action.replace('rbm.', '') + ' ' + args.join(',');
@@ -414,7 +421,7 @@
       jGroup.append(jGroupItem.append(jRow.append(jActionName.append(action))));
       appendCol(jRow, getButtons(pCommands, commands, index, element));
 
-      if (element.action == 'loop') {
+      if (element.action == 'loop' || element.action == 'ifColor') {
         for (var i = 0; i < element.commands.length; i++) {
           addSettingRow(commands, element.commands, i, backgroundColor === '#ffffff' ? '#f2f2f2' : '#ffffff', marginLeft + 15);
         }
@@ -442,7 +449,7 @@
         commands.splice(index, 1);
         initSettingRows();
       });
-      if (element.action === 'loop') {
+      if (element.action === 'loop' || element.action === 'ifColor') {
         var jBtnAdd = $("<button class='btn btn-plus'><i class='fa fa-plus' aria-hidden='true'></i></button>");
         jBtnAdd.click(function () {
           addSetting(element);
@@ -592,7 +599,19 @@
         if (action == 'loop') {
           okCallback({
             action: action,
-            times: $("#action-loop input").val(),
+            times: +$("#action-loop input").val(),
+            commands: setting.commands ? setting.commands : [],
+          });
+        } else if (action == 'ifColor') {
+          okCallback({
+            action: action,
+            is: ($("#action-ifColor .is").val() == 1 ? true: false),
+            x: +$("#action-ifColor .x").val(),
+            y: +$("#action-ifColor .y").val(),
+            r: +$("#action-ifColor .r").val(),
+            g: +$("#action-ifColor .g").val(),
+            b: +$("#action-ifColor .b").val(),
+            diff: +$("#action-ifColor .diff").val(),
             commands: setting.commands ? setting.commands : [],
           });
         } else {
@@ -662,6 +681,22 @@
           <div style="display:inline-block;" data-i18n="title.times"></div>
           <input type="number" value="3" />
         </div>
+        <div id="action-ifColor" class="action-parameters">
+          <div style="display:inline-block;" data-i18n="title.ifColor"></div>
+          <div class="row center-block">
+            Is: <input type="number" class="is" value="1" />
+            Diff: <input type="number" class="diff" value="20" />
+          </div>
+          <div class="row center-block">
+            X: <input type="number" class="x" value="100" />
+            Y: <input type="number" class="y" value="100" />
+          </div>
+          <div class="row center-block">
+            R: <input type="number" class="r" value="255" />
+            G: <input type="number" class="g" value="255" />
+            B: <input type="number" class="b" value="255" />
+          </div>
+        </div>
         <div id="action-Click" class="action-parameters">
           X: <input type="number" value="100" />
           Y: <input type="number" value="100" />
@@ -687,6 +722,10 @@
             X2: <input type="number" value="100" />
             Y2: <input type="number" value="200" />
           </div>
+        </div>
+        <div id="action-PrintColor" class="action-parameters">
+          X: <input type="number" value="100" />
+          Y: <input type="number" value="100" />
         </div>
         <div id="action-safeSleep" class="action-parameters">
           <div style="display:inline-block;" data-i18n="title.milliseconds"></div>
