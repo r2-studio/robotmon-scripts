@@ -1,6 +1,22 @@
 importJS("TaskController-0.0.1");
 importJS('RBM-0.0.3');
 
+function isSameColor(c1, c2, diff) {
+  if (diff == undefined) {
+    diff = 20;
+  }
+  if (Math.abs(c1.r - c2.r) > diff) {
+    return false;
+  }
+  if (Math.abs(c1.g - c2.g) > diff) {
+    return false;
+  }
+  if (Math.abs(c1.b - c2.b) > diff) {
+    return false;
+  }
+  return true;
+}
+
 var rbm = undefined;
 
 var testConfig = [{
@@ -18,6 +34,26 @@ var testConfig = [{
     {
       action: 'loop',
       times: 1,
+      commands: [
+        {
+          action: 'rbm.log',
+          args: ['Hello2'],
+        },
+        {
+          action: 'safeSleep',
+          args: [1000],
+        },
+      ],
+    },
+    {
+      action: 'ifColor',
+      is: true,
+      x: 0,
+      y: 0,
+      r: 0,
+      g: 0,
+      b: 0,
+      diff: 20,
       commands: [
         {
           action: 'rbm.log',
@@ -59,6 +95,16 @@ var Screenshot = function() {
   safeSleep(100);
   releaseImage(img);
 }
+var PrintColor = function(x, y) {
+  var wh = getScreenSize();
+  if (x < 0 || x >= wh.width || y < 0 || y > wh.height) {
+    rbm.log("X < 0 or X >= width or Y < 0 or Y >= height");
+  }
+  var img = getScreenshot();
+  var c = getImageColor(img, x, y);
+  releaseImage(img);
+  rbm.log("Color R: " + c.r + " G: " + c.g + " B: " + c.b);
+}
 
 function safeSleep(t) {
   if (t == undefined) {
@@ -86,7 +132,29 @@ var runCommands = function(commands) {
     var command = commands[idx];
     if (command.action == 'loop') {
       for (var t = 0; t < command.times && rbm && rbm.running; t++) {
+        console.log('loop' + t + '/' + command.times);
         runCommands(command.commands);
+      }
+    } else if (command.action == 'ifColor') {
+      var x = command.x;
+      var y = command.y;
+      var d = command.diff;
+      var wh = getScreenSize();
+      if (x < 0 || x >= wh.width || y < 0 || y > wh.height) {
+        rbm.log("ifColor X < 0 or X >= width or Y < 0 or Y >= height");
+        break;
+      }
+      var img = getScreenshot();
+      var c = getImageColor(img, x, y);
+      releaseImage(img);
+      if (command.is && isSameColor(command, c)) {
+        console.log('is color and do...');
+        runCommands(command.commands);
+      } else if (!command.is && !isSameColor(command, c, d)) {
+        console.log('is not color and do...');
+        runCommands(command.commands);
+      } else {
+        console.log('ifColor do nothing');
       }
     } else {
       if (command.action.search('rbm') != -1) {
