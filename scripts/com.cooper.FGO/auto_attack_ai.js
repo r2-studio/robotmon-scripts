@@ -3,6 +3,7 @@ var initUlt = [];
 var ultList = [];
 var cardList = [];
 var cardStatus = []; // -1:null 0:disable 1:weak 2:resist
+var servantExist = [];
 var servantInited;
 var ultCheckX = [682,1146,1612];
 var ultCheckY = 285;
@@ -151,6 +152,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
         skillUsed[i] = checkImage(screenShot,skillUsedImage,skillPositionX[i],skillPositionY,skillPositionW,skillPositionH);
         m+=skillUsed[i]+",";
     }
+    updateServantExist(screenShot);
     releaseImage(screenShot);
     console.log(m);
     for(var i =0;i<3;i++){
@@ -164,7 +166,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
                         isScriptRunning = false;
                     return;
                     case 1:
-                        if(!skillUsed[i*3+j]){
+                        if(!skillUsed[i*3+j] && servantExist[i]){
                             useSkill(i,j,skill[i][1][j],false); 
                         }
                     break;
@@ -401,6 +403,21 @@ function updateCardList(){
         }
     }
     releaseImage(screenShot);
+}
+
+function updateServantExist(screenShot){
+    var servantExistX = [222,858,1495];
+    var servantExistY = 1342;
+    var servantExistWidth = 50;
+    var servantExistHeight = 24;
+
+    servantExist = [true,true,true];
+
+    for(var i = 0;i<3;i++){
+        if(!checkImage(screenShot, servantExistImage, servantExistX[i], servantExistY, servantExistWidth, servantExistHeight)){
+            servantExist[i] = false;
+        }
+    }
 }
 
 function getCurrentServant(screenShot){

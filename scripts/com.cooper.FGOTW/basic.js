@@ -1,4 +1,4 @@
-var version = "V1.15";
+var version = "V1.17";
 var isDebug = false;
 //image
 var noApImage;
@@ -8,6 +8,7 @@ var selectFriendImage;
 var selectFriendImage2;
 var selectTeamImage;
 var finishStageImage = [];
+var stageFailedImage;
 var whiteImage;
 var currentStageImage = [];
 var cardListImage = [];
@@ -27,9 +28,15 @@ var friendPointNew;
 var friendPointBack;
 var starImage;
 var useItemImage;
+var servantExistImage;
 
 var selectStartImage = [];
 var selectBackImage;
+
+var swimMark;
+var swimStage;
+var swimMap;
+var swimLogo;
 
 //position
 var skillPositionX;
@@ -99,6 +106,7 @@ function loadImage(){
         finishStageImage[i] = openImage(imagePath+"FinishStage"+i+".png");
     }
     whiteImage = openImage(imagePath+"White.png");
+    stageFailedImage = openImage(imagePath+"StageFailed.png");
 
     for(var i=0;i<3;i++){
         currentStageImage[i] = openImage(imagePath+"CurrentStage"+i+".png");
@@ -139,6 +147,17 @@ function loadImage(){
     
     starImage = openImage(imagePath+"Star.png");
     useItemImage = openImage(imagePath+"UseItem.png");
+
+
+    swimMark = openImage(imagePath+"SwimMark.png");
+    swimStage = openImage(imagePath+"SwimStage.png");
+    swimMap = openImage(imagePath+"SwimMap.png");
+    swimLogo = openImage(imagePath+"SwimLogo.png");
+
+
+    servantExistImage = openImage(imagePath+"ServantExist.png");
+
+
     isImageInit = true;
 }
 
@@ -154,6 +173,7 @@ function releaseAllImage(){
         releaseImage(finishStageImage[i]);
     }
     releaseImage(whiteImage);
+    releaseImage(stageFailedImage);
 
     for(var i=0;i<3;i++){
         releaseImage(currentStageImage[i]);        
@@ -183,6 +203,14 @@ function releaseAllImage(){
 
     releaseImage(starImage);
     releaseImage(useItemImage);
+
+    releaseImage(swimMark);
+    releaseImage(swimStage);
+    releaseImage(swimMap);
+    releaseImage(swimLogo);
+
+    releaseImage(servantExistImage);
+
 }
 
 function initScreenSize(){

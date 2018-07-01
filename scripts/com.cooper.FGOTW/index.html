@@ -1,5 +1,24 @@
 <html>
 <head>
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-120995182-1',  {
+  'cookieDomain': 'none'
+});
+
+
+ga('set', 'checkProtocolTask', null); // Disable file protocol checking.
+ga('set', 'checkStorageTask', null); // Disable cookie storage checking.
+ga('set', 'historyImportTask', null); // Disable history checking (requires reading from cookies).
+ga('set', 'page', 'app');
+ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style>
     .command {
@@ -136,6 +155,7 @@
 
     <script>
     var server = "TW"
+    var version = "";
     var commandId = 0;
     var scriptCnt = 0;
     var friendServantList = [];
@@ -434,6 +454,7 @@
                 $("#insertDirection").text("前");
             }
         });
+        
         setTimeout(function(){
         JavaScriptInterface.showMenu();
         JavaScriptInterface.runScriptCallback('initHTML("'+server+'");',"initHTML");
@@ -936,7 +957,7 @@ function getSelectTeam(id){
 }
 function getStartQuest(id){
     return getCommandItem(id,'進入關卡',
-        '<li><label>使用活動道具(日服尚未支援)&nbsp;&nbsp;</label>'+
+        '<li><label>使用活動道具&nbsp;&nbsp;</label>'+
         '<select id = "useItem'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">一</option>'+
@@ -1007,7 +1028,7 @@ function initHTML(result){
         $("#serverMessage").text("請重新開啟腳本以完成更新");
         return;
     }
-    var v = result[4];
+    version = result[4];
     if(result[1].length > 0){
         friendServantList = result[1].split(",");
     }
@@ -1037,13 +1058,20 @@ function initHTML(result){
     servantImgPath = storagePath+'friend_servant/';
     itemImgPath = storagePath+'friend_item/';
     if(server == "JP"){
-        $("#serverMessage").text("日服 "+v+"-需要其他伺服器版本請至腳本商店下載");
+        $("#serverMessage").text("日服 "+version+" - 其他伺服器版本請至腳本商店下載");
     }else if(server == "TW"){
-        $("#serverMessage").text("台服 "+v+"-需要其他伺服器版本請至腳本商店下載");
+        $("#serverMessage").text("台服 "+version+" - 其他伺服器版本請至腳本商店下載");
     }
 }
 
 function scriptFinish(){
+    var l = server +"_"+version;
+    ga('send', {
+        hitType: 'event',
+        eventCategory: 'Script',
+        eventAction: 'Finish',
+        eventLabel: l
+    });
     JavaScriptInterface.showMenu();
     JavaScriptInterface.showPlayButton();
 }
@@ -1378,10 +1406,24 @@ function onEvent(eventType) {
     if (eventType == 'OnPlayClick') {        
         var loopTime = parseInt($("#loopTime").val());
         var currentScript = getCurrentScript();
+        var l = server +"_"+version;
+        ga('send', {
+            hitType: 'event',
+            eventCategory: 'Script',
+            eventAction: 'Play',
+            eventLabel: l
+        });
         JavaScriptInterface.runScriptCallback('start('+loopTime+',\''+currentScript+'\');',"scriptFinish");
         JavaScriptInterface.hideMenu();
         JavaScriptInterface.setXY(3000,0);
     } else if (eventType == 'OnPauseClick') {
+        var l = server +"_"+version;
+        ga('send', {
+            hitType: 'event',
+            eventCategory: 'Script',
+            eventAction: 'Stop',
+            eventLabel: l
+        });
         JavaScriptInterface.runScript('stop();');
     } else if (eventType == 'OnReloadClick') {
     }

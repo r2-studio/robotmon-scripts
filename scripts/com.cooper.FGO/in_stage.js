@@ -44,6 +44,14 @@ function waitUntilPlayerCanMoveOrFinish(){
             return;
         }
         console.log("waitUntilPlayerCanMoveOrFinish");
+        var screenShot = getScreenshot();
+        if(checkImage(screenShot,stageFailedImage,1000,200,550,100)){
+            console.log("Stage failed");
+            isScriptRunning = false;
+            releaseImage(screenShot);
+            return;
+        }
+        releaseImage(screenShot);
         if(checkPlayerCanMove()){
             return;
         }
@@ -133,7 +141,7 @@ function useSkill(player,skill,target,checkUsed){
             tapScale(1800,1135,100);
         }
     }
-    sleep(500);    
+    sleep(1000);    
     if(!isScriptRunning){
         return;
     }
@@ -147,7 +155,7 @@ function useSkill(player,skill,target,checkUsed){
         tapScale(1280,1110,100);
         releaseImage(screenShot2);
         return;
-    }    
+    }
     if(checkImage(screenShot2,skillCheckImage,1070,325,420,85)){
         tapScale(1700,850,100);
         sleep(500);
@@ -169,14 +177,23 @@ function selectSkillTarget(player){
     if(!isScriptRunning){
         return;
     }
-    if(player == 0){
-        tapScale(650,850,100);
-        //will also cancel used skill
-    }else if(player == 1){
-        tapScale(1250,935,100);
-    }else if(player == 2){
-        tapScale(1850,935,100);
-    }
+    var targetX = [650,1250,1850];
+    tapScale(targetX[player],850,100);
+    sleep(1000);
+    var screenShot = getScreenshot();
+    if(checkImage(screenShot,skillNullImage,2161,269,69,67)){
+        tapScale(targetX[player]+300,935,100);
+        sleep(1000)
+        releaseImage(screenShot);
+    }else{
+        releaseImage(screenShot);
+        return;
+    };
+    var screenShot2 = getScreenshot();
+    if(checkImage(screenShot2,skillNullImage,2161,269,69,67)){
+        tapScale(targetX[1],935,100);
+    };
+    releaseImage(screenShot2);
 }
 
 function useClothesSkill(skill,target1,target2){
@@ -199,6 +216,13 @@ function useClothesSkill(skill,target1,target2){
         selectSkillTarget(target1);
     }else if(target1!=undefined && target2 !=undefined){
         changePlayer(target1,target2);
+    }
+    sleep(1000);    
+    var screenShot = getScreenshot();
+    if(checkImage(screenShot,skillNullImage,2085,142,69,67)){
+        tapScale(2100,170,100);
+        releaseImage(screenShot);
+        return;
     }
     sleep(3000);
 }
