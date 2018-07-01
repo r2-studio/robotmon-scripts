@@ -102,14 +102,14 @@
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
       "versionCode": 1.16,
-      "description": "<div>V1.16 支援泳裝活動選取關卡與道具<br><br>V1.15 修正部分腳本卡住與中斷的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "description": "<div>V1.17修正從者少於三人會卡住的問題<br><br>V1.16 支援泳裝活動選取關卡與道具<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
       "versionCode": 1.15,
-      "description": "<div>V1.15修正部分腳本卡住與中斷的問題<br><br>V1.14修正部分機型無法新建腳本與截取好友從者禮裝的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "description": "<div>V1.17修正從者少於三人會卡住的問題<br><br>V1.15修正部分腳本卡住與中斷的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     }
