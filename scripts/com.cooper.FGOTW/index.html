@@ -16,7 +16,6 @@ ga('set', 'checkProtocolTask', null); // Disable file protocol checking.
 ga('set', 'checkStorageTask', null); // Disable cookie storage checking.
 ga('set', 'historyImportTask', null); // Disable history checking (requires reading from cookies).
 ga('set', 'page', 'app');
-ga('send', 'pageview');
 </script>
 <!-- End Google Analytics -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -1062,6 +1061,7 @@ function initHTML(result){
     }else if(server == "TW"){
         $("#serverMessage").text("台服 "+version+" - 其他伺服器版本請至腳本商店下載");
     }
+    ga('send', 'pageview');
 }
 
 function scriptFinish(){
