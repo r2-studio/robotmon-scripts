@@ -13,7 +13,7 @@ function selectStage(useApple){
         }
         console.log("find swim team icon");
         var screenShotSwim = getScreenshot();
-        if(checkImage(screenShotSwim,swimLogo,400,30,200,100)){
+        if(checkImage(screenShotSwim,swimLogo,400,40,200,40)){
             if(checkImage(screenShotSwim,swimMap,120,40,180,80)){
                 if(!waitSwimAnimation){
                     waitSwimAnimation = true;
