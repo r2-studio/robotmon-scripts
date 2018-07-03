@@ -651,15 +651,21 @@ var GameAssistant = function () {
       }
 
       // expend full tab
-      this.refreshScreen();
-      if (!this.gInfo.expendTabPage.check(this._img)) {
-        this.gInfo.expendTab.tap();
-        sleep(500);
+      for (var i = 0; i < 3; i ++) {
+        this.refreshScreen();
+        if (!this.gInfo.expendTabPage.check(this._img)) {
+          this.gInfo.expendTab.tap();
+          sleep(500);
+        } else {
+          break;
+        }
+
+        sleep(1000);
       }
 
       for (var i = 0; i < 4; i ++) {
         for (var y = 420; y < 2440; y += 200) {
-          Utils.mTap(1250, y, 150);
+          Utils.mTap(1250, y, 200);
         }
 
         this.ttListSwipeUp()
@@ -1087,7 +1093,8 @@ var GameAssistant = function () {
         var wh = getScreenSize();
         if (wh.width > wh.height) {
           console.log('screen is landscape, hit back and wait 3.5secs');
-          keycode('BACK', 200);
+          sleep(1000);
+          keycode('BACK', 100);
           sleep(3500);
           continue;
         }
