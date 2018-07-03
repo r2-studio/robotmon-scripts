@@ -306,22 +306,30 @@ function isQuestFinish(){
     var positionY = [1340,1191,165,362,142,137,1300,550,317,500,1337];
     var positionW = [190,221,230,373,545,2141,270,510,649,420,376];
     var positionH = [55,60,285,89,77,233,100,40,113,60,77];
-    var screenShot = getScreenshot();
-    for(var i = 0;i<11;i++){
-        if(checkImage(screenShot,finishStageImage[i],positionX[i],positionY[i],positionW[i],positionH[i])){
-            if(checkImage(screenShot,whiteImage,500,500,500,500)){
-                releaseImage(screenShot);
-                return -1;
-            }
-            releaseImage(screenShot);
-            if(i<2){
-                return i;
-            }else{
-                return 2;
+    var sameImage = [-1,-1];
+    for(var j = 0;j<2;j++){
+        var screenShot = getScreenshot();    
+        for(var i = 0;i<11;i++){
+            if(checkImage(screenShot,finishStageImage[i],positionX[i],positionY[i],positionW[i],positionH[i])){
+                if(checkImage(screenShot,whiteImage,500,500,500,500)){
+                    releaseImage(screenShot);
+                    return -1;
+                }
+                sameImage[j]=i;
+                break;
             }
         }
+        releaseImage(screenShot);
     }
-    releaseImage(screenShot);
+    if(sameImage[0] == sameImage[1]){
+        if(sameImage[0] == -1){
+            return -1;
+        }else if(sameImage[0]<2){
+            return sameImage[0];
+        }else{
+            return 2;
+        }
+    }
     return -1;
 }
 
