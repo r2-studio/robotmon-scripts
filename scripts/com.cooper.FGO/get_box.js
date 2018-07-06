@@ -83,12 +83,15 @@ function getFriendPoint(){
 }
 
 function checkIsBoxFinish(){
-    return checkPixel(2100,500,74,125,172);
+    var screenShot = getScreenshot();
+    var r = checkImage(screenShot,checkBoxImage,2210,360,190,40);
+    releaseImage(screenShot);
+    return r;
 }
 
 function resetBox(){
     console.log("reset box");
-    tapScale(2100,510,100);
+    tapScale(2300,400,100);
     sleep(1000);
     tapScale(1700,1135,100);
     waitLoading();

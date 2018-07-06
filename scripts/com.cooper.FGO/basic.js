@@ -29,6 +29,7 @@ var friendPointBack;
 var starImage;
 var useItemImage;
 var servantExistImage;
+var checkBoxImage;
 
 var selectStartImage = [];
 var selectBackImage;
@@ -156,7 +157,7 @@ function loadImage(){
 
 
     servantExistImage = openImage(imagePath+"ServantExist.png");
-
+    checkBoxImage = openImage(imagePath+"CheckBox.png");
 
     isImageInit = true;
 }
@@ -210,7 +211,7 @@ function releaseAllImage(){
     releaseImage(swimLogo);
 
     releaseImage(servantExistImage);
-
+    releaseImage(checkBoxImage);
 }
 
 function initScreenSize(){
