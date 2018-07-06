@@ -30,6 +30,7 @@ var starImage;
 var useItemImage;
 var servantExistImage;
 var checkBoxImage;
+var checkBoxPointImage;
 
 var selectStartImage = [];
 var selectBackImage;
@@ -158,7 +159,7 @@ function loadImage(){
 
     servantExistImage = openImage(imagePath+"ServantExist.png");
     checkBoxImage = openImage(imagePath+"CheckBox.png");
-
+    checkBoxPointImage = openImage(imagePath+"CheckBoxPoint.png");
     isImageInit = true;
 }
 
@@ -212,6 +213,7 @@ function releaseAllImage(){
 
     releaseImage(servantExistImage);
     releaseImage(checkBoxImage);
+    releaseImage(checkBoxPointImage);
 }
 
 function initScreenSize(){
