@@ -2,16 +2,17 @@ function getBox(newBox){
     if(newBox == 1 && checkIsBoxFinish()){
         resetBox();
     }
-    var clickCnt = 0;
+    var failedCnt = 0;
     while(true){
         if(!isScriptRunning){
             return;
         }
-        if(clickCnt % 10 == 0 && checkIsBoxFinish()){
-            return;
+        if(checkBoxPoint()){
+            failedCnt = 0;
+        }else{
+            failedCnt++;
         }
-        clickCnt++;
-        if(clickCnt > 200){
+        if(failedCnt > 10){
             return;
         }
         tapScale(800,955,1000);
@@ -87,6 +88,13 @@ function checkIsBoxFinish(){
     var r = checkImage(screenShot,checkBoxImage,2210,360,190,40);
     releaseImage(screenShot);
     return r;
+}
+
+function checkBoxPoint(){
+    var screenShot = getScreenshot();
+    var r = checkImage(screenShot,checkBoxPointImage,700,780,240,130);
+    releaseImage(screenShot);
+    return r;    
 }
 
 function resetBox(){
