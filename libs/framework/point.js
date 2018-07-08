@@ -6,7 +6,7 @@ function Point(devX, devY, r, g, b, need, diff) {
   this.g = g || 0;
   this.b = b || 0;
   this.need = need || false;
-  this.diff = diff || 25;
+  this.d = diff || 0.9;
 }
 
 Point.prototype._check = function() {
@@ -61,7 +61,7 @@ Point.prototype.moveTo = function() {
   moveTo(xy.x, xy.y, 20);
 }
 
-Point.prototype.checkColor = function() {
+Point.prototype.getColor = function() {
   if (!this._check()) {
     return false;
   }
@@ -75,12 +75,17 @@ Point.prototype.checkColor = function() {
       return false;
     }
   }
-  var c = getImageColor(img, xy.x, xy.y);
-  if (this.need && !Colors.isSameColor(c, this, this.d)) {
-    this.context.debug("Is Not Same Color, but need: " + JSON.stringify(c) + " " + JSON.stringify(this));
+  return getImageColor(img, xy.x, xy.y);
+}
+
+Point.prototype.checkColor = function() {
+  var c = this.getColor();
+  var score = Colors.identityScore(c, this);
+  if (this.need && score <= this.d) {
+    this.context.debug("Is Not Same Color, but need");
     return false;
-  } else if (!this.need && Colors.isSameColor(c, this)) {
-    this.context.debug("Is Same Color, but not need: " + JSON.stringify(c) + " " + JSON.stringify(this));
+  } else if (!this.need && score >= this.d) {
+    this.context.debug("Is Same Color, but not need");
     return false;
   }
   return true;

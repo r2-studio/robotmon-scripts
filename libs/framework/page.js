@@ -4,6 +4,7 @@ function Page(name) {
   this._wantExit = false;
 
   this.context = undefined;
+  this.bundle = {};
   this.name = name;
   this.type = Enum.TypePage;
   this.onPage = function() {};

@@ -29,7 +29,7 @@ Colors.identityScore = function(e1, e2) {
   var r = e1.r - e2.r;
   var g = e1.g - e2.g;
   var b = e1.b - e2.b;
-  return Math.sqrt((((512+mean)*r*r)>>8) + 4*g*g + (((767-mean)*b*b)>>8)) / 255;
+  return 1 - Math.sqrt((((512+mean)*r*r)>>8) + 4*g*g + (((767-mean)*b*b)>>8)) / 768;
 }
 
 Colors.minMaxDiff = function (c) {

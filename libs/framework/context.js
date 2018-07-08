@@ -9,6 +9,21 @@ function Context() {
   this.screenshot = 0;
 }
 
+Context.prototype.getPageBundle = function() {
+  if (this.currentPage !== undefined && this.currentPage.bundle === undefined) {
+    this.currentPage.bundle = {};
+  }
+  return this.currentPage.bundle;
+}
+
+Context.prototype.getTaskBundle = function() {
+  if (this.currentTask !== undefined && this.currentTask.bundle === undefined) {
+    console.log('dsflsdjflksjdf')
+    this.currentTask.bundle = {};
+  }
+  return this.currentTask.bundle;
+}
+
 Context.prototype.getParams = function(key) {
   if (this.params[key] !== undefined) {
     return this.params[key];
@@ -17,12 +32,8 @@ Context.prototype.getParams = function(key) {
   }
 }
 
-Context.prototype.getConfig = function(key) {
-  if (this.config[key] !== undefined) {
-    return this.config[key];
-  } else {
-    this.debug("Config not exist, key: " + key);
-  }
+Context.prototype.getConfig = function() {
+  return this.config;
 }
 
 Context.prototype.delayTask = function(pageName, taskName, time) {

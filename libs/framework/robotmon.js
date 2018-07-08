@@ -1,3 +1,5 @@
+var global = this;
+
 function Robotmon() {
   this.onInit = function() {};
   this.context = new Context();
@@ -7,6 +9,27 @@ function Robotmon() {
 Robotmon.prototype.registObject = function(obj) {
   obj.context = this.context;
   return obj;
+}
+
+Robotmon.prototype.registAll = function(obj) {
+  for (var name in global) {
+    var obj = global[name];
+    if (typeof obj !== 'object' ) {
+      continue;
+    }
+    if (obj instanceof Page) {
+      this.addPage(obj);
+    } else if (obj instanceof Feature || obj instanceof Line || obj instanceof Point || obj instanceof Rect) {
+      this.registObject(obj);
+    }
+  }
+  for (var name in global) {
+    var obj = global[name];
+    if (typeof obj === 'object' && obj instanceof Task) {
+      this.addTask(obj.page, obj);
+    }
+  }
+  this.context.debug('register All done');
 }
 
 Robotmon.prototype.addPage = function(page) {
@@ -64,36 +87,37 @@ Robotmon.prototype.init = function() {
   return true;
 }
 
-Robotmon.prototype._getScreenshot = function() {
-  var ss = getScreenSize();
-  if (this._screenshot !== 0) {
-    releaseImage(this._screenshot);
-  }
-  this._screenshot = getScreenshotModify(0, 0, ss.width, ss.height, ss.width, ss.height, 90);
-  return this._screenshot;
-}
-
 Robotmon.prototype._changePage = function(page) {
   var name = "";
   if (page !== undefined) {
     name = page.name;
   }
-  if (this.context.currentPage !== undefined && this.context.currentPage.name !== name) {
+  if (this.context.currentPage === undefined) {
+    this.context.currentPage = page;
+    if (this.context.currentPage !== undefined) {
+      this.context.currentPage.onEnter();
+    }
+  } else if (this.context.currentPage !== undefined && this.context.currentPage.name !== name) {
     this.context.currentPage.onExit();
     this.context.currentPage = page;
-    this.context.currentPage.onEnter(); 
+    this.context.currentPage.onEnter();
   }
 }
 
 Robotmon.prototype._changeTask = function(task) {
   var name = "";
   if (task !== undefined) {
-    name = page.name;
+    name = task.name;
   }
-  if (this.context.currentTask !== undefined && this.context.currentTask.name !== name) {
+  if (this.context.currentTask === undefined) {
+    this.context.currentTask = task;
+    if (this.context.currentTask !== undefined) {
+      this.context.currentTask.onEnter();
+    }
+  } else if (this.context.currentTask !== undefined && this.context.currentTask.name !== name) {
     this.context.currentTask.onExit();
-    this.context.currentTask = page;
-    this.context.currentTask.onEnter(); 
+    this.context.currentTask = task;
+    this.context.currentTask.onEnter();
   }
 }
 
@@ -103,14 +127,14 @@ Robotmon.prototype._runPage = function() {
       this.context.sleep(this.context.config.pauseSleepTime);
       continue;
     }
-    var screenImg = this._getScreenshot();
-    if (screenImg === 0) {
-      this.context.log("Error: Can not get screenshot");
-      break;
-    }
     for(var pageName in this.context.pages) {
       var page = this.context.pages[pageName];
-      var isPage = page.onPage(screenImg);
+      var tmpPage = this.context.currentPage;
+      this.context.currentPage = page;
+      var tmpImg = page.onScreenshot();
+      var isPage = page.onPage();
+      releaseImage(tmpImg);
+      this.context.currentPage = tmpPage;
       if (isPage) {
         this._changePage(page);
         page._wantExit = false;
@@ -130,6 +154,11 @@ Robotmon.prototype._runTask = function() {
       this.context.sleep(this.context.config.pauseSleepTime);
       continue;
     }
+    var screenshot = this.context.getScreenshot(true);
+    var isInPage = page.onPage(screenshot);
+    if (!isInPage) {
+      break;
+    }
     var hasTask = false;
     // implement Context.doAgainTask 2
     if (this.context.currentTask !== undefined && this.context.currentTask._doAgainTask) {
@@ -137,7 +166,6 @@ Robotmon.prototype._runTask = function() {
       this.context.currentTask.onRun();
       continue;
     }
-    var screenshot = this.context.getScreenshot(true);
     if (screenshot === 0) {
       this.context.log("Error: cant not get page screenshot");
       break;
