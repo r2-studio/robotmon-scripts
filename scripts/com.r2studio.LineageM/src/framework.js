@@ -414,6 +414,7 @@ Point.prototype.getColor = function() {
 Point.prototype.checkColor = function() {
   var c = this.getColor();
   var score = Colors.identityScore(c, this);
+  this.context.debug(c, score, this.r);
   if (this.need && score <= this.d) {
     this.context.debug("Is Not Same Color, but need");
     return false;

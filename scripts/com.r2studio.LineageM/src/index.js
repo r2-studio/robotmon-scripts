@@ -31,6 +31,7 @@ var pGameTask = new Point(1747, 57, 233, 228, 196, true, 0.9);
 var pGameBag = new Point(1523, 64, 237, 231, 197, true, 0.9);
 var pGameStore = new Point(1414, 70, 234, 228, 196, true, 0.9);
 var pGameCoin = new Point(960, 57, 205, 179, 60, true, 0.9);
+var pIsMenuOn = new Point(1856, 66, 255, 252, 240, true, 0.9);
 
 var pIsAutoOn1 = new Point(1450, 738, 0, 0, 0, true, 0.9);
 var pIsAutoOn2 = new Point(1484, 775, 0, 0, 0, true, 0.9);
@@ -46,10 +47,10 @@ var fIsAutoOn = new Feature("IsAutoOn", [
 ]);
 
 // 
-
 var rHPBar = new Rect(122, 30, 412, 50);
 var rMPBar = new Rect(110, 58, 412, 72);
 var rEXPValue = new Rect(74, 1044, 150, 1052);
+var rRegion = new Rect(1714, 476, 1812, 490);
 var fInGamePage = new Feature("InGamePage", [pGameTask, pGameBag, pGameStore, pGameCoin]);
 
 var gamePage = new Page("gamePage");
@@ -61,7 +62,7 @@ gamePage.onPage = function(img) {
   var isFeature = fInGamePage.checkColor();
   // releaseImage(img);
   // console.log(isFeature);
-  return fInGamePage;
+  return isFeature;
 };
 gamePage.onInit = function() {
 };
@@ -97,11 +98,14 @@ updateStatusTask.onExit = function() {
   this.context.debug('Exit', this.name);
 };
 updateStatusTask.onRun = function() {
-  var hp = this.getHP();
-  var mp = this.getMP();
+  // var hp = this.getHP();
+  // var mp = this.getMP();
   // this.expChanged();
   // this.isAutoOn();
-  console.log('time', hp, mp);
+  // console.log('time', hp, mp);
+  // var region = this.inRegion();
+  // this.context.debug(region);
+  this.isMenuOn();
 };
 
 updateStatusTask.getHP = function() {
@@ -180,6 +184,38 @@ updateStatusTask.isAutoOn = function() {
     }
   }
   return false;
+}
+
+updateStatusTask.isMenuOn = function() {
+  return pIsMenuOn.checkColor();
+}
+
+updateStatusTask.inRegion = function() {
+  var regionImg = rRegion.crop();
+  var size = getImageSize(regionImg);
+  var grayCount = 0;
+  var blueCount = 0;
+  var redCount = 0;
+  for (var x = 0; x < size.width; x+=3) {
+    var c = getImageColor(regionImg, x, 2);
+    var diff = Colors.minMaxDiff(c);
+    if (diff < 15) {
+      grayCount++;
+    } else if (c.b - c.r > 40) {
+      blueCount++;
+    } else if (c.r - c.b > 40) {
+      redCount++;
+    }
+  }
+  releaseImage(regionImg);
+  if (grayCount > 8) {
+    return 'normal';
+  } else if (blueCount > 6) {
+    return 'safe';
+  } else if (redCount > 6) {
+    return 'battle';
+  }
+  return 'unknown';
 }
 
 function stop() {
