@@ -491,6 +491,8 @@ var LineageM = function () {
         console.log('未知狀態，隨便點看看，等待 3 秒');
         this.gi.enterBtn.tap();
         this.safeSleep(3 * 1000);
+
+        this.refreshScreen();
         if (this.rState.isLogin) {
           console.log('登入遊戲，等待 5 秒');
           this.gi.loginBtn.tap();
