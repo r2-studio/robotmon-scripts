@@ -11,6 +11,7 @@ var ultWidth = 280;
 var ultHeight = 300;
 var ultLightnessOffset = 140;
 var allServentDieFlag = false;
+var servantAliveMessage;
 
 //autoAttack(3,0,1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1);
 function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1,p0s2,p0t2,p1ult,p1s0,p1t0,p1s1,p1t1,p1s2,p1t2,p2ult,p2s0,p2t0,p2s1,p2t1,p2s2,p2t2){
@@ -59,7 +60,10 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
     skill[0] = p0;
     skill[1] = p1;
     skill[2] = p2;
+
+    servantAliveMessage = [true,true,true];
     waitUntilPlayerCanMove();
+    var lastStage = -1;
     while(true){
         if(!isScriptRunning){
             break;
@@ -84,6 +88,12 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
             }
         }else{
             console.log("AutoAttack start new turn");
+            if(lastStage < currentStage){
+                lastStage = currentStage;
+                if(getUserPlan() == 2){
+                    sendNormalMessage(runningScriptName,"Wave "+(lastStage + 1));
+                }
+            }
             attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage);
         }
         if(until == 0){
@@ -102,7 +112,6 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
     var servantAlive = [true,true,true];
     if(!servantInited){
         sleep(3000);
-        console.log("Init servant image");
         servantInited = true;
         initServant = getCurrentServant(screenShot);
         for(var i=0;i<3;i++){
@@ -114,8 +123,12 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
             if(getIdentityScore(initServant[i],currentServant[i])>0.85){
                 servantAlive[i] = true;
             }else{
-                console.log("servant "+i+" died");
+                console.log("servant "+(i+1)+" die");
                 servantAlive[i] = false;
+                if(servantAliveMessage[i]){
+                    servantAliveMessage[i] = false;
+                    sendNormalMessage(runningScriptName,"servant "+(i+1)+" die");
+                }
             }
         }
         if(!(servantAlive[0] || servantAlive[1] || servantAlive[2])){
@@ -150,11 +163,11 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
     var m = 'skill_used:';
     for(var i=0;i<9;i++){
         skillUsed[i] = checkImage(screenShot,skillUsedImage,skillPositionX[i],skillPositionY,skillPositionW,skillPositionH);
-        m+=skillUsed[i]+",";
+        m+=(skillUsed[i]+1)+",";
     }
     updateServantExist(screenShot);
     releaseImage(screenShot);
-    console.log(m);
+    //console.log(m);
     for(var i =0;i<3;i++){
         for(var j=2;j>=0;j--){
             if(!isScriptRunning){
@@ -265,7 +278,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
             }
         }
         if(id >= 0){
-            m=m+id+" ";
+            m=m+(id+1)+" ";
             selectCard(id);
             cardScore[id] = -15000;
         }else{
