@@ -1025,9 +1025,9 @@ var GameAssistant = function () {
           this.safeSleep(3500);
           this.gInfo.clanBossBack.tap();
         } else {
-          this.safeSleep(4000);
+          this.safeSleep(7000);
           console.log('start taping');
-          for (i = 0; i < 30 && this._loop; i ++){
+          for (i = 0; i < 27 && this._loop; i ++){
             for (j = 0; j < 10 && this._loop; j ++) {
               this.tapRandom(700, 900, 50, 50, 80);
             }
@@ -1046,7 +1046,7 @@ var GameAssistant = function () {
           sleep(4000);
           this.gInfo.clanBossBack.tap();
           console.log('tap back 4')
-        }  
+        }
       }
     }
   }, {

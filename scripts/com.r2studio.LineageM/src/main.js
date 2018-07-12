@@ -408,15 +408,20 @@ class LineageM {
       return true;
     }
     if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
-      console.log('未知狀態，隨便點看看，等待 3 秒');
+      console.log('未知狀態，隨便點看看，等待 5 秒');
       this.gi.enterBtn.tap();
-      this.safeSleep(3 * 1000);
+      this.safeSleep(5 * 1000);
 
       this.refreshScreen();
       if (this.rState.isLogin) {
         console.log('登入遊戲，等待 5 秒');
         this.gi.loginBtn.tap();
         this.safeSleep(5 * 1000);
+        return true;
+      } else if (this.rState.isEnter) {
+        console.log('進入遊戲，等待 10 秒');        
+        this.gi.enterBtn.tap();
+        this.safeSleep(10 * 1000);
         return true;
       }
 
