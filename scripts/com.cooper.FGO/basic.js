@@ -1,4 +1,4 @@
-var version = "V1.20";
+var version = "V1.21";
 var isDebug = false;
 //image
 var noApImage;
@@ -62,14 +62,28 @@ var defaultScreenSize = [2560,1440];
 var screenScale = [];
 var screenOffset = [];
 var realScreenSize = [];
+var runningScriptName = "";
 
-function startScript(loopTime,script){
+function startScript(loopTime,script,scriptName){
     loadImage();
     initScreenSize();
     isScriptRunning = true;
-    for(var loop = 0;loop<loopTime;loop++){
+    runningScriptName = scriptName;
+    var next = 1;
+    if(loopTime < 0){
+        next = 0;
+        loopTime = 1;
+    }
+    for(var loop = 0;loop<loopTime;loop+= next){
         if(!isScriptRunning){
-            return;
+            break;
+        }
+        if(next == 0){
+            console.log("Start script");
+        sendNormalMessage (runningScriptName, "Start loop");
+        }else{
+            console.log("Start script loop "+(loop+1)+"/"+loopTime);
+        sendNormalMessage (runningScriptName, "Start loop "+(loop+1)+"/"+loopTime);
         }
         runScript(script);
     }
@@ -296,6 +310,7 @@ function readScript(scriptName){
     var path = getStoragePath();
     return readFile(itemPath+"script/"+scriptName+".js");
 }
+
 //-----------------------------------------------------generial
 
 function checkPixel(x,y,r,g,b){

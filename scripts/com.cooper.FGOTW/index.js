@@ -4,8 +4,8 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-function start(loopTime,script){
-    startScript(loopTime,script);
+function start(loopTime,script,scriptName){
+    startScript(loopTime,script,scriptName);
 }
 
 function stop(){

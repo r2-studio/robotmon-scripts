@@ -32,9 +32,12 @@ function waitUntilPlayerCanMove(){
         }
         console.log("waitUntilPlayerCanMove");
         if(checkPlayerCanMove()){
-            return;
+            sleep(500);
+            if(checkPlayerCanMove()){
+                return;
+            }
         }
-        sleep(2000);
+        sleep(1500);
     }
 }
 
@@ -47,6 +50,7 @@ function waitUntilPlayerCanMoveOrFinish(){
         var screenShot = getScreenshot();
         if(checkImage(screenShot,stageFailedImage,1000,200,550,100)){
             console.log("Stage failed");
+            sendUrgentMessage(runningScriptName,"Stage failed");
             isScriptRunning = false;
             releaseImage(screenShot);
             return;
@@ -85,7 +89,7 @@ function useUlt(player){
     if(!isScriptRunning){
         return;
     }
-    console.log("useUlt "+player);
+    console.log("use servent "+(player+1)+" ult");
     if(player == 0){
         tapScale(800,435,100);
     }else if(player == 1){
@@ -100,7 +104,7 @@ function useSkill(player,skill,target,checkUsed){
     if(!isScriptRunning){
         return;
     }
-    console.log("useSkill "+player+","+skill+","+target);
+    console.log("useSkill servent "+(player+1)+", skill "+(skill+1)+", target "+(target+1));
     if(target == undefined || target < 0){
         target = 0;
     }
@@ -201,7 +205,7 @@ function useClothesSkill(skill,target1,target2){
         return;
     }
     waitUntilPlayerCanMove();
-    console.log("useClothesSkill "+skill);
+    console.log("useClothesSkill "+(skill+1));
     tapScale(2400,635,100);
     sleep(1000);
     if(skill == 0){
@@ -249,7 +253,7 @@ function changePlayer(target1,target2){
     if(!isScriptRunning){
         return;
     }
-    console.log("useClothesSkill "+target1 +","+target2);
+    console.log("useClothesSkill "+(target1+1) +","+(target2+1));
     if(target1 == 0 || target2 == 0){
         tapScale(275,735,100);
         sleep(300);
@@ -311,7 +315,7 @@ function isQuestFinish(){
         var screenShot = getScreenshot();    
         for(var i = 0;i<11;i++){
             if(checkImage(screenShot,finishStageImage[i],positionX[i],positionY[i],positionW[i],positionH[i])){
-                if(checkImage(screenShot,whiteImage,500,500,500,500)){
+                if(checkImage(screenShot,whiteImage,1000,500,500,500)){
                     releaseImage(screenShot);
                     return -1;
                 }
@@ -326,7 +330,32 @@ function isQuestFinish(){
             return -1;
         }else if(sameImage[0]<2){
             return sameImage[0];
-        }else{
+        }else if(sameImage[0] == 4 ){
+            var plan = getUserPlan();
+            if(plan > 0){
+                var itemX = 360;
+                var itemY = 300;
+                var itemW = 1860;
+                var itemH = 1000;
+                var itemScreenshot = getScreenshot();
+                var itemCrop = cropImage(itemScreenshot, itemX* screenScale[0] + screenOffset[0], itemY * screenScale[1] + screenOffset[1], itemW * screenScale[0], itemH* screenScale[1]);
+                var smallCrop;
+                if(plan == 1){
+                    smallCrop = resizeImage(itemCrop,300,140);
+                }else if(plan = 2){
+                    smallCrop = resizeImage(itemCrop,405,189);
+                }
+                var base = getBase64FromImage(smallCrop);
+                sendNormalMessage(runningScriptName,base);
+                releaseImage(itemScreenshot);
+                releaseImage(itemCrop);
+                releaseImage(smallCrop);
+            }else{
+                sendNormalMessage(runningScriptName,"Finish quest");
+            }
+            return 2;
+        }
+        else{
             return 2;
         }
     }

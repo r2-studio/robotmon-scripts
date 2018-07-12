@@ -101,15 +101,15 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 1.20,
-      "description": "<div>V1.20修正自動抽箱刷新判斷<br><br>V1.18修正選取關卡會卡住的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 1.21,
+      "description": "<div>V1.21新增自然回體與無限周回V<br><br>1.20修正自動抽箱刷新判斷<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 1.20,
-      "description": "<div>V1.20修正自動抽箱刷新判斷<br><br>V1.18修正選取關卡會卡住的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 1.21,
+      "description": "<div>V1.21新增自然回體與無限周回V<br><br>1.20修正自動抽箱刷新判斷<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     }
