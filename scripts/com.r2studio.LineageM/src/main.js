@@ -331,6 +331,7 @@ class RoleState {
     this.hasKillNumber = false;
     this.autoPlayOffCount = 0;
     this.isPoison = false;
+    this.shouldTapMiddle = true;  // determine to tap middle or tap back
   }
 
   print() {
@@ -408,27 +409,19 @@ class LineageM {
       return true;
     }
     if (!this.rState.isMenuOn && !this.rState.isMenuOff) {
-      console.log('未知狀態，隨便點看看，等待 5 秒');
-      this.gi.enterBtn.tap();
-      this.safeSleep(5 * 1000);
-
-      this.refreshScreen();
-      if (this.rState.isLogin) {
-        console.log('登入遊戲，等待 5 秒');
-        this.gi.loginBtn.tap();
-        this.safeSleep(5 * 1000);
-        return true;
-      } else if (this.rState.isEnter) {
-        console.log('進入遊戲，等待 10 秒');        
+      if (this.rState.shouldTapMiddle) {
+        console.log('未知狀態，隨便點看看，等待 5 秒');
         this.gi.enterBtn.tap();
-        this.safeSleep(10 * 1000);
+        this.safeSleep(5 * 1000);
+        this.rState.shouldTapMiddle = false;
+        return true;
+      } else {
+        console.log('未知狀態，等待 5 秒');
+        keycode('BACK', 100);
+        this.safeSleep(5 * 1000);
+        this.rState.shouldTapMiddle = true;
         return true;
       }
-
-      console.log('未知狀態，等待 5 秒');
-      keycode('BACK', 100);
-      this.safeSleep(5 * 1000);
-      return true;
     }
     return false;
   }
