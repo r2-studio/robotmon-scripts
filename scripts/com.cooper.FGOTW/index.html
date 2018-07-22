@@ -335,6 +335,10 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
                 minimumResultsForSearch: -1,
                 dropdownAutoWidth: true
             });
+            $("#getBoxFast"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
         });
         $("#addSelectStage").click(function(){
             commandId++;
@@ -601,7 +605,7 @@ function getCurrentScript(){
                     newScript+="getFriendPoint();";
                     break;
                     case "抽箱":
-                    newScript+="getBox("+$("#getBoxReset"+itemId).val()+");";
+                    newScript+="getBox("+$("#getBoxReset"+itemId).val()+","+$("#getBoxFast"+itemId).val()+");";
                     break;
                     case "選擇關卡":
                     newScript+="selectStage("+$("#autoApple"+itemId).val()+");";
@@ -685,11 +689,16 @@ function getGetFriendPoint(id){
     return getCommandItem(id,'友抽','<label>請移到友抽頁面後再執行腳本</label>');
 }
 function getGetBox(id){
-    return getCommandItem(id,'抽箱',
+    return getCommandItem(id,'抽箱', 
+        '<li><label>快速模式&nbsp;&nbsp;</label>'+
+        '<select id = "getBoxFast'+id+'">'+
+        '<option value = "0" selected>關閉</option>'+
+        '<option value = "1">開啟</option></select></li>'+
+        '<label>效能差的手機請勿開啟，可能會造成開箱到一半停止腳本</label><br><br>'+
         '<li><label>自動重置&nbsp;&nbsp;</label>'+
         '<select id = "getBoxReset'+id+'">'+
         '<option value = "0" selected>否</option>'+
-        '<option value = "1">是</option></select></li><br>'+
+        '<option value = "1">是</option></select></li>'+
         '<label>注意 箱子中獎後會立刻重置</label>');
 }
 function getUseSkillItem(id){
@@ -1257,13 +1266,22 @@ function resetScript(result){
         }else if(checkstring(content,"getBox")){
             content = content.replace('getBox(','');
             content = content.replace(')','');
+            var scriptValue = content.split(",");
             $("#skill-list").append(getGetBox(commandId));
             initCommandButton(commandId);
             $("#getBoxReset"+commandId).select2({
                 minimumResultsForSearch: -1,
                 dropdownAutoWidth: true
             });
-            $("#getBoxReset"+commandId).val(content).trigger('change');
+            $("#getBoxReset"+commandId).val(scriptValue[0]).trigger('change');
+
+            $("#getBoxFast"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            if(scriptValue.length >= 2){
+                $("#getBoxFast"+commandId).val(scriptValue[1]).trigger('change');
+            }
         }else if(checkstring(content,"selectFriend")){
             content = content.replace('selectFriend(','');
             content = content.replace(')','');

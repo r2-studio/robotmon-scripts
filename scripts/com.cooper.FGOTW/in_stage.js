@@ -97,7 +97,12 @@ function useUlt(player){
     }else if(player == 2){
         tapScale(1800,250,100);
     }
-    sleep(500);
+    sleep(1000);
+    var screenShot = getScreenshot();
+    if(checkImage(screenShot,ultFailedImage,1200,850,165,80)){
+        tapScale(1280,880,100);
+    }
+    releaseImage(screenShot);
 }
 
 function useSkill(player,skill,target,checkUsed){
@@ -216,6 +221,25 @@ function useClothesSkill(skill,target1,target2){
         tapScale(2150,635,100);
     }
     sleep(1000);
+
+    var screenShot2 = getScreenshot();
+    if(checkImage(screenShot2,skillCheckImage,1070,325,420,85)){
+        tapScale(1700,850,100);
+        sleep(500);
+        var screenShot3 = getScreenshot();
+        if(checkImage(screenShot3,skillCheckImage,1070,325,420,85)){
+            //skill already used
+            tapScale(800,850,100);
+            sleep(1000);
+            tapScale(2400,635,100);
+            releaseImage(screenShot2);
+            releaseImage(screenShot3);
+            return;
+        }
+    }
+    releaseImage(screenShot2);
+    releaseImage(screenShot3);
+
     if(target1 != undefined && (target2 == undefined || target2 == -1)){
         selectSkillTarget(target1);
     }else if(target1!=undefined && target2 !=undefined){
@@ -323,6 +347,7 @@ function isQuestFinish(){
                 break;
             }
         }
+        sleep(1000);
         releaseImage(screenShot);
     }
     if(sameImage[0] == sameImage[1]){

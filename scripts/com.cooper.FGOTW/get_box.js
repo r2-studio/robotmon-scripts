@@ -1,4 +1,7 @@
-function getBox(newBox){
+function getBox(newBox,fast){
+    if(fast == undefined){
+        fast = 0;
+    }
     if(newBox == 1 && checkIsBoxFinish()){
         resetBox();
     }
@@ -16,7 +19,10 @@ function getBox(newBox){
             return;
         }
         tapScale(800,955,1000);
-        sleep(1000);
+        if(fast==1){
+        }else{
+            sleep(1000);
+        }
     }
 }
 
