@@ -91,11 +91,11 @@ function useUlt(player){
     }
     console.log("use servent "+(player+1)+" ult");
     if(player == 0){
-        tapScale(800,435,100);
+        tapScale(800,250,100);
     }else if(player == 1){
-        tapScale(1250,435,100);
+        tapScale(1250,250,100);
     }else if(player == 2){
-        tapScale(1800,435,100);
+        tapScale(1800,250,100);
     }
     sleep(500);
 }
