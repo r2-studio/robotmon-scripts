@@ -449,6 +449,10 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
                 minimumResultsForSearch: -1,
                 dropdownAutoWidth: true
             });
+            $("#ultColor"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
             for(var i =0;i<3;i++){
                 $("#servant"+i+"ult"+commandId).select2({
                     minimumResultsForSearch: -1,
@@ -639,7 +643,7 @@ function getCurrentScript(){
                     case "選擇敵人":
                     newScript+="selectEnemy("+$("#selectEnemy"+itemId).val()+");";
                     break;
-                    case "進入戰鬥":
+                    case "開始選卡":
                     newScript+="startAttack();"
                     break;
                     case "使用寶具":
@@ -662,6 +666,8 @@ function getCurrentScript(){
                                 newScript+=","+$("#servant"+i+"skill"+j+"target"+itemId).val();
                             }
                         }
+
+                        newScript+=","+$("#ultColor"+itemId).val();
                         newScript+=");";
                     break;
                     default:
@@ -706,7 +712,7 @@ function getUseSkillItem(id){
         '<option value = "2">從者3</option></select></li>');
 }    
 function getStartAttackItem(id){
-    return getCommandItem(id,'進入戰鬥');
+    return getCommandItem(id,'開始選卡');
 }
 function getUseUltItem(id){
     return getCommandItem(id,"使用寶具",
@@ -767,6 +773,11 @@ function getAutoItem(id){
         '<option value = "0">完全無視</option>'+
         '<option value = "1" selected>基本權重</option>'+
         '<option value = "2">同色優先</option></select><br>'+
+
+        '<label>辨識寶具顏色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        '<select id = "ultColor'+id+'">'+
+        '<option value = "0" selected>啟用</option>'+
+        '<option value = "1">關閉</option></select><br>'+
 
         '<label>弱點&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "autoFightWeak'+id+'">'+
@@ -1415,6 +1426,15 @@ function resetScript(result){
                     $("#servant"+i+"skill"+j+"target"+commandId).val(scriptValue[5+7*i+1+j*2+1]).trigger('change');
                 }
             }
+            if(scriptValue.length >= 27){
+                $("#ultColor"+commandId).val(scriptValue[26]).trigger('change');
+            }else{
+                $("#ultColor"+commandId).val("0").trigger('change');
+            }
+            $("#ultColor"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
         }
     });
     bootbox.alert("讀取成功");
@@ -1522,7 +1542,7 @@ function onLog(message) {
               <button id="addSelectEnemy" type="button">選擇敵人</button>
           </div><br><br>
           <div  class="pull-left" style="margin-top:-4px">
-              <button id="addStartAttack" type="button">進入戰鬥</button>
+              <button id="addStartAttack" type="button">開始選卡</button>
               <button id="addUseUlt" type="button">使用寶具</button>
               <button id="addSelectCard" type="button">選擇卡片</button>
               <button id="addAuto" type="button">自動戰鬥</button>

@@ -12,9 +12,9 @@ var ultHeight = 300;
 var ultLightnessOffset = 140;
 var allServentDieFlag = false;
 var servantAliveMessage;
+var checkUlt;
 
-//autoAttack(3,0,1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1);
-function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1,p0s2,p0t2,p1ult,p1s0,p1t0,p1s1,p1t1,p1s2,p1t2,p2ult,p2s0,p2t0,p2s1,p2t1,p2s2,p2t2){
+function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1,p0s2,p0t2,p1ult,p1s0,p1t0,p1s1,p1t1,p1s2,p1t2,p2ult,p2s0,p2t0,p2s1,p2t1,p2s2,p2t2,ultColor){
     servantInited = false;
     var ult = [];
     ult[0] = p0ult;
@@ -61,8 +61,22 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
     skill[1] = p1;
     skill[2] = p2;
 
+    if(ultColor == 0){
+        checkUlt = true;
+    }else{
+        checkUlt = false;
+    }
+
     servantAliveMessage = [true,true,true];
-    waitUntilPlayerCanMove();
+    waitUntilPlayerCanMoveOrFinish();
+    if(isQuestFinish() >= 0){
+        sleep(1000);
+        if(isQuestFinish() >= 0){
+            //double check
+            console.log("Quest Finish");
+            return;
+        }
+    }
     var lastStage = -1;
     while(true){
         if(!isScriptRunning){
@@ -260,7 +274,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
     console.log("Card:"+cardList);
     console.log("Status:"+cardStatus);
     for(var i =0;i<3;i++){
-        if(ult[i] >= 0 && currentStage >= ult[i] && ultList[i] >= 0){
+        if(ult[i] >= 0 && currentStage >= ult[i] && (ultList[i] >= 0 || !checkUlt)){
             useUlt(i);
         }
     }
@@ -290,6 +304,10 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
 }
 
 function updateUltList(){
+    if(!checkUlt){
+        ultList= [-1,-1,-1];
+        return;
+    }
     var edgeX = [696,1159,1622];
     var edgeY = [270,570];
     var ultUpdateFailed = true;
