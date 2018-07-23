@@ -3,29 +3,35 @@ function startAttack(){
     if(!isScriptRunning){
         return;
     }
-    waitUntilPlayerCanMove();
+    if(!waitUntilPlayerCanMove()){
+        return;
+    }
     tapScale(2250,1115,100);
     sleep(5000);
 }
 
 function checkPlayerCanMove(){
-    var screenShot = getScreenshot();
     var x = [2150,2320,2320];
     var y = [1285,370,600];
     var w = [220,120,120];
     var h = [65,80,80];
-    for(var i = 0;i<3;i++){
-        sleep(300);
-        if(!checkImage(screenShot,selectStartImage[i],x[i],y[i],w[i],h[i])){
-            releaseImage(screenShot);
-            return false;
+    var r = [true,true];
+    for(var j = 0;j<2;j++){
+        var screenShot = getScreenshot();
+        for(var i = 0;i<3;i++){
+            if(!checkImage(screenShot,selectStartImage[i],x[i],y[i],w[i],h[i])){
+                r[j] = false;
+                break;
+            }
         }
+        releaseImage(screenShot);
+        sleep(500);
     }
-    releaseImage(screenShot);
-    return true;
+    return r[0]&&r[1];
 }
 
 function waitUntilPlayerCanMove(){
+    /*
     while(true){
         if(!isScriptRunning){
             return;
@@ -38,31 +44,39 @@ function waitUntilPlayerCanMove(){
             }
         }
         sleep(1500);
-    }
+    }*/
+    return waitUntilPlayerCanMoveOrFinish();
 }
 
 function waitUntilPlayerCanMoveOrFinish(){
-    while(true){
+
+    console.log("waitUntilPlayerCanMoveOrFinish");
+    var cnt = 0;
+    while(true){        
         if(!isScriptRunning){
-            return;
+            return false;
         }
-        console.log("waitUntilPlayerCanMoveOrFinish");
+        cnt = (cnt + 1 )%10;
+        if(cnt == 0){
+            console.log("waitUntilPlayerCanMoveOrFinish still looping");
+        }
         var screenShot = getScreenshot();
         if(checkImage(screenShot,stageFailedImage,1000,200,550,100)){
             console.log("Stage failed");
             sendUrgentMessage(runningScriptName,"Stage failed");
             isScriptRunning = false;
             releaseImage(screenShot);
-            return;
+            return false;
         }
         releaseImage(screenShot);
         if(checkPlayerCanMove()){
-            return;
+            console.log("Player can move");
+            return true;
         }
         if(isQuestFinish() >= 0){
-            return;            
+            console.log("Quest finish");
+            return false;            
         }
-        sleep(5000);
     }
 }
 
@@ -91,13 +105,19 @@ function useUlt(player){
     }
     console.log("use servent "+(player+1)+" ult");
     if(player == 0){
-        tapScale(800,435,100);
+        tapScale(800,250,100);
     }else if(player == 1){
-        tapScale(1250,435,100);
+        tapScale(1250,250,100);
     }else if(player == 2){
-        tapScale(1800,435,100);
+        tapScale(1800,250,100);
     }
-    sleep(500);
+    sleep(1000);
+    var screenShot = getScreenshot();
+    if(checkImage(screenShot,ultFailedImage,1200,850,165,80)){
+        tapScale(1280,880,100);
+        sleep(500);
+    }
+    releaseImage(screenShot);
 }
 
 function useSkill(player,skill,target,checkUsed){
@@ -108,7 +128,9 @@ function useSkill(player,skill,target,checkUsed){
     if(target == undefined || target < 0){
         target = 0;
     }
-    waitUntilPlayerCanMove();
+    if(!waitUntilPlayerCanMove()){
+        return;
+    }
     if(checkUsed == undefined || checkUsed == true){
         var screenShot = getScreenshot();
         if(checkImage(screenShot,skillUsedImage,skillPositionX[player*3+skill],skillPositionY,skillPositionW,skillPositionH)){
@@ -204,7 +226,9 @@ function useClothesSkill(skill,target1,target2){
     if(!isScriptRunning){
         return;
     }
-    waitUntilPlayerCanMove();
+    if(!waitUntilPlayerCanMove()){
+        return;
+    }
     console.log("useClothesSkill "+(skill+1));
     tapScale(2400,635,100);
     sleep(1000);
@@ -216,6 +240,25 @@ function useClothesSkill(skill,target1,target2){
         tapScale(2150,635,100);
     }
     sleep(1000);
+
+    var screenShot2 = getScreenshot();
+    if(checkImage(screenShot2,skillCheckImage,1070,325,420,85)){
+        tapScale(1700,850,100);
+        sleep(500);
+        var screenShot3 = getScreenshot();
+        if(checkImage(screenShot3,skillCheckImage,1070,325,420,85)){
+            //skill already used
+            tapScale(800,850,100);
+            sleep(1000);
+            tapScale(2400,635,100);
+            releaseImage(screenShot2);
+            releaseImage(screenShot3);
+            return;
+        }
+    }
+    releaseImage(screenShot2);
+    releaseImage(screenShot3);
+
     if(target1 != undefined && (target2 == undefined || target2 == -1)){
         selectSkillTarget(target1);
     }else if(target1!=undefined && target2 !=undefined){
@@ -323,6 +366,7 @@ function isQuestFinish(){
                 break;
             }
         }
+        sleep(1000);
         releaseImage(screenShot);
     }
     if(sameImage[0] == sameImage[1]){
