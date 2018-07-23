@@ -2,8 +2,8 @@
   "scripts": {
     "com.r2studio.EndlessFrontier": {
       "title": "Endless Frontier AutoPlay",
-      "versionCode": 18,
-      "description": "<h1>無盡的邊疆自動玩</h1><ul><li>提升穩定性</li><li>新增升級全體士兵</li><li>新增購買全體士兵</li><li>修正卡在任務資訊</li></ul>",
+      "versionCode": 19,
+      "description": "<h1>無盡的邊疆自動玩</h1><ul><li>大幅提升開寶箱</li><li>修正升級全體士兵位置</li><li>修正購買勳章士兵位置</li><li>修正魔法商店位置</li></ul>",
       "packageName": "com.ekkorr.endlessfrontier.global",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip",
       "dependencies": [

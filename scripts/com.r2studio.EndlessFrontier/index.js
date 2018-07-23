@@ -73,21 +73,20 @@ function EndlessFrontier() {
     InGameCheck: {x: 340, y: 820, color: {b: 1, g:1, r: 1, a: 0}},
     ButtonRevolutionScreen: {x: 65, y: 185},
     ButtonRevolutionTeam: {x: 500, y: 1180},
-    ButtonMenuStoreProp: {x: 700, y: 750},
+    ButtonMenuStoreProp: {x: 620, y: 750},
     ButtonTableRightTask: {x: 1040, y: 1100},
     ButtonTableRightOther: {x: 1040, y: 1070},
     ButtonTaskIcon: {x: 100, y: 1100},
     ButtonTaskMoney: {x: 1040, y: 1100},
     ButtonTaskMax: {x: 420, y: 1100},
     ButtonAutoTask: {x: 1040, y: 900},
-    ButtonArmyLevelUpAll: {x: 525, y: 900},
+    ButtonArmyLevelUpAll: {x: 685, y: 900},
     ButtonArmyLevelUpAll1: {x: 975, y: 630},
     ButtonArmyLevelUpAll10: {x: 725, y: 630},
     ButtonArmyLevelUpAll100: {x: 475, y: 630},
     ButtonArmyLevelUpAll1000: {x: 225, y: 630},
-    ButtonBuyArmy: {x: 760, y: 900},
     ButtonBuyArmyRefresh: {x: 850, y: 900},
-    ButtonBuyArmyBuyAll: {x: 670, y: 900},
+    ButtonBuyArmyBuyAll: {x: 650, y: 900},
     ButtonBuyArmyBuy: {x: 460, y: 1070},
     ButtonStartBattle: {x: 925, y: 1490},
     ButtonUnopenedTask: {x: 630, y: 1120},
@@ -220,7 +219,6 @@ EndlessFrontier.prototype.initButtons = function() {
   this.ButtonArmyLevelUpAll10 = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll10);
   this.ButtonArmyLevelUpAll100 = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll100);
   this.ButtonArmyLevelUpAll1000 = this.getRealWHRatio(this.Const.ButtonArmyLevelUpAll1000);
-  this.ButtonBuyArmy = this.getRealWHRatio(this.Const.ButtonBuyArmy);
   this.ButtonBuyArmyRefresh = this.getRealWHRatio(this.Const.ButtonBuyArmyRefresh);
   this.ButtonBuyArmyBuyAll = this.getRealWHRatio(this.Const.ButtonBuyArmyBuyAll);
   this.ButtonBuyArmyBuy = this.getRealWHRatio(this.Const.ButtonBuyArmyBuy);
@@ -429,10 +427,11 @@ EndlessFrontier.prototype.taskUsingSkill= function() {
 EndlessFrontier.prototype.taskTreasure = function() {
   log('檢查自動開寶箱');
   this.goToGame();
-  var interval = this.ScreenInfo.gameWidth / 5;
-  for (var i = 0; i < 2; i++) {
-    for (var x = interval; x < this.ScreenInfo.gameWidth; x += this.ScreenInfo.gameWidth) {
-      this.tap({x: x, y: this.Treasure.y}, 80);
+  var maxX = this.ScreenInfo.gameWidth / 3 * 2;
+  var interval = maxX / 15;
+  for (var i = 0; i < 4; i++) {
+    for (var x = interval; x < maxX; x += interval) {
+      this.tap({x: x, y: this.Treasure.y}, 50);
     }
   }
 
@@ -502,7 +501,7 @@ EndlessFrontier.prototype.taskArmy = function() {
 }
 
 EndlessFrontier.prototype.taskTask = function() {
-  log('檢查自動做任務' + '，跳過' + this.Status.taskTaskIgnore);
+  log('檢查自動做任務，跳過' + this.Status.taskTaskIgnore);
   this.goToGame();
   this.tap(this.ButtonMenuTask);
 
