@@ -1,4 +1,4 @@
-var version = "V1.21";
+var version = "V1.24";
 var isDebug = false;
 //image
 var noApImage;
@@ -31,6 +31,7 @@ var useItemImage;
 var servantExistImage;
 var checkBoxImage;
 var checkBoxPointImage;
+var ultFailedImage;
 
 var selectStartImage = [];
 var selectBackImage;
@@ -164,6 +165,8 @@ function loadImage(){
     starImage = openImage(imagePath+"Star.png");
     useItemImage = openImage(imagePath+"UseItem.png");
 
+    ultFailedImage = openImage(imagePath+"UltFailed.png");
+
 
     swimMark = openImage(imagePath+"SwimMark.png");
     swimStage = openImage(imagePath+"SwimStage.png");
@@ -219,6 +222,8 @@ function releaseAllImage(){
 
     releaseImage(starImage);
     releaseImage(useItemImage);
+
+    releaseImage(ultFailedImage);
 
     releaseImage(swimMark);
     releaseImage(swimStage);

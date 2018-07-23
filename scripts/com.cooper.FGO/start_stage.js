@@ -149,6 +149,9 @@ function selectFriend(filter,servant,item,star){
         itemImage = openImage(itemPath+"friend_item/"+item+".png");
     }
     while(true){
+        if(!isScriptRunning){
+            return;
+        }
         var screenShot2 = getScreenshot();
         if(!checkImage(screenShot2,selectFriendImage,1340,200,420,100)){
             releaseImage(screenShot2);
@@ -356,11 +359,11 @@ function startQuest(useItem){
 
 function finishQuest(){
     console.log("Wait for quest finish");
-    sleep(500);
     for(var i=0;i<30;i++){
         if(!isScriptRunning){
             return;
         }
+        sleep(500);
         var r = isQuestFinish();
         switch(r){
             case 0:
@@ -373,9 +376,7 @@ function finishQuest(){
                 tapScale(2300,1335,100);
                 break;
         }
-        sleep(1500);
     }
-    isScriptRunning = false;
     console.log("Wait for quest finish timeout");
 }
 
