@@ -25,7 +25,7 @@ function checkPlayerCanMove(){
             }
         }
         releaseImage(screenShot);
-        sleep(500);
+        sleep(1000);
     }
     return r[0]&&r[1];
 }
@@ -52,7 +52,7 @@ function waitUntilPlayerCanMoveOrFinish(){
 
     console.log("waitUntilPlayerCanMoveOrFinish");
     var cnt = 0;
-    while(true){        
+    while(true){
         if(!isScriptRunning){
             return false;
         }
@@ -340,7 +340,7 @@ function getCurrentStage(){
     var result;
     if(score[0]>=score[1] && score[0]>=score[2]){
         result = 0;
-    }else     if(score[1]>=score[0] && score[1]>score[2]){
+    }else if(score[1]>=score[0] && score[1]>score[2]){
         result = 1;
     }else{
         result = 2;
@@ -355,7 +355,12 @@ function isQuestFinish(){
     var positionH = [55,60,285,89,77,233,100,40,113,60,77];
     var sameImage = [-1,-1];
     for(var j = 0;j<2;j++){
-        var screenShot = getScreenshot();    
+        var screenShot = getScreenshot();
+        if(checkImage(screenShot,stageNotFinishImage,1950,1400,150,20)){
+            console.log("Still in stage");
+            releaseImage(screenShot);
+            return -1;
+        }
         for(var i = 0;i<11;i++){
             if(checkImage(screenShot,finishStageImage[i],positionX[i],positionY[i],positionW[i],positionH[i])){
                 if(checkImage(screenShot,whiteImage,1000,500,500,500)){

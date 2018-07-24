@@ -1,4 +1,4 @@
-var version = "V1.24";
+var version = "V1.25";
 var isDebug = false;
 //image
 var noApImage;
@@ -8,6 +8,7 @@ var selectFriendImage;
 var selectFriendImage2;
 var selectTeamImage;
 var finishStageImage = [];
+var stageNotFinishImage;
 var stageFailedImage;
 var whiteImage;
 var currentStageImage = [];
@@ -53,6 +54,7 @@ var updateCardListOffsetWeakY;
 var currentStageX;
 var currentStageY;
 var selectFriendPosition;
+
 
 var skillColor = [];
 var resetFriendCnt;
@@ -122,6 +124,7 @@ function loadImage(){
     for(var i=0;i<11;i++){
         finishStageImage[i] = openImage(imagePath+"FinishStage"+i+".png");
     }
+    stageNotFinishImage = openImage(imagePath+"StageNotFinish.png");
     whiteImage = openImage(imagePath+"White.png");
     stageFailedImage = openImage(imagePath+"StageFailed.png");
 
@@ -191,6 +194,7 @@ function releaseAllImage(){
     for(var i=0;i<11;i++){
         releaseImage(finishStageImage[i]);
     }
+    releaseImage(stageNotFinishImage);
     releaseImage(whiteImage);
     releaseImage(stageFailedImage);
 
