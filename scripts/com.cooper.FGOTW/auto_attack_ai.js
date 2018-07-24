@@ -83,12 +83,14 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
         }
         if(lastStage < currentStage){
             lastStage = currentStage;
+            console.log("Wave "+(lastStage+1));
             if(getUserPlan() == 2){
                 sendNormalMessage(runningScriptName,"Wave "+(lastStage + 1));
             }
         }
         attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage);
         if(until == 0){
+            console.log("One turn break AutoAttack");
             break;
         }
         sleep(5000);
@@ -170,6 +172,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
                 switch(die){
                     case 0:
                         isScriptRunning = false;
+                        console.log("Servant die break AutoAttack");
                     return;
                     case 1:
                         if(!skillUsed[i*3+j] && servantExist[i]){
