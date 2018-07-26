@@ -24,6 +24,11 @@ function absColor(c1, c2) {
   return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
 }
 
+function nowTime() {
+  var offset = (new Date().getTimezoneOffset()) * 60 * 1000;
+  return Date.now() + offset;
+}
+
 function log() {
   sleep(10);
   var args = [];
@@ -37,7 +42,7 @@ function log() {
         if (sendTask.lastRunTime == 0) {
           msg += "/0";
         } else {
-          var next = (Date.now() - (sendTask.lastRunTime + sendTask.interval)) / 60000;
+          var next = (nowTime() - (sendTask.lastRunTime + sendTask.interval)) / 60000;
           msg += "/" + (+next.toFixed(0));
         }
       }
@@ -1835,12 +1840,13 @@ Tsum.prototype.recognizeSender = function(img) {
   }
   // console.log("Score: " + score);
   if (existFilename == '') {
-    var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
+    var now = nowTime();
+    var dayTime = Math.floor(now / (24 * 60 * 60 * 1000)); 
     // not found, new friend
-    var filename = 'f_' + Date.now() + '.png';
+    var filename = 'f_' + now + '.png';
     this.record[filename] = {
       receiveCounts: {},
-      lastReceiveTime: Date.now(),
+      lastReceiveTime: now,
     };
     this.record[filename].receiveCounts[dayTime] = 1;
     this.recordImages[filename] = nameImg;
@@ -1864,13 +1870,14 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
     return;
   }
   log(this.logs.calculatingHeartSender);
-  var dayTime = Math.floor(Date.now() / (24 * 60 * 60 * 1000)); 
+  var now = nowTime();
+  var dayTime = Math.floor(now / (24 * 60 * 60 * 1000)); 
   // found
   if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
     this.record[existFilename].receiveCounts[dayTime] = 0;
   }
   this.record[existFilename].receiveCounts[dayTime]++;
-  this.record[existFilename].lastReceiveTime = Date.now();
+  this.record[existFilename].lastReceiveTime = now;
   log(this.logs.receiveHeartFromHeartSender, this.record[existFilename].receiveCounts[dayTime], this.logs.hearts);
 }
 
@@ -2284,7 +2291,7 @@ function genRecordTable() {
 
   var html = "<html><body>";
   html += "<table>";
-  html += "<tr><td>UserImage</td><td>All</td><td>Avg</td><td>Day</td></tr>";
+  html += "<tr><td>UserImage</td><td>UserImage2</td><td>All</td><td>Avg</td><td>Day</td></tr>";
   var dayMapCount = {};
   for (var filename in record) {
     if (filename == "hearts_count") {
@@ -2293,6 +2300,12 @@ function genRecordTable() {
     html += "<tr>";
     // user image
     html += "<td><img src='./" + filename + "' /></td>";
+    // user image2
+    var filePath = getStoragePath()+"/tsum_record/" + filename;
+    var tmpImg = openImage(filePath);
+    var base64 = getBase64FromImage(tmpImg);
+    releaseImage(tmpImg);
+    html += "<td><img src='data:image/png;base64," + base64 + "' /></td>";
     
     var totalDay = 0;
     var totalCount = 0;
