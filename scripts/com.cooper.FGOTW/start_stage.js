@@ -54,6 +54,7 @@ function selectStage(useApple){
         return;
     }
     if(checkImage(screenShot,noApImage,900,70,750,110)){
+        sleep(1000);
         switch(useApple){
             case -1:
             isScriptRunning = false;
@@ -359,13 +360,22 @@ function startQuest(useItem){
 
 function finishQuest(){
     console.log("Wait for quest finish");
-    for(var i=0;i<30;i++){
+    for(var i=0;i<50;i++){
         if(!isScriptRunning){
             return;
         }
-        sleep(500);
         var r = isQuestFinish();
         switch(r){
+            case -1:
+                var screenShot3 = getScreenshot();
+                if(checkImage(screenShot3,friendPointNew,2030,1300,300,100)){
+                    tapScale(2180,1350,100);
+                }else if(checkImage(screenShot3,friendPointBack,60,25,60,115)){
+                    sendUrgentMessage(runningScriptName,"Get new craft");
+                    tapScale(90,80,100);
+                }
+                releaseImage(screenShot3);
+                break;
             case 0:
                 console.log("Back to main screen");
                 return;

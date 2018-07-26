@@ -204,22 +204,33 @@ function selectSkillTarget(player){
         return;
     }
     var targetX = [650,1250,1850];
-    tapScale(targetX[player],850,100);
-    sleep(1000);
-    var screenShot = getScreenshot();
-    if(checkImage(screenShot,skillNullImage,2161,269,69,67)){
-        tapScale(targetX[player]+300,935,100);
-        sleep(1000)
+    for(var checkTarget = 0;checkTarget<3;checkTarget++){
+        sleep(1000);
+        var screenShot = getScreenshot();
+        if(!checkImage(screenShot,skillNullImage,2161,269,69,67)){
+            releaseImage(screenShot);
+            return;
+        }
         releaseImage(screenShot);
-    }else{
-        releaseImage(screenShot);
-        return;
-    };
-    var screenShot2 = getScreenshot();
-    if(checkImage(screenShot2,skillNullImage,2161,269,69,67)){
-        tapScale(targetX[1],935,100);
-    };
-    releaseImage(screenShot2);
+        switch(checkTarget){
+            case 0:
+                console.log("Select skill target "+(player+1));
+                tapScale(targetX[player],850,100);
+                break;
+            case 1:
+                console.log("Two servant left, select again");
+                var offset = 300;
+                if(player == 2){
+                    offset = -300;
+                }
+                tapScale(targetX[player]+offset,850,100);
+                break;
+            case 2:
+                console.log("Only one servant left");
+                tapScale(targetX[1],850,100);
+                break;
+        }
+    }
 }
 
 function useClothesSkill(skill,target1,target2){
