@@ -12,7 +12,7 @@
     },
     "com.r2studio.Tsum": {
       "title": "Tsum Tsum AutoPlay",
-      "versionCode": 42,
+      "versionCode": 43,
       "description": "<h1>Tsum Tsum</h1><ul><li>⭐ Supports all resolutions</li><li>⭐ New Quick Play Mode(新增快速計算模式)</li><li>Supported more skills</li><li>Bubble item</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
