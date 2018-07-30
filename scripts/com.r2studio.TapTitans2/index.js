@@ -286,21 +286,22 @@ var FeaturePoint = function (_Point) {
     _this.b = b;
     _this.d = diff;
     _this.need = need;
+    _this.colorCheck = null;
     return _this;
   }
 
   _createClass(FeaturePoint, [{
     key: 'check',
     value: function check(img) {
-      var c = getImageColor(img, this.tx, this.ty);
-      if (this.need && !Utils.isSameColor(c, this, this.d)) {
+      this.colorCheck = getImageColor(img, this.tx, this.ty);
+      if (this.need && !Utils.isSameColor(this.colorCheck, this, this.d)) {
         if (gDebug) {
-          console.log('!c, (x, y, r, g, b):', this.tx, this.ty, c.r, c.g, c.b)
+          console.log('!c, (x, y, r, g, b):', this.tx, this.ty, this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
         }
         return false;
-      } else if (!this.need && Utils.isSameColor(c, this)) {
+      } else if (!this.need && Utils.isSameColor(this.colorCheck, this, this.d)) {
         if (gDebug) {
-          console.log('!c: ', c.r, c.g, c.b)
+          console.log('!c: ', this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
         }
         return false;
       }
