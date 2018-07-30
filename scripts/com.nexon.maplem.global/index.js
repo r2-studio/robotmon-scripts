@@ -328,7 +328,7 @@ var gPageColors = {
 		{x: 1478, y: 192, r: 251, g: 253, b: 248},
 		{x: 1292, y: 192, r: 78, g: 94, b: 107},
 		{x: 633, y: 186, r: 78, g: 94, b: 107},
-		{x: 1376, y: 816, r: 247, g: 122, b: 76},
+		// {x: 1376, y: 816, r: 247, g: 122, b: 76},
 	],
 	"task_two_select": [
 		{x: 614, y: 816, r: 84, g: 174, b: 162},
@@ -373,6 +373,7 @@ function MapleM() {
 	this.running = false;
 	this.noAutoCount = 0;
 	this.unknownCount = 0;
+	this.isGuide06Done = false;
 }
 
 MapleM.prototype.getScreenshot = function() {
@@ -429,6 +430,9 @@ MapleM.prototype.getCurrentPage = function() {
 	var img = this.getScreenshot();
 	var cPage = "unknown";
 	for (var key in gPageColors) {
+		if (this.isGuide06Done && key === 'guide06') {
+			continue;
+		}
 		var isPage = true;
 		var pageColors = gPageColors[key];
 		for(var i in pageColors) {
@@ -507,6 +511,16 @@ MapleM.prototype.guide05 = function() {
 }
 
 MapleM.prototype.guide06 = function() {
+	this.clickPoint({x: 1241, y: 1002}); sleep(2000);
+	var xyColor = {x: 1478, y: 186, r: 252, g: 253, b: 247, score: 0.95};
+	var img = this.getScreenshot();
+	var isNoisy = this.isSamePoint(img, xyColor);
+	releaseImage(img);
+	if (isNoisy) {
+		this.isGuide06Done = true;
+		this.clickPoint({x: 1478, y: 186}); sleep(2000);
+		return;
+	}
 	for (var i in gBtnGuide06) {
 		var xy = gBtnGuide06[i];
 		this.clickPoint(xy);
