@@ -131,15 +131,23 @@ var gBtnGuide07 = [
 	{x: 1420, y: 957},
 	{x: 665, y: 302},
 	{x: 1081, y: 797},
+	{x: 1081, y: 797},
 	{x: 1632, y: 957},
 	{x: 966, y: 977},
+	{x: 966, y: 977},
+	{x: 966, y: 977},
+	{x: 1862, y: 64},
 	{x: 1862, y: 64},
 	{x: 1862, y: 64},
 ];
 var gBtnGuide08 = [
 	{x: 1638, y: 70},
+	{x: 1638, y: 70},
+	{x: 211, y: 630},
 	{x: 211, y: 630},
 	{x: 556, y: 623},
+	{x: 556, y: 623},
+	{x: 896, y: 630},
 	{x: 896, y: 630},
 	{x: 1241, y: 630},
 	{x: 1235, y: 630},
@@ -202,10 +210,9 @@ var gPageColors = {
 		{x: 915, y: 327, r: 117, g: 133, b: 148},
 	],
 	"menu": [
-		{x: 1893 , y: 1053 , r: 87 , g: 123 , b: 62 },
-		{x: 37 , y: 1015 , r: 225 , g: 185 , b: 0 },
-		{x: 1765 , y: 70 , r: 155 , g: 184 , b: 92 },
-		{x: 1209, y: 297, r: 238, g: 120, b: 30},
+		{x: 1893 , y: 1053 , r: 87 , g: 123 , b: 6, score: 0.98 },
+		{x: 1765 , y: 70 , r: 155 , g: 184 , b: 92, score: 0.98 },
+		{x: 1209, y: 297, r: 238, g: 120, b: 30, score: 0.98},
 	],
 	"menu_select_server": [
 		{x: 1458 , y: 340 , r: 247 , g: 252 , b: 246 },
@@ -259,6 +266,10 @@ var gPageColors = {
 		{x: 741 , y: 82 , r: 78 , g: 94 , b: 107 },
 		{x: 1234 , y: 90 , r: 78 , g: 94 , b: 107 },
 	],
+	"task_done2": [
+		{x: 1824, y: 977, r: 247, g: 122, b: 76},
+		{x: 1568, y: 970, r: 247, g: 122, b: 76},
+	],
 	"online_sign": [
 		{x: 1728 , y: 90 , r: 249 , g: 252 , b: 245 },
 		{x: 300 , y: 96 , r: 78 , g: 94 , b: 107 },
@@ -276,6 +287,12 @@ var gPageColors = {
 		{x: 1574, y: 64, r: 156, g: 137, b: 32, score: 0.8},
 		{x: 1638, y: 180, r: 244, g: 160, b: 88, score: 0.8},
 		{x: 1811, y: 96, r: 20, g: 20, b: 20},
+	],
+	"guide08-2": [
+		{x: 697, y: 70, r: 23, g: 28, b: 31},
+		{x: 1305, y: 57, r: 23, g: 28, b: 31},
+		{x: 921, y: 147, r: 69, g: 71, b: 68},
+		{x: 1612, y: 1060, r: 69, g: 71, b: 68},
 	],
 	"guide06": [
 		{x: 1248, y: 1002, r: 248, g: 235, b: 201, score: 0.85 },
@@ -300,10 +317,16 @@ var gPageColors = {
 		{x: 210 , y: 51 , r: 180 , g: 170 , b: 122, score: 0.85 },
 		{x: 274 , y: 172 , r: 252 , g: 180 , b: 95 },
 	],
+	"guide03-2": [
+		{x: 896, y: 237, r: 247, g: 252, b: 246},
+		{x: 51, y: 1002, r: 6, g: 7, b: 2},
+		{x: 1868, y: 64, r: 18, g: 20, b: 19},
+		{x: 908, y: 340, r: 241, g: 116, b: 58, score: 0.8},
+	],
 	"guide02": [
 		{x: 6, y: 398, r: 250, g: 245, b: 152},
 		{x: 236, y: 867, r: 7, g: 6, b: 1},
-		{x: 1632, y: 925, r: 60 , g: 62 , b: 61},
+		{x: 1632, y: 925, r: 60 , g: 62 , b: 61, score: 0.85},
 		{x: 1753, y: 38, r: 68 , g: 70 , b: 65},
 	],
 	"guide01": [
@@ -351,6 +374,11 @@ var gPageColors = {
 		{x: 471, y: 958, r: 156 , g: 135 , b: 92, score: 0.8},
 		{x: 511, y: 987, r: 215 , g: 213 , b: 190, score: 0.8},
 	],
+	"autoPlayBtn2": [
+		{x: 538, y: 1034, r: 161 , g: 199 , b: 122, score: 0.8},
+		{x: 471, y: 958, r: 156 , g: 135 , b: 92, score: 0.8},
+		{x: 512, y: 990, r: 99, g: 98, b: 96, score: 0.9},
+	],
 	"skillPage": [
 		{x: 953, y: 57, r: 78, g: 94, b: 107},
 		{x: 140, y: 919, r: 75, g: 77, b: 74},
@@ -367,12 +395,22 @@ var gPageColors = {
 		{x: 1759 , y: 462 , r: 246 , g: 175 , b: 147, score: 0.8 },
 		{x: 1644 , y: 462 , r: 117 , g: 133 , b: 148, score: 0.8 },
 	],
+	"revive": [
+		{x: 742, y: 765, r: 117, g: 133, b: 148},
+		{x: 1094, y: 765, r: 84, g: 174, b: 162},
+		{x: 1459, y: 771, r: 248, g: 121, b: 76},
+	],
+	"unknown2": [
+		{x: 369, y: 396, r: 240, g: 240, b: 240, score: 0.9},
+		{x: 384, y: 396, r: 240, g: 240, b: 240, score: 0.9},
+	]
 };
 
 function MapleM() {
 	this.running = false;
 	this.noAutoCount = 0;
 	this.unknownCount = 0;
+	this.unknown2Count = 0;
 	this.isGuide06Done = false;
 }
 
@@ -387,7 +425,7 @@ MapleM.prototype.isSamePoint = function(img, xyColor) {
 	var s = Colors.identityScore(c, xyColor);
 	if (xyColor.score !== undefined && s > xyColor.score) {
 		return true;
-	} else if (s > 0.95) {
+	} else if (s > 0.9) {
 		return true;
 	}
 	return false;
@@ -511,11 +549,12 @@ MapleM.prototype.guide05 = function() {
 }
 
 MapleM.prototype.guide06 = function() {
-	this.clickPoint({x: 1241, y: 1002}); sleep(2000);
+	this.clickPoint({x: 1241, y: 1002}); sleep(4000);
 	var xyColor = {x: 1478, y: 186, r: 252, g: 253, b: 247, score: 0.95};
 	var img = this.getScreenshot();
 	var isNoisy = this.isSamePoint(img, xyColor);
 	releaseImage(img);
+	console.log(isNoisy);
 	if (isNoisy) {
 		this.isGuide06Done = true;
 		this.clickPoint({x: 1478, y: 186}); sleep(2000);
@@ -550,7 +589,7 @@ MapleM.prototype.run = function() {
 	// if (currentPage !== currentPage2) {
 	// 	return;
 	// }
-	console.log("current page", currentPage, this.noAutoCount, this.unknownCount);
+	console.log("current page", currentPage, this.noAutoCount, this.unknownCount, this.unknown2Count);
 	switch (currentPage) {
 	case "unknown":
 		this.unknownCount++;
@@ -560,10 +599,21 @@ MapleM.prototype.run = function() {
 			this.unknownCount = 0;
 		}
 		break;
+	case "unknown2":
+		this.unknown2Count++;
+		if (this.unknownCount > 1 || this.unknown2Count > 2) {
+			if (this.unknown2Count >= 2) {
+				this.clickPoint({x: 192, y: 392});
+				this.unknown2Count = 0;
+			}
+		}
+		break;
 	case "guide01":
+	case "guide01-2":
 		this.guide01();
 		break;
 	case "guide03":
+	case "guide03-2":
 		this.guide03();
 		break;
 	case "guide04":
@@ -576,6 +626,7 @@ MapleM.prototype.run = function() {
 		this.guide06();
 		break;
 	case "guide08":
+	case "guide08-2":
 		this.guide08();
 		break;
 	case "blackBottom":
@@ -584,6 +635,7 @@ MapleM.prototype.run = function() {
 		sleep(500);
 		break;
 	case "autoPlayBtn":
+	case "autoPlayBtn2":
 		this.noAutoCount++;
 		break;
 	case "goFindNPC":
@@ -605,7 +657,7 @@ MapleM.prototype.run = function() {
 	if (currentPage !== "unknown") {
 		this.unknownCount = 0;
 	}
-	if (currentPage !== "autoPlayBtn") {
+	if (currentPage !== "autoPlayBtn" && currentPage !== "autoPlayBtn2") {
 		this.noAutoCount = 0;
 	}
 	if (this.noAutoCount == 2) {
@@ -627,6 +679,16 @@ MapleM.prototype.start = function() {
 		this.run();
 		sleep(300);
 	}
+}
+
+MapleM.prototype.test = function(){
+	var img = this.getScreenshot();
+	//358 392
+	for (var x = 119; x < 175; x++) {
+		var c = getImageColor(img, x, 132);
+		console.log(x, JSON.stringify(c));
+	}
+	releaseImage(img);
 }
 
 MapleM.prototype.stop = function() {
