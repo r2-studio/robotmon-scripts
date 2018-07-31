@@ -387,7 +387,7 @@ MapleM.prototype.isSamePoint = function(img, xyColor) {
 	var s = Colors.identityScore(c, xyColor);
 	if (xyColor.score !== undefined && s > xyColor.score) {
 		return true;
-	} else if (s > 0.85) {
+	} else if (s > 0.95) {
 		return true;
 	}
 	return false;
@@ -581,6 +581,7 @@ MapleM.prototype.run = function() {
 	case "blackBottom":
 		this.clickPoint({x: 140, y: 83});
 		this.clickPoint({x: 953, y: 507});
+		sleep(500);
 		break;
 	case "autoPlayBtn":
 		this.noAutoCount++;
@@ -591,6 +592,7 @@ MapleM.prototype.run = function() {
 		this.clickPoint({x: 1779, y: 572}); sleep(500);
 		this.clickPoint({x: 1779, y: 572}); sleep(500);
 		this.clickPoint({x: 1792, y: 379}); sleep(500);
+		this.clickPoint({x: 1856, y: 64}); sleep(500);
 		break;
 	default:
 		if (gPageColors[currentPage] === undefined) {
