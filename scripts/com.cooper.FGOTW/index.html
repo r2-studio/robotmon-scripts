@@ -696,14 +696,14 @@ function getGetBox(id){
     return getCommandItem(id,'抽箱', 
         '<li><label>快速模式&nbsp;&nbsp;</label>'+
         '<select id = "getBoxFast'+id+'">'+
-        '<option value = "0" selected>關閉</option>'+
-        '<option value = "1">開啟</option></select></li>'+
-        '<label>效能差的手機請勿開啟，可能會造成開箱到一半停止腳本</label><br><br>'+
+        '<option value = "0">關閉</option>'+
+        '<option value = "1" selected>開啟</option></select></li>'+
+        '<label>開啟此功能較耗電</label><br><br>'+
         '<li><label>自動重置&nbsp;&nbsp;</label>'+
         '<select id = "getBoxReset'+id+'">'+
         '<option value = "0" selected>否</option>'+
         '<option value = "1">是</option></select></li>'+
-        '<label>注意 箱子中獎後會立刻重置</label>');
+        '<label>注意 箱子中獎後會立刻重置，想把前五箱抽完請勿開啟</label>');
 }
 function getUseSkillItem(id){
     return getCommandItem(id,"使用技能",

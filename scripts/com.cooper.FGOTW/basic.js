@@ -1,4 +1,4 @@
-var version = "V1.26";
+var version = "V1.27";
 var isDebug = false;
 //image
 var noApImage;
@@ -32,6 +32,7 @@ var useItemImage;
 var servantExistImage;
 var checkBoxImage;
 var checkBoxPointImage;
+var presentBoxFullImgae;
 var ultFailedImage;
 
 var selectStartImage = [];
@@ -180,6 +181,7 @@ function loadImage(){
     servantExistImage = openImage(imagePath+"ServantExist.png");
     checkBoxImage = openImage(imagePath+"CheckBox.png");
     checkBoxPointImage = openImage(imagePath+"CheckBoxPoint.png");
+    presentBoxFullImgae = openImage(imagePath+"PresentBoxFull.png");    
     isImageInit = true;
 }
 
@@ -237,6 +239,7 @@ function releaseAllImage(){
     releaseImage(servantExistImage);
     releaseImage(checkBoxImage);
     releaseImage(checkBoxPointImage);
+    releaseImage(presentBoxFullImgae);
 }
 
 function initScreenSize(){
@@ -294,7 +297,7 @@ function initPosition(){
         updateCardListOffsetWeakX = 224;
         updateCardListOffsetWeakY = [-310,-340];
 
-        currentStageX = 1700;
+        currentStageX = 1737;
         currentStageY = 25;
 
         selectFriendPosition = [315,450,585,725,860,995,1130,1265];
