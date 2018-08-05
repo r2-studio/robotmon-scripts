@@ -25,7 +25,7 @@ function checkPlayerCanMove(){
             }
         }
         releaseImage(screenShot);
-        sleep(500);
+        sleep(1000);
     }
     return r[0]&&r[1];
 }
@@ -49,10 +49,9 @@ function waitUntilPlayerCanMove(){
 }
 
 function waitUntilPlayerCanMoveOrFinish(){
-
     console.log("waitUntilPlayerCanMoveOrFinish");
     var cnt = 0;
-    while(true){        
+    while(true){
         if(!isScriptRunning){
             return false;
         }
@@ -204,22 +203,33 @@ function selectSkillTarget(player){
         return;
     }
     var targetX = [650,1250,1850];
-    tapScale(targetX[player],850,100);
-    sleep(1000);
-    var screenShot = getScreenshot();
-    if(checkImage(screenShot,skillNullImage,2161,269,69,67)){
-        tapScale(targetX[player]+300,935,100);
-        sleep(1000)
+    for(var checkTarget = 0;checkTarget<3;checkTarget++){
+        sleep(1000);
+        var screenShot = getScreenshot();
+        if(!checkImage(screenShot,skillNullImage,2161,269,69,67)){
+            releaseImage(screenShot);
+            return;
+        }
         releaseImage(screenShot);
-    }else{
-        releaseImage(screenShot);
-        return;
-    };
-    var screenShot2 = getScreenshot();
-    if(checkImage(screenShot2,skillNullImage,2161,269,69,67)){
-        tapScale(targetX[1],935,100);
-    };
-    releaseImage(screenShot2);
+        switch(checkTarget){
+            case 0:
+                console.log("Select skill target "+(player+1));
+                tapScale(targetX[player],850,100);
+                break;
+            case 1:
+                console.log("Two servant left, select again");
+                var offset = 300;
+                if(player == 2){
+                    offset = -300;
+                }
+                tapScale(targetX[player]+offset,850,100);
+                break;
+            case 2:
+                console.log("Only one servant left");
+                tapScale(targetX[1],850,100);
+                break;
+        }
+    }
 }
 
 function useClothesSkill(skill,target1,target2){
@@ -340,7 +350,7 @@ function getCurrentStage(){
     var result;
     if(score[0]>=score[1] && score[0]>=score[2]){
         result = 0;
-    }else     if(score[1]>=score[0] && score[1]>score[2]){
+    }else if(score[1]>=score[0] && score[1]>score[2]){
         result = 1;
     }else{
         result = 2;
@@ -355,10 +365,18 @@ function isQuestFinish(){
     var positionH = [55,60,285,89,77,233,100,40,113,60,77];
     var sameImage = [-1,-1];
     for(var j = 0;j<2;j++){
-        var screenShot = getScreenshot();    
-        for(var i = 0;i<11;i++){
+        var screenShot = getScreenshot();
+        for(var i = 0;i<10;i++){
+            if(!isScriptRunning){
+                return -1;
+            }
             if(checkImage(screenShot,finishStageImage[i],positionX[i],positionY[i],positionW[i],positionH[i])){
                 if(checkImage(screenShot,whiteImage,1000,500,500,500)){
+                    console.log("Get white image");
+                    releaseImage(screenShot);
+                    return -1;
+                }else if(checkImage(screenShot,stageNotFinishImage,1950,1400,150,20)){
+                    console.log("Get critical, still in stage");
                     releaseImage(screenShot);
                     return -1;
                 }

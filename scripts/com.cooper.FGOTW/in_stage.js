@@ -49,7 +49,6 @@ function waitUntilPlayerCanMove(){
 }
 
 function waitUntilPlayerCanMoveOrFinish(){
-
     console.log("waitUntilPlayerCanMoveOrFinish");
     var cnt = 0;
     while(true){
@@ -367,14 +366,17 @@ function isQuestFinish(){
     var sameImage = [-1,-1];
     for(var j = 0;j<2;j++){
         var screenShot = getScreenshot();
-        if(checkImage(screenShot,stageNotFinishImage,1950,1400,150,20)){
-            console.log("Still in stage");
-            releaseImage(screenShot);
-            return -1;
-        }
-        for(var i = 0;i<11;i++){
+        for(var i = 0;i<10;i++){
+            if(!isScriptRunning){
+                return -1;
+            }
             if(checkImage(screenShot,finishStageImage[i],positionX[i],positionY[i],positionW[i],positionH[i])){
                 if(checkImage(screenShot,whiteImage,1000,500,500,500)){
+                    console.log("Get white image");
+                    releaseImage(screenShot);
+                    return -1;
+                }else if(checkImage(screenShot,stageNotFinishImage,1950,1400,150,20)){
+                    console.log("Get critical, still in stage");
                     releaseImage(screenShot);
                     return -1;
                 }

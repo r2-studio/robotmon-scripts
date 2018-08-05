@@ -1,4 +1,4 @@
-var version = "V1.27";
+var version = "V1.28";
 var isDebug = false;
 //image
 var noApImage;
@@ -37,12 +37,12 @@ var ultFailedImage;
 
 var selectStartImage = [];
 var selectBackImage;
-
+/*
 var swimMark;
 var swimStage;
 var swimMap;
 var swimLogo;
-
+*/
 //position
 var skillPositionX;
 var skillPositionY;
@@ -125,7 +125,7 @@ function loadImage(){
     for(var i=0;i<11;i++){
         finishStageImage[i] = openImage(imagePath+"FinishStage"+i+".png");
     }
-    stageNotFinishImage = openImage(imagePath+"StageNotFinish.png");
+    stageNotFinishImage = openImage(imagePath+"StageNotFinish.png");    
     whiteImage = openImage(imagePath+"White.png");
     stageFailedImage = openImage(imagePath+"StageFailed.png");
 
@@ -171,12 +171,12 @@ function loadImage(){
 
     ultFailedImage = openImage(imagePath+"UltFailed.png");
 
-
+/*
     swimMark = openImage(imagePath+"SwimMark.png");
     swimStage = openImage(imagePath+"SwimStage.png");
     swimMap = openImage(imagePath+"SwimMap.png");
     swimLogo = openImage(imagePath+"SwimLogo.png");
-
+*/
 
     servantExistImage = openImage(imagePath+"ServantExist.png");
     checkBoxImage = openImage(imagePath+"CheckBox.png");
@@ -230,12 +230,12 @@ function releaseAllImage(){
     releaseImage(useItemImage);
 
     releaseImage(ultFailedImage);
-
+/*
     releaseImage(swimMark);
     releaseImage(swimStage);
     releaseImage(swimMap);
     releaseImage(swimLogo);
-
+*/
     releaseImage(servantExistImage);
     releaseImage(checkBoxImage);
     releaseImage(checkBoxPointImage);

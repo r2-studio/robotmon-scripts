@@ -4,6 +4,7 @@ function selectStage(useApple){
     if(!isScriptRunning){
         return;
     }
+    /*
     var swimFlag = true;
     var waitSwimAnimation = false;
     var markResize = resizeImage(swimMark,83 * screenScale[0],60 * screenScale[1]);
@@ -37,7 +38,7 @@ function selectStage(useApple){
         releaseImage(screenShotSwim);
     }
     releaseImage(markResize);
-
+    */
     tapScale(1600,475,100);
     sleep(1000);
     var screenShot = getScreenshot();
@@ -369,10 +370,22 @@ function finishQuest(){
             case -1:
                 var screenShot3 = getScreenshot();
                 if(checkImage(screenShot3,friendPointNew,2030,1300,300,100)){
-                    tapScale(2180,1350,100);
+                    sleep(3000);
+                    var screenShot4 = getScreenshot();
+                    if(!checkImage(screenShot4,finishStageImage[0],2280,1340,190,55)){
+                        tapScale(2180,1350,100);
+                        console.log("Get new craft");
+                    }
+                    releaseImage(screenShot4);
                 }else if(checkImage(screenShot3,friendPointBack,60,25,60,115)){
-                    sendUrgentMessage(runningScriptName,"Get new craft");
-                    tapScale(90,80,100);
+                    sleep(3000);
+                    var screenShot4 = getScreenshot();
+                    if(!checkImage(screenShot4,finishStageImage[0],2280,1340,190,55)){
+                        sendUrgentMessage(runningScriptName,"Get new craft");
+                        console.log("Get new craft finish");
+                        tapScale(90,80,100);
+                    }
+                    releaseImage(screenShot4);
                 }
                 releaseImage(screenShot3);
                 break;

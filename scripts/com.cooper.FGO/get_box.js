@@ -1,29 +1,32 @@
 function getBox(newBox,fast){
-    if(fast == undefined){
-        fast = 0;
+    var waitTime = 100;
+    var checkTime = 50;
+    if(fast != 1){
+        waitTime = 1000;
+        checkTime = 5;
     }
-    if(newBox == 1 && checkIsBoxFinish()){
-        resetBox();
-    }
-    var failedCnt = 0;
-    while(true){
+    if(checkIsBoxFinish()){
         if(!isScriptRunning){
             return;
         }
-        if(checkBoxPoint()){
-            failedCnt = 0;
+        if(newBox){
+            resetBox();
         }else{
-            failedCnt++;
-        }
-        if(failedCnt > 10){
+            console.log("box already empty, please reset");
             return;
         }
-        tapScale(800,955,1000);
-        if(fast==1){
-        }else{
-            sleep(1000);
+    }  
+    console.log("start getbox");
+    while(isScriptRunning){
+        for(var t = 0;t<checkTime;t++){
+            tapScale(800,955,100);
+            sleep(waitTime);
+        }
+        if(checkIsBoxFinish()){
+            break;
         }
     }
+    console.log("finish getbox");
 }
 
 function getFriendPoint(){
@@ -91,16 +94,24 @@ function getFriendPoint(){
 
 function checkIsBoxFinish(){
     var screenShot = getScreenshot();
-    var r = checkImage(screenShot,checkBoxImage,2210,360,190,40);
+    var r = false;
+    if(checkImage(screenShot,presentBoxFullImgae,950,800,650,400)){
+        console.log("Present box full");
+        sendUrgentMessage(runningScriptName,"Present box full");
+        releaseImage(screenShot);
+        isScriptRunning = false;
+        return true;
+    }
+    if(checkImage(screenShot,checkBoxImage,2210,360,190,40)){
+        sleep(1000);
+        var screenShot2 = getScreenshot();
+        if(checkImage(screenShot2,checkBoxPointImage,500,800,250,200)){
+            r = true;
+        }
+        releaseImage(screenShot2);
+    }
     releaseImage(screenShot);
     return r;
-}
-
-function checkBoxPoint(){
-    var screenShot = getScreenshot();
-    var r = checkImage(screenShot,checkBoxPointImage,700,780,240,130);
-    releaseImage(screenShot);
-    return r;    
 }
 
 function resetBox(){
