@@ -1,4 +1,4 @@
-var version = "V1.24";
+var version = "V1.28";
 var isDebug = false;
 //image
 var noApImage;
@@ -8,6 +8,7 @@ var selectFriendImage;
 var selectFriendImage2;
 var selectTeamImage;
 var finishStageImage = [];
+var stageNotFinishImage;
 var stageFailedImage;
 var whiteImage;
 var currentStageImage = [];
@@ -31,16 +32,17 @@ var useItemImage;
 var servantExistImage;
 var checkBoxImage;
 var checkBoxPointImage;
+var presentBoxFullImgae;
 var ultFailedImage;
 
 var selectStartImage = [];
 var selectBackImage;
-
+/*
 var swimMark;
 var swimStage;
 var swimMap;
 var swimLogo;
-
+*/
 //position
 var skillPositionX;
 var skillPositionY;
@@ -53,6 +55,7 @@ var updateCardListOffsetWeakY;
 var currentStageX;
 var currentStageY;
 var selectFriendPosition;
+
 
 var skillColor = [];
 var resetFriendCnt;
@@ -122,6 +125,7 @@ function loadImage(){
     for(var i=0;i<11;i++){
         finishStageImage[i] = openImage(imagePath+"FinishStage"+i+".png");
     }
+    stageNotFinishImage = openImage(imagePath+"StageNotFinish.png");    
     whiteImage = openImage(imagePath+"White.png");
     stageFailedImage = openImage(imagePath+"StageFailed.png");
 
@@ -167,16 +171,17 @@ function loadImage(){
 
     ultFailedImage = openImage(imagePath+"UltFailed.png");
 
-
+/*
     swimMark = openImage(imagePath+"SwimMark.png");
     swimStage = openImage(imagePath+"SwimStage.png");
     swimMap = openImage(imagePath+"SwimMap.png");
     swimLogo = openImage(imagePath+"SwimLogo.png");
-
+*/
 
     servantExistImage = openImage(imagePath+"ServantExist.png");
     checkBoxImage = openImage(imagePath+"CheckBox.png");
     checkBoxPointImage = openImage(imagePath+"CheckBoxPoint.png");
+    presentBoxFullImgae = openImage(imagePath+"PresentBoxFull.png");    
     isImageInit = true;
 }
 
@@ -191,6 +196,7 @@ function releaseAllImage(){
     for(var i=0;i<11;i++){
         releaseImage(finishStageImage[i]);
     }
+    releaseImage(stageNotFinishImage);
     releaseImage(whiteImage);
     releaseImage(stageFailedImage);
 
@@ -224,15 +230,16 @@ function releaseAllImage(){
     releaseImage(useItemImage);
 
     releaseImage(ultFailedImage);
-
+/*
     releaseImage(swimMark);
     releaseImage(swimStage);
     releaseImage(swimMap);
     releaseImage(swimLogo);
-
+*/
     releaseImage(servantExistImage);
     releaseImage(checkBoxImage);
     releaseImage(checkBoxPointImage);
+    releaseImage(presentBoxFullImgae);
 }
 
 function initScreenSize(){
@@ -290,7 +297,7 @@ function initPosition(){
         updateCardListOffsetWeakX = 224;
         updateCardListOffsetWeakY = [-310,-340];
 
-        currentStageX = 1700;
+        currentStageX = 1737;
         currentStageY = 25;
 
         selectFriendPosition = [315,450,585,725,860,995,1130,1265];

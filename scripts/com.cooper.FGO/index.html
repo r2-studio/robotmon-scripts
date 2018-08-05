@@ -363,6 +363,10 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
         $("#addStartQuest").click(function(){
             commandId++;
             insertNewCommand(getStartQuest(commandId));
+            $("#useItem"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
         });
         $("#addFinish").click(function(){
             commandId++;
@@ -692,14 +696,14 @@ function getGetBox(id){
     return getCommandItem(id,'抽箱', 
         '<li><label>快速模式&nbsp;&nbsp;</label>'+
         '<select id = "getBoxFast'+id+'">'+
-        '<option value = "0" selected>關閉</option>'+
-        '<option value = "1">開啟</option></select></li>'+
-        '<label>效能差的手機請勿開啟，可能會造成開箱到一半停止腳本</label><br><br>'+
+        '<option value = "0">關閉</option>'+
+        '<option value = "1" selected>開啟</option></select></li>'+
+        '<label>開啟此功能較耗電</label><br><br>'+
         '<li><label>自動重置&nbsp;&nbsp;</label>'+
         '<select id = "getBoxReset'+id+'">'+
         '<option value = "0" selected>否</option>'+
         '<option value = "1">是</option></select></li>'+
-        '<label>注意 箱子中獎後會立刻重置</label>');
+        '<label>注意 箱子中獎後會立刻重置，想把前五箱抽完請勿開啟</label>');
 }
 function getUseSkillItem(id){
     return getCommandItem(id,"使用技能",
@@ -785,8 +789,8 @@ function getAutoItem(id){
 
         '<label>辨識寶具顏色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "ultColor'+id+'">'+
-        '<option value = "0" selected>啟用</option>'+
-        '<option value = "1">關閉</option></select><br>'+
+        '<option value = "0">啟用</option>'+
+        '<option value = "1" selected>關閉</option></select><br>'+
 
         '<label>弱點&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "autoFightWeak'+id+'">'+
@@ -1447,7 +1451,7 @@ function resetScript(result){
             if(scriptValue.length >= 27){
                 $("#ultColor"+commandId).val(scriptValue[26]).trigger('change');
             }else{
-                $("#ultColor"+commandId).val("0").trigger('change');
+                $("#ultColor"+commandId).val("1").trigger('change');
             }
             $("#ultColor"+commandId).select2({
                 minimumResultsForSearch: -1,
