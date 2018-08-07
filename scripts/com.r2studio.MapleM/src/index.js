@@ -9,12 +9,20 @@ var gTargetHeight = 450;
 var gDevToResizeRatio = 1/2.4;
 var gGameWidth = gUserScreenWidth;
 var gGameHeight = gUserScreenHeight;
+var gDevToUserRatio = 1;
 var gGameOffsetX = 0;
 var gGameOffsetY = 0;
+var gUserScreenWHType = 0;
 if (gUserScreenWidth / gUserScreenHeight > 1.777778) {
+  // more width, align height
+  gUserScreenWHType = 1;
+  gDevToUserRatio = gGameHeight / gDevScreenHeight;
   gGameWidth = Math.round(gGameHeight * 1.777778);
   gGameOffsetX = (gUserScreenWidth - gGameWidth) / 2;
 } else if (gUserScreenWidth / gUserScreenHeight < 1.777778) {
+  // less width, align width
+  gUserScreenWHType = -1;
+  gDevToUserRatio = gGameWidth / gDevScreenWidth;
   gGameHeight = Math.round(gGameWidth / 1.777778);
   gGameOffsetY = (gUserScreenHeight - gGameHeight) / 2;
 }
@@ -30,6 +38,65 @@ function stop() {
 
 function start() {
 
+}
+
+// =====
+
+function devToUserAtLeftTop(xy) {
+  if (gUserScreenWHType == 1) {
+    return {x: xy.x * gDevToUserRatio, y: xy.y * gDevToUserRatio};
+  } else if (gUserScreenWHType == -1) {
+    return {x: xy.x * gDevToUserRatio, y: xy.y * gDevToUserRatio};
+  }
+  return xy;
+}
+
+function devToUserAtRightTop(xy) {
+  if (gUserScreenWHType == 1) {
+    var x = gUserScreenWidth - ((gDevScreenWidth - xy.x) * gDevToUserRatio);
+    return {x: x, y: xy.y * gDevToUserRatio};
+  } else if (gUserScreenWHType == -1) {
+    return {x: xy.x * gDevToUserRatio, y: xy.y * gDevToUserRatio};
+  }
+  return xy;
+}
+
+function devToUserAtRightBottom(xy) {
+  if (gUserScreenWHType == 1) {
+    var x = gUserScreenWidth - ((gDevScreenWidth - xy.x) * gDevToUserRatio);
+    return {x: x, y: xy.y * gDevToUserRatio};
+  } else if (gUserScreenWHType == -1) {
+    var y = gUserScreenHeight - ((gDevScreenHeight - xy.y) * gDevToUserRatio);
+    return {x: xy.x * gDevToUserRatio, y: y};
+  }
+  return xy;
+}
+
+function devToUserAtLeftBottom(xy) {
+  if (gUserScreenWHType == 1) {
+    return {x: xy.x * gDevToUserRatio, y: xy.y * gDevToUserRatio};
+  } else if (gUserScreenWHType == -1) {
+    var y = gUserScreenHeight - ((gDevScreenHeight - xy.y) * gDevToUserRatio);
+    return {x: xy.x * gDevToUserRatio, y: y};
+  }
+  return xy;
+}
+
+function devToUserAtFullScreen(xy) {
+  return {x: gGameOffsetX + xy.x, y: gGameOffsetY + xy.y};
+}
+
+function devToUserAtCenterBottom(xy) {
+  if (gUserScreenWHType == 1) {
+    var w = gDevScreenWidth * gDevToUserRatio;
+    var offsetX = Math.floor((gUserScreenWidth - w) / 2);
+    var x = offsetX + (xy.x * gDevToUserRatio);
+    return {x: x, y: xy.y * gDevToUserRatio};
+  } else if (gUserScreenWHType == -1) {
+    var y = gUserScreenHeight - ((gDevScreenHeight - xy.y) * gDevToUserRatio);
+    return {x: xy.x * gDevToUserRatio, y: y};
+  }
+  return xy;
 }
 
 // ===== game features =====
@@ -52,11 +119,11 @@ gamePage.onExit = function() {
   this.context.debug('Exit', this.name);
 };
 gamePage.onScreenshot = function() {
-  return getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 90);
+  return getScreenshotModify(0, 0, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 90);
 };
 gamePage.onDevToUserXY = function(devX, devY) {
-  var x = gGameOffsetX + devX * gDevToUserRatio;
-  var y = gGameOffsetY + devY * gDevToUserRatio;
+  var x = devX * gDevToUserRatio;
+  var y = devY * gDevToUserRatio;
   return {x: x, y: y};
 }
 gamePage.onDevToResizeXY = function(devX, devY) {
