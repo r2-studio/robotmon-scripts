@@ -94,6 +94,19 @@ var gBtnsAutoPlay = [
 var gBtnTask1 = {loc: LocLT, x: 140, y: 417, r: 144, g: 150, b: 140};
 var gBtnTask2 = {loc: LocLT, x: 140, y: 565, r: 141, g: 142, b: 134};
 var gBtnSkipTask = {loc: LocRB, x: 1830, y: 920};
+var gBtnsSkill = [
+  {loc: LocRB, x: 1638, y: 938, r: 179, g: 207, b: 228},
+  {loc: LocRB, x: 1708, y: 732, r: 147, g: 139, b: 128},
+  {loc: LocRB, x: 1542, y: 739, r: 236, g: 140, b: 92},
+  {loc: LocRB, x: 1427, y: 855, r: 207, g: 206, b: 204},
+  {loc: LocRB, x: 1427, y: 1002, r: 255, g: 247, b: 180},
+];
+var gBtnJump = {loc: LocRB, x: 1836, y: 932};
+var gBtnChange = {loc: LocRB, x: 1849, y: 739};
+var gBtnUp = {x: 236, y: 739, r: 50, g: 64, b: 3};
+var gBtnDown = {x: 236, y: 1002, r: 65, g: 82, b: 151};
+var gBtnLeft = {x: 108, y: 867, r: 254, g: 252, b: 239};
+var gBtnRight = {x: 371, y: 861, r: 209, g: 215, b: 239};
 
 var gPages = {
   moving: {name: "moving", points: [
@@ -136,6 +149,12 @@ function MapleM(config) {
   this.stopCount = 0;
   this.unknownCount = 0;
   saveImage(this.updateScreenshot(true), '/sdcard/Robotmon/test.png');
+
+  // auto play
+  this.direct = '';
+  this.moveCount = 0;
+  this.tmpImg1 = 0;
+  this.tmpImg2 = 0;
 }
 
 MapleM.prototype.updateScreenshot = function(update) {
@@ -164,17 +183,32 @@ MapleM.prototype.clickPoint = function(point) {
   tap(xy.x, xy.y, 20);
 }
 
+MapleM.prototype.tapDown = function(point, id) {
+  var xy = devToUserXY(point, point.loc);
+  tapDown(xy.x, xy.y, 10, id);
+}
+
+MapleM.prototype.moveTo = function(point, id) {
+  var xy = devToUserXY(point, point.loc);
+  moveTo(xy.x, xy.y, 10, id);
+}
+
+MapleM.prototype.tapUp = function(point, id) {
+  var xy = devToUserXY(point, point.loc);
+  tapUp(xy.x, xy.y, 10, id);
+}
+
 MapleM.prototype.doTasks = function() {
   this.updateScreenshot(true);
-  var cPage = this.getCurrentPage();
+  var cPage = "autoPlaying";
   var autoPlaying = this.isAutoPlaying();
-  if (autoPlaying) {
-    cPage = "autoPlaying";
+  if (!autoPlaying) {
+    cPage = this.getCurrentPage();
   }
   console.log('currentPage', cPage);
   switch(cPage) {
     case "diePage":
-    this.clickPoint(gPages['diePage'].points[0]);
+      this.clickPoint(gPages['diePage'].points[0]);
       break;
     case "black":
       this.clickPoint(gBtnSkipTask);
@@ -208,7 +242,7 @@ MapleM.prototype.doTasks = function() {
   if (this.stopCount > 10) {
     keycode('BACK', 20);
   }
-  console.log(autoPlaying, this.unknownCount, this.stopCount);
+  console.log(autoPlaying, 'unknown', this.unknownCount, 'stop', this.stopCount);
 }
 
 MapleM.prototype.startDoTasks = function() {
@@ -216,11 +250,106 @@ MapleM.prototype.startDoTasks = function() {
   while(this.running) {
     var startRunTime = Date.now();
     this.doTasks();
-    var sTime = 800 - (Date.now() - startRunTime);
+    var sTime = 1000 - (Date.now() - startRunTime);
     if (sTime > 0) {
       sleep(sTime);
     }
   }
+}
+
+MapleM.prototype.autoPlay = function() {
+  if (this.config.apWalkType === 'continue') {
+    if (this.direct === 'changeToRight') {
+      this.tapUp(gBtnLeft, 1);
+      sleep(800);
+      this.tapDown(gBtnRight, 1);
+      this.moveCount = 0;
+      this.direct = 'right';
+      sleep(800);
+    } else if (this.direct === 'changeToLeft') {
+      this.tapUp(gBtnRight, 1);
+      sleep(800);
+      this.tapDown(gBtnLeft, 1);
+      this.direct = 'left';
+      this.moveCount = 0;
+      sleep(800);
+    }
+  }
+  if (this.config.apJump && this.moveCount % 7 === 6) {
+    this.tapDown(gBtnJump, 2);
+    sleep(100);
+    this.tapUp(gBtnJump, 2);
+    this.moveTo(gBtnUp, 1);
+    sleep(1000);
+    if (this.direct === 'right') {
+      this.moveTo(gBtnRight, 1);
+    } else if (this.direct === 'left') {
+      this.moveTo(gBtnLeft, 1);
+    }
+    sleep(200);
+    this.tapDown(gBtnJump, 2);
+    sleep(100);
+    this.tapUp(gBtnJump, 2);
+    this.moveCount++;
+    return;
+  }
+  var now = Date.now();
+  var useSkill = undefined;
+  var useSkillBtn = 0;
+  for (var i in this.config.apUseSkillsTime) {
+    var skill = this.config.apUseSkillsTime[i];
+    var lastUseTime = skill.lastUseTime || 0;
+    if (now - lastUseTime > skill.delay) {
+      if (useSkill === undefined) {
+        useSkill = skill;
+        useSkillBtn = i;
+      } else if (skill.delay > useSkill.delay) {
+        useSkill = skill;
+        useSkillBtn = i;
+      }
+    }
+  }
+  if (useSkill === undefined) {
+    return;
+  }
+  console.log('Use Skill', useSkillBtn);
+  this.tapDown(gBtnsSkill[useSkillBtn], 2);
+  sleep(useSkill.during);
+  this.tapUp(gBtnsSkill[useSkillBtn], 2);
+  useSkill.lastUseTime = now;
+
+  this.moveCount++;
+  if (this.moveCount > 5) {
+    sleep(100);
+    var img1 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    sleep(this.config.apStepDelay);
+    var img2 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    var score = getIdentityScore(img1, img2);
+    // console.log(score);
+    releaseImage(img1);
+    releaseImage(img2);
+    if (score > 0.99) {
+      this.direct = (this.direct === 'right') ? 'changeToLeft' : 'changeToRight';
+      console.log(this.direct, this.moveCount);
+      this.moveCount = 0;
+    }
+  } else {
+    sleep(this.config.apStepDelay);
+  }
+  console.log('run count', this.moveCount);
+}
+
+MapleM.prototype.startAutoAttack = function() {
+  this.running = true;
+  this.direct = 'right';
+  this.moveCount = 0;
+  this.tapDown(gBtnRight, 1);;
+  sleep(800);
+  while(this.running) {
+    var startRunTime = Date.now();
+    this.autoPlay();
+  }
+  this.tapUp(gBtnRight, 1);;
 }
 
 MapleM.prototype.getCurrentPage = function() {
@@ -290,19 +419,32 @@ function start(configString) {
   var config = JSON.parse(configString)
   if (mapleM === undefined) {
     mapleM = new MapleM(config);
-    mapleM.startDoTasks();
+    mapleM.startAutoAttack();
   }
 }
 
-var DEFAULT_TASK = {
-  task: 'doTasks', // doTasks, autoAttack
-
+var DEFAULT_CONFIG = {
+  task: 'autoAttack', // doTasks, autoAttack
+  apWalkType: 'continue', // continue, step
+  apJump: true,
+  apSupportSkillTime: 10 * 60 * 1000,
+  apStepDelay: 800,
+  apUseSkillsTime: [
+    {delay: 2000, during: 20},
+    {delay: 12*1000, during: 20},
+    {delay: 1000, during: 1300},
+    {delay: 10*60*1000, during: 20},
+    {delay: 30*1000, during: 20},
+  ],
 };
 
-mapleM = new MapleM(undefined);
+mapleM = new MapleM(DEFAULT_CONFIG);
 // for (var i = 0; i < 10; i++) {
 //   console.log(mapleM.isAutoPlaying());
 // }
 // console.log('currentPage', mapleM.getCurrentPage());
 // start("{}");
-mapleM.doTasks();
+mapleM.startAutoAttack();
+// mapleM.autoPlay();
+// sleep(1000);
+// mapleM.autoPlay();
