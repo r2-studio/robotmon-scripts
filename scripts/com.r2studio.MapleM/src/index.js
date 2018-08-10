@@ -257,25 +257,24 @@ MapleM.prototype.startDoTasks = function() {
   }
 }
 
-MapleM.prototype.autoPlay = function() {
-  if (this.config.apWalkType === 'continue') {
-    if (this.direct === 'changeToRight') {
-      this.tapUp(gBtnLeft, 1);
-      sleep(800);
-      this.tapDown(gBtnRight, 1);
-      this.moveCount = 0;
-      this.direct = 'right';
-      sleep(800);
-    } else if (this.direct === 'changeToLeft') {
-      this.tapUp(gBtnRight, 1);
-      sleep(800);
-      this.tapDown(gBtnLeft, 1);
-      this.direct = 'left';
-      this.moveCount = 0;
-      sleep(800);
-    }
+MapleM.prototype.autoPlayContinue = function() {
+  if (this.direct === 'changeToRight') {
+    this.tapUp(gBtnLeft, 1);
+    sleep(800);
+    this.tapDown(gBtnRight, 1);
+    this.moveCount = 0;
+    this.direct = 'right';
+    sleep(800);
+  } else if (this.direct === 'changeToLeft') {
+    this.tapUp(gBtnRight, 1);
+    sleep(800);
+    this.tapDown(gBtnLeft, 1);
+    this.direct = 'left';
+    this.moveCount = 0;
+    sleep(800);
   }
-  if (this.config.apJump && this.moveCount % 7 === 6) {
+  var n = Math.ceil(4 + Math.random()*8);
+  if (this.config.apJump && this.moveCount % n === (n-1)) {
     this.tapDown(gBtnJump, 2);
     sleep(100);
     this.tapUp(gBtnJump, 2);
@@ -339,7 +338,70 @@ MapleM.prototype.autoPlay = function() {
   console.log('run count', this.moveCount);
 }
 
-MapleM.prototype.startAutoAttack = function() {
+MapleM.prototype.autoPlayStep = function() {
+  var now = Date.now();
+  var useSkill = undefined;
+  var useSkillBtn = 0;
+  for (var i in this.config.apUseSkillsTime) {
+    var skill = this.config.apUseSkillsTime[i];
+    var lastUseTime = skill.lastUseTime || 0;
+    if (now - lastUseTime > skill.delay) {
+      if (useSkill === undefined) {
+        useSkill = skill;
+        useSkillBtn = i;
+      } else if (skill.delay > useSkill.delay) {
+        useSkill = skill;
+        useSkillBtn = i;
+      }
+    }
+  }
+  if (useSkill === undefined) {
+    return;
+  }
+  console.log('Use Skill', useSkillBtn);
+  sleep(200);
+  this.tapDown(gBtnsSkill[useSkillBtn], 0);
+  sleep(useSkill.during);
+  this.tapUp(gBtnsSkill[useSkillBtn], 0);
+  useSkill.lastUseTime = now;
+
+  this.moveCount++;
+
+  sleep(200);
+  if (this.direct === 'right') {
+    this.tapDown(gBtnRight, 0);
+  } else {
+    this.tapDown(gBtnLeft, 0);
+  }
+
+  var score = 0;
+  if (this.moveCount > 5) {
+    var img1 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    sleep(this.config.apStepDelay);
+    var img2 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    score = getIdentityScore(img1, img2);
+    console.log(score);
+    releaseImage(img1);
+    releaseImage(img2);
+  } else {
+    sleep(this.config.apStepDelay);
+  }
+
+  if (this.direct === 'right') {
+    this.tapUp(gBtnRight, 0);
+  } else {
+    this.tapUp(gBtnLeft, 0);
+  }
+
+  if (score > 0.99) {
+    this.direct = (this.direct === 'right') ? 'left' : 'right';
+    console.log('change direct', this.direct, this.moveCount);
+    this.moveCount = 0;
+  }
+  console.log('run count', this.moveCount, 'score', score);
+}
+
+MapleM.prototype.startAutoAttackContinue = function() {
   this.running = true;
   this.direct = 'right';
   this.moveCount = 0;
@@ -347,9 +409,19 @@ MapleM.prototype.startAutoAttack = function() {
   sleep(800);
   while(this.running) {
     var startRunTime = Date.now();
-    this.autoPlay();
+    this.autoPlayContinue();
   }
   this.tapUp(gBtnRight, 1);;
+}
+
+MapleM.prototype.startAutoAttackStep = function() {
+  this.running = true;
+  this.direct = 'right';
+  this.moveCount = 0;
+  while(this.running) {
+    var startRunTime = Date.now();
+    this.autoPlayStep();
+  }
 }
 
 MapleM.prototype.getCurrentPage = function() {
@@ -419,14 +491,20 @@ function start(configString) {
   var config = JSON.parse(configString)
   if (mapleM === undefined) {
     mapleM = new MapleM(config);
-    mapleM.startAutoAttack();
+    if (config.task === 'autoAttack' && config.apWalkType === 'continue') {
+      mapleM.startAutoAttackContinue();
+    } else if (config.task === 'autoAttack' && config.apWalkType === 'step') {
+      mapleM.startAutoAttackStep();
+    } else if (config.task === 'doTasks'){
+      mapleM.startDoTasks();
+    }
   }
 }
 
 var DEFAULT_CONFIG = {
   task: 'autoAttack', // doTasks, autoAttack
   apWalkType: 'continue', // continue, step
-  apJump: true,
+  apJump: false,
   apSupportSkillTime: 10 * 60 * 1000,
   apStepDelay: 800,
   apUseSkillsTime: [
