@@ -112,6 +112,17 @@
       "description": "<div>V1.28修正FQ會回到上一頁與泳裝小莫寶具會誤判關卡結束的bug<br><br>V1.27修正Wave辨識與強化快速抽箱功能<br><br>Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
+    },
+    "com.donny.maplem": {
+      "title": " MapleM / 楓之谷M ",
+      "versionCode": 0.02,
+      "description": "<div>V0.02 測試版-測試 LV.1~LV.85自動任務功能 <br><br>V0.01測試解析度 960x540 圖型辨識 </div>",
+      "packageName": "com.nexon.maplem.global",
+      "downloadURL": "https://github.com/toodonny/robotmon-scripts/raw/master/scripts/com.donny.maplem/index.zip",
+      "dependencies": [
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
+        "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
+      ]
     }
   },
   "libs": {
