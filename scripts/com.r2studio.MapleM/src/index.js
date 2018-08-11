@@ -273,24 +273,11 @@ MapleM.prototype.autoPlayContinue = function() {
     this.moveCount = 0;
     sleep(800);
   }
-  var n = Math.ceil(4 + Math.random()*8);
-  if (this.config.apJump && this.moveCount % n === (n-1)) {
+  if (this.config.apJump && this.moveCount % 4 === 3) {
     this.tapDown(gBtnJump, 2);
     sleep(100);
     this.tapUp(gBtnJump, 2);
-    this.moveTo(gBtnUp, 1);
-    sleep(1000);
-    if (this.direct === 'right') {
-      this.moveTo(gBtnRight, 1);
-    } else if (this.direct === 'left') {
-      this.moveTo(gBtnLeft, 1);
-    }
-    sleep(200);
-    this.tapDown(gBtnJump, 2);
-    sleep(100);
-    this.tapUp(gBtnJump, 2);
-    this.moveCount++;
-    return;
+    sleep(400);
   }
   var now = Date.now();
   var useSkill = undefined;
@@ -312,6 +299,7 @@ MapleM.prototype.autoPlayContinue = function() {
     return;
   }
   console.log('Use Skill', useSkillBtn);
+  sleep(100);
   this.tapDown(gBtnsSkill[useSkillBtn], 2);
   sleep(useSkill.during);
   this.tapUp(gBtnsSkill[useSkillBtn], 2);
@@ -359,7 +347,7 @@ MapleM.prototype.autoPlayStep = function() {
     return;
   }
   console.log('Use Skill', useSkillBtn);
-  sleep(200);
+  sleep(100);
   this.tapDown(gBtnsSkill[useSkillBtn], 0);
   sleep(useSkill.during);
   this.tapUp(gBtnsSkill[useSkillBtn], 0);
@@ -377,14 +365,14 @@ MapleM.prototype.autoPlayStep = function() {
   var score = 0;
   if (this.moveCount > 5) {
     var img1 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
-    sleep(this.config.apStepDelay);
+    sleep(this.config.apStepDelay + 800);
     var img2 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
     score = getIdentityScore(img1, img2);
     console.log(score);
     releaseImage(img1);
     releaseImage(img2);
   } else {
-    sleep(this.config.apStepDelay);
+    sleep(this.config.apStepDelay + 800);
   }
 
   if (this.direct === 'right') {
@@ -522,7 +510,7 @@ mapleM = new MapleM(DEFAULT_CONFIG);
 // }
 // console.log('currentPage', mapleM.getCurrentPage());
 // start("{}");
-mapleM.startAutoAttack();
+mapleM.startAutoAttackContinue();
 // mapleM.autoPlay();
 // sleep(1000);
 // mapleM.autoPlay();
