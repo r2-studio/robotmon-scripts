@@ -1,0 +1,325 @@
+<html>
+
+<head>
+  <style>
+    .navbar-custom {
+      border-radius: 0 !important;
+      background-color: #2196F3;
+      color: #FFFFFF;
+      margin-bottom: 0px !important;
+    }
+
+    .navbar-custom>a {
+      width: 100%;
+      color: #FFFFFF;
+      text-align: center;
+    }
+
+    .navbar-custom>a:hover {
+      color: #FFFFFF;
+    }
+
+    .list-group {
+      margin-bottom: 15px !important;
+    }
+
+    .list-group-item {
+      padding: 6px 10px !important;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0px;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 4px;
+      top: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(24px);
+      -ms-transform: translateX(24px);
+      transform: translateX(24px);
+    }
+
+    .slider.round {
+      border-radius: 28px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    .btn {
+      margin-left: 5px;
+    }
+
+    .btn-plus {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus:hover,
+    .btn-plus:focus,
+    .btn-plus:active,
+    .btn-plus.active {
+      color: #FFFFFF !important;
+      background-color: #0d8aee;
+      border-color: #0c7cd5;
+    }
+
+    .btn-plus.disabled:hover,
+    .btn-plus.disabled:focus,
+    .btn-plus.disabled:active,
+    .btn-plus.disabled.active,
+    .btn-plus[disabled]:hover,
+    .btn-plus[disabled]:focus,
+    .btn-plus[disabled]:active,
+    .btn-plus[disabled].active,
+    fieldset[disabled] .btn-plus:hover,
+    fieldset[disabled] .btn-plus:focus,
+    fieldset[disabled] .btn-plus:active,
+    fieldset[disabled] .btn-plus.active {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus,
+    .btn-danger,
+    .btn-warning,
+    .btn-success {
+      min-width: 25px;
+      min-height: 25px;
+      padding: 1px 0px 1px 0px !important;
+    }
+
+    .btn-circle {
+      min-width: 30px;
+      min-height: 30px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 15px;
+      border: 0px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+    }
+
+    ul {
+      padding-left: 5px;
+    }
+
+    .setting_input {
+      text-align: center;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
+
+  <script>
+    if (typeof String.prototype.startsWith != 'function') {
+      // see below for better implementation!
+      String.prototype.startsWith = function (str){
+        return this.indexOf(str) === 0;
+      };
+    }
+
+    TAG = "MapleM";
+    VERSION = 1.0;
+    DEFAULT_CONFIG = {
+      task: 'autoAttackContinue', // doTasks, autoAttackContinue, autoAttackStep
+      apJump: false,
+      // apSupportSkillTime: 10 * 60 * 1000,
+      apStepDelay: 800,
+      apUseSkillsTime: [
+        {delay: 2000, during: 100},
+        {delay: 0, during: 0},
+        {delay: 0, during: 0},
+        {delay: 0, during: 0},
+        {delay: 0, during: 0},
+      ],
+    };
+    var settings;
+
+    function getSettingKey() {
+      return TAG + '-settings';
+    }
+
+    function getVersionKey() {
+      return TAG + '-version';
+    }
+
+    $(function () {
+      $("#version").html("楓之谷M v" + VERSION);
+      loadSettings();
+      initView();
+      console.log(settings)
+    });
+
+    function initView() {
+      $('input:radio[name="task"]').filter('[value="' + settings.task + '"]').attr('checked', true);
+      $('input:radio[name="apJump"]').filter('[value="' + settings.apJump + '"]').attr('checked', true);
+      $('input:text[name="apStepDelay"]').val(settings.apStepDelay);
+      for (var i in settings.apUseSkillsTime) {
+        var obj = settings.apUseSkillsTime[i];
+        var nameDelay = 'apUseSkillsTime-delay-' + i;
+        $('input:text[name="' + nameDelay + '"]').val(obj.delay);
+        var nameDuring = 'apUseSkillsTime-during-' + i;
+        $('input:text[name="' + nameDuring + '"]').val(obj.during);
+      }
+      $('input').change(function() {
+        onValueChange();
+      });
+    }
+
+    function onValueChange() {
+      settings.task = $('input:radio[name="task"]:checked').val();
+      settings.apJump = $('input:radio[name="apJump"]:checked').val() === 'true' ? true : false;
+      settings.apStepDelay = +$('input:text[name="apStepDelay"]').val();
+      for (var i in settings.apUseSkillsTime) {
+        var obj = settings.apUseSkillsTime[i];
+        var nameDelay = 'apUseSkillsTime-delay-' + i;
+        obj.delay = +$('input:text[name="' + nameDelay + '"]').val();
+        var nameDuring = 'apUseSkillsTime-during-' + i;
+        obj.during = +$('input:text[name="' + nameDuring + '"]').val();
+      }
+      console.log(settings);
+      saveSettings();
+    }
+
+    function loadSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var tempSettings = localStorage.getItem(getSettingKey());
+      if (tempSettings == null) {
+        settings = $.extend(true, {}, DEFAULT_CONFIG);
+      } else {
+        settings = JSON.parse(tempSettings);
+        var keys = Object.keys(DEFAULT_CONFIG);
+        for (var i in keys) {
+          var key = keys[i];
+          if (key === 'conditions' && settings['conditions'] !== undefined) {
+            for (var index = settings.conditions.length; index < DEFAULT_CONFIG.conditions.length; index++) {
+              settings.conditions[index] = DEFAULT_CONFIG.conditions[index];
+            }
+            continue;
+          }
+          if (settings[key] === undefined) {
+            settings[key] = DEFAULT_CONFIG[key];
+          }
+        }
+      }
+    }
+
+    function saveSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      localStorage.setItem(getVersionKey(), VERSION);
+      localStorage.setItem(getSettingKey(), JSON.stringify(settings));
+    }
+
+    function onEvent(eventType) {
+      if (eventType == 'OnPlayClick') {
+        console.log('start(\'' + JSON.stringify(settings) + '\');');
+        JavaScriptInterface.runScript('start(\'' + JSON.stringify(settings) + '\');');
+      } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript('stop();');
+      }
+    }
+    function onLog(message) {
+      console.log(message);
+    }
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-custom" role="navigation">
+   <a id="version" class="navbar-brand"></a>
+  </nav>
+  <div id="container" class="container">
+    <div style="margin: 10px 0px;">
+      <div>1️⃣ 支援自動任務</div>
+      <div>2️⃣ 支援自動打怪(邊走邊放技能)</div>
+      <div>3️⃣ 支援自動打怪(一步一技能模式)</div>
+    </div>
+    <div style="margin: 10px 0px;">
+      <h3>任務選擇</h3>
+      <input name="task" type="radio" value="autoAttackContinue"/>自動打怪(邊走邊放技能)(v4.2)<br />
+      <input name="task" type="radio" value="autoAttackStep"/>自動打怪(一步一技能模式)<br />
+      <input name="task" type="radio" value="doTasks"/>自動任務<br />
+    </div>
+    <div style="margin: 10px 0px;">
+        <h3>自動打怪選項</h3>
+        是否跳躍
+        <input name="apJump" type="radio" value="true" />是
+        <input name="apJump" type="radio" value="false" />否
+        <br />
+        走路時間
+        <input name="apStepDelay" type="text" value="800" size="10"/>(毫秒)
+        <br />
+        技能施放時間： 施放間隔 按住時間 <br />
+        技能 0 : <input name="apUseSkillsTime-delay-0" type="text" value="0" size="10"/>(毫秒) <input name="apUseSkillsTime-during-0" type="text" value="0" size="10"/>(毫秒) <br />
+        技能 1 : <input name="apUseSkillsTime-delay-1" type="text" value="0" size="10"/>(毫秒) <input name="apUseSkillsTime-during-1" type="text" value="0" size="10"/>(毫秒) <br /> 
+        技能 2 : <input name="apUseSkillsTime-delay-2" type="text" value="0" size="10"/>(毫秒) <input name="apUseSkillsTime-during-2" type="text" value="0" size="10"/>(毫秒) <br />
+        技能 3 : <input name="apUseSkillsTime-delay-3" type="text" value="0" size="10"/>(毫秒) <input name="apUseSkillsTime-during-3" type="text" value="0" size="10"/>(毫秒) <br />
+        技能 4 : <input name="apUseSkillsTime-delay-4" type="text" value="0" size="10"/>(毫秒) <input name="apUseSkillsTime-during-4" type="text" value="0" size="10"/>(毫秒) <br />
+      </div>
+    <ul id="condition" class="list-group"></ul>
+    <ul id="other" class="list-group"></ul>
+  </div>
+</body>
+
+</html>

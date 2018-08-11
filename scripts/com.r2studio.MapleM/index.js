@@ -285,6 +285,9 @@ MapleM.prototype.autoPlayContinue = function() {
   for (var i in this.config.apUseSkillsTime) {
     var skill = this.config.apUseSkillsTime[i];
     var lastUseTime = skill.lastUseTime || 0;
+    if (skill.delay === 0) {
+      continue;
+    }
     if (now - lastUseTime > skill.delay) {
       if (useSkill === undefined) {
         useSkill = skill;
@@ -333,6 +336,9 @@ MapleM.prototype.autoPlayStep = function() {
   for (var i in this.config.apUseSkillsTime) {
     var skill = this.config.apUseSkillsTime[i];
     var lastUseTime = skill.lastUseTime || 0;
+    if (skill.delay === 0) {
+      continue;
+    }
     if (now - lastUseTime > skill.delay) {
       if (useSkill === undefined) {
         useSkill = skill;
@@ -479,9 +485,9 @@ function start(configString) {
   var config = JSON.parse(configString)
   if (mapleM === undefined) {
     mapleM = new MapleM(config);
-    if (config.task === 'autoAttack' && config.apWalkType === 'continue') {
+    if (config.task === 'autoAttackContinue') {
       mapleM.startAutoAttackContinue();
-    } else if (config.task === 'autoAttack' && config.apWalkType === 'step') {
+    } else if (config.task === 'autoAttackStep') {
       mapleM.startAutoAttackStep();
     } else if (config.task === 'doTasks'){
       mapleM.startDoTasks();
@@ -490,10 +496,9 @@ function start(configString) {
 }
 
 var DEFAULT_CONFIG = {
-  task: 'autoAttack', // doTasks, autoAttack
-  apWalkType: 'continue', // continue, step
+  task: 'autoAttack', // doTasks, autoAttackContinue, autoAttackStep
   apJump: false,
-  apSupportSkillTime: 10 * 60 * 1000,
+  // apSupportSkillTime: 10 * 60 * 1000,
   apStepDelay: 800,
   apUseSkillsTime: [
     {delay: 2000, during: 20},
@@ -504,13 +509,13 @@ var DEFAULT_CONFIG = {
   ],
 };
 
-mapleM = new MapleM(DEFAULT_CONFIG);
+// mapleM = new MapleM(DEFAULT_CONFIG);
 // for (var i = 0; i < 10; i++) {
 //   console.log(mapleM.isAutoPlaying());
 // }
 // console.log('currentPage', mapleM.getCurrentPage());
 // start("{}");
-mapleM.startAutoAttackContinue();
+// mapleM.startAutoAttackContinue();
 // mapleM.autoPlay();
 // sleep(1000);
 // mapleM.autoPlay();
