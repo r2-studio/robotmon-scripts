@@ -374,7 +374,7 @@ function finishQuest(){
                     var screenShot4 = getScreenshot();
                     if(!checkImage(screenShot4,finishStageImage[0],2280,1340,190,55)){
                         tapScale(2180,1350,100);
-                        console.log("Get new craft");
+                        //console.log("Get new craft");
                     }
                     releaseImage(screenShot4);
                 }else if(checkImage(screenShot3,friendPointBack,60,25,60,115)){
@@ -382,7 +382,7 @@ function finishQuest(){
                     var screenShot4 = getScreenshot();
                     if(!checkImage(screenShot4,finishStageImage[0],2280,1340,190,55)){
                         sendUrgentMessage(runningScriptName,"Get new craft");
-                        console.log("Get new craft finish");
+                        console.log("Get new craft");
                         tapScale(90,80,100);
                     }
                     releaseImage(screenShot4);

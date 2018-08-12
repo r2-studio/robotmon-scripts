@@ -108,8 +108,8 @@
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 1.28,
-      "description": "<div>V1.28修正FQ會回到上一頁與泳裝小莫寶具會誤判關卡結束的bug<br><br>V1.27修正Wave辨識與強化快速抽箱功能<br><br>Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 1.29,
+      "description": "<div>V1.29修正部分寶具造成腳本停止的問題<br><br>V1.28修正FQ會回到上一頁與泳裝小莫寶具會誤判關卡結束的bug<br><br>Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
