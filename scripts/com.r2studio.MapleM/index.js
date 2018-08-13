@@ -18,13 +18,15 @@ if (gUserScreenWidth / gUserScreenHeight > 1.777778) {
   var w = Math.round(gUserScreenHeight * 1.777778);
   gGameOffsetX = (gUserScreenWidth - w) / 2;
   gResizeWidth = Math.floor(gUserScreenWidth * gResizeHeight / gUserScreenHeight);
-} else if (gUserScreenWidth / gUserScreenHeight < 1.777778) {
+} else if (gUserScreenWidth / gUserScreenHeight < 1.777776) {
   // less width, align width
   gUserScreenWHType = -1;
   gDevToUserRatio = gUserScreenWidth / gDevScreenWidth;
   var h = Math.round(gUserScreenWidth / 1.777776);
   gGameOffsetY = (gUserScreenHeight - h) / 2;
   gResizeHeight = Math.floor(gUserScreenHeight * gResizeWidth / gUserScreenWidth);
+} else {
+  gDevToUserRatio = gUserScreenWidth / gDevScreenWidth;
 }
 var gUserToResizeRatio = gResizeHeight / gUserScreenHeight;
 console.log('Resize WH', gResizeWidth, gResizeHeight, gGameOffsetX, gGameOffsetY);
@@ -74,7 +76,7 @@ function devToUserXY(xy, loc) {
   }
   x = Math.floor(x);
   y = Math.floor(y);
-  return xy;
+  return {x: x, y: y};
 }
 
 function devToResizeXY(xy, loc) {
@@ -103,10 +105,10 @@ var gBtnsSkill = [
 ];
 var gBtnJump = {loc: LocRB, x: 1836, y: 932};
 var gBtnChange = {loc: LocRB, x: 1849, y: 739};
-var gBtnUp = {x: 236, y: 739, r: 50, g: 64, b: 3};
-var gBtnDown = {x: 236, y: 1002, r: 65, g: 82, b: 151};
-var gBtnLeft = {x: 108, y: 867, r: 254, g: 252, b: 239};
-var gBtnRight = {x: 371, y: 861, r: 209, g: 215, b: 239};
+var gBtnUp = {loc: LocLB, x: 236, y: 739, r: 50, g: 64, b: 3};
+var gBtnDown = {loc: LocLB, x: 236, y: 1002, r: 65, g: 82, b: 151};
+var gBtnLeft = {loc: LocLB, x: 108, y: 867, r: 254, g: 252, b: 239};
+var gBtnRight = {loc: LocLB, x: 371, y: 861, r: 209, g: 215, b: 239};
 
 var gPages = {
   moving: {name: "moving", points: [
