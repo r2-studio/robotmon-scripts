@@ -87,10 +87,10 @@ function devToResizeXY(xy, loc) {
 // ===== Buttons Infos =====
 
 var gBtnsAutoPlay = [
-  {loc: LocLB, x: 500, y: 940}, 
-  {loc: LocLB, x: 500, y: 1054},
-  {loc: LocLB, x: 450, y: 1000},
-  {loc: LocLB, x: 560, y: 1000}
+  {loc: LocCB, x: 500, y: 940}, 
+  {loc: LocCB, x: 500, y: 1054},
+  {loc: LocCB, x: 450, y: 1000},
+  {loc: LocCB, x: 560, y: 1000}
 ];
 
 var gBtnTask1 = {loc: LocLT, x: 140, y: 417, r: 144, g: 150, b: 140};
@@ -112,8 +112,8 @@ var gBtnRight = {loc: LocLB, x: 371, y: 861, r: 209, g: 215, b: 239};
 
 var gPages = {
   moving: {name: "moving", points: [
-    {loc: LocLT, x: 928, y: 334, r: 120, g: 136, b: 152},
-    {loc: LocLT, x: 1100, y: 340, r: 255, g: 124, b: 80},
+    {loc: LocFull, x: 928, y: 334, r: 120, g: 136, b: 152},
+    {loc: LocFull, x: 1100, y: 340, r: 255, g: 124, b: 80},
   ]},
   confirmPage: {name: "confirmPage", points: [
     {loc: LocFull, x: 1548, y: 977, r: 247, g: 122, b: 76},
@@ -252,7 +252,7 @@ MapleM.prototype.startDoTasks = function() {
   while(this.running) {
     var startRunTime = Date.now();
     this.doTasks();
-    var sTime = 1000 - (Date.now() - startRunTime);
+    var sTime = 800 - (Date.now() - startRunTime);
     if (sTime > 0) {
       sleep(sTime);
     }
@@ -512,6 +512,7 @@ var DEFAULT_CONFIG = {
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
+// mapleM.doTasks();
 // for (var i = 0; i < 10; i++) {
 //   console.log(mapleM.isAutoPlaying());
 // }
