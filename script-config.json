@@ -114,7 +114,7 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
     "com.donny.maplem": {
-      "title": " MapleM / 楓之谷M ",
+      "title": "MapleM / 楓之谷M",
       "versionCode": 0.02,
       "description": "<div>V0.02 測試版-測試 LV.1~LV.85自動任務功能 <br><br>V0.01測試解析度 960x540 圖型辨識 </div>",
       "packageName": "com.nexon.maplem.global",
@@ -125,7 +125,7 @@
       ]
     },
     "com.r2studio.MapleM": {
-      "title": "楓之谷M - 官方腳本",
+      "title": "MapleM / 楓之谷M - 官方腳本",
       "versionCode": 1,
       "description": "<h3>楓之谷M</h3><ul><li>1️⃣ 支援自動任務</li><li>2️⃣ 支援自動打怪(邊走邊放技能)</li><li>3️⃣ 支援自動打怪(一步一技能模式)</li></ul>",
       "packageName": "com.nexon.maplem.global",
