@@ -611,8 +611,8 @@ var GameAssistant = function () {
 
         this.checkRandomSleep(3);
 
-        console.log('check tapGround');
-        this.tapGround();
+        // console.log('check tapGround');
+        // this.tapGround();
 
         this.checkRandomSleep(3);
 
@@ -685,6 +685,8 @@ var GameAssistant = function () {
       }
 
       // Check the tab is shrinked
+      this.gInfo.shrinkTab.tap();
+      sleep(200);
       for (var i = 0; i < 6; i ++) {
         this.refreshScreen();
         var img = this.gInfo.gearRect.crop(this._img);
@@ -693,7 +695,7 @@ var GameAssistant = function () {
         console.log('r: ', JSON.stringify(r))
         releaseImage(img);
 
-        if (r.score > 0.72) {
+        if (r.score > 0.75) {
           break;
         }
 
@@ -834,7 +836,7 @@ var GameAssistant = function () {
       if (skill.check(this._img)) {
         console.log('learn skill')
 
-        for (var i = 0; i < 9; i ++) {
+        for (var i = 0; i < 20; i ++) {
           skill.tap(1, 300);
         }
       }
@@ -873,8 +875,9 @@ var GameAssistant = function () {
 
         if (!this.gInfo.masterTab.check(this._img)) {
           this.gInfo.masterTab.tap();
+          sleep(300);
         }
-  
+
         // swipe to top
         for(var i = 0; i < 3; i ++) {
           this.ttListSwipeDown();
@@ -949,9 +952,41 @@ var GameAssistant = function () {
     key: 'tapFairy',
     value: function tapFairy() {
       // Tap the fairy route 3 times
-      for (var j = 0; j < 3; j ++) {
+      for (var j = 0; j < 4; j ++) {
         for (var i = 0; i < 10; i ++) {
-          Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y);
+          Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y, 80);
+        }
+
+        // Click left heros
+        for (var i = 0; i < 10; i ++) {
+          Utils.mTap(350, 333 + i * 100, 80);
+        }
+
+        // Click right heros
+        for (var i = 0; i < 10; i ++) {
+          Utils.mTap(1280, 333 + i * 100, 80);
+        }
+
+        // Tap ground
+        this.gInfo.petEggs.tap(1, 300);
+        this.gInfo.inactiveGold.tap(1, 300);
+        for (var i =  -5; i < 5; i ++) {
+          Utils.mTap(this.gInfo.petGold.x + 0.1 * i * gDeviceWidth, this.gInfo.petGold.y, 80);
+        }
+
+        // Tap Fairy NoThanks
+        this.refreshScreen();
+        if (this.gInfo.fairyNoThanks.check(this._img) &&
+          this.gInfo.fairyWatchAds.check(this._img)) {
+            this.idleTap(500);
+
+          if (this.isVipEnabled) {
+            console.log('we are VIPs, collecting awards');
+            this.gInfo.fairyWatchAds.tap();
+          } else {
+            console.log('found noThanks, tapping');
+            this.gInfo.fairyNoThanks.tap();
+          }
         }
       }
 
