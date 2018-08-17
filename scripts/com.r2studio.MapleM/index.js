@@ -117,6 +117,12 @@ var gMoney1 = {loc: LocFull, x: 1480, y: 25};
 var gMoney2 = {loc: LocFull, x: 1830, y: 105};
 var gExp1 = {loc: LocLB, x: 0, y: 1032};
 var gExp2 = {loc: LocLB, x: 180, y: 1080};
+var gHp1 = {loc: LocLT, x: 28, y: 80};
+var gHp2 = {loc: LocLT, x: 270, y: 80};
+var gMp1 = {loc: LocLT, x: 28, y: 112};
+var gMp2 = {loc: LocLT, x: 270, y: 112};
+var gItemHP = {loc: LocRB, x: 1730, y: 580};
+var gItemMP = {loc: LocRB, x: 1850, y: 580};
 
 var gPages = {
   moving: {name: "moving", points: [
@@ -378,6 +384,10 @@ MapleM.prototype.autoPlayStep = function() {
 
   this.moveCount++;
 
+  if (this.config.apStepDelay == 0) {
+    return;
+  }
+
   sleep(200);
   if (this.direct === 'right') {
     this.tapDown(gBtnRight, 0);
@@ -475,6 +485,26 @@ MapleM.prototype.startAutoAttackStep = function() {
   }
 }
 
+MapleM.prototype.startAutoUseItems = function() {
+  this.running = true;
+  while(this.running) {
+    this.updateScreenshot(true);
+    var hp = this.getHp();
+    var mp = this.getMp();
+    if (hp < this.config.useItemHP) {
+      this.clickPoint(gItemHP);
+      console.log('use hp', hp.toFixed(1), '<', this.config.useItemHP);
+      sleep(300);
+    }
+    if (mp < this.config.useItemMp) {
+      this.clickPoint(gItemMP);
+      console.log('use mp', mp.toFixed(1), '<', this.config.useItemMp);
+      sleep(300);
+    }
+    sleep(300);
+  }
+}
+
 MapleM.prototype.getCurrentPage = function() {
   var cPage = "unknown";
   for (var k in gPages) {
@@ -503,7 +533,33 @@ MapleM.prototype.getCurrentPage = function() {
 }
 
 MapleM.prototype.getHp = function() {
+  var xy1 = devToResizeXY(gHp1, gHp1.loc);
+  var xy2 = devToResizeXY(gHp2, gHp2.loc);
+  var vx = 0;
+  for (var x = xy1.x; x < xy2.x; x+=2) {
+    var c = getImageColor(this.img, x, xy1.y);
+    if (c.r > (c.g + c.b)) {
+      vx = x;
+    }
+  }
+  var r = ((vx - xy1.x) / (xy2.x - xy1.x) * 100);
+  // console.log('HP', r.toFixed(1));
+  return r;
+}
 
+MapleM.prototype.getMp = function() {
+  var xy1 = devToResizeXY(gMp1, gMp1.loc);
+  var xy2 = devToResizeXY(gMp2, gMp2.loc);
+  var vx = 0;
+  for (var x = xy1.x; x < xy2.x; x+=2) {
+    var c = getImageColor(this.img, x, xy1.y);
+    if (c.b > (c.r + c.g)) {
+      vx = x;
+    }
+  }
+  var r = ((vx - xy1.x) / (xy2.x - xy1.x) * 100);
+  // console.log('MP', r.toFixed(1));
+  return r;
 }
 
 MapleM.prototype.isAutoPlaying = function() {
@@ -552,12 +608,14 @@ function start(configString) {
       mapleM.startAutoAttackStep();
     } else if (config.task === 'doTasks'){
       mapleM.startDoTasks();
+    } else if (config.task === 'autoUseItem'){
+      mapleM.startAutoUseItems();
     }
   }
 }
 
 var DEFAULT_CONFIG = {
-  task: 'doTasks', // doTasks, autoAttackContinue, autoAttackStep
+  task: 'autoUseItem', // doTasks, autoAttackContinue, autoAttackStep, autoUseItem
   apJump: false,
   // apSupportSkillTime: 10 * 60 * 1000,
   apStepDelay: 800,
@@ -568,6 +626,8 @@ var DEFAULT_CONFIG = {
     {delay: 10*60*1000, during: 20},
     {delay: 30*1000, during: 20},
   ],
+  useItemHP: 70,
+  useItemMp: 70,
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
@@ -579,8 +639,10 @@ var DEFAULT_CONFIG = {
 // for (var i = 0; i < 8; i++) {
 //   mapleM.doTasks();
 // }
+// mapleM.startAutoUseItems();
 // mapleM.startDoTasks();
-
+// mapleM.getHp();
+// mapleM.getMp();
 // start("{}");
 // mapleM.startAutoAttackContinue();
 // mapleM.autoPlay();
