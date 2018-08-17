@@ -110,7 +110,13 @@ var gBtnChange = {loc: LocRB, x: 1849, y: 739};
 var gBtnUp = {loc: LocLB, x: 236, y: 739, r: 50, g: 64, b: 3};
 var gBtnDown = {loc: LocLB, x: 236, y: 1002, r: 65, g: 82, b: 151};
 var gBtnLeft = {loc: LocLB, x: 108, y: 867, r: 254, g: 252, b: 239};
-var gBtnRight = {loc: LocLB, x: 371, y: 861, r: 209, g: 215, b: 239};
+var gBtnRight = {loc: LocFull, x: 371, y: 861, r: 209, g: 215, b: 239};
+
+var gBagBtn = {loc: LocRT, x: 1750, y: 54};
+var gMoney1 = {loc: LocFull, x: 1480, y: 25};
+var gMoney2 = {loc: LocFull, x: 1830, y: 105};
+var gExp1 = {loc: LocLB, x: 0, y: 1032};
+var gExp2 = {loc: LocLB, x: 180, y: 1080};
 
 var gPages = {
   moving: {name: "moving", points: [
@@ -159,6 +165,7 @@ function MapleM(config) {
   this.moveCount = 0;
   this.tmpImg1 = 0;
   this.tmpImg2 = 0;
+  this.sendMessageTime = 0;
 }
 
 MapleM.prototype.updateScreenshot = function(update) {
@@ -268,6 +275,7 @@ MapleM.prototype.startDoTasks = function() {
 MapleM.prototype.autoPlayContinue = function() {
   if (this.direct === 'changeToRight') {
     this.tapUp(gBtnLeft, 1);
+    this.sendMessage();
     sleep(800);
     this.tapDown(gBtnRight, 1);
     this.moveCount = 0;
@@ -275,6 +283,7 @@ MapleM.prototype.autoPlayContinue = function() {
     sleep(800);
   } else if (this.direct === 'changeToLeft') {
     this.tapUp(gBtnRight, 1);
+    this.sendMessage();
     sleep(800);
     this.tapDown(gBtnLeft, 1);
     this.direct = 'left';
@@ -403,6 +412,45 @@ MapleM.prototype.autoPlayStep = function() {
   console.log('run count', this.moveCount, 'score', score);
 }
 
+MapleM.prototype.cropRectImg = function(p1, p2) {
+  var xy1 = devToResizeXY(p1, p1.loc);
+  var xy2 = devToResizeXY(p2, p2.loc);
+  var w = xy2.x - xy1.x;
+  var h = xy2.y - xy1.y;
+  return cropImage(this.img, xy1.x, xy1.y, w, h);
+}
+
+MapleM.prototype.sendMessage = function() {
+  if (Date.now() - this.sendMessageTime < 60 * 60 * 1000) {
+    return;
+  }
+  this.sendMessageTime = Date.now();
+  var userPlan = getUserPlan();
+  if (userPlan === -1) {
+    console.log('Need login');
+    return;
+  }
+  if (userPlan > 0) {
+    console.log('Sending Messages... Exp');
+    var expImg = this.cropRectImg(gExp1, gExp2);
+    var expBase64 = getBase64FromImage(expImg);
+    releaseImage(expImg);
+    console.log(sendNormalMessage('Maple M Info', expBase64));
+  }
+  
+  console.log('Sending Messages... Money');
+  this.clickPoint(gBagBtn);
+  sleep(4700);
+  this.updateScreenshot(true);
+  var moneyImg = this.cropRectImg(gMoney1, gMoney2);
+  var moneyBase64 = getBase64FromImage(moneyImg);
+  releaseImage(moneyImg);
+  console.log(sendNormalMessage('Maple M Info', moneyBase64));
+  sleep(400);
+  keycode('BACK', 20);
+  sleep(400);
+}
+
 MapleM.prototype.startAutoAttackContinue = function() {
   this.running = true;
   this.direct = 'right';
@@ -423,6 +471,7 @@ MapleM.prototype.startAutoAttackStep = function() {
   while(this.running) {
     var startRunTime = Date.now();
     this.autoPlayStep();
+    this.sendMessage();
   }
 }
 
@@ -451,6 +500,10 @@ MapleM.prototype.getCurrentPage = function() {
     }
   }
   return cPage;
+}
+
+MapleM.prototype.getHp = function() {
+
 }
 
 MapleM.prototype.isAutoPlaying = function() {
