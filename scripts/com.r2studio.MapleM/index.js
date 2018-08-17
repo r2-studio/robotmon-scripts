@@ -48,6 +48,7 @@ var LocLB = 'lb';
 var LocRB = 'rb';
 var LocFull = 'full';
 var LocCB = 'cb';
+var LocUnknown = 'unknown';
 
 function devToUserXY(xy, loc) {
   var x = xy.x * gDevToUserRatio;
@@ -96,6 +97,7 @@ var gBtnsAutoPlay = [
 var gBtnTask1 = {loc: LocLT, x: 140, y: 417, r: 144, g: 150, b: 140};
 var gBtnTask2 = {loc: LocLT, x: 140, y: 565, r: 141, g: 142, b: 134};
 var gBtnSkipTask = {loc: LocRB, x: 1830, y: 920};
+var gBtnSkipTask2 = {loc: LocFull, x: 595, y: 816};
 var gBtnsSkill = [
   {loc: LocRB, x: 1638, y: 938, r: 179, g: 207, b: 228},
   {loc: LocRB, x: 1708, y: 732, r: 147, g: 139, b: 128},
@@ -129,10 +131,10 @@ var gPages = {
     {loc: LocLT, x: 1875, y: 1035, r: 3, g: 3, b: 1, s: 0.9},
     {loc: LocLT, x: 960, y: 1035, r: 3, g: 3, b: 1, s: 0.9},
   ]},
-  pageOthers: {name: "pageOthers", points: [
-    {loc: LocFull, x: 704, y: 51, r: 78, g: 94, b: 107},
-    {loc: LocFull, x: 979, y: 64, r: 78, g: 94, b: 107},
-  ]},
+  // pageOthers: {name: "pageOthers", points: [
+  //   {loc: LocFull, x: 704, y: 51, r: 78, g: 94, b: 107},
+  //   {loc: LocFull, x: 979, y: 64, r: 78, g: 94, b: 107},
+  // ]},
   exitGame: {name: "exitGame", points: [
     {loc: LocFull, x: 569, y: 797, r: 117, g: 133, b: 148},
     {loc: LocFull, x: 588, y: 263, r: 78, g: 94, b: 107},
@@ -214,6 +216,7 @@ MapleM.prototype.doTasks = function() {
       break;
     case "black":
       this.clickPoint(gBtnSkipTask);
+      this.clickPoint(gBtnSkipTask2);
       break;
     case "pageOthers":
       keycode('BACK', 20);
@@ -231,17 +234,20 @@ MapleM.prototype.doTasks = function() {
   if (autoPlaying) {
     this.unknownCount = 0;
   } else if (!autoPlaying) {
-    if (this.stopCount > 4) {
+    if (this.stopCount == 5 || this.stopCount == 7 || this.stopCount == 9) {
+      console.log('click task 1');
       this.clickPoint(gBtnTask1);
-    } else if (this.stopCount > 2){
+    } else if (this.stopCount == 3){
+      console.log('click task 2');
       this.clickPoint(gBtnTask2);
     }
   }
   if (this.unknownCount > 5) {
     this.unknownCount = 0;
+    console.log('Press BACK');
     keycode('BACK', 20);
   }
-  if (this.stopCount > 10) {
+  if (this.stopCount > 15) {
     keycode('BACK', 20);
   }
   console.log(autoPlaying, 'unknown', this.unknownCount, 'stop', this.stopCount);
@@ -498,7 +504,7 @@ function start(configString) {
 }
 
 var DEFAULT_CONFIG = {
-  task: 'autoAttack', // doTasks, autoAttackContinue, autoAttackStep
+  task: 'doTasks', // doTasks, autoAttackContinue, autoAttackStep
   apJump: false,
   // apSupportSkillTime: 10 * 60 * 1000,
   apStepDelay: 800,
@@ -517,6 +523,11 @@ var DEFAULT_CONFIG = {
 //   console.log(mapleM.isAutoPlaying());
 // }
 // console.log('currentPage', mapleM.getCurrentPage());
+// for (var i = 0; i < 8; i++) {
+//   mapleM.doTasks();
+// }
+// mapleM.startDoTasks();
+
 // start("{}");
 // mapleM.startAutoAttackContinue();
 // mapleM.autoPlay();
