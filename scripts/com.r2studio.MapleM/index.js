@@ -123,6 +123,8 @@ var gMp1 = {loc: LocLT, x: 28, y: 112};
 var gMp2 = {loc: LocLT, x: 270, y: 112};
 var gItemHP = {loc: LocRB, x: 1730, y: 580};
 var gItemMP = {loc: LocRB, x: 1850, y: 580};
+var gMenu1 = {loc: LocRB, x: 1180, y: 0};
+var gMenu2 = {loc: LocRB, x: 1920, y: 80};
 
 var gPages = {
   moving: {name: "moving", points: [
@@ -430,6 +432,21 @@ MapleM.prototype.cropRectImg = function(p1, p2) {
   return cropImage(this.img, xy1.x, xy1.y, w, h);
 }
 
+MapleM.prototype.waitForChange = function() {
+  var imgOrigin = this.cropRectImg(gMenu1, gMenu2);
+  for (var i = 0; i < 10; i++) {
+    this.updateScreenshot(true);
+    var imgNow = this.cropRectImg(gMenu1, gMenu2);
+    var s = getIdentityScore(imgOrigin, imgNow);
+    releaseImage(imgNow);
+    if (s < 0.9) {
+      break;
+    }
+    sleep(1000);
+  }
+  releaseImage(imgOrigin);
+}
+
 MapleM.prototype.sendMessage = function() {
   if (Date.now() - this.sendMessageTime < 60 * 60 * 1000) {
     return;
@@ -442,23 +459,22 @@ MapleM.prototype.sendMessage = function() {
   }
   if (userPlan > 0) {
     console.log('Sending Messages... Exp');
+    this.updateScreenshot(true);
     var expImg = this.cropRectImg(gExp1, gExp2);
     var expBase64 = getBase64FromImage(expImg);
     releaseImage(expImg);
     console.log(sendNormalMessage('Maple M Info', expBase64));
   }
-  
   console.log('Sending Messages... Money');
   this.clickPoint(gBagBtn);
-  sleep(4700);
-  this.updateScreenshot(true);
+  this.waitForChange();
   var moneyImg = this.cropRectImg(gMoney1, gMoney2);
   var moneyBase64 = getBase64FromImage(moneyImg);
   releaseImage(moneyImg);
   console.log(sendNormalMessage('Maple M Info', moneyBase64));
-  sleep(400);
+  sleep(1500);
   keycode('BACK', 20);
-  sleep(400);
+  sleep(300);
 }
 
 MapleM.prototype.startAutoAttackContinue = function() {
@@ -639,6 +655,7 @@ var DEFAULT_CONFIG = {
 // for (var i = 0; i < 8; i++) {
 //   mapleM.doTasks();
 // }
+// mapleM.sendMessage();
 // mapleM.startAutoUseItems();
 // mapleM.startDoTasks();
 // mapleM.getHp();
