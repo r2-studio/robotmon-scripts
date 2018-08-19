@@ -521,6 +521,52 @@ MapleM.prototype.startAutoUseItems = function() {
   }
 }
 
+MapleM.prototype.startAutoAttackMini = function() {
+  this.running = true;
+  var i = 0;
+  while(this.running) {
+    this.clickPoint(gBtnsSkill[2]);
+    sleep(1200);
+    this.tapDown(gBtnLeft, 1);
+    sleep(800);
+    this.tapUp(gBtnLeft, 1);
+    sleep(500);
+    this.clickPoint(gBtnsSkill[2]);
+    sleep(1000);
+
+    this.tapDown(gBtnUp, 1);
+    sleep(1000);
+    this.clickPoint(gBtnsSkill[0]);
+    sleep(500);
+    this.tapUp(gBtnUp, 1);
+    
+    sleep(600);
+    this.clickPoint(gBtnsSkill[1]);
+    sleep(600);
+    this.clickPoint(gBtnsSkill[3]);
+    sleep(1000);
+
+    this.clickPoint(gBtnsSkill[2]);
+    sleep(1200);
+    this.tapDown(gBtnRight, 1);
+    sleep(800);
+    this.tapUp(gBtnRight, 1);
+    sleep(500);
+    this.clickPoint(gBtnsSkill[2]);
+    sleep(1000);
+
+    this.tapDown(gBtnDown, 1);
+    sleep(1000);
+    this.clickPoint(gBtnsSkill[0]);
+    sleep(500);
+    this.tapUp(gBtnDown, 1);
+
+    sleep(600);
+
+    i++;
+  }
+}
+
 MapleM.prototype.getCurrentPage = function() {
   var cPage = "unknown";
   for (var k in gPages) {
@@ -655,6 +701,7 @@ var DEFAULT_CONFIG = {
 // for (var i = 0; i < 8; i++) {
 //   mapleM.doTasks();
 // }
+// mapleM.startAutoAttackMini();
 // mapleM.sendMessage();
 // mapleM.startAutoUseItems();
 // mapleM.startDoTasks();
