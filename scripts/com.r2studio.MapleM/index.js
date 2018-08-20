@@ -132,8 +132,8 @@ var gPages = {
     {loc: LocFull, x: 1100, y: 340, r: 255, g: 124, b: 80},
   ]},
   confirmPage: {name: "confirmPage", points: [
-    {loc: LocFull, x: 1548, y: 977, r: 247, g: 122, b: 76},
-    {loc: LocFull, x: 1017, y: 1041, r: 6, g: 5, b: 1},
+    {loc: LocRB, x: 1548, y: 977, r: 247, g: 122, b: 76},
+    {loc: LocRB, x: 1017, y: 1041, r: 6, g: 5, b: 1},
   ]},
   diePage: {name: "diePage", points: [
     {loc: LocFull, x: 716, y: 790, r: 120, g: 136, b: 152},
@@ -249,7 +249,7 @@ MapleM.prototype.doTasks = function() {
   if (autoPlaying) {
     this.unknownCount = 0;
   } else if (!autoPlaying) {
-    if (this.stopCount == 5 || this.stopCount == 7 || this.stopCount == 9) {
+    if (this.stopCount >= 5 && this.stopCount % 2 == 1) {
       console.log('click task 1');
       this.clickPoint(gBtnTask1);
     } else if (this.stopCount == 3){
@@ -264,6 +264,7 @@ MapleM.prototype.doTasks = function() {
   }
   if (this.stopCount > 15) {
     keycode('BACK', 20);
+    sleep(1000);
   }
   console.log(autoPlaying, 'unknown', this.unknownCount, 'stop', this.stopCount);
 }
