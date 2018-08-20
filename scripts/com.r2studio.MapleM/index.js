@@ -97,7 +97,7 @@ var gBtnsAutoPlay = [
 var gBtnTask1 = {loc: LocLT, x: 140, y: 417, r: 144, g: 150, b: 140};
 var gBtnTask2 = {loc: LocLT, x: 140, y: 565, r: 141, g: 142, b: 134};
 var gBtnSkipTask = {loc: LocRB, x: 1830, y: 920};
-var gBtnSkipTask2 = {loc: LocFull, x: 595, y: 816};
+var gBtnSkipTask2 = {loc: LocLB, x: 595, y: 816};
 var gBtnsSkill = [
   {loc: LocRB, x: 1638, y: 938, r: 179, g: 207, b: 228},
   {loc: LocRB, x: 1708, y: 732, r: 147, g: 139, b: 128},
@@ -110,7 +110,7 @@ var gBtnChange = {loc: LocRB, x: 1849, y: 739};
 var gBtnUp = {loc: LocLB, x: 236, y: 739, r: 50, g: 64, b: 3};
 var gBtnDown = {loc: LocLB, x: 236, y: 1002, r: 65, g: 82, b: 151};
 var gBtnLeft = {loc: LocLB, x: 108, y: 867, r: 254, g: 252, b: 239};
-var gBtnRight = {loc: LocFull, x: 371, y: 861, r: 209, g: 215, b: 239};
+var gBtnRight = {loc: LocLB, x: 371, y: 861, r: 209, g: 215, b: 239};
 
 var gBagBtn = {loc: LocRT, x: 1750, y: 54};
 var gMoney1 = {loc: LocFull, x: 1480, y: 25};
