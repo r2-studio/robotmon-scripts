@@ -198,3 +198,18 @@ function stop() {
 }
 
 // start(JSON.stringify(testConfig));
+
+function getSavedFiles() {
+  var path = getStoragePath();
+  var result = execute('ls /sdcard/Robotmon').split('\n');
+  var scripts = [];
+  for (var i in result) {
+    var filename = result[i];
+    var idx = filename.indexOf('EZRobot-setting');
+    if (idx != -1) {
+      var scriptName = filename.substr(16);
+      scripts.push(scriptName);
+    }
+  }
+  return JSON.stringify(scripts);
+}

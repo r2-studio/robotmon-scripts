@@ -267,9 +267,8 @@
       $("#version").html(TAG + " v" + VERSION);
       $("#setting-dropdown-btn").text(noSetting);
       initLocale();
-      initSettings();
-      initSettingRows();
-      initActionDropdown();
+      // initSettings();
+      JavaScriptInterface.runScriptCallback('getSavedFiles()', "initSettings");
     });
 
     function updateLocale() {
@@ -373,16 +372,27 @@
       $("#action-loop").show();
     }
 
-    function initSettings() {
-      if (localStorage === undefined) {
-        return;
+    // function initSettings() {
+    //   if (localStorage === undefined) {
+    //     return;
+    //   }
+    //   for (var i = 0; i < localStorage.length; i++) {
+    //     if (localStorage.key(i).startsWith(TAG + '-setting-')) {
+    //       var name = localStorage.key(i).replace(TAG + '-setting-', '');
+    //       addSettingDropdown(name);
+    //     }
+    //   }
+    // }
+
+    function initSettings(scripts) {
+      
+      scripts = JSON.parse(scripts);
+      for (var i in scripts) {
+        console.log(scripts[i]);
+        addSettingDropdown(scripts[i]);
       }
-      for (var i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i).startsWith(TAG + '-setting-')) {
-          var name = localStorage.key(i).replace(TAG + '-setting-', '');
-          addSettingDropdown(name);
-        }
-      }
+      initSettingRows();
+      initActionDropdown();
     }
 
     function initSettingRows() { 
@@ -527,9 +537,8 @@
       if (localStorage === undefined || localStorage.getItem(getSettingName(name)) !== null) {
         return;
       }
-
-      setting = [];
-      localStorage.setItem(getSettingName(name), JSON.stringify(setting));
+      var scriptName = getSettingName(name);
+      JavaScriptInterface.runScript('writeFile("/sdcard/Robotmon/' +scriptName+ '", "[]")');
       addSettingDropdown(name);
       initSettingRows();
     }
@@ -542,7 +551,13 @@
       if (name === noSetting) {
         return;
       }
-      setting = JSON.parse(localStorage.getItem(getSettingName(name)));
+      var scriptName = getSettingName(name);
+      JavaScriptInterface.runScriptCallback('readFile("/sdcard/Robotmon/' +scriptName+ '")', "loadSettingImpl");
+    }
+
+    function loadSettingImpl(str) {
+      console.log(str);
+      setting = JSON.parse(str);
       initSettingRows();
     }
 
@@ -556,7 +571,9 @@
       if (name === noSetting) {
         return;
       }
-      localStorage.setItem(getSettingName(name), JSON.stringify(setting));
+      var scriptName = getSettingName(name);
+      var scriptJSON = JSON.stringify(setting);
+      JavaScriptInterface.runScript('writeFile("/sdcard/Robotmon/' +scriptName+ '", \' '+scriptJSON+'\')');
     }
 
     function deleteSetting() {
@@ -567,7 +584,8 @@
       if (name === noSetting) {
         return;
       }
-      localStorage.removeItem(getSettingName(name));
+      var scriptName = getSettingName(name);
+      JavaScriptInterface.runScript('rm "/sdcard/Robotmon/' +scriptName+'"');
     }
 
     function onEvent(eventType) {
