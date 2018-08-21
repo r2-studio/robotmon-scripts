@@ -91,7 +91,12 @@ var gBtnsAutoPlay = [
   {loc: LocCB, x: 500, y: 940}, 
   {loc: LocCB, x: 500, y: 1054},
   {loc: LocCB, x: 450, y: 1000},
-  {loc: LocCB, x: 560, y: 1000}
+  {loc: LocCB, x: 560, y: 1000},
+
+  {loc: LocCB, x: 500, y: 936}, 
+  {loc: LocCB, x: 500, y: 1060},
+  {loc: LocCB, x: 444, y: 1000},
+  {loc: LocCB, x: 566, y: 1000}
 ];
 
 var gBtnTask1 = {loc: LocLT, x: 140, y: 417, r: 144, g: 150, b: 140};
@@ -250,11 +255,11 @@ MapleM.prototype.doTasks = function() {
   if (autoPlaying) {
     this.unknownCount = 0;
   } else if (!autoPlaying) {
-    if (this.stopCount >= 5 && this.stopCount % 2 == 1) {
+    if (this.stopCount >= 6 && this.stopCount % 2 == 0) {
       console.log('click task 1');
       sleep(400);
       this.clickPoint(gBtnTask1);
-    } else if (this.stopCount == 3){
+    } else if (this.stopCount == 4){
       console.log('click task 2');
       sleep(400);
       this.clickPoint(gBtnTask2);
@@ -632,14 +637,14 @@ MapleM.prototype.isAutoPlaying = function() {
   this.updateScreenshot(true);
   var autoCheckColors = [];
   var samePointsCount = 0;
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 7; i++) {
     autoCheckColors.push(this.getPointColor(gBtnsAutoPlay[i]));
     var s = Colors.identityScore(this.autoCheckColors[i], autoCheckColors[i]);
     if (s > 0.96) {
       samePointsCount++;
     }
   }
-  if (samePointsCount >= 2) {
+  if (samePointsCount >= 5) {
     this.stopCount++;
   } else {
     this.stopCount = 0;
