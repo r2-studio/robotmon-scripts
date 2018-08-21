@@ -231,6 +231,7 @@ MapleM.prototype.doTasks = function() {
       break;
     case "black":
       this.clickPoint(gBtnSkipTask);
+      sleep(100);
       this.clickPoint(gBtnSkipTask2);
       break;
     case "pageOthers":
@@ -251,9 +252,11 @@ MapleM.prototype.doTasks = function() {
   } else if (!autoPlaying) {
     if (this.stopCount >= 5 && this.stopCount % 2 == 1) {
       console.log('click task 1');
+      sleep(400);
       this.clickPoint(gBtnTask1);
     } else if (this.stopCount == 3){
       console.log('click task 2');
+      sleep(400);
       this.clickPoint(gBtnTask2);
     }
   }
@@ -274,7 +277,7 @@ MapleM.prototype.startDoTasks = function() {
   while(this.running) {
     var startRunTime = Date.now();
     this.doTasks();
-    var sTime = 800 - (Date.now() - startRunTime);
+    var sTime = 1200 - (Date.now() - startRunTime);
     if (sTime > 0) {
       sleep(sTime);
     }
