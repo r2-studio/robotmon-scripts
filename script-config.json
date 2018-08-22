@@ -126,7 +126,7 @@
     },
     "com.r2studio.MapleM": {
       "title": "MapleM / 楓之谷M - 官方腳本",
-      "versionCode": 4,
+      "versionCode": 5,
       "description": "<h3>楓之谷M</h3><ul><li>支援自動使用HP,MP道具</li><li>傳送楓幣與經驗值訊息</li><li>1️⃣ 支援自動任務</li><li>2️⃣ 支援自動打怪(邊走邊放技能)</li><li>3️⃣ 支援自動打怪(一步一技能模式)</li></ul>",
       "packageName": "com.nexon.maplem.global",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MapleM/index.zip"
