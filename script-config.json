@@ -43,7 +43,7 @@
     },
     "com.r2studio.EZRobot": {
       "title": "EZRobot",
-      "versionCode": 5,
+      "versionCode": 6,
       "description": "<div>Make your scripts yourself</div><div>Add Color Condition ifColor/PrintColor</div>",
       "packageName": "com.r2studio.robotmon",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",

@@ -259,7 +259,7 @@
     }
 
     TAG = "EZRobot";
-    VERSION = 5;
+    VERSION = 6;
     var setting = [];
     var noSetting = 'No Setting';
 
@@ -371,18 +371,6 @@
       $("#action-dropdown-btn").text(names[0]);
       $("#action-loop").show();
     }
-
-    // function initSettings() {
-    //   if (localStorage === undefined) {
-    //     return;
-    //   }
-    //   for (var i = 0; i < localStorage.length; i++) {
-    //     if (localStorage.key(i).startsWith(TAG + '-setting-')) {
-    //       var name = localStorage.key(i).replace(TAG + '-setting-', '');
-    //       addSettingDropdown(name);
-    //     }
-    //   }
-    // }
 
     function initSettings(scripts) {
       
