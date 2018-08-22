@@ -168,7 +168,7 @@ function MapleM(config) {
   this.config = config;
   this.running = false;
   this.img = 0;
-  this.autoCheckColors = [{r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}];
+  this.autoCheckColors = [{r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}];
   this.stopCount = 0;
   this.unknownCount = 0;
   saveImage(this.updateScreenshot(true), '/sdcard/Robotmon/test.png');
