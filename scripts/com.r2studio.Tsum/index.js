@@ -1690,15 +1690,13 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
 
     // double check
-    if (this.runTimes % 4 == 0) {
-      var page = this.findPage(1, 2500);
+    var page = this.findPage(1, 2500);
+    if (page != 'GamePlaying' && page != 'GamePause') {
+      this.sleep(500);
+      page = this.findPage(1, 2500);
       if (page != 'GamePlaying' && page != 'GamePause') {
-        this.sleep(500);
-        page = this.findPage(1, 2500);
-        if (page != 'GamePlaying' && page != 'GamePause') {
-          log(this.logs.gameOver);
-          break;
-        }
+        log(this.logs.gameOver);
+        break;
       }
     }
     this.runTimes++;

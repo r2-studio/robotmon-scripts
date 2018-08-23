@@ -191,7 +191,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 43;
+      VERSION = 44;
       ASC = true;
 
       var settings = [
@@ -304,10 +304,10 @@
         ],
         [
           { title: 'Auto Send Hearts', title_zh_TW: '自動送愛心', default: false},
-          { title: 'Send to 0 score', title_zh_TW: '送心給0分', default: false},
+          { title: 'Send to 0 score', title_zh_TW: '送心給 0 分', default: false},
           {
-            title: 'Max run time(min) [0 = no limit]',
-            title_zh_TW: '執行時間上限(分)',
+            title: 'Max run time(min) [Start from the first place if time is 0]',
+            title_zh_TW: '執行時間上限(分) [0 將從第一名開始送]',
             default: 0,
             step: 5,
             max: 80,
@@ -606,10 +606,10 @@
             $('#record').html('');
           }
         });
-        $('#exportRecord').click(function(){
+        $('#exportRecordLegacy').click(function() {
           exportHTML();
         });
-        $('#exportTable').click(function(){
+        $('#exportRecordExcel').click(function() {
           $("#genTableResult").html("Please wait...");
           JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
         });
@@ -620,10 +620,10 @@
           $('#updateRecordDESC').text('更新(遞減)');
           $('#resetRecord').text('清除紀錄');
           $('#goToTop').text('回頁面頂端');
-		      $('#goToBottom').text('回頁面底端');
-          // $('#exportInfo').text('點選更新後請等待圖片的讀取，完成後再點選輸出 HTML');
-          $('#exportRecord').text('輸出 HTML');
-          $('#exportTable').text('輸出表格 (複製到Excel)');
+          $('#goToBottom').text('回頁面底端');
+          $('#exportInfo').text('輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)');
+          $('#exportRecordLegacy').text('輸出 HTML(舊版)');
+          $('#exportRecordExcel').text('輸出 HTML(Excel)');
         } else {
           $('#senders').text('List of Heart Counts');
           $('#updateRecordASC').text('Update(ASC)');
@@ -631,9 +631,9 @@
           $('#resetRecord').text('Reset Record');
           $('#goToTop').text('Go to Top');
           $('#goToBottom').text('Go to Bottom');
-          // $('#exportInfo').text('Click Update and wait for loading all images, then click Export HTML');
-          $('#exportRecord').text('Export HTML');
-          $('#exportTable').text('Export Table (Copy to Excel)');
+          $('#exportInfo').text('Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)');
+          $('#exportRecordLegacy').text('Export HTML(Legacy)');
+          $('#exportRecordExcel').text('Export HTML(Excel)');
         }
       });
 
@@ -743,9 +743,9 @@
       }
       function exportHTML() {
         if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
-          $('#exportRecord').text('輸出中');
+          $('#exportRecordLegacy').text('輸出中');
         } else {
-          $('#exportRecord').text('Exporting');
+          $('#exportRecordLegacy').text('Exporting');
         }
         var html = $('#record').html();
         html = html.replace(/\n/g, '');
@@ -754,9 +754,9 @@
       }
       function exportSuccess() {
         if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
-          $('#exportRecord').text('輸出 HTML');
+          $('#exportRecordLegacy').text('輸出 HTML(舊版)');
         } else {
-          $('#exportRecord').text('Export HTML');
+          $('#exportRecordLegacy').text('Export HTML(Legacy)');
         }
       }
     </script>
@@ -771,10 +771,12 @@
       <button id='updateRecordASC' class='btn btn-plus' style='margin-left:0px;'>Update(ASC)</button>
       <button id='updateRecordDESC' class='btn btn-plus'>Update(DESC)</button>
       <button id='resetRecord' style='float:right;' class='btn btn-danger'>Reset Record</button>
-      <button id='exportRecord' style='float:right; display: none;' class='btn btn-warning'>Export HTML</button>
-      <button id='exportTable' style='float:right;' class='btn btn-warning'>Export Table</button>
+      <br />
+      <div style='padding-top:5px;'></div>
+      <button id='exportRecordLegacy' class='btn btn-warning' style='margin-left:0px;'>Export HTML(Legacy)</button>
+      <button id='exportRecordExcel' class='btn btn-warning'>Export HTML(Excel)</button>
+      <div id='exportInfo' style='padding-top:5px;'>Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)</div>
       <div id="genTableResult" style='padding-top:5px;'></div>
-      <!-- <div id='exportInfo' style='padding-top:5px;'>Click Update and wait for loading all images, then click Export HTML</div> -->
       <br />
       <div id='record' style='padding-top:5px;'>
       </div>
