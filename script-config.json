@@ -1,9 +1,9 @@
 {
   "scripts": {
     "com.r2studio.EndlessFrontier": {
-      "title": "Endless Frontier AutoPlay",
+      "title": "Endless Frontier / 無盡的邊疆",
       "versionCode": 19,
-      "description": "<h1>無盡的邊疆自動玩</h1><ul><li>大幅提升開寶箱</li><li>修正升級全體士兵位置</li><li>修正購買勳章士兵位置</li><li>修正魔法商店位置</li></ul>",
+      "description": "<h3>無盡的邊疆自動玩</h3><ul><li>大幅提升開寶箱</li><li>修正升級全體士兵位置</li><li>修正購買勳章士兵位置</li><li>修正魔法商店位置</li></ul>",
       "packageName": "com.ekkorr.endlessfrontier.global",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EndlessFrontier/index.zip",
       "dependencies": [
@@ -12,8 +12,8 @@
     },
     "com.r2studio.Tsum": {
       "title": "Tsum Tsum AutoPlay",
-      "versionCode": 43,
-      "description": "<h1>Tsum Tsum</h1><ul><li>⭐ Supports all resolutions</li><li>⭐ New Quick Play Mode(新增快速計算模式)</li><li>Supported more skills</li><li>Bubble item</li></ul>",
+      "versionCode": 44,
+      "description": "<h3>Tsum Tsum</h3><ul><li>⭐ Supports all resolutions</li><li>⭐ New Quick Play Mode(新增快速計算模式)</li><li>Supported more skills</li><li>Bubble item</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
       "dependencies": [
@@ -21,7 +21,7 @@
       ]
     },
     "com.r2studio.MarvelFutureFight": {
-      "title": "Marvel Future Fight AutoPlay",
+      "title": "Marvel Future Fight / Marvel 未來之戰",
       "versionCode": 6,
       "packageName": "com.netmarble.mherosgb",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MarvelFutureFight/index.zip",
@@ -33,7 +33,7 @@
     "com.r2studio.LoopYT": {
       "title": "LoopYT",
       "versionCode": 9,
-      "description": "<div>自動刷Youtube影片</div>",
+      "description": "<div>自動刷 Youtube 影片</div>",
       "packageName": "com.google.android.youtube",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LoopYT/index.zip",
       "dependencies": [
@@ -53,9 +53,9 @@
       ]
     },
     "com.r2studio.LineageM": {
-      "title": "Lineage M Helper",
+      "title": "Lineage M / 天堂M 無課救星",
       "versionCode": 20.3,
-      "description": "<h1>天堂M無課救星</h1><ul><li>⭐⭐⭐大幅提升腳本速度⭐⭐⭐</li><li>支援所有螢幕解析度</li><li>自動買水買銀箭</li><li>HP 與 MP 條件設定使用按鈕</li><li>回到地圖原點</li><li>移動到指定地圖</li><li>安全區域瞬移</li><li>被攻擊瞬移</li><li>使用回卷直到安全區域</li><li>斷線重新連線</li><li>自動攻擊</li><li>自動使用解毒劑</li><li>試煉副本輔助按紐</li></ul>",
+      "description": "<h3>天堂M 無課救星</h3><ul><li>⭐⭐⭐大幅提升腳本速度⭐⭐⭐</li><li>支援所有螢幕解析度</li><li>自動買水買銀箭</li><li>HP 與 MP 條件設定使用按鈕</li><li>回到地圖原點</li><li>移動到指定地圖</li><li>安全區域瞬移</li><li>被攻擊瞬移</li><li>使用回卷直到安全區域</li><li>斷線重新連線</li><li>自動攻擊</li><li>自動使用解毒劑</li><li>試煉副本輔助按紐</li></ul>",
       "packageName": "com.gamania.lineagem",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LineageM/index.zip",
       "dependencies": [
@@ -125,9 +125,9 @@
       ]
     },
     "com.r2studio.MapleM": {
-      "title": "MapleM / 楓之谷M - 官方腳本",
+      "title": "MapleM / 楓之谷M - 官方",
       "versionCode": 5,
-      "description": "<h3>楓之谷M</h3><ul><li>支援自動使用HP,MP道具</li><li>傳送楓幣與經驗值訊息</li><li>1️⃣ 支援自動任務</li><li>2️⃣ 支援自動打怪(邊走邊放技能)</li><li>3️⃣ 支援自動打怪(一步一技能模式)</li></ul>",
+      "description": "<h3>楓之谷M</h3><ul><li>1️⃣ 支援自動任務</li><li>2️⃣ 支援自動打怪(邊走邊放技能)</li><li>3️⃣ 支援自動打怪(一步一技能模式)</li><li>4️⃣ 支援自動使用HP和MP道具</li><li>5️⃣ 傳送楓幣與經驗值訊息</li></ul>",
       "packageName": "com.nexon.maplem.global",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MapleM/index.zip"
     }
