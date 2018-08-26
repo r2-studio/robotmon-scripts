@@ -179,6 +179,7 @@ function MapleM(config) {
   this.tmpImg1 = 0;
   this.tmpImg2 = 0;
   this.sendMessageTime = 0;
+  this.attackStop = 0;
 }
 
 MapleM.prototype.updateScreenshot = function(update) {
@@ -345,17 +346,24 @@ MapleM.prototype.autoPlayContinue = function() {
   this.moveCount++;
   if (this.moveCount > 5) {
     sleep(100);
-    var img1 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    var img1 = getScreenshotModify(gUserScreenWidth - 40, gUserScreenHeight - 30, 40, 30, 40, 30, 100);
     sleep(this.config.apStepDelay);
-    var img2 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    var img2 = getScreenshotModify(gUserScreenWidth - 40, gUserScreenHeight - 30, 40, 30, 40, 30, 100);
     var score = getIdentityScore(img1, img2);
-    // console.log(score);
+    console.log(score);
     releaseImage(img1);
     releaseImage(img2);
     if (score > 0.99) {
       this.direct = (this.direct === 'right') ? 'changeToLeft' : 'changeToRight';
       console.log(this.direct, this.moveCount);
       this.moveCount = 0;
+      this.attackStop++;
+    } else {
+      this.attackStop = 0;
+    }
+    if (this.attackStop > 3) {
+      keycode('BACK', 20);
+      this.attackStop = 0;
     }
   } else {
     sleep(this.config.apStepDelay);
@@ -408,13 +416,22 @@ MapleM.prototype.autoPlayStep = function() {
 
   var score = 0;
   if (this.moveCount > 5) {
-    var img1 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
-    sleep(this.config.apStepDelay + 800);
-    var img2 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    var img1 = getScreenshotModify(gUserScreenWidth - 40, gUserScreenHeight - 30, 40, 30, 40, 30, 100);
+    sleep(this.config.apStepDelay + 400);
+    var img2 = getScreenshotModify(gUserScreenWidth - 40, gUserScreenHeight - 30, 40, 30, 40, 30, 100);
     score = getIdentityScore(img1, img2);
     console.log(score);
     releaseImage(img1);
     releaseImage(img2);
+    if (score > 0.99) {
+      this.attackStop++;
+    } else {
+      this.attackStop = 0;
+    }
+    if (this.attackStop > 3) {
+      keycode('BACK', 20);
+      this.attackStop = 0;
+    }
   } else {
     sleep(this.config.apStepDelay + 800);
   }
@@ -543,6 +560,11 @@ MapleM.prototype.startAutoAttackMini = function() {
     this.clickPoint(gBtnsSkill[2]);
     sleep(1000);
 
+    if (i % 7 == 0) {
+      this.clickPoint(gBtnsSkill[2]);
+      sleep(1000);
+    }
+
     this.tapDown(gBtnUp, 1);
     sleep(1000);
     this.clickPoint(gBtnsSkill[0]);
@@ -563,6 +585,13 @@ MapleM.prototype.startAutoAttackMini = function() {
     sleep(500);
     this.clickPoint(gBtnsSkill[2]);
     sleep(1000);
+
+    if (i % 23 == 0) {
+      this.clickPoint(gBtnJump);
+      sleep(800);
+      this.clickPoint(gBtnsSkill[2]);
+      sleep(1000);
+    }
 
     this.tapDown(gBtnDown, 1);
     sleep(1000);
@@ -694,7 +723,7 @@ var DEFAULT_CONFIG = {
     {delay: 2000, during: 20},
     {delay: 12*1000, during: 20},
     {delay: 1000, during: 1300},
-    {delay: 10*60*1000, during: 20},
+    {delay: 62*1000, during: 20},
     {delay: 30*1000, during: 20},
   ],
   useItemHP: 70,
