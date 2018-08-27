@@ -293,15 +293,15 @@ MapleM.prototype.startDoTasks = function() {
 
 MapleM.prototype.useSecondSkills = function() {
   console.log('Use second skills');
-  this.sleep(1500);
+  sleep(1600);
   this.clickPoint(gBtnChange);
   for (var i = 0; i < 5; i++) {
-    this.sleep(1000);
+    sleep(1600);
     this.clickPoint(gBtnsSkill[i]);
-    this.sleep(300);
+    sleep(500);
     this.clickPoint(gBtnsSkill[i]);
   }
-  this.sleep(1500);
+  sleep(1600);
   this.clickPoint(gBtnChange);
 }
 
@@ -757,7 +757,7 @@ var DEFAULT_CONFIG = {
   ],
   useItemHP: 70,
   useItemMp: 70,
-  useSecondSkills: false,
+  useSecondSkills: true,
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
