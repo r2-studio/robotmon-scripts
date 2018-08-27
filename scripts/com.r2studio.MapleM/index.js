@@ -180,6 +180,7 @@ function MapleM(config) {
   this.tmpImg2 = 0;
   this.sendMessageTime = 0;
   this.attackStop = 0;
+  this.secondSkillUsedTime = 0;
 }
 
 MapleM.prototype.updateScreenshot = function(update) {
@@ -205,7 +206,7 @@ MapleM.prototype.getPointColor = function(point, img) {
 
 MapleM.prototype.clickPoint = function(point) {
   var xy = devToUserXY(point, point.loc);
-  tap(xy.x, xy.y, 20);
+  tap(xy.x, xy.y, 50);
 }
 
 MapleM.prototype.tapDown = function(point, id) {
@@ -290,10 +291,28 @@ MapleM.prototype.startDoTasks = function() {
   }
 }
 
+MapleM.prototype.useSecondSkills = function() {
+  console.log('Use second skills');
+  this.sleep(1500);
+  this.clickPoint(gBtnChange);
+  for (var i = 0; i < 5; i++) {
+    this.sleep(1000);
+    this.clickPoint(gBtnsSkill[i]);
+    this.sleep(300);
+    this.clickPoint(gBtnsSkill[i]);
+  }
+  this.sleep(1500);
+  this.clickPoint(gBtnChange);
+}
+
 MapleM.prototype.autoPlayContinue = function() {
   if (this.direct === 'changeToRight') {
     this.tapUp(gBtnLeft, 1);
     this.sendMessage();
+    if (this.config.useSecondSkills && Date.now() - this.secondSkillUsedTime > 1200000) {
+      this.useSecondSkills();
+      this.secondSkillUsedTime = Date.now();
+    }
     sleep(800);
     this.tapDown(gBtnRight, 1);
     this.moveCount = 0;
@@ -317,13 +336,15 @@ MapleM.prototype.autoPlayContinue = function() {
   var now = Date.now();
   var useSkill = undefined;
   var useSkillBtn = 0;
+  var maxInterval = 0; // for selecting non use skill
   for (var i in this.config.apUseSkillsTime) {
     var skill = this.config.apUseSkillsTime[i];
     var lastUseTime = skill.lastUseTime || 0;
     if (skill.delay === 0) {
       continue;
     }
-    if (now - lastUseTime > skill.delay) {
+    var interval = now - lastUseTime;
+    if (interval > skill.delay && interval >= maxInterval) {
       if (useSkill === undefined) {
         useSkill = skill;
         useSkillBtn = i;
@@ -331,6 +352,7 @@ MapleM.prototype.autoPlayContinue = function() {
         useSkill = skill;
         useSkillBtn = i;
       }
+      maxInterval = interval;
     }
   }
   if (useSkill === undefined) {
@@ -372,16 +394,22 @@ MapleM.prototype.autoPlayContinue = function() {
 }
 
 MapleM.prototype.autoPlayStep = function() {
+  if (this.config.useSecondSkills && Date.now() - this.secondSkillUsedTime > 1200000) {
+    this.useSecondSkills();
+    this.secondSkillUsedTime = Date.now();
+  }
   var now = Date.now();
   var useSkill = undefined;
   var useSkillBtn = 0;
+  var maxInterval = 0; // for selecting non use skill
   for (var i in this.config.apUseSkillsTime) {
     var skill = this.config.apUseSkillsTime[i];
     var lastUseTime = skill.lastUseTime || 0;
     if (skill.delay === 0) {
       continue;
     }
-    if (now - lastUseTime > skill.delay) {
+    var interval = now - lastUseTime;
+    if (interval > skill.delay && interval >= maxInterval) {
       if (useSkill === undefined) {
         useSkill = skill;
         useSkillBtn = i;
@@ -389,6 +417,7 @@ MapleM.prototype.autoPlayStep = function() {
         useSkill = skill;
         useSkillBtn = i;
       }
+      maxInterval = interval;
     }
   }
   if (useSkill === undefined) {
@@ -728,6 +757,7 @@ var DEFAULT_CONFIG = {
   ],
   useItemHP: 70,
   useItemMp: 70,
+  useSecondSkills: false,
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
