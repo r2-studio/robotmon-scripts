@@ -40,7 +40,7 @@ function selectStage(useApple){
     releaseImage(markResize);
     */
     tapScale(1600,475,100);
-    sleep(1000);
+    sleep(2000);
     var screenShot = getScreenshot();
     if(checkImage(screenShot,stageFullImage,650,300,1200,250)){
         console.log("item box full");
@@ -54,8 +54,8 @@ function selectStage(useApple){
         isScriptRunning = false;
         return;
     }
-    if(checkImage(screenShot,noApImage,900,70,750,110)){
-        sleep(1000);
+    else if(checkImage(screenShot,noApImage,900,70,750,110)){
+        sleep(2000);
         switch(useApple){
             case -1:
             isScriptRunning = false;
@@ -123,22 +123,22 @@ function selectStage(useApple){
             return;
         }
         releaseImage(screenShot2);
-        if(useApple != 4){
+        if(useApple > 0 && useApple < 4){
             tapScale(1700,1135,100);
             sleep(2000);
             if(server == "TW"){
                 while(true){
-                    tapScale(1600,475,100);
-                    sleep(1000);
                     if(!isScriptRunning){
                         return;
                     }
+                    sleep(2000);
                     var screenShot3 = getScreenshot();
                     if(checkImage(screenShot3,selectFriendImage,1340,200,420,100)){
                         releaseImage(screenShot3);
                         break;
                     }
                     releaseImage(screenShot3);
+                    tapScale(1600,475,100);
                 }
             }
         }
