@@ -176,7 +176,7 @@
     }
 
     TAG = "MapleM";
-    VERSION = 5;
+    VERSION = 6;
     DEFAULT_CONFIG = {
       task: 'autoAttackContinue', // doTasks, autoAttackContinue, autoAttackStep, autoUseItem
       apJump: false,
@@ -191,6 +191,7 @@
       ],
       useItemHP: 60,
       useItemMP: 60,
+      useSecondSkills: false,
     };
     var settings;
 
@@ -212,6 +213,7 @@
     function initView() {
       $('input:radio[name="task"]').filter('[value="' + settings.task + '"]').attr('checked', true);
       $('input:radio[name="apJump"]').filter('[value="' + settings.apJump + '"]').attr('checked', true);
+      $('input:radio[name="useSecondSkills"]').filter('[value="' + settings.useSecondSkills + '"]').attr('checked', true);
       $('input:text[name="apStepDelay"]').val(settings.apStepDelay);
       $('input:text[name="useItemHP"]').val(settings.useItemHP);
       $('input:text[name="useItemMP"]').val(settings.useItemMP);
@@ -230,6 +232,7 @@
     function onValueChange() {
       settings.task = $('input:radio[name="task"]:checked').val();
       settings.apJump = $('input:radio[name="apJump"]:checked').val() === 'true' ? true : false;
+      settings.useSecondSkills = $('input:radio[name="useSecondSkills"]:checked').val() === 'true' ? true : false;
       settings.apStepDelay = +$('input:text[name="apStepDelay"]').val();
       settings.useItemHP = +$('input:text[name="useItemHP"]').val();
       settings.useItemMP = +$('input:text[name="useItemMP"]').val();
@@ -327,6 +330,10 @@
         是否跳躍 (allow jump)
         <input name="apJump" type="radio" value="true" />是 (yes)
         <input name="apJump" type="radio" value="false" />否 (no)
+        <br />
+        使用第二頁技能(每20分鐘) (Use another skill page, every 20 minutes)
+        <input name="useSecondSkills" type="radio" value="true" />是 (yes)
+        <input name="useSecondSkills" type="radio" value="false" />否 (no)
         <br />
         走路時間 (walking duration)
         <input name="apStepDelay" type="text" value="800" size="10"/>(毫秒)

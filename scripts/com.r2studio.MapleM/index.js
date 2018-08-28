@@ -179,6 +179,8 @@ function MapleM(config) {
   this.tmpImg1 = 0;
   this.tmpImg2 = 0;
   this.sendMessageTime = 0;
+  this.attackStop = 0;
+  this.secondSkillUsedTime = 0;
 }
 
 MapleM.prototype.updateScreenshot = function(update) {
@@ -204,7 +206,7 @@ MapleM.prototype.getPointColor = function(point, img) {
 
 MapleM.prototype.clickPoint = function(point) {
   var xy = devToUserXY(point, point.loc);
-  tap(xy.x, xy.y, 20);
+  tap(xy.x, xy.y, 50);
 }
 
 MapleM.prototype.tapDown = function(point, id) {
@@ -289,10 +291,28 @@ MapleM.prototype.startDoTasks = function() {
   }
 }
 
+MapleM.prototype.useSecondSkills = function() {
+  console.log('Use second skills');
+  sleep(1600);
+  this.clickPoint(gBtnChange);
+  for (var i = 0; i < 5; i++) {
+    sleep(1600);
+    this.clickPoint(gBtnsSkill[i]);
+    sleep(500);
+    this.clickPoint(gBtnsSkill[i]);
+  }
+  sleep(1600);
+  this.clickPoint(gBtnChange);
+}
+
 MapleM.prototype.autoPlayContinue = function() {
   if (this.direct === 'changeToRight') {
     this.tapUp(gBtnLeft, 1);
     this.sendMessage();
+    if (this.config.useSecondSkills && Date.now() - this.secondSkillUsedTime > 1200000) {
+      this.useSecondSkills();
+      this.secondSkillUsedTime = Date.now();
+    }
     sleep(800);
     this.tapDown(gBtnRight, 1);
     this.moveCount = 0;
@@ -316,13 +336,15 @@ MapleM.prototype.autoPlayContinue = function() {
   var now = Date.now();
   var useSkill = undefined;
   var useSkillBtn = 0;
+  var maxInterval = 0; // for selecting non use skill
   for (var i in this.config.apUseSkillsTime) {
     var skill = this.config.apUseSkillsTime[i];
     var lastUseTime = skill.lastUseTime || 0;
     if (skill.delay === 0) {
       continue;
     }
-    if (now - lastUseTime > skill.delay) {
+    var interval = now - lastUseTime;
+    if (interval > skill.delay && interval >= maxInterval) {
       if (useSkill === undefined) {
         useSkill = skill;
         useSkillBtn = i;
@@ -330,6 +352,7 @@ MapleM.prototype.autoPlayContinue = function() {
         useSkill = skill;
         useSkillBtn = i;
       }
+      maxInterval = interval;
     }
   }
   if (useSkill === undefined) {
@@ -345,17 +368,24 @@ MapleM.prototype.autoPlayContinue = function() {
   this.moveCount++;
   if (this.moveCount > 5) {
     sleep(100);
-    var img1 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    var img1 = getScreenshotModify(gUserScreenWidth - 40, gUserScreenHeight - 30, 40, 30, 40, 30, 100);
     sleep(this.config.apStepDelay);
-    var img2 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    var img2 = getScreenshotModify(gUserScreenWidth - 40, gUserScreenHeight - 30, 40, 30, 40, 30, 100);
     var score = getIdentityScore(img1, img2);
-    // console.log(score);
+    console.log(score);
     releaseImage(img1);
     releaseImage(img2);
     if (score > 0.99) {
       this.direct = (this.direct === 'right') ? 'changeToLeft' : 'changeToRight';
       console.log(this.direct, this.moveCount);
       this.moveCount = 0;
+      this.attackStop++;
+    } else {
+      this.attackStop = 0;
+    }
+    if (this.attackStop > 3) {
+      keycode('BACK', 20);
+      this.attackStop = 0;
     }
   } else {
     sleep(this.config.apStepDelay);
@@ -364,16 +394,22 @@ MapleM.prototype.autoPlayContinue = function() {
 }
 
 MapleM.prototype.autoPlayStep = function() {
+  if (this.config.useSecondSkills && Date.now() - this.secondSkillUsedTime > 1200000) {
+    this.useSecondSkills();
+    this.secondSkillUsedTime = Date.now();
+  }
   var now = Date.now();
   var useSkill = undefined;
   var useSkillBtn = 0;
+  var maxInterval = 0; // for selecting non use skill
   for (var i in this.config.apUseSkillsTime) {
     var skill = this.config.apUseSkillsTime[i];
     var lastUseTime = skill.lastUseTime || 0;
     if (skill.delay === 0) {
       continue;
     }
-    if (now - lastUseTime > skill.delay) {
+    var interval = now - lastUseTime;
+    if (interval > skill.delay && interval >= maxInterval) {
       if (useSkill === undefined) {
         useSkill = skill;
         useSkillBtn = i;
@@ -381,6 +417,7 @@ MapleM.prototype.autoPlayStep = function() {
         useSkill = skill;
         useSkillBtn = i;
       }
+      maxInterval = interval;
     }
   }
   if (useSkill === undefined) {
@@ -408,13 +445,22 @@ MapleM.prototype.autoPlayStep = function() {
 
   var score = 0;
   if (this.moveCount > 5) {
-    var img1 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
-    sleep(this.config.apStepDelay + 800);
-    var img2 = getScreenshotModify(gUserScreenWidth - 30, gUserScreenHeight - 30, 30, 20, 20, 20, 100);
+    var img1 = getScreenshotModify(gUserScreenWidth - 40, gUserScreenHeight - 30, 40, 30, 40, 30, 100);
+    sleep(this.config.apStepDelay + 400);
+    var img2 = getScreenshotModify(gUserScreenWidth - 40, gUserScreenHeight - 30, 40, 30, 40, 30, 100);
     score = getIdentityScore(img1, img2);
     console.log(score);
     releaseImage(img1);
     releaseImage(img2);
+    if (score > 0.99) {
+      this.attackStop++;
+    } else {
+      this.attackStop = 0;
+    }
+    if (this.attackStop > 3) {
+      keycode('BACK', 20);
+      this.attackStop = 0;
+    }
   } else {
     sleep(this.config.apStepDelay + 800);
   }
@@ -543,6 +589,11 @@ MapleM.prototype.startAutoAttackMini = function() {
     this.clickPoint(gBtnsSkill[2]);
     sleep(1000);
 
+    if (i % 7 == 0) {
+      this.clickPoint(gBtnsSkill[2]);
+      sleep(1000);
+    }
+
     this.tapDown(gBtnUp, 1);
     sleep(1000);
     this.clickPoint(gBtnsSkill[0]);
@@ -563,6 +614,13 @@ MapleM.prototype.startAutoAttackMini = function() {
     sleep(500);
     this.clickPoint(gBtnsSkill[2]);
     sleep(1000);
+
+    if (i % 23 == 0) {
+      this.clickPoint(gBtnJump);
+      sleep(800);
+      this.clickPoint(gBtnsSkill[2]);
+      sleep(1000);
+    }
 
     this.tapDown(gBtnDown, 1);
     sleep(1000);
@@ -694,11 +752,12 @@ var DEFAULT_CONFIG = {
     {delay: 2000, during: 20},
     {delay: 12*1000, during: 20},
     {delay: 1000, during: 1300},
-    {delay: 10*60*1000, during: 20},
+    {delay: 62*1000, during: 20},
     {delay: 30*1000, during: 20},
   ],
   useItemHP: 70,
   useItemMp: 70,
+  useSecondSkills: true,
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
