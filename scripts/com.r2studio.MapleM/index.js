@@ -383,9 +383,13 @@ MapleM.prototype.autoPlayContinue = function() {
     } else {
       this.attackStop = 0;
     }
-    if (this.attackStop > 3) {
-      keycode('BACK', 20);
-      this.attackStop = 0;
+
+    var t = Date.now() - new Date().getTimezoneOffset() * 60000;
+    if (t % 86400000 < 180000) {
+      if (this.attackStop > 3) {
+        keycode('BACK', 20);
+        this.attackStop = 0;
+      }
     }
   } else {
     sleep(this.config.apStepDelay);
@@ -457,9 +461,13 @@ MapleM.prototype.autoPlayStep = function() {
     } else {
       this.attackStop = 0;
     }
-    if (this.attackStop > 3) {
-      keycode('BACK', 20);
-      this.attackStop = 0;
+    var d = new Date();
+    var t = d.now() - d.getTimezoneOffset()*60000;
+    if (t % 86400000 < 180000) {
+      if (this.attackStop > 3) {
+        keycode('BACK', 20);
+        this.attackStop = 0;
+      }
     }
   } else {
     sleep(this.config.apStepDelay + 800);
