@@ -179,7 +179,6 @@ function MapleM(config) {
   this.tmpImg1 = 0;
   this.tmpImg2 = 0;
   this.sendMessageTime = 0;
-  this.attackStop = 0;
   this.secondSkillUsedTime = 0;
 }
 
@@ -379,13 +378,6 @@ MapleM.prototype.autoPlayContinue = function() {
       this.direct = (this.direct === 'right') ? 'changeToLeft' : 'changeToRight';
       console.log(this.direct, this.moveCount);
       this.moveCount = 0;
-      this.attackStop++;
-    } else {
-      this.attackStop = 0;
-    }
-    if (this.attackStop > 3) {
-      keycode('BACK', 20);
-      this.attackStop = 0;
     }
   } else {
     sleep(this.config.apStepDelay);
@@ -452,15 +444,6 @@ MapleM.prototype.autoPlayStep = function() {
     console.log(score);
     releaseImage(img1);
     releaseImage(img2);
-    if (score > 0.99) {
-      this.attackStop++;
-    } else {
-      this.attackStop = 0;
-    }
-    if (this.attackStop > 3) {
-      keycode('BACK', 20);
-      this.attackStop = 0;
-    }
   } else {
     sleep(this.config.apStepDelay + 800);
   }
