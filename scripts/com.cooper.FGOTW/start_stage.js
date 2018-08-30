@@ -4,6 +4,7 @@ function selectStage(useApple){
     if(!isScriptRunning){
         return;
     }
+    console.log("selectStage");
     /*
     var swimFlag = true;
     var waitSwimAnimation = false;
@@ -58,6 +59,7 @@ function selectStage(useApple){
         sleep(2000);
         switch(useApple){
             case -1:
+            console.log("Ap not enough, stop script");
             isScriptRunning = false;
             releaseImage(screenShot);
             return;
@@ -123,7 +125,7 @@ function selectStage(useApple){
             return;
         }
         releaseImage(screenShot2);
-        if(useApple > 0 && useApple < 4){
+        if(useApple >= 0 && useApple < 4){
             tapScale(1700,1135,100);
             sleep(2000);
             if(server == "TW"){

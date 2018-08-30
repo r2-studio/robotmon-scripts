@@ -101,15 +101,15 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 1.28,
-      "description": "<div>V1.28修正FQ會回到上一頁與泳裝小莫寶具會誤判關卡結束的bug<br><br>V1.24提升效能並修正各種會造成腳本卡住的bug<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 1.31,
+      "description": "<div>V1.31 修正搜尋好友<br><br>V1.24提升效能並修正各種會造成腳本卡住的bug<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 1.31,
-      "description": "<div>V1.31 嘗試解決卡在隊伍畫面的bug<br><br>V1.30緊急更新 Robotmon最新4.2版造成的變動，使用此版請先更新Robotmon app並重新啟動Robotmon Service<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 1.32,
+      "description": "<div>V1.32 修正Battle 3辨識錯誤的問題<br><br>V1.30緊急更新 Robotmon最新4.2版造成的變動，使用此版請先更新Robotmon app並重新啟動Robotmon Service<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
