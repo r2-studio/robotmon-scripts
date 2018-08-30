@@ -394,7 +394,7 @@ function finishQuest(){
                     sleep(3000);
                     var screenShot4 = getScreenshot();
                     if(!checkImage(screenShot4,finishStageImage[0],2280,1340,190,55)){
-                        sendUrgentMessage(runningScriptName,"Get new craft");
+                        //sendUrgentMessage(runningScriptName,"Get new craft");
                         console.log("Get new craft");
                         tapScale(90,80,100);
                     }
