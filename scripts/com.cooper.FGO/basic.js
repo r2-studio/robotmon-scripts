@@ -1,4 +1,4 @@
-var version = "V1.28";
+var version = "V1.31";
 var isDebug = false;
 //image
 var noApImage;
@@ -84,10 +84,10 @@ function startScript(loopTime,script,scriptName){
         }
         if(next == 0){
             console.log("Start script");
-        sendNormalMessage (runningScriptName, "Start loop");
+            sendNormalMessage (runningScriptName, "Start loop");
         }else{
             console.log("Start script loop "+(loop+1)+"/"+loopTime);
-        sendNormalMessage (runningScriptName, "Start loop "+(loop+1)+"/"+loopTime);
+            sendNormalMessage (runningScriptName, "Start loop "+(loop+1)+"/"+loopTime);
         }
         runScript(script);
     }
@@ -462,10 +462,13 @@ function swipeScale(x,y,endX,endY,step){
     tapDown(x, y, 40);
     //avoid outside loop i
     for (var s = 0; s < step; s ++) {
+        if(!isScriptRunning){
+          break;
+        }
         moveTo(x + s * xStep, y + s * yStep, 4)
     }
     moveTo(endX,endY,4);
-    sleep(1000);
+    sleep(1500);
     tapUp(endX, endY)
 }
 
