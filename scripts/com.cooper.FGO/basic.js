@@ -1,4 +1,4 @@
-var version = "V1.31";
+var version = "V1.33";
 var isDebug = false;
 //image
 var noApImage;
@@ -54,6 +54,8 @@ var updateCardListOffsetWeakX;
 var updateCardListOffsetWeakY;
 var currentStageX;
 var currentStageY;
+var currentStageW;
+var currentStageH;
 var selectFriendPosition;
 
 
@@ -283,6 +285,8 @@ function initPosition(){
 
         currentStageX = 1720;
         currentStageY = 25;
+        currentStageW = 50;
+        currentStageH = 50;
 
         selectFriendPosition = [180,315,450,585,725,860,995,1130,1265];
     }
@@ -297,8 +301,10 @@ function initPosition(){
         updateCardListOffsetWeakX = 224;
         updateCardListOffsetWeakY = [-310,-340];
 
-        currentStageX = 1737;
+        currentStageX = 1747;
         currentStageY = 25;
+        currentStageW = 30;
+        currentStageH = 50;
 
         selectFriendPosition = [315,450,585,725,860,995,1130,1265];
     }
