@@ -368,7 +368,7 @@ function isQuestFinish(){
     var sameImage = [-1,-1];
     for(var j = 0;j<2;j++){
         var screenShot = getScreenshot();
-        for(var i = 0;i<11;i++){
+        for(var i = 0;i<10;i++){
             if(!isScriptRunning){
                 return -1;
             }
