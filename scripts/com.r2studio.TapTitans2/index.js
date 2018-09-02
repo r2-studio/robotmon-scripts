@@ -623,7 +623,8 @@ var GameAssistant = function () {
 
         this.checkRandomSleep(3);
 
-        console.log('check testPrestige');
+        console.log('check ingame then testPrestige');
+        this.checkInGame();
         this.testPrestige();
 
         //console.log('time: ', Math.floor((Date.now() - startTime)/1000/60), 'm', Math.floor(((Date.now() - startTime)/1000)%60), 's, of', this.gInfo.prestigeTime / 60, 'mins');
