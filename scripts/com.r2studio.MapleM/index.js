@@ -133,6 +133,11 @@ var gItemHP = {loc: LocRB, x: 1730, y: 580};
 var gItemMP = {loc: LocRB, x: 1850, y: 580};
 var gMenu1 = {loc: LocRB, x: 1180, y: 0};
 var gMenu2 = {loc: LocRB, x: 1920, y: 80};
+var gMenuBtn = {loc: LocRT, x: 1850, y: 60};
+var gQuickStoreBtn = {loc: LocFull, x: 280, y: 980};
+var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
+var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
+var gTreasureBtn = {loc: LocLT, x: 128, y: 460};
 
 var gPages = {
   moving: {name: "moving", points: [
@@ -190,6 +195,184 @@ function MapleM(config) {
   this.secondSkillUsedTime = 0;
 }
 
+MapleM.prototype.autoBuy = function() {
+  this.running = true;
+  this.clickPoint(gMenuBtn);
+  sleep(1000);
+
+  this.clickPoint(gQuickStoreBtn);
+  sleep(1000);
+  this.clickPoint(gMoneyStoreBtn);
+  sleep(4000);
+  this.clickPoint(gTreasureBtn);
+  sleep(3000);
+
+  console.log('購買11次');
+  this.clickPoint({loc: LocFull, x: 660, y: 960});
+  sleep(3000);
+
+  for (var i = 0; i < 10 && this.running; i++) {
+    console.log('確認購買');
+    this.clickPoint({loc: LocFull, x: 1241, y: 803});
+    sleep(4000);
+    this.updateScreenshot(true);
+    var isPointColor = this.isPointColor({loc: LocFull,x: 1094, y: 790, r: 247, g: 122, b: 76});
+    if (isPointColor) {
+      console.log('背包已滿');
+      keycode('BACK'); sleep(1000);
+      break;
+    }
+    sleep(2000);
+    this.waitForChangePointColor({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76}, 12000);
+    console.log('全部開啟');
+    this.clickPoint({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76});
+    sleep(6000);
+    console.log('再試一次');
+    this.clickPoint({loc: LocFull, x: 876, y: 945, r: 84, g: 174, b: 162});
+    sleep(2000);
+  }
+  console.log('離開');
+  keycode('BACK'); sleep(1000);
+  keycode('BACK'); sleep(1000);
+
+  this.clickPoint({loc: LocFull, x: 1090, y: 90});
+  this.waitForChangePointColor({loc: LocFull, x: 665, y: 990, r: 247, g: 252, b: 246}, 10000);
+  
+  // attack
+  console.log('第一把武器');
+  this.clickPoint({loc: LocFull, x: 1184, y: 321}); // first equip
+  sleep(1500);
+  console.log('自動選擇');
+  this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
+  sleep(1500);
+  console.log('選擇');
+  this.clickPoint({loc: LocFull, x: 1036, y: 970});
+  sleep(1500);
+  console.log('等待選擇');
+  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 5000);
+  console.log('確認');
+  this.clickPoint({loc: LocFull, x: 1024, y: 996});
+  sleep(1500);
+  console.log('等待動畫');
+  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 5000);
+  console.log('完成');
+  this.clickPoint({loc: LocFull, x: 1036, y: 970});
+  sleep(2500);
+  console.log('移除武器');
+  this.clickPoint({loc: LocFull, x: 420, y: 240}); // current equip
+  sleep(2500);
+
+  // armor
+  console.log('防具');
+  this.clickPoint({loc: LocFull, x: 1340, y: 200}); // armor
+  sleep(2000);
+  console.log('尋找橘防具');
+  // find target
+  this.findOrangeEquip();
+  console.log('自動選擇');
+  this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
+  sleep(1500);
+  console.log('選擇史詩');
+  this.clickPoint({loc: LocFull, x: 1235, y: 681}); // 史詩
+  sleep(1500);
+  console.log('選擇');
+  this.clickPoint({loc: LocFull, x: 1036, y: 970});
+  sleep(3000);
+  console.log('等待選擇');
+  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 5000);
+  console.log('確認');
+  this.clickPoint({loc: LocFull, x: 1024, y: 996});
+  sleep(3000);
+  console.log('等待動畫');
+  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 5000);
+  console.log('完成');
+  this.clickPoint({loc: LocFull, x: 1036, y: 970});
+  sleep(3000);
+
+  console.log('自動選擇');
+  this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
+  sleep(1500);
+  console.log('選擇');
+  this.clickPoint({loc: LocFull, x: 1036, y: 970});
+  sleep(3000);
+  console.log('等待選擇');
+  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 5000);
+  console.log('確認');
+  this.clickPoint({loc: LocFull, x: 1024, y: 996});
+  sleep(2000);
+  console.log('等待動畫');
+  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 5000);
+  this.clickPoint({loc: LocFull, x: 1036, y: 970});
+  sleep(3000);
+
+  this.clickPoint({loc: LocFull, x: 420, y: 240}); // current equip
+  sleep(2000);
+
+  keycode('BACK'); sleep(1000);
+  keycode('BACK'); sleep(1000);
+}
+
+MapleM.prototype.findOrangeEquip = function() {
+  this.running = true;
+  var xs = [1180, 1340, 1500, 1650, 1810];
+  var cs = [{r: 149, g: 156, b: 149}, {r: 62, g: 146, b: 210}, {r: 144, g: 100, b: 192}, {r: 226, g: 151, b: 70}];
+
+  var isFound = false;
+  var ex = 0;
+  var ey = 0;
+  for (var page = 0; page < 6 && this.running; page++) {
+    console.log('page', page);
+    this.updateScreenshot(true);
+    for (var i = 0; i < 5 && this.running; i++) {
+      for (var y = 256; y < 900 && this.running; y+=2) {
+        for (var c = 0; c < 4 && this.running; c++) {
+          var color = cs[c];
+          var p1 = {loc: LocFull, x: xs[i], y: y, r: color.r, g: color.g, b: color.b};
+          var p2 = {loc: LocFull, x: xs[i], y: y+138, r: color.r, g: color.g, b: color.b};
+          var p22 = {loc: LocFull, x: xs[i], y: y+140, r: color.r, g: color.g, b: color.b};
+          var p3 = {loc: LocFull, x: xs[i] + 24, y: y, r: color.r, g: color.g, b: color.b};
+          var isp1 = this.isPointColor(p1);
+          var isp2 = this.isPointColor(p2);
+          var isp22 = this.isPointColor(p22);
+          var isp3 = this.isPointColor(p3);
+          if (c === 3 && isp1 && (isp2 || isp22) && isp3) {
+            console.log('Found');
+            ex = xs[i];
+            ey = y+69;
+            isFound = true;
+            break;
+          } else if (isp1 && isp3) {
+            // console.log('jump', c, y);
+            y += 154;
+          }
+        }
+        if (isFound) {break;}
+      }
+      if (isFound) {break;}
+    }
+    if (!isFound) {
+      this.tapDown({loc: LocFull, x: 1500, y: 870}, 0);
+      sleep(300);
+      this.moveTo({loc: LocFull, x: 1500, y: 700}, 0);
+      sleep(300);
+      this.moveTo({loc: LocFull, x: 1500, y: 500}, 0);
+      sleep(300);
+      this.moveTo({loc: LocFull, x: 1500, y: 300}, 0);
+      sleep(300);
+      this.moveTo({loc: LocFull, x: 1500, y: 205}, 0);
+      sleep(800);
+      this.tapUp({loc: LocFull, x: 1500, y: 205}, 0);
+    }
+    if (isFound) {break;}
+  }
+  if (!isFound) {
+    return false;
+  }
+  this.clickPoint({loc: LocFull, x: ex, y: ey});
+  sleep(1500);
+  return true;
+}
+
 MapleM.prototype.updateScreenshot = function(update) {
   if (update || this.img === 0) {
     if (this.img !== 0) {
@@ -200,6 +383,7 @@ MapleM.prototype.updateScreenshot = function(update) {
   return this.img;
 }
 
+
 MapleM.prototype.getPointColor = function(point, img) {
   if (img === undefined) {
     img = this.img;
@@ -209,6 +393,16 @@ MapleM.prototype.getPointColor = function(point, img) {
   var c = getImageColor(img, xy.x, xy.y);
   // console.log(xy.x, xy.y, c.r, c.g, c.b);
   return c;
+}
+
+MapleM.prototype.isPointColor = function(point, img) {
+  var c = this.getPointColor(point, img);
+  var s = Colors.identityScore(c, point);
+  // console.log(s, c.r, c.g, c.b);
+  if (s > 0.95) {
+    return true;
+  }
+  return false;
 }
 
 MapleM.prototype.clickPoint = function(point) {
@@ -521,6 +715,22 @@ MapleM.prototype.waitForChange = function() {
     sleep(1000);
   }
   releaseImage(imgOrigin);
+}
+
+MapleM.prototype.waitForChangePointColor = function(point, maxWaitTime) {
+  var start = Date.now();
+  for (var i = 0; i < 10; i++) {
+    this.updateScreenshot(true);
+    var isPointColor = this.isPointColor(point);
+    if (isPointColor) {
+      return true;
+    }
+    if (Date.now() - start > maxWaitTime) {
+      return false;
+    }
+    sleep(500);
+  }
+  return false;
 }
 
 MapleM.prototype.sendMessage = function() {
