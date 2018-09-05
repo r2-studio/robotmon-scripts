@@ -175,10 +175,10 @@ var Page = {
   FriendPage: {
     name: 'FriendPage',
     colors: [
-      {x: 547, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
-      {x: 860, y: 1505 + adjY, r: 238, g: 189, b: 11 , match: true, threshold: 80},
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 547, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 860, y: 1505 + adjY, r: 238, g: 189, b: 11 , match: true, threshold: 80}, // top of the myTsum button
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -186,10 +186,32 @@ var Page = {
   FriendPage2: {
     name: 'FriendPage',
     colors: [
-      {x: 547, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80},
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80},
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80},
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 547, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+    ],
+    back: {x: 547, y: 1581 + adjY},
+    next: {x: 547, y: 1581 + adjY},
+  },
+  FriendPage3: {
+    name: 'FriendPage',
+    colors: [
+      {x: 543, y: 1577 + adjY, r: 175, g: 188, b: 197, match: true, threshold: 80}, // center of the Tsum Hades
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 860, y: 1505 + adjY, r: 238, g: 189, b: 11 , match: true, threshold: 80}, // top of the myTsum button
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+    ],
+    back: {x: 547, y: 1581 + adjY},
+    next: {x: 547, y: 1581 + adjY},
+  },
+  FriendPage4: {
+    name: 'FriendPage',
+    colors: [
+      {x: 543, y: 1577 + adjY, r: 175, g: 188, b: 197, match: true, threshold: 80}, // center of the Tsum Hades
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
