@@ -196,10 +196,10 @@ function MapleM(config) {
 }
 
 MapleM.prototype.autoBuy = function() {
-  this.running = true;
   this.clickPoint(gMenuBtn);
   sleep(1000);
 
+  console.log('進入市集');
   this.clickPoint(gQuickStoreBtn);
   sleep(1000);
   this.clickPoint(gMoneyStoreBtn);
@@ -223,8 +223,10 @@ MapleM.prototype.autoBuy = function() {
       break;
     }
     sleep(2000);
-    this.waitForChangePointColor({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76}, 12000);
+    this.waitForChangePointColor({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76}, 15000);
     console.log('全部開啟');
+    this.clickPoint({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76});
+    sleep(1000);
     this.clickPoint({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76});
     sleep(6000);
     console.log('再試一次');
@@ -236,25 +238,25 @@ MapleM.prototype.autoBuy = function() {
   keycode('BACK'); sleep(1000);
 
   this.clickPoint({loc: LocFull, x: 1090, y: 90});
-  this.waitForChangePointColor({loc: LocFull, x: 665, y: 990, r: 247, g: 252, b: 246}, 10000);
+  this.waitForChangePointColor({loc: LocFull, x: 665, y: 990, r: 247, g: 252, b: 246}, 15000);
   
   // attack
   console.log('第一把武器');
   this.clickPoint({loc: LocFull, x: 1184, y: 321}); // first equip
-  sleep(1500);
+  sleep(2000);
   console.log('自動選擇');
   this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
-  sleep(1500);
+  sleep(2000);
   console.log('選擇');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
-  sleep(1500);
+  sleep(2000);
   console.log('等待選擇');
-  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 5000);
+  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 15000);
   console.log('確認');
   this.clickPoint({loc: LocFull, x: 1024, y: 996});
-  sleep(1500);
+  sleep(2000);
   console.log('等待動畫');
-  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 5000);
+  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 15000);
   console.log('完成');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(2500);
@@ -271,49 +273,48 @@ MapleM.prototype.autoBuy = function() {
   this.findOrangeEquip();
   console.log('自動選擇');
   this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
-  sleep(1500);
+  sleep(2000);
   console.log('選擇史詩');
   this.clickPoint({loc: LocFull, x: 1235, y: 681}); // 史詩
-  sleep(1500);
+  sleep(2000);
   console.log('選擇');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
   console.log('等待選擇');
-  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 5000);
+  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 15000);
   console.log('確認');
   this.clickPoint({loc: LocFull, x: 1024, y: 996});
   sleep(3000);
   console.log('等待動畫');
-  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 5000);
+  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 15000);
   console.log('完成');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
 
   console.log('自動選擇');
   this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
-  sleep(1500);
+  sleep(2000);
   console.log('選擇');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
   console.log('等待選擇');
-  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 5000);
+  this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 15000);
   console.log('確認');
   this.clickPoint({loc: LocFull, x: 1024, y: 996});
   sleep(2000);
   console.log('等待動畫');
-  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 5000);
+  this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 15000);
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
 
   this.clickPoint({loc: LocFull, x: 420, y: 240}); // current equip
-  sleep(2000);
+  sleep(3000);
 
   keycode('BACK'); sleep(1000);
   keycode('BACK'); sleep(1000);
 }
 
 MapleM.prototype.findOrangeEquip = function() {
-  this.running = true;
   var xs = [1180, 1340, 1500, 1650, 1810];
   var cs = [{r: 149, g: 156, b: 149}, {r: 62, g: 146, b: 210}, {r: 144, g: 100, b: 192}, {r: 226, g: 151, b: 70}];
 
@@ -322,7 +323,9 @@ MapleM.prototype.findOrangeEquip = function() {
   var ey = 0;
   for (var page = 0; page < 6 && this.running; page++) {
     console.log('page', page);
+    sleep(500);
     this.updateScreenshot(true);
+    sleep(500);
     for (var i = 0; i < 5 && this.running; i++) {
       for (var y = 256; y < 900 && this.running; y+=2) {
         for (var c = 0; c < 4 && this.running; c++) {
@@ -350,7 +353,9 @@ MapleM.prototype.findOrangeEquip = function() {
       }
       if (isFound) {break;}
     }
+    // break;
     if (!isFound) {
+      console.log('換頁');
       this.tapDown({loc: LocFull, x: 1500, y: 870}, 0);
       sleep(300);
       this.moveTo({loc: LocFull, x: 1500, y: 700}, 0);
@@ -399,7 +404,7 @@ MapleM.prototype.isPointColor = function(point, img) {
   var c = this.getPointColor(point, img);
   var s = Colors.identityScore(c, point);
   // console.log(s, c.r, c.g, c.b);
-  if (s > 0.95) {
+  if (s > 0.9) {
     return true;
   }
   return false;
@@ -763,6 +768,14 @@ MapleM.prototype.sendMessage = function() {
   sleep(300);
 }
 
+MapleM.prototype.startAutoBuy = function() {
+  this.running = true;
+  for (var k = 0; k < this.config.buyTimes && this.running; k++) {
+    mapleM.autoBuy();
+    sleep(2000);
+  }
+}
+
 MapleM.prototype.startAutoAttackContinue = function() {
   this.running = true;
   this.direct = 'right';
@@ -970,6 +983,8 @@ function start(configString) {
       mapleM.startDoTasks();
     } else if (config.task === 'autoUseItem'){
       mapleM.startAutoUseItems();
+    } else if (config.task === 'autoBuy') {
+      mapleM.startAutoBuy();
     }
   }
 }
@@ -989,6 +1004,7 @@ var DEFAULT_CONFIG = {
   useItemHP: 70,
   useItemMp: 70,
   useSecondSkills: true,
+  buyTimes: 1,
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
