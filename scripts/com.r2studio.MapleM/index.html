@@ -191,6 +191,7 @@
       useItemHP: 60,
       useItemMP: 60,
       useSecondSkills: false,
+      buyTimes: 1,
     };
     var settings;
 
@@ -216,6 +217,7 @@
       $('input:text[name="apStepDelay"]').val(settings.apStepDelay);
       $('input:text[name="useItemHP"]').val(settings.useItemHP);
       $('input:text[name="useItemMP"]').val(settings.useItemMP);
+      $('input:text[name="buyTimes"]').val(settings.buyTimes);
       for (var i in settings.apUseSkillsTime) {
         var obj = settings.apUseSkillsTime[i];
         var nameDelay = 'apUseSkillsTime-delay-' + i;
@@ -235,6 +237,7 @@
       settings.apStepDelay = +$('input:text[name="apStepDelay"]').val();
       settings.useItemHP = +$('input:text[name="useItemHP"]').val();
       settings.useItemMP = +$('input:text[name="useItemMP"]').val();
+      settings.buyTimes = +$('input:text[name="buyTimes"]').val();
       for (var i in settings.apUseSkillsTime) {
         var obj = settings.apUseSkillsTime[i];
         var nameDelay = 'apUseSkillsTime-delay-' + i;
@@ -314,6 +317,14 @@
       Auto Tasks<br />
       <input name="task" type="radio" value="autoUseItem"/>自動使用HP和MP物品<br />
       Auto Use HP and MP items<br />
+      <input name="task" type="radio" value="autoBuy"/>自動買寶箱<br />
+      Auto Buy Treasure<br />
+    </div>
+    <div style="margin: 10px 0px;">
+      <h3>自動買寶箱設定 (Auto Buy Treasure)</h3>
+      幾回合
+      <input name="buyTimes" type="text" value="1" size="5"/>
+      <br />
     </div>
     <div style="margin: 10px 0px;">
         <h3>自動使用HP和MP物品設定 (Auto Use HP and MP items)</h3>
