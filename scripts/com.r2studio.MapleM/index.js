@@ -202,10 +202,24 @@ MapleM.prototype.autoBuy = function() {
   console.log('進入市集');
   this.clickPoint(gQuickStoreBtn);
   sleep(1000);
+
+  if (!this.running) {
+    return;
+  }
+
   this.clickPoint(gMoneyStoreBtn);
   sleep(4000);
+
+  if (!this.running) {
+    return;
+  }
+
   this.clickPoint(gTreasureBtn);
   sleep(3000);
+
+  if (!this.running) {
+    return;
+  }
 
   console.log('購買11次');
   this.clickPoint({loc: LocFull, x: 660, y: 960});
@@ -215,6 +229,11 @@ MapleM.prototype.autoBuy = function() {
     console.log('確認購買');
     this.clickPoint({loc: LocFull, x: 1241, y: 803});
     sleep(4000);
+
+    if (!this.running) {
+      break;
+    }
+
     this.updateScreenshot(true);
     var isPointColor = this.isPointColor({loc: LocFull,x: 1094, y: 790, r: 247, g: 122, b: 76});
     if (isPointColor) {
@@ -223,92 +242,192 @@ MapleM.prototype.autoBuy = function() {
       break;
     }
     sleep(2000);
+
+    if (!this.running) {
+      break;
+    }
+
     this.waitForChangePointColor({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76}, 15000);
     console.log('全部開啟');
     this.clickPoint({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76});
     sleep(1000);
     this.clickPoint({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76});
     sleep(6000);
+
+    if (!this.running) {
+      break;
+    }
+
     console.log('再試一次');
     this.clickPoint({loc: LocFull, x: 876, y: 945, r: 84, g: 174, b: 162});
     sleep(2000);
   }
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('離開');
   keycode('BACK'); sleep(1000);
   keycode('BACK'); sleep(1000);
 
+  if (!this.running) {
+    return;
+  }
+
   this.clickPoint({loc: LocFull, x: 1090, y: 90});
   this.waitForChangePointColor({loc: LocFull, x: 665, y: 990, r: 247, g: 252, b: 246}, 15000);
-  
+
   // attack
   console.log('第一把武器');
   this.clickPoint({loc: LocFull, x: 1184, y: 321}); // first equip
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('自動選擇');
   this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('選擇');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('等待選擇');
   this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 15000);
   console.log('確認');
   this.clickPoint({loc: LocFull, x: 1024, y: 996});
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('等待動畫');
   this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 15000);
   console.log('完成');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(2500);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('移除武器');
   this.clickPoint({loc: LocFull, x: 420, y: 240}); // current equip
   sleep(2500);
+
+  if (!this.running) {
+    return;
+  }
 
   // armor
   console.log('防具');
   this.clickPoint({loc: LocFull, x: 1340, y: 200}); // armor
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('尋找橘防具');
   // find target
   this.findOrangeEquip();
   console.log('自動選擇');
   this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('選擇史詩');
   this.clickPoint({loc: LocFull, x: 1235, y: 681}); // 史詩
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('選擇');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('等待選擇');
   this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 15000);
   console.log('確認');
   this.clickPoint({loc: LocFull, x: 1024, y: 996});
   sleep(3000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('等待動畫');
   this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 15000);
   console.log('完成');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
 
+  if (!this.running) {
+    return;
+  }
+
   console.log('自動選擇');
   this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('選擇');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('等待選擇');
   this.waitForChangePointColor({loc: LocFull, x: 1024, y: 996, r: 247, g: 122, b: 76}, 15000);
   console.log('確認');
   this.clickPoint({loc: LocFull, x: 1024, y: 996});
   sleep(2000);
+
+  if (!this.running) {
+    return;
+  }
+
   console.log('等待動畫');
   this.waitForChangePointColor({loc: LocFull, x: 1036, y: 970, r: 247, g: 122, b: 76}, 15000);
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
 
+  if (!this.running) {
+    return;
+  }
+
   this.clickPoint({loc: LocFull, x: 420, y: 240}); // current equip
   sleep(3000);
+
+  if (!this.running) {
+    return;
+  }
 
   keycode('BACK'); sleep(1000);
   keycode('BACK'); sleep(1000);
