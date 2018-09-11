@@ -192,6 +192,7 @@
       useItemMP: 60,
       useSecondSkills: false,
       buyTimes: 1,
+      firstArms: true,
     };
     var settings;
 
@@ -212,6 +213,7 @@
 
     function initView() {
       $('input:radio[name="task"]').filter('[value="' + settings.task + '"]').attr('checked', true);
+      $('input:radio[name="firstArms"]').filter('[value="' + settings.firstArms + '"]').attr('checked', true);
       $('input:radio[name="apJump"]').filter('[value="' + settings.apJump + '"]').attr('checked', true);
       $('input:radio[name="useSecondSkills"]').filter('[value="' + settings.useSecondSkills + '"]').attr('checked', true);
       $('input:text[name="apStepDelay"]').val(settings.apStepDelay);
@@ -232,6 +234,7 @@
 
     function onValueChange() {
       settings.task = $('input:radio[name="task"]:checked').val();
+      settings.firstArms = $('input:radio[name="firstArms"]:checked').val() === 'true' ? true : false;
       settings.apJump = $('input:radio[name="apJump"]:checked').val() === 'true' ? true : false;
       settings.useSecondSkills = $('input:radio[name="useSecondSkills"]:checked').val() === 'true' ? true : false;
       settings.apStepDelay = +$('input:text[name="apStepDelay"]').val();
@@ -324,6 +327,11 @@
       <h3>自動買寶箱設定 (Auto Buy Treasure)</h3>
       幾回合
       <input name="buyTimes" type="text" value="1" size="5"/>
+      <br />
+      第一把武器
+      <input name="firstArms" type="radio" value="true" />
+      橘色武器
+      <input name="firstArms" type="radio" value="false" />
       <br />
     </div>
     <div style="margin: 10px 0px;">

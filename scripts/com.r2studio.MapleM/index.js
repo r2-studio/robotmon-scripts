@@ -137,7 +137,7 @@ var gMenuBtn = {loc: LocRT, x: 1850, y: 60};
 var gQuickStoreBtn = {loc: LocFull, x: 280, y: 980};
 var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
 var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
-var gTreasureBtn = {loc: LocLT, x: 128, y: 460};
+var gTreasureBtn = {loc: LocLT, x: 128, y: 600};
 
 var gPages = {
   moving: {name: "moving", points: [
@@ -279,10 +279,20 @@ MapleM.prototype.autoBuy = function() {
   this.waitForChangePointColor({loc: LocFull, x: 665, y: 990, r: 247, g: 252, b: 246}, 15000);
 
   // attack
-  console.log('第一把武器');
-  this.clickPoint({loc: LocFull, x: 1184, y: 321}); // first equip
-  sleep(2000);
-
+  if (this.config.firstArms) {
+    console.log('第一把武器');
+    this.clickPoint({loc: LocFull, x: 1184, y: 321}); // first equip
+    sleep(2000);
+  } else {
+    var isFound = this.findOrangeEquip();
+    if (!isFound) {
+      console.log('找不到裝備 跳出');
+      keycode('BACK'); sleep(1000);
+      keycode('BACK'); sleep(1000);
+      return;
+    }
+  }
+  
   if (!this.running) {
     return;
   }
@@ -1176,6 +1186,7 @@ var DEFAULT_CONFIG = {
   buyTreasureTimes: 1,
   useSecondSkills: true,
   buyTimes: 1,
+  firstArms: true,
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
