@@ -160,6 +160,11 @@ var gPages = {
     {loc: LocFull, x: 1062, y: 803, r: 84, g: 174, b: 162},
     {loc: LocFull, x: 1350, y: 810, r: 247, g: 122, b: 76},
   ]},
+  taskDone: {name: "taskDone", points: [
+    {loc: LocFull, x: 1088, y: 970, r: 247, g: 122, b: 76},
+    {loc: LocFull, x: 684, y: 96, r: 78, g: 94, b: 107},
+    {loc: LocFull, x: 633, y: 970, r: 234, g: 239, b: 233},
+  ]},
 };
 
 // ===== MapleM script =====
@@ -248,6 +253,9 @@ MapleM.prototype.doTasks = function() {
       break;
     case "exitGame":
       this.clickPoint(gPages['exitGame'].points[0]);
+      break;
+    case "taskDone":
+      this.clickPoint(gPages['taskDone'].points[0]);
       break;
     case "unknown":
       this.unknownCount++;
@@ -743,8 +751,9 @@ var DEFAULT_CONFIG = {
   useSecondSkills: true,
 };
 
-// mapleM = new MapleM(DEFAULT_CONFIG);
-// mapleM.doTasks();
+mapleM = new MapleM(DEFAULT_CONFIG);
+mapleM.startDoTasks();
+// console.log(mapleM.getCurrentPage());
 // for (var i = 0; i < 10; i++) {
 //   console.log(mapleM.isAutoPlaying());
 // }
