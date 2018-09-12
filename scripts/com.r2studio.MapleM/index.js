@@ -297,7 +297,7 @@ MapleM.prototype.doTasks = function() {
     this.unknownCount = 0;
   } else if (!autoPlaying) {
     if (cPage !== 'black' && cPage !== 'confirmPage') {
-      if (this.stopCount % 4 == 3) {
+      if (this.stopCount % 5 == 4) {
         this.selectTask();
       }
     } else {
