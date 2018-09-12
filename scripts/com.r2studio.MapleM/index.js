@@ -99,6 +99,9 @@ var gBtnsAutoPlay = [
   {loc: LocCB, x: 566, y: 1000}
 ];
 
+var gBtnTaskMenu = {loc: LocLT, x: 18, y: 295, r: 224, g: 106, b: 66};
+var gBtnTaskFirst = {loc: LocFull, x: 780, y: 226};
+var gBtnTaskGo = {loc: LocFull, x: 1734, y: 996};
 var gBtnTask1 = {loc: LocLT, x: 140, y: 417, r: 144, g: 150, b: 140};
 var gBtnTask2 = {loc: LocLT, x: 140, y: 565, r: 141, g: 142, b: 134};
 var gBtnSkipTask = {loc: LocRB, x: 1830, y: 920};
@@ -159,6 +162,11 @@ var gPages = {
     {loc: LocFull, x: 588, y: 263, r: 78, g: 94, b: 107},
     {loc: LocFull, x: 1062, y: 803, r: 84, g: 174, b: 162},
     {loc: LocFull, x: 1350, y: 810, r: 247, g: 122, b: 76},
+  ]},
+  taskDone: {name: "taskDone", points: [
+    {loc: LocFull, x: 1088, y: 970, r: 247, g: 122, b: 76},
+    {loc: LocFull, x: 684, y: 96, r: 78, g: 94, b: 107},
+    {loc: LocFull, x: 633, y: 970, r: 234, g: 239, b: 233},
   ]},
 };
 
@@ -223,6 +231,30 @@ MapleM.prototype.tapUp = function(point, id) {
   tapUp(xy.x, xy.y, 10, id);
 }
 
+MapleM.prototype.selectTask = function() {
+  console.log('selectTask');
+  for (var i = 0; i < 5; i++) {
+    this.updateScreenshot(true);
+    var c = this.getPointColor(gBtnTaskMenu);
+    var s = Colors.identityScore(c, gBtnTaskMenu);
+    if (s > 0.9) {
+      break;
+    }
+    if (i == 2) {
+      this.clickPoint(gBtnTaskMenu);
+    }
+    keycode('BACK');
+    sleep(1000);
+  }
+  this.clickPoint(gBtnTaskMenu);
+  sleep(100);
+  this.clickPoint(gBtnTaskMenu);
+  sleep(2500);
+  this.clickPoint(gBtnTaskFirst);
+  sleep(1000);
+  this.clickPoint(gBtnTaskGo);
+}
+
 MapleM.prototype.doTasks = function() {
   this.updateScreenshot(true);
   var cPage = "autoPlaying";
@@ -236,9 +268,14 @@ MapleM.prototype.doTasks = function() {
       this.clickPoint(gPages['diePage'].points[0]);
       break;
     case "black":
-      this.clickPoint(gBtnSkipTask);
-      sleep(100);
-      this.clickPoint(gBtnSkipTask2);
+      for (var i = 0; i < 3; i++) {
+        this.clickPoint(gBtnSkipTask);
+        sleep(200);
+        this.clickPoint(gBtnSkipTask2);
+        sleep(200);
+        this.clickPoint(gPages['confirmPage'].points[0]);
+        sleep(200);
+      }
       break;
     case "pageOthers":
       keycode('BACK', 20);
@@ -249,6 +286,9 @@ MapleM.prototype.doTasks = function() {
     case "exitGame":
       this.clickPoint(gPages['exitGame'].points[0]);
       break;
+    case "taskDone":
+      this.clickPoint(gPages['taskDone'].points[0]);
+      break;
     case "unknown":
       this.unknownCount++;
       break;
@@ -256,24 +296,22 @@ MapleM.prototype.doTasks = function() {
   if (autoPlaying) {
     this.unknownCount = 0;
   } else if (!autoPlaying) {
-    if (this.stopCount >= 6 && this.stopCount % 2 == 0) {
-      console.log('click task 1');
-      sleep(400);
-      this.clickPoint(gBtnTask1);
-    } else if (this.stopCount == 4){
-      console.log('click task 2');
-      sleep(400);
-      this.clickPoint(gBtnTask2);
+    if (cPage !== 'black' && cPage !== 'confirmPage') {
+      if (this.stopCount % 4 == 3) {
+        this.selectTask();
+      }
+    } else {
+      if (this.stopCount % 8 == 7) {
+        this.selectTask();
+      }
     }
   }
-  if (this.unknownCount > 5) {
+  if (this.unknownCount > 10) {
     this.unknownCount = 0;
-    console.log('Press BACK');
-    keycode('BACK', 20);
+    this.selectTask();
   }
-  if (this.stopCount > 15) {
-    keycode('BACK', 20);
-    sleep(1000);
+  if (this.stopCount > 16) {
+    this.selectTask();
   }
   console.log(autoPlaying, 'unknown', this.unknownCount, 'stop', this.stopCount);
 }
@@ -744,7 +782,9 @@ var DEFAULT_CONFIG = {
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
-// mapleM.doTasks();
+// mapleM.selectTask();
+// mapleM.startDoTasks();
+// console.log(mapleM.getCurrentPage());
 // for (var i = 0; i < 10; i++) {
 //   console.log(mapleM.isAutoPlaying());
 // }
