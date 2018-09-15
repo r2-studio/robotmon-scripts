@@ -178,7 +178,7 @@
     VERSION = 1;
     DEFAULT_CONFIG = {
       accountId: '',
-      buyTimes: 1,
+      buyTimes: 2,
       armSelection: '0',
       armorSelection: '2',
     };
@@ -196,7 +196,7 @@
       $("#version").html("楓之谷M 自動買寶箱 v" + VERSION);
       loadSettings();
       initView();
-      console.log(settings)
+      console.log(JSON.stringify(settings));
     });
 
     function initView() {
@@ -239,11 +239,11 @@
     }
 
     function onValueChange() {
-      settings.accountId = +$('input:text[name="accountId"]').val();
+      settings.accountId = $('input:text[name="accountId"]').val();
       settings.buyTimes = +$('input:text[name="buyTimes"]').val();
       settings.armSelection = $('input:radio[name="armSelection"]:checked').val();
       settings.armorSelection = $('input:radio[name="armorSelection"]:checked').val();
-      console.log(settings);
+      console.log(JSON.stringify(settings));
       saveSettings();
     }
 
