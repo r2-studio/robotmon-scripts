@@ -1,0 +1,339 @@
+<html>
+
+<head>
+  <style>
+    .navbar-custom {
+      border-radius: 0 !important;
+      background-color: #2196F3;
+      color: #FFFFFF;
+      margin-bottom: 0px !important;
+    }
+
+    .navbar-custom>a {
+      width: 100%;
+      color: #FFFFFF;
+      text-align: center;
+    }
+
+    .navbar-custom>a:hover {
+      color: #FFFFFF;
+    }
+
+    .list-group {
+      margin-bottom: 15px !important;
+    }
+
+    .list-group-item {
+      padding: 6px 10px !important;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0px;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 4px;
+      top: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(24px);
+      -ms-transform: translateX(24px);
+      transform: translateX(24px);
+    }
+
+    .slider.round {
+      border-radius: 28px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    .btn {
+      margin-left: 5px;
+    }
+
+    .btn-plus {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus:hover,
+    .btn-plus:focus,
+    .btn-plus:active,
+    .btn-plus.active {
+      color: #FFFFFF !important;
+      background-color: #0d8aee;
+      border-color: #0c7cd5;
+    }
+
+    .btn-plus.disabled:hover,
+    .btn-plus.disabled:focus,
+    .btn-plus.disabled:active,
+    .btn-plus.disabled.active,
+    .btn-plus[disabled]:hover,
+    .btn-plus[disabled]:focus,
+    .btn-plus[disabled]:active,
+    .btn-plus[disabled].active,
+    fieldset[disabled] .btn-plus:hover,
+    fieldset[disabled] .btn-plus:focus,
+    fieldset[disabled] .btn-plus:active,
+    fieldset[disabled] .btn-plus.active {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus,
+    .btn-danger,
+    .btn-warning,
+    .btn-success {
+      min-width: 25px;
+      min-height: 25px;
+      padding: 1px 0px 1px 0px !important;
+    }
+
+    .btn-circle {
+      min-width: 30px;
+      min-height: 30px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 15px;
+      border: 0px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+    }
+
+    ul {
+      padding-left: 5px;
+    }
+
+    .setting_input {
+      text-align: center;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
+
+  <script>
+    if (typeof String.prototype.startsWith != 'function') {
+      // see below for better implementation!
+      String.prototype.startsWith = function (str){
+        return this.indexOf(str) === 0;
+      };
+    }
+
+    TAG = "MapleU";
+    VERSION = 1;
+    DEFAULT_CONFIG = {
+      accountId: '',
+      buyTimes: 1,
+      armSelection: '0',
+      armorSelection: '2',
+    };
+    var settings;
+
+    function getSettingKey() {
+      return TAG + '-settings';
+    }
+
+    function getVersionKey() {
+      return TAG + '-version';
+    }
+
+    $(function () {
+      $("#version").html("楓之谷M 自動買寶箱 v" + VERSION);
+      loadSettings();
+      initView();
+      console.log(settings)
+    });
+
+    function initView() {
+      $('input:text[name="accountId"]').val(settings.accountId);
+      $('input:text[name="buyTimes"]').val(settings.buyTimes);
+      $('input:radio[name="armSelection"]')
+        .filter('[value="' + settings.armSelection + '"]').attr('checked', true);
+      $('input:radio[name="armorSelection"]')
+        .filter('[value="' + settings.armorSelection + '"]').attr('checked', true);
+
+      $('input').change(function() {
+        onValueChange();
+      });
+      $('#accountId').change(function() {
+        syncPoints();
+      });
+
+      if (settings.accountId != "") {
+        syncPoints();
+      }
+    }
+
+    function syncPoints() {
+      // https://us-central1-robotmon-98370.cloudfunctions.net/getMaplePoints
+      // https://us-central1-robotmon-98370.cloudfunctions.net/useMaplePoints
+      // httpClient('POST', 'https://us-central1-robotmon-98370.cloudfunctions.net/getMaplePoints', 'accountId=andy', {'Content-Type': 'application/x-www-form-urlencoded'});
+      var accountId = settings.accountId;
+      if (accountId == "") {
+        $('#accountId').val('請輸入英數字帳號ID');
+        return;
+      }
+      JavaScriptInterface.runScriptCallback("httpClient('POST', 'https://us-central1-robotmon-98370.cloudfunctions.net/getMaplePoints', 'accountId=" + accountId + "', {'Content-Type': 'application/x-www-form-urlencoded'});", 'onAccountCallback');
+      $("#points").html('查詢中...請稍候');
+    }
+
+    function onAccountCallback(result) {
+      console.log(result);
+      var pointData = JSON.parse(result);
+      $("#points").html(pointData.points);
+    }
+
+    function onValueChange() {
+      settings.accountId = +$('input:text[name="accountId"]').val();
+      settings.buyTimes = +$('input:text[name="buyTimes"]').val();
+      settings.armSelection = $('input:radio[name="armSelection"]:checked').val();
+      settings.armorSelection = $('input:radio[name="armorSelection"]:checked').val();
+      console.log(settings);
+      saveSettings();
+    }
+
+    function loadSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      var tempSettings = localStorage.getItem(getSettingKey());
+      if (tempSettings == null) {
+        settings = $.extend(true, {}, DEFAULT_CONFIG);
+      } else {
+        settings = JSON.parse(tempSettings);
+        var keys = Object.keys(DEFAULT_CONFIG);
+        for (var i in keys) {
+          var key = keys[i];
+          if (key === 'conditions' && settings['conditions'] !== undefined) {
+            for (var index = settings.conditions.length; index < DEFAULT_CONFIG.conditions.length; index++) {
+              settings.conditions[index] = DEFAULT_CONFIG.conditions[index];
+            }
+            continue;
+          }
+          if (settings[key] === undefined) {
+            settings[key] = DEFAULT_CONFIG[key];
+          }
+        }
+      }
+    }
+
+    function saveSettings() {
+      if (localStorage === undefined) {
+        return;
+      }
+      localStorage.setItem(getVersionKey(), VERSION);
+      localStorage.setItem(getSettingKey(), JSON.stringify(settings));
+    }
+
+    function onEvent(eventType) {
+      if (eventType == 'OnPlayClick') {
+        if (settings.accountId == "") {
+          JavaScriptInterface.runScript('console.log("請輸入帳號ID");');
+          return;
+        }
+        if (! +$("#points").html() > 0) {
+          JavaScriptInterface.runScript('console.log("點數不足或尚未確認");');
+          return;
+        }
+        console.log('start(\'' + JSON.stringify(settings) + '\');');
+        JavaScriptInterface.runScript('start(\'' + JSON.stringify(settings) + '\');');
+      } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript('stop();');
+      }
+    }
+    function onLog(message) {
+      console.log(message);
+    }
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-custom" role="navigation">
+   <a id="version" class="navbar-brand"></a>
+  </nav>
+  <div id="container" class="container">
+    <div style="margin: 10px 0px;">
+      <div>⚠️ 楓之谷M 自動買寶箱，自動升級裝備腳本</div>
+      <div>⚠️ 此腳本為付費腳本，自訂帳號ID（請加入亂數，避免被猜到）</div>
+      <div>⚠️ 自動升級裝備會吃掉史詩（包含）以下的裝備，請小心</div>
+      <div>⚠️ 有任何問題請聯繫：</div>
+    </div>
+    <div style="margin: 10px 0px;">
+      <h3>帳號設定</h3>
+      帳號ID: <input id="accountId" name="accountId" type="text" value="1" size="12"/>
+      剩餘點數: <span id="points">尚未確認</span>
+      <br />
+      <h3>自動買寶箱設定</h3>
+      買幾次寶箱
+      <input name="buyTimes" type="text" value="1" size="5"/>
+      <br />
+      <h4>升級武器選擇</h4>
+      <input name="armSelection" type="radio" value="0" />第一個武器 
+      <input name="armSelection" type="radio" value="1" />綠色武器 
+      <input name="armSelection" type="radio" value="2" />橘色武器 
+      <br />
+      <h4>升級防具選擇</h4>
+      <input name="armorSelection" type="radio" value="0" />第一個防具 
+      <input name="armorSelection" type="radio" value="1" />綠色防具 
+      <input name="armorSelection" type="radio" value="2" />橘色防具 
+      <br />
+    </div>
+  </div>
+</body>
+
+</html>
