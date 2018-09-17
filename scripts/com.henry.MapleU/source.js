@@ -403,14 +403,6 @@ MapleM.prototype.autoBuy = function() {
     return;
   }
 
-  console.log('選擇史詩');
-  this.clickPoint({loc: LocFull, x: 1235, y: 681}); // 史詩
-  sleep(2000);
-
-  if (!this.running) {
-    return;
-  }
-
   console.log('選擇');
   this.clickPoint({loc: LocFull, x: 1036, y: 970});
   sleep(3000);
