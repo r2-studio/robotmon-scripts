@@ -292,7 +292,7 @@ MapleM.prototype.autoBuy = function() {
 
   console.log('尋找武器');
   var isFound = false;
-  if (this.config.armorSelection === '0') {
+  if (this.config.armSelection === '0') {
     // first equip
     isFound = true;
     this.clickPoint({loc: LocFull, x: 1184, y: 321}); // first equip
@@ -300,7 +300,7 @@ MapleM.prototype.autoBuy = function() {
   } else if (this.config.armSelection === '1') {
     // green equip
     isFound = this.findEquip(4);
-  } else if (this.config.armorSelection === '2') {
+  } else if (this.config.armSelection === '2') {
     // orange equip
     isFound = this.findEquip(3);
   }
@@ -380,7 +380,7 @@ MapleM.prototype.autoBuy = function() {
     isFound = true;
     this.clickPoint({loc: LocFull, x: 1184, y: 321}); // first equip
     sleep(2000);
-  } else if (this.config.armSelection === '1') {
+  } else if (this.config.armorSelection === '1') {
     // green equip
     isFound = this.findEquip(4);
   } else if (this.config.armorSelection === '2') {
