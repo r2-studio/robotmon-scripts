@@ -18,12 +18,12 @@ function getBox(newBox,fast){
     }  
     console.log("start getbox");
     while(isScriptRunning){
+        if(checkIsBoxFinish()){
+            break;
+        }
         for(var t = 0;t<checkTime;t++){
             tapScale(800,955,100);
             sleep(waitTime);
-        }
-        if(checkIsBoxFinish()){
-            break;
         }
     }
     console.log("finish getbox");
@@ -102,13 +102,8 @@ function checkIsBoxFinish(){
         isScriptRunning = false;
         return true;
     }
-    if(checkImage(screenShot,checkBoxImage,2210,360,190,40)){
-        sleep(1000);
-        var screenShot2 = getScreenshot();
-        if(checkImage(screenShot2,checkBoxPointImage,500,800,250,200)){
-            r = true;
-        }
-        releaseImage(screenShot2);
+    if(checkImage(screenShot,checkBoxPointImage,checkBoxPointPosition[0],checkBoxPointPosition[1],checkBoxPointPosition[2],checkBoxPointPosition[3])){
+        r = true;
     }
     releaseImage(screenShot);
     return r;
@@ -116,7 +111,7 @@ function checkIsBoxFinish(){
 
 function resetBox(){
     console.log("reset box");
-    tapScale(2300,400,100);
+    tapScale(checkBoxPosition[0] + checkBoxPosition[2]/2,checkBoxPosition[1] + checkBoxPosition[3]/2,100);
     sleep(1000);
     tapScale(1700,1135,100);
     waitLoading();
