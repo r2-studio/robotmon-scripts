@@ -137,7 +137,7 @@ var gMenuBtn = {loc: LocRT, x: 1850, y: 60};
 var gQuickStoreBtn = {loc: LocFull, x: 280, y: 980};
 var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
 var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
-var gTreasureBtn = {loc: LocLT, x: 128, y: 600};
+var gTreasureBtn = {loc: LocLT, x: 128, y: 732};
 
 var gPages = {
   moving: {name: 'moving', points: [
@@ -224,7 +224,7 @@ MapleM.prototype.autoBuy = function() {
 
   console.log('購買寶箱');
   this.clickPoint({loc: LocFull, x: 660, y: 960});
-  sleep(3000);
+  sleep(4000);
 
   for (var i = 0; i < 15 && this.running; i++) {
     console.log('確認購買');
@@ -255,11 +255,12 @@ MapleM.prototype.autoBuy = function() {
     }
 
     this.waitForChangePointColor({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76}, 15000);
+    sleep(1500);
     console.log('全部開啟');
     this.clickPoint({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76});
     sleep(500);
     this.clickPoint({loc: LocFull, x: 1060, y: 970, r: 247, g: 122, b: 76});
-    sleep(4000);
+    sleep(5000);
 
     if (!this.running) {
       break;
@@ -613,7 +614,7 @@ MapleM.prototype.isPointColor = function(point, img) {
   var c = this.getPointColor(point, img);
   var s = Colors.identityScore(c, point);
   // console.log(s, c.r, c.g, c.b);
-  if (s > 0.92) {
+  if (s > 0.9) {
     return true;
   }
   return false;
@@ -742,7 +743,7 @@ var DEFAULT_CONFIG = {
   accountId: '',
   buyTimes: 10,
   armSelection: '2', // 武器
-  armorSelection: '2', // 防具
+  armorSelection: '1', // 防具
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
