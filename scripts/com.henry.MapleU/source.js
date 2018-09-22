@@ -42,6 +42,8 @@ Colors.identityScore = function(e1, e2) {
   return 1 - Math.sqrt((((512+mean)*r*r)>>8) + 4*g*g + (((767-mean)*b*b)>>8)) / 768;
 }
 
+var ERROR_SCREEN_ORIENTATION = 1;
+
 var LocLT = 'lt';
 var LocRT = 'rt';
 var LocLB = 'lb';
@@ -140,9 +142,12 @@ var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
 var gTreasureBtn = {loc: LocLT, x: 128, y: 732};
 
 var gPages = {
-  moving: {name: 'moving', points: [
-    {loc: LocFull, x: 928, y: 334, r: 120, g: 136, b: 152},
-    {loc: LocFull, x: 1100, y: 340, r: 255, g: 124, b: 80},
+  mainPage: {name: 'mainPage', points: [
+    {loc: LocRT, x: 691, y: 34, r: 244, g: 253, b: 248},
+    {loc: LocRT, x: 998, y: 47, r: 247, g: 253, b: 243},
+    {loc: LocRT, x: 1109, y: 47, r: 247, g: 252, b: 255},
+    {loc: LocRT, x: 1164, y: 30, r: 247, g: 252, b: 245},
+    {loc: LocRT, x: 1237, y: 34, r: 245, g: 250, b: 243},
   ]},
   confirmPage: {name: 'confirmPage', points: [
     {loc: LocRB, x: 1548, y: 977, r: 247, g: 122, b: 76},
@@ -184,7 +189,6 @@ function MapleM(config) {
   this.autoCheckColors = [{r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}, {r:0,g:0,b:0}];
   this.stopCount = 0;
   this.unknownCount = 0;
-  saveImage(this.updateScreenshot(true), '/sdcard/Robotmon/test.png');
 
   // auto play
   this.direct = '';
@@ -288,8 +292,60 @@ MapleM.prototype.autoBuy = function() {
     return;
   }
 
+  if (this.config.equipUsage === 'update') {
+    this.updateEquip();
+  } else if (this.config.equipUsage === 'break'){
+    this.breakEquip();
+  }
+}
+
+MapleM.prototype.breakEquip = function() {
+  this.clickPoint({loc: LocFull, x: 812, y: 90});
+  this.waitForChangePointColor({loc: LocFull, x: 89, y: 977, r: 247, g: 252, b: 246}, 15000);
+  sleep(1000);
+  console.log('進入分解');
+  this.clickPoint({loc: LocFull, x: 1542, y: 996});
+  console.log('等待分解畫面');
+  this.waitForChangePointColor({loc: LocFull, x: 710, y: 1035, r: 81, g: 140, b: 180}, 10000);
+  if (!this.running) {
+    return;
+  }
+  sleep(3500);
+  for (var i = 0; i < 3; i++) {
+    this.updateScreenshot(true);
+    var p1 = {loc: LocFull, x: 140, y: 340, r: 213, g: 219, b: 217};
+    var p2 = {loc: LocFull, x: 121, y: 321, r: 213, g: 219, b: 217};
+    var p3 = {loc: LocFull, x: 160, y: 360, r: 213, g: 219, b: 217};
+    if (this.isPointColor(p1) && this.isPointColor(p2) && this.isPointColor(p3)) {
+      console.log('無裝備要分解，跳出');
+      break;
+    } else {
+      if (!this.running) {return;}
+      console.log('分解');
+      this.clickPoint({loc: LocFull, x: 1004, y: 1002});
+      this.waitForChangePointColor({loc: LocFull, x: 1292, y: 983, r: 247, g: 122, b: 76}, 10000);
+      if (!this.running) {return;}
+      sleep(1000);
+      console.log('確認分解');
+      this.clickPoint({loc: LocFull, x: 1292, y: 983});
+      this.waitForChangePointColor({loc: LocFull, x: 1088, y: 983, r: 247, g: 122, b: 76}, 10000);
+      if (!this.running) {return;}
+      sleep(1000);
+      console.log('分解完成');
+      this.clickPoint({loc: LocFull, x: 1088, y: 983});
+      if (!this.running) {return;}
+      sleep(3000);
+    }
+  }
+  keycode('BACK'); sleep(3000);
+  keycode('BACK'); sleep(2000);
+  keycode('BACK'); sleep(2000);
+}
+
+MapleM.prototype.updateEquip = function() {
   this.clickPoint({loc: LocFull, x: 1090, y: 90});
   this.waitForChangePointColor({loc: LocFull, x: 665, y: 990, r: 247, g: 252, b: 246}, 15000);
+  sleep(1000);
 
   console.log('尋找武器');
   var isFound = false;
@@ -594,10 +650,17 @@ MapleM.prototype.updateScreenshot = function(update) {
       releaseImage(this.img);
     }
     this.img = getScreenshotModify(0, 0, gUserScreenWidth, gUserScreenHeight, gResizeWidth, gResizeHeight, 80);
+    var size = getImageSize(this.img);
+    if (size.height > size.width) {
+      throw ERROR_SCREEN_ORIENTATION;
+    }
   }
   return this.img;
 }
 
+MapleM.prototype.startMapleMApp = function() {
+  execute('am start -n com.nexon.maplem.global/com.nexon.maplem.module.MapleUnityActivity');
+}
 
 MapleM.prototype.getPointColor = function(point, img) {
   if (img === undefined) {
@@ -675,6 +738,7 @@ MapleM.prototype.waitForChangePointColor = function(point, maxWaitTime) {
       return false;
     }
     sleep(500);
+    if (!this.running) {return;}
   }
   return false;
 }
@@ -709,6 +773,33 @@ MapleM.prototype.usePoints = function() {
   return pointData.success;
 }
 
+MapleM.prototype.getCurrentPage = function() {
+  var cPage = "unknown";
+  for (var k in gPages) {
+    var page = gPages[k];
+    var name = page.name;
+    var isPage = true;
+    for (var i in page.points) {
+      var point = page.points[i];
+      var c = this.getPointColor(point);
+      console.log(c.r, c.b, c.g)
+      var s = Colors.identityScore(c, point);
+      if (point.s !== undefined && s < point.s) {
+        isPage = false;
+        break;
+      } else if (s < 0.9) {
+        isPage = false;
+        break;
+      }
+    }
+    if (isPage) {
+      cPage = name;
+      break;
+    }
+  }
+  return cPage;
+}
+
 MapleM.prototype.startAutoBuy = function() {
   this.updatePoints();
   this.running = true;
@@ -741,10 +832,12 @@ function start(configString) {
 
 var DEFAULT_CONFIG = {
   accountId: '',
-  buyTimes: 10,
+  buyTimes: 2,
   armSelection: '2', // 武器
   armorSelection: '1', // 防具
+  equipUsage: 'break', // update or break
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
 // mapleM.startAutoBuy();
+// mapleM.breakEquip();

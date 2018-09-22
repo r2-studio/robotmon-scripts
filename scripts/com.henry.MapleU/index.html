@@ -175,10 +175,11 @@
     }
 
     TAG = "MapleU";
-    VERSION = 1;
+    VERSION = 2;
     DEFAULT_CONFIG = {
       accountId: '',
       buyTimes: 2,
+      equipUsage: 'update',
       armSelection: '0',
       armorSelection: '2',
     };
@@ -202,6 +203,8 @@
     function initView() {
       $('input:text[name="accountId"]').val(settings.accountId);
       $('input:text[name="buyTimes"]').val(settings.buyTimes);
+      $('input:radio[name="equipUsage"]')
+        .filter('[value="' + settings.equipUsage + '"]').attr('checked', true);
       $('input:radio[name="armSelection"]')
         .filter('[value="' + settings.armSelection + '"]').attr('checked', true);
       $('input:radio[name="armorSelection"]')
@@ -241,6 +244,7 @@
     function onValueChange() {
       settings.accountId = $('input:text[name="accountId"]').val();
       settings.buyTimes = +$('input:text[name="buyTimes"]').val();
+      settings.equipUsage = $('input:radio[name="equipUsage"]:checked').val();
       settings.armSelection = $('input:radio[name="armSelection"]:checked').val();
       settings.armorSelection = $('input:radio[name="armorSelection"]:checked').val();
       console.log(JSON.stringify(settings));
@@ -322,6 +326,10 @@
       買幾次寶箱
       <input name="buyTimes" type="text" value="1" size="5"/>
       <br />
+      <h3>裝備處理設定</h3>
+      <input name="equipUsage" type="radio" value="update" />升級
+      <input name="equipUsage" type="radio" value="break" />分解
+
       <h4>升級武器選擇</h4>
       <input name="armSelection" type="radio" value="0" />第一個武器 
       <input name="armSelection" type="radio" value="1" />綠色武器 
