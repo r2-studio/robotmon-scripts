@@ -41,7 +41,7 @@ function selectStage(useApple){
     releaseImage(markResize);
     */
     tapScale(1600,475,100);
-    sleep(2000);
+    sleep(3000);
     var screenShot = getScreenshot();
     if(checkImage(screenShot,stageFullImage,650,300,1200,250)){
         console.log("item box full");
@@ -56,7 +56,7 @@ function selectStage(useApple){
         return;
     }
     else if(checkImage(screenShot,noApImage,900,70,750,110)){
-        sleep(2000);
+        sleep(1000);
         switch(useApple){
             case -1:
             console.log("Ap not enough, stop script");
@@ -102,7 +102,7 @@ function selectStage(useApple){
                     break;
                 }
                 tapScale(1600,475,100);
-                sleep(1000);
+                sleep(5000);
                 var autoWaitScreenShot = getScreenshot();
                 if(!checkImage(autoWaitScreenShot,noApImage,900,70,750,110)){
                     releaseImage(autoWaitScreenShot);
@@ -219,12 +219,12 @@ function selectFriend(filter,servant,item,star){
                         if(server == "JP"){
                             if(!checkImage(screenShot,itemImage,100,655,310,90,0.9)){
                                 i1 = false;
-                            }else if(star == 1 && !checkImage(screenShot,starImage,377,713,14,14)){
+                            }else if(star == 1 && !checkStar(screenShot,0)){
                                 star1 = false;
                             }
                             if(!checkImage(screenShot,itemImage,100,1055,310,90,0.9)){
                                 i2 = false;
-                            }else if(star == 1 && !checkImage(screenShot,starImage,377,1113,14,14)){
+                            }else if(star == 1 && !checkStar(screenShot,1)){
                                 star2 = false;
                             }
                         }else if(server == "TW"){
@@ -232,12 +232,12 @@ function selectFriend(filter,servant,item,star){
                             var shortImage = cropImage(itemImage,0,0,itemSize.width,((itemSize.height * 0.667) | 0));
                             if(!checkImage(screenShot,shortImage,100,655,310,60,0.9)){
                                 i1 = false;
-                            }else if(star == 1 && !checkImage(screenShot,starImage,377,713,14,14)){
+                            }else if(star == 1 && !checkStar(screenShot,0)){
                                 star1 = false;
                             }
                             if(!checkImage(screenShot,shortImage,100,1055,310,60,0.9)){
                                 i2 = false;
-                            }else if(star == 1 && !checkImage(screenShot,starImage,377,1113,14,14)){
+                            }else if(star == 1 && !checkStar(screenShot,1)){
                                 star2 = false;
                             }
                             releaseImage(shortImage);
@@ -269,6 +269,29 @@ function selectFriend(filter,servant,item,star){
         }
         reloadFriend();
     }
+}
+
+function checkStar(screenShot,position){
+    var w = 10 * screenScale[0];
+    var h = 10 * screenScale[1];
+    var startX = screenOffset[0] + 379 * screenScale[0];
+    var startY =  screenOffset[1] + (720 + position * 400)* screenScale[1];
+    var isG = 0;
+    var notG = 0;
+    for(var i=0;i<w;i++){
+        for(var j=0;j<h;j++){
+            var color = getImageColor(screenShot,startX+i,startY+j);
+            if(color.g>color.r && color.g > color.b){
+                isG++;
+            }else{
+                notG++;
+            }
+        }
+    }
+    if(isG > notG * 3){
+        return true;
+    }
+    return false;
 }
 
 function reloadFriend(){

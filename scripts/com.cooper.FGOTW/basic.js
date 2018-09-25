@@ -1,4 +1,4 @@
-var version = "V1.33";
+var version = "V1.36";
 var isDebug = false;
 //image
 var noApImage;
@@ -58,7 +58,6 @@ var currentStageW;
 var currentStageH;
 var selectFriendPosition;
 
-
 var skillColor = [];
 var resetFriendCnt;
 var isImageInit = false;
@@ -69,6 +68,9 @@ var screenScale = [];
 var screenOffset = [];
 var realScreenSize = [];
 var runningScriptName = "";
+
+var checkBoxPosition = [];
+var checkBoxPointPosition = [];
 
 function startScript(loopTime,script,scriptName){
     loadImage();
@@ -111,6 +113,7 @@ function initIDE(serverString){
     loadApi();
     loadImage();
     initScreenSize();
+    initPosition();
     isScriptRunning = true;
 }
 
@@ -289,6 +292,8 @@ function initPosition(){
         currentStageH = 50;
 
         selectFriendPosition = [180,315,450,585,725,860,995,1130,1265];
+        checkBoxPosition = [2130,450,300,50];
+        checkBoxPointPosition = [450,850,350,150];
     }
     else if(server == "TW"){
         skillPositionX =[47,236,427,682,871,1062,1320,1509,1700];
@@ -307,6 +312,8 @@ function initPosition(){
         currentStageH = 50;
 
         selectFriendPosition = [315,450,585,725,860,995,1130,1265];
+        checkBoxPosition = [2210,360,190,40];
+        checkBoxPointPosition = [500,800,250,200];
     }
 
 }
