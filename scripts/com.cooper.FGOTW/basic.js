@@ -1,4 +1,4 @@
-var version = "V1.36";
+var version = "V1.37";
 var isDebug = false;
 //image
 var noApImage;
@@ -296,8 +296,8 @@ function initPosition(){
         checkBoxPointPosition = [450,850,350,150];
     }
     else if(server == "TW"){
-        skillPositionX =[47,236,427,682,871,1062,1320,1509,1700];
-        skillPositionY = 1185;
+        skillPositionX =[62,249,436,696,884,1071,1335,1523,1710];
+        skillPositionY = 1200;
         skillPositionW = 32;
         skillPositionH = 32;
         
@@ -306,12 +306,12 @@ function initPosition(){
         updateCardListOffsetWeakX = 224;
         updateCardListOffsetWeakY = [-310,-340];
 
-        currentStageX = 1747;
+        currentStageX = 1720;
         currentStageY = 25;
-        currentStageW = 30;
+        currentStageW = 50;
         currentStageH = 50;
 
-        selectFriendPosition = [315,450,585,725,860,995,1130,1265];
+        selectFriendPosition = [180,315,450,585,725,860,995,1130,1265];
         checkBoxPosition = [2210,360,190,40];
         checkBoxPointPosition = [500,800,250,200];
     }
