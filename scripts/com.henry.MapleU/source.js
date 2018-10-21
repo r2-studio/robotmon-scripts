@@ -136,10 +136,9 @@ var gItemMP = {loc: LocRB, x: 1850, y: 580};
 var gMenu1 = {loc: LocRB, x: 1180, y: 0};
 var gMenu2 = {loc: LocRB, x: 1920, y: 80};
 var gMenuBtn = {loc: LocRT, x: 1850, y: 60};
-var gQuickStoreBtn = {loc: LocFull, x: 280, y: 980};
-var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
-var gMoneyStoreBtn = {loc: LocFull, x: 480, y: 800};
-var gTreasureBtn = {loc: LocLT, x: 128, y: 732};
+var gQuickStoreBtn = {loc: LocUnknown, x: 280, y: 980};
+var gMoneyStoreBtn = {loc: LocUnknown, x: 480, y: 800};
+var gTreasureBtn = {loc: LocFull, x: 128, y: 600};
 
 var gPages = {
   mainPage: {name: 'mainPage', points: [
@@ -833,9 +832,9 @@ function start(configString) {
 var DEFAULT_CONFIG = {
   accountId: '',
   buyTimes: 2,
-  armSelection: '2', // 武器
-  armorSelection: '1', // 防具
-  equipUsage: 'break', // update or break
+  armSelection: '0', // 武器 0 => first, 1 => green, 2 => orange
+  armorSelection: '2', // 防具
+  equipUsage: 'update', // update or break
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
