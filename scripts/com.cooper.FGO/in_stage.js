@@ -361,14 +361,19 @@ function getCurrentStage(){
     return result;
 }
 function isQuestFinish(){
-    var positionX = [2280,120,990,1294,222, 215,1390,141,1480,1083, 210];
-    var positionY = [1340,140,165, 362,142, 137, 550,317, 500,1337, 145];
-    var positionW = [190 ,200,230, 373,545,2141, 510,649, 420, 376,  90];
-    var positionH = [55  ,110,285,  89, 77, 233,  40,113,  60,  77,  70];
+    //crop1540577715359_2100_1300_80_100
+    var positionX = [2280,120,990,1294,222, 215,1390,141,1480,1083, 2100];
+    var positionY = [1340,140,165, 362,142, 137, 550,317, 500,1337, 1300];
+    var positionW = [190 ,200,230, 373,545,2141, 510,649, 420, 376,   80];
+    var positionH = [55  ,110,285,  89, 77, 233,  40,113,  60,  77,  100];
+    var checkSize = 10;
+    if(server == "JP"){
+        checkSize = 11;
+    }
     var sameImage = [-1,-1];
     for(var j = 0;j<2;j++){
         var screenShot = getScreenshot();
-        for(var i = 0;i<10;i++){
+        for(var i = 0;i<checkSize;i++){
             if(!isScriptRunning){
                 return -1;
             }

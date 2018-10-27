@@ -1,4 +1,4 @@
-var version = "V1.38";
+var version = "V1.39";
 var isDebug = false;
 //image
 var noApImage;
