@@ -1,4 +1,4 @@
-var version = "V1.39";
+var version = "V1.41";
 var isDebug = false;
 //image
 var noApImage;
@@ -296,8 +296,8 @@ function initPosition(){
         checkBoxPointPosition = [450,850,350,150];
     }
     else if(server == "TW"){
-        skillPositionX =[47,236,427,682,871,1062,1320,1509,1700];
-        skillPositionY = 1185;
+        skillPositionX =[62,249,436,696,884,1071,1335,1523,1710];
+        skillPositionY = 1200;
         skillPositionW = 32;
         skillPositionH = 32;
         
@@ -306,12 +306,12 @@ function initPosition(){
         updateCardListOffsetWeakX = 224;
         updateCardListOffsetWeakY = [-310,-340];
 
-        currentStageX = 1747;
+        currentStageX = 1720;
         currentStageY = 25;
-        currentStageW = 30;
+        currentStageW = 50;
         currentStageH = 50;
 
-        selectFriendPosition = [315,450,585,725,860,995,1130,1265];
+        selectFriendPosition = [180,315,450,585,725,860,995,1130,1265];
         checkBoxPosition = [2210,360,190,40];
         checkBoxPointPosition = [500,800,250,200];
     }
@@ -401,6 +401,50 @@ function checkImage(screenShot,imageSmall,x,y,width,height,threshold){
     }else{
         return false;
     }
+}
+
+function checkImageAndColor(screenShot,imageSmall,x,y,width,height){
+    var size = getImageSize(screenShot);
+    if(size.width < size.height){
+        console.log("screen orientation wrong");
+        return false;
+    }
+    var threshold = 0.9;
+    
+    var realScreen = screenShot;
+    if(size.width > realScreenSize[0] || size.width > realScreenSize[1]){
+        realScreen = cropImage(screenShot,screenOffset[0],screenOffset[1],realScreenSize[0],realScreenSize[1]);
+    }
+    width = width * screenScale[0];
+    height = height * screenScale[1];
+    var resizeSmall = resizeImage(imageSmall,width,height);
+
+    x = x * screenScale[0] - 1;
+    y = y * screenScale[1] - 1;
+    if(x < 0){
+        x = 0;
+    }
+    if(y < 0){
+        y = 0;
+    }
+    var cropWidth = width + 2;
+    var cropHeight = height + 2;
+    if(x + cropWidth > realScreenSize[0]){
+        cropWidth = realScreenSize[0] - x;
+    }
+    if(y + cropHeight > realScreenSize[1]){
+        cropHeight = realScreenSize[1] - y;
+    }
+    var crop = cropImage(realScreen,x,y,cropWidth,cropHeight);
+    var find = findImage(crop,resizeSmall);
+    var r = false;
+    if(find.score > threshold){
+        r = compareImageColor(crop,find.x,find.y,resizeSmall,width,height,10);
+    }
+    releaseImage(crop);
+    releaseImage(resizeSmall);
+    releaseImage(realScreen);    
+    return r;
 }
 
 function findImageResize(imageBig,imageSmall,threshold){
@@ -521,6 +565,23 @@ function isSameColor(r1,g1,b1,r2,g2,b2){
         return true;
     }
     return false;
+}
+
+function compareImageColor(image1,offsetx,offsety,image2,w,h,scale){
+    var e = 0;
+    var c = 0;
+    for(var x=0;x<w;x+=scale){
+        for(var y=0;y<h;y+=scale){
+            var color1 = getImageColor(image1,offsetx+x,offsety+y);
+            var color2 = getImageColor(image2,x,y);
+            if(!isSameColor(color1.r,color1.g,color1.b,color2.r,color2.g,color2.b)){
+                e++;
+            }else{
+                c++;
+            }
+        }
+    }
+    return e * 2  < c;
 }
 
 function saveScreenShotImage(){

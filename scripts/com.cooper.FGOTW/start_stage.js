@@ -217,12 +217,12 @@ function selectFriend(filter,servant,item,star){
                     }
                     if(itemImage != undefined){
                         if(server == "JP"){
-                            if(!checkImage(screenShot,itemImage,100,655,310,90,0.9)){
+                            if(!checkImageAndColor(screenShot,itemImage,100,655,310,90)){
                                 i1 = false;
                             }else if(star == 1 && !checkStar(screenShot,0)){
                                 star1 = false;
                             }
-                            if(!checkImage(screenShot,itemImage,100,1055,310,90,0.9)){
+                            if(!checkImageAndColor(screenShot,itemImage,100,1055,310,90)){
                                 i2 = false;
                             }else if(star == 1 && !checkStar(screenShot,1)){
                                 star2 = false;
@@ -230,12 +230,12 @@ function selectFriend(filter,servant,item,star){
                         }else if(server == "TW"){
                             var itemSize = getImageSize(itemImage);
                             var shortImage = cropImage(itemImage,0,0,itemSize.width,((itemSize.height * 0.667) | 0));
-                            if(!checkImage(screenShot,shortImage,100,655,310,60,0.9)){
+                            if(!checkImageAndColor(screenShot,shortImage,100,655,310,60)){
                                 i1 = false;
                             }else if(star == 1 && !checkStar(screenShot,0)){
                                 star1 = false;
                             }
-                            if(!checkImage(screenShot,shortImage,100,1055,310,60,0.9)){
+                            if(!checkImageAndColor(screenShot,shortImage,100,1055,310,60)){
                                 i2 = false;
                             }else if(star == 1 && !checkStar(screenShot,1)){
                                 star2 = false;
