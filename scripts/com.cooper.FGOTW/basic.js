@@ -1,4 +1,4 @@
-var version = "V1.37";
+var version = "V1.41";
 var isDebug = false;
 //image
 var noApImage;
@@ -403,6 +403,50 @@ function checkImage(screenShot,imageSmall,x,y,width,height,threshold){
     }
 }
 
+function checkImageAndColor(screenShot,imageSmall,x,y,width,height){
+    var size = getImageSize(screenShot);
+    if(size.width < size.height){
+        console.log("screen orientation wrong");
+        return false;
+    }
+    var threshold = 0.9;
+    
+    var realScreen = screenShot;
+    if(size.width > realScreenSize[0] || size.width > realScreenSize[1]){
+        realScreen = cropImage(screenShot,screenOffset[0],screenOffset[1],realScreenSize[0],realScreenSize[1]);
+    }
+    width = width * screenScale[0];
+    height = height * screenScale[1];
+    var resizeSmall = resizeImage(imageSmall,width,height);
+
+    x = x * screenScale[0] - 1;
+    y = y * screenScale[1] - 1;
+    if(x < 0){
+        x = 0;
+    }
+    if(y < 0){
+        y = 0;
+    }
+    var cropWidth = width + 2;
+    var cropHeight = height + 2;
+    if(x + cropWidth > realScreenSize[0]){
+        cropWidth = realScreenSize[0] - x;
+    }
+    if(y + cropHeight > realScreenSize[1]){
+        cropHeight = realScreenSize[1] - y;
+    }
+    var crop = cropImage(realScreen,x,y,cropWidth,cropHeight);
+    var find = findImage(crop,resizeSmall);
+    var r = false;
+    if(find.score > threshold){
+        r = compareImageColor(crop,find.x,find.y,resizeSmall,width,height,10);
+    }
+    releaseImage(crop);
+    releaseImage(resizeSmall);
+    releaseImage(realScreen);    
+    return r;
+}
+
 function findImageResize(imageBig,imageSmall,threshold){
     if(threshold == undefined){
         threshold = 0.85;
@@ -521,6 +565,23 @@ function isSameColor(r1,g1,b1,r2,g2,b2){
         return true;
     }
     return false;
+}
+
+function compareImageColor(image1,offsetx,offsety,image2,w,h,scale){
+    var e = 0;
+    var c = 0;
+    for(var x=0;x<w;x+=scale){
+        for(var y=0;y<h;y+=scale){
+            var color1 = getImageColor(image1,offsetx+x,offsety+y);
+            var color2 = getImageColor(image2,x,y);
+            if(!isSameColor(color1.r,color1.g,color1.b,color2.r,color2.g,color2.b)){
+                e++;
+            }else{
+                c++;
+            }
+        }
+    }
+    return e * 2  < c;
 }
 
 function saveScreenShotImage(){

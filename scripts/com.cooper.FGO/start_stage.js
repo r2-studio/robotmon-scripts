@@ -41,7 +41,7 @@ function selectStage(useApple){
     releaseImage(markResize);
     */
     tapScale(1600,475,100);
-    sleep(2000);
+    sleep(5000);
     var screenShot = getScreenshot();
     if(checkImage(screenShot,stageFullImage,650,300,1200,250)){
         console.log("item box full");
@@ -55,8 +55,7 @@ function selectStage(useApple){
         isScriptRunning = false;
         return;
     }
-    else if(checkImage(screenShot,noApImage,900,70,750,110)){
-        sleep(2000);
+    else if(!checkImage(screenShot,selectFriendImage,1340,200,420,100)){
         switch(useApple){
             case -1:
             console.log("Ap not enough, stop script");
@@ -102,9 +101,9 @@ function selectStage(useApple){
                     break;
                 }
                 tapScale(1600,475,100);
-                sleep(1000);
+                sleep(5000);
                 var autoWaitScreenShot = getScreenshot();
-                if(!checkImage(autoWaitScreenShot,noApImage,900,70,750,110)){
+                if(checkImage(autoWaitScreenShot,selectFriendImage,1340,200,420,100)){
                     releaseImage(autoWaitScreenShot);
                     break;
                 }
@@ -128,6 +127,7 @@ function selectStage(useApple){
         if(useApple >= 0 && useApple < 4){
             tapScale(1700,1135,100);
             sleep(2000);
+            /*
             if(server == "TW"){
                 while(true){
                     if(!isScriptRunning){
@@ -142,7 +142,7 @@ function selectStage(useApple){
                     releaseImage(screenShot3);
                     tapScale(1600,475,100);
                 }
-            }
+            }*/
         }
     }
     releaseImage(screenShot);
@@ -217,12 +217,12 @@ function selectFriend(filter,servant,item,star){
                     }
                     if(itemImage != undefined){
                         if(server == "JP"){
-                            if(!checkImage(screenShot,itemImage,100,655,310,90,0.9)){
+                            if(!checkImageAndColor(screenShot,itemImage,100,655,310,90)){
                                 i1 = false;
                             }else if(star == 1 && !checkStar(screenShot,0)){
                                 star1 = false;
                             }
-                            if(!checkImage(screenShot,itemImage,100,1055,310,90,0.9)){
+                            if(!checkImageAndColor(screenShot,itemImage,100,1055,310,90)){
                                 i2 = false;
                             }else if(star == 1 && !checkStar(screenShot,1)){
                                 star2 = false;
@@ -230,12 +230,12 @@ function selectFriend(filter,servant,item,star){
                         }else if(server == "TW"){
                             var itemSize = getImageSize(itemImage);
                             var shortImage = cropImage(itemImage,0,0,itemSize.width,((itemSize.height * 0.667) | 0));
-                            if(!checkImage(screenShot,shortImage,100,655,310,60,0.9)){
+                            if(!checkImageAndColor(screenShot,shortImage,100,655,310,60)){
                                 i1 = false;
                             }else if(star == 1 && !checkStar(screenShot,0)){
                                 star1 = false;
                             }
-                            if(!checkImage(screenShot,shortImage,100,1055,310,60,0.9)){
+                            if(!checkImageAndColor(screenShot,shortImage,100,1055,310,60)){
                                 i2 = false;
                             }else if(star == 1 && !checkStar(screenShot,1)){
                                 star2 = false;

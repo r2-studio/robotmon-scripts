@@ -162,7 +162,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
     }
     updateServantExist(screenShot);
     releaseImage(screenShot);
-    //console.log(m);
+    console.log(m);
     for(var i =0;i<3;i++){
         for(var j=2;j>=0;j--){
             if(!isScriptRunning){
