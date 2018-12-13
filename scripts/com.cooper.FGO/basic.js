@@ -1,4 +1,4 @@
-var version = "V1.41";
+var version = "V1.42";
 var isDebug = false;
 //image
 var noApImage;
@@ -56,6 +56,7 @@ var currentStageX;
 var currentStageY;
 var currentStageW;
 var currentStageH;
+var checkFriendPosition;
 var selectFriendPosition;
 
 var skillColor = [];
@@ -291,6 +292,7 @@ function initPosition(){
         currentStageW = 50;
         currentStageH = 50;
 
+        checkFriendPosition = [1480,200,300,100];
         selectFriendPosition = [180,315,450,585,725,860,995,1130,1265];
         checkBoxPosition = [2130,450,300,50];
         checkBoxPointPosition = [450,850,350,150];
@@ -311,6 +313,7 @@ function initPosition(){
         currentStageW = 50;
         currentStageH = 50;
 
+        checkFriendPosition = [1340,200,420,100];
         selectFriendPosition = [180,315,450,585,725,860,995,1130,1265];
         checkBoxPosition = [2210,360,190,40];
         checkBoxPointPosition = [500,800,250,200];
