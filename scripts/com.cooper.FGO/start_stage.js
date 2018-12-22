@@ -155,6 +155,12 @@ function selectFriend(filter,servant,item,star){
     if(!isScriptRunning){
         return;
     }
+
+    var teamScreenShot = getScreenshot();
+    if(checkImage(teamScreenShot,selectTeamImage,2270,1300,230,100)){
+        tapScale(200,100,100);
+    }
+    releaseImage(teamScreenShot);
     var servantImage;
     if(servant.length > 0){
         servantImage = openImage(itemPath+"friend_servant/"+servant+".png");
