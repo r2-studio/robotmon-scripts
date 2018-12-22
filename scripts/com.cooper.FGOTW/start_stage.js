@@ -55,7 +55,7 @@ function selectStage(useApple){
         isScriptRunning = false;
         return;
     }
-    else if(!checkImage(screenShot,selectFriendImage,1340,200,420,100)){
+    else if(!checkImage(screenShot,selectFriendImage,checkFriendPosition[0],checkFriendPosition[1],checkFriendPosition[2],checkFriendPosition[3])){
         switch(useApple){
             case -1:
             console.log("Ap not enough, stop script");
@@ -155,6 +155,12 @@ function selectFriend(filter,servant,item,star){
     if(!isScriptRunning){
         return;
     }
+
+    var teamScreenShot = getScreenshot();
+    if(checkImage(teamScreenShot,selectTeamImage,2270,1300,230,100)){
+        tapScale(200,100,100);
+    }
+    releaseImage(teamScreenShot);
     var servantImage;
     if(servant.length > 0){
         servantImage = openImage(itemPath+"friend_servant/"+servant+".png");
@@ -168,7 +174,7 @@ function selectFriend(filter,servant,item,star){
             return;
         }
         var screenShot2 = getScreenshot();
-        if(!checkImage(screenShot2,selectFriendImage,1340,200,420,100)){
+        if(!checkImage(screenShot2,selectFriendImage,checkFriendPosition[0],checkFriendPosition[1],checkFriendPosition[2],checkFriendPosition[3])){
             releaseImage(screenShot2);
             sleep(3000);
             continue;

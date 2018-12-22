@@ -101,15 +101,15 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 1.43,
-      "description": "<div>V1.43修正無法換箱與加入好友卡住bug<br><br>V1.42 修正新版選擇好友卡住的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 1.44,
+      "description": "<div>V1.44 嘗試解決在隊伍畫面亂戳的問題<br><br>V1.43修正無法換箱與加入好友卡住bug<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 1.41,
-      "description": "<div>V1.41 修正關卡判斷錯誤bug<br><br>V1.37 修正新介面造成的各種問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 1.44,
+      "description": "<div>V1.44 嘗試解決在隊伍畫面亂戳的問題<br><br>V1.41 修正關卡判斷錯誤bug<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
