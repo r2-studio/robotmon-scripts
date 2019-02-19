@@ -102,10 +102,10 @@ var Utils = function () {
 
       xStep = (endX - x) / step;
       yStep = (endY - y) / step;
-      for (i = 0; i < step; i ++) {
+      for (i = 0; i < step; i++) {
         moveTo(x + i * xStep, y + i * yStep, 40);
       }
-      
+
       tapUp(endX, endY);
     }
   }, {
@@ -251,7 +251,7 @@ var Image = function () {
     {
       key: 'check',
       value: function check(img) {
-      
+
         var result = findImage(img, targetImg);
         // console.log(JSON.stringify(result));
 
@@ -382,7 +382,7 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
     new FeaturePoint(820, 1950, 40, 170, 210, true, 35),
     new FeaturePoint(1240, 1950, 40, 170, 210, true, 35),
   ])
-    // This Rect shows fairy reward type
+  // This Rect shows fairy reward type
   this.fairyRewardRect = new Rect(70, 1600, 400, 1900);
   this.QuitGameNo = new PageFeature('QuitGameNo', [
     new FeaturePoint(190, 1650, 240, 130, 10, true, 35),
@@ -470,10 +470,10 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
 
 var SkillEnum = Object.freeze({ 'none': 1, 'ok': 2, 'active': 3, 'oom': 4 })
 var SkillColor = Object.freeze({
-  'none': {r: 0, g: 0, b: 0},
-  'ok': {r: 250, g: 250, b: 250},
-  'active': {r: 250, g: 170, b: 50},
-  'oom': {r: 120, g: 120, b: 130},
+  'none': { r: 0, g: 0, b: 0 },
+  'ok': { r: 250, g: 250, b: 250 },
+  'active': { r: 250, g: 170, b: 50 },
+  'oom': { r: 120, g: 120, b: 130 },
 })
 
 var RoleState = function () {
@@ -501,7 +501,7 @@ var RoleState = function () {
   _createClass(RoleState, [{
     key: 'print',
     value: function print() {
-      console.log('time: ', Math.floor((Date.now() - startTime)/1000/60), 'm', Math.floor(((Date.now() - startTime)/1000)%60), 's, of', settings.prestigeTime / 60, 'mins');
+      console.log('time: ', Math.floor((Date.now() - startTime) / 1000 / 60), 'm', Math.floor(((Date.now() - startTime) / 1000) % 60), 's, of', settings.prestigeTime / 60, 'mins');
     }
   }]);
 
@@ -509,7 +509,7 @@ var RoleState = function () {
 }();
 
 var GameAssistant = function () {
-  function GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, prestigeTime, upgradeAllHeroCD) {
+  function GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyRandomTapEnabed, prestigeTime, upgradeAllHeroCD) {
     _classCallCheck(this, GameAssistant);
 
     // this.config = config || { conditions: [] };
@@ -519,6 +519,7 @@ var GameAssistant = function () {
     this.shouldRandomSleep = randomSleep;
     this.shouldTapFairyRoute = tapFairyRoute === false ? false : true;
     this.isVipEnabled = vipEnabled;
+    this.isFairyRandomTapEnabed = fairyRandomTapEnabed;
     gDebug = debug == true ? true : false;
     this.localPath = getStoragePath() + '/scripts/com.r2studio.TapTitans2/images/';
     this._loop = false;
@@ -534,7 +535,7 @@ var GameAssistant = function () {
       gear: openImage(this.localPath + 'gear.png')
     };
 
-    Object.keys(this.images).forEach(function(key) {
+    Object.keys(this.images).forEach(function (key) {
       if (this.images[key] != 0) {
         this.images[key] = Utils.fitImageSize(this.images[key]);
       } else {
@@ -574,7 +575,7 @@ var GameAssistant = function () {
       while (this._loop) {
         this.refreshScreen();
 
-        if (this.shouldCheckInGame){
+        if (this.shouldCheckInGame) {
           console.log('check checkInGame');
           this.checkInGame();
 
@@ -599,13 +600,13 @@ var GameAssistant = function () {
 
         if (this.shouldTapFairyRoute) {
           console.log('check tapFairy');
-          this.tapFairy();  
+          this.tapFairy();
 
           this.checkRandomSleep(3);
         }
 
         console.log('check checkWarCry');
-        if (Math.floor((Date.now() - this.roundStart)/1000/60) > 3) {
+        if (Math.floor((Date.now() - this.roundStart) / 1000 / 60) > 3) {
           this.checkWarCry();
         }
 
@@ -634,14 +635,14 @@ var GameAssistant = function () {
     key: 'upgradeAllHeros',
     value: function upgradeAllHeros() {
       if (Date.now() - this.rState.lastUpgradeAllHeros < this.gInfo.upgradeAllHeroCD * 60 * 1000) {
-        console.log('upgradeAllHeros cd: ', (Date.now() - this.rState.lastUpgradeAllHeros)/ 1000);
+        console.log('upgradeAllHeros cd: ', (Date.now() - this.rState.lastUpgradeAllHeros) / 1000);
         return false;
       }
 
       console.log('time to upgrade all heros');
 
       // Open Hero Tab
-      for (var i = 0; i < 3; i ++) {
+      for (var i = 0; i < 3; i++) {
         this.refreshScreen();
         if (this.gInfo.heroTab.check(this._img)) {
           break;
@@ -652,7 +653,7 @@ var GameAssistant = function () {
       }
 
       // expend full tab
-      for (var i = 0; i < 3; i ++) {
+      for (var i = 0; i < 3; i++) {
         this.refreshScreen();
         if (!this.gInfo.expendTabPage.check(this._img)) {
           this.gInfo.expendTab.tap();
@@ -664,7 +665,7 @@ var GameAssistant = function () {
         sleep(1000);
       }
 
-      for (var i = 0; i < 4; i ++) {
+      for (var i = 0; i < 4; i++) {
         for (var y = 420; y < 2440; y += 200) {
           Utils.mTap(1250, y, 200);
         }
@@ -679,7 +680,7 @@ var GameAssistant = function () {
       }
 
       // Swipe to top
-      for(var i = 0; i < 5; i ++) {
+      for (var i = 0; i < 5; i++) {
         this.ttListSwipeDown();
         sleep(350);
       }
@@ -687,7 +688,7 @@ var GameAssistant = function () {
       // Check the tab is shrinked
       this.gInfo.shrinkTab.tap();
       sleep(200);
-      for (var i = 0; i < 6; i ++) {
+      for (var i = 0; i < 6; i++) {
         this.refreshScreen();
         var img = this.gInfo.gearRect.crop(this._img);
         var r = findImage(img, this.images.gear);
@@ -715,7 +716,7 @@ var GameAssistant = function () {
       this.refreshScreen();
       // Close all tabs
       this.gInfo.masterTab.tap(1, 400);
-      for (var i = 0; i < 3; i ++) {
+      for (var i = 0; i < 3; i++) {
         this.refreshScreen();
         if (!this.gInfo.masterTab.check(this._img)) {
           break;
@@ -726,7 +727,7 @@ var GameAssistant = function () {
       }
 
       // this.refreshScreen();
-      Object.keys(this.rState.skillsState).forEach(function(name, index) {
+      Object.keys(this.rState.skillsState).forEach(function (name, index) {
         var c = this.gInfo.skillStatusRef[index].getColor(this._img);
 
         if (Utils.isSameColor(c, SkillColor.none)) {
@@ -764,7 +765,7 @@ var GameAssistant = function () {
       else if (this.rState.skillsState['WC'] == SkillEnum.oom) {
         console.log('try to solve OOM');
         this.toLearn = null;
-        Object.keys(this.rState.skillsState).forEach(function(name, index) {
+        Object.keys(this.rState.skillsState).forEach(function (name, index) {
           if (this.toLearn !== null) {
             return;
           }
@@ -794,7 +795,7 @@ var GameAssistant = function () {
     value: function learnSkill(skill) {
       console.log('learn: ', JSON.stringify(skill))
       // Open master tab
-      for (var i = 0; i < 3; i ++) {
+      for (var i = 0; i < 3; i++) {
         this.refreshScreen();
         if (this.gInfo.masterTab.check(this._img)) {
           break;
@@ -812,14 +813,14 @@ var GameAssistant = function () {
       }
 
       // swipe to top
-      for(var i = 0; i < 5; i ++) {
+      for (var i = 0; i < 5; i++) {
         this.refreshScreen();
         var img = this.gInfo.accountExpendRect.crop(this._img);
         var r = findImage(img, this.images.account);
         r.score = r.score.toFixed(2);
         console.log('r: ', JSON.stringify(r))
         releaseImage(img);
-  
+
         if (r.score > 0.78) {
           console.log('master tab expanded')
           break;
@@ -836,7 +837,7 @@ var GameAssistant = function () {
       if (skill.check(this._img)) {
         console.log('learn skill')
 
-        for (var i = 0; i < 20; i ++) {
+        for (var i = 0; i < 20; i++) {
           skill.tap(1, 300);
         }
       }
@@ -879,32 +880,32 @@ var GameAssistant = function () {
         }
 
         // swipe to top
-        for(var i = 0; i < 3; i ++) {
+        for (var i = 0; i < 3; i++) {
           this.ttListSwipeDown();
           sleep(200);
         }
-  
+
         // upgradeMaster
         this.gInfo.upgradeMaster.tap(5, 100);
-  
-        for (var i = 0; i < 7; i ++) {
+
+        for (var i = 0; i < 7; i++) {
           this.ttListSwipeUp();
           sleep(250);
         }
-  
+
         this.gInfo.prestige.tap(1, 50);
         this.gInfo.prestige2.tap(1, 200);
         this.gInfo.prestige3.tap(1, 300);
 
         this.roundStart = Date.now();
       } else {
-        console.log('time: ', Math.floor((Date.now() - this.roundStart)/1000/60), 'm', Math.floor(((Date.now() - this.roundStart)/1000)%60), 's, of', this.gInfo.prestigeTime, 'mins');
+        console.log('time: ', Math.floor((Date.now() - this.roundStart) / 1000 / 60), 'm', Math.floor(((Date.now() - this.roundStart) / 1000) % 60), 's, of', this.gInfo.prestigeTime, 'mins');
       }
     }
   }, {
     key: 'upgradeHeros',
     value: function upgradeHeros() {
-      for (var i = 0; i < 3; i ++) {
+      for (var i = 0; i < 3; i++) {
         this.refreshScreen();
         if (this.gInfo.heroTab.check(this._img)) {
           break;
@@ -930,7 +931,7 @@ var GameAssistant = function () {
     value: function tapGround() {
       this.gInfo.petEggs.tap(1, 300);
       this.gInfo.inactiveGold.tap(1, 300);
-      for (var i =  -5; i < 5; i ++) {
+      for (var i = -5; i < 5; i++) {
         Utils.mTap(this.gInfo.petGold.x + 0.1 * i * gDeviceWidth, this.gInfo.petGold.y, 80);
       }
 
@@ -941,7 +942,7 @@ var GameAssistant = function () {
     key: 'idleTap',
     value: function idleTap(duration) {
       var i = 0;
-      while(i < duration) {
+      while (i < duration) {
         var sleepTime = 40 + Utils.getRandomInt(40);
 
         this.tapRandom(700, 1250, 50, 50, sleepTime);
@@ -952,25 +953,25 @@ var GameAssistant = function () {
     key: 'tapFairy',
     value: function tapFairy() {
       // Tap the fairy route 3 times
-      for (var j = 0; j < 4; j ++) {
-        for (var i = 0; i < 10; i ++) {
+      for (var j = 0; j < 4; j++) {
+        for (var i = 0; i < 10; i++) {
           Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y, 80);
         }
 
         // Click left heros
-        for (var i = 0; i < 10; i ++) {
+        for (var i = 0; i < 10; i++) {
           Utils.mTap(350, 333 + i * 100, 80);
         }
 
         // Click right heros
-        for (var i = 0; i < 10; i ++) {
+        for (var i = 0; i < 10; i++) {
           Utils.mTap(1280, 333 + i * 100, 80);
         }
 
         // Tap ground
         this.gInfo.petEggs.tap(1, 300);
         this.gInfo.inactiveGold.tap(1, 300);
-        for (var i =  -5; i < 5; i ++) {
+        for (var i = -5; i < 5; i++) {
           Utils.mTap(this.gInfo.petGold.x + 0.1 * i * gDeviceWidth, this.gInfo.petGold.y, 80);
         }
 
@@ -978,7 +979,6 @@ var GameAssistant = function () {
         this.refreshScreen();
         if (this.gInfo.fairyNoThanks.check(this._img) &&
           this.gInfo.fairyWatchAds.check(this._img)) {
-            this.idleTap(500);
 
           if (this.isVipEnabled) {
             console.log('we are VIPs, collecting awards');
@@ -987,18 +987,23 @@ var GameAssistant = function () {
             console.log('found noThanks, tapping');
             this.gInfo.fairyNoThanks.tap();
           }
+
+          if (this.isFairyRandomTapEnabed) {
+            this.idleTap(500);
+          }
+
         }
       }
 
       this.idleTap(1500);
 
       console.log('looking for fairyNoThanks, may take 6 secs')
-      for (var i = 0; i < 20; i ++) {
+      for (var i = 0; i < 20; i++) {
         this.refreshScreen();
 
         if (this.gInfo.fairyNoThanks.check(this._img) &&
           this.gInfo.fairyWatchAds.check(this._img)) {
-            this.idleTap(500);
+          this.idleTap(500);
 
           if (this.isVipEnabled) {
             console.log('we are VIPs, collecting awards');
@@ -1014,7 +1019,7 @@ var GameAssistant = function () {
   }, {
     key: 'fightStageBoss',
     value: function fightStageBoss() {
-      for (var i = 0; i < 5; i ++) {
+      for (var i = 0; i < 5; i++) {
         this.refreshScreen();
         if (this.gInfo.fightStageBoss.check(this._img)) {
           this.gInfo.fightStageBoss.tap();
@@ -1036,7 +1041,7 @@ var GameAssistant = function () {
         this.gInfo.clanBoss2.tap();
 
         var foundBoss = false;
-        for (var i = 0; i < 40; i ++) {
+        for (var i = 0; i < 40; i++) {
           this.refreshScreen();
           var img = this.gInfo.fightClanBossRect.crop(this._img);
           var r = findImage(img, this.images.fightClanBoss);
@@ -1063,12 +1068,12 @@ var GameAssistant = function () {
         } else {
           this.safeSleep(7000);
           console.log('start taping');
-          for (i = 0; i < 27 && this._loop; i ++){
-            for (j = 0; j < 10 && this._loop; j ++) {
+          for (i = 0; i < 27 && this._loop; i++) {
+            for (j = 0; j < 10 && this._loop; j++) {
               this.tapRandom(700, 900, 50, 50, 80);
             }
           }
-  
+
           console.log('tap complete');
           this.safeSleep(8000);
           console.log('tap back 1/3')
@@ -1124,7 +1129,7 @@ var GameAssistant = function () {
         return;
       }
 
-      for (var i = 0; i < 5; i ++) {
+      for (var i = 0; i < 5; i++) {
         this.refreshScreen();
         var wh = getScreenSize();
         if (wh.width > wh.height) {
@@ -1135,7 +1140,7 @@ var GameAssistant = function () {
           continue;
         }
 
-        if (this.gInfo.inGamePage.check(this._img)){
+        if (this.gInfo.inGamePage.check(this._img)) {
           return;
         }
         sleep(2000);
@@ -1148,7 +1153,7 @@ var GameAssistant = function () {
       keycode('BACK', 100);
 
       sleep(3000);
-      for (var i = 0; i < 90; i ++) {
+      for (var i = 0; i < 90; i++) {
         this.refreshScreen();
 
         if (this.gInfo.fairyCollectReward.check(this._img)) {
@@ -1159,17 +1164,17 @@ var GameAssistant = function () {
         sleep(1000);
       }
 
-      if (this.gInfo.inGamePage.check(this._img)){
+      if (this.gInfo.inGamePage.check(this._img)) {
         console.log('back worked');
         return;
       }
-      if (this.gInfo.QuitGameNo.check(this._img)){
+      if (this.gInfo.QuitGameNo.check(this._img)) {
         this.gInfo.QuitGameNo.tap();
         console.log('tap quit no');
         return;
       }
 
-      console.log('still cant find gear icon, stopping, exec time: ' + (Date.now() - this.roundStart)/1000 + ' secs');
+      console.log('still cant find gear icon, stopping, exec time: ' + (Date.now() - this.roundStart) / 1000 + ' secs');
       this.stop();
       return;
     }
@@ -1198,7 +1203,7 @@ var GameAssistant = function () {
 
 var assistant = undefined;
 
-function start(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, prestigeTime, upgradeAllHeroCD) {
+function start(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyRandomTapEnabed, prestigeTime, upgradeAllHeroCD) {
   console.log('📢 啟動腳本 📢');
   if (typeof config === 'string') {
     config = JSON.parse(config);
@@ -1208,7 +1213,7 @@ function start(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, prest
     return;
   }
 
-  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, prestigeTime, upgradeAllHeroCD);
+  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyRandomTapEnabed, prestigeTime, upgradeAllHeroCD);
   assistant.start();
   // TODO: don't know why won't work
   // assistant.stop();
