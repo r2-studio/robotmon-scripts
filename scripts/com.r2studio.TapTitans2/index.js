@@ -292,16 +292,16 @@ var FeaturePoint = function (_Point) {
 
   _createClass(FeaturePoint, [{
     key: 'check',
-    value: function check(img) {
+    value: function check(img, msg) {
       this.colorCheck = getImageColor(img, this.tx, this.ty);
       if (this.need && !Utils.isSameColor(this.colorCheck, this, this.d)) {
         if (gDebug) {
-          console.log('!c, (x, y, r, g, b):', this.tx, this.ty, this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
+          console.log(msg + ', rgb:', this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
         }
         return false;
       } else if (!this.need && Utils.isSameColor(this.colorCheck, this, this.d)) {
         if (gDebug) {
-          console.log('!c: ', this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
+          console.log(msg + ', rgb:', this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
         }
         return false;
       }
@@ -333,10 +333,10 @@ var PageFeature = function () {
 
   _createClass(PageFeature, [{
     key: 'check',
-    value: function check(img) {
+    value: function check(img, msg) {
       for (var i = 0; i < this.featurPoints.length; i++) {
         var _p = this.featurPoints[i];
-        if (!_p.check(img)) {
+        if (!_p.check(img, msg)) {
           return false;
         }
       }
@@ -375,12 +375,12 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
 
   this.fightStageBoss = new FeaturePoint(1290, 110, 240, 100, 20, true, 40);
   this.fairyNoThanks = new PageFeature('fairyNoThanks', [
-    new FeaturePoint(500, 2050, 240, 140, 10, true, 35),
-    new FeaturePoint(300, 1950, 240, 140, 10, true, 35),
-    new FeaturePoint(150, 1950, 240, 140, 10, true, 35)]);
+    new FeaturePoint(600, 1950, 240, 140, 10, true, 35),
+    new FeaturePoint(600, 1850, 240, 140, 10, true, 35),
+    new FeaturePoint(150, 1850, 240, 140, 10, true, 35)]);
   this.fairyWatchAds = new PageFeature('fairyWatchAds', [
-    new FeaturePoint(820, 1950, 40, 170, 210, true, 35),
-    new FeaturePoint(1240, 1950, 40, 170, 210, true, 35),
+    new FeaturePoint(1250, 1930, 40, 170, 210, true, 35),
+    new FeaturePoint(1250, 1850, 40, 170, 210, true, 35),
   ])
   // This Rect shows fairy reward type
   this.fairyRewardRect = new Rect(70, 1600, 400, 1900);
@@ -509,7 +509,7 @@ var RoleState = function () {
 }();
 
 var GameAssistant = function () {
-  function GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyRandomTapEnabed, prestigeTime, upgradeAllHeroCD) {
+  function GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyNoRandomTapEnabed, prestigeTime, upgradeAllHeroCD) {
     _classCallCheck(this, GameAssistant);
 
     // this.config = config || { conditions: [] };
@@ -519,7 +519,7 @@ var GameAssistant = function () {
     this.shouldRandomSleep = randomSleep;
     this.shouldTapFairyRoute = tapFairyRoute === false ? false : true;
     this.isVipEnabled = vipEnabled;
-    this.isFairyRandomTapEnabed = fairyRandomTapEnabed;
+    this.isFairyNoRandomTapEnabed = fairyNoRandomTapEnabed;
     gDebug = debug == true ? true : false;
     this.localPath = getStoragePath() + '/scripts/com.r2studio.TapTitans2/images/';
     this._loop = false;
@@ -953,7 +953,9 @@ var GameAssistant = function () {
     key: 'tapFairy',
     value: function tapFairy() {
       // Tap the fairy route 3 times
-      for (var j = 0; j < 4; j++) {
+      for (var j = 0; j < 5; j++) {
+
+        // Tap upper fiary route
         for (var i = 0; i < 10; i++) {
           Utils.mTap(this.gInfo.ship.x + 0.1 * i * gDevWidth, this.gInfo.ship.y, 80);
         }
@@ -975,10 +977,11 @@ var GameAssistant = function () {
           Utils.mTap(this.gInfo.petGold.x + 0.1 * i * gDeviceWidth, this.gInfo.petGold.y, 80);
         }
 
+        console.log('start checking fairies')
         // Tap Fairy NoThanks
         this.refreshScreen();
-        if (this.gInfo.fairyNoThanks.check(this._img) &&
-          this.gInfo.fairyWatchAds.check(this._img)) {
+        if (this.gInfo.fairyNoThanks.check(this._img, 'NoThanks:') &&
+          this.gInfo.fairyWatchAds.check(this._img, 'ad:')) {
 
           if (this.isVipEnabled) {
             console.log('we are VIPs, collecting awards');
@@ -988,10 +991,9 @@ var GameAssistant = function () {
             this.gInfo.fairyNoThanks.tap();
           }
 
-          if (this.isFairyRandomTapEnabed) {
+          if (!this.isFairyNoRandomTapEnabed) {
             this.idleTap(500);
           }
-
         }
       }
 
@@ -1203,7 +1205,7 @@ var GameAssistant = function () {
 
 var assistant = undefined;
 
-function start(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyRandomTapEnabed, prestigeTime, upgradeAllHeroCD) {
+function start(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyNoRandomTapEnabed, prestigeTime, upgradeAllHeroCD) {
   console.log('📢 啟動腳本 📢');
   if (typeof config === 'string') {
     config = JSON.parse(config);
@@ -1213,7 +1215,7 @@ function start(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairy
     return;
   }
 
-  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyRandomTapEnabed, prestigeTime, upgradeAllHeroCD);
+  assistant = new GameAssistant(debug, checkInGame, tapFairyRoute, randomSleep, vipEnabled, fairyNoRandomTapEnabed, prestigeTime, upgradeAllHeroCD);
   assistant.start();
   // TODO: don't know why won't work
   // assistant.stop();
