@@ -295,13 +295,14 @@ var FeaturePoint = function (_Point) {
     value: function check(img, msg) {
       this.colorCheck = getImageColor(img, this.tx, this.ty);
       if (this.need && !Utils.isSameColor(this.colorCheck, this, this.d)) {
+        msg = msg == undefined ? '>' : msg + ','
         if (gDebug) {
-          console.log(msg + ', rgb:', this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
+          console.log(msg + ' xyrgb:', this.tx, this.ty, this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
         }
         return false;
       } else if (!this.need && Utils.isSameColor(this.colorCheck, this, this.d)) {
         if (gDebug) {
-          console.log(msg + ', rgb:', this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
+          console.log(msg + ' xyrgb:', this.tx, this.ty, this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
         }
         return false;
       }
