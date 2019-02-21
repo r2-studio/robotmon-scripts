@@ -295,7 +295,10 @@ var FeaturePoint = function (_Point) {
     value: function check(img, msg) {
       this.colorCheck = getImageColor(img, this.tx, this.ty);
       if (this.need && !Utils.isSameColor(this.colorCheck, this, this.d)) {
-        msg = msg == undefined ? '>' : msg + ','
+        if (msg == undefined) {
+          msg = '>'
+        }
+
         if (gDebug) {
           console.log(msg + ' xyrgb:', this.tx, this.ty, this.colorCheck.r, this.colorCheck.g, this.colorCheck.b)
         }
