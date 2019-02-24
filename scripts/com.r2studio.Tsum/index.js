@@ -2279,10 +2279,10 @@ function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, c
 
 function stop() {
   log(ts.logs.stop);
-  sleep(500);
+  sleep(300);
   if (ts != undefined) {
     ts.isRunning = false;
-    sleep(2000);
+    sleep(800);
     // loop stop here...
     ts.deinit();
     if (ts.recordReceive) {

@@ -138,7 +138,7 @@ var gMenu2 = {loc: LocRB, x: 1920, y: 80};
 var gMenuBtn = {loc: LocRT, x: 1850, y: 60};
 var gQuickStoreBtn = {loc: LocUnknown, x: 280, y: 980};
 var gMoneyStoreBtn = {loc: LocUnknown, x: 480, y: 800};
-var gTreasureBtn = {loc: LocFull, x: 128, y: 600};
+var gTreasureBtn = {loc: LocFull, x: 128, y: 871};
 
 var gPages = {
   mainPage: {name: 'mainPage', points: [
@@ -370,15 +370,17 @@ MapleM.prototype.updateEquip = function() {
 
   console.log('找到裝備，自動選擇');
   this.clickPoint({loc: LocFull, x: 1785, y: 996}); // auto select
-  sleep(2000);
+  sleep(2500);
 
   if (!this.running) {
     return;
   }
 
   console.log('選擇史詩');
-  this.clickPoint({loc: LocFull, x: 1235, y: 681}); // 史詩
-  sleep(2000);
+  if (this.config.keepPurple === 'break') {
+    this.clickPoint({loc: LocFull, x: 1235, y: 681}); // 史詩
+  }
+  sleep(2500);
 
   if (!this.running) {
     return;
@@ -835,6 +837,7 @@ var DEFAULT_CONFIG = {
   armSelection: '0', // 武器 0 => first, 1 => green, 2 => orange
   armorSelection: '2', // 防具
   equipUsage: 'update', // update or break
+  keepPurple: 'break', // keep or break
 };
 
 // mapleM = new MapleM(DEFAULT_CONFIG);
