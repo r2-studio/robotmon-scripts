@@ -1003,13 +1003,10 @@ var GameAssistant = function () {
 
       this.idleTap(1500);
 
-      console.log('looking for fairyNoThanks, may take 6 secs')
-      for (var i = 0; i < 20; i++) {
-        this.refreshScreen();
-
-        if (this.gInfo.fairyNoThanks.check(this._img) &&
-          this.gInfo.fairyWatchAds.check(this._img)) {
-          this.idleTap(500);
+      console.log('keep looking for fairyNoThanks.')
+      this.refreshScreen();
+      while(this.gInfo.fairyNoThanks.check(this._img) &&
+        this.gInfo.fairyWatchAds.check(this._img)) {
 
           if (this.isVipEnabled) {
             console.log('we are VIPs, collecting awards');
@@ -1018,9 +1015,29 @@ var GameAssistant = function () {
             console.log('found noThanks, tapping');
             this.gInfo.fairyNoThanks.tap();
           }
-        }
-        this.idleTap(350);
+
+          this.refreshScreen();
+          sleep(20);
       }
+      console.log('done fairyNoThanks.')
+
+      // for (var i = 0; i < 20; i++) {
+      //   this.refreshScreen();
+
+      //   if (this.gInfo.fairyNoThanks.check(this._img) &&
+      //     this.gInfo.fairyWatchAds.check(this._img)) {
+      //     this.idleTap(500);
+
+      //     if (this.isVipEnabled) {
+      //       console.log('we are VIPs, collecting awards');
+      //       this.gInfo.fairyWatchAds.tap();
+      //     } else {
+      //       console.log('found noThanks, tapping');
+      //       this.gInfo.fairyNoThanks.tap();
+      //     }
+      //   }
+      //   this.idleTap(350);
+      // }
     }
   }, {
     key: 'fightStageBoss',
