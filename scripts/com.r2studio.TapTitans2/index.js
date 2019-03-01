@@ -395,7 +395,7 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
     new FeaturePoint(500, 1700, 240, 130, 10, true, 35)]);
   this.fairyCollectReward = new PageFeature('fairyCollectReward', [
     new FeaturePoint(500, 1940, 40, 160, 200, true, 40),
-    new FeaturePoint(940, 2030, 40, 160, 200, true, 40)]);
+    new FeaturePoint(940, 1940, 40, 160, 200, true, 40)]);
 
   this.ship = new Point(140, 580);
   this.inactiveGold = new Point(100, 725);
@@ -470,6 +470,9 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
     new FeaturePoint(1170, 2540, 120, 100, 190, true, 30),
     new FeaturePoint(1400, 2540, 60, 130, 130, true, 30)
   ])
+
+  // Relic earn during prestige
+  this.prestigeRelicRect = new Rect(81, 1248, 690, 1565);
 };
 
 var SkillEnum = Object.freeze({ 'none': 1, 'ok': 2, 'active': 3, 'oom': 4 })
@@ -876,8 +879,8 @@ var GameAssistant = function () {
     key: 'testPrestige',
     value: function testPrestige() {
       if (Date.now() - this.roundStart > this.gInfo.prestigeTime * 60 * 1000) {
+        this.refreshScreen()
         console.log('Prestige');
-
         if (!this.gInfo.masterTab.check(this._img)) {
           this.gInfo.masterTab.tap();
           sleep(300);
@@ -899,6 +902,14 @@ var GameAssistant = function () {
 
         this.gInfo.prestige.tap(1, 50);
         this.gInfo.prestige2.tap(1, 200);
+
+        console.log('Sending Robotmon message...')
+        sleep(300)
+        this.refreshScreen();
+        var img = this.gInfo.prestigeRelicRect.crop(this._img);
+        sendNormalMessage('TapTitans2', getBase64FromImage(img))
+        releaseImage(img);
+
         this.gInfo.prestige3.tap(1, 300);
 
         this.roundStart = Date.now();
@@ -1001,7 +1012,7 @@ var GameAssistant = function () {
         }
       }
 
-      this.idleTap(1500);
+      this.idleTap(2500);
 
       console.log('keep looking for fairyNoThanks.')
       this.refreshScreen();
