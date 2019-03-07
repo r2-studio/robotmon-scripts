@@ -1,663 +1,680 @@
 <html>
-  <head>
-    <style>
-      .navbar-custom {
-        border-radius: 0 !important;
-        background-color: #2196F3;
-        color: #FFFFFF;
-      }
-      .navbar-custom > a {
-        width: 100%;
-        color: #FFFFFF;
-        text-align: center;
-      }
-      .navbar-custom > a:hover {
-        color: #FFFFFF;
-      }
 
-      .list-group-item {
-        padding: 6px 10px !important;
-      }
+<head>
+  <style>
+    .navbar-custom {
+      border-radius: 0 !important;
+      background-color: #2196F3;
+      color: #FFFFFF;
+    }
 
-      /* The switch - the box around the slider */
-      .switch {
-        position: relative; 
-        display: inline-block;
-        vertical-align: middle;
-        margin: 0px;
-        width: 52px;
-        height: 28px;
-      }
+    .navbar-custom>a {
+      width: 100%;
+      color: #FFFFFF;
+      text-align: center;
+    }
 
-      ul {
-        padding-left: 5px;
-      }
+    .navbar-custom>a:hover {
+      color: #FFFFFF;
+    }
 
-      /* Hide default HTML checkbox */
-      .switch input {display:none;}
+    .list-group-item {
+      padding: 6px 10px !important;
+    }
 
-      /* The slider */
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-      }
+    /* The switch - the box around the slider */
+    .switch {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0px;
+      width: 52px;
+      height: 28px;
+    }
 
-      .slider:before {
-        position: absolute;
-        content: "";
-        height: 24px;
-        width: 24px;
-        left: 2px;
-        bottom: 4px;
-        top: 2px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-      }
+    ul {
+      padding-left: 5px;
+    }
 
-      input:checked + .slider {
-        background-color: #2196F3;
-      }
+    /* Hide default HTML checkbox */
+    .switch input {
+      display: none;
+    }
 
-      input:focus + .slider {
-        box-shadow: 0 0 1px #2196F3;
-      }
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
 
-      input:checked + .slider:before {
-        -webkit-transform: translateX(24px);
-        -ms-transform: translateX(24px);
-        transform: translateX(24px);
-      }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 4px;
+      top: 2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
 
-      /* Rounded sliders */
-      .slider.round {
-        border-radius: 28px;
-      }
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
 
-      .slider.round:before {
-        border-radius: 50%;
-      }
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
 
-      .btn {
-        margin-left: 5px;
-      }
-      .btn-plus {
-        color:#FFFFFF;
-        background-color: #2196F3;
-        border-color: #2196F3;
-      }
-      .btn-plus:hover,
-      .btn-plus:focus,
-      .btn-plus:active,
-      .btn-plus.active {
-        color:#FFFFFF !important; 
-        background-color: #0d8aee;
-        border-color: #0c7cd5;
-      }
-      .btn-plus.disabled:hover,
-      .btn-plus.disabled:focus,
-      .btn-plus.disabled:active,
-      .btn-plus.disabled.active,
-      .btn-plus[disabled]:hover,
-      .btn-plus[disabled]:focus,
-      .btn-plus[disabled]:active,
-      .btn-plus[disabled].active,
-      fieldset[disabled] .btn-plus:hover,
-      fieldset[disabled] .btn-plus:focus,
-      fieldset[disabled] .btn-plus:active,
-      fieldset[disabled] .btn-plus.active {
-        color:#FFFFFF;
-        background-color: #2196F3;
-        border-color: #2196F3;
-      }
-      .btn-plus,
-      .btn-danger {
-        min-width: 35px;
-        padding: 3px 0px 3px 0px !important;
-      }
-      .setting_input_value {
-        width: 40px;
-        text-align: center;
-      }
-      .setting_input_value[type=text] {
-        width: 80%;
-      }
-      .row {
-          display: flex;
-          align-items: center;
-      }
-      #goToTop {
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-      }
-	  #goToBottom {
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-      }
-      .dropbtn {
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        border: 0.5px solid rgba(0,0,0,0.2);
-        background-color: white;
-      }
+    input:checked+.slider:before {
+      -webkit-transform: translateX(24px);
+      -ms-transform: translateX(24px);
+      transform: translateX(24px);
+    }
 
-      .dropdown {
-        position: relative;
-        display: inline-block;
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 28px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    .btn {
+      margin-left: 5px;
+    }
+
+    .btn-plus {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus:hover,
+    .btn-plus:focus,
+    .btn-plus:active,
+    .btn-plus.active {
+      color: #FFFFFF !important;
+      background-color: #0d8aee;
+      border-color: #0c7cd5;
+    }
+
+    .btn-plus.disabled:hover,
+    .btn-plus.disabled:focus,
+    .btn-plus.disabled:active,
+    .btn-plus.disabled.active,
+    .btn-plus[disabled]:hover,
+    .btn-plus[disabled]:focus,
+    .btn-plus[disabled]:active,
+    .btn-plus[disabled].active,
+    fieldset[disabled] .btn-plus:hover,
+    fieldset[disabled] .btn-plus:focus,
+    fieldset[disabled] .btn-plus:active,
+    fieldset[disabled] .btn-plus.active {
+      color: #FFFFFF;
+      background-color: #2196F3;
+      border-color: #2196F3;
+    }
+
+    .btn-plus,
+    .btn-danger {
+      min-width: 35px;
+      padding: 3px 0px 3px 0px !important;
+    }
+
+    .setting_input_value {
+      width: 40px;
+      text-align: center;
+    }
+
+    .setting_input_value[type=text] {
+      width: 80%;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+    }
+
+    #goToTop {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+    }
+
+    #goToBottom {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+    }
+
+    .dropbtn {
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 0.5px solid rgba(0, 0, 0, 0.2);
+      background-color: white;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 150px;
+      max-width: 200px;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 10px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .show {
+      display: block;
+    }
+  </style>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script>
+    VERSION = 10.8;
+
+    var settings = [
+      [
+        {
+          title: 'Welcome to TapTitan2 x Robotmon v0.2!',
+          title_zh_TW: '歡迎使用 TapTitan2 x Robotmon v0.2!',
+        },
+      ],
+      [
+        {
+          title: 'Language',
+          title_zh_TW: '語言',
+          buttons: [
+            {
+              title: 'En',
+              onclick: 'saveLocale("en-US")'
+            },
+            {
+              title: '中文',
+              onclick: 'saveLocale("zh-TW")'
+            }
+          ]
+        },
+        { title: 'Debug', title_zh_TW: '偵錯', default: true },
+        { title: 'Not in game check', title_zh_TW: '偵測跳出遊戲', default: true },
+        { title: 'Tap Fairy route', title_zh_TW: '點擊妖精路徑', default: true },
+        { title: 'Random sleep between actions', title_zh_TW: '動作間亂數休眠（反反外掛）', default: false },
+        { title: 'VIP (fairy no ads)', title_zh_TW: 'VIP（已去妖精廣告）', default: false },
+        { title: 'Fairy no random tap', title_zh_TW: '妖精廣告檢查時不隨機點擊', default: true },
+        // { title: 'Special Screen Ratio', title_zh_TW: '特殊螢幕比例', default: false},
+      ],
+      [
+        {
+          title: 'Time before Prestiage (minutes)',
+          title_zh_TW: '轉生一輪時間 (分)',
+          default: 45,
+          step: 5,
+          max: 120,
+          min: 0,
+        },
+        {
+          title: 'CD between upgrade all heros (minutes)',
+          title_zh_TW: '升級全部英雄冷卻時間 (分)',
+          default: 2,
+          step: 1,
+          max: 20,
+          min: 1,
+        },
+      ]
+    ];
+
+    function saveLocale(locale) {
+      if (localStorage !== undefined) {
+        localStorage.setItem('taptitan2Language', locale);
+        location.reload();
       }
+    }
 
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 150px;
-        max-width: 200px;
-        overflow: auto;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
+    function loadSettings(settings) {
+      var recordSettings = {};
+      if (localStorage = undefined) {
+        return;
       }
-
-      .dropdown-content a {
-        color: black;
-        padding: 10px;
-        text-decoration: none;
-        display: block;
+      var version = +localStorage.getItem('tapTitan2Version');
+      if (!version || VERSION != version) {
+        return;
       }
-
-      .dropdown a:hover {
-        background-color: #f1f1f1;
+      var settingsJSON = localStorage.getItem('tapTitan2Settings');
+      if (!settingsJSON) {
+        return;
       }
-
-      .show {
-        display: block;
+      recordSettings = JSON.parse(settingsJSON);
+      if (!recordSettings) {
+        return;
       }
-    </style>
-
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <script>
-      VERSION = 10.7;
-
-      var settings = [
-        [
-          {
-            title: 'Welcome to TapTitan2 x Robotmon v0.2!',
-            title_zh_TW: '歡迎使用 TapTitan2 x Robotmon v0.2!',
-          },
-        ],
-        [
-          {
-            title: 'Language',
-            title_zh_TW: '語言',
-            buttons: [
-              {
-                title: 'En',
-                onclick: 'saveLocale("en-US")'
-              },
-              {
-                title: '中文',
-                onclick: 'saveLocale("zh-TW")'
-              }
-            ]
-          },
-          { title: 'Debug', title_zh_TW: '偵錯', default: true},
-          { title: 'Not in game check', title_zh_TW: '偵測跳出遊戲', default: true},
-          { title: 'Tap Fairy route', title_zh_TW: '點擊妖精路徑', default: true},
-          { title: 'Random sleep between actions', title_zh_TW: '動作間亂數休眠（反反外掛）', default: false},
-          { title: 'VIP (fairy no ads)', title_zh_TW: 'VIP（已去妖精廣告）', default: false},
-          { title: 'Fairy no random tap', title_zh_TW: '妖精廣告檢查時不隨機點擊', default: true},
-          // { title: 'Special Screen Ratio', title_zh_TW: '特殊螢幕比例', default: false},
-        ],
-        [
-          {
-            title: 'Time before Prestiage (minutes)',
-            title_zh_TW: '轉生一輪時間 (分)',
-            default: 45,
-            step: 5,
-            max: 120,
-            min: 0,
-          },
-          {
-            title: 'CD between upgrade all heros (minutes)',
-            title_zh_TW: '升級全部英雄冷卻時間 (分)',
-            default: 2,
-            step: 1,
-            max: 20,
-            min: 1,
-          },
-        ]
-      ];
-
-      function saveLocale(locale) {
-        if (localStorage !== undefined) {
-          localStorage.setItem('taptitan2Language', locale);
-          location.reload();
+      for (var i in settings) {
+        for (var g in settings[i]) {
+          var id = i + '_' + g;
+          var setting = settings[i][g];
+          if (recordSettings[id] != undefined) {
+            setting.default = recordSettings[id];
+          }
         }
       }
 
-      function loadSettings(settings) {
+      // This is so we send the locale for logging.... we should do this better but good enough for now.
+      lang = localStorage.getItem('taptitan2Language');
+      if (lang === 'zh-TW') {
+        console.log('讀取設定');
+      } else {
+        console.log('Load settings');
+      }
+    }
+
+    function saveSettings(settings) {
+      if (localStorage != undefined) {
         var recordSettings = {};
-        if (localStorage = undefined) {
-          return;
-        }
-        var version = +localStorage.getItem('tapTitan2Version');
-        if (!version || VERSION != version) {
-          return;
-        }
-        var settingsJSON = localStorage.getItem('tapTitan2Settings');
-        if (!settingsJSON) {
-          return;
-        }
-        recordSettings = JSON.parse(settingsJSON);
-        if (!recordSettings) {
-          return;
-        }
         for (var i in settings) {
           for (var g in settings[i]) {
-            var id =  i + '_' + g;
-            var setting = settings[i][g];
-            if (recordSettings[id] != undefined) {
-              setting.default = recordSettings[id];
-            }
-          }
-        }
-		
-        // This is so we send the locale for logging.... we should do this better but good enough for now.
-        lang = localStorage.getItem('taptitan2Language');
-        if (lang === 'zh-TW'){
-          console.log('讀取設定');			
-        } else {
-          console.log('Load settings');
-        }
-      }
-
-      function saveSettings(settings) {
-        if (localStorage != undefined) {
-          var recordSettings = {};
-          for (var i in settings) {
-            for (var g in settings[i]) {
-              var id =  i + '_' + g;
-              var setting = settings[i][g];
-              if (typeof setting.default === 'boolean') {
-                recordSettings[id] = $('#setting_value_' + id).is(':checked');
-              } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
-                recordSettings[id] = setting.default;
-              } else if (typeof setting.default === 'number') {
-                recordSettings[id] = +$('#setting_value_' + id).val();
-              } else if (typeof setting.default === 'string') {
-                recordSettings[id] = $('#setting_value_' + id).val();
-              }
-            }
-          }
-          localStorage.setItem('tapTitan2Version', VERSION);
-          localStorage.setItem('tapTitan2Settings', JSON.stringify(recordSettings));
-
-          lang = localStorage.getItem('taptitan2Language');
-          if (lang === 'zh-TW'){
-              console.log('儲存設置');
-          } else {
-            console.log('Save settings');
-          }
-
-        }
-      }
-
-      function genStartCommand(settings) {
-        var command = 'start(';
-        for (var i in settings) {
-          for (var g in settings[i]) {
-            var id =  i + '_' + g;
+            var id = i + '_' + g;
             var setting = settings[i][g];
             if (typeof setting.default === 'boolean') {
-              command += $('#setting_value_' + id).is(':checked') + ', ';
+              recordSettings[id] = $('#setting_value_' + id).is(':checked');
             } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
-              command += '"' + setting.default + '", ';
+              recordSettings[id] = setting.default;
             } else if (typeof setting.default === 'number') {
-              command += $('#setting_value_' + id).val() + ', ';
+              recordSettings[id] = +$('#setting_value_' + id).val();
             } else if (typeof setting.default === 'string') {
-              command += '"' + $('#setting_value_' + id).val() + '", ';
+              recordSettings[id] = $('#setting_value_' + id).val();
             }
           }
         }
+        localStorage.setItem('tapTitan2Version', VERSION);
+        localStorage.setItem('tapTitan2Settings', JSON.stringify(recordSettings));
 
-        // This is where we send the locale to the start function
         lang = localStorage.getItem('taptitan2Language');
-        if (lang === 'zh-TW'){
-          command += 'true);';
-          console.log('啟動命令: ' + command);
+        if (lang === 'zh-TW') {
+          console.log('儲存設置');
         } else {
-          command += 'false);';
-          console.log('Start command: ' + command);
+          console.log('Save settings');
         }
 
-        return command;
+      }
+    }
+
+    function genStartCommand(settings) {
+      var command = 'start(';
+      for (var i in settings) {
+        for (var g in settings[i]) {
+          var id = i + '_' + g;
+          var setting = settings[i][g];
+          if (typeof setting.default === 'boolean') {
+            command += $('#setting_value_' + id).is(':checked') + ', ';
+          } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
+            command += '"' + setting.default + '", ';
+          } else if (typeof setting.default === 'number') {
+            command += $('#setting_value_' + id).val() + ', ';
+          } else if (typeof setting.default === 'string') {
+            command += '"' + $('#setting_value_' + id).val() + '", ';
+          }
+        }
       }
 
-      function getTitle(setting) {
-        if (localStorage === undefined) {
-          return setting.title;
-        }
-        var lang = localStorage.getItem('taptitan2Language');
-        if (!lang) {
-          return setting.title;
-        } else if (lang === 'zh-TW') {
-          return setting.title_zh_TW;
-        }
+      // This is where we send the locale to the start function
+      lang = localStorage.getItem('taptitan2Language');
+      if (lang === 'zh-TW') {
+        command += 'true);';
+        console.log('啟動命令: ' + command);
+      } else {
+        command += 'false);';
+        console.log('Start command: ' + command);
+      }
+
+      return command;
+    }
+
+    function getTitle(setting) {
+      if (localStorage === undefined) {
         return setting.title;
       }
-
-      function appendTitle(jSetting, title) {
-        jSetting.append('<div class="col-xs-6">' + title + '</div>');
+      var lang = localStorage.getItem('taptitan2Language');
+      if (!lang) {
+        return setting.title;
+      } else if (lang === 'zh-TW') {
+        return setting.title_zh_TW;
       }
+      return setting.title;
+    }
 
-      function appendCol(jSetting, jContent) {
-        var jDiv = $('<div class="pull-right"></div>');
-        var jCol = $('<div class="col-xs-6"></div>');
-        if (Array.isArray(jContent)) {
-          for (var j in jContent) {
-            jDiv.append(jContent[j]);
-          }
-        } else {
-          jDiv.append(jContent);
+    function appendTitle(jSetting, title) {
+      jSetting.append('<div class="col-xs-6">' + title + '</div>');
+    }
+
+    function appendCol(jSetting, jContent) {
+      var jDiv = $('<div class="pull-right"></div>');
+      var jCol = $('<div class="col-xs-6"></div>');
+      if (Array.isArray(jContent)) {
+        for (var j in jContent) {
+          jDiv.append(jContent[j]);
         }
-        jCol.append(jDiv);
-        jSetting.append(jCol);
+      } else {
+        jDiv.append(jContent);
       }
+      jCol.append(jDiv);
+      jSetting.append(jCol);
+    }
 
-      function getSwitchButton(id, checked) {
-        var jLabel = $('<label class="switch pull-right"></label>');
-        var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="checkbox" ' + (checked ? 'checked' : '') + '/>');
-        jInput.change(function() {saveSettings(settings);});
-        jLabel.append(jInput);
-        jLabel.append('<a class="slider round"></a>');
-        return jLabel;
-      }
+    function getSwitchButton(id, checked) {
+      var jLabel = $('<label class="switch pull-right"></label>');
+      var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="checkbox" ' + (checked ? 'checked' : '') + '/>');
+      jInput.change(function () { saveSettings(settings); });
+      jLabel.append(jInput);
+      jLabel.append('<a class="slider round"></a>');
+      return jLabel;
+    }
 
-      function genSettings(jContainer, settings) {
-        for (var i in settings) {
-          var jGroup = $('<div class="list-group"></div>');
-          for (var g in settings[i]) {
-            var id =  i + '_' + g;
-            var setting = settings[i][g];
-            var title = getTitle(setting);
-            var jGroupItem = $('<div id="setting_' + id + '" class="list-group-item"></div>');
-            var jSetting = $('<div class="row"></div>');
-            if (typeof setting.default === 'boolean') {
-              appendTitle(jSetting, title);
-              appendCol(jSetting, getSwitchButton(id, setting.default));
-            } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
-              var jDiv = $('<div class="dropdown"></div>');
-              var jDropdownBtn = $('<button id="setting_value_' + id + '" class="dropbtn"></button>');
-              var jDropdown = $('<div class="dropdown-content"></div>');
-              jDropdownBtn.click((function (jDropdown) {
+    function genSettings(jContainer, settings) {
+      for (var i in settings) {
+        var jGroup = $('<div class="list-group"></div>');
+        for (var g in settings[i]) {
+          var id = i + '_' + g;
+          var setting = settings[i][g];
+          var title = getTitle(setting);
+          var jGroupItem = $('<div id="setting_' + id + '" class="list-group-item"></div>');
+          var jSetting = $('<div class="row"></div>');
+          if (typeof setting.default === 'boolean') {
+            appendTitle(jSetting, title);
+            appendCol(jSetting, getSwitchButton(id, setting.default));
+          } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
+            var jDiv = $('<div class="dropdown"></div>');
+            var jDropdownBtn = $('<button id="setting_value_' + id + '" class="dropbtn"></button>');
+            var jDropdown = $('<div class="dropdown-content"></div>');
+            jDropdownBtn.click((function (jDropdown) {
+              return function () {
+                jDropdown.addClass('show');
+              }
+            })(jDropdown));
+            var items = setting.dropdown;
+            for (var index = 0; index < items.length; index++) {
+              var item = items[index];
+              var itemTitle = getTitle(item);
+              if (item.key === setting.default) {
+                jDropdownBtn.text(itemTitle);
+              }
+              var jItem = $('<a href="#' + itemTitle + '" class="action-dropdown-item">' + itemTitle + '</a>');
+              jItem.click((function (jDropdownBtn, itemTitle, setting, key) {
                 return function () {
-                  jDropdown.addClass('show');
-                }
-              })(jDropdown));
-              var items = setting.dropdown;
-              for (var index = 0; index < items.length; index++) {
-                var item = items[index];
-                var itemTitle = getTitle(item);
-                if (item.key === setting.default) {
+                  setting.default = key;
                   jDropdownBtn.text(itemTitle);
-                }
-                var jItem = $('<a href="#' + itemTitle + '" class="action-dropdown-item">' + itemTitle + '</a>');
-                jItem.click((function (jDropdownBtn, itemTitle, setting, key) {
-                  return function () {
-                    setting.default = key;
-                    jDropdownBtn.text(itemTitle);
-                    jDropdown.removeClass('show');
-                    saveSettings(settings);
-                  }
-                })(jDropdownBtn, itemTitle, setting, item.key));
-                jDropdown.append(jItem);
-              }
-              jDiv.append(jDropdownBtn).append(jDropdown);
-              appendTitle(jSetting, title);
-              appendCol(jSetting, jDiv);
-            } else if (typeof setting.default === 'number') {
-              var step = setting.step;
-              var max = setting.max;
-              var min = setting.min;
-              var jBtns = [];
-              var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>');
-              var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
-              var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
-              jBtnP.click((function(jInput, min, max, step){
-                return function() {
-                  var newValue = (+jInput.val()) + step;
-                  if (newValue <= max) {
-                    jInput.val(newValue);
-                  }
+                  jDropdown.removeClass('show');
                   saveSettings(settings);
                 }
-              })(jInput, min, max, step));
-              jBtnM.click((function(jInput, min, max, step){
-                return function() {
-                  var newValue = (+jInput.val()) - step;
-                  if (newValue >= min) {
-                    jInput.val(newValue);
-                  }
-                  saveSettings(settings);
-                }
-              })(jInput, min, max, step));
-              jBtns.push(jInput);
-              jBtns.push(jBtnP);
-              jBtns.push(jBtnM);
-              jInput.change(function() {saveSettings(settings);});
-              appendTitle(jSetting, title);
-              appendCol(jSetting, jBtns);
-            } else if (typeof setting.default === 'string') {
-              var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="text" value="' + setting.default + '"/>');
-              jInput.change(function() {saveSettings(settings);});
-              appendTitle(jSetting, title);
-              appendCol(jSetting, jInput);
-            } else if (setting.buttons !== undefined) {
-              var jBtns = [];
-              for (var j in setting.buttons) {
-                var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + ' class="btn btn-plus">' + setting.buttons[j].title + '</button>');
-                jBtns.push(jBtn);
-              }
-              appendTitle(jSetting, title);
-              appendCol(jSetting, jBtns);
-            } else if (title !== undefined) {
-              jSetting.append('<div class="col-xs-12">' + title + '</div>');
+              })(jDropdownBtn, itemTitle, setting, item.key));
+              jDropdown.append(jItem);
             }
-            jGroupItem.append(jSetting);
-            jGroup.append(jGroupItem);
+            jDiv.append(jDropdownBtn).append(jDropdown);
+            appendTitle(jSetting, title);
+            appendCol(jSetting, jDiv);
+          } else if (typeof setting.default === 'number') {
+            var step = setting.step;
+            var max = setting.max;
+            var min = setting.min;
+            var jBtns = [];
+            var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>');
+            var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
+            var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
+            jBtnP.click((function (jInput, min, max, step) {
+              return function () {
+                var newValue = (+jInput.val()) + step;
+                if (newValue <= max) {
+                  jInput.val(newValue);
+                }
+                saveSettings(settings);
+              }
+            })(jInput, min, max, step));
+            jBtnM.click((function (jInput, min, max, step) {
+              return function () {
+                var newValue = (+jInput.val()) - step;
+                if (newValue >= min) {
+                  jInput.val(newValue);
+                }
+                saveSettings(settings);
+              }
+            })(jInput, min, max, step));
+            jBtns.push(jInput);
+            jBtns.push(jBtnP);
+            jBtns.push(jBtnM);
+            jInput.change(function () { saveSettings(settings); });
+            appendTitle(jSetting, title);
+            appendCol(jSetting, jBtns);
+          } else if (typeof setting.default === 'string') {
+            var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="text" value="' + setting.default + '"/>');
+            jInput.change(function () { saveSettings(settings); });
+            appendTitle(jSetting, title);
+            appendCol(jSetting, jInput);
+          } else if (setting.buttons !== undefined) {
+            var jBtns = [];
+            for (var j in setting.buttons) {
+              var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + ' class="btn btn-plus">' + setting.buttons[j].title + '</button>');
+              jBtns.push(jBtn);
+            }
+            appendTitle(jSetting, title);
+            appendCol(jSetting, jBtns);
+          } else if (title !== undefined) {
+            jSetting.append('<div class="col-xs-12">' + title + '</div>');
           }
-          jContainer.append(jGroup)
+          jGroupItem.append(jSetting);
+          jGroup.append(jGroupItem);
         }
+        jContainer.append(jGroup)
       }
-    </script>
+    }
+  </script>
 
-    <script>
-      $(function() {
-        $('#version').html('Tap Titans 2 Automated v' + VERSION);
+  <script>
+    $(function () {
+      $('#version').html('Tap Titans 2 Automated v' + VERSION);
 
-        loadSettings(settings);
-        genSettings($('#settings'), settings);
+      loadSettings(settings);
+      genSettings($('#settings'), settings);
 
-        $('#updateRecordASC').click(function() {
-          ASC = true;
-          refreshRecord();
-        });
-        $('#updateRecordDESC').click(function() {
-          ASC = false;
-          refreshRecord();
-        });
-        $('#goToTop').click(function() {
-          window.scrollTo(0, 0);
-        });
-        $('#goToBottom').click(function() {
-          window.scrollTo(0, document.body.scrollHeight);
-        });		
-        var protect = true;
-        $('#resetRecord').click(function() {
-          if (protect) {
-            protect = false;
-            $('#resetRecord').html('Are you sure?');
-          } else {
-            protect = true;
-            $('#resetRecord').html('Reset Record?');
-            JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
-            $('#record').html('');
-          }
-        });
-        $('#exportRecord').click(function(){
-          exportHTML();
-        });
-
-        if (localStorage !== undefined && localStorage.getItem('taptitan2Language') === 'zh-TW') {
-          $('#goToTop').text('回頁面頂端');
-          $('#goToBottom').text('轉到底部');
+      $('#updateRecordASC').click(function () {
+        ASC = true;
+        refreshRecord();
+      });
+      $('#updateRecordDESC').click(function () {
+        ASC = false;
+        refreshRecord();
+      });
+      $('#goToTop').click(function () {
+        window.scrollTo(0, 0);
+      });
+      $('#goToBottom').click(function () {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      var protect = true;
+      $('#resetRecord').click(function () {
+        if (protect) {
+          protect = false;
+          $('#resetRecord').html('Are you sure?');
         } else {
-          $('#goToTop').text('Go to Top');
-          $('#goToBottom').text('Go to Bottom');
+          protect = true;
+          $('#resetRecord').html('Reset Record?');
+          JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
+          $('#record').html('');
         }
       });
+      $('#exportRecord').click(function () {
+        exportHTML();
+      });
 
-      function getCheckStatus(id) {
-        return $(id).is(':checked');
+      if (localStorage !== undefined && localStorage.getItem('taptitan2Language') === 'zh-TW') {
+        $('#goToTop').text('回頁面頂端');
+        $('#goToBottom').text('轉到底部');
+      } else {
+        $('#goToTop').text('Go to Top');
+        $('#goToBottom').text('Go to Bottom');
+      }
+    });
+
+    function getCheckStatus(id) {
+      return $(id).is(':checked');
+    }
+
+    function onEvent(eventType) {
+      if (eventType == 'OnPlayClick') {
+        var startCommand = genStartCommand(settings);
+        console.log('startCommand: ', startCommand)
+        JavaScriptInterface.runScript(startCommand);
+      } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript('stop(); sleep(100); reset();');
+      } else if (eventType == 'OnSettingClick') {
+        // refreshRecord();
+      }
+    }
+    function onLog(message) {
+      console.log(message);
+    }
+    function refreshRecord() {
+      JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
+    }
+    var imageQueue = [];
+    var isRunning = false;
+    function getBase64(id, filename) {
+      var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/' + filename + '");if(__img_ != 0){var __' + id + '_base64_="' + id + ',"+getBase64FromImage(__img_);releaseImage(__img_);};__' + id + '_base64_;';
+      imageQueue.push(script);
+      if (!isRunning) {
+        isRunning = true;
+        JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
+      }
+    }
+    function assignImage(results) {
+      var rs = results.split(',');
+      if (rs.length == 2) {
+        $('#' + rs[0]).attr('src', 'data:image/png;base64,' + rs[1]);
+      }
+      if (imageQueue.length == 0) {
+        isRunning = false;
+      } else {
+        JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
+      }
+    }
+    function getTimeString(d) {
+      return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
+    }
+    function getDayTimeString(d) {
+      return (d.getMonth() + 1) + '/' + d.getDate();
+    }
+    function getRecordFilename() {
+      var d = new Date();
+      return 'record_' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
+    }
+    function genRecord(record) {
+      if (record == undefined || record == 'undefined' || record == '') {
+        return;
+      }
+      var recordObjs = JSON.parse(record);
+      record = [];
+      for (var filename in recordObjs) {
+        if (filename == 'hearts_count') {
+          continue;
+        }
+        var obj = recordObjs[filename];
+        var totalCount = 0;
+        for (var d in obj.receiveCounts) {
+          totalCount += +obj.receiveCounts[d];
+        }
+        obj.totalCount = totalCount;
+        obj.filename = filename;
+        record.push(obj);
+      }
+      if (ASC) {
+        record.sort(function (a, b) {
+          return a.totalCount < b.totalCount ? -1 : 1;
+        });
+      } else {
+        record.sort(function (a, b) {
+          return a.totalCount >= b.totalCount ? -1 : 1;
+        });
       }
 
-      function onEvent(eventType) {
-        if (eventType == 'OnPlayClick') {
-          var startCommand = genStartCommand(settings);
-          console.log('startCommand: ', startCommand)
-          JavaScriptInterface.runScript(startCommand);
-        } else if (eventType == 'OnPauseClick') {
-          JavaScriptInterface.runScript('stop(); sleep(100); reset();');
-        } else if (eventType == 'OnSettingClick') {
-          // refreshRecord();
-        }
-      }
-      function onLog(message) {
-        console.log(message);
-      }
-      function refreshRecord() {
-        JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
-      }
-      var imageQueue = [];
-      var isRunning = false;
-      function getBase64(id, filename) {
-        var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/'+filename+'");if(__img_ != 0){var __'+id+'_base64_="'+id+',"+getBase64FromImage(__img_);releaseImage(__img_);};__'+id+'_base64_;';
-        imageQueue.push(script);
-        if (!isRunning) {
-          isRunning = true;
-          JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
-        }
-      }
-      function assignImage(results) {
-        var rs = results.split(',');
-        if (rs.length == 2) {
-          $('#' + rs[0]).attr('src', 'data:image/png;base64,' + rs[1]);
-        }
-        if (imageQueue.length == 0) {
-          isRunning = false;
-        } else {
-          JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
-        }
-      }
-      function getTimeString(d) {
-        return (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
-      }
-      function getDayTimeString(d) {
-        return (d.getMonth()+1) + '/' + d.getDate();
-      }
-      function getRecordFilename() {
-        var d = new Date();
-        return 'record_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
-      }
-      function genRecord(record) {
-        if (record == undefined || record == 'undefined' || record == '') {
-          return;
-        }
-        var recordObjs = JSON.parse(record);
-        record = [];
-        for (var filename in recordObjs) {
-          if (filename == 'hearts_count'){
-            continue;
-          }
-          var obj = recordObjs[filename];
-          var totalCount = 0;
-          for (var d in obj.receiveCounts) {
-            totalCount += +obj.receiveCounts[d];
-          }
-          obj.totalCount = totalCount;
-          obj.filename = filename;
-          record.push(obj);
-        }
-        if (ASC) {
-          record.sort(function(a, b) {
-            return a.totalCount < b.totalCount ? -1 : 1;
-          });
-        } else {
-          record.sort(function(a, b) {
-            return a.totalCount >= b.totalCount ? -1 : 1;
-          });
-        }
-        
-        var html = '<ul>';
-        for (var idx in record) {
-          var filename = record[idx].filename;
-          var imgId = filename.split('.')[0];
-          var lastTime = new Date(record[idx].lastReceiveTime);
-          html += '<li>'
-          html += '<div><img id="' + imgId + '" />' + getTimeString(lastTime) + '</div>';
-          html += '<ul>';
-          for(var day in record[idx].receiveCounts) {
-            var dayTime = new Date(+day * 86400000 );
-            html += '<li>';
-            html += getDayTimeString(dayTime) + ': get ' + record[idx].receiveCounts[day] + ' hearts';
-            html += '</li>';
-          }
-          html += '</ul>';
+      var html = '<ul>';
+      for (var idx in record) {
+        var filename = record[idx].filename;
+        var imgId = filename.split('.')[0];
+        var lastTime = new Date(record[idx].lastReceiveTime);
+        html += '<li>'
+        html += '<div><img id="' + imgId + '" />' + getTimeString(lastTime) + '</div>';
+        html += '<ul>';
+        for (var day in record[idx].receiveCounts) {
+          var dayTime = new Date(+day * 86400000);
+          html += '<li>';
+          html += getDayTimeString(dayTime) + ': get ' + record[idx].receiveCounts[day] + ' hearts';
           html += '</li>';
-          getBase64(imgId, filename);
         }
         html += '</ul>';
-        $('#record').html(html);
+        html += '</li>';
+        getBase64(imgId, filename);
       }
-      function exportHTML() {
-        $('#exportRecord').html('Exporting');
-        var html = $('#record').html();
-        html = html.replace(/\n/g, '');
-        var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>'+ html+ '</body>\');';
-        JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
-      }
-      function exportSuccess() {
-        $('#exportRecord').html('Export HTML');
-      }
-    </script>
-  </head>
-  <body>
-    <nav class='navbar navbar-custom' role='navigation'>
-      <a id='version' class='navbar-brand'></a>
-    </nav>
-    <div class='container'>
-      <div id='settings'></div>
-      <br />
-      <br />
-      <button id='goToTop' class='btn btn-plus'>Go to Top</button>
-      <button id='goToBottom' class='btn btn-plus'>Go to Bottom</button>	  
-      <br />
-      <br />
-      <br />
-    </div>
-  </body>
+      html += '</ul>';
+      $('#record').html(html);
+    }
+    function exportHTML() {
+      $('#exportRecord').html('Exporting');
+      var html = $('#record').html();
+      html = html.replace(/\n/g, '');
+      var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>' + html + '</body>\');';
+      JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
+    }
+    function exportSuccess() {
+      $('#exportRecord').html('Export HTML');
+    }
+  </script>
+</head>
+
+<body>
+  <nav class='navbar navbar-custom' role='navigation'>
+    <a id='version' class='navbar-brand'></a>
+  </nav>
+  <div class='container'>
+    <div id='settings'></div>
+    <br />
+    <br />
+    <button id='goToTop' class='btn btn-plus'>Go to Top</button>
+    <button id='goToBottom' class='btn btn-plus'>Go to Bottom</button>
+    <br />
+    <br />
+    <br />
+  </div>
+</body>
+
 </html>

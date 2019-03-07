@@ -1012,23 +1012,23 @@ var GameAssistant = function () {
         }
       }
 
-      this.idleTap(2500);
+      this.idleTap(3500);
 
       console.log('keep looking for fairyNoThanks.')
       this.refreshScreen();
-      while(this.gInfo.fairyNoThanks.check(this._img) &&
+      while (this.gInfo.fairyNoThanks.check(this._img) &&
         this.gInfo.fairyWatchAds.check(this._img)) {
 
-          if (this.isVipEnabled) {
-            console.log('we are VIPs, collecting awards');
-            this.gInfo.fairyWatchAds.tap();
-          } else {
-            console.log('found noThanks, tapping');
-            this.gInfo.fairyNoThanks.tap();
-          }
+        if (this.isVipEnabled) {
+          console.log('we are VIPs, collecting awards');
+          this.gInfo.fairyWatchAds.tap();
+        } else {
+          console.log('found noThanks, tapping');
+          this.gInfo.fairyNoThanks.tap();
+        }
 
-          this.refreshScreen();
-          sleep(20);
+        this.refreshScreen();
+        sleep(20);
       }
       console.log('done fairyNoThanks.')
 
