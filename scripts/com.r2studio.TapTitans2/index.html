@@ -556,7 +556,7 @@
         console.log('startCommand: ', startCommand)
         JavaScriptInterface.runScript(startCommand);
       } else if (eventType == 'OnPauseClick') {
-        JavaScriptInterface.runScript('stop(); sleep(100); reset();');
+        JavaScriptInterface.runScript('stop();');
       } else if (eventType == 'OnSettingClick') {
         // refreshRecord();
       }

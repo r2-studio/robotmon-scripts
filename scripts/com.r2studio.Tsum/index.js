@@ -1340,7 +1340,7 @@ Tsum.prototype.goFriendPage = function() {
       this.startApp();
     }
     var page = this.findPage(2, 1000);
-    log(this.logs.currentPage, page);
+    log(this.logs.currentPage, page, "goFriend");
     if (page == 'FriendPage') {
       // check again
       page = this.findPage(1, 500);
@@ -1348,6 +1348,10 @@ Tsum.prototype.goFriendPage = function() {
         this.sendMoneyInfo();
         return;
       }
+    } else if (page == "ClosePage") {
+      this.tap(Page.ClosePage.back);
+      this.tap({x: 310, y: 1588 - 140});
+      console.log("eeee");
     } else if (page == 'unknown') {
       this.exitUnknownPage();
     } else {
@@ -1405,7 +1409,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.startApp();
     }
     var page = this.findPage(2, 2000);
-    log(this.logs.currentPage, page);
+    log(this.logs.currentPage, page, "play");
     if (page == 'FriendPage') {
       this.tap(Page[page].next);
     } else if (page == 'StartPage') {
@@ -1424,6 +1428,9 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Page[page].next);
     } else if (page == 'unknown') {
       this.exitUnknownPage();
+    } else if (page == "ClosePage") {
+      this.tap(Page.ClosePage.back);
+      this.tap({x: 310, y: 1588 - 140});
     } else {
       this.tap(Page[page].back);
     }
@@ -2186,6 +2193,7 @@ Tsum.prototype.sendHeart = function(btn) {
       this.tap(Page.FriendInfo.back);
     } else if (page == "ClosePage") {
       this.tap(Page.ClosePage.back);
+      this.tap({x: 310, y: 1588 - 140});
     } else {
       unknownCount++;
     }

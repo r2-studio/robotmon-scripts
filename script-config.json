@@ -12,8 +12,8 @@
     },
     "com.r2studio.Tsum": {
       "title": "Disney Tsum Tsum",
-      "versionCode": 45,
-      "description": "<b><font color='#2196f3'>🔖 版本 v45</font></b><ul><li>1️⃣ 修正 Fantasmic 活動卡住</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
+      "versionCode": 46,
+      "description": "<b><font color='#2196f3'>🔖 版本 v46</font></b><ul><li>1️⃣ Fix High Score (修正分數超越)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
       "dependencies": [

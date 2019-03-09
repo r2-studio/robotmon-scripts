@@ -518,7 +518,7 @@
         var startCommand = genStartCommand(settings);
         JavaScriptInterface.runScript(startCommand);
       } else if (eventType == 'OnPauseClick') {
-        JavaScriptInterface.runScript('stop(); sleep(100); reset();');
+        JavaScriptInterface.runScript('stop();');
       } else if (eventType == 'OnReloadClick') {
         JavaScriptInterface.runScript(script);
       }
