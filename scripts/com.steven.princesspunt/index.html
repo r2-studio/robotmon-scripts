@@ -1,0 +1,398 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
+		<style>
+			.navbar {
+				position: relative;
+				min-height: 50px;
+				margin-bottom: 20px;
+				border: 1px solid transparent;
+			}
+			.navbar-custom > a {
+				width: 100%;
+				color: #FFFFFF;
+				text-align: center;
+			}
+			.navbar-custom {
+				border-radius: 0 !important;
+				background-color: #2196F3;
+				color: #FFFFFF;
+			}
+			.list-group {
+				padding-left: 0;
+				margin-bottom: 20px;
+			}
+			.list-group-item{
+				position: relative;
+				display: block;
+				margin-bottom: -1px;
+				background-color: #fff;
+				border: 1px solid #ddd;
+				padding: 10px 15px;
+			}
+			.row{
+				margin-bottom: 10px;
+			}
+			.row:last-child{
+				margin-bottom: 0px;
+			}
+			#announcement {
+				border: 1px solid #ddd;
+			}
+			#announcement-item {
+				border: 0px !important;
+				padding: 0px 15px;
+			}
+			#announcement-item:first-child{
+				padding-top: 10px;
+			}
+			#announcement-item:last-child{
+				padding-bottom: 10px;
+			}
+			.input-size-5{
+				width: 60px;
+			}
+			.input-size-7{
+				width: 70px;
+			}
+			.input-size-10{
+				width: 200px;
+			}
+		</style>
+		<script>
+            tag = "PrincessPunt";
+            version = 1;
+            var setting;
+            if (typeof String.prototype.startsWith != 'function') {
+                String.prototype.startsWith = function (str){
+                    return this.indexOf(str) === 0;
+                };
+            }
+            default_setting = {
+				friendUse: 0,
+				checkOut: -1,
+                questPosition: {x: 540, y: 360},
+                questLevel: 5,
+                puntPosition: {x: 300, y: 300},
+				warning: 1,
+				questName: '',
+                puntSetting: [
+                    {roleNumber: 0, angle: 0, flyDelay: 0},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650},
+                    {roleNumber: 0, angle: 80, flyDelay: 650}
+                ]
+            };
+        function getSettingName() {
+            return tag + '-settings';
+        }
+        function getVersionName() {
+            return tag + '-version';
+        }
+        
+        $(function() {
+			$("#version").html(tag + " - " + version);
+			loadSettings();
+			initView();
+			//console.log(settings);
+        });
+        function initView(){
+			$('input:text[name="friendUse"]').val(settings.friendUse);
+			$('input:text[name="checkOut"]').val(settings.checkOut);
+            $('input:text[name="questX"]').val(settings.questPosition.x);
+            $('input:text[name="questY"]').val(settings.questPosition.y);
+            $('input:text[name="questLevel"]').val(settings.questLevel);
+			$('input:text[name="questName"]').val(settings.questName);
+            $('input:text[name="puntX"]').val(settings.puntPosition.x);
+            $('input:text[name="puntY"]').val(settings.puntPosition.y);
+			$('input:text[name="warning"]').val(settings.warning);
+            for(i = 1; i < 11; i++){
+                $('input:text[name="punt-roleNumber-' + i + '"]').val(settings.puntSetting[i].roleNumber);
+                $('input:text[name="punt-angle-' + i + '"]').val(settings.puntSetting[i].angle);
+                $('input:text[name="punt-flyDelay-' + i + '"]').val(settings.puntSetting[i].flyDelay);
+            }
+            $('input').change(function(){
+                onSettingChange();
+            });
+        }
+        function onSettingChange(){
+			settings.friendUse = $('input:text[name="friendUse"]').val();
+			settings.checkOut = $('input:text[name="checkOut"]').val();
+            settings.questPosition.x = $('input:text[name="questX"]').val();
+			settings.questPosition.y = $('input:text[name="questY"]').val();
+			settings.questLevel = $('input:text[name="questLevel"]').val();
+			settings.questName = $('input:text[name="questName"]').val();
+			settings.puntPosition.x = $('input:text[name="puntX"]').val();
+			settings.puntPosition.y = $('input:text[name="puntY"]').val();
+			settings.warning = $('input:text[name="warning"]').val();
+			for(i = 1; i < 11; i++){
+                settings.puntSetting[i].roleNumber = $('input:text[name="punt-roleNumber-' + i + '"]').val();
+                settings.puntSetting[i].angle = $('input:text[name="punt-angle-' + i + '"]').val();
+                settings.puntSetting[i].flyDelay = $('input:text[name="punt-flyDelay-' + i + '"]').val();
+            }
+			//console.log(settings);
+			//console.log(JSON.stringify(settings));
+			//console.log(JSON.parse(JSON.stringify(settings)));
+			//console.log(Math.round(Math.sin((270 + 20) * Math.PI / 180) * 100 + 0));
+			//console.log(Math.round(Math.cos((270 + 20) * Math.PI / 180) * 100 + 0));
+			saveSettings();
+        }
+        function loadSettings() {
+            if (localStorage === undefined) {
+                return;
+            }
+            var tempSettings = localStorage.getItem(getSettingName());
+            if (tempSettings == null) {
+                settings = $.extend(true, {}, default_setting);
+            } else {
+                settings = JSON.parse(tempSettings);
+                var keys = Object.keys(default_setting);
+                for (var i in keys) {
+                    var key = keys[i];
+                    if (settings[key] === undefined) {
+                        settings[key] = default_setting[key];
+                    }
+                }
+            }
+        }
+        function saveSettings() {
+            if (localStorage === undefined) {
+                return;
+            }
+            localStorage.setItem(getVersionName(), version);
+            localStorage.setItem(getSettingName(), JSON.stringify(settings));
+        }
+        function onEvent(eventType) {
+            if (eventType == 'OnPlayClick') {
+                //console.log('start("' + JSON.stringify(settings) + '");');
+				JavaScriptInterface.runScript('console.log("run script now");');
+                JavaScriptInterface.runScript('start(' + JSON.stringify(settings) + ');');
+            } else if (eventType == 'OnPauseClick') {
+				JavaScriptInterface.runScript('console.log("stop script now");');
+                JavaScriptInterface.runScript('stop();');
+            }
+        }
+		</script>
+	</head>
+	<body>
+		<nav class="navbar navbar-custom" role="navigation">
+		   <a id="version" class="navbar-brand"></a>
+		</nav>
+		<div class="container">
+			<div id="settings"> 
+				<div class="list-group" id="announcement">
+					<div class="list-group-item" id="announcement-item">=================注意事項=================</div>
+					<div class="list-group-item" id="announcement-item">本腳本僅適用 720x1280 解析度，中文介面。</div>
+				</div>
+				<div class="list-group">
+					<div class="list-group-item">主介面</div>
+					<div class="list-group-item">
+						<div class="row">
+							<div class="col-xs-6">朋友使用</div>
+							<div class="col-xs-6">
+								<div class="pull-right" >
+									<input name="friendUse" type="text" size="2" placeholder="0/1" class="input-size-5"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="list-group-item">任務進入座標說明: <br>1. 一般活動關卡座標: 540, 360</div>
+					<div class="list-group-item">任務等級說明: <br>1. 1-15 為一般關卡1-15等 <br>2. 21-25 為有限制條件的關卡1-5等<br> 3. 99 為999等BOSS關卡</div>
+					<div class="list-group-item">
+						<div class="row">
+							<div class="col-xs-6">check Out</div>
+							<div class="col-xs-6">
+								<div class="pull-right" >
+									<input name="checkOut" type="text" size="2" placeholder="-1/0/1" class="input-size-5"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-6">任務進入座標</div>
+							<div class="col-xs-6">
+								<div class="pull-right">
+									<input name="questX" type="text" size="4" placeholder="X" class="input-size-5"/>
+									<input name="questY" type="text" size="4" placeholder="Y" class="input-size-5"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-6">任務等級</div>
+							<div class="col-xs-6">
+								<div class="pull-right" >
+									<input name="questLevel" type="text" size="2" placeholder="1-15" class="input-size-5"/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="list-group">
+					<div class="list-group-item">戰鬥介面</div>
+					<div class="list-group-item">
+						<div class="row">
+                            <div class="col-xs-6">測驗用</div>
+                            <div class="col-xs-6">
+                                <div class="pull-right">
+                                    <input name="questName" type="text" size="50" placeholder="quest Name" class="input-size-10"/>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+					<div class="list-group-item">
+						<div class="row">
+                            <div class="col-xs-6">角色座標</div>
+                            <div class="col-xs-6">
+                                <div class="pull-right">
+                                    <input name="puntX" type="text" size="4" placeholder="X" class="input-size-5"/>
+                                    <input name="puntY" type="text" size="4" placeholder="Y" class="input-size-5"/>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+					<div class="list-group-item">
+						<div class="row">
+                            <div class="col-xs-6">亂入 (0: 不進入, 1: 進入)</div>
+                            <div class="col-xs-6">
+                                <div class="pull-right">
+                                    <input name="warning" type="text" size="1" placeholder="0-1" class="input-size-5"/>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+					<div class="list-group-item">角色位置以數字代表:<br>當前角色: 0<br>切換上方角色一次: 1 切換下方角色一次: -1<br>切換上方角色二次: 2 切換下方角色二次: -2<br>切換上方角色三次: 3 切換下方角色三次: -3</div>
+					<div class="list-group-item">
+						<div class="row">
+							<div class="col-xs-3"> </div>
+							<div class="col-xs-9">
+									<div class="pull-right">
+										<table>
+											<tr>
+												<td><div class="input-size-5">角色</div></td>
+												<td><div class="input-size-5">角度</div></td>
+												<td><div class="input-size-7">飛行時間</div></td>
+											</tr>
+										</table>
+									</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第一踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-1" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-1" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-1" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第二踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-2" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-2" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-2" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第三踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-3" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-3" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-3" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第四踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-4" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-4" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-4" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第五踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-5" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-5" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-5" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第六踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-6" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-6" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-6" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第七踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-7" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-7" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-7" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第八踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-8" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-8" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-8" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第九踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-9" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-9" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-9" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">第十踢</div>
+							<div class="col-xs-9">
+								<div class="pull-right">
+									<input name="punt-roleNumber-10" type="text" size="2" placeholder="角色" class="input-size-5"/>
+									<input name="punt-angle-10" type="text" size="3" placeholder="角度" class="input-size-5"/>
+									<input name="punt-flyDelay-10" type="text" size="5" placeholder="飛行時間" class="input-size-7"/>
+								</div>
+							</div>
+						</div>
+						
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
