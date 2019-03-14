@@ -900,8 +900,8 @@ var GameAssistant = function () {
           sleep(250);
         }
 
-        this.gInfo.prestige.tap(1, 50);
-        this.gInfo.prestige2.tap(1, 200);
+        this.gInfo.prestige.tap(1, 350);
+        this.gInfo.prestige2.tap(1, 350);
 
         console.log('Sending Robotmon message...')
         sleep(300)
@@ -910,7 +910,7 @@ var GameAssistant = function () {
         sendNormalMessage('TapTitans2', getBase64FromImage(img))
         releaseImage(img);
 
-        this.gInfo.prestige3.tap(1, 300);
+        this.gInfo.prestige3.tap(1, 350);
 
         this.roundStart = Date.now();
       } else {
