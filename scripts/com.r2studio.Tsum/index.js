@@ -975,6 +975,8 @@ function Tsum(isJP, detect, logs) {
   this.storagePath = getStoragePath();
   // screen size config
   var size = getScreenSize();
+  this.originScreenWidth = size.width;
+  this.originScreenHeight = size.height;
   this.screenHeight = size.height - getVirtualButtonHeight();
   this.screenWidth = size.width;
   this.gameOffsetX = 0;
@@ -1177,10 +1179,10 @@ Tsum.prototype.screenshot = function() {
   return getScreenshotModify(
     0, 
     0, 
-    this.screenWidth, 
-    this.screenHeight, 
-    this.screenWidth / this.resizeRatio, 
-    this.screenHeight / this.resizeRatio,
+    this.originScreenWidth, 
+    this.originScreenHeight, 
+    this.originScreenWidth / this.resizeRatio, 
+    this.originScreenHeight / this.resizeRatio,
     80
   );
 }
@@ -1351,7 +1353,6 @@ Tsum.prototype.goFriendPage = function() {
     } else if (page == "ClosePage") {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
-      console.log("eeee");
     } else if (page == 'unknown') {
       this.exitUnknownPage();
     } else {
