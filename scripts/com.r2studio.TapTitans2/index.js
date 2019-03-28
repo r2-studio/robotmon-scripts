@@ -415,8 +415,8 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
   this.upgradeMaster = new Point(1180, 1800);
   this.upgradeMasterExpend = new Point(1200, 400);
   this.prestige = new Point(1200, 2340);
-  this.prestige2 = new Point(700, 1980);
-  this.prestige3 = new Point(1000, 1700);
+  this.prestige2 = new FeaturePoint(700, 1980, 48, 48, 48, true, 20);
+  this.prestige3 = new FeaturePoint(1000, 1700, 60, 60, 60, true, 20);
 
   this.splashKillRect = new Rect(530, 530, 720, 940);
   this.accountRect = new Rect(0, 1500, 330, 1760);
@@ -646,7 +646,24 @@ var GameAssistant = function () {
         return false;
       }
 
-      console.log('time to upgrade all heros');
+      console.log('time to upgrade all heros, check fairyNoThanks in 3s');
+      sleep(3000);
+
+      this.refreshScreen();
+      while (this.gInfo.fairyNoThanks.check(this._img) &&
+        this.gInfo.fairyWatchAds.check(this._img)) {
+
+        if (this.isVipEnabled) {
+          console.log('we are VIPs, collecting awards');
+          this.gInfo.fairyWatchAds.tap();
+        } else {
+          console.log('found noThanks, tapping');
+          this.gInfo.fairyNoThanks.tap();
+        }
+
+        this.refreshScreen();
+        sleep(20);
+      }
 
       // Open Hero Tab
       for (var i = 0; i < 3; i++) {
@@ -879,15 +896,18 @@ var GameAssistant = function () {
     key: 'testPrestige',
     value: function testPrestige() {
       if (Date.now() - this.roundStart > this.gInfo.prestigeTime * 60 * 1000) {
-        this.refreshScreen()
+        let prestigeRetry = 0
+
         console.log('Prestige');
-        if (!this.gInfo.masterTab.check(this._img)) {
+        this.refreshScreen()
+        while (!this.gInfo.masterTab.check(this._img, 'masterTab')) {
           this.gInfo.masterTab.tap();
-          sleep(300);
+          sleep(1000);
+          this.refreshScreen()
         }
 
         // swipe to top
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 4; i++) {
           this.ttListSwipeDown();
           sleep(200);
         }
@@ -900,8 +920,23 @@ var GameAssistant = function () {
           sleep(250);
         }
 
-        this.gInfo.prestige.tap(1, 350);
-        this.gInfo.prestige2.tap(1, 350);
+        this.gInfo.prestige.tap();
+        this.refreshScreen()
+        while (!this.gInfo.prestige2.check(this._img, 'p2?') && prestigeRetry < 20) {
+          this.gInfo.prestige.tap();
+          sleep(500);
+          this.refreshScreen();
+          prestigeRetry += 1;
+        }
+
+        this.gInfo.prestige2.tap();
+        this.refreshScreen()
+        while (!this.gInfo.prestige3.check(this._img, 'p3?') && prestigeRetry < 20) {
+          this.gInfo.prestige2.tap();
+          sleep(500);
+          this.refreshScreen();
+          prestigeRetry += 1;
+        }
 
         console.log('Sending Robotmon message...')
         sleep(300)
@@ -910,7 +945,7 @@ var GameAssistant = function () {
         sendNormalMessage('TapTitans2', getBase64FromImage(img))
         releaseImage(img);
 
-        this.gInfo.prestige3.tap(1, 350);
+        this.gInfo.prestige3.tap(3, 350);
 
         this.roundStart = Date.now();
       } else {
@@ -995,8 +1030,8 @@ var GameAssistant = function () {
         console.log('start checking fairies')
         // Tap Fairy NoThanks
         this.refreshScreen();
-        if (this.gInfo.fairyNoThanks.check(this._img, 'NoThanks:') &&
-          this.gInfo.fairyWatchAds.check(this._img, 'ad:')) {
+        while (this.gInfo.fairyNoThanks.check(this._img) &&
+          this.gInfo.fairyWatchAds.check(this._img)) {
 
           if (this.isVipEnabled) {
             console.log('we are VIPs, collecting awards');
@@ -1006,13 +1041,12 @@ var GameAssistant = function () {
             this.gInfo.fairyNoThanks.tap();
           }
 
-          if (!this.isFairyNoRandomTapEnabed) {
-            this.idleTap(500);
-          }
+          this.refreshScreen();
+          sleep(20);
         }
       }
 
-      this.idleTap(3500);
+      this.idleTap(5000);
 
       console.log('keep looking for fairyNoThanks.')
       this.refreshScreen();
@@ -1031,24 +1065,6 @@ var GameAssistant = function () {
         sleep(20);
       }
       console.log('done fairyNoThanks.')
-
-      // for (var i = 0; i < 20; i++) {
-      //   this.refreshScreen();
-
-      //   if (this.gInfo.fairyNoThanks.check(this._img) &&
-      //     this.gInfo.fairyWatchAds.check(this._img)) {
-      //     this.idleTap(500);
-
-      //     if (this.isVipEnabled) {
-      //       console.log('we are VIPs, collecting awards');
-      //       this.gInfo.fairyWatchAds.tap();
-      //     } else {
-      //       console.log('found noThanks, tapping');
-      //       this.gInfo.fairyNoThanks.tap();
-      //     }
-      //   }
-      //   this.idleTap(350);
-      // }
     }
   }, {
     key: 'fightStageBoss',
@@ -1208,7 +1224,7 @@ var GameAssistant = function () {
         return;
       }
 
-      console.log('still cant find gear icon, stopping, exec time: ' + (Date.now() - this.roundStart) / 1000 + ' secs');
+      console.log('still cant find button icon, stopping, exec time: ' + (Date.now() - this.roundStart) / 1000 + ' secs');
       this.stop();
       return;
     }
