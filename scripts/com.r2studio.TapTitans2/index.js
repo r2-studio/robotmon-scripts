@@ -896,7 +896,7 @@ var GameAssistant = function () {
     key: 'testPrestige',
     value: function testPrestige() {
       if (Date.now() - this.roundStart > this.gInfo.prestigeTime * 60 * 1000) {
-        let prestigeRetry = 0
+        var prestigeRetry = 0
 
         console.log('Prestige');
         this.refreshScreen()
