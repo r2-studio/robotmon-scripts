@@ -84,10 +84,10 @@ var Swipe = function(x1, y1, x2, y2) {
   rbm.swipe({x: x1, y: y1}, {x: x2, y: y2}, 4);
 };
 var Home = function() {
-  keycode('HOME');
+  keycode('HOME', 100);
 }
 var Back = function() {
-  keycode('BACK');
+  keycode('BACK', 100);
 }
 var Screenshot = function() {
   var img = getScreenshot();
@@ -136,9 +136,9 @@ var runCommands = function(commands) {
         runCommands(command.commands);
       }
     } else if (command.action == 'ifColor') {
-      var x = command.x;
-      var y = command.y;
-      var d = command.diff;
+      var x = +command.x;
+      var y = +command.y;
+      var d = +command.diff;
       var wh = getScreenSize();
       if (x < 0 || x >= wh.width || y < 0 || y > wh.height) {
         rbm.log("ifColor X < 0 or X >= width or Y < 0 or Y >= height");
@@ -147,7 +147,7 @@ var runCommands = function(commands) {
       var img = getScreenshot();
       var c = getImageColor(img, x, y);
       releaseImage(img);
-      if (command.is && isSameColor(command, c)) {
+      if (command.is && isSameColor(command, c, d)) {
         console.log('is color and do...');
         runCommands(command.commands);
       } else if (!command.is && !isSameColor(command, c, d)) {
