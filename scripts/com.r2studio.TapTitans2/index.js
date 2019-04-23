@@ -673,7 +673,7 @@ var GameAssistant = function () {
         }
 
         this.gInfo.heroTab.tap();
-        sleep(300);
+        sleep(500);
       }
 
       // expend full tab
@@ -694,9 +694,9 @@ var GameAssistant = function () {
           Utils.mTap(1250, y, 200);
         }
 
-        this.ttListSwipeUp()
+        this.ttListSwipeUpOnRight()
         sleep(200);
-        this.ttListSwipeUp()
+        this.ttListSwipeUpOnRight()
         sleep(350);
       }
       for (var y = 420; y < 2440; y += 200) {
@@ -705,7 +705,7 @@ var GameAssistant = function () {
 
       // Swipe to top
       for (var i = 0; i < 5; i++) {
-        this.ttListSwipeDown();
+        this.ttListSwipeDownOnRight();
         sleep(350);
       }
 
@@ -962,7 +962,7 @@ var GameAssistant = function () {
         }
 
         this.gInfo.heroTab.tap();
-        sleep(300);
+        sleep(500);
       }
 
       sleep(300);
@@ -1157,9 +1157,21 @@ var GameAssistant = function () {
       Utils.mSwipe(600 * gRatioDevice, 1680 * gRatioDevice, 600 * gRatioDevice, 3600 * gRatioDevice, 5);
     }
   }, {
+    key: 'ttListSwipeDownOnRight',
+    value: function ttListSwipeDown() {
+      // So that we won't trigger hero descriptions
+      Utils.mSwipe(1250 * gRatioDevice, 1680 * gRatioDevice, 1250 * gRatioDevice, 3600 * gRatioDevice, 5);
+    }
+  }, {
     key: 'ttListSwipeUp',
     value: function ttListSwipeUp() {
       Utils.mSwipe(600 * gRatioDevice, 2400 * gRatioDevice, 600 * gRatioDevice, 1400 * gRatioDevice, 4);
+    }
+  }, {
+    key: 'ttListSwipeUpOnRight',
+    value: function ttListSwipeUpOnRight() {
+      // So that we won't trigger hero descriptions
+      Utils.mSwipe(1250 * gRatioDevice, 2400 * gRatioDevice, 1250 * gRatioDevice, 1400 * gRatioDevice, 4);
     }
   }, {
     key: 'tapRandom',
