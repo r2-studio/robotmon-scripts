@@ -795,7 +795,8 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug, logs) {
 }
 
 function getDistance(t1, t2) {
-  return Math.sqrt((t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y));
+  //return Math.sqrt((t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y));
+  return (t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y);
 }
 
 function findNearTsum(tsum, tsums) {
@@ -810,6 +811,7 @@ function findNearTsum(tsum, tsums) {
       idx = i;
     }
   }
+  minDis = Math.sqrt(minDis)
   return {dis: minDis, tsum: minTsum, idx: idx};
 }
 
