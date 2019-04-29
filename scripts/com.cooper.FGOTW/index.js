@@ -1,6 +1,7 @@
 var packagePath;
 var imagePath;
 var itemPath;
+
 var server;
 var loadApiCnt;
 
@@ -12,10 +13,25 @@ function stop(){
     stopScript();
 }
 
+function initServer(){
+    var path = getStoragePath();
+    if(server == "JP"){
+        console.log("JP server");
+        packagePath = path+"/scripts/com.cooper.FGO/";
+        imagePath = packagePath+"image_jp/"
+    }
+    else if(server == "TW"){
+        console.log("TW server");
+        packagePath = path+"/scripts/com.cooper.FGOTW/";
+        imagePath = packagePath+"image_tw/"
+    }
+    itemPath = path+"/FGOV2/";
+}
+
 function loadApi(){
     console.log("start load api");
     loadApiCnt = 0;
-    var apiList = ["basic","start_stage","in_stage","auto_attack_ai","get_box"];
+    var apiList = ["basic","start_stage","in_stage","auto_attack_ai","get_box","check_stage"];
     for(var i = 0;i<apiList.length;i++){
         var s = readFile(packagePath+apiList[i]+".js");
         if(s == undefined || s.length == 0){
@@ -24,7 +40,7 @@ function loadApi(){
         }
         runScript(s);
     }
-    if(loadApiCnt == 5){
+    if(loadApiCnt == apiList.length){
         console.log("load api success");
         return true;
     }else{
@@ -42,10 +58,9 @@ function initHTML(serverString){
         return;
     }
     initScreenSize();
-    initPosition();
 
     var firstTime = execute("ls "+itemPath);
-    if(firstTime.length == 0){
+    if(firstTime.length == 0 || firstTime.lastIndexOf("exit", 0) === 0){
         console.log("First time run script, init basic item");
         execute("mkdir "+itemPath);
         execute("mkdir "+itemPath+"script");
@@ -79,19 +94,4 @@ function initHTML(serverString){
       itemList = itemList.slice(0,-1);
     }
     return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version;
-}
-
-function initServer(){
-    var path = getStoragePath();
-    if(server == "JP"){
-        console.log("JP server");
-        packagePath = path+"/scripts/com.cooper.FGO/";
-        imagePath = packagePath+"image_jp/"
-    }
-    else if(server == "TW"){
-        console.log("TW server");
-        packagePath = path+"/scripts/com.cooper.FGOTW/";
-        imagePath = packagePath+"image_tw/"
-    }
-    itemPath = path+"/FGO/";
 }

@@ -1,186 +1,146 @@
-//selectFriend(0,"","贗作",1);
 //-----------------------------------------------------select stage
 function selectStage(useApple){
     if(!isScriptRunning){
         return;
     }
-    console.log("selectStage");
-    /*
-    var swimFlag = true;
-    var waitSwimAnimation = false;
-    var markResize = resizeImage(swimMark,83 * screenScale[0],60 * screenScale[1]);
-    while(swimFlag){
-        if(!isScriptRunning){
-            return;
-        }
-        console.log("find swim team icon");
-        var screenShotSwim = getScreenshot();
-        if(checkImage(screenShotSwim,swimLogo,400,40,200,40)){
-            if(checkImage(screenShotSwim,swimMap,120,40,180,80)){
-                if(!waitSwimAnimation){
-                    waitSwimAnimation = true;
-                    sleep(3000);
-                }
-                var find = findImage(screenShotSwim,markResize);
-                if(find.y < 1200 * screenScale[1] && find.y > 200 * screenScale[1]){
-                    if(find.score > 0.85){
-                        var x = find.x + 45 * screenScale[0];
-                        var y = find.y + 75 * screenScale[1];
-                        tap(x,y,100);
-                        sleep(1000);
-                    }   
-                }
-            }else if(checkImage(screenShotSwim,swimStage,120,40,180,80)){
-                    swimFlag = false;
-            }
-        }else{
-          swimFlag = false;
-        }
-        releaseImage(screenShotSwim);
-    }
-    releaseImage(markResize);
-    */
-    tapScale(1600,475,100);
-    sleep(5000);
-    var screenShot = getScreenshot();
-    if(checkImage(screenShot,stageFullImage,650,300,1200,250)){
-        console.log("item box full");
-        releaseImage(screenShot);
+    console.log("-選擇關卡-");
+    if(!isMainPage()){
+        console.log("不在主畫面-選擇關卡失敗");
         isScriptRunning = false;
         return;
     }
-    else if(checkImage(screenShot,stageFullImage2,650,300,1200,250)){
-        console.log("item box full");
-        releaseImage(screenShot);
+    tapScale(800,160);
+    sleep(500);
+    var status = -1;
+    while(true){
+        if(isItemOrServantFullDialog()){
+            status = 0;
+        }else if(isUseAppleDialog()){
+            status = 1;
+        }else if(isSelectFriendPage()){
+            status = 2;
+        }
+        if(status>=0){
+            break;
+        }
+    }
+    if(status == 2){
+        return;
+    }
+    if(status == 0){
+        console.log("倉庫已滿-選擇關卡失敗");
         isScriptRunning = false;
         return;
     }
-    else if(!checkImage(screenShot,selectFriendImage,checkFriendPosition[0],checkFriendPosition[1],checkFriendPosition[2],checkFriendPosition[3])){
+    if(status == 1){
         switch(useApple){
             case -1:
-            console.log("Ap not enough, stop script");
+            console.log("AP不足-選擇關卡失敗");
             isScriptRunning = false;
-            releaseImage(screenShot);
             return;
             case 2://gold
-            tapScale(750,600,100);
-            console.log("Ap not enough, use gold apple");
-            sendNormalMessage(runningScriptName,"Ap not enough, use gold apple");
+            tapScale(600,300);
+            console.log("使用金蘋果");
+            sendNormalMessage(runningScriptName,"使用金蘋果");
             break;
             case 1://silver
-            tapScale(750,900,100);
-            console.log("Ap not enough, use silver apple");
-            sendNormalMessage(runningScriptName,"Ap not enough, use silver apple");
+            tapScale(600,450);
+            console.log("使用銀蘋果");
+            sendNormalMessage(runningScriptName,"使用銀蘋果");
             break;
             case 0://bronze
-            tapScale(750,1120,100);
-            console.log("Ap not enough, use bronze apple");
-            sendNormalMessage(runningScriptName,"Ap not enough, use bronze apple");
+            tapScale(600,560);
+            console.log("使用銅蘋果");
+            sendNormalMessage(runningScriptName,"使用銅蘋果");
             break;
             case 3:
-            tapScale(750,350,100);
-            console.log("Ap not enough, use stone apple");
-            sendNormalMessage(runningScriptName,"Ap not enough, use stone apple");
+            tapScale(600,150);
+            console.log("使用聖晶石");
+            sendNormalMessage(runningScriptName,"使用聖晶石");
             break;
             case 4:
-            tapScale(1290,1240,100);
             var counter = 0;
             while(isScriptRunning){
-                console.log("Wait 1 min for ap restore");
+                sleep(1000);
+                tapScale(640,620);
+                console.log("等待一分鐘回復體力");
                 if(counter == 0){
-                    sendNormalMessage(runningScriptName,"Ap not enough, wait for ap restore");
+                    sendNormalMessage(runningScriptName,"等待回復體力");
                 }
                 counter = (counter + 1) % 5;
-                for(var i = 0;i<55;i++){
-                    if(!isScriptRunning){
-                        break;
-                    }
-                    sleep(1000);
-                }
-                if(!isScriptRunning){
+                if(selectStageAutoRestore()){
                     break;
                 }
-                tapScale(1600,475,100);
-                sleep(5000);
-                var autoWaitScreenShot = getScreenshot();
-                if(checkImage(autoWaitScreenShot,selectFriendImage,1340,200,420,100)){
-                    releaseImage(autoWaitScreenShot);
-                    break;
-                }
-                tapScale(1290,1240,100);
-                releaseImage(autoWaitScreenShot);
             }
-            sendNormalMessage(runningScriptName,"Ap restore, continue");
             break;
-        }
-        sleep(1000);
-        var screenShot2 = getScreenshot();
-        var size = getImageSize(screenShot2);
-        if(getIdentityScore(screenShot,screenShot2)>0.8){
-            console.log("no apple");
-            releaseImage(screenShot);
-            releaseImage(screenShot2);
-            isScriptRunning = false;
-            return;
-        }
-        releaseImage(screenShot2);
+        }        
         if(useApple >= 0 && useApple < 4){
-            tapScale(1700,1135,100);
-            sleep(2000);
-            /*
-            if(server == "TW"){
-                while(true){
-                    if(!isScriptRunning){
-                        return;
-                    }
-                    sleep(2000);
-                    var screenShot3 = getScreenshot();
-                    if(checkImage(screenShot3,selectFriendImage,1340,200,420,100)){
-                        releaseImage(screenShot3);
-                        break;
-                    }
-                    releaseImage(screenShot3);
-                    tapScale(1600,475,100);
-                }
-            }*/
+            sleep(500);
+            tapScale(850,567);
         }
     }
-    releaseImage(screenShot);
+    while(isScriptRunning){
+        if(isSelectFriendPage()){
+            break;
+        }
+    }
 }
-//-----------------------------------------------------friend list
 
-function selectFriend(filter,servant,item,star){
-    console.log("select friend");
-    sleep(500);
+function selectStageAutoRestore(){
+    for(var i = 0;i<55;i++){
+        sleep(1000);
+        if(!isScriptRunning){
+            break;
+        }
+    }
+    //select stage again
+    tapScale(800,160);
+    while(true){
+        sleep(1000);
+        if(isUseAppleDialog()){
+            return false;
+        }else if(isSelectFriendPage()){
+            return true;
+        }
+    }
+}
+
+//-----------------------------------------------------friend list
+var friendServantPosition = [[51,230,155,96],[51,430,155,96]];
+var friendItemPosition =  [[51,328,155,30],[51,528,155,30]];
+var friendStarPosition =  [[190,360,5,5],[190,560,5,5]];
+var selectFriendPosition = [90,158,225,292,362,430,497,565,632];
+//selectFriend(1,"s1","i1",true,false);
+function selectFriend(filter,servant,item,star,isFriend){
     if(!isScriptRunning){
         return;
     }
-
-    var teamScreenShot = getScreenshot();
-    if(checkImage(teamScreenShot,selectTeamImage,2270,1300,230,100)){
-        tapScale(200,100,100);
+    if(isFriend == undefined){
+        isFriend = true;
     }
-    releaseImage(teamScreenShot);
+    console.log("-選擇好友-");
+    if(!isSelectFriendPage()){
+        console.log("不在選擇好友頁面-選擇好友失敗");
+        isScriptRunning = false;
+        return;
+    }
     var servantImage;
     if(servant.length > 0){
-        servantImage = openImage(itemPath+"friend_servant/"+servant+".png");
+        var servantImagePath = itemPath+"friend_servant/"+servant+".png";
+        servantImage = openImage(servantImagePath);
+        if(isDebug){
+            console.log("check servant image "+servantImagePath);
+        }
     }
     var itemImage;
     if(item.length > 0){
-        itemImage = openImage(itemPath+"friend_item/"+item+".png");
+        var servantItemPath = itemPath+"friend_item/"+item+".png";
+        itemImage = openImage(servantItemPath);
+        if(isDebug){
+            console.log("check item image "+servantItemPath);
+        }
     }
     while(true){
-        if(!isScriptRunning){
-            return;
-        }
-        var screenShot2 = getScreenshot();
-        if(!checkImage(screenShot2,selectFriendImage,checkFriendPosition[0],checkFriendPosition[1],checkFriendPosition[2],checkFriendPosition[3])){
-            releaseImage(screenShot2);
-            sleep(3000);
-            continue;
-        }
-        releaseImage(screenShot2);
-        sleep(1000);
         var t = 1;
         for(var i = 0;i < selectFriendPosition.length;i++){//loop for filter
             if(!isScriptRunning){
@@ -193,83 +153,56 @@ function selectFriend(filter,servant,item,star){
                 continue;
             }else{
                 t *= 2;
-                tapScale(selectFriendPosition[i],250,100);
+                tapScale(selectFriendPosition[i],125);
                 sleep(1000);
             }
-            for(var j = 0;j < 3;j++){ //loop for scroll
-                if(!isScriptRunning){
-                    return;
+
+            for(var j = 0;j<3;j++){
+                var screenshot = getScreenshotResize();
+                var friend1 = true;
+                var friend2 = true;
+                if(servantImage!=undefined){
+                    friend1 = checkFriendServant(screenshot,servantImage,0);
+                    friend2 = checkFriendServant(screenshot,servantImage,1);
                 }
-                var screenShot = getScreenshot();
-                var friend1;
-                var friend2;
-                if(servantImage == undefined && itemImage == undefined){
-                    friend1 = true;
-                    friend2 = true;
-                }else{
-                    var s1 = true;
-                    var i1 = true;
-                    var star1 = true;
-                    var s2 = true;
-                    var i2 = true;
-                    var star2 = true;
-                    if(servantImage != undefined){
-                        if(!checkImage(screenShot,servantImage,100,460,310,195)){
-                            s1 = false;
-                        }
-                        if(!checkImage(screenShot,servantImage,100,860,310,195)){
-                            s2 = false;
-                        }
-                    }
-                    if(itemImage != undefined){
-                        if(server == "JP"){
-                            if(!checkImageAndColor(screenShot,itemImage,100,655,310,90)){
-                                i1 = false;
-                            }else if(star == 1 && !checkStar(screenShot,0)){
-                                star1 = false;
-                            }
-                            if(!checkImageAndColor(screenShot,itemImage,100,1055,310,90)){
-                                i2 = false;
-                            }else if(star == 1 && !checkStar(screenShot,1)){
-                                star2 = false;
-                            }
-                        }else if(server == "TW"){
-                            var itemSize = getImageSize(itemImage);
-                            var shortImage = cropImage(itemImage,0,0,itemSize.width,((itemSize.height * 0.667) | 0));
-                            if(!checkImageAndColor(screenShot,shortImage,100,655,310,60)){
-                                i1 = false;
-                            }else if(star == 1 && !checkStar(screenShot,0)){
-                                star1 = false;
-                            }
-                            if(!checkImageAndColor(screenShot,shortImage,100,1055,310,60)){
-                                i2 = false;
-                            }else if(star == 1 && !checkStar(screenShot,1)){
-                                star2 = false;
-                            }
-                            releaseImage(shortImage);
-                        }
-                    }
-                    friend1 = s1 && i1 && star1;
-                    friend2 = s2 && i2 && star2;
-                }            
-                releaseImage(screenShot);
-                if(friend1||friend2){
-                    if(friend1){
-                        tapScale(900,535,100);
-                    }else if(friend2){
-                        tapScale(900,935,100);
-                    }
+                var item1 = true;
+                var item2 = true;                
+                if(itemImage!=undefined){
+                    item1 = checkFriendItem(screenshot,itemImage,0,star);
+                    item2 = checkFriendItem(screenshot,itemImage,1,star);
+                }
+                var found = false;
+                if(friend1 && item1){
+                    tapScale(450,267);
+                    found = true;
+                }else if(friend2 &&item2){                    
+                    tapScale(450,467);
+                    found = true;
+                }
+                if(isDebug){
+                    var star1 = checkStar(screenshot,0);
+                    var star2 = checkStar(screenshot,1);
+                    console.log("=====================================");
+                    console.log("loop "+j)
+                    console.log("friend1 "+friend1+" "+item1+" "+star1);
+                    console.log("friend2 "+friend2+" "+item2+" "+star2);
+                    console.log("=====================================");
+                }
+                releaseImage(screenshot);
+                if(found){                    
                     if(servantImage!=undefined){
                         releaseImage(servantImage);
                     }
                     if(itemImage!=undefined){
                         releaseImage(itemImage);
                     }
-                    sleep(3000);
+                    while(!isSelectTeamPage()){
+                    }
                     return;
                 }
                 if(j < 2){
                     scrollFriendList();
+                    sleep(500);
                 }
             }
         }
@@ -277,16 +210,37 @@ function selectFriend(filter,servant,item,star){
     }
 }
 
+function checkFriendServant(screenshot,servantImage,position){
+    if(isDebug){
+        console.log("checkFriendServant " +position);
+    }
+    return checkImage(screenshot,servantImage,friendServantPosition[position][0],friendServantPosition[position][1],friendServantPosition[position][2],friendServantPosition[position][3]);
+}
+
+function checkFriendItem(screenshot,itemImage,position,star){
+    if(isDebug){
+        console.log("checkFriendItem " +position);
+    }
+    if(!checkImageAndColor(screenshot,itemImage,friendItemPosition[position][0],friendItemPosition[position][1],friendItemPosition[position][2],friendItemPosition[position][3])){
+        return false;
+    }
+    if(star){
+        if(!checkStar(screenshot,position)){
+            return false;
+        }
+    }
+    return true;
+}
+
 function checkStar(screenShot,position){
-    var w = 10 * screenScale[0];
-    var h = 10 * screenScale[1];
-    var startX = screenOffset[0] + 379 * screenScale[0];
-    var startY =  screenOffset[1] + (720 + position * 400)* screenScale[1];
+    if(isDebug){
+        console.log("checkStar " +position);
+    }
     var isG = 0;
     var notG = 0;
-    for(var i=0;i<w;i++){
-        for(var j=0;j<h;j++){
-            var color = getImageColor(screenShot,startX+i,startY+j);
+    for(var i=0;i<friendStarPosition[position][2];i++){
+        for(var j=0;j<friendStarPosition[position][3];j++){
+            var color = getImageColor(screenShot,friendStarPosition[position][0]+i,friendStarPosition[position][1]+j);
             if(color.g>color.r && color.g > color.b){
                 isG++;
             }else{
@@ -305,27 +259,28 @@ function reloadFriend(){
         if(!isScriptRunning){
             return;
         }
-        tapScale(1650,235,100);
+        tapScale(825,117);
         sleep(1000);
-        var screenShot = getScreenshot();
-        if(checkImage(screenShot,selectFriendImage2,1600,1080,150,80)){
-            tapScale(1700,1135,100);
-            releaseImage(screenShot);
-            waitLoading();
-            return;
-        }else{
-            tapScale(1250,1135,100);
-            sleep(5000);
+        if(isSelectFriendRefreshDialog()){
+            tapScale(850,567);
+            sleep(1000);
+            if(isSelectFriendRefreshDialog()){
+                tapScale(625,567);
+                sleep(5000);
+            }else{
+                return;
+            }
         }
-        releaseImage(screenShot);
     }
 }
 
 function scrollFriendList(){
-    swipeScale(800,1000,800,200,300);
+    swipeScale(400,500,400,100,300);
 }
 
 //-----------------------------------------------------team menu
+var itemPositionY = [200,350,500];
+
 function selectTeam(team){
     if(!isScriptRunning){
         return;
@@ -333,19 +288,16 @@ function selectTeam(team){
     if(team < 0 || team >= 10){
         return;
     }
-    while(true){
-        var screenShot = getScreenshot();
-        if(checkImage(screenShot,selectTeamImage,2270,1300,230,100)){
-            releaseImage(screenShot);
-            break;
-        }
-        releaseImage(screenShot);
+    console.log("-選擇隊伍-");
+    if(!isSelectTeamPage()){
+        console.log("不在選擇隊伍畫面");
+        return;
     }
-    var x = 1050 + 50*team;
-    var x2 = 1050 + 50*((team+1)%10);
-    tapScale(x2,100,100);
+    var x = 525 + 25*team;
+    var x2 = 525 + 25*((team+1)%10);
+    tapScale(x2,50);
     sleep(1000);
-    tapScale(x,100,100);
+    tapScale(x,50);
     sleep(2000);
 }
 
@@ -353,96 +305,39 @@ function startQuest(useItem){
     if(!isScriptRunning){
         return;
     }
-    while(true){
-        var screenShot = getScreenshot();
-        if(checkImage(screenShot,selectTeamImage,2270,1300,230,100)){
-            releaseImage(screenShot);
-            break;
-        }
-        releaseImage(screenShot);
+    console.log("-進入關卡-");
+    if(!isSelectTeamPage()){
+        console.log("不在選擇隊伍畫面");
+        return;
     }
-    tapScale(2300,1335,100);
+    tapScale(1150,667);
     sleep(1500);
-
-    //check use item
-    var screenShot2 = getScreenshot();
-    if(checkImage(screenShot2,useItemImage,800,160,950,60)){
+    if(isUseItemDialog()){
         if(useItem == undefined || useItem == -1){
-            tapScale(1640,1300,100);
-            releaseImage(screenShot2);
+            console.log("不使用道具");
+            tapScale(820,650);
             return;
-        }else{
-            var itemPositionY = [400,700,1000];
-            var y;
-            if(useItem > 2){
-                y = 1000;
-                for(var i = 0; i < useItem - 2; i++){
-                    swipeScale(800,1000,800,600,20);
-                    sleep(1000);
-                }
-            }else{
-                y = itemPositionY[useItem];
+        }
+        var y = itemPositionY[useItem];
+        if(useItem > 2){
+            y = 500;
+            for(var i = 0; i < useItem - 2; i++){
+                swipeScale(400,500,400,300,20);
+                sleep(1000);
             }
-            tapScale(1300,y,100);
-            sleep(1000);
-            tapScale(1655,1110,100);
         }
-        releaseImage(screenShot2);
-        sleep(5000);        
-        var screenShot3 = getScreenshot();
-        if(checkImage(screenShot3,useItemImage,800,160,950,60)){
+        console.log("使用道具");
+        tapScale(650,y);
+        sleep(1000);
+        tapScale(827,555);
+        sleep(3000);
+        if(isUseItemDialog()){
             isScriptRunning = false;
-            sendUrgentMessage(runningScriptName,"No enough item");
-            console.log("Use item failed");
-        }
-        releaseImage(screenShot3);
-    }else{
-        releaseImage(screenShot2);
-    }
-}
-
-function finishQuest(){
-    console.log("Wait for quest finish");
-    for(var i=0;i<50;i++){
-        if(!isScriptRunning){
+            console.log("道具不足");
+            sendUrgentMessage(runningScriptName,"道具不足");
             return;
         }
-        var r = isQuestFinish();
-        switch(r){
-            case -1:
-                var screenShot3 = getScreenshot();
-                if(checkImage(screenShot3,friendPointNew,2030,1300,300,100)){
-                    sleep(3000);
-                    var screenShot4 = getScreenshot();
-                    if(!checkImage(screenShot4,finishStageImage[0],2280,1340,190,55)){
-                        tapScale(2180,1350,100);
-                        //console.log("Get new craft");
-                    }
-                    releaseImage(screenShot4);
-                }else if(checkImage(screenShot3,friendPointBack,60,25,60,115)){
-                    sleep(3000);
-                    var screenShot4 = getScreenshot();
-                    if(!checkImage(screenShot4,finishStageImage[0],2280,1340,190,55)){
-                        //sendUrgentMessage(runningScriptName,"Get new craft");
-                        console.log("Get new craft");
-                        tapScale(90,80,100);
-                    }
-                    releaseImage(screenShot4);
-                }
-                releaseImage(screenShot3);
-                break;
-            case 0:
-                console.log("Back to main screen");
-                return;
-            case 1:
-                tapScale(650,1200,100);
-                break;
-            case 2:
-                tapScale(2300,1335,100);
-                break;
-        }
     }
-    console.log("Wait for quest finish timeout");
 }
 
 loadApiCnt++;

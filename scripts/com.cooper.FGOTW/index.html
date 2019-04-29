@@ -457,10 +457,10 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
                 minimumResultsForSearch: -1,
                 dropdownAutoWidth: true
             });
-            $("#ultColor"+commandId).select2({
-                minimumResultsForSearch: -1,
-                dropdownAutoWidth: true
-            });
+            // $("#ultColor"+commandId).select2({
+            //     minimumResultsForSearch: -1,
+            //     dropdownAutoWidth: true
+            // });
             for(var i =0;i<3;i++){
                 $("#servant"+i+"ult"+commandId).select2({
                     minimumResultsForSearch: -1,
@@ -675,7 +675,8 @@ function getCurrentScript(){
                             }
                         }
 
-                        newScript+=","+$("#ultColor"+itemId).val();
+                        // newScript+=","+$("#ultColor"+itemId).val();
+                        newScript+=",false";
                         newScript+=");";
                     break;
                     default:
@@ -771,9 +772,9 @@ function getAutoItem(id){
         '<label>直到&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "autoFightUntil'+id+'">'+
         '<option value = "3" selected>關卡結束</option>'+
-        '<option value = "1">Wave 2</option>'+
-        '<option value = "2">Wave 3</option>'+
-        '<option value = "0">一回合</option></select><br>'+
+        '<option value = "1">第一波結束</option>'+
+        '<option value = "2">第二波結束</option>'+
+        '<option value = "0">只跑一回合</option></select><br>'+
 
         '<label>優先選擇卡片顏色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "autoFightColor'+id+'">'+
@@ -787,10 +788,10 @@ function getAutoItem(id){
         '<option value = "1" selected>基本權重</option>'+
         '<option value = "2">同色優先</option></select><br>'+
 
-        '<label>辨識寶具顏色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
-        '<select id = "ultColor'+id+'">'+
-        '<option value = "0">啟用</option>'+
-        '<option value = "1" selected>關閉</option></select><br>'+
+        // '<label>辨識寶具顏色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
+        // '<select id = "ultColor'+id+'">'+
+        // '<option value = "0">啟用</option>'+
+        // '<option value = "1" selected>關閉</option></select><br>'+
 
         '<label>弱點&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "autoFightWeak'+id+'">'+
@@ -809,14 +810,14 @@ function getAutoItem(id){
         '<select id = "servant0ult'+id+'">'+
         '<option value = "-1">不使用</option>'+
         '<option value = "0" selected>自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>技能一&nbsp;&nbsp;</label>'+
         '<select id = "servant0skill0'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant0skill0target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -827,8 +828,8 @@ function getAutoItem(id){
         '<select id = "servant0skill1'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant0skill1target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -839,8 +840,8 @@ function getAutoItem(id){
         '<select id = "servant0skill2'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant0skill2target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -853,14 +854,14 @@ function getAutoItem(id){
         '<select id = "servant1ult'+id+'">'+
         '<option value = "-1">不使用</option>'+
         '<option value = "0" selected>自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>技能一&nbsp;&nbsp;</label>'+
         '<select id = "servant1skill0'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant1skill0target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -871,8 +872,8 @@ function getAutoItem(id){
         '<select id = "servant1skill1'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant1skill1target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -883,8 +884,8 @@ function getAutoItem(id){
         '<select id = "servant1skill2'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant1skill2target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -897,14 +898,14 @@ function getAutoItem(id){
         '<select id = "servant2ult'+id+'">'+
         '<option value = "-1">不使用</option>'+
         '<option value = "0" selected>自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>技能一&nbsp;&nbsp;</label>'+
         '<select id = "servant2skill0'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant2skill0target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -915,8 +916,8 @@ function getAutoItem(id){
         '<select id = "servant2skill1'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant2skill1target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -927,8 +928,8 @@ function getAutoItem(id){
         '<select id = "servant2skill2'+id+'">'+
         '<option value = "-1" selected>不使用</option>'+
         '<option value = "0">自動使用</option>'+
-        '<option value = "1">Wave 2開始使用</option>'+
-        '<option value = "2">Wave 3開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<option value = "1">第二波開始使用</option>'+
+        '<option value = "2">第三波開始使用</option></select><br>&nbsp;&nbsp;&nbsp;&nbsp;'+
         '<label>對象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>'+
         '<select id = "servant2skill2target'+id+'">'+
         '<option value = "-1" selected>無</option>'+
@@ -1448,15 +1449,15 @@ function resetScript(result){
                     $("#servant"+i+"skill"+j+"target"+commandId).val(scriptValue[5+7*i+1+j*2+1]).trigger('change');
                 }
             }
-            if(scriptValue.length >= 27){
-                $("#ultColor"+commandId).val(scriptValue[26]).trigger('change');
-            }else{
-                $("#ultColor"+commandId).val("1").trigger('change');
-            }
-            $("#ultColor"+commandId).select2({
-                minimumResultsForSearch: -1,
-                dropdownAutoWidth: true
-            });
+            // if(scriptValue.length >= 27){
+            //     $("#ultColor"+commandId).val(scriptValue[26]).trigger('change');
+            // }else{
+            //     $("#ultColor"+commandId).val("1").trigger('change');
+            // }
+            // $("#ultColor"+commandId).select2({
+            //     minimumResultsForSearch: -1,
+            //     dropdownAutoWidth: true
+            // });
         }
     });
     bootbox.alert("讀取成功");
