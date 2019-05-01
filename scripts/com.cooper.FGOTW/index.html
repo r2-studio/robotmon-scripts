@@ -704,7 +704,7 @@ function getGetBox(id){
         '<select id = "getBoxReset'+id+'">'+
         '<option value = "0" selected>否</option>'+
         '<option value = "1">是</option></select></li>'+
-        '<label>注意 箱子中獎後會立刻重置，想把前五箱抽完請勿開啟</label>');
+        '<label>注意 自動重置開啟時，中獎後會點擊重置按鈕，想抽乾前十箱請小心</label>');
 }
 function getUseSkillItem(id){
     return getCommandItem(id,"使用技能",
@@ -1523,7 +1523,7 @@ function onLog(message) {
                 </div>
             </li><br>
             <label>好友擷取
-            </label><br>
+            </label><br>請用不同排序方式找到需要的從者禮裝，不要上下滑動<br><br>
             <div>
               <button id="getServantImage1" type="button">擷取從者1</button>
               <button id="getItemImage1" type="button">擷取禮裝1</button><br><br>
@@ -1544,7 +1544,7 @@ function onLog(message) {
           <div  class="pull-left" style="margin-top:-4px">
               新增指令位置&nbsp;<button id="insertDirection" type="button" value = "1" >後</button><br><br>
               <button id="showAll" type="button">全部展開</button>
-              <button id="hideAll" type="button">全部隱藏</button>
+              <button id="hideAll" type="button">全部收起</button>
           </div><br><br><br><br><br><br>
           <div  class="pull-left" style="margin-top:-4px">
               <button id="addGetFriendPoint" type="button">友抽</button>

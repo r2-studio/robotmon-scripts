@@ -1,8 +1,8 @@
-var boxResetPosition = [1105,180,95,20];
+var boxResetPosition = [1105,220,95,20];
 var boxFullImage;
 var boxFullPosition = [475,400,325,200];
 var boxNoPointImage;
-var boxNoPointPosition = [250,400,125,100];
+var boxNoPointPosition = [240,420,130,80];
 
 function getBox(newBox,fast){
     boxFullImage = openImage(imagePath+"boxFull.png");
@@ -50,7 +50,7 @@ function checkIsBoxFinish(){
         isScriptRunning = false;
         return true;
     }
-    if(checkImage(screenshot,boxNoPointPosition,boxNoPointPosition[0],boxNoPointPosition[1],boxNoPointPosition[2],boxNoPointPosition[3])){
+    if(checkImage(screenshot,boxNoPointImage,boxNoPointPosition[0],boxNoPointPosition[1],boxNoPointPosition[2],boxNoPointPosition[3])){
         r = true;
     }
     releaseImage(screenshot);

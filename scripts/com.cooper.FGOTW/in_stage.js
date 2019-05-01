@@ -250,17 +250,29 @@ function finishQuest(){
         if(isMainPage()){
             return;
         }
-        tapScale(1050,668);
-        sleep(500);
-        if(isMainPage()){
-            return;
-        }
-        if(isAddFriendPage()){
+        tapScale(550,30);
+        sleep(1500);
+        if(isFinishDropDialoge()){
+            tapScale(1100,660);
+            sleep(1500);           
+        } else if(isAddFriendPage()){
             tapScale(325,600);
-        }else if(isItemPage()){
-            tapScale(45,40);
+            sleep(1500);
+        } else if(isItemPage()){
+            sleep(1000);
+            if(isMainPage()){
+                return;
+            }
+            sleep(2000);
+            if(isItemPage()){
+                sleep(1000);
+                if(isMainPage()){
+                    return;
+                }
+                tapScale(45,40);
+                sleep(1500);
+            }
         }
-        sleep(1000);
     }
 }
 
