@@ -545,6 +545,17 @@ function setPuntConfigByQuestName(questName){
       puntConfig.roleNumber[9] = "-1"; puntConfig.angle[9] = 80; puntConfig.flyDelay[9] = 650;
       puntConfig.roleNumber[10] = "-1"; puntConfig.angle[10] = 80; puntConfig.flyDelay[10] = 650;
       break;
+	case "Easter Egg Hunt!":
+	  console.log("Easter Egg Hunt!");
+	  questInfo.position.x = 640; questInfo.position.y = 400;
+      puntConfig.centerX = 490; puntConfig.centerY = 411;
+	  for(i = 1; i < 11; i++){
+		puntConfig.roleNumber[i] = "0";
+		puntConfig.angle[i] = 80;
+		puntConfig.flyDelay[i] = 550;
+	  }
+	  
+	  break;
     default:
       break;
   }
@@ -573,6 +584,18 @@ function setQuestPositionByQuestLevel(questLevel){
 		case 23: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 400; break;
 		case 24: questInfo.levelPosition.x = 820; questInfo.levelPosition.y = 400; break;
 		case 25: questInfo.levelPosition.x = 1000; questInfo.levelPosition.y = 400; break;
+		
+		case 31: questInfo.levelPosition.x = 280; questInfo.levelPosition.y = 160; break;
+		case 32: questInfo.levelPosition.x = 460; questInfo.levelPosition.y = 160; break;
+		case 33: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 160; break;
+		case 34: questInfo.levelPosition.x = 820; questInfo.levelPosition.y = 160; break;
+		case 35: questInfo.levelPosition.x = 1000; questInfo.levelPosition.y = 160; break;
+		case 36: questInfo.levelPosition.x = 280; questInfo.levelPosition.y = 560; break;
+		case 37: questInfo.levelPosition.x = 460; questInfo.levelPosition.y = 560; break;
+		case 38: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 560; break;
+		case 39: questInfo.levelPosition.x = 820; questInfo.levelPosition.y = 560; break;
+		case 40: questInfo.levelPosition.x = 1000; questInfo.levelPosition.y = 560; break;
+		
 		
 		case 99: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 300; break;
 		default:
@@ -635,9 +658,9 @@ function start(viewSettings){
 }
 // this.start(mySetting);
 // this.stop();
-config.isRunning = true;
-console.log(this.getGUIStr());
-config.isRunning = false;
+//config.isRunning = true;
+//console.log(this.getGUIStr());
+//config.isRunning = false;
 // if(gui.indexOf("Unknown") >= 0){
 //config.isRunning = true;
 //console.log(this.getGUIStr());
