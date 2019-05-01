@@ -415,7 +415,7 @@ var GameInfo = function GameInfo(prestigeTime, upgradeAllHeroCD) {
   this.upgradeMaster = new Point(1180, 1800);
   this.upgradeMasterExpend = new Point(1200, 400);
   this.prestige = new Point(1200, 2340);
-  this.prestige2 = new FeaturePoint(700, 1980, 48, 48, 48, true, 20);
+  this.prestige2 = new FeaturePoint(733, 1933, 48, 48, 48, true, 20);
   this.prestige3 = new FeaturePoint(1000, 1700, 60, 60, 60, true, 20);
 
   this.splashKillRect = new Rect(530, 530, 720, 940);
@@ -591,9 +591,6 @@ var GameAssistant = function () {
             return;
           }
         }
-
-        // this.tapFairy();
-        // break;
 
         console.log('check fightClanBoss');
         this.fightClanBoss();
@@ -861,7 +858,7 @@ var GameAssistant = function () {
       if (skill.check(this._img)) {
         console.log('learn skill')
 
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 25; i++) {
           skill.tap(1, 300);
         }
       }
