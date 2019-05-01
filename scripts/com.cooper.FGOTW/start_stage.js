@@ -264,6 +264,7 @@ function reloadFriend(){
         if(isSelectFriendRefreshDialog()){
             tapScale(850,567);
             sleep(1000);
+            waitLoading();
             if(isSelectFriendRefreshDialog()){
                 tapScale(625,567);
                 sleep(5000);
