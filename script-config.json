@@ -101,8 +101,8 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 1.44,
-      "description": "<div>V1.44 嘗試解決在隊伍畫面亂戳的問題<br><br>V1.43修正無法換箱與加入好友卡住bug<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.01,
+      "description": "<div>V2.01beta 支援Robotmon beta版的easy啟動模式，Android 8手機也能跑日服了!!<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },

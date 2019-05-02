@@ -1,18 +1,56 @@
+//servant
+var servantExistImage;
 var initServant = [];
-var initUlt = [];
-var ultList = [];
+var servantInited;
+var servantAliveX = [100,415,735];
+var servantAliveY = 400;
+var servantAliveW = 150;
+var servantAliveH = 100;
+
+var servantExistX =[111,428,748];
+var servantExistY = 671;
+var servantExistWidth = 25;
+var servantExistHeight = 12;
+
+//skill
+var skillUsedImage;
+var skillUsedPositionX = [31,124,218,348,442,535,667,761,855];
+if(server="JP"){
+     skillUsedPositionX[0] = 30;
+}
+var skillUsedPositionY = 600;
+var skillUsedSize = 16;
+
+//card
+var cardImage = [];
+
+var servantAliveMessage;
 var cardList = [];
 var cardStatus = []; // -1:null 0:disable 1:weak 2:resist
-var servantExist = [];
-var servantInited;
+var cardWidth = 150;
+var cardHeight = 65;
+
+var updateCardListX = [63,319,574,832,1092];
+var updateCardListY = 535;
+var updateCardListOffsetWeakX = 115;
+var updateCardListOffsetWeakY = [-155,-170];
+var weakW = 50;
+var weakH = 15;
+
+var offsetDisableX = [55,130];
+var offsetDisableY = -45;
+var disableW = 30;
+var disableH = 30;
+
+//ult
+var ultList = [];
 var ultCheckX = [682,1146,1612];
 var ultCheckY = 285;
 var ultWidth = 280;
 var ultHeight = 300;
 var ultLightnessOffset = 140;
 var allServentDieFlag = false;
-var servantAliveMessage;
-var checkUlt;
+
 
 function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1,p0s2,p0t2,p1ult,p1s0,p1t0,p1s1,p1t1,p1s2,p1t2,p2ult,p2s0,p2t0,p2s1,p2t1,p2s2,p2t2,ultColor){
     var ult = [];
@@ -60,119 +98,63 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
     skill[1] = p1;
     skill[2] = p2;
 
-    if(ultColor == 0){
-        checkUlt = true;
-    }else{
-        checkUlt = false;
-    }
     servantInited = false;
     servantAliveMessage = [true,true,true];
-    var lastStage = -1;
+    loadAllImage();
+
+    var lastStage = -1;    
     while(true){
         if(!isScriptRunning){
             break;
         }
         if(!waitUntilPlayerCanMoveOrFinish()){
-            console.log("Quest Finish break AutoAttack");
+            if(isScriptRunning){
+                console.log("關卡完成，自動戰鬥結束");
+            }else{
+                console.log("手動停止腳本");
+            }
             break;
         }
         var currentStage = getCurrentStage();
         if(until!=0 && until <= currentStage){
-            console.log("Wave Finish break AutoAttack");
+            console.log("進入第"+(currentStage+1)+"波，自動戰鬥結束");
             break;
         }
         if(lastStage < currentStage){
             lastStage = currentStage;
-            console.log("Wave "+(lastStage+1));
+            console.log("進入第"+(currentStage+1)+"波");
             if(getUserPlan() == 2){
                 sendNormalMessage(runningScriptName,"Wave "+(lastStage + 1));
             }
         }
         attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage);
         if(until == 0){
-            console.log("One turn break AutoAttack");
+            console.log("一回合完成，自動戰鬥結束");
             break;
         }
         sleep(5000);
     }
-    if(servantInited){
-        for(var i=0;i<3;i++){
-            releaseImage(initServant[i]);
-        }
-    }
+    releaseAllImage();
 }
 
 function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
-    console.log("AutoAttack start new turn");
-    var screenShot = getScreenshot();
-    var servantAlive = [true,true,true];
-    if(!servantInited){
-        servantInited = true;
-        initServant = getCurrentServant(screenShot);
-        for(var i=0;i<3;i++){
-            servantAlive[i] = true;
-        }
-    }else{
-        var currentServant = getCurrentServant(screenShot);
-        for(var i=0;i<3;i++){
-            if(getIdentityScore(initServant[i],currentServant[i])>0.85){
-                servantAlive[i] = true;
-            }else{
-                console.log("servant "+(i+1)+" die");
-                servantAlive[i] = false;
-                if(servantAliveMessage[i]){
-                    servantAliveMessage[i] = false;
-                    sendNormalMessage(runningScriptName,"servant "+(i+1)+" die");
-                }
-            }
-        }
-        if(!(servantAlive[0] || servantAlive[1] || servantAlive[2])){
-            /*
-            var path = getStoragePath();
-            var currentdate = new Date();
-            var time = currentdate.getTime();
-            saveImage(screenShot,path+"/AllDieBug_"+time+".png");
-            for(var j=0;j<3;j++){ 
-                saveImage(currentServant[j],path+"/AllDieBug_current"+j+"_"+time+".png");                
-                saveImage(initServant[j],path+"/AllDieBug_init"+j+"_"+time+".png");
-            }*/
-            console.log("All servant die bug?");
-            if(!allServentDieFlag){
-                allServentDieFlag = true;
-                releaseImage(screenShot);
-                return;
-            }
-        }
-        for(var i = 0;i<3;i++){            
-            releaseImage(currentServant[i]);
-        }
-    }
-    allServentDieFlag = false;
-    for(var i=0;i<3;i++){
-        if(initUlt[i] != undefined){
-            releaseImage(initUlt[i]);
-        }        
-        initUlt[i] = cropImage(screenShot, ultCheckX[i]* screenScale[0] + screenOffset[0], ultCheckY * screenScale[1] + screenOffset[1], ultWidth * screenScale[0], ultHeight* screenScale[1]);
-    }
-    var skillUsed = [];
-    var m = 'skill_used:';
-    for(var i=0;i<9;i++){
-        skillUsed[i] = checkImage(screenShot,skillUsedImage,skillPositionX[i],skillPositionY,skillPositionW,skillPositionH);
-        m+=(skillUsed[i]+1)+",";
-    }
-    updateServantExist(screenShot);
-    releaseImage(screenShot);
-    console.log(m);
+    console.log("自動戰鬥 新回合開始");
+    var screenshot = getScreenshotResize();
+    var servantAlive = updateServantAlive(screenshot);
+    var skillUsed = updateSkillUsed(screenshot);
+    var servantExist = updateServantExist(screenshot);
+    releaseImage(screenshot);
+
     for(var i =0;i<3;i++){
         for(var j=2;j>=0;j--){
             if(!isScriptRunning){
-                break;
+                return;
             }
             if(!servantAlive[i]){
                 switch(die){
                     case 0:
                         isScriptRunning = false;
-                        console.log("Servant die break AutoAttack");
+                        console.log("從者退場，停止腳本");
                     return;
                     case 1:
                         if(!skillUsed[i*3+j] && servantExist[i]){
@@ -188,14 +170,149 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
             }
         }
     }
-    console.log("skill use finish");
     startAttack();
-    console.log("startAttack finish");
     updateCardList();
-    console.log("updateCardList finish");
-    updateUltList();
-    console.log("updateUltList finish");
+    // updateUltList();
+    selectCards(sameColor,weak,mainColor,ult,currentStage);
+}
 
+//image---------------------------------------------
+function loadAllImage(){    
+    cardImage[0] = openImage(imagePath+"cardListB.png");
+    cardImage[1] = openImage(imagePath+"cardListN.png");
+    cardImage[2] = openImage(imagePath+"cardListQ.png");
+    cardImage[3] = openImage(imagePath+"cardWeak.png");
+    cardImage[4] = openImage(imagePath+"cardResist.png");
+    cardImage[5] = openImage(imagePath+"cardDisable1.png");
+    cardImage[6] = openImage(imagePath+"cardDisable2.png");
+    skillUsedImage = openImage(imagePath+"skillUsed.png");
+    servantExistImage = openImage(imagePath+"servantExist.png");
+}
+
+function releaseAllImage(){
+    if(servantInited){
+        for(var i=0;i<3;i++){
+            releaseImage(initServant[i]);
+        }
+    }
+    for(var i=0;i<7;i++){
+        releaseImage(cardImage[i]);
+    }
+    releaseImage(skillUsedImage);
+    releaseImage(servantExistImage);
+}
+
+//servant-------------------------------------------
+function updateServantAlive(screenshot){
+    var result = [];
+    if(!servantInited){
+        servantInited = true;
+        initServant = getCurrentServant(screenshot);
+        for(var i=0;i<3;i++){
+            result[i] = true;
+        }
+    }else{
+        var currentServant = getCurrentServant(screenshot);
+        for(var i=0;i<3;i++){
+            if(getIdentityScore(initServant[i],currentServant[i])>0.8){
+                result[i] = true;
+            }else{
+                console.log("從者 "+(i+1)+" 退場");
+                result[i] = false;
+            }
+        }
+        for(var i = 0;i<3;i++){            
+            releaseImage(currentServant[i]);
+        }
+    }
+    return result;
+}
+
+function updateServantExist(screenshot){
+    var result = [true,true,true];
+    for(var i = 0;i<3;i++){
+        if(!checkImage(screenshot, servantExistImage, servantExistX[i], servantExistY, servantExistWidth, servantExistHeight)){
+            result[i] = false;
+        }
+    }
+    return result;
+}
+
+function getCurrentServant(screenshot){
+    var servant = [];
+    for(var i=0;i<3;i++){
+        servant[i] = cropImage(screenshot,servantAliveX[i],servantAliveY,servantAliveW,servantAliveH);
+    }
+    return servant;
+}
+
+//skill------------------------------------------------
+function updateSkillUsed(screenshot){
+    var result = [];
+    for(var i=0;i<9;i++){
+        result[i] = checkImage(screenshot,skillUsedImage,skillUsedPositionX[i],skillUsedPositionY,skillUsedSize,skillUsedSize);
+    }
+    return result;
+}
+
+//card--------------------------------------------------
+function updateUltList(){
+    ultList= [-1,-1,-1];
+    return;
+}
+
+function updateCardList(){
+    var cardImageScore = [];
+    var screenshot = getScreenshotResize();
+    //get card color
+    for(var i=0;i<5;i++){
+        var cropCard = cropImage(screenshot,updateCardListX[i],updateCardListY,cardWidth,cardHeight);
+        for(var k=0;k<3;k++){
+            var find = findImage(cropCard,cardImage[k]);
+            if(cardImageScore[i] == undefined || find.score > cardImageScore[i]){
+                cardImageScore[i] = find.score;
+                cardList[i] = k;
+            }
+        }
+        releaseImage(cropCard);
+    }
+    //get card status
+    for(var i=0;i<5;i++){
+        cardStatus[i] = -1;
+        var cropDisable = [];
+        var cropWeak = [];
+        for(var j=0;j<2;j++){
+            cropDisable[j] = cropImage(screenshot,
+                (updateCardListX[i] + offsetDisableX[j])- 1,
+                updateCardListY + offsetDisableY,
+                disableW+2,
+                disableH+15);
+            cropWeak[j] = cropImage(screenshot,
+                (updateCardListX[i] + updateCardListOffsetWeakX)- 1,
+                updateCardListY + updateCardListOffsetWeakY[j],
+                weakW+5,
+                weakH+15);
+        }
+        if(findImage(cropDisable[0],cardImage[5]).score>=0.85 && findImage(cropDisable[1],cardImage[6]).score>=0.85) {
+            cardStatus[i] = 0;
+        }else if(findImage(cropWeak[0],cardImage[3]).score>=0.85){
+            cardStatus[i] = 1;
+        }else if(findImage(cropWeak[1],cardImage[4]).score>=0.85){
+            cardStatus[i] = 2;
+        }
+        for(var j=0;j<2;j++){
+            releaseImage(cropDisable[j]);
+            releaseImage(cropWeak[j]);
+        }
+    }
+    releaseImage(screenshot);
+    if(isDebug){
+        console.log("Color:"+cardList);
+        console.log("Status:"+cardStatus);
+    }
+}
+
+function selectCards(sameColor,weak,mainColor,ult,currentStage){
     var cardScore = [0,0,0,0,0];
     var sameColorCnt=[0,0,0];
     var sameColorScore = 1.5;
@@ -212,12 +329,6 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
         weakScore = 5;
     }
     var usedColor = [0,0,0];
-    for(var i = 0;i<3;i++){
-        if(ult[i] >= 0 && currentStage >= ult[i] && ultList[i] >= 0){
-            usedColor[ultList[i]]++;
-            sameColorCnt[ultList[i]]++;
-        }
-    }
     for(var i =0;i<5;i++){
         sameColorCnt[cardList[i]]++;
     }
@@ -252,19 +363,14 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
             cardScore[i] += mainColorScore;
         }
     }
-    console.log("Ult:"+ultList);
-    console.log("Card:"+cardList);
-    console.log("Status:"+cardStatus);
+    // console.log("Card:"+cardList);
+    // console.log("Status:"+cardStatus);
     for(var i =0;i<3;i++){
-        if(ult[i] >= 0 && currentStage >= ult[i] && (ultList[i] >= 0 || !checkUlt)){
+        if(ult[i] >= 0 && currentStage >= ult[i]){
             useUlt(i);
         }
     }
-    var m = "Select card ";
-    while(true){
-        if(!isScriptRunning){
-            break;
-        }
+    while(isScriptRunning){
         var max = -10000;
         var id = -1;
         for(var i =0;i<5;i++){
@@ -274,174 +380,12 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
             }
         }
         if(id >= 0){
-            m=m+(id+1)+" ";
             selectCard(id);
             cardScore[id] = -15000;
         }else{
-            console.log(m);
             return;
         }
     }
-    sleep(5000);
 }
-
-function updateUltList(){
-    if(!checkUlt){
-        ultList= [-1,-1,-1];
-        return;
-    }
-    var edgeX = [696,1159,1622];
-    var edgeY = [270,570];
-    var ultUpdateFailed = true;
-    var errorCnt = 0;
-    while(ultUpdateFailed){
-        ultUpdateFailed = false;
-        var screenShot = getScreenshot();
-        for(var i=0;i<3;i++){
-            var card = cropImage(screenShot, ultCheckX[i]* screenScale[0] + screenOffset[0], ultCheckY * screenScale[1] + screenOffset[1], ultWidth * screenScale[0], ultHeight* screenScale[1]);
-            var lightCard = cropImage(screenShot, ultCheckX[i]* screenScale[0] + screenOffset[0], (ultCheckY +ultLightnessOffset)* screenScale[1] + screenOffset[1], ultWidth * screenScale[0], (ultHeight-ultLightnessOffset)* screenScale[1]);
-            var score1 = getImageLightness(lightCard,5);
-            var score2 = getIdentityScore(card,initUlt[i]);
-            var isUlt = false;
-            if(score1 < 80 || score2 > 0.75){
-              isUlt = false;
-            }else if(score1 > 140 || score2 < 0.6){
-                isUlt = true;
-            }else{
-                //can not handle s1 80~140 score2 0.6~0.75, retry
-                if(errorCnt < 10){
-                    //recheck
-                    errorCnt++;
-                    ultUpdateFailed = true;
-                    releaseImage(card);
-                    sleep(100);
-                    break;
-                }else{
-                    if(score1 < 120 && score2 < 0.7){
-                        isUlt = true;
-                    }else{
-                        isUlt = false;
-                    }
-                }
-            }
-            if(isUlt){
-                var r=0,g=0,b=0;
-                for(var ey=edgeY[0];ey<edgeY[1];ey++){
-                    var color = getImageColor(screenShot,edgeX[i]* screenScale[0] + screenOffset[0],ey* screenScale[1] + screenOffset[1]);
-                    if(color.r > (color.g + color.b)){
-                        r++;
-                    }
-                    if(color.g > (color.r + color.b)){
-                        g++;
-                    }
-                    if(color.b > (color.r + color.g)){
-                        b++;
-                    }
-                }
-                if(r >= g && r >= b){
-                    ultList[i] = 0;
-                }
-                else if(b >= r && b >= g){
-                    ultList[i] = 1;
-                }
-                else if(g >= r && g >= b){
-                    ultList[i] = 2;
-                }
-            }else{
-                ultList[i] = -1;
-            }
-            releaseImage(card);
-            releaseImage(lightCard);
-        }
-        releaseImage(screenShot);
-    }
-}
-
-function updateCardList(){
-    var cardImageScore = [];
-    var screenShot = getScreenshot();
-
-    var offsetDisableX = [110,260];
-    var offsetDisableY = -90;
-    var disableW = [65,60];
-    var disableH = 65;
-
-    var weakW = 100;
-    var weakH = 30;
-    //get card color
-    for(var i=0;i<5;i++){
-        var card = cropImage(screenShot,updateCardListX[i]* screenScale[0] + screenOffset[0],updateCardListY* screenScale[1] + screenOffset[1],300 * screenScale[0],130* screenScale[1]);
-        for(var k=0;k<3;k++){
-            var resizeCard = resizeImage(cardListImage[k],300 * screenScale[0],100* screenScale[1]);
-            var find = findImage(card,resizeCard);
-            if(cardImageScore[i] == undefined || find.score > cardImageScore[i]){
-                cardImageScore[i] = find.score;
-                cardList[i] = k;
-            }
-            releaseImage(resizeCard);
-        }
-        releaseImage(card);
-    }
-    //get card status
-    for(var i=0;i<5;i++){
-        cardStatus[i] = -1;
-        var cropDisable = [];
-        var cropWeak = [];
-        cropDisable[0] = cropImage(screenShot,
-            (updateCardListX[i] + offsetDisableX[0])*screenScale[0]+screenOffset[0] - 2,
-            (updateCardListY + offsetDisableY)*screenScale[1]+screenOffset[1],
-            (disableW[0]+4)*screenScale[0],
-            (disableH+30)*screenScale[1]);
-        cropDisable[1] = cropImage(screenShot,
-            (updateCardListX[i] + offsetDisableX[1])*screenScale[0]+screenOffset[0] - 2,
-            (updateCardListY + offsetDisableY)*screenScale[1]+screenOffset[1],
-            (disableW[1]+4)*screenScale[0],
-            (disableH+30)*screenScale[1]);
-        cropWeak[0] = cropImage(screenShot,
-            (updateCardListX[i] + updateCardListOffsetWeakX)*screenScale[0]+screenOffset[0] - 2,
-            (updateCardListY + updateCardListOffsetWeakY[0])*screenScale[1]+screenOffset[1],
-            (weakW+4)*screenScale[0],
-            (weakH+30)*screenScale[1]);
-        cropWeak[1] = cropImage(screenShot,
-            (updateCardListX[i] + updateCardListOffsetWeakX)*screenScale[0]+screenOffset[0] - 2,
-            (updateCardListY + updateCardListOffsetWeakY[1])*screenScale[1]+screenOffset[1],
-            (weakW+4)*screenScale[0],
-            (weakH+30)*screenScale[1]);
-        if(findImageResize(cropDisable[0],cardDisableImage[0]) && findImageResize(cropDisable[1],cardDisableImage[1])) {
-            cardStatus[i] = 0;
-        }else if(findImageResize(cropWeak[0],cardWeakImage[0])){
-            cardStatus[i] = 1;
-        }else if(findImageResize(cropWeak[1],cardWeakImage[1])){
-            cardStatus[i] = 2;
-        }
-    }
-    releaseImage(screenShot);
-}
-
-function updateServantExist(screenShot){
-    var servantExistX = [222,858,1495];
-    var servantExistY = 1342;
-    var servantExistWidth = 50;
-    var servantExistHeight = 24;
-
-    servantExist = [true,true,true];
-
-    for(var i = 0;i<3;i++){
-        if(!checkImage(screenShot, servantExistImage, servantExistX[i], servantExistY, servantExistWidth, servantExistHeight)){
-            servantExist[i] = false;
-        }
-    }
-}
-
-function getCurrentServant(screenShot){
-    var x = [200,830,1470];
-    var y = 800;
-    var servant = [];
-    for(var i=0;i<3;i++){
-        servant[i] = cropImage(screenShot,x[i]* screenScale[0] + screenOffset[0],y* screenScale[1] + screenOffset[1],300* screenScale[0],200* screenScale[1]);
-    }
-    return servant;
-}
-
 loadApiCnt++;
 console.log("Load auto attack api finish");
