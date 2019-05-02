@@ -15,7 +15,7 @@ var servantExistHeight = 12;
 //skill
 var skillUsedImage;
 var skillUsedPositionX = [31,124,218,348,442,535,667,761,855];
-if(server="JP"){
+if(server=="JP"){
      skillUsedPositionX[0] = 30;
 }
 var skillUsedPositionY = 600;
