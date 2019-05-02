@@ -14,7 +14,10 @@ var servantExistHeight = 12;
 
 //skill
 var skillUsedImage;
-var skillUsedPositionX =[31,124,218,348,442,535,667,761,855];
+var skillUsedPositionX = [31,124,218,348,442,535,667,761,855];
+if(server="JP"){
+     skillUsedPositionX[0] = 30;
+}
 var skillUsedPositionY = 600;
 var skillUsedSize = 16;
 
@@ -97,9 +100,9 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
 
     servantInited = false;
     servantAliveMessage = [true,true,true];
-    var lastStage = -1;
-
     loadAllImage();
+
+    var lastStage = -1;    
     while(true){
         if(!isScriptRunning){
             break;
@@ -289,9 +292,6 @@ function updateCardList(){
                 updateCardListY + updateCardListOffsetWeakY[j],
                 weakW+5,
                 weakH+15);
-            if(i==0){
-                saveImage(cropDisable[j],imagePath+"/disable"+j+".png");
-            }
         }
         if(findImage(cropDisable[0],cardImage[5]).score>=0.85 && findImage(cropDisable[1],cardImage[6]).score>=0.85) {
             cardStatus[i] = 0;

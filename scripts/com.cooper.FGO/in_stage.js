@@ -248,6 +248,7 @@ function getCurrentStage(){
 function finishQuest(){
     while(isScriptRunning){
         if(isMainPage()){
+            sleep(3000);
             return;
         }
         tapScale(230,30);
@@ -267,6 +268,7 @@ function finishQuest(){
             if(isItemPage()){
                 sleep(1000);
                 if(isMainPage()){
+                    sleep(3000);
                     return;
                 }
                 tapScale(45,40);

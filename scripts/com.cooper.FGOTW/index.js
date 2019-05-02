@@ -80,6 +80,14 @@ function initHTML(serverString){
         sleep(500);
         execute("cp "+packagePath+"BasicItem/item2.png "+itemPath+"friend_item/QP.png");
         sleep(500);
+        // if(server == "JP"){
+        // execute("cp "+packagePath+"BasicItem/friend3.png "+itemPath+"friend_servant/術師匠.png");
+        // sleep(500);
+        // execute("cp "+packagePath+"BasicItem/item3.png "+itemPath+"friend_item/絆2.png");
+        // sleep(500);
+        // execute("cp "+packagePath+"BasicItem/item4.png "+itemPath+"friend_item/QP2.png");
+        // sleep(500);            
+        // }
     }
     var scriptList = execute("ls "+itemPath+"script").replace(/.js/g,'').replace(/ /g,'').replace(/\r\n|\n/g,",");
     if(scriptList.slice(-1)==','){

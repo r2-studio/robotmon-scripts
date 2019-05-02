@@ -4,13 +4,35 @@ var iconName = ["main","apple","friendPage","friendRefresh","teamPage","teamItem
 "battleServant","battleSkill","battleTarget","addFriend","ultFailed",
 "stageFailed","skillFailed","itemDetail","friendPointMain","friendPointFree",
 "friendPointTen","friendPointNew","friendPointReload","friendPointItemFull","friendPointServantFull",
-"selectStageItemFull","selectStageServantFull","finishDrop","finish3"];
-var iconPosition = [[1140,650,100,50],[530,30,200,60],[740,100,150,50],[560,100,160,60],[1135,650,115,50],[400,50,400,50],
-[1168,175,60,60],[1168,282,60,60],[1100,630,70,50],[60,150,240,50],[700,320,280,40],
-[560,70,150,40],[570,170,140,30],[1080,130,40,40],[60,70,100,55],[600,425,82,40],
-[500,100,275,50],[580,535,120,40],[0,0,70,80],[450,375,450,72],[525,525,225,50],
-[750,525,160,50],[1015,650,150,50],[700,650,125,42],[325,150,600,125],[325,150,600,125],
-[325,150,600,125],[325,150,600,125],[150,70,170,40],[700,350,280,40]];
+"selectStageItemFull","selectStageServantFull","finishDrop","finish3","addFriend2",
+"friendRefresh2"];
+
+var	iconPosition = [[1140,650,100,50],[530,30,200,60],[740,100,150,50],[560,100,160,60],[1135,650,115,50],[400,50,400,50],
+		[1168,175,60,60],[1168,282,60,60],[1100,630,70,50],[60,150,240,50],[700,320,280,40],
+		[560,70,150,40],[570,170,140,30],[1080,130,40,40],[60,70,100,55],[600,425,82,40],
+		[500,100,275,50],[580,535,120,40],[0,0,70,80],[450,375,450,72],[525,525,225,50],
+		[750,525,160,50],[1015,650,150,50],[700,650,125,42],[325,150,600,125],[325,150,600,125],
+		[325,150,600,125],[325,150,600,125],[150,70,170,40],[700,350,280,40],[60,70,100,55],
+		[560,100,160,60]];
+if(server == "JP"){
+	iconPosition[11]=[500,100,275,50];
+}
+
+function saveCropIcon(id){
+    var path = getStoragePath();
+    var x = iconPosition[id][0];
+    var y = iconPosition[id][1];
+    var width = iconPosition[id][2];
+    var height = iconPosition[id][3];
+    var filepath = path+"/cropImage/"+iconName[id]+".png";
+    var screenShot = getScreenshot();
+    var crop = cropImage(screenShot,x,y,width,height);
+    saveImage(crop,filepath);
+    releaseImage(screenShot);
+    releaseImage(crop);
+    console.log("save crop at "+filepath);
+}
+
 //select stage
 function isMainPage(){
 	return checkIconInScreen(0);
@@ -30,7 +52,11 @@ function isSelectFriendPage(){
 }
 
 function isSelectFriendRefreshDialog(){
-	return checkIconInScreen(3);
+	if(server == "TW"){
+		return checkIconInScreen(3);
+	}else{
+		return checkIconListInScreen([3,31],false);		
+	}
 }
 
 //select team
@@ -86,7 +112,11 @@ function isFinishDropDialoge(){
 }
 
 function isAddFriendPage(){
-	return checkIconInScreen(14);
+	if(server == "TW"){
+		return checkIconInScreen(14);
+	}else{
+		return checkIconListInScreen([14,30],false);
+	}
 }
 
 function isItemPage(){
