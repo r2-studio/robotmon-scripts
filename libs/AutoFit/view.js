@@ -1,8 +1,8 @@
-function View() {
+function View(viewId) {
   /*
     view ID. Used for layout
   */
-  this.viewId = 'viewId';
+  this.viewId = viewId;
 
   /*
     parent view, empty equal to root
@@ -79,6 +79,15 @@ function View() {
   */
   this.rightOf;
 
+  /*
+    the function to check is this view present, dev should overwrite this function.
+    it will auto release viewImage, do not release it.
+  */
+  this.checkIsView = function(view, viewImage) {
+    console.log('view.checkIsView is not set.');
+    return false
+  };
+
   /* 
     private variables
   */
@@ -87,10 +96,61 @@ function View() {
   this._w;
   this._h;
   this._static = true;
+  // will be set when add view
+  this._controller = undefined;
+  this._devLayoutView = undefined;
+}
+
+// Member functions
+View.prototype.getScreenshot = function() {
+  if (this._controller === undefined) {
+    console.log('Error: should call controller.addView first');
+    return undefined;
+  }
+  var img = this._controller.getScreenshot();
+  if (img === undefined) {
+    console.log('Error: view get screenshot failed', this.viewId);
+    return undefined;
+  }
+  return cropImage(img, this._x, this._y, this._w, this._h);
+}
+
+View.prototype.isView = function() {
+  var viewImage = this.getScreenshot();
+  if (viewImage === undefined) {
+    return false;
+  }
+  var isView = this.checkIsView(view, viewImage);
+  releaseImage(viewImage);
+  return isView;
+}
+
+View.prototype.mappingXY = function(rx, ry) {
 
 }
 
-View.prototype._calculateLayout = function() {
+// parameter rx, ry is dev x, y position, tapDown will auto linear transfer to user resolution
+View.prototype.tapDown = function(rx, ry) {
+  
+}
+
+View.prototype._createDeveloperLayout = function() {
+  this._devLayoutView = new View('tmp');
+  for (var key in this) {
+    this._devLayoutView[key] = this[key];
+  }
+  if (this.parent !== undefined) {
+    this._devLayoutView.parent = this.parent._devLayoutView;
+  }
+  this._devLayoutView.viewId = '_dev_' + this.viewId;
+  this._devLayoutView._devLayoutView = undefined;
+}
+
+View.prototype._calculateLayout = function(devScreenSize) {
+  var screenSize = getScreenSize();
+  if (devScreenSize !== undefined) {
+    screenSize = devScreenSize;
+  }
   if (this.layoutRatio === 0) {
     this._static = false;
   } else {
@@ -100,9 +160,8 @@ View.prototype._calculateLayout = function() {
   // get parent position
   var px = 0, py = 0, pw = 0, ph = 0;
   if (this.parent == undefined) {
-    var wh = getScreenSize();
-    pw = wh.width;
-    ph = wh.height;
+    pw = screenSize.width;
+    ph = screenSize.height;
   } else {
     px = this.parent._x;
     py = this.parent._y;
@@ -162,7 +221,6 @@ View.prototype._calculateLayout = function() {
   }
 
   // check and warning
-  var screenSize = getScreenSize();
   if (this._x < 0) {
     console.log('Warning x < 0');
   }
@@ -174,5 +232,15 @@ View.prototype._calculateLayout = function() {
   }
   if (this._y + this._h > screenSize.height) {
     console.log('Warning y + h > screen height', screenSize.height);
+  }
+
+  // create dev layout template
+  if (devScreenSize === undefined) {
+    this._createDeveloperLayout();
+    devScreenSize = {
+      width: this._controller.devScreenWidth,
+      height: this._controller.devScreenHeight,
+    };
+    this._devLayoutView._calculateLayout(devScreenSize);
   }
 }
