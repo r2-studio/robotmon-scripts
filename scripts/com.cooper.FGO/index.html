@@ -1137,7 +1137,7 @@ function saveServantConfirm(time){
                         return;
                     }
                     var imageNameOK = true;
-                    if(imageName.length <= 0 || imageName.indexOf(",")>=0 || imageName.indexOf(".")>=0 || imageName.indexOf(";") || imageName.indexOf(" ")>=0){
+                    if(imageName.length <= 0 || imageName.indexOf(",")>=0 || imageName.indexOf(".")>=0 || imageName.indexOf(";")>=0 || imageName.indexOf(" ")>=0){
                         imageNameOK = false;
                     }
                     if(imageNameOK){

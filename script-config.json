@@ -101,15 +101,15 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 2.02,
-      "description": "<div>V2.02beta 支援Robotmon beta版的easy啟動模式，Android 8手機也能跑日服了!!<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.03,
+      "description": "<div>V2.03beta 修正從者截圖無法存檔的bug，調整使用蘋果確認的等待時間<br>V2.02beta 支援Robotmon beta版的easy啟動模式，Android 8手機也能跑日服了!!<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 2.02,
-      "description": "<div>V2.02beta 調整結束關卡後的等待時間避免誤觸<br>V2.01beta 修正抽箱功能，修正結束關卡會誤觸按鈕的問題，修正升絆會卡住的問題，修正網路不佳時選好友會亂按的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.03,
+      "description": "<div>V2.03beta 修正從者截圖無法存檔的bug，調整使用蘋果確認的等待時間<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
