@@ -75,7 +75,7 @@ function selectStage(useApple){
             break;
         }        
         if(useApple >= 0 && useApple < 4){
-            sleep(500);
+            sleep(1500);
             tapScale(850,567);
         }
     }
