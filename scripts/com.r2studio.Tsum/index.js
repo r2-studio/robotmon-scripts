@@ -1,4 +1,4 @@
-importJS("TaskController-0.0.1");
+importJS('TaskController-0.0.1');
 
 var ts;
 var gTaskController;
@@ -33,22 +33,22 @@ function log() {
   sleep(10);
   var args = [];
   if (ts != undefined && ts.showHeartLog && ts.record && ts.record['hearts_count']) {
-    var msg = "";
-    msg += "R:"+ts.record['hearts_count'].receivedCount+" ";
-    msg += "S:"+ts.record['hearts_count'].sentCount;
+    var msg = '';
+    msg += 'R:'+ts.record['hearts_count'].receivedCount+' ';
+    msg += 'S:'+ts.record['hearts_count'].sentCount;
     if (gTaskController != undefined && gTaskController.tasks != undefined) {
-      var sendTask = gTaskController.tasks["sendHearts"];
+      var sendTask = gTaskController.tasks['sendHearts'];
       if (sendTask != undefined) {
         if (sendTask.lastRunTime == 0) {
-          msg += "/0";
+          msg += '/0';
         } else {
           var next = (nowTime() - (sendTask.lastRunTime + sendTask.interval)) / 60000;
-          msg += "/" + (+next.toFixed(0));
+          msg += '/' + (+next.toFixed(0));
         }
       }
     }
-    if (msg != "") {
-      args.push("["+msg+"]");
+    if (msg != '') {
+      args.push('['+msg+']');
     }
   }
   for (var i = 0; i < arguments.length; i++) {
@@ -71,11 +71,11 @@ var Config = {
   tsumBoundH: 13,
   screenResize: 200,
   loadRotatedCount: 10,
-  tsumFiles: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_annac_s", "block_annaf_s", "block_anna_s", "block_arielr_s", "block_ariel_s", "block_arlo_s", "block_aurora_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_baymaxx_s", "block_bb8_s", "block_beastl_s", "block_beast_s", "block_bellel_s", "block_belle_s", "block_bluefairy_s", "block_boogie_s", "block_brerrabbit_s", "block_buzz_s", "block_c3po_s", "block_carl_s", "block_charming_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chip_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_claricepi_s", "block_clarice_s", "block_cruella_s", "block_crush_s", "block_daisyn_s", "block_daisy_s", "block_daisyv_s", "block_daisyx_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_dale_s", "block_davyjones_s", "block_deathtrooper_s", "block_donaldhtskill_s", "block_donaldht_s", "block_donaldn_s", "block_donald_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx2_s", "block_donaldx_s", "block_dory_s", "block_drossel_s", "block_dumbo_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsac_s", "block_elsaf_s", "block_elsa_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_finnick_s", "block_flounder_s", "block_flynn_s", "block_gaston_s", "block_genie_s", "block_goofyh2016_s", "block_goofyht_s", "block_goofy_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_hunnypot_s", "block_jacksparrow2_s", "block_jacksparrow_s", "block_jack_s", "block_jackx_s", "block_jafar_s", "block_jailerdog_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen2_s", "block_littlegreenmen_s", "block_lotso_s", "block_lukej_s", "block_luke_s", "block_lumiere_s", "block_lumpy_s", "block_madhatterj_s", "block_madhatter_s", "block_maleficentd_s", "block_maleficent_s", "block_marchhare_s", "block_marie_s", "block_mariex_s", "block_mater_s", "block_maui_s", "block_maximus_s", "block_max_s", "block_mcqueen_s", "block_megara_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeypi_s", "block_mickeyp_s", "block_mickey_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_mike_s", "block_mikeu_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh2017_s", "block_minnieh_s", "block_minnie_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_mulan_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_oswald_s", "block_oswaldsp_s", "block_owl_s", "block_pascal_s", "block_patch_s", "block_perry_s", "block_peteb_s", "block_peterpan_s", "block_pete_s", "block_phillip2_s", "block_phillip_s", "block_piglet2_s", "block_piglet_s", "block_ping_s", "block_pinocchio_s", "block_plutoh2015_s", "block_pluto_s", "block_plutox_s", "block_pocahontas_s", "block_pooh2_s", "block_poohr_s", "block_pooh_s", "block_potts_s", "block_prince_s", "block_pudding_s", "block_puffy_s", "block_pumpkinking_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_ramirez_s", "block_randall_s", "block_rapunzel2_s", "block_rapunzelb_s", "block_rapunzel_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_salazar_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite2_s", "block_snowwhite_s", "block_soraht_s", "block_sora_s", "block_souffle_s", "block_stitchf_s", "block_stitchh_s", "block_stitchpi_s", "block_stitch_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tiggerr_s", "block_tigger_s", "block_timothy_s", "block_tinkerbellp_s", "block_tinkerbell_s", "block_tramp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_walle_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_woody_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s"],
-  tsumFilesJP: ["block_abu_s", "block_aladdin_s", "block_aladdinsp_s", "block_alice2_s", "block_alice_s", "block_angel_s", "block_annac_s", "block_annaf_s", "block_anna_s", "block_arielr_s", "block_ariel_s", "block_arlo_s", "block_aurora_s", "block_auroraw_s", "block_bambi_s", "block_baymax2_s", "block_baymax_s", "block_baymaxx_s", "block_bb8_s", "block_beastl_s", "block_beast_s", "block_bellel_s", "block_belle_s", "block_bellew_s", "block_bigbadwolf_s", "block_bluefairy_s", "block_boogie_s", "block_brerrabbit_s", "block_buzz2_s", "block_buzz_s", "block_c3po_s", "block_carl_s", "block_charming_s", "block_chernabog_s", "block_cheshirecat_s", "block_chewbacca_s", "block_chipcl_s", "block_chiph2015_s", "block_chiph2015sp_s", "block_chipj_s", "block_chip_s", "block_chips_s", "block_cinderella_s", "block_cinderellasp_s", "block_cinderellaw_s", "block_claricepi_s", "block_clarice_s", "block_cogsworth_s", "block_cruella_s", "block_crush_s", "block_daisyn_s", "block_daisy_s", "block_daisyv_s", "block_daisyx_s", "block_dalecl_s", "block_daleh2015_s", "block_daleh2015sp_s", "block_dalej_s", "block_dale_s", "block_davyjones_s", "block_deathtrooper_s", "block_donaldhtskill_s", "block_donaldht_s", "block_donaldn_s", "block_donald_s", "block_donaldt_s", "block_donaldv_s", "block_donaldx2_s", "block_donaldx_s", "block_dory_s", "block_drossel_s", "block_dumbo_s", "block_eeyore_s", "block_elizabethswann_s", "block_elsac_s", "block_elsaf_s", "block_elsa_s", "block_eric_s", "block_evilqueen_s", "block_fairygodmother_s", "block_fiddlerpig_s", "block_fiferpig_s", "block_finnick_s", "block_flounder_s", "block_flynn_s", "block_gaston_s", "block_genie_s", "block_goofyh2016_s", "block_goofyht_s", "block_goofy_s", "block_goofyt_s", "block_goofyx_s", "block_hades_s", "block_hansolo_s", "block_hercules_s", "block_hiro_s", "block_hook_s", "block_hpooh_s", "block_hunnypot_s", "block_jacksparrow2_s", "block_jacksparrow_s", "block_jack_s", "block_jackx_s", "block_jafar_s", "block_jailerdog_s", "block_jasmine_s", "block_jessie_s", "block_jiminy_s", "block_judy_s", "block_k2so_s", "block_kyloren_s", "block_lady_s", "block_leia_s", "block_lilo_s", "block_littlegreenmen2_s", "block_littlegreenmen_s", "block_lotso_s", "block_lukej_s", "block_luke_s", "block_lumiere_s", "block_lumpy_s", "block_madhatterj_s", "block_madhatter_s", "block_maleficentd_s", "block_maleficent_s", "block_marchhare_s", "block_marie_s", "block_mariex_s", "block_mater_s", "block_maui_s", "block_maximus_s", "block_max_s", "block_mcqueen_s", "block_megara_s", "block_mickeyb_s", "block_mickeyc_s", "block_mickeye_s", "block_mickeyf_s", "block_mickeyh2015_s", "block_mickeyh_s", "block_mickeypi_s", "block_mickeyp_s", "block_mickey_s", "block_mickeys_s", "block_mickeyt_s", "block_mickeyv_s", "block_mickeyx_s", "block_miguel_s", "block_mike_s", "block_mikeu_s", "block_minnieb_s", "block_minnieh2015_s", "block_minnieh2017_s", "block_minnieh_s", "block_minnie_s", "block_minniet_s", "block_minniev_s", "block_minniex_s", "block_missbunny_s", "block_moana_s", "block_mocha_s", "block_mowgli_s", "block_mulan_s", "block_nala_s", "block_nemo_s", "block_nick_s", "block_olaf_s", "block_olafs_s", "block_olafx_s", "block_oswald_s", "block_oswaldsp_s", "block_owl_s", "block_pascal_s", "block_patch_s", "block_perry_s", "block_peteb_s", "block_peterpan_s", "block_pete_s", "block_phillip2_s", "block_phillip_s", "block_piglet2_s", "block_piglet_s", "block_ping_s", "block_pinocchio_s", "block_plutoh2015_s", "block_pluto_s", "block_plutox_s", "block_pocahontas_s", "block_pooh2_s", "block_poohr_s", "block_pooh_s", "block_potts_s", "block_practicalpig_s", "block_prince_s", "block_pudding_s", "block_puffy_s", "block_pumpkinking_s", "block_queenofhearts_s", "block_r2d2_s", "block_rabbit_s", "block_ramirez_s", "block_randall_s", "block_rapunzel2_s", "block_rapunzelb_s", "block_rapunzel_s", "block_rex_s", "block_rey_s", "block_riku_s", "block_robin_s", "block_roo_s", "block_salazar_s", "block_sallynbc_s", "block_scar_s", "block_scramp_s", "block_scrooge_s", "block_scuttle_s", "block_sebastian_s", "block_simba_s", "block_snowwhite2_s", "block_snowwhite_s", "block_soraht_s", "block_sora_s", "block_souffle_s", "block_stitchf_s", "block_stitchh_s", "block_stitchpi_s", "block_stitch_s", "block_stormtrooper_s", "block_sulley_s", "block_sven_s", "block_thumper_s", "block_tiggerr_s", "block_tigger_s", "block_timothy_s", "block_tinkerbellp_s", "block_tinkerbell_s", "block_tramp_s", "block_triton_s", "block_troll_s", "block_ursula_s", "block_vader_s", "block_walle_s", "block_whip_s", "block_whiterabbit_s", "block_willturner_s", "block_woody2_s", "block_woody_s", "block_yensid_s", "block_yoda_s", "block_youngoyster_s", "block_zazu_s", "block_zero_s", "block_zurg_s"],
+  tsumFiles: ['block_abu_s', 'block_aladdin_s', 'block_aladdinsp_s', 'block_alice2_s', 'block_alice_s', 'block_angel_s', 'block_annac_s', 'block_annaf_s', 'block_anna_s', 'block_arielr_s', 'block_ariel_s', 'block_arlo_s', 'block_aurora_s', 'block_bambi_s', 'block_baymax2_s', 'block_baymax_s', 'block_baymaxx_s', 'block_bb8_s', 'block_beastl_s', 'block_beast_s', 'block_bellel_s', 'block_belle_s', 'block_bluefairy_s', 'block_boogie_s', 'block_brerrabbit_s', 'block_buzz_s', 'block_c3po_s', 'block_carl_s', 'block_charming_s', 'block_cheshirecat_s', 'block_chewbacca_s', 'block_chipcl_s', 'block_chiph2015_s', 'block_chiph2015sp_s', 'block_chip_s', 'block_chips_s', 'block_cinderella_s', 'block_cinderellasp_s', 'block_claricepi_s', 'block_clarice_s', 'block_cruella_s', 'block_crush_s', 'block_daisyn_s', 'block_daisy_s', 'block_daisyv_s', 'block_daisyx_s', 'block_dalecl_s', 'block_daleh2015_s', 'block_daleh2015sp_s', 'block_dale_s', 'block_davyjones_s', 'block_deathtrooper_s', 'block_donaldhtskill_s', 'block_donaldht_s', 'block_donaldn_s', 'block_donald_s', 'block_donaldt_s', 'block_donaldv_s', 'block_donaldx2_s', 'block_donaldx_s', 'block_dory_s', 'block_drossel_s', 'block_dumbo_s', 'block_eeyore_s', 'block_elizabethswann_s', 'block_elsac_s', 'block_elsaf_s', 'block_elsa_s', 'block_eric_s', 'block_evilqueen_s', 'block_fairygodmother_s', 'block_finnick_s', 'block_flounder_s', 'block_flynn_s', 'block_gaston_s', 'block_genie_s', 'block_goofyh2016_s', 'block_goofyht_s', 'block_goofy_s', 'block_goofyt_s', 'block_goofyx_s', 'block_hades_s', 'block_hansolo_s', 'block_hercules_s', 'block_hiro_s', 'block_hook_s', 'block_hpooh_s', 'block_hunnypot_s', 'block_jacksparrow2_s', 'block_jacksparrow_s', 'block_jack_s', 'block_jackx_s', 'block_jafar_s', 'block_jailerdog_s', 'block_jasmine_s', 'block_jessie_s', 'block_jiminy_s', 'block_judy_s', 'block_k2so_s', 'block_kyloren_s', 'block_lady_s', 'block_leia_s', 'block_lilo_s', 'block_littlegreenmen2_s', 'block_littlegreenmen_s', 'block_lotso_s', 'block_lukej_s', 'block_luke_s', 'block_lumiere_s', 'block_lumpy_s', 'block_madhatterj_s', 'block_madhatter_s', 'block_maleficentd_s', 'block_maleficent_s', 'block_marchhare_s', 'block_marie_s', 'block_mariex_s', 'block_mater_s', 'block_maui_s', 'block_maximus_s', 'block_max_s', 'block_mcqueen_s', 'block_megara_s', 'block_mickeyb_s', 'block_mickeyc_s', 'block_mickeyf_s', 'block_mickeyh2015_s', 'block_mickeyh_s', 'block_mickeypi_s', 'block_mickeyp_s', 'block_mickey_s', 'block_mickeys_s', 'block_mickeyt_s', 'block_mickeyv_s', 'block_mickeyx_s', 'block_mike_s', 'block_mikeu_s', 'block_minnieb_s', 'block_minnieh2015_s', 'block_minnieh2017_s', 'block_minnieh_s', 'block_minnie_s', 'block_minniet_s', 'block_minniev_s', 'block_minniex_s', 'block_missbunny_s', 'block_moana_s', 'block_mocha_s', 'block_mowgli_s', 'block_mulan_s', 'block_nala_s', 'block_nemo_s', 'block_nick_s', 'block_olaf_s', 'block_olafs_s', 'block_oswald_s', 'block_oswaldsp_s', 'block_owl_s', 'block_pascal_s', 'block_patch_s', 'block_perry_s', 'block_peteb_s', 'block_peterpan_s', 'block_pete_s', 'block_phillip2_s', 'block_phillip_s', 'block_piglet2_s', 'block_piglet_s', 'block_ping_s', 'block_pinocchio_s', 'block_plutoh2015_s', 'block_pluto_s', 'block_plutox_s', 'block_pocahontas_s', 'block_pooh2_s', 'block_poohr_s', 'block_pooh_s', 'block_potts_s', 'block_prince_s', 'block_pudding_s', 'block_puffy_s', 'block_pumpkinking_s', 'block_queenofhearts_s', 'block_r2d2_s', 'block_rabbit_s', 'block_ramirez_s', 'block_randall_s', 'block_rapunzel2_s', 'block_rapunzelb_s', 'block_rapunzel_s', 'block_rex_s', 'block_rey_s', 'block_riku_s', 'block_robin_s', 'block_roo_s', 'block_salazar_s', 'block_sallynbc_s', 'block_scar_s', 'block_scramp_s', 'block_scrooge_s', 'block_scuttle_s', 'block_sebastian_s', 'block_simba_s', 'block_snowwhite2_s', 'block_snowwhite_s', 'block_soraht_s', 'block_sora_s', 'block_souffle_s', 'block_stitchf_s', 'block_stitchh_s', 'block_stitchpi_s', 'block_stitch_s', 'block_stormtrooper_s', 'block_sulley_s', 'block_sven_s', 'block_thumper_s', 'block_tiggerr_s', 'block_tigger_s', 'block_timothy_s', 'block_tinkerbellp_s', 'block_tinkerbell_s', 'block_tramp_s', 'block_triton_s', 'block_troll_s', 'block_ursula_s', 'block_vader_s', 'block_walle_s', 'block_whip_s', 'block_whiterabbit_s', 'block_willturner_s', 'block_woody_s', 'block_yoda_s', 'block_youngoyster_s', 'block_zazu_s', 'block_zero_s'],
+  tsumFilesJP: ['block_abu_s', 'block_aladdin_s', 'block_aladdinsp_s', 'block_alice2_s', 'block_alice_s', 'block_angel_s', 'block_annac_s', 'block_annaf_s', 'block_anna_s', 'block_arielr_s', 'block_ariel_s', 'block_arlo_s', 'block_aurora_s', 'block_auroraw_s', 'block_bambi_s', 'block_baymax2_s', 'block_baymax_s', 'block_baymaxx_s', 'block_bb8_s', 'block_beastl_s', 'block_beast_s', 'block_bellel_s', 'block_belle_s', 'block_bellew_s', 'block_bigbadwolf_s', 'block_bluefairy_s', 'block_boogie_s', 'block_brerrabbit_s', 'block_buzz2_s', 'block_buzz_s', 'block_c3po_s', 'block_carl_s', 'block_charming_s', 'block_chernabog_s', 'block_cheshirecat_s', 'block_chewbacca_s', 'block_chipcl_s', 'block_chiph2015_s', 'block_chiph2015sp_s', 'block_chipj_s', 'block_chip_s', 'block_chips_s', 'block_cinderella_s', 'block_cinderellasp_s', 'block_cinderellaw_s', 'block_claricepi_s', 'block_clarice_s', 'block_cogsworth_s', 'block_cruella_s', 'block_crush_s', 'block_daisyn_s', 'block_daisy_s', 'block_daisyv_s', 'block_daisyx_s', 'block_dalecl_s', 'block_daleh2015_s', 'block_daleh2015sp_s', 'block_dalej_s', 'block_dale_s', 'block_davyjones_s', 'block_deathtrooper_s', 'block_donaldhtskill_s', 'block_donaldht_s', 'block_donaldn_s', 'block_donald_s', 'block_donaldt_s', 'block_donaldv_s', 'block_donaldx2_s', 'block_donaldx_s', 'block_dory_s', 'block_drossel_s', 'block_dumbo_s', 'block_eeyore_s', 'block_elizabethswann_s', 'block_elsac_s', 'block_elsaf_s', 'block_elsa_s', 'block_eric_s', 'block_evilqueen_s', 'block_fairygodmother_s', 'block_fiddlerpig_s', 'block_fiferpig_s', 'block_finnick_s', 'block_flounder_s', 'block_flynn_s', 'block_gaston_s', 'block_genie_s', 'block_goofyh2016_s', 'block_goofyht_s', 'block_goofy_s', 'block_goofyt_s', 'block_goofyx_s', 'block_hades_s', 'block_hansolo_s', 'block_hercules_s', 'block_hiro_s', 'block_hook_s', 'block_hpooh_s', 'block_hunnypot_s', 'block_jacksparrow2_s', 'block_jacksparrow_s', 'block_jack_s', 'block_jackx_s', 'block_jafar_s', 'block_jailerdog_s', 'block_jasmine_s', 'block_jessie_s', 'block_jiminy_s', 'block_judy_s', 'block_k2so_s', 'block_kyloren_s', 'block_lady_s', 'block_leia_s', 'block_lilo_s', 'block_littlegreenmen2_s', 'block_littlegreenmen_s', 'block_lotso_s', 'block_lukej_s', 'block_luke_s', 'block_lumiere_s', 'block_lumpy_s', 'block_madhatterj_s', 'block_madhatter_s', 'block_maleficentd_s', 'block_maleficent_s', 'block_marchhare_s', 'block_marie_s', 'block_mariex_s', 'block_mater_s', 'block_maui_s', 'block_maximus_s', 'block_max_s', 'block_mcqueen_s', 'block_megara_s', 'block_mickeyb_s', 'block_mickeyc_s', 'block_mickeye_s', 'block_mickeyf_s', 'block_mickeyh2015_s', 'block_mickeyh_s', 'block_mickeypi_s', 'block_mickeyp_s', 'block_mickey_s', 'block_mickeys_s', 'block_mickeyt_s', 'block_mickeyv_s', 'block_mickeyx_s', 'block_miguel_s', 'block_mike_s', 'block_mikeu_s', 'block_minnieb_s', 'block_minnieh2015_s', 'block_minnieh2017_s', 'block_minnieh_s', 'block_minnie_s', 'block_minniet_s', 'block_minniev_s', 'block_minniex_s', 'block_missbunny_s', 'block_moana_s', 'block_mocha_s', 'block_mowgli_s', 'block_mulan_s', 'block_nala_s', 'block_nemo_s', 'block_nick_s', 'block_olaf_s', 'block_olafs_s', 'block_olafx_s', 'block_oswald_s', 'block_oswaldsp_s', 'block_owl_s', 'block_pascal_s', 'block_patch_s', 'block_perry_s', 'block_peteb_s', 'block_peterpan_s', 'block_pete_s', 'block_phillip2_s', 'block_phillip_s', 'block_piglet2_s', 'block_piglet_s', 'block_ping_s', 'block_pinocchio_s', 'block_plutoh2015_s', 'block_pluto_s', 'block_plutox_s', 'block_pocahontas_s', 'block_pooh2_s', 'block_poohr_s', 'block_pooh_s', 'block_potts_s', 'block_practicalpig_s', 'block_prince_s', 'block_pudding_s', 'block_puffy_s', 'block_pumpkinking_s', 'block_queenofhearts_s', 'block_r2d2_s', 'block_rabbit_s', 'block_ramirez_s', 'block_randall_s', 'block_rapunzel2_s', 'block_rapunzelb_s', 'block_rapunzel_s', 'block_rex_s', 'block_rey_s', 'block_riku_s', 'block_robin_s', 'block_roo_s', 'block_salazar_s', 'block_sallynbc_s', 'block_scar_s', 'block_scramp_s', 'block_scrooge_s', 'block_scuttle_s', 'block_sebastian_s', 'block_simba_s', 'block_snowwhite2_s', 'block_snowwhite_s', 'block_soraht_s', 'block_sora_s', 'block_souffle_s', 'block_stitchf_s', 'block_stitchh_s', 'block_stitchpi_s', 'block_stitch_s', 'block_stormtrooper_s', 'block_sulley_s', 'block_sven_s', 'block_thumper_s', 'block_tiggerr_s', 'block_tigger_s', 'block_timothy_s', 'block_tinkerbellp_s', 'block_tinkerbell_s', 'block_tramp_s', 'block_triton_s', 'block_troll_s', 'block_ursula_s', 'block_vader_s', 'block_walle_s', 'block_whip_s', 'block_whiterabbit_s', 'block_willturner_s', 'block_woody2_s', 'block_woody_s', 'block_yensid_s', 'block_yoda_s', 'block_youngoyster_s', 'block_zazu_s', 'block_zero_s', 'block_zurg_s'],
   rotations: ['0', '45', '90', '135', '180', '225', '270', '315'],
   gameContinueDelay: 400,
-  colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
+  colors: [[255, 0, 0], [0, 255, 0], [0, 0, 255], [0, 255, 255], [255, 0, 255]],
   scoreTable: {
     block_kyloren_s: 0.02,
     // block_sulley_s: -0.02,
@@ -95,52 +95,52 @@ var Button = {
   gameQuestionCancel: {x: 400, y: 1280 + adjY},
   gameQuestionCancel2: {x: 400, y: 1000 + adjY},
   gameStop: {x: 440, y: 1000 + adjY},
-  gameSkillOn: {x: 160, y: 1490 + adjY, color: {"a":0,"b":0,"g":220,"r":238}},
-  gameSkillOff1: {x: 160, y: 1630 + adjY, color: {"a":0,"b":157,"g":112,"r":85}},
-  gameSkillOff2: {x: 160, y: 1630 + adjY, color: {"a":0,"b":181,"g":139,"r":72}},
-  gameSkillOff3: {x: 160, y: 1630 + adjY, color: {"a":0,"b":128,"g":73,"r":16}},
-  gameSkillOff4: {x: 160, y: 1630 + adjY, color: {"a":0,"b":178,"g":153,"r":3}},
-  gameRand: {x: 985, y: 1580 + adjY, color: {"a":0,"b":6,"g":180,"r":232}},
-  gamePause: {x: 983, y: 250 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue: {x: 540, y: 1270 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameContinue1: {x: 461, y: 980 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue2: {x: 911, y: 980 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameMagicalTime1: {x: 320, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime2: {x: 750, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime3: {x: 320, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime4: {x: 750, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  outGameItems: [{x: 205, y: 817 + adjY},{x: 435, y: 821 + adjY},{x: 651, y: 817 + adjY},{x: 871, y: 821 + adjY},{x: 201, y: 1095 + adjY},{x: 424, y: 1098 + adjY}],
-  outGameEnd: {x: 890, y: 1520 + adjY, color: {"a":0,"b":15,"g":140,"r":245}},
-  outStart1: {x: 500, y: 1520 + adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
-  outStart2: {x: 500, y: 1520 + adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
-  outClose: {x: 500, y: 1520 + adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
+  gameSkillOn: {x: 160, y: 1490 + adjY, color: {'a': 0, 'b': 0, 'g': 220, 'r': 238}},
+  gameSkillOff1: {x: 160, y: 1630 + adjY, color: {'a': 0, 'b': 157, 'g': 112, 'r': 85}},
+  gameSkillOff2: {x: 160, y: 1630 + adjY, color: {'a': 0, 'b': 181, 'g': 139, 'r': 72}},
+  gameSkillOff3: {x: 160, y: 1630 + adjY, color: {'a': 0, 'b': 128, 'g': 73, 'r': 16}},
+  gameSkillOff4: {x: 160, y: 1630 + adjY, color: {'a': 0, 'b': 178, 'g': 153, 'r': 3}},
+  gameRand: {x: 985, y: 1580 + adjY, color: {'a': 0, 'b': 6, 'g': 180, 'r': 232}},
+  gamePause: {x: 983, y: 250 + adjY, color: {'a': 0, 'b': 9, 'g': 188, 'r': 239}},
+  gameContinue: {x: 540, y: 1270 + adjY, color: {'a': 0, 'b': 13, 'g': 175, 'r': 240}},
+  gameContinue1: {x: 461, y: 980 + adjY, color: {'a': 0, 'b': 9, 'g': 188, 'r': 239}},
+  gameContinue2: {x: 911, y: 980 + adjY, color: {'a': 0, 'b': 9, 'g': 188, 'r': 239}},
+  gameMagicalTime1: {x: 320, y: 1255 + adjY, color: {'a': 0, 'b': 13, 'g': 175, 'r': 240}},
+  gameMagicalTime2: {x: 750, y: 1255 + adjY, color: {'a': 0, 'b': 13, 'g': 175, 'r': 240}},
+  gameMagicalTime3: {x: 320, y: 1130 + adjY, color: {'a': 0, 'b': 13, 'g': 175, 'r': 240}},
+  gameMagicalTime4: {x: 750, y: 1130 + adjY, color: {'a': 0, 'b': 13, 'g': 175, 'r': 240}},
+  outGameItems: [{x: 205, y: 817 + adjY}, {x: 435, y: 821 + adjY}, {x: 651, y: 817 + adjY}, {x: 871, y: 821 + adjY}, {x: 201, y: 1095 + adjY}, {x: 424, y: 1098 + adjY}],
+  outGameEnd: {x: 890, y: 1520 + adjY, color: {'a': 0, 'b': 15, 'g': 140, 'r': 245}},
+  outStart1: {x: 500, y: 1520 + adjY, color: {'a': 0, 'b': 19, 'g': 145, 'r': 247}}, // 開始遊戲
+  outStart2: {x: 500, y: 1520 + adjY, color: {'a': 0, 'b': 129, 'g': 111, 'r': 236}}, // 開始
+  outClose: {x: 500, y: 1520 + adjY, color: {'a': 0, 'b': 7, 'g': 180, 'r': 236}}, // 關閉
   outClose2: {x: 300, y: 1520 + adjY}, // 關閉
   outReceive: {x: 910, y: 350 + adjY},
   outReceiveAll: {x: 800, y: 1350 + adjY},
-  outReceiveOk: {x: 835, y: 1020 + adjY, color: {"a":0,"b":6,"g":175,"r":236}},
+  outReceiveOk: {x: 835, y: 1020 + adjY, color: {'a': 0, 'b': 6, 'g': 175, 'r': 236}},
   outReceiveClose: {x: 530, y: 1300 + adjY},
-  outReceiveOne: {x: 840, y: 497 + adjY, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {"a":0,"b":146,"g":65,"r":214}},
+  outReceiveOne: {x: 840, y: 497 + adjY, color: {'a': 0, 'b': 30, 'g': 181, 'r': 235}, color2: {'a': 0, 'b': 119, 'g': 74, 'r': 40}},
+  outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {'a': 0, 'b': 146, 'g': 65, 'r': 214}},
   outReceiveOneCoin: {x: 291, y: 579 + adjY, color: {r: 232, g: 229, b: 38}},
   outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
   outReceiveOneTicket1: {x: 298, y: 569 + adjY, color: {r: 125, g: 188, b: 177}}, // green
   outReceiveOneTicket2: {x: 316, y: 576 + adjY, color: {r: 248, g: 255, b: 253}}, // white
-  outIsLoading1: {x: 540, y: 720 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
-  outIsLoading2: {x: 540, y: 910 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
-  outReceiveTimeout: {x: 600, y: 1020 + adjY, color: {"a":0,"b":11,"g":171,"r":235}},
-  outDisconnected: {x:  147, y: 1008 + adjY, color: {r: 243, g: 89, b: 117}},
+  outIsLoading1: {x: 540, y: 720 + adjY, color: {'a': 0, 'b': 255, 'g': 255, 'r': 255}},
+  outIsLoading2: {x: 540, y: 910 + adjY, color: {'a': 0, 'b': 255, 'g': 255, 'r': 255}},
+  outReceiveTimeout: {x: 600, y: 1020 + adjY, color: {'a': 0, 'b': 11, 'g': 171, 'r': 235}},
+  outDisconnected: {x: 147, y: 1008 + adjY, color: {r: 243, g: 89, b: 117}},
   outSendHeartTop: {x: 910, y: 430 + adjY},
-  outSendHeart0: {x: 910, y: 626 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart1: {x: 910, y: 823 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart2: {x: 910, y: 1030 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart3: {x: 910, y: 1232 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart0: {x: 910, y: 626 + adjY, color: {'a': 0, 'b': 142, 'g': 60, 'r': 209}, color2: {'a': 0, 'b': 140, 'g': 65, 'r': 3}},
+  outSendHeart1: {x: 910, y: 823 + adjY, color: {'a': 0, 'b': 142, 'g': 60, 'r': 209}, color2: {'a': 0, 'b': 140, 'g': 65, 'r': 3}},
+  outSendHeart2: {x: 910, y: 1030 + adjY, color: {'a': 0, 'b': 142, 'g': 60, 'r': 209}, color2: {'a': 0, 'b': 140, 'g': 65, 'r': 3}},
+  outSendHeart3: {x: 910, y: 1232 + adjY, color: {'a': 0, 'b': 142, 'g': 60, 'r': 209}, color2: {'a': 0, 'b': 140, 'g': 65, 'r': 3}},
   outSendHeartClose: {x: 666, y: 1354 + adjY, color: {r: 236, g: 178, b: 9}},
   outSendHeartFrom: {x: 910, y: 530 + adjY},
   outSendHeartTo: {x: 910, y: 1250 + adjY},
-  outSendHeartEnd: {x: 328, y: 1194 + adjY, color: {"a":0,"b":132,"g":85,"r":47}},
-  outSendHeartEnd2: {x: 227, y: 1190 + adjY, color: {"a":0,"b":123,"g":78,"r":44}},
+  outSendHeartEnd: {x: 328, y: 1194 + adjY, color: {'a': 0, 'b': 132, 'g': 85, 'r': 47}},
+  outSendHeartEnd2: {x: 227, y: 1190 + adjY, color: {'a': 0, 'b': 123, 'g': 78, 'r': 44}},
   outSendHeartEnd3: {x: 316, y: 1152 + adjY, color: {r: 55, g: 91, b: 139}},
-  outFriendScoreFrom: {x: 550, y: 863 + adjY, color: {"a":0,"b":140,"g":93,"r":55}},
+  outFriendScoreFrom: {x: 550, y: 863 + adjY, color: {'a': 0, 'b': 140, 'g': 93, 'r': 55}},
   outFriendScoreTo: {x: 760, y: 863 + adjY},
   skillLuke1: {x: 1000, y: 1300 + adjY},
   skillLuke2: {x: 830, y: 1330 + adjY},
@@ -155,9 +155,9 @@ var Page = {
   TodayMission: {
     name: 'TodayMission',
     colors: [
-      {x: 540, y: 1408 + adjY, r: 238, g: 181, b: 12 , match: true, threshold: 80},
-      {x: 975, y: 428  + adjY, r: 161, g: 224, b: 231, match: true, threshold: 80},
-      {x: 554, y: 1260 + adjY, r: 24 , g: 189, b: 219, match: true, threshold: 80},
+      {x: 540, y: 1408 + adjY, r: 238, g: 181, b: 12, match: true, threshold: 80},
+      {x: 975, y: 428 + adjY, r: 161, g: 224, b: 231, match: true, threshold: 80},
+      {x: 554, y: 1260 + adjY, r: 24, g: 189, b: 219, match: true, threshold: 80},
     ],
     back: {x: 558, y: 1473},
     next: {x: 558, y: 1473},
@@ -165,9 +165,9 @@ var Page = {
   ScorePage: {
     name: 'ScorePage',
     colors: [
-      {x: 302, y: 1509 + adjY, r: 235, g: 184, b: 7  , match: true, threshold: 80},
-      {x: 777, y: 1516 + adjY, r: 248, g: 142, b: 20 , match: true, threshold: 80},
-      {x: 774, y: 428  + adjY, r: 243, g: 248, b: 242, match: true, threshold: 80},
+      {x: 302, y: 1509 + adjY, r: 235, g: 184, b: 7, match: true, threshold: 80},
+      {x: 777, y: 1516 + adjY, r: 248, g: 142, b: 20, match: true, threshold: 80},
+      {x: 774, y: 428 + adjY, r: 243, g: 248, b: 242, match: true, threshold: 80},
     ],
     back: {x: 309, y: 1581 + adjY},
     next: {x: 784, y: 1581 + adjY},
@@ -175,10 +175,10 @@ var Page = {
   FriendPage: {
     name: 'FriendPage',
     colors: [
-      {x: 540, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 540, y: 1520 + adjY, r: 246, g: 135, b: 17, match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72, match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7, match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 392 + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -187,9 +187,9 @@ var Page = {
     name: 'FriendPage',
     colors: [
       {x: 540, y: 1577 + adjY, r: 175, g: 188, b: 197, match: true, threshold: 80}, // center of the Tsum Hades
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72, match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7, match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 392 + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -198,9 +198,9 @@ var Page = {
     name: 'FriendPage',
     colors: [
       {x: 540, y: 1577 + adjY, r: 203, g: 192, b: 237, match: true, threshold: 80}, // center of the Tsum Ursula
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72, match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7, match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 392 + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -208,10 +208,10 @@ var Page = {
   FriendPage4: {
     name: 'FriendPage',
     colors: [
-      {x: 540, y: 1577 + adjY, r: 79 , g: 89 , b: 94 , match: true, threshold: 80}, // center of the Tsum Maleficentd
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 540, y: 1577 + adjY, r: 79, g: 89, b: 94, match: true, threshold: 80}, // center of the Tsum Maleficentd
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72, match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7, match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 392 + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -219,11 +219,11 @@ var Page = {
   GiftHeart: {
     name: 'GiftHeart',
     colors: [
-      {x: 216, y: 1012 + adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
-      {x: 673, y: 1008 + adjY, r: 235, g: 174, b: 8  , match: true, threshold: 80},
-      {x: 468, y: 731  + adjY, r: 214, g: 61 , b: 143, match: true, threshold: 100},
-      {x: 572, y: 489  + adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 583, y: 1123 + adjY, r: 28 , g: 186, b: 221, match: true, threshold: 80},
+      {x: 216, y: 1012 + adjY, r: 233, g: 172, b: 6, match: true, threshold: 80},
+      {x: 673, y: 1008 + adjY, r: 235, g: 174, b: 8, match: true, threshold: 80},
+      {x: 468, y: 731 + adjY, r: 214, g: 61, b: 143, match: true, threshold: 100},
+      {x: 572, y: 489 + adjY, r: 30, g: 193, b: 224, match: true, threshold: 80},
+      {x: 583, y: 1123 + adjY, r: 28, g: 186, b: 221, match: true, threshold: 80},
     ],
     back: {x: 774, y: 1023 + adjY},
     next: {x: 320, y: 1019 + adjY},
@@ -231,9 +231,9 @@ var Page = {
   MailBox: {
     name: 'MailBox',
     colors: [
-      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 604, y: 1347 + adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80},
+      {x: 738, y: 342 + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
+      {x: 604, y: 1347 + adjY, r: 234, g: 171, b: 6, match: true, threshold: 80},
     ],
     back: {x: 561, y: 1581 + adjY},
     next: {x: 561, y: 1581 + adjY},
@@ -241,9 +241,9 @@ var Page = {
   MailBox2: {
     name: 'MailBox',
     colors: [
-      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 619, y: 1354 + adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80},
+      {x: 738, y: 342 + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
+      {x: 619, y: 1354 + adjY, r: 19, g: 137, b: 175, match: true, threshold: 80},
     ],
     back: {x: 561, y: 1581 + adjY},
     next: {x: 561, y: 1581 + adjY},
@@ -251,12 +251,12 @@ var Page = {
   ReceiveHeart: {
     name: 'ReceiveHeart',
     colors: [
-      {x: 208, y: 1008 + adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
-      {x: 662, y: 1008 + adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
-      {x: 561, y: 482  + adjY, r: 28 , g: 191, b: 222, match: true, threshold: 80},
-      {x: 565, y: 1138 + adjY, r: 30 , g: 195, b: 225, match: true, threshold: 80},
-      {x: 334, y: 745  + adjY, r: 213, g: 62 , b: 143, match: true, threshold: 90},
-      {x: 586, y: 749  + adjY, r: 248, g: 249, b: 51 , match: true, threshold: 100},
+      {x: 208, y: 1008 + adjY, r: 233, g: 172, b: 6, match: true, threshold: 80},
+      {x: 662, y: 1008 + adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 561, y: 482 + adjY, r: 28, g: 191, b: 222, match: true, threshold: 80},
+      {x: 565, y: 1138 + adjY, r: 30, g: 195, b: 225, match: true, threshold: 80},
+      {x: 334, y: 745 + adjY, r: 213, g: 62, b: 143, match: true, threshold: 90},
+      {x: 586, y: 749 + adjY, r: 248, g: 249, b: 51, match: true, threshold: 100},
     ],
     back: {x: 774, y: 1023 + adjY},
     next: {x: 320, y: 1019 + adjY},
@@ -265,7 +265,7 @@ var Page = {
     name: 'Received',
     colors: [
       {x: 799, y: 644 + adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 806, y: 817 + adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
+      {x: 806, y: 817 + adjY, r: 45, g: 80, b: 122, match: true, threshold: 80},
       {x: 799, y: 976 + adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
     ],
     back: {x: 774, y: 1023 + adjY},
@@ -275,7 +275,7 @@ var Page = {
     name: 'Received',
     colors: [
       {x: 799, y: 644 + adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 889, y: 752 + adjY, r: 40, g: 72 , b: 111, match: true, threshold: 80},
+      {x: 889, y: 752 + adjY, r: 40, g: 72, b: 111, match: true, threshold: 80},
       {x: 799, y: 976 + adjY, r: 27, g: 188, b: 217, match: true, threshold: 80},
     ],
     back: {x: 774, y: 1023 + adjY},
@@ -284,11 +284,11 @@ var Page = {
   StartPage: {
     name: 'StartPage',
     colors: [
-      {x: 752, y: 399  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
-      {x: 856, y: 1358 + adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 169, y: 1509 + adjY, r: 239, g: 188, b: 11 , match: true, threshold: 80},
+      {x: 752, y: 399 + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 856, y: 1358 + adjY, r: 30, g: 193, b: 224, match: true, threshold: 80},
+      {x: 169, y: 1509 + adjY, r: 239, g: 188, b: 11, match: true, threshold: 80},
       {x: 547, y: 1509 + adjY, r: 235, g: 118, b: 134, match: true, threshold: 80},
-      {x: 792, y: 1588 + adjY, r: 234, g: 171, b: 8  , match: true, threshold: 100},
+      {x: 792, y: 1588 + adjY, r: 234, g: 171, b: 8, match: true, threshold: 100},
     ],
     back: {x: 190, y: 1574 + adjY},
     next: {x: 558, y: 1563 + adjY},
@@ -296,11 +296,11 @@ var Page = {
   StartPage2: {
     name: 'StartPage',
     colors: [
-      {x: 820,  y: 443  + adjY, r: 245, g: 250, b: 244, match: true, threshold: 80},
-      {x: 954,  y: 1354 + adjY, r: 31 , g: 190, b: 220, match: true, threshold: 80},
-      {x: 180,  y: 1512 + adjY, r: 235, g: 182, b: 8  , match: true, threshold: 80},
-      {x: 540,  y: 1512 + adjY, r: 238, g: 115, b: 133, match: true, threshold: 80},
-      {x: 1011, y: 1603 + adjY, r: 229, g: 166, b: 11 , match: true, threshold: 100},
+      {x: 820, y: 443 + adjY, r: 245, g: 250, b: 244, match: true, threshold: 80},
+      {x: 954, y: 1354 + adjY, r: 31, g: 190, b: 220, match: true, threshold: 80},
+      {x: 180, y: 1512 + adjY, r: 235, g: 182, b: 8, match: true, threshold: 80},
+      {x: 540, y: 1512 + adjY, r: 238, g: 115, b: 133, match: true, threshold: 80},
+      {x: 1011, y: 1603 + adjY, r: 229, g: 166, b: 11, match: true, threshold: 100},
     ],
     back: {x: 190, y: 1574 + adjY},
     next: {x: 558, y: 1563 + adjY},
@@ -308,9 +308,9 @@ var Page = {
   StartPage3: {
     name: 'StartPage',
     colors: [
-      {x: 400,  y: 1600 + adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
-      {x: 680,  y: 1600 + adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
-      {x: 540,  y: 1650 + adjY, r: 235, g: 70, b: 90 , match: true, threshold: 80},
+      {x: 400, y: 1600 + adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
+      {x: 680, y: 1600 + adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
+      {x: 540, y: 1650 + adjY, r: 235, g: 70, b: 90, match: true, threshold: 80},
     ],
     back: {x: 190, y: 1574 + adjY},
     next: {x: 558, y: 1563 + adjY},
@@ -318,9 +318,9 @@ var Page = {
   TsumsPage: {
     name: 'TsumsPage',
     colors: [
-      {x: 514, y: 842  + adjY, r: 41, g: 177, b: 203 , match: true, threshold: 80},
-      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11 , match: true, threshold: 100},
-      {x: 817, y: 1516 + adjY, r: 238, g: 191, b: 13 , match: true, threshold: 80},
+      {x: 514, y: 842 + adjY, r: 41, g: 177, b: 203, match: true, threshold: 80},
+      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11, match: true, threshold: 100},
+      {x: 817, y: 1516 + adjY, r: 238, g: 191, b: 13, match: true, threshold: 80},
     ],
     back: {x: 176, y: 1520 + adjY},
     next: {x: 176, y: 1520 + adjY},
@@ -328,11 +328,11 @@ var Page = {
   GamePause: {
     name: 'GamePause',
     colors: [
-      {x: 165, y: 1005 + adjY, r: 234, g: 173, b: 7  , match: true, threshold: 80},
-      {x: 594, y: 1001 + adjY, r: 233, g: 171, b: 8  , match: true, threshold: 80},
-      {x: 367, y: 702  + adjY, r: 24 , g: 191, b: 225, match: true, threshold: 80},
-      {x: 738, y: 540  + adjY, r: 248, g: 244, b: 245, match: true, threshold: 80},
-      {x: 550, y: 1264 + adjY, r: 236, g: 182, b: 11 , match: true, threshold: 80},
+      {x: 165, y: 1005 + adjY, r: 234, g: 173, b: 7, match: true, threshold: 80},
+      {x: 594, y: 1001 + adjY, r: 233, g: 171, b: 8, match: true, threshold: 80},
+      {x: 367, y: 702 + adjY, r: 24, g: 191, b: 225, match: true, threshold: 80},
+      {x: 738, y: 540 + adjY, r: 248, g: 244, b: 245, match: true, threshold: 80},
+      {x: 550, y: 1264 + adjY, r: 236, g: 182, b: 11, match: true, threshold: 80},
     ],
     back: {x: 331, y: 1008 + adjY},
     next: {x: 561, y: 1350 + adjY},
@@ -340,7 +340,7 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 916, y:  246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below pause
+      {x: 916, y: 246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below pause
       {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below fan
     ],
     back: {x: 986, y: 201 + adjY},
@@ -349,7 +349,7 @@ var Page = {
   GamePlaying2: {
     name: 'GamePlaying',
     colors: [
-      {x: 980, y:  186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
+      {x: 980, y: 186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
       {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below fan
     ],
     back: {x: 986, y: 201 + adjY},
@@ -358,10 +358,10 @@ var Page = {
   MagicalTime: {
     name: 'MagicalTime',
     colors: [
-      {x: 817, y:  435 + adjY, r: 244, g: 249, b: 243, match: true, threshold:  80},
-      {x: 594, y:  785 + adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
-      {x: 208, y: 1145 + adjY, r: 236, g: 175, b:   9, match: true, threshold:  80},
-      {x: 662, y: 1141 + adjY, r: 232, g: 171, b:   5, match: true, threshold:  80},
+      {x: 817, y: 435 + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 594, y: 785 + adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
+      {x: 208, y: 1145 + adjY, r: 236, g: 175, b: 9, match: true, threshold: 80},
+      {x: 662, y: 1141 + adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
     ],
     back: {x: 381, y: 1149 + adjY},
     next: {x: 856, y: 1149 + adjY},
@@ -369,8 +369,8 @@ var Page = {
   NetworkDisable: {
     name: 'NetworkDisable',
     colors: [
-      {x: 478, y: 1008 + adjY, r: 236, g:  94, b: 116, match: true, threshold: 80},
-      {x: 932, y: 1005 + adjY, r: 232, g: 171, b:   5, match: true, threshold: 80},
+      {x: 478, y: 1008 + adjY, r: 236, g: 94, b: 116, match: true, threshold: 80},
+      {x: 932, y: 1005 + adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
     ],
     back: {x: 885, y: 1008 + adjY},
     next: {x: 885, y: 1012 + adjY},
@@ -387,9 +387,9 @@ var Page = {
   FriendInfo: { // FriendInfo of Friend Page, SocailAccount of Setting Page
     name: 'FriendInfo',
     colors: [
-      {x: 565, y:  504 + adjY, r:  31, g: 190, b: 220, match: true, threshold: 80},
-      {x: 547, y: 1123 + adjY, r:  27, g: 192, b: 222, match: true, threshold: 80},
-      {x: 554, y: 1260 + adjY, r: 238, g: 186, b:  12, match: true, threshold: 80},
+      {x: 565, y: 504 + adjY, r: 31, g: 190, b: 220, match: true, threshold: 80},
+      {x: 547, y: 1123 + adjY, r: 27, g: 192, b: 222, match: true, threshold: 80},
+      {x: 554, y: 1260 + adjY, r: 238, g: 186, b: 12, match: true, threshold: 80},
     ],
     back: {x: 576, y: 1336 + adjY},
     next: {x: 576, y: 1336 + adjY},
@@ -482,8 +482,8 @@ var Logs = {
   checkSendingHearts: 'Check sending hearts',
   sendingHearts: 'Sending',
   sendingZeroScore: 'hearts',
-  timeIsUp: 'Time\'s up'
-}
+  timeIsUp: 'Time\'s up',
+};
 
 var LogsTW = {
   start: '[TsumTsum] 啟動',
@@ -535,15 +535,15 @@ var LogsTW = {
   checkSendingHearts: '檢查送愛心',
   sendingHearts: '已送出',
   sendingZeroScore: '顆愛心',
-  timeIsUp: '送心時間結束'
-}
+  timeIsUp: '送心時間結束',
+};
 
 // Utils for sending message
 var _userPlan = -1;
 var _lastSendingTime = 0;
 
 function checkFunction(f) {
-  return typeof(f) == 'function'
+  return typeof(f) == 'function';
 }
 function checkCanSendMessage() {
   _userPlan = -1;
@@ -573,9 +573,9 @@ checkCanSendMessage();
 // Utils for Tsum
 
 function printMaxScores(tsumMaxScores) {
-  var str = "";
+  var str = '';
   for (var i = 0; i < 10 && i < tsumMaxScores.length; i++) {
-    str += i + ", " + tsumMaxScores[i].key + ", " + tsumMaxScores[i].score + "    ";
+    str += i + ', ' + tsumMaxScores[i].key + ', ' + tsumMaxScores[i].score + '    ';
   }
   log(str);
 }
@@ -610,7 +610,7 @@ function loadTsumRotationImages(tsumMaxScores, isJP, debug) {
   var tsumPath = getStoragePath() + '/' + tsumDir;
   for (var i = 0; i < Config.loadRotatedCount && i < tsumMaxScores.length; i++) {
     if (debug) {
-      saveImage(tsumMaxScores[i].img, getStoragePath() + "/tmp/tsum" + i + ".jpg");
+      saveImage(tsumMaxScores[i].img, getStoragePath() + '/tmp/tsum' + i + '.jpg');
     }
   }
   for (var i = 0; i < Config.loadRotatedCount && i < tsumMaxScores.length; i++) {
@@ -640,7 +640,7 @@ function findAllTsumMatchScore(tsumImages, boardImg, myTsum) {
   for (var k in tsumImages) {
     var tsumImage = tsumImages[k];
     var xyScore = findImage(boardImg, tsumImage);
-    xyScore.img = tsumImage; 
+    xyScore.img = tsumImage;
     xyScore.key = k;
     if (k == myTsum) {
       xyScore.score = 1;
@@ -649,7 +649,7 @@ function findAllTsumMatchScore(tsumImages, boardImg, myTsum) {
     }
     tsumMaxScores.push(xyScore);
   }
-  tsumMaxScores.sort(function(a, b){
+  tsumMaxScores.sort(function(a, b) {
     return a.score > b.score ? -1 : 1;
   });
   return tsumMaxScores;
@@ -679,7 +679,7 @@ function removeSameTsumImages(tsumMaxScores, threshold) {
 function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug, logs) {
   // releaseRotationTsum();
   if (debug) {
-    saveImage(boardImg, getStoragePath() + "/tmp/boardImg.png");
+    saveImage(boardImg, getStoragePath() + '/tmp/boardImg.png');
   }
   var gameTsums = findAllTsumMatchScore(allTsumImages, boardImg, myTsum);
   gameTsums = gameTsums.splice(0, 50);
@@ -694,7 +694,7 @@ function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug, logs) 
   if (debug) {
     printMaxScores(gameTsums);
   }
-  
+
   loadTsumRotationImages(gameTsums, isJP, debug);
   // recheck first 5(4) tsums with rotation
   for (var i = 0; i < gameTsums.length && i < Config.loadRotatedCount; i++) {
@@ -706,7 +706,7 @@ function recognizeGameTsums(boardImg, allTsumImages, myTsum, isJP, debug, logs) 
       }
     }
   }
-  gameTsums.sort(function(a, b){
+  gameTsums.sort(function(a, b) {
     return a.score > b.score ? -1 : 1;
   });
 
@@ -744,7 +744,7 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug, logs) {
       }
       return results;
     }, JSON.stringify(gameTsums), boardImg, i);
-    
+
     multiTaskIds.push(ids);
   }
   sleep(50);
@@ -764,7 +764,9 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug, logs) {
     }
   }
 
-  boardTsums.sort(function(a, b){return a.score > b.score ? -1 : 1;});
+  boardTsums.sort(function(a, b) {
+    return a.score > b.score ? -1 : 1;
+  });
   // console.log('finding all rotated tsum in board', boardTsums.length, usingTimeString(startTime));
   var board = [];
   for (var i in boardTsums) {
@@ -781,7 +783,7 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug, logs) {
       board.push(boardTsum);
     }
   }
-  
+
   log(logs.recognizedTsums, board.length);
   sleep(30);
   log(logs.recognitionTime, usingTimeString(startTime));
@@ -795,7 +797,7 @@ function recognizeBoard(boardImg, gameTsums, tsumCount, debug, logs) {
 }
 
 function getDistance(t1, t2) {
-  //return Math.sqrt((t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y));
+  // return Math.sqrt((t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y));
   return (t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y);
 }
 
@@ -803,7 +805,7 @@ function findNearTsum(tsum, tsums) {
   var minDis = 99999;
   var minTsum = null;
   var idx = -1;
-  for(var i in tsums) {
+  for (var i in tsums) {
     var dis = getDistance(tsum, tsums[i]);
     if (dis < minDis) {
       minDis = dis;
@@ -811,14 +813,14 @@ function findNearTsum(tsum, tsums) {
       idx = i;
     }
   }
-  minDis = Math.sqrt(minDis)
+  minDis = Math.sqrt(minDis);
   return {dis: minDis, tsum: minTsum, idx: idx};
 }
 
 function calculateNearTsumPaths(tsum, ts) {
   var path = [];
   var tsums = ts.slice(); // copy array
-  while(true) {
+  while (true) {
     var result = findNearTsum(tsum, tsums);
     var minDis = result.dis;
     var minTsum = result.tsum;
@@ -876,7 +878,9 @@ function calculatePaths(board, logs) {
   }
 
   paths.sort(function(a, b) {
-    if (a.length < b.length) { return 1; }
+    if (a.length < b.length) {
+      return 1;
+    }
     return -1;
   });
   log(logs.calculatedPath, paths.length);
@@ -896,44 +900,58 @@ function findTsums(img) {
   smooth(hsvImg, 1, 7);
   convertColor(hsvImg, 40);
   var filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
-	var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
+  var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
   var mask = bgrToGray(filter2);
-  
+
   releaseImage(filter1);
   releaseImage(filter2);
 
   var points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
-  
+
   smooth(hsvImg, 1, 22);
   var results = [];
   for (var k in points) {
     var p = points[k];
     var hsv1 = getImageColor(hsvImg, p.x, p.y);
     var hsv2 = hsv1; var hsv3 = hsv1; var hsv4 = hsv1; var hsv5 = hsv1;
-    if (p.x - 1 >= 0) { hsv2 = getImageColor(hsvImg, p.x - 1, p.y); }
-    if (p.x + 1 < 200) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
-    if (p.y - 1 >= 0) { hsv4 = getImageColor(hsvImg, p.x, p.y - 1); }
-    if (p.y + 1 < 200) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
+    if (p.x - 1 >= 0) {
+      hsv2 = getImageColor(hsvImg, p.x - 1, p.y);
+    }
+    if (p.x + 1 < 200) {
+      hsv3 = getImageColor(hsvImg, p.x + 1, p.y);
+    }
+    if (p.y - 1 >= 0) {
+      hsv4 = getImageColor(hsvImg, p.x, p.y - 1);
+    }
+    if (p.y + 1 < 200) {
+      hsv5 = getImageColor(hsvImg, p.x, p.y + 1);
+    }
     var avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
     var avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
     var avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
     results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
   }
-  
+
   // saveImage(mask, getStoragePath() + "/tmp/mask.jpg");
   // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg.jpg");
-  
+
   releaseImage(mask);
   releaseImage(hsvImg);
-  
+
   return results;
 }
 
 function distance3D(p1, p2) {
   var d = Math.sqrt((p1.b-p2.b)*(p1.b-p2.b) + (p1.g-p2.g)*(p1.g-p2.g) + (p1.r-p2.r)*(p1.r-p2.r));
-  if (Math.abs(p1.b - p2.b) < 20) { d -= 10; }
-  if (Math.abs(p1.g - p2.g) < 20) { d -= 10; }
-  if (p1.r < 120 && p2.r < 120) { d -= 20; }
+  if (Math.abs(p1.b - p2.b) < 20) {
+    d -= 10;
+  }
+  if (Math.abs(p1.g - p2.g) < 20) {
+    d -= 10;
+  }
+  if (p1.r < 120 && p2.r < 120) {
+    d -= 20;
+  }
   return d;
 }
 
@@ -943,11 +961,11 @@ function classifyTsums(points, tsumCount) {
     return tcs;
   }
   var p = points[0];
-  tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p] });
+  tcs.push({sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p]});
   for (var i = 1; i < points.length; i++) {
     var p = points[i];
     var isSame = false;
-    for(var j in tcs) {
+    for (var j in tcs) {
       var tc = tcs[j];
       var d = distance3D(tc, p);
       if (d < 15) {
@@ -959,8 +977,8 @@ function classifyTsums(points, tsumCount) {
         break;
       }
     }
-    if(!isSame) {
-      tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p]});
+    if (!isSame) {
+      tcs.push({sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p]});
     }
   }
   return tcs;
@@ -1024,7 +1042,7 @@ function Tsum(isJP, detect, logs) {
     hearts_count: {
       receivedCount: 0,
       sentCount: 0,
-    }
+    },
   };
   this.recordImages = {};
   this.receiveCheckLimit = 5;
@@ -1055,12 +1073,12 @@ Tsum.prototype.detect = function() {
   log(this.logs.detectScreen, top, bottom);
   sleep(1000);
   return {top: top, bottom: bottom};
-}
+};
 
 Tsum.prototype.init = function(detect) {
   log(this.logs.calculateScreenSize);
-  
-  var extraOffsetY = 0; 
+
+  var extraOffsetY = 0;
   if (detect) {
     var topBottom = this.detect();
     var h = topBottom.bottom - topBottom.top;
@@ -1111,10 +1129,10 @@ Tsum.prototype.init = function(detect) {
   this.sleep(200);
   log(this.logs.offset, this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
   this.sleep(1000);
-  execute("mkdir -p " + this.storagePath + '/tmp');
+  execute('mkdir -p ' + this.storagePath + '/tmp');
   this.sleep(200);
-  execute("mkdir -p " + this.storagePath + '/' + Config.recordDir);
-}
+  execute('mkdir -p ' + this.storagePath + '/' + Config.recordDir);
+};
 
 Tsum.prototype.deinit = function() {
   if (this.isLoadRotateTsum) {
@@ -1123,7 +1141,7 @@ Tsum.prototype.deinit = function() {
   releaseTsumImages(this.allTsumImages);
   this.allTsumImages = {};
   this.isLoadAllTsum = false;
-}
+};
 
 Tsum.prototype.sendMoneyInfo = function() {
   if (!canSendMessage()) {
@@ -1137,8 +1155,8 @@ Tsum.prototype.sendMoneyInfo = function() {
   var base64 = getBase64FromImage(img);
   releaseImage(img);
   log(this.logs.sendMessage);
-  sendMessage("Tsum Tsum", base64);
-}
+  sendMessage('Tsum Tsum', base64);
+};
 
 Tsum.prototype.isAppOn = function() {
   if (!this.autoLaunch) {
@@ -1148,16 +1166,16 @@ Tsum.prototype.isAppOn = function() {
   if (result.length < 2) {
     return false;
   }
-  result = result[1].split(" ");
+  result = result[1].split(' ');
   if (result.length < 3) {
     return false;
   }
-  result = result[2].split("/");
+  result = result[2].split('/');
   if (result.length < 2) {
     return false;
   }
   var packageName = result[0];
-  var activityName = result[1];
+  // var activityName = result[1];
   if (packageName.indexOf('LGTMTM') == -1) {
     return false;
   }
@@ -1175,56 +1193,56 @@ Tsum.prototype.startApp = function() {
     execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
   }
   this.sleep(3000);
-}
+};
 
 Tsum.prototype.screenshot = function() {
   return getScreenshotModify(
-    0, 
-    0, 
-    this.originScreenWidth, 
-    this.originScreenHeight, 
-    this.originScreenWidth / this.resizeRatio, 
-    this.originScreenHeight / this.resizeRatio,
-    80
+      0,
+      0,
+      this.originScreenWidth,
+      this.originScreenHeight,
+      this.originScreenWidth / this.resizeRatio,
+      this.originScreenHeight / this.resizeRatio,
+      80
   );
-}
+};
 
 Tsum.prototype.playScreenshot = function() {
   return getScreenshotModify(
-    this.playOffsetX, 
-    this.playOffsetY, 
-    this.playWidth, 
-    this.playHeight, 
-    this.playResizeWidth, 
-    this.playResizeHeight,
-    100
+      this.playOffsetX,
+      this.playOffsetY,
+      this.playWidth,
+      this.playHeight,
+      this.playResizeWidth,
+      this.playResizeHeight,
+      100
   );
-}
+};
 
 Tsum.prototype.toResizeXY = function(x, y) {
   var rx = Math.floor((x * this.captureGameRatio - this.gameOffsetX) / this.resizeRatio);
   var ry = Math.floor((y * this.captureGameRatio - this.gameOffsetY) / this.resizeRatio);
   return {x: rx, y: ry};
-}
+};
 
 Tsum.prototype.toResizeXYs = function(xy) {
   return this.toResizeXY(xy.x, xy.y);
-}
+};
 
 Tsum.prototype.getColor = function(img, xy) {
   var rxy = this.toResizeXYs(xy);
   return getImageColor(img, rxy.x, rxy.y);
-}
+};
 
 Tsum.prototype.toRealXY = function(x, y) {
   var rx = Math.floor(x * this.captureGameRatio - this.gameOffsetX);
   var ry = Math.floor(y * this.captureGameRatio - this.gameOffsetY);
   return {x: rx, y: ry};
-}
+};
 
 Tsum.prototype.toRealXYs = function(xy) {
   return this.toRealXY(xy.x, xy.y);
-}
+};
 
 Tsum.prototype.tap = function(xy, during) {
   if (during === undefined) {
@@ -1232,7 +1250,7 @@ Tsum.prototype.tap = function(xy, during) {
   }
   var rxy = this.toRealXYs(xy);
   tap(rxy.x, rxy.y, during);
-}
+};
 
 Tsum.prototype.tapDown = function(xy, during) {
   if (during === undefined) {
@@ -1240,7 +1258,7 @@ Tsum.prototype.tapDown = function(xy, during) {
   }
   var rxy = this.toRealXYs(xy);
   tapDown(rxy.x, rxy.y, during);
-}
+};
 
 Tsum.prototype.moveTo = function(xy, during) {
   if (during === undefined) {
@@ -1248,7 +1266,7 @@ Tsum.prototype.moveTo = function(xy, during) {
   }
   var rxy = this.toRealXYs(xy);
   moveTo(rxy.x, rxy.y, during);
-}
+};
 
 Tsum.prototype.tapUp = function(xy, during) {
   if (during === undefined) {
@@ -1256,7 +1274,7 @@ Tsum.prototype.tapUp = function(xy, during) {
   }
   var rxy = this.toRealXYs(xy);
   tapUp(rxy.x, rxy.y, during);
-}
+};
 
 Tsum.prototype.linkTsums = function(path) {
   for (var j in path) {
@@ -1271,7 +1289,7 @@ Tsum.prototype.linkTsums = function(path) {
       tapUp(x, y, 10);
     }
   }
-}
+};
 
 Tsum.prototype.link = function(paths) {
   var isBubble = false;
@@ -1283,17 +1301,21 @@ Tsum.prototype.link = function(paths) {
     this.linkTsums(path);
   }
   return isBubble;
-}
+};
 
-function adsColor(c1, v2) {
-  return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
-}
+// function adsColor(c1, v2) {
+//  return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
+// }
 
 Tsum.prototype.findPage = function(times, timeout) {
-  if (times == undefined) {times = 2;}
-  if (timeout == undefined) {timeout = 700;}
+  if (times == undefined) {
+    times = 2;
+  }
+  if (timeout == undefined) {
+    timeout = 700;
+  }
   var start = Date.now();
-  while(this.isRunning) {
+  while (this.isRunning) {
     for (var t = 0; t < times; t++) {
       var img = this.screenshot();
       for (var key in Page) {
@@ -1325,7 +1347,7 @@ Tsum.prototype.findPage = function(times, timeout) {
       return 'unknown';
     }
   }
-}
+};
 
 Tsum.prototype.exitUnknownPage = function() {
   keycode('KEYCODE_DPAD_DOWN');
@@ -1336,15 +1358,15 @@ Tsum.prototype.exitUnknownPage = function() {
   this.tap(Button.outClose);
   this.tap(Button.gameStop);
   this.sleep(500);
-}
+};
 
 Tsum.prototype.goFriendPage = function() {
-  while(this.isRunning) {
+  while (this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
     }
     var page = this.findPage(2, 1000);
-    log(this.logs.currentPage, page, "goFriend");
+    log(this.logs.currentPage, page, 'goFriend');
     if (page == 'FriendPage') {
       // check again
       page = this.findPage(1, 500);
@@ -1352,7 +1374,7 @@ Tsum.prototype.goFriendPage = function() {
         this.sendMoneyInfo();
         return;
       }
-    } else if (page == "ClosePage") {
+    } else if (page == 'ClosePage') {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
     } else if (page == 'unknown') {
@@ -1362,9 +1384,9 @@ Tsum.prototype.goFriendPage = function() {
     }
     this.sleep(1000);
   }
-}
+};
 
-Tsum.prototype.checkGameItem = function() { 
+Tsum.prototype.checkGameItem = function() {
   var isItemsOn = [false, false, false, false, false, false];
   if (this.enableAllItems) {
     isItemsOn = [true, true, true, true, true, true];
@@ -1378,7 +1400,7 @@ Tsum.prototype.checkGameItem = function() {
   if (this.bubbleItem) {
     isItemsOn[4] = true;
   }
-  for(var t = 0; t < 3; t++) {
+  for (var t = 0; t < 3; t++) {
     var img = this.screenshot();
     var isChange = false;
     for (var i = 0; i < 6; i++) {
@@ -1404,15 +1426,15 @@ Tsum.prototype.checkGameItem = function() {
     this.sleep(500);
   }
   log(this.logs.checkBonusItems, isItemsOn);
-}
+};
 
 Tsum.prototype.goGamePlayingPage = function() {
-  while(this.isRunning) {
+  while (this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
     }
     var page = this.findPage(2, 2000);
-    log(this.logs.currentPage, page, "play");
+    log(this.logs.currentPage, page, 'play');
     if (page == 'FriendPage') {
       this.tap(Page[page].next);
     } else if (page == 'StartPage') {
@@ -1431,34 +1453,34 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(Page[page].next);
     } else if (page == 'unknown') {
       this.exitUnknownPage();
-    } else if (page == "ClosePage") {
+    } else if (page == 'ClosePage') {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
     } else {
       this.tap(Page[page].back);
     }
   }
-}
+};
 
 Tsum.prototype.findMyTsum = function() {
   var tsumSize = Config.tsumWidth * this.gameWidth / this.playResizeWidth;
   var myTsumImage = getScreenshotModify(
-    this.playOffsetX + tsumSize,
-    this.playOffsetY + this.playHeight,
-    tsumSize * 1.7,
-    tsumSize * 1.7,
-    Config.tsumWidth * 2.1, 
-    Config.tsumWidth * 2.1,
-    100
+      this.playOffsetX + tsumSize,
+      this.playOffsetY + this.playHeight,
+      tsumSize * 1.7,
+      tsumSize * 1.7,
+      Config.tsumWidth * 2.1,
+      Config.tsumWidth * 2.1,
+      100
   );
   smooth(myTsumImage, 1, 2);
   var allScores = findAllTsumMatchScore(this.allTsumImages, myTsumImage, '');
   if (this.debug) {
-    saveImage(myTsumImage, this.storagePath + "/tmp/mytsum.jpg");
+    saveImage(myTsumImage, this.storagePath + '/tmp/mytsum.jpg');
   }
   releaseImage(myTsumImage);
   this.myTsum = allScores[0].key;
-}
+};
 
 Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
   if (startDelay !== undefined) {
@@ -1479,7 +1501,7 @@ Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
   if (endDelay !== undefined) {
     this.sleep(endDelay);
   }
-}
+};
 
 Tsum.prototype.useCinderellaSkill = function(board) {
   var size = this.skillLevel + 6;
@@ -1494,7 +1516,7 @@ Tsum.prototype.useCinderellaSkill = function(board) {
     });
     this.linkTsums(path);
   }
-}
+};
 
 Tsum.prototype.useSkill = function(board) {
   var page = this.findPage(1, 500);
@@ -1560,14 +1582,14 @@ Tsum.prototype.useSkill = function(board) {
     }
   } else if (this.skillType == 'block_marie_s' || this.skillType == 'block_missbunny_s' || this.skillType == 'block_rabbit_s') {
     this.clearAllBubbles(2000, 50);
-  } else if(this.skillType == 'block_moana_s') {
+  } else if (this.skillType == 'block_moana_s') {
     this.clearAllBubbles(2500, 50);
-  } else if(this.skillType == 'block_mickeyh2015_s') {
+  } else if (this.skillType == 'block_mickeyh2015_s') {
     this.clearAllBubbles(1500, 50);
-  } else if(this.skillType == 'block_snowwhite_s') {
+  } else if (this.skillType == 'block_snowwhite_s') {
     this.clearAllBubbles(1300);
     this.clearAllBubbles(10, 50, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
-  } else if(this.skillType == 'block_cinderella_s') {
+  } else if (this.skillType == 'block_cinderella_s') {
     this.sleep(1500);
     this.useCinderellaSkill(board);
     this.sleep(500);
@@ -1578,7 +1600,7 @@ Tsum.prototype.useSkill = function(board) {
     this.sleep(this.skillInterval);
   }
   return true;
-}
+};
 
 Tsum.prototype.scanBoard = function() {
   // load game tsums
@@ -1607,7 +1629,7 @@ Tsum.prototype.scanBoard = function() {
   log(this.logs.recognizingTsums);
   var board = recognizeBoard(gameImage, this.gameTsums, this.tsumCount, this.debug, this.logs);
   if (this.debug) {
-    saveImage(gameImage, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
+    saveImage(gameImage, this.storagePath + '/tmp/boardImg-' + this.runTimes + '.jpg');
   }
   releaseImage(gameImage);
 
@@ -1620,7 +1642,7 @@ Tsum.prototype.scanBoard = function() {
   }
 
   return board;
-}
+};
 
 Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
@@ -1636,9 +1658,11 @@ Tsum.prototype.scanBoardQuick = function() {
   var points = findTsums(srcImg);
   log(this.logs.recognitionStart);
   var tcs = classifyTsums(points);
-  tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
+  tcs.sort(function(a, b) {
+    return a.points.length > b.points.length ? -1: 1;
+  });
   var board = [];
-  for(var i in tcs) {
+  for (var i in tcs) {
     if (i >= this.tsumCount - 1) {
       break;
     }
@@ -1652,7 +1676,7 @@ Tsum.prototype.scanBoardQuick = function() {
     }
   }
   if (this.debug) {
-    saveImage(srcImg, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
+    saveImage(srcImg, this.storagePath + '/tmp/boardImg-' + this.runTimes + '.jpg');
   }
   releaseImage(srcImg);
   log(this.logs.recognizedTsums, board.length);
@@ -1668,7 +1692,7 @@ Tsum.prototype.scanBoardQuick = function() {
   }
 
   return board;
-}
+};
 
 Tsum.prototype.taskPlayGameQuick = function() {
   log(this.logs.gameStart);
@@ -1680,7 +1704,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
   this.runTimes = 0;
   var clearBubbles = 0;
   var zeroPath = 0;
-  while(this.isRunning) {  
+  while (this.isRunning) {
     var board = this.scanBoardQuick();
     if (board == undefined || board == null) {
       break;
@@ -1736,7 +1760,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
   // releaseTsumRotationImages(this.gameTsums);
   this.gameTsums = [];
   this.isLoadRotateTsum = false;
-}
+};
 
 Tsum.prototype.taskPlayGame = function() {
   log(this.logs.gameStart);
@@ -1748,7 +1772,7 @@ Tsum.prototype.taskPlayGame = function() {
   this.runTimes = 0;
   var pathZero = 0;
   var clearBubbles = 0;
-  while(this.isRunning) {
+  while (this.isRunning) {
     var board = this.scanBoard();
     if (board == undefined || board == null) {
       break;
@@ -1785,7 +1809,7 @@ Tsum.prototype.taskPlayGame = function() {
       clearBubbles = 0;
       this.clearAllBubbles();
     }
-    
+
     if (this.useFan && this.runTimes % 4 == 3) {
       this.tap(Button.gameRand, 100);
       this.tap(Button.gameRand, 100);
@@ -1815,7 +1839,7 @@ Tsum.prototype.taskPlayGame = function() {
   this.gameTsums = [];
   this.isLoadRotateTsum = false;
   this.sleep(4000);
-}
+};
 
 Tsum.prototype.taskReceiveAllItems = function() {
   log(this.logs.friendsPage);
@@ -1833,22 +1857,22 @@ Tsum.prototype.taskReceiveAllItems = function() {
   this.tap(Button.outClose);
   this.goFriendPage();
   log(this.logs.allGiftsReceived);
-}
+};
 
 Tsum.prototype.readRecord = function() {
   log(this.logs.readRecords);
   var recordDir = this.storagePath + '/' + Config.recordDir;
   var recordFile = recordDir + '/record.txt';
   var txt = readFile(recordFile);
-  if (txt != undefined && txt != "") {
+  if (txt != undefined && txt != '') {
     this.record = JSON.parse(txt);
   }
   for (var filename in this.record) {
-    if (filename != "hearts_count") {
+    if (filename != 'hearts_count') {
       this.recordImages[filename] = openImage(recordDir + '/' + filename);
     }
   }
-}
+};
 
 Tsum.prototype.recognizeSender = function(img) {
   log(this.logs.recognizingHeartSender);
@@ -1858,12 +1882,12 @@ Tsum.prototype.recognizeSender = function(img) {
   var nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
   var score = 0;
   var existFilename = '';
-  for(var key in this.recordImages) {
+  for (var key in this.recordImages) {
     if (this.recordImages[key] != 0) {
       score = getIdentityScore(nameImg, this.recordImages[key]);
       if (score >= 0.98) {
         existFilename = key;
-        log(this.logs.recognitionScore + " > 0.98", key, score);
+        log(this.logs.recognitionScore + ' > 0.98', key, score);
         break;
       }
     }
@@ -1871,7 +1895,7 @@ Tsum.prototype.recognizeSender = function(img) {
   // console.log("Score: " + score);
   if (existFilename == '') {
     var now = nowTime();
-    var dayTime = Math.floor(now / (24 * 60 * 60 * 1000)); 
+    var dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
     // not found, new friend
     var filename = 'f_' + now + '.png';
     this.record[filename] = {
@@ -1884,7 +1908,7 @@ Tsum.prototype.recognizeSender = function(img) {
     log(this.logs.saveNewFriend, path);
     saveImage(nameImg, path);
     this.sleep(80);
-    var check = execute("ls " + path);
+    var check = execute('ls ' + path);
     if (check.indexOf(filename) == -1) {
       log(this.logs.saveNewFriendAgain);
       saveImage(nameImg, path);
@@ -1893,15 +1917,15 @@ Tsum.prototype.recognizeSender = function(img) {
     releaseImage(nameImg);
   }
   return existFilename;
-}
+};
 
 Tsum.prototype.countReceiveHeart = function(existFilename) {
-  if (existFilename == "") {
+  if (existFilename == '') {
     return;
   }
   log(this.logs.calculatingHeartSender);
   var now = nowTime();
-  var dayTime = Math.floor(now / (24 * 60 * 60 * 1000)); 
+  var dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
   // found
   if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
     this.record[existFilename].receiveCounts[dayTime] = 0;
@@ -1909,26 +1933,26 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
   this.record[existFilename].receiveCounts[dayTime]++;
   this.record[existFilename].lastReceiveTime = now;
   log(this.logs.receiveHeartFromHeartSender, this.record[existFilename].receiveCounts[dayTime], this.logs.hearts);
-}
+};
 
 Tsum.prototype.saveRecord = function() {
   log(this.logs.saveRecords);
   var recordFile = this.storagePath + '/' + Config.recordDir + '/record.txt';
   writeFile(recordFile, JSON.stringify(this.record));
-}
+};
 
 Tsum.prototype.releaseRecord = function() {
-  for(var filename in this.recordImages) {
+  for (var filename in this.recordImages) {
     releaseImage(this.recordImages[filename]);
   }
   this.record = {};
   this.recordImages = {};
-}
+};
 
 Tsum.prototype.clear = function() {
   var recordDir = getStoragePath() + '/' + Config.recordDir;
   execute('rm -r ' + recordDir);
-}
+};
 
 Tsum.prototype.isLoading = function() {
   var img = this.screenshot();
@@ -1946,13 +1970,13 @@ Tsum.prototype.isLoading = function() {
     return true;
   }
   return false;
-}
+};
 
 Tsum.prototype.taskReceiveOneItem = function() {
   log(this.logs.friendsPage);
   this.goFriendPage();
-  this.sleep(1000)
-  this.tap(Button.outReceive);;
+  this.sleep(1000);
+  this.tap(Button.outReceive); ;
   log(this.logs.receiveGiftsOneByOne);
   this.sleep(1000);
 
@@ -1991,7 +2015,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.sleep(1000);
     } else if (isOk) {
       if (this.recordReceive && sender != undefined) {
-        if (sender != "") {
+        if (sender != '') {
           this.countReceiveHeart(sender);
         }
         this.record['hearts_count'].receivedCount++;
@@ -2009,7 +2033,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     if (!isNonItem) {
       receiveTime = Date.now();
     }
-    
+
     if (Date.now() - receiveTime > 2000) {
       this.tap(Button.outClose);
       this.goFriendPage();
@@ -2020,7 +2044,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       } else {
         receiveCheckLimit++;
         receivedCount = 0;
-        sender = "";
+        sender = '';
         log(this.logs.checkUnreceivedGift);
         this.sleep(500);
         this.tap(Button.outReceive);
@@ -2028,15 +2052,15 @@ Tsum.prototype.taskReceiveOneItem = function() {
       }
     }
   }
-}
+};
 
 Tsum.prototype.friendPageGoTop = function() {
-  this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
-  this.moveTo({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
+  this.tapDown({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 100);
+  this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 100);
   this.moveTo({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
   this.tapUp({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
   this.sleep(2500);
-}
+};
 
 Tsum.prototype.taskSendHearts = function() {
   log(this.logs.friendsPage);
@@ -2051,7 +2075,7 @@ Tsum.prototype.taskSendHearts = function() {
   var startTime = Date.now();
   var retry = 0;
   var times = 0;
-  while(this.isRunning) {
+  while (this.isRunning) {
     times++;
     if (times % 15 == 14) {
       this.goFriendPage();
@@ -2063,7 +2087,7 @@ Tsum.prototype.taskSendHearts = function() {
 
     var img = this.screenshot();
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
-    for(var y = hfy; y <= hty; y += 8) {
+    for (var y = hfy; y <= hty; y += 8) {
       var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}), 40);
       if (isHs) {
         heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
@@ -2092,14 +2116,14 @@ Tsum.prototype.taskSendHearts = function() {
     }
 
     if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero && heartsPos.length != 0)) {
-      if(retry < 3){
-        this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
-        this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+      if (retry < 3) {
+        this.tapDown({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y}, 50);
+        this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y}, 50);
+        this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y}, 50);
+        this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y}, 50);
+        this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 50);
+        this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
+        this.tapUp({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
         retry++;
         log(this.logs.checkSendingHearts, retry);
         this.sleep(1000);
@@ -2115,7 +2139,7 @@ Tsum.prototype.taskSendHearts = function() {
       for (var h in heartsPos) {
         var success = this.sendHeart(heartsPos[h]);
         if (!success) {
-          success = this.sendHeart(heartsPos[h]); 
+          success = this.sendHeart(heartsPos[h]);
         }
         if (success) {
           rTimes++;
@@ -2135,13 +2159,13 @@ Tsum.prototype.taskSendHearts = function() {
         this.saveRecord();
       }
       this.sleep(250);
-      this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 400);
-      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+      this.tapDown({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 400);
+      this.tapUp({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
 
       this.sleep(400);
       if (this.sendHeartMaxDuring != 0) {
@@ -2155,18 +2179,18 @@ Tsum.prototype.taskSendHearts = function() {
       }
     }
   }
-}
+};
 
 Tsum.prototype.sendHeart = function(btn) {
   var unknownCount = 0;
   var isSent = 0;
-  var isClickedOk = false;
+  // var isClickedOk = false;
   var isGift = false;
   var isSent = false;
   // log("sendHeart");
   while (this.isRunning) {
     var page = this.findPage(1, 300);
-    if (page == "FriendPage") {
+    if (page == 'FriendPage') {
       // log("sendHeart A", Date.now() / 1000);
       var img = this.screenshot();
       var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
@@ -2178,11 +2202,11 @@ Tsum.prototype.sendHeart = function(btn) {
       } else {
         unknownCount += 1;
       }
-    } else if (page == "GiftHeart") {
+    } else if (page == 'GiftHeart') {
       this.tap(Button.outReceiveOk);
       isGift = true;
       // log("sendHeart B", Date.now() / 1000);
-    } else if (page == "Received") {
+    } else if (page == 'Received') {
       this.sleep(100);
       this.tap(Button.outSendHeartClose);
       // log("sendHeart C", Date.now() / 1000);
@@ -2192,9 +2216,9 @@ Tsum.prototype.sendHeart = function(btn) {
         this.sleep(100);
         return true;
       }
-    } else if (page == "FriendInfo") {
+    } else if (page == 'FriendInfo') {
       this.tap(Page.FriendInfo.back);
-    } else if (page == "ClosePage") {
+    } else if (page == 'ClosePage') {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
     } else {
@@ -2206,14 +2230,14 @@ Tsum.prototype.sendHeart = function(btn) {
     }
     // this.sleep(150);
   }
-}
+};
 
 Tsum.prototype.sleep = function(t) {
   if (t == undefined) {
     t = 1000;
   }
   var waitTime = t;
-  while(this.isRunning) {
+  while (this.isRunning) {
     if (waitTime <= 500) {
       sleep(waitTime);
       break;
@@ -2222,8 +2246,9 @@ Tsum.prototype.sleep = function(t) {
       waitTime -= 500;
     }
   }
-}
+};
 
+/* exported start */
 function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
@@ -2254,7 +2279,7 @@ function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, c
   if (largeImage) {
     ts.resizeRatio = 1;
   }
-  
+
   if (ts.recordReceive) {
     ts.readRecord();
   }
@@ -2264,30 +2289,41 @@ function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, c
       sentCount: 0,
     };
   }
-  
+
   if (!checkFunction(TaskController)) {
-    console.log("File lose...");
+    console.log('File lose...');
     return;
   }
 
   gTaskController = new TaskController();
-  if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
-  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
-  if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
+  if (receiveOneItem) {
+    gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);
+  }
+  if (receiveItem) {
+    gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);
+  }
+  if (sendHearts) {
+    gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);
+  }
   if (!isSlowCalculation && checkFunction(outRange)) {
-    if(autoPlay){gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);}
+    if (autoPlay) {
+      gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);
+    }
   } else {
     if (!isSlowCalculation) {
       log(ts.logs.updateApp);
       sleep(1000);
     }
-    if(autoPlay){gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);}
+    if (autoPlay) {
+      gTaskController.newTask('taskPlayGame', ts.taskPlayGame.bind(ts), 3 * 1000, 0);
+    }
   }
   sleep(500);
   gTaskController.start();
   log(ts.logs.TaskControllerStop);
 }
 
+/* exported stop */
 function stop() {
   log(ts.logs.stop);
   sleep(500);
@@ -2300,86 +2336,93 @@ function stop() {
       ts.releaseRecord();
     }
   }
-  if (gTaskController != undefined) {gTaskController.removeAllTasks();}
-  if (gTaskController != undefined) {gTaskController.stop();}
+  if (gTaskController != undefined) {
+    gTaskController.removeAllTasks();
+  }
+  if (gTaskController != undefined) {
+    gTaskController.stop();
+  }
   ts = undefined;
 }
 
+/* exported genRecordTable */
 function genRecordTable() {
-  console.log("Generate Record...");
-  var recordFile = getStoragePath() + "/tsum_record/record.txt";
+  console.log('Generate Record...');
+  var recordFile = getStoragePath() + '/tsum_record/record.txt';
   var txt = readFile(recordFile);
   var record = {};
-  if (txt != undefined && txt != "") {
+  if (txt != undefined && txt != '') {
     try {
       record = JSON.parse(txt);
-    } catch(e) {
-      return "Can not parse record.txt " + JSON.stringify(e);
+    } catch (e) {
+      return 'Can not parse record.txt ' + JSON.stringify(e);
     }
   } else {
-    return "Can not read record.txt";
+    return 'Can not read record.txt';
   }
 
-  var html = "<html><body>";
-  html += "<table>";
-  html += "<tr><td>UserImage</td><td>UserImage2</td><td>All</td><td>Avg</td><td>Day</td></tr>";
+  var html = '<html><body>';
+  html += '<table>';
+  html += '<tr><td>UserImage</td><td>UserImage2</td><td>All</td><td>Avg</td><td>Day</td></tr>';
   var dayMapCount = {};
   for (var filename in record) {
-    if (filename == "hearts_count") {
+    if (filename == 'hearts_count') {
       continue;
     }
-    html += "<tr>";
+    html += '<tr>';
     // user image
-    html += "<td><img src='./" + filename + "' /></td>";
+    html += '<td><img src=\'./' + filename + '\' /></td>';
     // user image2
-    var filePath = getStoragePath()+"/tsum_record/" + filename;
+    var filePath = getStoragePath()+'/tsum_record/' + filename;
     var tmpImg = openImage(filePath);
     var base64 = getBase64FromImage(tmpImg);
     releaseImage(tmpImg);
-    html += "<td><img src='data:image/png;base64," + base64 + "' /></td>";
-    
-    var totalDay = 0;
+    html += '<td><img src=\'data:image/png;base64,' + base64 + '\' /></td>';
+
+    // var totalDay = 0;
     var totalCount = 0;
-    var tmpHtml = "";
+    var tmpHtml = '';
     for (var day in record[filename].receiveCounts) {
       var dayTime = new Date(+day * 86400000);
       var dayStr = getDayTimeString(dayTime);
       var dayCount = record[filename].receiveCounts[day];
 
-      if (dayMapCount[+day] === undefined) {dayMapCount[+day] = 0;}
+      if (dayMapCount[+day] === undefined) {
+        dayMapCount[+day] = 0;
+      }
       dayMapCount[+day] += dayCount;
 
-      tmpHtml += "<td>" + dayStr + ":" + dayCount + "</td>";
-      totalDay++;
+      tmpHtml += '<td>' + dayStr + ':' + dayCount + '</td>';
+      // totalDay++;
       totalCount += dayCount;
     }
     var avg = 0;
     if (dayCount !== 0) {
       avg = (totalCount/dayCount).toFixed(1);
     }
-    html += "<td>" + totalCount + "</td>";
-    html += "<td>" + avg + "</td>";
+    html += '<td>' + totalCount + '</td>';
+    html += '<td>' + avg + '</td>';
     html += tmpHtml;
-    html += "</tr>";
+    html += '</tr>';
   }
-  html += "</table>";
-  html += "<br /> <br />";
+  html += '</table>';
+  html += '<br /> <br />';
   // day count
-  html += "<table>";
-  html += "<tr><td>Date</td><td>Hearts</td></tr>";
+  html += '<table>';
+  html += '<tr><td>Date</td><td>Hearts</td></tr>';
   for (var day in dayMapCount) {
     var dayTime = new Date(+day * 86400000);
-    html += "<tr>";
-    html += "<td>" + getDayTimeString(dayTime) + "</td>";
-    html += "<td>" + dayMapCount[day] + "</td>";
-    html += "</tr>";
+    html += '<tr>';
+    html += '<td>' + getDayTimeString(dayTime) + '</td>';
+    html += '<td>' + dayMapCount[day] + '</td>';
+    html += '</tr>';
   }
-  html += "</table>";
-  html += "</body></html>";
+  html += '</table>';
+  html += '</body></html>';
   var recordName = getRecordFilename();
-  var oPath = getStoragePath() + "/tsum_record/" + recordName;
+  var oPath = getStoragePath() + '/tsum_record/' + recordName;
   writeFile(oPath, html);
-  return "Download: " + getStoragePath()+"/tsum_record to PC" + "<br />Open: " + recordName;
+  return 'Download: ' + getStoragePath()+'/tsum_record to PC' + '<br />Open: ' + recordName;
 }
 
 function getDayTimeString(d) {

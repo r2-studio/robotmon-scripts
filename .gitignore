@@ -1,5 +1,8 @@
 *.DS_Store
+*.swp
 .vscode
 build
 node_modules
 out
+package-lock.json
+yarn.lock

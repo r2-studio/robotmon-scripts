@@ -6,7 +6,7 @@ function TaskController() {
 
 TaskController.prototype.getFirstPriorityTaskName = function() {
   var pTask = null;
-  var priority = 100;
+  // var priority = 100;
   var now = Date.now();
   for (var name in this.tasks) {
     var task = this.tasks[name];
@@ -34,11 +34,11 @@ TaskController.prototype.getFirstPriorityTaskName = function() {
     return '';
   }
   return pTask.name;
-}
+};
 
-TaskController.prototype.loop = function () {
+TaskController.prototype.loop = function() {
   console.log('loop start');
-  while(this.isRunning) {
+  while (this.isRunning) {
     var taskName = this.getFirstPriorityTaskName();
     var task = this.tasks[taskName];
     if (task !== undefined) {
@@ -53,16 +53,16 @@ TaskController.prototype.loop = function () {
   }
   this.isRunning = false;
   console.log('loop stop');
-}
+};
 
 TaskController.prototype.updateRunInterval = function(interval) {
-  if(interval < this.interval && interval >= 50) {
+  if (interval < this.interval && interval >= 50) {
     // min interval = 50
     this.interval = interval;
   }
-}
+};
 
-TaskController.prototype.newTaskObject = function (name, func, interval, runTimes, priority) {
+TaskController.prototype.newTaskObject = function(name, func, interval, runTimes, priority) {
   var task = {
     name: name,
     run: func,
@@ -73,9 +73,9 @@ TaskController.prototype.newTaskObject = function (name, func, interval, runTime
     status: 0, // 0 wait, 1 running
   };
   return task;
-}
+};
 
-TaskController.prototype.newTask = function (name, func, interval, runTimes, nextRun) {
+TaskController.prototype.newTask = function(name, func, interval, runTimes, nextRun) {
   if (nextRun === undefined) {
     nextRun = false;
   }
@@ -90,41 +90,41 @@ TaskController.prototype.newTask = function (name, func, interval, runTimes, nex
   this.updateRunInterval(newTask.interval);
 
   var taskName = 'system_newTask_' + name;
-  var sysTask = this.newTaskObject(taskName, function() {  
+  var sysTask = this.newTaskObject(taskName, function() {
     this.tasks[name] = newTask;
   }.bind(this), 0, 1, -20);
   this.tasks[taskName] = sysTask;
   return newTask;
 };
 
-TaskController.prototype.removeTask = function (name) {
+TaskController.prototype.removeTask = function(name) {
   var taskName = 'system_removeTask_' + Date.now().toString();
   var sysTask = this.newTaskObject(taskName, function() {
     delete this.tasks[name];
   }.bind(this), 0, 1, -20);
   this.tasks[taskName] = sysTask;
-}
+};
 
 TaskController.prototype.removeAllTasks = function() {
   var taskName = 'system_removeAllTask_' + Date.now().toString();
   var sysTask = this.newTaskObject(taskName, function() {
-    for(var k in this.tasks) {
+    for (var k in this.tasks) {
       delete this.tasks[k];
     }
   }.bind(this), 0, 1, -20);
   this.tasks[taskName] = sysTask;
-}
+};
 
-TaskController.prototype.start = function () {
+TaskController.prototype.start = function() {
   if (!this.isRunning) {
     this.isRunning = true;
     this.loop();
   }
-}
+};
 
-TaskController.prototype.stop = function () {
+TaskController.prototype.stop = function() {
   if (this.isRunning) {
     this.isRunning = false;
     console.log('wait loop stop...');
   }
-}
+};
