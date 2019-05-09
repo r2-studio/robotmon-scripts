@@ -1186,6 +1186,7 @@ Tsum.prototype.startApp = function() {
   if (!this.autoLaunch) {
     return;
   }
+  /* TODO: FIXME if startApp too quick, just stop
   log(this.logs.startTsumTsumApp);
   if (this.isJP) {
     execute('am start -n com.linecorp.LGTMTM/.TsumTsum');
@@ -1193,6 +1194,8 @@ Tsum.prototype.startApp = function() {
     execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
   }
   this.sleep(3000);
+  */
+  stop();
 };
 
 Tsum.prototype.screenshot = function() {
