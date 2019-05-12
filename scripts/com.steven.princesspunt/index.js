@@ -675,11 +675,11 @@ function start(viewSettings){
 
 // this.start(mySetting);
 // this.stop();
-config.isRunning = true;
-console.log(this.getPixelColor(1200, 35));
-console.log(this.getGUIStr());
+//config.isRunning = true;
+//console.log(this.getPixelColor(1200, 35));
+//console.log(this.getGUIStr());
 
-config.isRunning = false;
+//config.isRunning = false;
 // if(gui.indexOf("Unknown") >= 0){
 //config.isRunning = true;
 //console.log(this.getGUIStr());
