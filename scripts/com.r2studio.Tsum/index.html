@@ -2,6 +2,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Robotmon Tsum Config</title>
 <script src="https://unpkg.com/mithril@next/mithril.min.js"></script>
+<style>
+.version {
+  width: 100%;
+  color: #FFFFFF;
+  text-align:center;
+  background-color: #2196F3;
+  padding: 15px;
+}
+</style>
 </head>
 <body>
 <script>
@@ -28,8 +37,8 @@ function loadState() {
  
 var state = {
   config: [
-    {label: 'Language:English(英文)', 
-      labelZh: '語言:中文(Chinese)',  value: true },
+    {label: 'Switch Language:English(英文)', 
+      labelZh: '切換語言:中文(Chinese)',  value: true }, // true for English
     {label: 'Thanks ttung for improve image recognition and send heart function',
      labelZh: '感謝 ttung 提供改善辨識和送心功能'},
     {label: 'Thanks Chris Kwan\'s and Melissa Stinson\'s great help',
@@ -49,7 +58,6 @@ var state = {
     {label: '+Coin', labelZh: '道具Coin', value: false},
     {label: '+Bubble', labelZh: '道具Bubble', value: false},
     {label: 'All Bonus Items', labelZh: '開/關全部道具', value: false},
-    {label: '---'},
     {label: 'Skill Waiting time (sec)', labelZh: '技能等待時間(秒)',
       value: 3, min: 1, max: 15, step: 1},
     {label: 'Skill Level', labelZh: '技能等級',
@@ -104,10 +112,10 @@ var state = {
       value: 5, min: 1, max: 20, step: 1},
     {label: 'Waiting time (min) before repeat',
       labelZh: '完成後休息時間(分)', value: 5, min: 1, max: 60, step: 2},
-    {label: '---'},
     {label: 'Record Sender', labelZh: '記錄送心者', value: false},
     {label: 'Enlarge Sender\'s Image (Emulator)', 
       labelZh: '放大送心者圖片(模擬器)', value: false},
+    {label: '---'},
     {label: 'Auto Send Hearts', labelZh: '自動送愛心', value: false},
     {label: 'Send to 0 score', labelZh: '送心給 0 分', value: false},
     {label: 'Max run time(min) [Start from the first place if time is 0]',
@@ -160,6 +168,7 @@ var ConfigPage = {
           }, radioList)
         } else {
           ui = [
+            m('span', v.value),
             m('input[type=range]', { 
                 value: v.value,
                 min: v.min,
@@ -170,7 +179,7 @@ var ConfigPage = {
                   saveState()
                 }
             }),
-            m('span', v.value)]
+          ]
         }
       } else if (typeof(v.value) === 'string') {
         ui = m('input[type=text]', {
@@ -183,19 +192,50 @@ var ConfigPage = {
       }
       if (v.value == undefined) {
         if (v.label === '---') {
-          uiList.push(m('hr'))
+          uiList.push(m('tr',m('td[colspan=2]',m('hr'))))
         } else {
           uiList.push(m('tr',m('td[colspan=2]', 
             a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label))))
         }
       } else {
         uiList.push(m('tr', [
-          m('td', a[0].value ? v.label : 
+          m('td[width=70%]', a[0].value ? v.label : 
             (v.labelZh ? v.labelZh : v.label)),
-          m('td', ui)]))
+          m('td[width=30%][align=right]', ui)]))
       }
     })
-    return m('table[width=100%]', uiList)
+    var labelWhoSendHeart = 'List of Heart Counts'
+    var labelUpdAsc = 'Update(ASC)'
+    var labelUpdDesc = 'Update(DESC)'
+    var labelResetRecord = 'Reset Record'
+    var labelExportOld = 'Export HTML(Legacy)'
+    var labelExportExcel = 'Export HTML(Excel)'
+
+    var labelNote = 'Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)'
+
+    if (!state.config[0].value) {
+      labelWhoSendHeart = '誰送你心'
+      labelUpdAsc = '更新(遞增)'
+      labelUpdDesc = '更新(遞減)'
+      labelResetRecord = '清除紀錄'
+      labelExportOld = '輸出 HTML(舊版)'
+      labelExportExcel = '輸出 HTML(Excel)'
+      labelNote = '輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)'    
+    } 
+    return m('',
+      m('div.version', 'Tsum Tsum v' + VERSION),
+      m('table[width=100%]', uiList),
+      /*
+      m('hr'),
+      m('p', labelWhoSendHeart),
+      m('input[type=button]', {value:labelUpdAsc}),
+      m('input[type=button]', {value:labelUpdDesc}),
+      m('input[type=button]', {value:labelResetRecord}),
+      m('input[type=button]', {value:labelExportOld}),
+      m('input[type=button]', {value:labelExportExcel}),
+      m('p', labelNote)
+      */
+    )
   }
 }
 
