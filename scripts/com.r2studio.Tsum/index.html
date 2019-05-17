@@ -3,13 +3,11 @@
 <title>Robotmon Tsum Config</title>
 <script src="https://unpkg.com/mithril@next/mithril.min.js"></script>
 <style>
-.version {
-  width: 100%;
-  color: #FFFFFF;
-  text-align:center;
-  background-color: #2196F3;
-  padding: 15px;
-}
+.version { width: 100%; color: #FFF; text-align:center;
+  background-color: #2196F3; padding: 1em}
+li {display:block}
+li:nth-child(even) {background: #EEE}
+li:nth-child(odd) {background: #FFF}
 </style>
 </head>
 <body>
@@ -17,7 +15,7 @@
 "use strict;"
 
 var VERSION = 47
-var ASC = true
+//var ASC = true
 
 function saveState() {
   if (localStorage !== undefined) {
@@ -190,20 +188,25 @@ var ConfigPage = {
           }
         })
       }
-      if (v.value == undefined) {
+      if (v.value === undefined) {
         if (v.label === '---') {
-          uiList.push(m('tr',m('td[colspan=2]',m('hr'))))
+          uiList.push(m('li.sep','----------'))
         } else {
-          uiList.push(m('tr',m('td[colspan=2]', 
-            a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label))))
+          uiList.push(m('li', 
+            a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label)))
         }
+      } else if (v.list === undefined) {
+        uiList.push(m('li', 
+          m('label', ui,
+            a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label),
+          )))
       } else {
-        uiList.push(m('tr', [
-          m('td[width=70%]', a[0].value ? v.label : 
-            (v.labelZh ? v.labelZh : v.label)),
-          m('td[width=30%][align=right]', ui)]))
+        uiList.push(m('li', 
+          m('label', a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label),
+            ui)))
       }
     })
+    /*
     var labelWhoSendHeart = 'List of Heart Counts'
     var labelUpdAsc = 'Update(ASC)'
     var labelUpdDesc = 'Update(DESC)'
@@ -220,11 +223,12 @@ var ConfigPage = {
       labelResetRecord = '清除紀錄'
       labelExportOld = '輸出 HTML(舊版)'
       labelExportExcel = '輸出 HTML(Excel)'
-      labelNote = '輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)'    
-    } 
+      labelNote = '輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)'
+    }
+    */
     return m('',
       m('div.version', 'Tsum Tsum v' + VERSION),
-      m('table[width=100%]', uiList),
+      m('ol', uiList),
       /*
       m('hr'),
       m('p', labelWhoSendHeart),
