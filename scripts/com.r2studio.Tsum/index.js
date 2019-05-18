@@ -2070,7 +2070,7 @@ Tsum.prototype.taskSendHearts = function() {
   this.goFriendPage();
   log(this.logs.startSendingHearts);
   this.sleep(1000);
-  if (this.sendHeartMaxDuring == 0) {
+  if (this.sendFromFirst) {
     this.friendPageGoTop();
     tap(0, 0); // Avoid overlap between zero score and pointer location
   }
@@ -2252,7 +2252,7 @@ Tsum.prototype.sleep = function(t) {
 };
 
 /* exported start */
-function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendFromFirst, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
@@ -2277,6 +2277,7 @@ function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, c
   ts.sendHearts = sendHearts;
   ts.showHeartLog = true;
   ts.keepRuby = keepRuby;
+  ts.sendFromFirst = sendFromFirst;
   ts.sendHeartMaxDuring = sendHeartMaxDuring * 60 * 1000;
   ts.useFan = useFan;
   if (largeImage) {

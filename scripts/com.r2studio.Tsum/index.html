@@ -12,39 +12,37 @@ li:nth-child(odd) {background: #FFF}
 </head>
 <body>
 <script>
-"use strict;"
+'use strict;';
 
-var VERSION = 47
-//var ASC = true
+var VERSION = 47.1;
 
 function saveState() {
   if (localStorage !== undefined) {
-    var s = JSON.stringify(state)
     localStorage.setItem('tsum'+VERSION,
-      JSON.stringify(state))
+        JSON.stringify(state));
   }
 }
 function loadState() {
   if (localStorage !== undefined) {
-    var v = localStorage.getItem('tsum'+VERSION)
+    var v = localStorage.getItem('tsum'+VERSION);
     if (v !== null) {
-      state = JSON.parse(v)
+      state = JSON.parse(v);
     }
   }
 }
- 
+
 var state = {
   config: [
-    {label: 'Switch Language:English(英文)', 
-      labelZh: '切換語言:中文(Chinese)',  value: true }, // true for English
+    {label: 'Switch Language:English(英文)',
+      labelZh: '切換語言:中文(Chinese)', value: true}, // true for English
     {label: 'Thanks ttung for improve image recognition and send heart function',
-     labelZh: '感謝 ttung 提供改善辨識和送心功能'},
+      labelZh: '感謝 ttung 提供改善辨識和送心功能'},
     {label: 'Thanks Chris Kwan\'s and Melissa Stinson\'s great help',
       labelZh: '感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙'},
     {label: '---'},
     {label: 'Japan Version?', labelZh: '日本版?', value: false},
     {label: 'Special Screen Ratio', labelZh: '特殊螢幕比例', value: false},
-    {label: 'Auto Launch Tsum App', labelZh: '自動開啟 Tsum App', 
+    {label: 'Auto Launch Tsum App', labelZh: '自動開啟 Tsum App',
       value: false},
     {label: '---'},
     {label: 'Auto Play Game', labelZh: '自動玩遊戲', value: true},
@@ -62,208 +60,178 @@ var state = {
       value: 3, min: 1, max: 6, step: 1},
     {label: 'Skill Type', labelZh: '技能類型', value: 0,
       keyList: [
-              'burst',
-              'block_donald_s',
-              'block_donaldx_s',
-              'block_lukej_s',
-              'block_moana_s',
-              'block_marie_s',
-              'block_missbunny_s',
-              'block_rabbit_s',
-              'block_mickeyh2015_s',
-              'block_snowwhite_s',
-              'block_cinderella_s',
+        'burst',
+        'block_donald_s',
+        'block_donaldx_s',
+        'block_lukej_s',
+        'block_moana_s',
+        'block_marie_s',
+        'block_missbunny_s',
+        'block_rabbit_s',
+        'block_mickeyh2015_s',
+        'block_snowwhite_s',
+        'block_cinderella_s',
       ], list: [
-              'Burst',
-              'Donald',
-              'Holiday Donald',
-              'Jedi Luke',
-              'Moana',
-              'Marie',
-              'Miss Bunny',
-              'Rabbit',
-              'Horn Hat Mickey',
-              'Snow White',
-              'Cinderella',
-       ], listZh: [
-              '消除系',
-              '唐老鴨',
-              '假日唐老鴨',
-              '絕地路克',
-              '莫娜',
-              '瑪麗',
-              '小兔子',
-              '兔子',
-              '角帽米奇',
-              '白雪公主',
-              '仙度瑞拉',
-       ]},
+        'Burst',
+        'Donald',
+        'Holiday Donald',
+        'Jedi Luke',
+        'Moana',
+        'Marie',
+        'Miss Bunny',
+        'Rabbit',
+        'Horn Hat Mickey',
+        'Snow White',
+        'Cinderella',
+      ], listZh: [
+        '消除系',
+        '唐老鴨',
+        '假日唐老鴨',
+        '絕地路克',
+        '莫娜',
+        '瑪麗',
+        '小兔子',
+        '兔子',
+        '角帽米奇',
+        '白雪公主',
+        '仙度瑞拉',
+      ]},
     {label: '---'},
     {label: 'Receive All Hearts', labelZh: '收全部愛心', value: true},
     {label: 'Waiting time (min) before repeat',
       labelZh: '完成後休息時間(分)',
-      value: 25, min: 5, max: 60, step: 5},
+      value: 25, min: 5, max: 60, step: 1},
     {label: '---'},
     {label: 'Receive Hearts One By One', labelZh: '一顆一顆收愛心', value: false},
     {label: 'Skip Ruby', labelZh: '保留鑽石', value: false},
     {label: 'Max Times to Open Mailbox', labelZh: '重複檢查上限次數',
       value: 5, min: 1, max: 20, step: 1},
     {label: 'Waiting time (min) before repeat',
-      labelZh: '完成後休息時間(分)', value: 5, min: 1, max: 60, step: 2},
+      labelZh: '完成後休息時間(分)', value: 5, min: 1, max: 60, step: 1},
     {label: 'Record Sender', labelZh: '記錄送心者', value: false},
-    {label: 'Enlarge Sender\'s Image (Emulator)', 
+    {label: 'Enlarge Sender\'s Image (Emulator)',
       labelZh: '放大送心者圖片(模擬器)', value: false},
     {label: '---'},
     {label: 'Auto Send Hearts', labelZh: '自動送愛心', value: false},
     {label: 'Send to 0 score', labelZh: '送心給 0 分', value: false},
-    {label: 'Max run time(min) [Start from the first place if time is 0]',
-      labelZh: '執行時間上限(分) [0 將從第一名開始送]',
-      value: 0, min: 0, max: 80, step: 5},
+    {label: 'Send from first', labelZh: '從第1名開始送', value: false},
+    {label: 'Max run time(min)', labelZh: '執行時間上限(分)', value: 0,
+      min: 0, max: 80, step: 1},
     {label: 'Waiting time (min) before repeat',
       labelZh: '完成後休息時間(分)',
-      value: 26, min: 1, max: 60, step: 5},
+      value: 25, min: 1, max: 59, step: 1},
   ],
-}
-console.log("dbg:103 state=", state)
+};
 var ConfigPage = {
   oninit: loadState,
   view: function(vnode) {
-    var uiList = []
+    var uiList = [];
     state.config.forEach(function(v, i, a) {
-      var ui
+      var ui;
       if (typeof(v.value) === 'boolean') {
-        ui = m('input[type=checkbox]',  {
+        ui = m('input[type=checkbox]', {
           value: v.value,
           checked: v.value,
-          onchange: function(e) { 
-            v.value = e.target.checked
-            saveState()
-          }
-        })
+          onchange: function(e) {
+            v.value = e.target.checked;
+            saveState();
+          },
+        });
       } else if (typeof(v.value) === 'number') {
         if (v.list !== undefined) {
-          radioList = []
-          aList = v.list
+          radioList = [];
+          aList = v.list;
           if (!state.config[0].value) {
-            aList = v.listZh
+            aList = v.listZh;
           }
           aList.forEach(function(rv, ri) {
             radioList.push(m('input[type=radio]', {
               value: rv,
-              checked: (ri == v.value)
-            }))
-            radioList.push(rv)
-          })
+              checked: (ri == v.value),
+            }));
+            radioList.push(rv);
+          });
           ui = m('form', {
             onchange: function(e) {
               aList.forEach(function(rv, ri) {
                 if (rv === e.target.value) {
-                  v.value = ri
+                  v.value = ri;
                 }
-              })
-              saveState()
-            }
-          }, radioList)
+              });
+              saveState();
+            },
+          }, radioList);
         } else {
           ui = [
             m('span', v.value),
-            m('input[type=range]', { 
-                value: v.value,
-                min: v.min,
-                max: v.max,
-                step: v.step,
-                onchange: function(e) { 
-                  v.value = +e.target.value 
-                  saveState()
-                }
+            m('input[type=range]', {
+              value: v.value,
+              min: v.min,
+              max: v.max,
+              step: v.step,
+              oninput: function(e) {
+                v.value = +e.target.value;
+              },
+              onchange: function(e) {
+                saveState();
+              },
             }),
-          ]
+          ];
         }
       } else if (typeof(v.value) === 'string') {
         ui = m('input[type=text]', {
           value: v.value,
           onchange: function(e) {
-            v.value = e.target.value
-            saveState()
-          }
-        })
+            v.value = e.target.value;
+            saveState();
+          },
+        });
       }
       if (v.value === undefined) {
         if (v.label === '---') {
-          uiList.push(m('li.sep','----------'))
+          uiList.push(m('li', '----------'));
         } else {
-          uiList.push(m('li', 
-            a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label)))
+          uiList.push(m('li',
+            a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label)));
         }
       } else if (v.list === undefined) {
-        uiList.push(m('li', 
-          m('label', ui,
+        uiList.push(m('li',
+            m('label', ui,
             a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label),
-          )))
+            )));
       } else {
-        uiList.push(m('li', 
-          m('label', a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label),
-            ui)))
+        uiList.push(m('li',
+            m('label', a[0].value ? v.label : (v.labelZh ? v.labelZh : v.label),
+                ui)));
       }
-    })
-    /*
-    var labelWhoSendHeart = 'List of Heart Counts'
-    var labelUpdAsc = 'Update(ASC)'
-    var labelUpdDesc = 'Update(DESC)'
-    var labelResetRecord = 'Reset Record'
-    var labelExportOld = 'Export HTML(Legacy)'
-    var labelExportExcel = 'Export HTML(Excel)'
-
-    var labelNote = 'Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)'
-
-    if (!state.config[0].value) {
-      labelWhoSendHeart = '誰送你心'
-      labelUpdAsc = '更新(遞增)'
-      labelUpdDesc = '更新(遞減)'
-      labelResetRecord = '清除紀錄'
-      labelExportOld = '輸出 HTML(舊版)'
-      labelExportExcel = '輸出 HTML(Excel)'
-      labelNote = '輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)'
-    }
-    */
+    });
     return m('',
-      m('div.version', 'Tsum Tsum v' + VERSION),
-      m('ol', uiList),
-      /*
-      m('hr'),
-      m('p', labelWhoSendHeart),
-      m('input[type=button]', {value:labelUpdAsc}),
-      m('input[type=button]', {value:labelUpdDesc}),
-      m('input[type=button]', {value:labelResetRecord}),
-      m('input[type=button]', {value:labelExportOld}),
-      m('input[type=button]', {value:labelExportExcel}),
-      m('p', labelNote)
-      */
-    )
-  }
-}
+        m('div.version', 'Tsum Tsum v' + VERSION),
+        m('ol', uiList),
+    );
+  },
+};
 
 function genStartCommand() {
-  var command = 'start('
+  var command = 'start(';
   state.config.forEach(function(v, i, a) {
     if (i > 0) {
       if (typeof v.value === 'boolean') {
-        command += v.value.toString() + ', '
+        command += v.value.toString() + ', ';
       } else if (typeof v.value === 'number') {
         if (v.list !== undefined) {
-          // console.log("dbg:210 v.value=", v.value, "v.key=", v.keyList)
-          command += '"' + v.keyList[v.value] + '", '
+          command += '"' + v.keyList[v.value] + '", ';
         } else {
-          command += v.value + ', '
+          command += v.value + ', ';
         }
       } else if (typeof v.value === 'string') {
-        command += '"' + v.value + '", '
+        command += '"' + v.value + '", ';
       }
     }
-  })
-  command += state.config[0].value.toString() + ');'
-  console.log('Start command: ' + command)
-  return command
+  });
+  command += state.config[0].value.toString() + ');';
+  console.log('Start command: ' + command);
+  return command;
 }
 
 function onEvent(eventType) {
@@ -272,10 +240,7 @@ function onEvent(eventType) {
     JavaScriptInterface.runScript(startCommand);
   } else if (eventType == 'OnPauseClick') {
     JavaScriptInterface.runScript('stop();');
-  } 
-   // else if (eventType == 'OnSettingClick') {
-    // refreshRecord();
-  //}
+  }
 }
 
 function onLog(message) {
@@ -284,9 +249,10 @@ function onLog(message) {
 
 m.mount(document.body, {
   view: function() {
-    return m(ConfigPage)
-  }
-})
+    return m(ConfigPage);
+  },
+});
 </script>
 </body>
 <!-- vim:set et sw=2 ts=2 ai: -->
+</html>
