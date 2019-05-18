@@ -1,10 +1,9 @@
 #!/bin/bash
 set -ex
-t=/sdcard/Robotmon/scripts/com.twpda.Tsum
-f=scripts/com.r2studio.Tsum/index.html
-adb push "$f" "$t"
-f=scripts/com.r2studio.Tsum/index.js
-adb push "$f" "$t"
+from_dir=scripts/com.r2studio.Tsum
+to_dir=/sdcard/Robotmon/scripts/com.twpda.Tsum
+cd "$from_dir"
+adb push index.html index.js settings.js "$to_dir"
 echo Done
 # vim:et sw=2 ts=2 ai nocp sta
 
