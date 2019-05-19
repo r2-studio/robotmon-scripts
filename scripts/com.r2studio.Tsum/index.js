@@ -2309,6 +2309,9 @@ function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, c
   if (sendHearts) {
     gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);
   }
+  if (receiveOneItem) {
+    gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);
+  }
   if (!isSlowCalculation && checkFunction(outRange)) {
     if (autoPlay) {
       gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);
