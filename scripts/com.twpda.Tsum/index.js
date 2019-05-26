@@ -1163,26 +1163,44 @@ Tsum.prototype.sendMoneyInfo = function() {
 };
 
 Tsum.prototype.isAppOn = function() {
-  if (Date.now() - this.lastAppOnTime < this.detectAppOnPeriod) return true;
-  var result = execute('dumpsys window windows').split('mCurrentFocus');
+  if (Date.now() - this.lastAppOnTime < this.detectAppOnPeriod) {
+    return true;
+  }
   this.lastAppOnTime = Date.now();
-  if (result.length < 2) {
-    return false;
+  while (Date.now() - this.lastAppOnTime < this.detectAppOnPeriod) {
+    log('dbg:1171');
+    var result = execute('dumpsys window windows').split('mCurrentFocus');
+    log('dbg:1173.a');
+    if (result.length < 2) {
+      log('dbg:1173');
+      this.sleep(100);
+      continue;
+    }
+    result = result[1].split(' ');
+    if (result.length < 3) {
+      log('dbg:1179');
+      this.sleep(100);
+      continue;
+    }
+    result = result[2].split('/');
+    if (result.length < 2) {
+      log('dbg:1185');
+      this.sleep(100);
+      continue;
+    }
+    var packageName = result[0];
+    // var activityName = result[1];
+    if (packageName.indexOf('LGTMTM') == -1) {
+      log('dbg:1192');
+      this.sleep(100);
+      continue;
+    }
+    log('dbg:1198');
+    this.lastAppOnTime = Date.now();
+    return true;
   }
-  result = result[1].split(' ');
-  if (result.length < 3) {
-    return false;
-  }
-  result = result[2].split('/');
-  if (result.length < 2) {
-    return false;
-  }
-  var packageName = result[0];
-  // var activityName = result[1];
-  if (packageName.indexOf('LGTMTM') == -1) {
-    return false;
-  }
-  return true;
+  log('dbg:1202');
+  return false;
 };
 
 Tsum.prototype.startApp = function() {
@@ -1379,9 +1397,13 @@ Tsum.prototype.exitUnknownPage = function() {
 
 Tsum.prototype.goFriendPage = function() {
   while (this.isRunning) {
+      log('dbg:1396');
     if (!this.isAppOn()) {
+      log('dbg:1398');
       this.startApp();
+      log('dbg:1400');
       if (!this.isAppOn()) {
+        log('dbg:1402');
         stop();
         return;
       }
@@ -2015,8 +2037,10 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var sender = undefined;
   var receiveTime = Date.now();
   while (this.isRunning) {
-    if (!isAppOn()) {
-      isRunning = false;
+    log('dbg:2036');
+    if (!this.isAppOn()) {
+      this.isRunning = false;
+      log('dbg:2021');
       break;
     }
     var img = this.screenshot();
@@ -2317,9 +2341,9 @@ function start(isJP, detect, autoLaunch, detectAppOnPeriod, autoPlay,
   ts.debug = false;
   // ts.debug = true; // FIXME
   ts.autoLaunch = autoLaunch;
-  ts.detectAppOnPeriod = detectAppOnPeriod; ;
+  ts.detectAppOnPeriod = detectAppOnPeriod * 1000;
   // ts.isSlowCalculation = isSlowCalculation;
-  isSlowCalculation = false; // FIXME: remove
+  var isSlowCalculation = false; // FIXME: remove
   ts.isPause = isPause;
 
   ts.clearBubbles = clearBubbles;

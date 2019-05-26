@@ -1,6 +1,6 @@
 'use strict;';
 
-var VERSION = 0.1;
+var VERSION = 47.5;
 
 function saveState() {
   if (localStorage !== undefined) {
@@ -31,7 +31,7 @@ var state = {
     {label: 'Auto Launch Tsum App', labelZh: '自動開啟 Tsum App',
       value: false},
     {label: 'Detect out of game time(second)', labelZh: '偵測脫離遊戲(秒)',
-      value: 3, min: 1, max: 10, step: 1},
+      value: 5, min: 1, max: 10, step: 1},
     {label: '---'},
     {label: 'Auto Play Game', labelZh: '自動玩遊戲', value: true},
     // {label: 'Slow Calculation', labelZh: '慢速計算', value: false},
