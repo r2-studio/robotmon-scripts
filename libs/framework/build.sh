@@ -1,11 +1,9 @@
 OUTPUT="../framework.js"
 
 echo "// Robotmon Framework" > $OUTPUT
-
-for filename in ./*.js;
-do
+for filename in ./*.js; do
     echo "Build" $filename;
-    echo "\n" >> $OUTPUT;
+    echo >> $OUTPUT;
     cat $filename >> $OUTPUT;
 done
 

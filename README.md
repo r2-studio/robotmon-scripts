@@ -9,6 +9,7 @@ Only support ES5
 * [JavaScript Raw APIs](#javascrip-apis)
 * [RBM library APIs](#rbm-library-apis)
 * [gRPC APIs](#grpc-apis)
+* [Debug](#debug)
 
 ## JavaScript Events
 
@@ -1235,3 +1236,15 @@ service GrpcService {
   rpc MoveTo(RequestTap) returns (Response) {}
 }
 ```
+
+## Debug
+
+* use 'robotmon-desktop/light-manager' 'StartService'' 
+* use 'robotmon-desktop/light-manager' 'EnableRemotePhone' 
+* reconnect USB ethernet tethering if required
+* On mobile, launch the 'Robotmon' click menu/IP to get *IP* of mobile
+* On mobile, launch the 'Robotmon' click any script
+* build 'robotmon-desktop/app' on linux
+* run 'robotmon-desktop/app' click 'Robotmon Devices' 新增 *IP*
+* click '同步螢幕' if required
+* run 'adb logcat | grep Robotmon:' to show related message
