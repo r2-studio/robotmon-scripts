@@ -125,13 +125,39 @@ View.prototype.isView = function() {
   return isView;
 }
 
+// linear mapping from dev to user resolution
 View.prototype.mappingXY = function(rx, ry) {
-
+  var devX = this._devLayoutView._x;
+  var devY = this._devLayoutView._y;
+  var devW = this._devLayoutView._w;
+  var devH = this._devLayoutView._h;
+  var devInViewX = rx - devX;
+  var devInViewY = ry - devY;
+  var devInViewXRatio = devInViewX / devW;
+  var devInViewYRatio = devInViewY / devH;
+  var inViewX = devInViewXRatio * this._w;
+  var inViewY = devInViewYRatio * this._h;
+  var x = this._x + inViewX;
+  var y = this._y + inViewY;
+  return {x: x, y: y};
 }
 
 // parameter rx, ry is dev x, y position, tapDown will auto linear transfer to user resolution
 View.prototype.tapDown = function(rx, ry) {
-  
+  var xy = this.mappingXY(rx, ry);
+  tapDown(xy.x, xy.y, 10);
+}
+
+// parameter rx, ry is dev x, y position, moveTo will auto linear transfer to user resolution
+View.prototype.moveTo = function(rx, ry) {
+  var xy = this.mappingXY(rx, ry);
+  moveTo(xy.x, xy.y, 10);
+}
+
+// parameter rx, ry is dev x, y position, tapUp will auto linear transfer to user resolution
+View.prototype.tapUp = function(rx, ry) {
+  var xy = this.mappingXY(rx, ry);
+  tapUp(xy.x, xy.y, 20);
 }
 
 View.prototype._createDeveloperLayout = function() {
