@@ -1,6 +1,6 @@
 'use strict;';
 
-var VERSION = 47.4;
+var VERSION = 48;
 
 function saveState() {
   if (localStorage !== undefined) {

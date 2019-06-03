@@ -123,6 +123,7 @@ var Button = {
   outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {'a': 0, 'b': 146, 'g': 65, 'r': 214}},
   outReceiveOneCoin: {x: 291, y: 579 + adjY, color: {r: 232, g: 229, b: 38}},
   outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
+  outReceiveOneAd: { x: 290, y: 812 - 140, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveOneTicket1: {x: 298, y: 569 + adjY, color: {r: 125, g: 188, b: 177}}, // green
   outReceiveOneTicket2: {x: 316, y: 576 + adjY, color: {r: 248, g: 255, b: 253}}, // white
   outIsLoading1: {x: 540, y: 720 + adjY, color: {'a': 0, 'b': 255, 'g': 255, 'r': 255}},
@@ -1975,6 +1976,18 @@ Tsum.prototype.isLoading = function() {
   return false;
 };
 
+Tsum.prototype.skipAd = function () {
+  log("Ignore Ad");
+  this.tap(Button.outReceiveOne);
+  this.sleep(4000);
+  // delete ad
+  this.tap({ x: 462, y: 1235 - 140 });
+  this.sleep(4000);
+  this.tap({ x: 172, y: 1360 - 140 });
+  this.sleep(2000);
+  this.tap({ x: 556, y: 1557 - 140 });
+}
+
 Tsum.prototype.taskReceiveOneItem = function() {
   log(this.logs.friendsPage);
   this.goFriendPage();
@@ -1993,10 +2006,16 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 24);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
+    var isAd = isSameColor(Button.outReceiveOneAd.color, this.getColor(img, Button.outReceiveOneAd), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     releaseImage(img);
     if (isItem) {
+      if (isAd) {
+        this.skipAd();
+        this.sleep(2000);
+        continue;
+      }
       if (!this.keepRuby || !isRuby) {
         if (this.recordReceive) {
           var img = this.screenshot();
