@@ -1582,9 +1582,9 @@ Tsum.prototype.useSkill = function(board) {
     this.sleep(50);
     for (var i = 0; i < 3; i++) {
       this.moveTo({x: 100, y: 960}, 20);
-      this.sleep(400);
+      this.sleep(420);
       this.moveTo({x: 980, y: 960}, 20);
-      this.sleep(500);
+      this.sleep(480);
     }
     this.tapUp({x: 980, y: 960}, 20);
   }
