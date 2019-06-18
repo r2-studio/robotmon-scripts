@@ -1575,7 +1575,20 @@ Tsum.prototype.useSkill = function(board) {
     board = this.scanBoard();
     this.useCinderellaSkill(board);
     this.clearAllBubbles(2500, 50);
-  } else {
+  } else if(this.skillType == 'block_woody2_s'){
+    this.sleep(1800);
+    this.tapDown({x: 540, y: 960}, 20);
+    this.moveTo({x: 980, y: 960}, 20);      
+    this.sleep(50);
+    for (var i = 0; i < 3; i++) {
+      this.moveTo({x: 100, y: 960}, 20);
+      this.sleep(420);
+      this.moveTo({x: 980, y: 960}, 20);
+      this.sleep(480);
+    }
+    this.tapUp({x: 980, y: 960}, 20);
+  }
+  else {
     this.sleep(this.skillInterval);
   }
   return true;
