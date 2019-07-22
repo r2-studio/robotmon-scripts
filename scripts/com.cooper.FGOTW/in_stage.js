@@ -249,7 +249,7 @@ function finishQuest(){
         }
         tapScale(230,30);
         sleep(1500);
-        if(isFinishDropDialoge()){
+        if(isFinishDropDialoge() || isFinishNext()){
             tapScale(1100,660);
             sleep(1500);           
         } else if(isAddFriendPage()){

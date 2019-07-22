@@ -159,6 +159,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
 
     <script>
     var server = "JP"
+    // var server = "TW"
     var version = "";
     var commandId = 0;
     var scriptCnt = 0;
@@ -528,7 +529,7 @@ function initFriendButton(scriptValue){
             var path = itemImgPath+$(this).select2('data')[0].text+".png";
             $("#selectFriendItemImg"+currentId).attr("src",path);
         }else{
-            $("#selectFriendItemImg"+currentId).removeAttr('src').replaceWith($("#selectFriendServantImg"+currentId).clone());;
+            $("#selectFriendItemImg"+currentId).removeAttr('src').replaceWith($("#selectFriendItemImg"+currentId).clone());;
         }
     });
     $("#selectFriendItem"+currentId).select2({
@@ -539,11 +540,19 @@ function initFriendButton(scriptValue){
         minimumResultsForSearch: -1,
         dropdownAutoWidth: true
     });
+    $("#selectFriendOnlyFriend"+currentId).select2({
+        minimumResultsForSearch: -1,
+        dropdownAutoWidth: true
+    });
+    $("#selectFriendScrollCnt"+currentId).select2({
+        minimumResultsForSearch: -1,
+        dropdownAutoWidth: true
+    });
     if(scriptValue == undefined || scriptValue.length == 0){
         return;
     }
     var t = 1;
-    for(var i=0;i<9;i++){
+    for(var i=0;i<10;i++){
         if(scriptValue[0]&t){
             $("#selectFriend"+i+""+currentId).prop('checked', true);
         }else{
@@ -564,6 +573,13 @@ function initFriendButton(scriptValue){
         }
     }
     $("#selectFriendItemFull"+currentId).val(scriptValue[3]).trigger('change');
+
+    if(scriptValue.length > 4){
+        $("#selectFriendOnlyFriend"+currentId).val(scriptValue[4]).trigger('change');
+    }
+    if(scriptValue.length > 5){
+        $("#selectFriendScrollCnt"+currentId).val(scriptValue[5]).trigger('change');        
+    }
 }
 function initCommandButton(currentId){
     $("#removeItem"+currentId).click(function(){
@@ -617,7 +633,7 @@ function getCurrentScript(){
                     case "選擇好友":
                     var filter = 0;
                     var t = 1;
-                    for(var i =0;i<9;i++){
+                    for(var i =0;i<10;i++){
                         if($("#selectFriend"+i+""+itemId).is(":checked")){
                             filter += t;
                         }
@@ -631,7 +647,8 @@ function getCurrentScript(){
                     if($("#selectFriendItem"+itemId).val()!=-1){
                         item = $("#selectFriendItem"+itemId).select2('data')[0].text;
                     }
-                    newScript+='selectFriend('+filter+',"'+servant+'","'+item+'",'+$("#selectFriendItemFull"+itemId).val()+');';
+                    newScript+='selectFriend('+filter+',"'+servant+'","'+item+'",'+$("#selectFriendItemFull"+itemId).val()
+                        +','+$("#selectFriendOnlyFriend"+itemId).val()+','+$("#selectFriendScrollCnt"+itemId).val()+');';
                     break;
                     case "選擇隊伍":
                     newScript+="selectTeam("+$("#selectTeam"+itemId).val()+");";
@@ -972,19 +989,36 @@ function getSelectFriend(id){
         '<input type="checkbox" id = "selectFriend5'+id +'" checked>術&nbsp'+
         '<input type="checkbox" id = "selectFriend6'+id +'">殺&nbsp'+
         '<input type="checkbox" id = "selectFriend7'+id +'">狂&nbsp'+
-        '<input type="checkbox" id = "selectFriend8'+id +'">特<br>'+
+        '<input type="checkbox" id = "selectFriend8'+id +'">特&nbsp'+
+        '<input type="checkbox" id = "selectFriend9'+id +'">混<br>'+
+
         '<li><label>指定從者&nbsp;&nbsp;</label>'+
         '<select id = "selectFriendServant'+id+'">'+
         '<option value = "-1" selected>無</option></select>&nbsp;&nbsp;'+
         '<img id = "selectFriendServantImg'+id+'" height = "40" width = "60"></li>' +
+
         '<li><label>指定禮裝&nbsp;&nbsp;</label>'+
         '<select id = "selectFriendItem'+id+'">'+
         '<option value = "-1" selected>無</option></select>&nbsp;&nbsp;'+
         '<img id = "selectFriendItemImg'+id+'" height = "20" width = "60"></li>' +
+
         '<li><label>指定突滿&nbsp;&nbsp;</label>'+
         '<select id = "selectFriendItemFull'+id+'">'+
         '<option value = "0">不限制</option>'+
-        '<option value = "1" selected>突滿</option></select></li>'
+        '<option value = "1" selected>突滿</option></select></li>'+
+
+        '<li><label>限定好友&nbsp;&nbsp;</label>'+
+        '<select id = "selectFriendOnlyFriend'+id+'">'+
+        '<option value = "0" selected>不限制</option>'+
+        '<option value = "1">僅限好友</option></select></li>'+
+
+        '<li><label>下拉次數&nbsp;&nbsp;</label>'+
+        '<select id = "selectFriendScrollCnt'+id+'">'+
+        '<option value = "-1" selected>到最後</option>'+
+        '<option value = "0">不下拉</option>'+
+        '<option value = "1">一次</option>'+
+        '<option value = "2">兩次</option>'+
+        '<option value = "3">三次</option></select></li>'
         );
 }
 function getSelectTeam(id){
@@ -1479,6 +1513,7 @@ function onEvent(eventType) {
         var currentScript = getCurrentScript();
         var l = server +"_"+version;
         var scriptName = $("#scriptMode").select2('data')[0].text;
+
         JavaScriptInterface.runScriptCallback('start('+loopTime+',\''+currentScript+'\',\''+scriptName+'\');',"scriptFinish");
         JavaScriptInterface.hideMenu();
         JavaScriptInterface.setXY(3000,0);

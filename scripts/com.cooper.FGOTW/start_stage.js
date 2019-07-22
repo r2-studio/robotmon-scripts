@@ -114,7 +114,7 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
         return;
     }
     if(checkIsFriend == undefined){
-        isFriend = true;
+        checkIsFriend = true;
     }
     if(scrollTimes == undefined){
         scrollTimes = 3;
@@ -170,7 +170,7 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                 var haveNotFriend = false;
                 for(var j = 0; j < friendLinePosition.length;j++){
                     var lineY = friendLinePosition[j];
-                    console.log("check line "+lineY);
+                    // console.log("check line "+lineY);
                     var isSameServant = true;
                     var isSameItem = true;
                     var isFriend = true;
@@ -190,6 +190,8 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                         tapScale(450,lineY + 70);
                         found = true;
                         break;
+                    }else if(isDebug){
+                        console.log("select friend "+j+" failed "+isSameServant+","+isSameItem+","+isFriend);
                     }
                 }
                 releaseImage(screenshot);
@@ -284,7 +286,7 @@ function checkFriendItem(screenshot,itemImage,lineY,star){
     if(isDebug){
         console.log("checkFriendItem " +lineY);
     }
-    if(!checkImageAndColor(screenshot,itemImage,friendX,lineY+friendItemYOffset,friendItemSize[0],friendItemSize[1])){
+    if(!checkImage(screenshot,itemImage,friendX,lineY+friendItemYOffset,friendItemSize[0],friendItemSize[1],0.9)){
         return false;
     }
     if(star){
@@ -328,7 +330,11 @@ function checkFriendIsFriend(screenShot,lineY){
     if(isDebug){
         console.log("checkFriendIsFriend " +lineY);
     }
-    return checkPixel(1148,lineY+122,223,254,174);
+    if(server == "TW"){
+        return checkPixel(1148,lineY+122,223,254,174);
+    }else{
+        return checkPixel(1148,lineY+132,227,255,177);        
+    }
 }
 
 function reloadFriend(){
@@ -341,7 +347,7 @@ function reloadFriend(){
             waitLoading();
             if(isSelectFriendRefreshDialog()){
                 tapScale(625,567);
-                sleep(5000);
+                sleep(2000);
             }else{
                 return;
             }
