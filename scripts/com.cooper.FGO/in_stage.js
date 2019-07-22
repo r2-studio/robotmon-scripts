@@ -181,10 +181,7 @@ function useUlt(player){
 //---------------------------------------------Battle next
 function waitUntilPlayerCanMove(){
     //double check
-    while(true){
-        if(!isScriptRunning){
-            return false;
-        }
+    while(isScriptRunning){
         if(isBattleMainPage()){
             sleep(500);
             if(isBattleMainPage()){
@@ -193,14 +190,12 @@ function waitUntilPlayerCanMove(){
         }
         sleep(500);
     }
+    return false;
 }
 
 function waitUntilPlayerCanMoveOrFinish(){
     //double check
-    while(true){
-        if(!isScriptRunning){
-            return false;
-        }
+    while(isScriptRunning){
         if(isBattleMainPage()){
             sleep(1000);
             if(isBattleMainPage()){
@@ -221,6 +216,7 @@ function waitUntilPlayerCanMoveOrFinish(){
         }
         sleep(1000);
     }
+    return false;
 }
 
 function getCurrentStage(){
@@ -253,7 +249,7 @@ function finishQuest(){
         }
         tapScale(230,30);
         sleep(1500);
-        if(isFinishDropDialoge()){
+        if(isFinishDropDialoge() || isFinishNext()){
             tapScale(1100,660);
             sleep(1500);           
         } else if(isAddFriendPage()){

@@ -12,7 +12,7 @@ function selectStage(useApple){
     tapScale(800,160);
     sleep(500);
     var status = -1;
-    while(true){
+    while(isScriptRunning){
         if(isItemOrServantFullDialog()){
             status = 0;
         }else if(isUseAppleDialog()){
@@ -80,7 +80,9 @@ function selectStage(useApple){
         }
     }
     while(isScriptRunning){
+        waitLoading();
         if(isSelectFriendPage()){
+            sleep(500);
             break;
         }
     }
@@ -95,7 +97,7 @@ function selectStageAutoRestore(){
     }
     //select stage again
     tapScale(800,160);
-    while(true){
+    while(isScriptRunning){
         sleep(1000);
         if(isUseAppleDialog()){
             return false;
@@ -106,17 +108,18 @@ function selectStageAutoRestore(){
 }
 
 //-----------------------------------------------------friend list
-var friendServantPosition = [[51,230,155,96],[51,430,155,96]];
-var friendItemPosition =  [[51,328,155,30],[51,528,155,30]];
-var friendStarPosition =  [[190,360,5,5],[190,560,5,5]];
-var selectFriendPosition = [90,158,225,292,362,430,497,565,632];
-//selectFriend(1,"s1","i1",true,false);
-function selectFriend(filter,servant,item,star,isFriend){
+var selectFriendPosition = [90,158,225,292,362,430,497,565,632,699];
+function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
     if(!isScriptRunning){
         return;
     }
-    if(isFriend == undefined){
-        isFriend = true;
+    if(checkIsFriend == undefined){
+        checkIsFriend = true;
+    }
+    if(scrollTimes == undefined){
+        scrollTimes = 3;
+    }else if(scrollTimes < 0){
+        scrollTimes = 15;
     }
     console.log("-選擇好友-");
     if(!isSelectFriendPage()){
@@ -140,7 +143,7 @@ function selectFriend(filter,servant,item,star,isFriend){
             console.log("check item image "+servantItemPath);
         }
     }
-    while(true){
+    while(isScriptRunning){
         var t = 1;
         for(var i = 0;i < selectFriendPosition.length;i++){//loop for filter
             if(!isScriptRunning){
@@ -156,37 +159,40 @@ function selectFriend(filter,servant,item,star,isFriend){
                 tapScale(selectFriendPosition[i],125);
                 sleep(1000);
             }
-
-            for(var j = 0;j<3;j++){
-                var screenshot = getScreenshotResize();
-                var friend1 = true;
-                var friend2 = true;
-                if(servantImage!=undefined){
-                    friend1 = checkFriendServant(screenshot,servantImage,0);
-                    friend2 = checkFriendServant(screenshot,servantImage,1);
-                }
-                var item1 = true;
-                var item2 = true;                
-                if(itemImage!=undefined){
-                    item1 = checkFriendItem(screenshot,itemImage,0,star);
-                    item2 = checkFriendItem(screenshot,itemImage,1,star);
-                }
+            if(isSelectFriendEmpty()){
+                continue;
+            }
+            var scrollCnt = 0;
+            while(isScriptRunning){
                 var found = false;
-                if(friend1 && item1){
-                    tapScale(450,267);
-                    found = true;
-                }else if(friend2 &&item2){                    
-                    tapScale(450,467);
-                    found = true;
-                }
-                if(isDebug){
-                    var star1 = checkStar(screenshot,0);
-                    var star2 = checkStar(screenshot,1);
-                    console.log("=====================================");
-                    console.log("loop "+j)
-                    console.log("friend1 "+friend1+" "+item1+" "+star1);
-                    console.log("friend2 "+friend2+" "+item2+" "+star2);
-                    console.log("=====================================");
+                var screenshot = getScreenshotResize();
+                var friendLinePosition = getFriendLine(screenshot);
+                var haveNotFriend = false;
+                for(var j = 0; j < friendLinePosition.length;j++){
+                    var lineY = friendLinePosition[j];
+                    // console.log("check line "+lineY);
+                    var isSameServant = true;
+                    var isSameItem = true;
+                    var isFriend = true;
+                    if(servantImage!=undefined){
+                        isSameServant = checkFriendServant(screenshot,servantImage,lineY);
+                    }
+                    if(itemImage!=undefined){
+                        isSameItem = checkFriendItem(screenshot,itemImage,lineY,star);
+                    }
+                    if(checkIsFriend){
+                        isFriend = checkFriendIsFriend(screenshot,lineY);
+                        if(!isFriend){
+                            haveNotFriend = true;
+                        }
+                    }
+                    if(isSameServant && isSameItem && isFriend){
+                        tapScale(450,lineY + 70);
+                        found = true;
+                        break;
+                    }else if(isDebug){
+                        console.log("select friend "+j+" failed "+isSameServant+","+isSameItem+","+isFriend);
+                    }
                 }
                 releaseImage(screenshot);
                 if(found){                    
@@ -196,51 +202,114 @@ function selectFriend(filter,servant,item,star,isFriend){
                     if(itemImage!=undefined){
                         releaseImage(itemImage);
                     }
-                    while(!isSelectTeamPage()){
+                    waitLoading();
+                    while(isScriptRunning){
+                        if(isSelectTeamPage()){
+                            sleep(500);
+                            return;
+                        }
                     }
-                    return;
                 }
-                if(j < 2){
-                    scrollFriendList();
-                    sleep(500);
+                if(isSelectFriendEnd()){
+                    break;
                 }
+                if(scrollCnt == scrollTimes){
+                    break;
+                }
+                if(checkIsFriend && haveNotFriend){
+                    break;
+                }
+                scrollCnt++;
+                scrollFriendList();
+                sleep(500);
             }
         }
         reloadFriend();
     }
 }
 
-function checkFriendServant(screenshot,servantImage,position){
-    if(isDebug){
-        console.log("checkFriendServant " +position);
+
+var positionX = [400,800];
+var pixelColor = [[206,192,128],[243,212,164]];
+if(server =="JP"){
+    pixelColor = [[206,192,128],[243,212,164],[189,189,172],[220,220,220]];
+}
+function getFriendLine(screenshot){
+    console.log("getFriendLine");
+    var lineY = [];
+    var lineCnt = 0;
+    for(var y = 0;y<530;y++){
+      //console.log("check "+y);
+      var isLine = false;
+      for(var i=0;i<pixelColor.length;i+=2){
+        //console.log("check i "+i);
+        var x = i % positionX.length;
+        var screenshotColor1 = getImageColor(screenshot,positionX[x],y);
+        var screenshotColor2 = getImageColor(screenshot,positionX[x+1],y);
+        var c1 = isSameColor(screenshotColor1.r,screenshotColor1.g,screenshotColor1.b,pixelColor[i][0],pixelColor[i][1],pixelColor[i][2]);
+        var c2 = isSameColor(screenshotColor2.r,screenshotColor2.g,screenshotColor2.b,pixelColor[i+1][0],pixelColor[i+1][1],pixelColor[i+1][2],25);
+        if(c1||c2){
+          console.log(c1+","+c2+":"+y);
+        }
+        if(c1&&c2){
+          isLine = true;
+          break;
+        }
+      }
+      if(isLine){
+        if(lineCnt > 0){
+            if(y - lineY[lineCnt-1] < 150){
+                lineCnt--;
+            }
+        }
+        lineY[lineCnt] = y;
+        lineCnt++;
+      }
     }
-    return checkImage(screenshot,servantImage,friendServantPosition[position][0],friendServantPosition[position][1],friendServantPosition[position][2],friendServantPosition[position][3]);
+    console.log("line y "+lineY);
+    return lineY;
 }
 
-function checkFriendItem(screenshot,itemImage,position,star){
+var friendX = 51;
+var friendServantYOffset = 33;
+var friendServantSize = [155,96];
+function checkFriendServant(screenshot,servantImage,lineY){
     if(isDebug){
-        console.log("checkFriendItem " +position);
+        console.log("checkFriendServant " +lineY);
     }
-    if(!checkImageAndColor(screenshot,itemImage,friendItemPosition[position][0],friendItemPosition[position][1],friendItemPosition[position][2],friendItemPosition[position][3])){
+    return checkImage(screenshot,servantImage,friendX,lineY+friendServantYOffset,friendServantSize[0],friendServantSize[1],0.9);
+}
+
+var friendItemYOffset = 131;
+var friendItemSize = [155,30];
+function checkFriendItem(screenshot,itemImage,lineY,star){
+    if(isDebug){
+        console.log("checkFriendItem " +lineY);
+    }
+    if(!checkImage(screenshot,itemImage,friendX,lineY+friendItemYOffset,friendItemSize[0],friendItemSize[1],0.9)){
         return false;
     }
     if(star){
-        if(!checkStar(screenshot,position)){
+        if(!checkStar(screenshot,lineY)){
             return false;
         }
     }
     return true;
 }
 
-function checkStar(screenShot,position){
+var friendStarX = 190;
+var friendStarYOffset = 163;
+var friendStarSize = 5;
+function checkStar(screenShot,lineY){
     if(isDebug){
-        console.log("checkStar " +position);
+        console.log("checkStar " +lineY);
     }
+    var friendStarY = lineY + friendStarYOffset;
     var isG = 0;
     var notG = 0;
-    for(var i=0;i<friendStarPosition[position][2];i++){
-        for(var j=0;j<friendStarPosition[position][3];j++){
-            var color = getImageColor(screenShot,friendStarPosition[position][0]+i,friendStarPosition[position][1]+j);
+    for(var i=0;i<friendStarSize;i++){
+        for(var j=0;j<friendStarSize;j++){
+            var color = getImageColor(screenShot,friendStarX+i,friendStarY+j);
             if(color.g>color.r && color.g > color.b){
                 isG++;
             }else{
@@ -254,11 +323,22 @@ function checkStar(screenShot,position){
     return false;
 }
 
+var friendIsFriendX;
+var friendIsFriendYOffset;
+var friendIsFriendSize;
+function checkFriendIsFriend(screenShot,lineY){
+    if(isDebug){
+        console.log("checkFriendIsFriend " +lineY);
+    }
+    if(server == "TW"){
+        return checkPixel(1148,lineY+122,223,254,174);
+    }else{
+        return checkPixel(1148,lineY+132,227,255,177);        
+    }
+}
+
 function reloadFriend(){
-    while(true){
-        if(!isScriptRunning){
-            return;
-        }
+    while(isScriptRunning){
         tapScale(825,117);
         sleep(1000);
         if(isSelectFriendRefreshDialog()){
@@ -267,7 +347,7 @@ function reloadFriend(){
             waitLoading();
             if(isSelectFriendRefreshDialog()){
                 tapScale(625,567);
-                sleep(5000);
+                sleep(2000);
             }else{
                 return;
             }

@@ -79,6 +79,8 @@ function getFriendPoint(){
             tapScale(800,550);
         }else if(isFriendPointFree()){
             tapScale(625,550);
+        }else if(isFriendPointContinue()){
+            tapScale(750,650);
         }else{
             console.log("結束友抽");
             isScriptRunning = false;
@@ -101,7 +103,10 @@ function getFriendPoint(){
                 tapScale(1090,675);
             }else if(isItemPage()){
                 tapScale(45,40);
-            }else {
+            }else if(isFriendPointContinue()){
+                break; 
+            }
+            else {
                 tapScale(750,650);
             }
         }
