@@ -181,10 +181,7 @@ function useUlt(player){
 //---------------------------------------------Battle next
 function waitUntilPlayerCanMove(){
     //double check
-    while(true){
-        if(!isScriptRunning){
-            return false;
-        }
+    while(isScriptRunning){
         if(isBattleMainPage()){
             sleep(500);
             if(isBattleMainPage()){
@@ -193,14 +190,12 @@ function waitUntilPlayerCanMove(){
         }
         sleep(500);
     }
+    return false;
 }
 
 function waitUntilPlayerCanMoveOrFinish(){
     //double check
-    while(true){
-        if(!isScriptRunning){
-            return false;
-        }
+    while(isScriptRunning){
         if(isBattleMainPage()){
             sleep(1000);
             if(isBattleMainPage()){
@@ -221,6 +216,7 @@ function waitUntilPlayerCanMoveOrFinish(){
         }
         sleep(1000);
     }
+    return false;
 }
 
 function getCurrentStage(){
