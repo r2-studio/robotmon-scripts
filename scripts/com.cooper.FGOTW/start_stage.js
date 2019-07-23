@@ -168,6 +168,10 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                 var screenshot = getScreenshotResize();
                 var friendLinePosition = getFriendLine(screenshot);
                 var haveNotFriend = false;
+                if(friendLinePosition.length == 0){
+                    console.log("無法辨識好友位置")
+                    friendLinePosition = [197,397];
+                }
                 for(var j = 0; j < friendLinePosition.length;j++){
                     var lineY = friendLinePosition[j];
                     // console.log("check line "+lineY);
@@ -192,6 +196,8 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                         break;
                     }else if(isDebug){
                         console.log("select friend "+j+" failed "+isSameServant+","+isSameItem+","+isFriend);
+                    }else{
+                        console.log("好友"+(j+1)+"忽略，"+isSameServant+","+isSameItem+","+isFriend);
                     }
                 }
                 releaseImage(screenshot);
@@ -235,7 +241,7 @@ if(server =="JP"){
     pixelColor = [[206,192,128],[243,212,164],[189,189,172],[220,220,220]];
 }
 function getFriendLine(screenshot){
-    console.log("getFriendLine");
+    // console.log("getFriendLine");
     var lineY = [];
     var lineCnt = 0;
     for(var y = 0;y<530;y++){
@@ -249,7 +255,7 @@ function getFriendLine(screenshot){
         var c1 = isSameColor(screenshotColor1.r,screenshotColor1.g,screenshotColor1.b,pixelColor[i][0],pixelColor[i][1],pixelColor[i][2]);
         var c2 = isSameColor(screenshotColor2.r,screenshotColor2.g,screenshotColor2.b,pixelColor[i+1][0],pixelColor[i+1][1],pixelColor[i+1][2],25);
         if(c1||c2){
-          console.log(c1+","+c2+":"+y);
+          // console.log(c1+","+c2+":"+y);
         }
         if(c1&&c2){
           isLine = true;
@@ -266,7 +272,7 @@ function getFriendLine(screenshot){
         lineCnt++;
       }
     }
-    console.log("line y "+lineY);
+    //console.log("line y "+lineY);
     return lineY;
 }
 
