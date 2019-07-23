@@ -108,8 +108,8 @@
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 2.06,
-      "description": "<div>V2.06 修正禮裝辨識失敗的問題<br>V2.05 改善搜尋好友功能<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.061,
+      "description": "<div>V2.06Debug 試圖解決好友刷新問題，沒問題的話可以不用更新<br>V2.06 修正禮裝辨識失敗的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
