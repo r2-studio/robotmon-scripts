@@ -244,6 +244,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
                         if(scriptNameOK){
                             JavaScriptInterface.runScriptCallback('saveScript("'+newScriptName+'",\''+currentScript+'\');',"createScriptConfirm");
                         }else{
+                            console.log("Save script file name failed "+newScriptName);
                             bootbox.alert("檔名不合法");
                         }
                     }
@@ -284,6 +285,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
                     if(scriptNameOK){
                         JavaScriptInterface.runScriptCallback('saveScript("'+newScriptName+'",\''+'\');',"createScriptConfirm");
                     }else{
+                        console.log("Create script file name failed "+newScriptName);
                         bootbox.alert("檔名不合法");
                     }
                 }
@@ -299,9 +301,25 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
                 title: "腳本名稱",
                 value: oldScriptName+'_copy',
                 callback: function(newScriptName) {
-                    if(newScriptName!=null &&newScriptName.length >0){
+                    var scriptNameOK = true;
+                    if(newScriptName == null ){
+                        return;
+                    }else if(newScriptName.length <= 0 
+                            || newScriptName.indexOf(",")>=0|| newScriptName.indexOf(".")>=0 || newScriptName.indexOf(";")>=0 || newScriptName.indexOf(" ")>=0){
+                        scriptNameOK = false;
+                    }else {
+                        $('#scriptMode option').each(function() {
+                            if($(this).text() == newScriptName){
+                                scriptNameOK = false;
+                            }
+                        });
+                    }
+                    if(scriptNameOK){
                         var currentScript = getCurrentScript();
                         JavaScriptInterface.runScriptCallback('saveScript("'+newScriptName+'",\''+currentScript+'\');','copyScriptConfirm');
+                    }else{
+                        console.log("Copy script file name failed "+newScriptName);
+                        bootbox.alert("檔名不合法");
                     }
                 }
             });
@@ -1139,9 +1157,9 @@ function initHTML(result){
     servantImgPath = storagePath+'friend_servant/';
     itemImgPath = storagePath+'friend_item/';
     if(server == "JP"){
-        $("#serverMessage").text("日服 "+version+" - 其他伺服器版本請至腳本商店下載");
+        $("#serverMessage").text("日服 "+version+" 啟動成功 - 其他伺服器版本請至腳本商店下載");
     }else if(server == "TW"){
-        $("#serverMessage").text("台服 "+version+" - 其他伺服器版本請至腳本商店下載");
+        $("#serverMessage").text("台服 "+version+" 啟動成功 - 其他伺服器版本請至腳本商店下載");
     }
     ga('set', 'page', 'app'+server);
     ga('send', 'pageview');
@@ -1545,7 +1563,7 @@ function onLog(message) {
         <a class="navbar-brand">FGO</a>
     </nav>
     <div class="container">
-        <li id="serverMessage">腳本開啟中，如此行文字一直存在，請重開腳本，並確認Robotmon service狀態與檔案完整性</li>
+        <li id="serverMessage">腳本開啟中，第一次使用須初始化約15秒，如此行文字一直存在，請重開腳本，並確認Robotmon service狀態與檔案完整性</li>
         <a href="https://www.facebook.com/FGOAutoScript">有任何使用上的問題，歡迎到粉絲團來發問</a><br>
         <ul class="list-group">
             <li class="list-group-item">

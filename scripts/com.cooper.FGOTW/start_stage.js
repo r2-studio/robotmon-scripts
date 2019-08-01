@@ -169,7 +169,7 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                 var friendLinePosition = getFriendLine(screenshot);
                 var haveNotFriend = false;
                 if(friendLinePosition.length == 0){
-                    console.log("無法辨識好友位置")
+                    console.log("辨識好友座標失敗，使用固定座標");
                     friendLinePosition = [197,397];
                 }
                 for(var j = 0; j < friendLinePosition.length;j++){
@@ -191,12 +191,11 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                         }
                     }
                     if(isSameServant && isSameItem && isFriend){
+                        console.log("好友"+(j+1)+"符合條件");
                         tapScale(450,lineY + 70);
                         found = true;
                         break;
                     }else if(isDebug){
-                        console.log("select friend "+j+" failed "+isSameServant+","+isSameItem+","+isFriend);
-                    }else{
                         console.log("好友"+(j+1)+"忽略，"+isSameServant+","+isSameItem+","+isFriend);
                     }
                 }
