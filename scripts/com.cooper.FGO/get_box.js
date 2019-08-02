@@ -2,7 +2,7 @@ var boxResetPosition = [1105,220,95,20];
 var boxFullImage;
 var boxFullPosition = [475,400,325,200];
 var boxNoPointImage;
-var boxNoPointPosition = [240,420,130,80];
+var boxNoPointPosition = [240,420,130,55];
 
 function getBox(newBox,fast){
     boxFullImage = openImage(imagePath+"boxFull.png");
@@ -104,7 +104,15 @@ function getFriendPoint(){
             }else if(isItemPage()){
                 tapScale(45,40);
             }else if(isFriendPointContinue()){
-                break; 
+                tapScale(750,650);
+                sleep(1000);        
+                if(isFriendPointFull()){
+                    console.log("結束友抽-倉庫已滿");
+                    isScriptRunning = false;
+                    return;
+                }
+                tapScale(850,567);
+                sleep(1000);
             }
             else {
                 tapScale(750,650);
