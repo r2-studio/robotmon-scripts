@@ -1,5 +1,5 @@
 var loadApiCnt = 0;
-var version = "V2.08";
+var version = "V2.09";
 var isDebug = false;
 
 var defaultScreenSize = [1280,720];
@@ -307,8 +307,9 @@ function swipeScale(x,y,endX,endY,step){
         moveTo(x + s * xStep, y + s * yStep, 4)
     }
     moveTo(endX,endY,4);
-    sleep(1500);
+    sleep(1000);
     tapUp(endX, endY,40);
+    sleep(1000);
 }
 
 function waitLoading(){
