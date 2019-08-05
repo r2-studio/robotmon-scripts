@@ -2,15 +2,25 @@
 function selectStage(useApple){
     if(!isScriptRunning){
         return;
+    }    
+    if(isBattleMainPage()){
+        console.log("已進入戰鬥，選擇關卡省略");
+        sleep(500);
+        return;
     }
     console.log("-選擇關卡-");
-    if(!isMainPage()){
+
+    if(isStageRestart()){
+        tapScale(800,560);
+        sleep(500);
+    } else if(!isMainPage()){
         console.log("不在主畫面-選擇關卡失敗");
         isScriptRunning = false;
         return;
+    }else{
+        tapScale(800,160);
+        sleep(500);
     }
-    tapScale(800,160);
-    sleep(500);
     var status = -1;
     while(isScriptRunning){
         if(isItemOrServantFullDialog()){
@@ -92,13 +102,13 @@ function selectStageAutoRestore(){
     for(var i = 0;i<55;i++){
         sleep(1000);
         if(!isScriptRunning){
-            break;
+            return;
         }
     }
     //select stage again
     tapScale(800,160);
     while(isScriptRunning){
-        sleep(1000);
+        sleep(3000);
         if(isUseAppleDialog()){
             return false;
         }else if(isSelectFriendPage()){
@@ -111,6 +121,11 @@ function selectStageAutoRestore(){
 var selectFriendPosition = [90,158,225,292,362,430,497,565,632,699];
 function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
     if(!isScriptRunning){
+        return;
+    }    
+    if(isBattleMainPage()){
+        console.log("已進入戰鬥，選擇好友省略");
+        sleep(500);
         return;
     }
     if(checkIsFriend == undefined){
@@ -212,6 +227,9 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                         if(isSelectTeamPage()){
                             sleep(500);
                             return;
+                        }else if(isBattleMainPage()){
+                            sleep(500);
+                            return;
                         }
                     }
                 }
@@ -235,9 +253,9 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
 
 
 var positionX = [400,800];
-var pixelColor = [[206,192,128],[243,212,164]];
-if(server =="JP"){
-    pixelColor = [[206,192,128],[243,212,164],[189,189,172],[220,220,220]];
+var pixelColor = [[206,192,128],[243,212,164],[189,189,172],[220,220,220]];
+if(server =="TW"){
+    pixelColor = [[206,192,128],[243,212,164]];
 }
 function getFriendLine(screenshot){
     // console.log("getFriendLine");
@@ -272,6 +290,10 @@ function getFriendLine(screenshot){
       }
     }
     //console.log("line y "+lineY);
+
+    if(isDebug){
+        console.log("Line at "+lineY);
+    }
     return lineY;
 }
 
@@ -374,6 +396,11 @@ function selectTeam(team){
     if(team < 0 || team >= 10){
         return;
     }
+    if(isBattleMainPage()){
+        console.log("已進入戰鬥，選擇隊伍省略");
+        sleep(500);
+        return;
+    }
     console.log("-選擇隊伍-");
     if(!isSelectTeamPage()){
         console.log("不在選擇隊伍畫面");
@@ -389,6 +416,11 @@ function selectTeam(team){
 
 function startQuest(useItem){
     if(!isScriptRunning){
+        return;
+    }
+    if(isBattleMainPage()){
+        console.log("已進入戰鬥，進入關卡省略");
+        sleep(500);
         return;
     }
     console.log("-進入關卡-");
