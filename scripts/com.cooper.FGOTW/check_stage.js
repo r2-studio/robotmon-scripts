@@ -6,7 +6,7 @@ var iconName = ["main","apple","friendPage","friendRefresh","teamPage","teamItem
 "friendPointTen","friendPointNew","friendPointReload","friendPointItemFull","friendPointServantFull",
 "selectStageItemFull","selectStageServantFull","finishDrop","finish3","addFriend2",
 "friendRefresh2","friendEnd","friendEnd2","friendEnd3","friendEnd4",
-"friendEmpty","finishNext","friendPointContinue"];
+"friendEmpty","finishNext","friendPointContinue","stageRestart"];
 //TODO: update image for friend end
 var	iconPosition = [[1140,650,100,50],[530,30,200,60],[740,100,150,50],[560,100,160,60],[1135,650,115,50],[400,50,400,50],
 		[1168,175,60,60],[1168,282,60,60],[1100,630,70,50],[60,150,240,50],[700,320,280,40],
@@ -15,7 +15,7 @@ var	iconPosition = [[1140,650,100,50],[530,30,200,60],[740,100,150,50],[560,100,
 		[750,525,160,50],[1015,650,150,50],[700,650,125,42],[325,150,600,125],[325,150,600,125],
 		[325,150,600,125],[325,150,600,125],[150,70,170,40],[700,350,280,40],[60,70,100,55],
 		[560,100,160,60],[1220,685,40,30],[1220,685,40,30],[100,600,400,100],[100,600,400,100],
-		[450,420,350,40],[1050,660,120,40],[700,650,125,42]];
+		[450,420,350,40],[1050,660,120,40],[700,650,125,42],[760,540,160,50]];
 if(server == "JP"){
 	iconPosition[11]=[500,100,275,50];
 }
@@ -38,6 +38,10 @@ function saveCropIcon(id){
 //select stage
 function isMainPage(){
 	return checkIconInScreen(0);
+}
+
+function isStageRestart(){
+	return checkIconInScreen(39);
 }
 
 function isItemOrServantFullDialog(){
