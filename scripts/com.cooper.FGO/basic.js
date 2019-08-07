@@ -1,5 +1,5 @@
 var loadApiCnt = 0;
-var version = "V2.09";
+var version = "V2.10";
 var isDebug = false;
 
 var defaultScreenSize = [1280,720];
@@ -157,11 +157,19 @@ function checkIconInScreen(iconId){
     return result;
 }
 
+var orientationLog = false;
 function getScreenshotResize(){
     var size = getScreenSize();
     if(size.width < size.height){
-        console.log("screen orientation wrong");
+        if(!orientationLog){
+            orientationLog = true;
+            console.log("螢幕方向錯誤");
+        }
         return null;
+    }
+    if(orientationLog){        
+        console.log("螢幕方向回復");
+        orientationLog = false;
     }
     var screenshot = getScreenshot();
     var cutScreenshot = cropImage(screenshot,screenOffset[0],screenOffset[1],realScreenSize[0],realScreenSize[1]);

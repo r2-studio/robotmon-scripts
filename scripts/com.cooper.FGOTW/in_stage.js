@@ -246,6 +246,9 @@ function finishQuest(){
         if(isMainPage()){
             sleep(3000);
             return;
+        }else if(isStageRestart()){
+            sleep(1000);
+            return;
         }
         tapScale(230,30);
         sleep(1500);

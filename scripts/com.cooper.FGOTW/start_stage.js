@@ -2,15 +2,25 @@
 function selectStage(useApple){
     if(!isScriptRunning){
         return;
+    }    
+    if(isBattleMainPage()){
+        console.log("已進入戰鬥，選擇關卡省略");
+        sleep(500);
+        return;
     }
     console.log("-選擇關卡-");
-    if(!isMainPage()){
+
+    if(isStageRestart()){
+        tapScale(800,560);
+        sleep(500);
+    } else if(!isMainPage()){
         console.log("不在主畫面-選擇關卡失敗");
         isScriptRunning = false;
         return;
+    }else{
+        tapScale(800,160);
+        sleep(500);
     }
-    tapScale(800,160);
-    sleep(500);
     var status = -1;
     while(isScriptRunning){
         if(isItemOrServantFullDialog()){
@@ -24,15 +34,11 @@ function selectStage(useApple){
             break;
         }
     }
-    if(status == 2){
-        return;
-    }
     if(status == 0){
         console.log("倉庫已滿-選擇關卡失敗");
         isScriptRunning = false;
         return;
-    }
-    if(status == 1){
+    }else if(status == 1){
         switch(useApple){
             case -1:
             console.log("AP不足-選擇關卡失敗");
@@ -82,7 +88,8 @@ function selectStage(useApple){
     while(isScriptRunning){
         waitLoading();
         if(isSelectFriendPage()){
-            sleep(500);
+            waitLoading();
+            sleep(2000);
             break;
         }
     }
@@ -92,13 +99,13 @@ function selectStageAutoRestore(){
     for(var i = 0;i<55;i++){
         sleep(1000);
         if(!isScriptRunning){
-            break;
+            return;
         }
     }
     //select stage again
     tapScale(800,160);
     while(isScriptRunning){
-        sleep(1000);
+        sleep(3000);
         if(isUseAppleDialog()){
             return false;
         }else if(isSelectFriendPage()){
@@ -111,6 +118,11 @@ function selectStageAutoRestore(){
 var selectFriendPosition = [90,158,225,292,362,430,497,565,632,699];
 function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
     if(!isScriptRunning){
+        return;
+    }    
+    if(isBattleMainPage()){
+        console.log("已進入戰鬥，選擇好友省略");
+        sleep(500);
         return;
     }
     if(checkIsFriend == undefined){
@@ -212,6 +224,9 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                         if(isSelectTeamPage()){
                             sleep(500);
                             return;
+                        }else if(isBattleMainPage()){
+                            sleep(500);
+                            return;
                         }
                     }
                 }
@@ -235,15 +250,15 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
 
 
 var positionX = [400,800];
-var pixelColor = [[206,192,128],[243,212,164]];
-if(server =="JP"){
-    pixelColor = [[206,192,128],[243,212,164],[189,189,172],[220,220,220]];
+var pixelColor = [[206,192,128],[243,212,164],[189,189,172],[220,220,220]];
+if(server =="TW"){
+    pixelColor = [[206,192,128],[243,212,164]];
 }
 function getFriendLine(screenshot){
     // console.log("getFriendLine");
     var lineY = [];
     var lineCnt = 0;
-    for(var y = 0;y<530;y++){
+    for(var y = 170;y<530;y++){
       //console.log("check "+y);
       var isLine = false;
       for(var i=0;i<pixelColor.length;i+=2){
@@ -251,8 +266,8 @@ function getFriendLine(screenshot){
         var x = i % positionX.length;
         var screenshotColor1 = getImageColor(screenshot,positionX[x],y);
         var screenshotColor2 = getImageColor(screenshot,positionX[x+1],y);
-        var c1 = isSameColor(screenshotColor1.r,screenshotColor1.g,screenshotColor1.b,pixelColor[i][0],pixelColor[i][1],pixelColor[i][2]);
-        var c2 = isSameColor(screenshotColor2.r,screenshotColor2.g,screenshotColor2.b,pixelColor[i+1][0],pixelColor[i+1][1],pixelColor[i+1][2],25);
+        var c1 = isSameColor(screenshotColor1.r,screenshotColor1.g,screenshotColor1.b,pixelColor[i][0],pixelColor[i][1],pixelColor[i][2],30);
+        var c2 = isSameColor(screenshotColor2.r,screenshotColor2.g,screenshotColor2.b,pixelColor[i+1][0],pixelColor[i+1][1],pixelColor[i+1][2],30);
         if(c1||c2){
           // console.log(c1+","+c2+":"+y);
         }
@@ -272,6 +287,10 @@ function getFriendLine(screenshot){
       }
     }
     //console.log("line y "+lineY);
+
+    if(isDebug){
+        console.log("Line at "+lineY);
+    }
     return lineY;
 }
 
@@ -374,6 +393,11 @@ function selectTeam(team){
     if(team < 0 || team >= 10){
         return;
     }
+    if(isBattleMainPage()){
+        console.log("已進入戰鬥，選擇隊伍省略");
+        sleep(500);
+        return;
+    }
     console.log("-選擇隊伍-");
     if(!isSelectTeamPage()){
         console.log("不在選擇隊伍畫面");
@@ -389,6 +413,11 @@ function selectTeam(team){
 
 function startQuest(useItem){
     if(!isScriptRunning){
+        return;
+    }
+    if(isBattleMainPage()){
+        console.log("已進入戰鬥，進入關卡省略");
+        sleep(500);
         return;
     }
     console.log("-進入關卡-");
