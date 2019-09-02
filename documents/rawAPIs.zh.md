@@ -1,170 +1,38 @@
-# Robotmon JavaScript APIs
-
-Only support ES5
-
-## Contents
-
-* [JavaScript Events](#javascrip-svents)
-* [JavaScript Interface](#javascrip-interface)
-* [JavaScript Raw APIs](#javascrip-apis)
-* [RBM library APIs](#rbm-library-apis)
-* [gRPC APIs](#grpc-apis)
-* [Debug](#debug)
-
-## JavaScript Events
-
-Add the following `<script>` in the `<head>` section of `index.html`
-
-`start()` and `stop()` should defined in `index.js`
-
-```html
-<script>
-  function onEvent(eventType) {
-    if (eventType == 'OnPlayClick') {
-      JavaScriptInterface.runScript(`start();`);
-    } else if (eventType == 'OnPauseClick') {
-      JavaScriptInterface.runScript('stop();');
-    }
-  }
-
-  function onLog(message) {
-    console.log(message);
-  }
-</script>
-```
-
-|event name|
-|---|
-|OnMenuClick|
-|OnPlayClick|
-|OnPauseClick|
-|OnLogClick|
-|OnSettingClick|
-|OnCloseClick|
-
-## JavaScript Interface
-
-```javascript
-runScript(script)
-```
-
-* `script` String
-
-```javascript
-runScriptCallback(script, callback)
-```
-
-* `script` String
-* `callback` String
-
-```javascript
-clickIconButton()
-```
-
-Click the `app icon button` on floating widget.
-
-```javascript
-clickPlayButton()
-```
-
-Click the `play button` on floating widget.
-
-```javascript
-clickPauseButton()
-```
-
-Click the `pause button` on floating widget.
-
-```javascript
-clickLogButton()
-```
-
-Click the `log button` on floating widget.
-
-```javascript
-clickSettingButton()
-```
-
-Click the `setting button` on floating widget.
-
-```javascript
-clickCloseButton()
-```
-
-Click the `close button` on floating widget.
-
-```javascript
-setXY(x, y)
-```
-
-* `x` Number
-* `y` Number
-
-Set the position of the floating widget.
-
-```javascript
-getX()
-```
-
-Returns `Number` - The x position of the floating widget.
-
-```javascript
-getY()
-```
-
-Returns `Number` - The y position of the floating widget.
-
-```javascript
-showMenu()
-```
-
-Show the menu on floating widget.
-
-```javascript
-hideMenu()
-```
-
-Hide the menu on floating widget.
-
-```javascript
-showPlayButton()
-```
-
-Show the `play button` on floating widget.
-
-```javascript
-showPauseButton()
-```
-
-Show the `pause button` on floating widget.
-
-## JavaScript Raw APIs
+# Robotmon Raw APIs 中文版
 
 
 #### `getScreenSize()`
 
-Returns `Object` - `{width: Number, height: Number}`
+取得螢幕大小
+
+回傳值 `Object` - `{width: Number, height: Number}`
 
 ```javascript
 var sizeObj = getScreenSize();
 console.log(sizeObj.width, sizeObj.height);
 // 1080 1920
 ```
-
+---
 #### `getScreenshot()`
 
-Returns `Number` - The image pointer
+取得螢幕截圖，回傳值為圖片的指標，以數字代表
+
+提示：圖片顏色將以 BGR 順序放置
+
+回傳值 `Number` - 圖片指標（以數字表示）
 
 ```javascript
 var img = getScreenshot();
 console.log(img);
-// 122344533 <- image pointer
-releaseImage(img); // Don't forgot release a pointer
+// 122344533 <- 圖片指標
+releaseImage(img); // 圖片存在記憶體中，用完後必須釋放記憶體
 ```
-
+---
 #### `getScreenshotModify(cropX, cropY, cropWidth, cropHeight, resizeWidth, resizeHeight, qualitys)`
 
-Get screenshot, crop and resize. For speeding up screenshot.
+取得螢幕截圖，可設定截圖範圍，然後縮放圖片。（縮小圖片可以加速圖片運算速度）
+
+提示：圖片顏色將以 BGR 順序放置
 
 * `cropX` Number
 * `cropY` Number
@@ -174,7 +42,7 @@ Get screenshot, crop and resize. For speeding up screenshot.
 * `resizeHeight` Number
 * `quality` Number
 
-Returns `Number` - The image pointer
+回傳值 `Number` - 圖片指標（以數字表示）
 
 ```javascript
 var image = getScreenshotModify(200, 200, 100, 100, 50, 50, 80);
@@ -185,11 +53,11 @@ releaseImage(image);
 
 #### `execute(command)`
 
-Call exec command in android system. It's permission is same as `adb shell`
+呼叫 Android 系統指令，等同於 `adb shell` 指令。權限同等啟動Service方式。（透過電腦啟動：擁有adb權限；透過app啟動：只擁有app權限）
 
 * `command` String
 
-Returns `String` - The result of the execution
+回傳值 `String` - 執行指令結果
 
 ```javascript
 var result = execute("ls -al /sdcard");
@@ -199,57 +67,78 @@ console.log(result);
 
 #### `tap(x, y, during)`
 
-Simulate a tap event
+模擬觸控螢幕，點擊
 
 * `x` Number
 * `y` Number
 * `during` Number
+* `touchId` Number（不同 `touchId` 可以完成多點觸控，預設為 0）
 
 ```javascript
 tap(200, 200, 10);
-// Will inject a tap down and a tap up event to system
+// 模擬手指點擊螢幕座標(200,200)位置
 ```
 
 #### `tapDown(x, y, during)`
 
+模擬觸控螢幕，按下螢幕
+
 * `x` Number
 * `y` Number
 * `during` Number
+* `touchId` Number（不同 `touchId` 可以完成多點觸控，預設為 0）
 
 ```javascript
 tapDown(200, 200, 40);
-// Will inject a tapDown event to system
+// 模擬手指按下螢幕座標(200,200)位置
 ```
 
 #### `tapUp(x, y, during)`
 
+模擬觸控螢幕，離開螢幕
+
 * `x` Number
 * `y` Number
 * `during` Number
+* `touchId` Number（不同 `touchId` 可以完成多點觸控，預設為 0）
 
 ```javascript
 tapUp(200, 200, 40);
-// Will inject a tapUo event to system
+// 模擬手指離開螢幕座標(200,200)位置
 ```
 
 #### `moveTo(x, y, during)`
 
-moveTo should be betewwn `tapDown` and `tapUp`
+模擬觸控螢幕，手指移動位置。`moveTo`必須介於`tapDown` 和 `tapUp`之間
 
 * `x` Number
 * `y` Number
 * `during` Number
+* `touchId` Number（不同 `touchId` 可以完成多點觸控，預設為 0）
 
 ```javascript
 tapDown(500, 300, 40);
 moveTo(500, 600, 40);
 tapUp(500, 600, 40);
-// Will inject a swipe down event
+// 模擬手指在螢幕上滑動事件
+```
+
+```javascript
+tapDown(500, 300, 40, 1);
+tapDown(800, 300, 40, 2);
+moveTo(500, 600, 40, 1);
+moveTo(800, 600, 40, 2);
+tapUp(500, 600, 40, 1);
+tapUp(800, 600, 40, 2);
+// 模擬2根手指在螢幕上執行多點觸控
 ```
 
 #### `swipe(x1, y1, x2, y2, during)`
 
-Simulate a swipe event, using `tapDown`, `moveTo` and `tapUp` event. This function may not work in some game, you should implement yourself.
+模擬觸控螢幕，滑動。結合`tapDown`、`moveTo`和`tapUp`事件。
+由於不同app偵測滑動事件各有不同，因此此功能在某些app中無法使用，請拆開事件自行撰寫。
+
+提示：可以在三個事件中間自行插入 `sleep` 與更多的 `moveTo`
 
 * `x1` Number
 * `y1` Number
@@ -258,52 +147,55 @@ Simulate a swipe event, using `tapDown`, `moveTo` and `tapUp` event. This functi
 * `during` Number
 
 ```javascript
-swipe(500, 300, 40); // same as above example
-// Will inject a swipe down event
+swipe(500, 300, 600, 400, 80);
 ```
 
 #### `keycode(label, during)`
 
-Send a key code event to system
-Like adb shell input keyevent command
-[Android Keycode List](https://developer.android.com/reference/android/view/KeyEvent.html)
+模擬系統按鍵，此功能類似 `adb shell input keyevent`
+請參考 [Android Keycode 列表](https://developer.android.com/reference/android/view/KeyEvent.html)
 
 * `label` String
 * `during` Number
 
 ```javascript
-keycode('HOME', 40); // same as keycode('KEYCODE_HOME', 40);
-// Will send a HOME event to system
+keycode('HOME', 40); // 等同 keycode('KEYCODE_HOME', 40);
+// 點擊Home鍵
+
+keycode('BACK', 40);
+// 點擊返回鍵
 ```
 
 #### `typing(words, during)`
 
-Only allow English words
+模擬打字，目前只支援英文數字
 
 * `words` String
 * `during` Number
 
 ```javascript
 typing('Hello!', 100);
-// Will type 'H' 'e' 'l' 'l' 'o' '!' 6 words
+// 輸入字串 'H' 'e' 'l' 'l' 'o' '!'
 ```
 
 ### OpenCV
 
 #### `clone(sourceImg)`
 
-Duplicate an image to another.
+複製圖片到新的記憶體空間。（將佔用兩份記憶體）
+
+提示：請記得`releaseImage`
 
 * `sourceImg` Number
 
-Returns `Number` - The image pointer
+回傳值 `Number` - 圖片指標（以數字表示）
 
 ```javascript
 var oriImage = getScreenshot();
 for (var i = 0; i < 10; i++) {
   var cloneImage = clone(oriImage);
-  // modify clone Image here
-  smooth(cloneImage, 1, 5); // blur
+  // 修改複製過的圖片，不會修改原始圖片
+  smooth(cloneImage, 1, 5); // 模糊處理
   release(cloneImage);
 }
 release(oriImage);
@@ -312,7 +204,7 @@ release(oriImage);
 
 #### `smooth(sourceImg, smoothType, size)`
 
-Same as OpenCV `smooth()` function.
+等同於 OpenCV `smooth()` function.
 
 * `sourceImg` Number
 * `smoothType` Number
@@ -328,15 +220,14 @@ Same as OpenCV `smooth()` function.
 
 ```javascript
 var img = getScreenshot();
-smooth(img, 2, 5); // Gaussian blur
+smooth(img, 2, 5); // 高斯模糊
 saveImage(img, getStoragePath + '/smooth.png');
 releaseImage(img);
 ```
 
 #### `convertColor(sourceImg, code)`
 
-Same as OpenCV `cvtColor()`. Not support different channels. If you want to convert to gray, please use bgrToGray.
-Note that `getScreenshot` and `getScreenshotModify` is BGR order;
+等同於 OpenCV `cvtColor()`。轉換圖片顏色。不支援不同channels數量，如果要轉灰階，請使用 `bgrToGray`。
 
 * `sourceImg` Number
 * `code` Number
@@ -346,11 +237,11 @@ Note that `getScreenshot` and `getScreenshotModify` is BGR order;
 |40|CV_BGR2HSV|
 |52|CV_BGR2HLS|
 
-See more: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
+詳細資訊: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
 
 ```javascript
 var img = getScreenshot();
-// Convert BGR to HSV color
+// 將圖片從 BGR 轉成 HSV 顏色
 convertColor(img, 40);
 releaseImage(img);
 ```
@@ -361,7 +252,7 @@ Convert form bgr (3 channels) to gray (1 channel).
 
 * `sourceImg` Number
 
-Returns `Number` - The gray image pointer
+回傳值 `Number` - The gray image pointer
 
 ```javascript
 var img = getScreenshot();
@@ -377,7 +268,7 @@ Same as OpenCV `adbdiff()`.
 * `sourceImg` Number
 * `targetImg` Number
 
-Returns `Number` - The image pointer of the difference
+回傳值 `Number` - 圖片指標（以數字表示） of the difference
 
 ```javascript
 var img1 = getScreenshot();
@@ -475,7 +366,7 @@ Same as OpenCV `inRange + clone + mask`. Filter with range color and clone to ne
 * `maxR` Number
 * `maxA` Number
 
-Returns `Number` - The filtered image pointer
+回傳值 `Number` - The filtered image pointer
 
 ```javascript
 var img = getScreenshot();
@@ -499,7 +390,7 @@ Same as OpenCV `inRange + clone + not + mask`. Filter without range color and cl
 * `maxR` Number
 * `maxA` Number
 
-Returns `Number` - The filtered image pointer
+回傳值 `Number` - The filtered image pointer
 
 ```javascript
 var img = getScreenshot();
@@ -516,7 +407,7 @@ Same as OpenCV `copyTo`. Clone image with mask (only support 1 channel)
 * `sourceImg` Number
 * `mask` Number
 
-Returns `Number` - new image pointer with mask
+回傳值 `Number` - new image pointer with mask
 
 ```javascript
 var img1 = getScreenshot();
@@ -544,7 +435,7 @@ Same as OpenCV `houghCircles`. For finding circles.
 * `minR` Number (min radius)
 * `maxR` Number (max radius)
 
-Returns `Object` - Array of circles
+回傳值 `Object` - Array of circles
 
 ```javascript
 var img = getScreenshot();
@@ -562,7 +453,7 @@ Same as OpenCV `canny`
 * `t2` Float
 * `apertureSize` Number
 
-Returns `Number` - The canny image pointer
+回傳值 `Number` - The canny image pointer
 
 ```javascript
 var img = getScreenshot();
@@ -582,7 +473,7 @@ Same as OpenCV `findContours`.
 * `minArea` Float
 * `maxArea` Float
 
-Returns `Object` - `{"0": {x: Number, y: Number}`
+回傳值 `Object` - `{"0": {x: Number, y: Number}`
 
 ```javascript
 var img = getScreenshot();
@@ -621,7 +512,7 @@ releaseImage(img);
 * `sourceImg` Number
 * `targetImg` Number
 
-Returns `Float` - The identity score
+回傳值 `Float` - The identity score
 
 ```javascript
 keycode('MENU');
@@ -645,7 +536,7 @@ Crop image.
 * `width` Number
 * `height` Number
 
-Returns `Number` - The image pointer
+回傳值 `Number` - 圖片指標（以數字表示）
 
 ```javascript
 var img = getScreenshot();
@@ -662,7 +553,7 @@ Using OpenCV `Template Match` to fing image.
 * `sourceImg` Number
 * `targetImg` Number
 
-Returns `Object` - `{x: Number, y: Number, score: Float}`
+回傳值 `Object` - `{x: Number, y: Number, score: Float}`
 
 ```javascript
 var img = getScreenshot();
@@ -683,7 +574,7 @@ Same as `findImage()`, but find mulitple times.
 * `resultCountLimit` Number
 * `withoutOverlap` Boolean
 
-Returns `String` - `{"0": {"x": Number, "y": Number, "score": Float}, "1": {"x": Number, "y": Number, "score": Float}}`, Key is String!
+回傳值 `String` - `{"0": {"x": Number, "y": Number, "score": Float}, "1": {"x": Number, "y": Number, "score": Float}}`, Key is String!
 
 ```javascript
 var img = getScreenshot();
@@ -701,7 +592,7 @@ Resize image.
 * `width` Number
 * `height` Number
 
-Returns `Number` - The image pointer
+回傳值 `Number` - 圖片指標（以數字表示）
 
 ```javascript
 var img = getScreenshot();
@@ -730,7 +621,7 @@ Get color of point from an image.
 * `x` Number
 * `y` Number
 
-Returns `Object` - `{r: Number, g: Number, b: Number, a: Number}`
+回傳值 `Object` - `{r: Number, g: Number, b: Number, a: Number}`
 
 ```javascript
 var img = getScreenshot();
@@ -743,7 +634,7 @@ releaseImage(img);
 
 * `imgPtr` Number
 
-Returns `Object` - `{width: Number, height: Number}`
+回傳值 `Object` - `{width: Number, height: Number}`
 
 ```javascript
 var img = getScreenshot();
@@ -771,7 +662,7 @@ Open image from disk.
 
 * `path` String
 
-Returns `Number` - The image pointer
+回傳值 `Number` - 圖片指標（以數字表示）
 
 ```javascript
 var img = openImage(getStoragePath + '/test_save.png');
@@ -794,7 +685,7 @@ console.log('Andy');
 
 Get Robotmon folder. Like `/sdcard/Robotmon`.
 
-Returns `String` - The storage path
+回傳值 `String` - The storage path
 
 ```javascript
 console.log(getStoragePath());
@@ -806,7 +697,7 @@ Get image from an url.
 
 * `url` String
 
-Returns `Number` - The image pointer
+回傳值 `Number` - 圖片指標（以數字表示）
 
 #### `getImageFromBase64(base64)`
 
@@ -814,7 +705,7 @@ Get image from a base64 string.
 
 * `base64` String
 
-Returns `Number` - The image pointer
+回傳值 `Number` - 圖片指標（以數字表示）
 
 #### `getBase64FromImage(imgPtr)`
 
@@ -822,7 +713,7 @@ Get base64 string from an image.
 
 * `imgPtr` Number
 
-Returns `String` - base64
+回傳值 `String` - base64
 
 #### `readFile(path)`
 
@@ -830,7 +721,7 @@ Read a file as string.
 
 * `path` String
 
-Returns `String` - The text of the file
+回傳值 `String` - The text of the file
 
 #### `writeFile(path, text)`
 
@@ -845,7 +736,7 @@ Encrypted a string
 
 * `script` String
 
-Returns String - The encrypted script
+回傳值 String - The encrypted script
 
 #### `runEncryptedScript(script)`
 
@@ -868,7 +759,7 @@ Do a http request.
 * `body` String
 * `headers` Object
 
-Returns `String` - The result
+回傳值 `String` - The result
 
 ```javascript
 httpClient('GET', 'http://httpbin.org/get', '', {});
@@ -889,7 +780,7 @@ importJS('js/customerJS') // import local library
 
 #### `getVirtualButtonHeight()`
 
-Returns `Number` - The height of the virtual button
+回傳值 `Number` - The height of the virtual button
 
 ## RBM library APIs
 
@@ -951,7 +842,7 @@ For general output of logging information.
 rbm.currentApp()
 ```
 
-Returns `Object` - The current app in foreground. `{packageName: String, activityName: String}`
+回傳值 `Object` - The current app in foreground. `{packageName: String, activityName: String}`
 
 ```javascript
 rbm.startApp(packageName, activityName)
@@ -1025,7 +916,7 @@ rbm.getImagePath()
 // /sdcard/Robotmon/scripts/com.your.app/images
 ```
 
-Returns `String` - The path of the image folder. All about images used in this library will load and save within this folder.
+回傳值 `String` - The path of the image folder. All about images used in this library will load and save within this folder.
 
 ```javascript
 rbm.screenshot(filename)
@@ -1075,7 +966,7 @@ rbm.findImage('startButton.png', 0.9)
 * `filename` String
 * `threshold` Float
 
-Returns `Object` - Find the image with `filename` in screen. `{x: Number, y: Number, score: Float}`
+回傳值 `Object` - Find the image with `filename` in screen. `{x: Number, y: Number, score: Float}`
 
 ```javascript
 rbm.findImages(filename, threshold, countLimit, allowOverlap, deep)
@@ -1090,7 +981,7 @@ rbm.findImages('startButton.png', 0.9, 3, false, false)
 * `allowOverlap` Boolean
 * `deep` Boolean
 
-Returns `Object` - Find the image with `filename` in screen. `{x: Number, y: Number, score: Float}`
+回傳值 `Object` - Find the image with `filename` in screen. `{x: Number, y: Number, score: Float}`
 
 ```javascript
 rbm.imageExists(filename, threshold)
@@ -1099,7 +990,7 @@ rbm.imageExists(filename, threshold)
 * `filename` String
 * `threshold` Float
 
-Returns `Boolean` - Whether the image is exists in screen.
+回傳值 `Boolean` - Whether the image is exists in screen.
 
 ```javascript
 rbm.imageClick(filename, threshold)
@@ -1226,14 +1117,14 @@ message ResponseScreenSize {
 
 ```protobuf 
 service GrpcService {
-  rpc RunScript(RequestRunScript) returns (Response) {}
-  rpc Logs(Empty) returns (stream Response) {}
-  rpc GetScreenshot(RequestScreenshot) returns (ResponseScreenshot) {}
-  rpc GetScreenSize(Empty) returns (ResponseScreenSize) {}
-  rpc Tap(RequestTap) returns (Response) {}
-  rpc TapDown(RequestTap) returns (Response) {}
-  rpc TapUp(RequestTap) returns (Response) {}
-  rpc MoveTo(RequestTap) returns (Response) {}
+  rpc RunScript(RequestRunScript) 回傳值 (Response) {}
+  rpc Logs(Empty) 回傳值 (stream Response) {}
+  rpc GetScreenshot(RequestScreenshot) 回傳值 (ResponseScreenshot) {}
+  rpc GetScreenSize(Empty) 回傳值 (ResponseScreenSize) {}
+  rpc Tap(RequestTap) 回傳值 (Response) {}
+  rpc TapDown(RequestTap) 回傳值 (Response) {}
+  rpc TapUp(RequestTap) 回傳值 (Response) {}
+  rpc MoveTo(RequestTap) 回傳值 (Response) {}
 }
 ```
 
