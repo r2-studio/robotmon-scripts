@@ -13,12 +13,20 @@
     "com.r2studio.Tsum": {
       "title": "Disney Tsum Tsum",
       "versionCode": 51,
-      "description": "<b><font color='#2196f3'>🔖 版本 v48</font></b><ul><li>1️⃣ Delete Ad (忽略廣告)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
+      "description": "<b><font color='#2196f3'>🔖 版本 v51</font></b><ul><li>1️⃣ Delete Ad (忽略廣告)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
       ]
+    },
+    "com.r2studio.TsumBeta": {
+      "title": "Disney Tsum Tsum (Beta Testing)",
+      "versionCode": 52,
+      "description": "<b><font color='#2196f3'>🔖 版本 v52 Beta</font></b><ul><li>測試：偵測螢幕高，請在遊戲中啟動腳本</li><li>Testing: detect screen height. Should start script in game.</li></ul>",
+      "packageName": "com.linecorp.LGTMTMG",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
+      "dependencies": []
     },
     "com.r2studio.MarvelFutureFight": {
       "title": "Marvel Future Fight / Marvel 未來之戰",
