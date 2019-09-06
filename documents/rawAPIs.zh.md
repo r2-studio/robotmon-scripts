@@ -248,11 +248,11 @@ releaseImage(img);
 
 #### `bgrToGray(sourceImg)`
 
-Convert form bgr (3 channels) to gray (1 channel).
+轉換圖片從BGR格式（三通道）至灰階圖片（一通道）
 
 * `sourceImg` Number
 
-回傳值 `Number` - The gray image pointer
+回傳值 `Number` - 灰階圖片指標
 
 ```javascript
 var img = getScreenshot();
@@ -263,18 +263,22 @@ releaseImage(gray);
 
 #### `absDiff(sourceImg, targetImg)`
 
-Same as OpenCV `adbdiff()`.
+等同於 OpenCV `adbdiff()`.
 
 * `sourceImg` Number
 * `targetImg` Number
 
-回傳值 `Number` - 圖片指標（以數字表示） of the difference
+回傳值 `Number` - 圖片指標（以數字表示），紀錄差值
 
 ```javascript
 var img1 = getScreenshot();
 sleep(100);
 var img2 = getScreenshot();
-var diff = absDiff(img1, img2); // in gray order
+var grayImg1 = bgrToGray(img1);
+var grayImg2 = bgrToGray(img2);
+var diff = absDiff(grayImg1, grayImg2); // 必須先轉為灰階
+releaseImage(grayImg1);
+releaseImage(grayImg2);
 releaseImage(img1);
 releaseImage(img2);
 releaseImage(diff);
@@ -282,7 +286,7 @@ releaseImage(diff);
 
 #### `threshold(sourceImg, thr, maxThr, code)`
 
-Same as OpenCV `threshold()`.
+等同於 OpenCV `threshold()`.
 
 * `sourceImg` Number
 * `thr` Float
@@ -293,7 +297,7 @@ Same as OpenCV `threshold()`.
 |---|---|
 |0|CV_THRES_BINARY|
 
-See more: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
+詳細資料: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
 
 ```javascript
 keycode('MENU');
@@ -302,11 +306,14 @@ var img1 = getScreenshot();
 keycode('HOME');
 sleep(1000);
 var img2 = getScreenshot();
-var diff = absDiff(img1, img2); // in gray order
-threshold(diff, 100, 255); // set to 0 if <= 100, set to 255 if > 100
+var grayImg1 = bgrToGray(img1);
+var grayImg2 = bgrToGray(img2);
+var diff = absDiff(grayImg1, grayImg2); // 必須先轉為灰階
+threshold(diff, 100, 255); // 將圖片值（灰階）如果小於等於100設為0，大於100設為255
 var value = getImageColor(diff, 500, 200); // value => {r":255,"g":0,"b":0","a":0}
-console.log(value['r']); // current diff value is show on 'r'
-// 255
+console.log(value['r']); // 灰階資料將存在 r 的欄位中，g 與 b 將為 0
+releaseImage(grayImg1);
+releaseImage(grayImg2);
 releaseImage(img1);
 releaseImage(img2);
 releaseImage(diff);
@@ -314,9 +321,9 @@ releaseImage(diff);
 
 #### `eroid(sourceImg, width, height, x, y)`
 
-Same as OpenCV `eroid`.
+等同於 OpenCV `eroid`
 
-`width`, `height`, `x`, `y` is `getStructuringElement()` parameters.
+`width`, `height`, `x`, `y` 為 `getStructuringElement()` 的參數.
 
 * `sourceImg` Number
 * `width` Number
@@ -334,9 +341,9 @@ releaseImage(img);
 
 #### `dilate(sourceImg, width, height, x, y)`
 
-Same as OpenCV `dilate`.
+等同於 OpenCV `dilate`
 
-`width`, `height`, `x`, `y` is `getStructuringElement()` parameters.
+`width`, `height`, `x`, `y` 為 `getStructuringElement()` 參數.
 
 * `sourceImg` Number
 * `width` Number
@@ -354,7 +361,7 @@ releaseImage(img);
 
 #### `inRange(sourceImg, minB, minG, minR, minA, maxB, maxG, maxR, maxA)`
 
-Same as OpenCV `inRange + clone + mask`. Filter with range color and clone to new image.
+等同於 OpenCV `inRange + clone + mask` 過濾圖片的每個像素，只保留範圍顏色，範圍外的值歸零
 
 * `sourceImg` Number
 * `minB` Number
@@ -366,11 +373,11 @@ Same as OpenCV `inRange + clone + mask`. Filter with range color and clone to ne
 * `maxR` Number
 * `maxA` Number
 
-回傳值 `Number` - The filtered image pointer
+回傳值 `Number` - 過濾後的圖片指標
 
 ```javascript
 var img = getScreenshot();
-var filteredImg = inRange(img, 0, 255, 255, 255, 255, 255, 255, 255); // only keep blue color pixel
+var filteredImg = inRange(img, 0, 255, 255, 255, 255, 255, 255, 255); // 只保留藍色的像素
 saveImage(filteredImg, getStoragePath() + '/test_filterd.png');
 releaseImage(img);
 releaseImage(filteredImg);
@@ -378,7 +385,7 @@ releaseImage(filteredImg);
 
 #### `outRange(sourceImg, minB, minG, minR, minA, maxB, maxG, maxR, maxA)`
 
-Same as OpenCV `inRange + clone + not + mask`. Filter without range color and clone to new image.
+等同於 OpenCV `inRange + clone + not + mask`. 過濾圖片的每個像素，只保留範圍外的顏色，範圍內的值歸零
 
 * `sourceImg` Number
 * `minB` Number
@@ -390,11 +397,11 @@ Same as OpenCV `inRange + clone + not + mask`. Filter without range color and cl
 * `maxR` Number
 * `maxA` Number
 
-回傳值 `Number` - The filtered image pointer
+回傳值 `Number` - 過濾後的圖片指標
 
 ```javascript
 var img = getScreenshot();
-var filteredImg = outRange(img, 0, 255, 255, 255, 255, 255, 255, 255); // keep all but blue color
+var filteredImg = outRange(img, 0, 255, 255, 255, 255, 255, 255, 255); // 保留除了藍色以外的顏色
 saveImage(filteredImg, getStoragePath() + '/test_filterd.png');
 releaseImage(img);
 releaseImage(filteredImg);
@@ -402,14 +409,15 @@ releaseImage(filteredImg);
 
 #### `cloneWithMask(sourceImg, mask)`
 
-Same as OpenCV `copyTo`. Clone image with mask (only support 1 channel)
+等同於 OpenCV `copyTo`. 使用遮罩過濾複製圖片
 
 * `sourceImg` Number
 * `mask` Number
 
-回傳值 `Number` - new image pointer with mask
+回傳值 `Number` - 新圖片指標
 
 ```javascript
+// 比較兩張圖片的差異，並且只保留差異，將不同的像素歸零
 var img1 = getScreenshot();
 sleep(100);
 var img2 = getScreenshot();
@@ -424,16 +432,16 @@ releaseImage(diff);
 
 #### `houghCircles(sourceImg, method, dp, minDist, p1, p2, minR, maxR)`
 
-Same as OpenCV `houghCircles`. For finding circles.
+等同於 OpenCV `houghCircles`. 尋找圓形圖案.
 
 * `sourceImg` Number
 * `method` Number (3 = CV_HOUGH_GRADIENT)
 * `dp` Float (1) (ratio between input image and input params.)
-* `minDist` Float (min distance between circles)
-* `p1` Float (canny parameter)
-* `p2` Float (canny parameter)
-* `minR` Number (min radius)
-* `maxR` Number (max radius)
+* `minDist` Float (圓與圓之間的最小距離)
+* `p1` Float (輪廓canny閾值參數)
+* `p2` Float (圓心閾值參數，最小認定為圓心值)
+* `minR` Number (圓最小半徑)
+* `maxR` Number (圓最大半徑)
 
 回傳值 `Object` - Array of circles
 
@@ -446,14 +454,14 @@ releaseImage(img);
 
 #### `canny(sourceImg, t1, t2, apertureSize)`
 
-Same as OpenCV `canny`
+等同於 OpenCV `canny` 邊緣梯度檢測
 
 * `sourceImg` Number
 * `t1` Float
 * `t2` Float
 * `apertureSize` Number
 
-回傳值 `Number` - The canny image pointer
+回傳值 `Number` - 圖片指標
 
 ```javascript
 var img = getScreenshot();
@@ -467,11 +475,11 @@ releaseImage(cannyImg);
 
 #### `findContours(cannyImgPtr, minArea, maxArea)`
 
-Same as OpenCV `findContours`.
+等同於 OpenCV `findContours`. 尋找輪廓
 
-* `cannyImgPtr` Number (Canny image as input)
-* `minArea` Float
-* `maxArea` Float
+* `cannyImgPtr` Number (必須是Canny後的圖片)
+* `minArea` Number
+* `maxArea` Number
 
 回傳值 `Object` - `{"0": {x: Number, y: Number}`
 
@@ -480,7 +488,7 @@ var img = getScreenshot();
 threshold(img, 30, 255);
 eroid(img, 5, 5, 1, 1);
 var cannyImg = canny(img, 50, 150, 3);
-var results = findContours(cannyImg, 1000, 10000); // area > 100
+var results = findContours(cannyImg, 1000, 10000); // 面積 > 100
 console.log(JSON.stringify(results));
 // {"0":{"x":537,"y":1850},"1":{"x":133,"y":601}}
 releaseImage(img);
@@ -489,7 +497,7 @@ releaseImage(cannyImg);
 
 #### `drawCircle(sourceImg, x, y, radius, r, g, b, a)`
 
-Draw circle in an image.
+在圖片上畫圓
 
 * `sourceImg` Number
 * `x` Number
@@ -502,17 +510,19 @@ Draw circle in an image.
 
 ```javascript
 var img = getScreenshot();
-drawCircle(img, 100, 100, 10, 0, 0, 255, 0); // draw a blue circle
+drawCircle(img, 100, 100, 10, 0, 0, 255, 0); // 畫一個藍色圓圈
 saveImage(img, getStoragePath() + '/test_drawCircle.png');
 releaseImage(img);
 ```
 
 #### `getIdentityScore(sourceImg, targetImg)`
 
+兩個圖片的相似度，兩湯圖片的大小必須一致
+
 * `sourceImg` Number
 * `targetImg` Number
 
-回傳值 `Float` - The identity score
+回傳值 `Float` - 相似度 0~1 之間
 
 ```javascript
 keycode('MENU');
@@ -529,7 +539,7 @@ releaseImage(img2);
 
 #### `cropImage(sourceImg, x, y, width, height)`
 
-Crop image.
+裁剪圖片
 
 * `x` Number
 * `y` Number
@@ -548,12 +558,13 @@ releaseImage(cropImg);
 
 #### `findImage(sourceImg, targetImg)`
 
-Using OpenCV `Template Match` to fing image.
+使用 OpenCV `Template Match` 以圖找圖片
 
 * `sourceImg` Number
 * `targetImg` Number
 
 回傳值 `Object` - `{x: Number, y: Number, score: Float}`
+（x, y 像素座標，score 為相似度 0~1）
 
 ```javascript
 var img = getScreenshot();
@@ -566,20 +577,19 @@ releaseImage(cropImg);
 
 #### `findImages(sourceImg, targetImg, scoreLimit, resultCountLimit, withoutOverlap)`
 
-Same as `findImage()`, but find mulitple times.
+等同於重複執行 `findImage()`， 以圖找多圖
 
 * `sourceImg` Number
 * `targetImg` Number
-* `scoreLimit` Number
-* `resultCountLimit` Number
-* `withoutOverlap` Boolean
+* `scoreLimit` Number 相似度限制（可節省時間，越高越快）
+* `resultCountLimit` Number 結果數量限制（可節省時間，越低越快）
 
 回傳值 `String` - `{"0": {"x": Number, "y": Number, "score": Float}, "1": {"x": Number, "y": Number, "score": Float}}`, Key is String!
 
 ```javascript
 var img = getScreenshot();
 var cropImg = cropImage(img, 350, 550, 150, 150);
-var result = findImages(img, cropImg, 0.95, 3, true);
+var result = findImages(img, cropImg, 0.95, 3);
 console.log(JSON.stringify(result)); // {"0":{"score":0.9999997615814209,"x":350,"y":550}}
 releaseImage(img);
 releaseImage(cropImg);
@@ -798,7 +808,7 @@ The RBM library is an API wrapper of the Robotmon JavaScript APIs.
 |eventDelay|The delay milliseconds of the event.|
 |imageThreshold|The threshold of image recognition. Range from `0` to `1`.|
 |imageQuality|The compression level of the image. Range from `0` to `100`.|
-|resizeFactor|The resize ratio of the screenshot in user's environment. Same as `oriResizeFactor` is better. Range from `0` to `1`.|
+|resizeFactor|The resize ratio of the screenshot in user's environment. 等同於 `oriResizeFactor` is better. Range from `0` to `1`.|
 
 ### Using
 

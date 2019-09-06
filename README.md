@@ -681,14 +681,13 @@ Same as `findImage()`, but find mulitple times.
 * `targetImg` Number
 * `scoreLimit` Number
 * `resultCountLimit` Number
-* `withoutOverlap` Boolean
 
 Returns `String` - `{"0": {"x": Number, "y": Number, "score": Float}, "1": {"x": Number, "y": Number, "score": Float}}`, Key is String!
 
 ```javascript
 var img = getScreenshot();
 var cropImg = cropImage(img, 350, 550, 150, 150);
-var result = findImages(img, cropImg, 0.95, 3, true);
+var result = findImages(img, cropImg, 0.95, 3);
 console.log(JSON.stringify(result)); // {"0":{"score":0.9999997615814209,"x":350,"y":550}}
 releaseImage(img);
 releaseImage(cropImg);
@@ -761,7 +760,7 @@ Save image to disk.
 
 ```javascript
 var img = getScreenshot();
-saveImage(img, getStoragePath + '/test_save.png');
+saveImage(img, getStoragePath() + '/test_save.png');
 releaseImage(img);
 ```
 
@@ -774,7 +773,7 @@ Open image from disk.
 Returns `Number` - The image pointer
 
 ```javascript
-var img = openImage(getStoragePath + '/test_save.png');
+var img = openImage(getStoragePath() + '/test_save.png');
 releaseImage(img);
 ```
 
