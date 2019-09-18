@@ -220,10 +220,10 @@ function updateServantAlive(screenshot){
         }
     }else{
         var currentServant = getCurrentServant(screenshot);
+        var path = getStoragePath();
         if(isDebug){
             saveImage(screenshot, path+"/debug_current_screen.png");
         }
-        var path = getStoragePath();
         for(var i=0;i<3;i++){
             if(isDebug){
                 saveImage(currentServant[i], path+"/debug_current"+i+".png");

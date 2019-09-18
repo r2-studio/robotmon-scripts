@@ -93,8 +93,10 @@ function isBattleMainPage(){
 		if(checkPixel(1075,665,163,146,121,screenshot)
 			&& checkPixel(1135,690,191,175,150,screenshot)
 			&& checkPixel(1200,665,163,146,121,screenshot)){
+			releaseImage(screenshot);
 			return true;
 		}
+		releaseImage(screenshot);
 	}
 	return false;
 }
