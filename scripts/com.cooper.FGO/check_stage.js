@@ -84,7 +84,19 @@ function isUseItemDialog(){
 
 //battle
 function isBattleMainPage(){
-	return checkIconListInScreen([6,7,8],true,0.8);
+	if(checkIconListInScreen([6,7,8],true,0.8)){
+		if(server == "TW"){
+			return true;
+		}
+		// double check ring color
+		var screenshot = getScreenshotResize();
+		if(checkPixel(1075,665,163,146,121,screenshot)
+			&& checkPixel(1135,690,191,175,150,screenshot)
+			&& checkPixel(1200,665,163,146,121,screenshot)){
+			return true;
+		}
+	}
+	return false;
 }
 
 function isBattleCardPage(){
