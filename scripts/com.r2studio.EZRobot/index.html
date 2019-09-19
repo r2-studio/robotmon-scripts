@@ -230,6 +230,43 @@
       display: none;
       margin: 10px;
     }
+    #alert-window {
+      position: absolute;
+      border: 2px solid #2196F3;
+      z-index: 3;
+      width: 80%;
+      height: 60%;
+      left: 10%;
+      top: 15%;
+      background-color: white;
+      border-radius: 5px;
+      display: none;
+    }
+    #alert-window .setting-title {
+      color: #FFFFFF;
+      width: 100%;
+      text-align: center;
+      background-color: #2196F3;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #alert-window .setting-content {
+      margin: 20px;
+      text-align: center;
+    }
+    #alert-window .setting-content div div div a {
+      text-align: left;
+    }
+    .setting-content input {
+      width: 50px;
+      margin: 5px 0px;
+    }
+    .setting-content .action-parameters {
+      display: none;
+      margin: 10px;
+    }
     .overlay {
       position: absolute;
       top: 0;
@@ -259,7 +296,7 @@
     }
 
     TAG = "EZRobot";
-    VERSION = 6;
+    VERSION = 7;
     var setting = [];
     var noSetting = 'No Setting';
 
@@ -352,6 +389,7 @@
         var name = $(this).text();
         $("#setting-dropdown-btn").text(name);
         $("#setting-dropdown").removeClass("show");
+        loadSetting();
       });
     }
 
@@ -377,12 +415,14 @@
       if (localStorage === undefined) {
         return;
       }
+      $("#setting-dropdown").html("");
       for (var i = 0; i < localStorage.length; i++) {
         if (localStorage.key(i).startsWith(TAG + '-setting-')) {
           var name = localStorage.key(i).replace(TAG + '-setting-', '');
           addSettingDropdown(name);
         }
       }
+      loadSetting();
     }
 
     function initSettingRows() { 
@@ -448,6 +488,7 @@
       jBtnDelete.click(function () {
         commands.splice(index, 1);
         initSettingRows();
+        saveSetting();
       });
       if (element.action === 'loop' || element.action === 'ifColor') {
         var jBtnAdd = $("<button class='btn btn-plus'><i class='fa fa-plus' aria-hidden='true'></i></button>");
@@ -460,23 +501,27 @@
         pCommands.push(element);
         commands.splice(index, 1);
         initSettingRows();
+        saveSetting();
       });
       jBtnRight.click(function () {
         commands[index - 1].commands.push(element);
         commands.splice(index, 1);
         initSettingRows();
+        saveSetting();
       });
       jBtnUp.click(function () {
         var tmp = commands[index - 1];
         commands[index - 1] = commands[index];
         commands[index] = tmp;
         initSettingRows();
+        saveSetting();
       });
       jBtnDown.click(function () {
         var tmp = commands[index + 1];
         commands[index + 1] = commands[index];
         commands[index] = tmp;
         initSettingRows();
+        saveSetting();
       });
       if (index != 0) {
         jBtns.push(jBtnUp);
@@ -559,6 +604,59 @@
       localStorage.setItem(getSettingName(name), JSON.stringify(setting));
     }
 
+    function exportSetting() {
+      var name = $("#setting-dropdown-btn").text();
+      if (name === noSetting) {
+        return;
+      }
+      var obj = {
+        name: name,
+        setting: setting,
+      };
+      $("#overlay").show();
+      $("#alert-window").show();
+      $("#export-value").val(JSON.stringify(obj));
+      $("#alert-close").off("click").on("click", function(e) {
+        $("#overlay").hide();
+        $("#alert-window").hide();
+        $("#export-value").val("");
+      });
+      $(".alert-message").html("");
+      $("#export-value").select()
+      var successful = document.execCommand('copy');
+      if (successful) {
+        $(".alert-message").html("Copied");
+      } else {
+        JavaScriptInterface.runScript('keycode("KEYCODE_COPY", 50);');
+        $(".alert-message").html("Copied (keycode)");
+      }
+    }
+
+    function importSetting(json) {
+      if (json == undefined) {
+        $("#overlay").show();
+        $("#alert-window").show();
+        $("#export-value").focus();
+        $(".alert-message").html("Start service to paste automatically");
+        if (JavaScriptInterface != undefined) {
+          JavaScriptInterface.runScript('keycode("KEYCODE_PASTE", 50);');
+        }
+        $("#alert-close").off("click").on("click", function(e) {
+          $("#overlay").hide();
+          $("#alert-window").hide();
+          importSetting($("#export-value").val());
+          $("#export-value").val("");
+        });
+        return;
+      }
+      var obj = JSON.parse(json);
+      $("#setting-dropdown-btn").html(obj.name);
+      setting = obj.setting;
+      initSettingRows();
+      saveSetting();
+      initSettings();
+    }
+
     function deleteSetting() {
       if (localStorage === undefined) {
         return;
@@ -568,6 +666,7 @@
         return;
       }
       localStorage.removeItem(getSettingName(name));
+      initSettings();
     }
 
     function onEvent(eventType) {
@@ -624,6 +723,7 @@
             args: args,
           });
         }
+        saveSetting();
       });
       
       $("#setting-close").off("click").on("click", function(e) {
@@ -661,6 +761,17 @@
   </nav>
   <div id="container" class="container">
     <div id="overlay" class="overlay"></div>
+    <div id="alert-window">
+      <div class="alert-title">
+        <div style="position: absolute; right: 6px;">
+          <button id="alert-close" class="btn-success btn-circle"><i class="fa fa-circle-o" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="alert-content">
+        <div class="alert-message"></div>
+        <textarea id="export-value" style="width:100%;height:80%;"></textarea>
+      </div>
+    </div>
     <div id="setting-window">
       <div class="setting-title">
         <div data-i18n="title.setting"></div>
@@ -747,13 +858,15 @@
       </li>
       <li class="list-group-item">
         <div class="row">
-          <div class="col-xs-10">
+          <div class="col-xs-8">
             <div style="display:inline-block;" data-i18n="title.name"></div>
             <input id="setting-name" type="text"></input>
           </div>
-          <div class="col-xs-2">
+          <div class="col-xs-4">
             <div class="pull-right">
               <button onclick="addSettingScript()" class="btn btn-plus"><i class='fa fa-plus' aria-hidden='true'></i></button>
+              <button onclick="importSetting()" class="btn btn-plus"><i class='fa fa-sign-in' aria-hidden='true'></i></button>
+              <button onclick="exportSetting()" class="btn btn-plus"><i class='fa fa-sign-out' aria-hidden='true'></i></button>
             </div>
           </div>
         </div>
