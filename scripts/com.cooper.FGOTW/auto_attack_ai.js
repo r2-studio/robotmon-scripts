@@ -14,9 +14,10 @@ var servantExistHeight = 12;
 
 //skill
 var skillUsedImage;
-var skillUsedPositionX = [31,124,218,348,442,535,667,761,855];
+var skillUsedPositionX = [31,124,218,348,442,536,667,761,855];
 if(server=="JP"){
      skillUsedPositionX[0] = 30;
+     skillUsedPositionX[5] = 535;
 }
 var skillUsedPositionY = 600;
 var skillUsedSize = 16;
@@ -211,9 +212,23 @@ function updateServantAlive(screenshot){
         for(var i=0;i<3;i++){
             result[i] = true;
         }
+        if(isDebug){
+            var path = getStoragePath();
+            saveImage(screenshot, path+"/debug_init_screen.png");
+            for(var i=0;i<3;i++){
+                saveImage(initServant[i],path+"/debug_init"+i+".png");
+            }
+        }
     }else{
         var currentServant = getCurrentServant(screenshot);
+        var path = getStoragePath();
+        if(isDebug){
+            saveImage(screenshot, path+"/debug_current_screen.png");
+        }
         for(var i=0;i<3;i++){
+            if(isDebug){
+                saveImage(currentServant[i], path+"/debug_current"+i+".png");
+            }
             if(getIdentityScore(initServant[i],currentServant[i])>0.8){
                 result[i] = true;
             }else{

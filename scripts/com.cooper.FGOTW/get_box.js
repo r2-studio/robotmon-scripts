@@ -31,6 +31,9 @@ function getBox(newBox,fast){
             break;
         }
         for(var t = 0;t<checkTime;t++){
+            if(!isScriptRunning){
+                break;
+            }
             tapScale(400,477);
             sleep(waitTime);
         }
@@ -41,6 +44,7 @@ function getBox(newBox,fast){
 }
 
 function checkIsBoxFinish(){
+    sleep(500);
     var screenshot = getScreenshotResize();
     var r = false;
     if(checkImage(screenshot,boxFullImage,boxFullPosition[0],boxFullPosition[1],boxFullPosition[2],boxFullPosition[3])){
@@ -119,6 +123,33 @@ function getFriendPoint(){
             }
         }
         sleep(2000);
+    }
+}
+
+function eatFire(){
+    isScriptRunning = true;
+    var eat = 3;
+    //eat = 4;
+    if(eat==3){
+    tapScale(644,225);
+    }
+    sleep(1000);
+    for(var i = 0;i<7;i++){
+        for(var j = 0;j<eat;j++){
+            tapScale(120+i*130,230+j*130);
+            sleep(100);
+        }
+    }
+    if(eat==3){
+        tapScale(1140,670);
+        sleep(500);
+        tapScale(1140,670);
+        sleep(500);
+        tapScale(830,590);
+        sleep(1500);
+        tapScale(640,220);
+        sleep(5000);
+        tapScale(640,220);
     }
 }
 

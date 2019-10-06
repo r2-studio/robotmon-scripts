@@ -184,6 +184,9 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                     console.log("辨識好友座標失敗，使用固定座標");
                     friendLinePosition = [197,397];
                 }
+                if(isDebug){
+                    console.log("好友座標 "+friendLinePosition);
+                }
                 for(var j = 0; j < friendLinePosition.length;j++){
                     var lineY = friendLinePosition[j];
                     // console.log("check line "+lineY);
@@ -272,8 +275,11 @@ function getFriendLine(screenshot){
           // console.log(c1+","+c2+":"+y);
         }
         if(c1&&c2){
-          isLine = true;
-          break;
+            isLine = true;
+            if(isDebug){
+                console.log("isLine "+y);
+            }
+            break;
         }
       }
       if(isLine){
@@ -324,7 +330,7 @@ function checkFriendItem(screenshot,itemImage,lineY,star){
 var friendStarX = 190;
 var friendStarYOffset = 163;
 var friendStarSize = 5;
-function checkStar(screenShot,lineY){
+function checkStar(screenshot,lineY){
     if(isDebug){
         console.log("checkStar " +lineY);
     }
@@ -333,7 +339,7 @@ function checkStar(screenShot,lineY){
     var notG = 0;
     for(var i=0;i<friendStarSize;i++){
         for(var j=0;j<friendStarSize;j++){
-            var color = getImageColor(screenShot,friendStarX+i,friendStarY+j);
+            var color = getImageColor(screenshot,friendStarX+i,friendStarY+j);
             if(color.g>color.r && color.g > color.b){
                 isG++;
             }else{
@@ -350,14 +356,14 @@ function checkStar(screenShot,lineY){
 var friendIsFriendX;
 var friendIsFriendYOffset;
 var friendIsFriendSize;
-function checkFriendIsFriend(screenShot,lineY){
+function checkFriendIsFriend(screenshot,lineY){
     if(isDebug){
         console.log("checkFriendIsFriend " +lineY);
     }
     if(server == "TW"){
-        return checkPixel(1148,lineY+122,223,254,174);
+        return checkPixel(1148,lineY+122,223,254,174,screenshot);
     }else{
-        return checkPixel(1148,lineY+132,227,255,177);        
+        return checkPixel(1148,lineY+132,227,255,177,screenshot);
     }
 }
 
