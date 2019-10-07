@@ -1,5 +1,5 @@
 var loadApiCnt = 0;
-var version = "V2.11";
+var version = "V2.13";
 var isDebug = false;
 
 var defaultScreenSize = [1280,720];
@@ -218,13 +218,19 @@ function checkImageAndColor(screenshot,icon,x,y,width,height){
     return r;
 }
 
-function checkPixel(x,y,r,g,b){
-    var screenshot = getScreenshotResize();
+function checkPixel(x,y,r,g,b,screenshot){
+    var needRelease = false;
+    if(screenshot == undefined){
+        needRelease = true;
+        screenshot = getScreenshotResize();        
+    }
     if(screenshot==null){
         return false;
     }
     var color = getImageColor(screenshot,x,y);
-    releaseImage(screenshot);
+    if(needRelease){
+        releaseImage(screenshot);
+    }
     if(isDebug){
         console.log("get color "+x+","+y+":"+color.r+","+color.g+","+color.b);
     }

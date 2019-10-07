@@ -110,14 +110,14 @@
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
       "versionCode": 2.12,
-      "description": "<div>V2.12 修正禮裝開場產星偶爾會造成指令錯亂的問題，修正金閃祭無法自動重置箱子的問題<br>V2.11 可以在戰鬥中開始執行腳本，會自動跳過前面的指令。修正進入選擇好友頁面沒有等跑狗造成的錯誤<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "description": "<div>V2.12 修正禮裝開場產星偶爾會造成指令錯亂的問題，修正金閃祭無法自動重置箱子的問題<br>V2.11 可以在戰鬥中開始執行腳本，會自動跳過前面的指令。修正進入選擇好友頁面沒有等跑狗造成的錯誤<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 2.11,
-      "description": "<div>V2.11 可以在戰鬥中開始執行腳本，會自動跳過前面的指令。修正進入選擇好友頁面沒有等跑狗造成的錯誤<br>V2.08 修正部分手機選擇好友指令無法讀出圖片的問題<br><br>支援Android手機、夜神模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.13,
+      "description": "<div>V2.13 對應新版本<br>V2.11 可以在戰鬥中開始執行腳本，會自動跳過前面的指令。修正進入選擇好友頁面沒有等跑狗造成的錯誤<br><br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
