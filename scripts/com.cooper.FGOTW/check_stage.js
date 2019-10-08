@@ -115,7 +115,6 @@ function isBattleServantDialog(){
 }
 
 function isBattleSkillFailedDialog(){
-	//TODO:TW
 	return checkIconInScreen(17);
 }
 
@@ -152,7 +151,6 @@ function isFinishNext(){
 }
 
 function isAddFriendPage(){
-	//TODO:TW
 	if(server == "TW"){
 		return checkIconInScreen(14);
 	}else{

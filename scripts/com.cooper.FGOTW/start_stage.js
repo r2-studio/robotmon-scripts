@@ -233,13 +233,16 @@ function selectFriend(filter,servant,item,star,checkIsFriend,scrollTimes){
                         }
                     }
                 }
-                if(isSelectFriendEnd()){
+                if(isSelectFriendEnd()){                    
+                    console.log("已到最底，刷新好友清單");
                     break;
                 }
                 if(scrollCnt == scrollTimes){
+                    console.log("已達到下拉次數，刷新好友清單");
                     break;
                 }
                 if(checkIsFriend && haveNotFriend){
+                    console.log("發現非好友，刷新好友清單");
                     break;
                 }
                 scrollCnt++;
@@ -360,11 +363,7 @@ function checkFriendIsFriend(screenshot,lineY){
     if(isDebug){
         console.log("checkFriendIsFriend " +lineY);
     }
-    if(server == "TW"){
-        return checkPixel(1148,lineY+122,223,254,174,screenshot);
-    }else{
-        return checkPixel(1148,lineY+132,227,255,177,screenshot);
-    }
+    return checkPixel(1148,lineY+132,227,255,177,screenshot);
 }
 
 function reloadFriend(){

@@ -31,29 +31,35 @@ function useSkill(player,skill,target){
     if(!isScriptRunning){
         return;
     }
-    if(isBattleServantDialog()){
+    if(isBattleServantDialog()){        
+        console.log("使用技能-無此技能");
         //skill null
         tapScale(1050,85);
-        return;
+    }
+    else if(isBattleSkillTargetDialog()){
+        console.log("使用技能-選擇目標");
+        selectSkillTarget(target);
     }
     else if(isBattleSkillFailedDialog()){
         //skill can not use
+        console.log("使用技能-條件未達成，無法使用");
         tapScale(640,555);
-        releaseImage(screenShot2);
-        return;
     }
     else if(isBattleSkillDetailDialog()){
         //need confirm or in cd
+        console.log("使用技能-確認畫面");
         tapScale(850,425);
-        sleep(500);
+        sleep(1000);
         if(isBattleSkillDetailDialog()){
             //in cd
+            console.log("使用技能-技能無法使用");
             tapScale(400,425);
-        }else {
+        }else if(isBattleSkillFailedDialog()){
+            console.log("使用技能-選擇目標");
             selectSkillTarget(target);
         }
     }else {
-        selectSkillTarget(target);        
+        console.log("使用技能-無法判斷目前狀態");
     }
 }
 
@@ -94,24 +100,28 @@ function useClothesSkill(skill,target1,target2){
     if(!waitUntilPlayerCanMove()){
         return;
     }
-    console.log("使用禮裝技能 "+(skill+1));
+    console.log("使用衣服技能 "+(skill+1));
     tapScale(1200,317);
     sleep(1000);
     tapScale(clothSkillX[skill],clothSkillY);
     sleep(1000);
     if(isBattleSkillDetailDialog()){
+        console.log("使用衣服技能-確認畫面");
         tapScale(850,425);
         sleep(500);
         if(isBattleSkillDetailDialog()){
             //in cd
+            console.log("使用衣服技能-技能無法使用");
             tapScale(400,425);
             sleep(1000);
             tapScale(1200,317);
         }        
     }
     if(target1 != undefined && (target2 == undefined || target2 == -1)){
+        console.log("使用衣服技能-選擇目標");
         selectSkillTarget(target1);
     }else if(target1!=undefined && target2 !=undefined){
+        console.log("使用衣服技能-選擇換人目標");
         changePlayer(target1,target2);
     }
     sleep(1000);    
