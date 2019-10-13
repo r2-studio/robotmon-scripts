@@ -54,7 +54,7 @@ function useSkill(player,skill,target){
             //in cd
             console.log("使用技能-技能無法使用");
             tapScale(400,425);
-        }else if(isBattleSkillFailedDialog()){
+        }else if(isBattleSkillTargetDialog()){
             console.log("使用技能-選擇目標");
             selectSkillTarget(target);
         }
