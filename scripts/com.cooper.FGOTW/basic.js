@@ -1,5 +1,5 @@
 var loadApiCnt = 0;
-var version = "V2.14";
+var version = "V2.15";
 var isDebug = false;
 
 var defaultScreenSize = [1280,720];
@@ -12,6 +12,7 @@ var friendServantPosition = [[51,230,155,96],[51,430,155,96]];
 var friendItemPosition =  [[51,328,155,30],[51,528,155,30]];
 
 function startScript(loopTime,script,scriptName){
+    console.log("開始執行指令，版本"+version);
     initScreenSize();
     isScriptRunning = true;
     runningScriptName = scriptName;
