@@ -85,6 +85,8 @@ function getGUIStr(){
 		      imgStr = "friendSelect";
 		    } else if(rbm.imageExists('equipmentConfirm.png', 0.9)){
 		      imgStr = "equipmentConfirm";
+		    } else if(rbm.imageExists('crusade.png',0.9)){
+		      imgStr = "crusade";
 		    } else {
 		      imgStr = "Main Page G - Exit - Unknown";
 		    }
@@ -111,6 +113,10 @@ function getGUIStr(){
 		      return "explore-end";
 		    } else if(this.findPic(454, 70, 823, 110, 'levelOpen.png', 0.9)){
 		      return "levelOpen";
+		    } else if(this.findPic(510, 80, 768, 135, 'crusadeSussess.png', 0.9)){
+		      return "crusadeSussess";
+		    } else if(this.findPic(485, 130, 785, 170, 'crusadeResult.png', 0.9)){
+		      return "crusadeResult";
 		    } else {
 		      return "Main Page G - No Exit - Unknown";
 		    }
@@ -241,7 +247,15 @@ function main(puntConfig, questInfo){
       } else {
         tap(questInfo.levelPosition.x, questInfo.levelPosition.y, 10);
       }
-      
+      break;
+    case "crusade":
+        tap(questInfo.levelPosition.x, questInfo.levelPosition.y, 10);
+      break;
+	case "crusadeSussess":
+        tap(640, 580, 10);
+      break;
+	case "crusadeResult":
+        tap(480, 550, 10);
       break;
     case "friendSelect":
       if(friendUse == 0){
@@ -545,6 +559,17 @@ function setPuntConfigByQuestName(questName){
       puntConfig.roleNumber[9] = "-1"; puntConfig.angle[9] = 80; puntConfig.flyDelay[9] = 650;
       puntConfig.roleNumber[10] = "-1"; puntConfig.angle[10] = 80; puntConfig.flyDelay[10] = 650;
       break;
+	case "Easter Egg Hunt!":
+	  console.log("Easter Egg Hunt!");
+	  questInfo.position.x = 640; questInfo.position.y = 400;
+      puntConfig.centerX = 490; puntConfig.centerY = 411;
+	  for(i = 1; i < 11; i++){
+		puntConfig.roleNumber[i] = "0";
+		puntConfig.angle[i] = 80;
+		puntConfig.flyDelay[i] = 550;
+	  }
+	  
+	  break;
     default:
       break;
   }
@@ -573,6 +598,20 @@ function setQuestPositionByQuestLevel(questLevel){
 		case 23: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 400; break;
 		case 24: questInfo.levelPosition.x = 820; questInfo.levelPosition.y = 400; break;
 		case 25: questInfo.levelPosition.x = 1000; questInfo.levelPosition.y = 400; break;
+		
+		case 31: questInfo.levelPosition.x = 280; questInfo.levelPosition.y = 160; break;
+		case 32: questInfo.levelPosition.x = 460; questInfo.levelPosition.y = 160; break;
+		case 33: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 160; break;
+		case 34: questInfo.levelPosition.x = 820; questInfo.levelPosition.y = 160; break;
+		case 35: questInfo.levelPosition.x = 1000; questInfo.levelPosition.y = 160; break;
+		case 36: questInfo.levelPosition.x = 280; questInfo.levelPosition.y = 560; break;
+		case 37: questInfo.levelPosition.x = 460; questInfo.levelPosition.y = 560; break;
+		case 38: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 560; break;
+		case 39: questInfo.levelPosition.x = 820; questInfo.levelPosition.y = 560; break;
+		case 40: questInfo.levelPosition.x = 1000; questInfo.levelPosition.y = 560; break;
+		case 41: questInfo.levelPosition.x = 450; questInfo.levelPosition.y = 300; break;
+		case 42: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 300; break;
+		case 43: questInfo.levelPosition.x = 850; questInfo.levelPosition.y = 300; break;
 		
 		case 99: questInfo.levelPosition.x = 640; questInfo.levelPosition.y = 300; break;
 		default:
@@ -633,11 +672,14 @@ function start(viewSettings){
   
   console.log('Scripts End');
 }
+
 // this.start(mySetting);
 // this.stop();
-config.isRunning = true;
-console.log(this.getGUIStr());
-config.isRunning = false;
+//config.isRunning = true;
+//console.log(this.getPixelColor(1200, 35));
+//console.log(this.getGUIStr());
+
+//config.isRunning = false;
 // if(gui.indexOf("Unknown") >= 0){
 //config.isRunning = true;
 //console.log(this.getGUIStr());
