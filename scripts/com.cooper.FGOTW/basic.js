@@ -1,8 +1,9 @@
 var loadApiCnt = 0;
-var version = "V2.15";
+var version = "V2.16";
 var isDebug = false;
 
 var defaultScreenSize = [1280,720];
+var blackEdge = [0,0,0,0];//l 52,t 0,r 2176,b 1035
 var screenScale = [];
 var screenOffset = [];
 var realScreenSize = [];
@@ -53,11 +54,14 @@ function initIDE(serverString){
 }
 
 function initScreenSize(){
+    getBlackEdge();
     var size = getScreenSize();
     screenOffset[0] = 0;
     screenOffset[1] = 0;
-    var w = size.width;
-    var h = size.height;
+    //var w = size.width;
+    //var h = size.height;
+    var w = blackEdge[2] - blackEdge[0] + 1;
+    var h = blackEdge[3] - blackEdge[1] + 1;
     if(w < h){
         //swap
         var tmp = h;
@@ -77,6 +81,43 @@ function initScreenSize(){
     screenScale[1] = h / defaultScreenSize[1];
     realScreenSize[0] = w;
     realScreenSize[1] = h;
+}
+
+function getBlackEdge(){
+    var screenshot = getScreenshot();
+    var imageSize = getImageSize(screenshot);
+    var w = imageSize.width;
+    var h = imageSize.height;
+    for(var i = 0;i<w;i++){
+        var color = getImageColor(screenshot,i,h/4);
+        if(color.r != 0 || color.g != 0 || color.b != 0){
+            blackEdge[0] = i;
+            break;
+        }
+    }
+    for(var i = 0;i<h;i++){
+        var color = getImageColor(screenshot,w/4,i);
+        if(color.r != 0 || color.g != 0 || color.b != 0){
+            blackEdge[1] = i;
+            break;
+        }
+    }
+    for(var i =w-1;i>=0;i--){
+        var color = getImageColor(screenshot,i,h/4);
+        if(color.r != 0 || color.g != 0 || color.b != 0){
+            blackEdge[2] = i;
+            break;
+        }
+    }
+    for(var i = h-1;i>=0;i--){
+        var color = getImageColor(screenshot,w/4,i);
+        if(color.r != 0 || color.g != 0 || color.b != 0){
+            blackEdge[3] = i;
+            break;
+        }
+    }
+    console.log("取得黑邊 "+blackEdge);
+    releaseImage(screenshot);
 }
 
 function saveScript(scriptName,scriptContent){
@@ -173,7 +214,7 @@ function getScreenshotResize(){
         orientationLog = false;
     }
     var screenshot = getScreenshot();
-    var cutScreenshot = cropImage(screenshot,screenOffset[0],screenOffset[1],realScreenSize[0],realScreenSize[1]);
+    var cutScreenshot = cropImage(screenshot,blackEdge[0] + screenOffset[0],blackEdge[1] + screenOffset[1],realScreenSize[0],realScreenSize[1]);
     var resizeScreenshot = resizeImage(cutScreenshot,defaultScreenSize[0],defaultScreenSize[1]);
     releaseImage(screenshot);
     releaseImage(cutScreenshot);
@@ -223,7 +264,7 @@ function checkPixel(x,y,r,g,b,screenshot){
     var needRelease = false;
     if(screenshot == undefined){
         needRelease = true;
-        screenshot = getScreenshotResize();        
+        screenshot = getScreenshotResize();
     }
     if(screenshot==null){
         return false;
@@ -294,8 +335,8 @@ function tapScale(x,y,wait){
     if(size.width < size.height){
         return;
     }
-    x = x * screenScale[0] + screenOffset[0];
-    y = y * screenScale[1] + screenOffset[1];
+    x = x * screenScale[0] + screenOffset[0] + blackEdge[0];
+    y = y * screenScale[1] + screenOffset[1] + blackEdge[1];
     tap(x,y,wait);
 }
 
@@ -426,6 +467,7 @@ function saveCropImage2(name,l,t,w,h){
 
 function saveFriendServantImage(cnt){
     sleep(1000);
+    initScreenSize();
     var screenShot = getScreenshotResize();
     if(screenShot==null){
         return null;
@@ -448,6 +490,7 @@ function saveFriendServantImage(cnt){
 
 function saveFriendItemImage(cnt){
     sleep(1000);
+    initScreenSize();
     var screenShot = getScreenshotResize();
     if(screenShot==null){
         return null;

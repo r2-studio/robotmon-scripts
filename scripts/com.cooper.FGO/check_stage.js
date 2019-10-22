@@ -41,10 +41,12 @@ function isMainPage(){
 }
 
 function isStageRestart(){
+	//TODO:TW
 	return checkIconInScreen(39);
 }
 
 function isItemOrServantFullDialog(){
+	//TODO:TW
 	return checkIconListInScreen([26,27],false);
 }
 
@@ -70,6 +72,7 @@ function isSelectFriendEnd(){
 }
 
 function isSelectFriendEmpty(){
+	//TODO:TW
 	return checkIconInScreen(36);
 }
 
@@ -79,6 +82,7 @@ function isSelectTeamPage(){
 }
 
 function isUseItemDialog(){
+	//TODO:TW
 	return checkIconInScreen(5);
 }
 
@@ -123,6 +127,7 @@ function isBattleSkillTargetDialog(){
 }
 
 function isBattleUltFailedDialog(){
+	//TODO:TW
 	return checkIconInScreen(15);
 }
 
@@ -132,10 +137,12 @@ function isBattleStageFailedDialog(){
 
 //finish
 function isFinishBondPage(){
+	//TODO:TW
 	return checkIconListInScreen([9,10,29],false);
 }
 
 function isFinishDropDialoge(){
+	//TODO:TW
 	return checkIconInScreen(28);
 }
 
@@ -152,6 +159,7 @@ function isAddFriendPage(){
 }
 
 function isItemPage(){
+	//TODO:TW
 	return checkIconInScreen(18);
 }
 
@@ -167,12 +175,12 @@ function isFriendPointTen(){
 	return checkIconInScreen(21);
 }
 
-function isFriendPointNew(){
-	return checkIconInScreen(22);
-}
-
 function isFriendPointReload(){
 	return checkIconInScreen(23);
+}
+
+function isFriendPointNew(){
+	return checkIconInScreen(22);
 }
 
 function isFriendPointFull(){	

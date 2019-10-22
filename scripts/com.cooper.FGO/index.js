@@ -57,8 +57,6 @@ function initHTML(serverString){
     if(!loadApi()){
         return;
     }
-    initScreenSize();
-
     var firstTime = execute("ls "+itemPath);
     if(firstTime.length == 0 || firstTime.lastIndexOf("exit", 0) === 0){
         console.log("First time run script, init basic item");

@@ -59,7 +59,7 @@ function useSkill(player,skill,target){
             selectSkillTarget(target);
         }
     }else {
-        console.log("使用技能-無法判斷目前狀態");
+        console.log("使用技能-技能動畫中");
     }
 }
 
