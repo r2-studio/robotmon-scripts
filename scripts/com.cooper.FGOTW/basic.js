@@ -33,6 +33,7 @@ function startScript(loopTime,script,scriptName){
             console.log("Start script loop "+(loop+1)+"/"+loopTime);
             sendNormalMessage (runningScriptName, "Start loop "+(loop+1)+"/"+loopTime);
         }
+        spaceUltColor = 2;
         runScript(script);
     }
     isScriptRunning = false;

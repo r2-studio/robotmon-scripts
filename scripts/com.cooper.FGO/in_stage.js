@@ -14,6 +14,11 @@ var cardPositionX = [125,400,625,900,1175];
 var cardPositionY = 517;
 var ultPositionX = [400,625,900];
 var ultPositionY = 125;
+
+var spaceUltPositionX = [900,600,300];
+var spaceUltPositionY = 450;
+var spaceUltColor = 2;
+var colorName = ["紅","藍","綠"];
 //----------------------------------------------Battle main page
 function useSkill(player,skill,target){
     if(!isScriptRunning){
@@ -36,10 +41,6 @@ function useSkill(player,skill,target){
         //skill null
         tapScale(1050,85);
     }
-    else if(isBattleSkillTargetDialog()){
-        console.log("使用技能-選擇目標");
-        selectSkillTarget(target);
-    }
     else if(isBattleSkillFailedDialog()){
         //skill can not use
         console.log("使用技能-條件未達成，無法使用");
@@ -54,11 +55,23 @@ function useSkill(player,skill,target){
             //in cd
             console.log("使用技能-技能無法使用");
             tapScale(400,425);
-        }else if(isBattleSkillTargetDialog()){
+            return;
+        }
+    }
+
+    if(!isScriptRunning){
+        return;
+    }if(isBattleSkillSpaceDialog()){
+        if(spaceUltColor == undefined || spaceUltColor < 0 || spaceUltColor > 2){
+            console.log("reset color "+spaceUltColor);
+            spaceUltColor = 2;
+        }
+        console.log("使用技能-宇宙伊斯塔寶具顏色 "+colorName[spaceUltColor]);
+        tapScale(spaceUltPositionX[spaceUltColor],spaceUltPositionY);
+    }else if(isBattleSkillTargetDialog()){
             console.log("使用技能-選擇目標");
             selectSkillTarget(target);
-        }
-    }else {
+    }else{
         console.log("使用技能-技能動畫中");
     }
 }
@@ -115,9 +128,13 @@ function useClothesSkill(skill,target1,target2){
             tapScale(400,425);
             sleep(1000);
             tapScale(1200,317);
+            return;
         }        
     }
-    if(target1 != undefined && (target2 == undefined || target2 == -1)){
+    if(isBattleSkillTargetDialog()){
+        if(target1 == undefined || target1 < 0){
+            target1 = 0;
+        }
         console.log("使用衣服技能-選擇目標");
         selectSkillTarget(target1);
     }else if(target1!=undefined && target2 !=undefined){
@@ -285,6 +302,11 @@ function finishQuest(){
             }
         }
     }
+}
+
+function setSpaceUltColor(color){    
+    spaceUltColor = color;
+    console.log("設定宇宙伊斯塔寶具顏色 - "+colorName[spaceUltColor]);
 }
 
 loadApiCnt++;
