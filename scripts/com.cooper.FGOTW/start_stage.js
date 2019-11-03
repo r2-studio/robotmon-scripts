@@ -15,6 +15,7 @@ function selectStage(useApple){
         sleep(500);
     } else if(!isMainPage()){
         console.log("不在主畫面-選擇關卡失敗");
+        console.log("若FGO並未置中，請確認黑邊數值是否正確");
         isScriptRunning = false;
         return;
     }else{

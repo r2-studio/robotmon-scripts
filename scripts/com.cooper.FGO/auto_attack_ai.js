@@ -14,9 +14,9 @@ var servantExistHeight = 12;
 
 //skill
 var skillUsedImage;
-var skillUsedPositionX = [31,124,218,348,442,535,667,761,855];
+var skillUsedPositionX = [32,126,220,350,443,537,669,763,856];
 if(server=="JP"){
-     skillUsedPositionX[0] = 30;
+    skillUsedPositionX = [31,124,218,348,442,536,667,761,855];
 }
 var skillUsedPositionY = 600;
 var skillUsedSize = 16;
@@ -262,9 +262,17 @@ function getCurrentServant(screenshot){
 
 //skill------------------------------------------------
 function updateSkillUsed(screenshot){
+    var needRelease = false;
+    if(screenshot == null){
+        needRelease = true;
+        screenshot = getScreenshotResize();
+    }
     var result = [];
     for(var i=0;i<9;i++){
-        result[i] = checkImage(screenshot,skillUsedImage,skillUsedPositionX[i],skillUsedPositionY,skillUsedSize,skillUsedSize);
+        result[i] = checkImage(screenshot,skillUsedImage,skillUsedPositionX[i],skillUsedPositionY,skillUsedSize,skillUsedSize,0.7);
+    }
+    if(needRelease){
+        releaseImage(screenshot);
     }
     return result;
 }

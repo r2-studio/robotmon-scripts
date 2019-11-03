@@ -170,7 +170,12 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
     var itemImgPath;
     var insertDirection = 1;
     var listenScriptMode = true;
-    $(function() {
+    $(function() {        
+        $("#loopTime1").click(function() {
+            var t = $("#loopTime").val();
+            var n = 1;
+            $("#loopTime").val(n);
+        });
         $("#loopTimePlus").click(function() {
             var t = $("#loopTime").val();
             var n = 0;
@@ -180,7 +185,16 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
                 n = parseInt(t)+1;
             }
             $("#loopTime").val(n);
-            //console.log(getCurrentScript());
+        });
+        $("#loopTimePlus5").click(function() {
+            var t = $("#loopTime").val();
+            var n = 0;
+            if(t == "無限"){
+                n = 5;
+            }else{
+                n = parseInt(t)+5;
+            }
+            $("#loopTime").val(n);
         });
         $("#loopTimeMinus").click(function() {
             var t = $("#loopTime").val();
@@ -391,7 +405,14 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
             commandId++;
             insertNewCommand(getFinishItem(commandId));
         });
-    
+        $("#addSpaceUlt").click(function(){
+            commandId++;
+            insertNewCommand(getSpaceUltItem(commandId));
+            $("#spaceUltColor"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+        });
         $("#addSkill").click(function(){
             commandId++;
             insertNewCommand(getUseSkillItem(commandId));
@@ -677,6 +698,9 @@ function getCurrentScript(){
                     case "結束關卡":
                     newScript+='finishQuest();';
                     break;
+                    case "設定宇宙伊斯塔寶具顏色":
+                    newScript+="setSpaceUltColor("+$("#spaceUltColor"+itemId).val()+");";
+                    break;
                     case "使用技能":
                     newScript+="useSkill("+$("#useSkillServant"+itemId).val()+","+$("#useSkill"+itemId).val()+","+$("#useSkillTarget"+itemId).val()+");";
                     break;
@@ -740,6 +764,15 @@ function getGetBox(id){
         '<option value = "0" selected>否</option>'+
         '<option value = "1">是</option></select></li>'+
         '<label>注意 自動重置開啟時，中獎後會點擊重置按鈕，想抽乾前十箱請小心</label>');
+}
+function getSpaceUltItem(id){
+    return getCommandItem(id,"設定宇宙伊斯塔寶具顏色",
+        '<li><label>寶具顏色&nbsp;&nbsp;</label>'+
+        '<select id = "spaceUltColor'+id+'">'+
+        '<option value = "2" selected>綠</option>'+
+        '<option value = "1">藍</option>'+
+        '<option value = "0">紅</option></select></li>'+
+        '<label>寶具顏色預設為綠色，執行此指令後，使用技能會選擇指定的顏色</label>');
 }
 function getUseSkillItem(id){
     return getCommandItem(id,"使用技能",
@@ -1356,8 +1389,6 @@ function resetScript(result){
             });
             $("#selectTeam"+commandId).val(content).trigger('change');
         }else if(checkstring(content,"startQuest")){
-
-
             content = content.replace('startQuest(','');
             content = content.replace(')','');
             $("#skill-list").append(getStartQuest(commandId));
@@ -1370,11 +1401,19 @@ function resetScript(result){
                 content = -1;
             }
             $("#useItem"+commandId).val(content).trigger('change');
-
-
         }else if(checkstring(content,"finishQuest")){
             $("#skill-list").append(getFinishItem(commandId));
             initCommandButton(commandId);
+        }else if(checkstring(content,"setSpaceUltColor")){
+            content = content.replace('setSpaceUltColor(','');
+            content = content.replace(')','');
+            $("#skill-list").append(getSpaceUltItem(commandId));
+            initCommandButton(commandId);
+            $("#spaceUltColor"+commandId).select2({
+                minimumResultsForSearch: -1,
+                dropdownAutoWidth: true
+            });
+            $("#spaceUltColor"+commandId).val(content).trigger('change');
         }else if(checkstring(content,"useSkill")){
             content = content.replace('useSkill(','');
             content = content.replace(')','');
@@ -1569,9 +1608,11 @@ function onLog(message) {
             <li class="list-group-item">
                 腳本執行次數
                 <div class="pull-right" style="margin-top:-4px">
-                    <input id="loopTime" style="width: 40px; text-align: center;" min="0" type="text" value="1" readonly>
+                    <input id="loopTime" style="width: 40px; text-align: center;" min="0" type="text" value="1" readonly>                    
+                    <button id="loopTime1" type="button" class="btn btn-danger">重置</button>
                     <button id="loopTimeMinus" type="button" class="btn btn-danger">-1</button>
                     <button id="loopTimePlus" type="button" class="btn btn-plus">+1</button>
+                    <button id="loopTimePlus5" type="button" class="btn btn-plus">+5</button>
                     <button id="loopTimeInfinite" type="button" class="btn btn-infinite">無限</button>
                 </div>
             </li><br>
@@ -1612,6 +1653,9 @@ function onLog(message) {
               <button id="addStartQuest" type="button">進入關卡</button>
               <button id="addFinish" type="button">結束關卡</button>
           </div><br><br><br>
+          <div  class="pull-left" style="margin-top:-4px">
+              <button id="addSpaceUlt" type="button">設定宇宙伊斯塔寶具顏色</button>
+          </div><br><br>
           <div  class="pull-left" style="margin-top:-4px">
               <button id="addSkill" type="button">使用技能</button>
               <button id="addCloth" type="button">使用衣服技能</button>
