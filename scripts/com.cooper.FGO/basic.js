@@ -174,7 +174,7 @@ function checkIconListInScreen(iconList,allPass,threshold){
     return allPass;
 }
 
-function checkIconInScreen(iconId){
+function checkIconInScreen(iconId,threshold){
     if(!isScriptRunning){
         return false;
     }
@@ -186,12 +186,15 @@ function checkIconInScreen(iconId){
     if(screenshot == null){
         return false;
     }
+    if(threshold == undefined){
+        threshold = 0.85;
+    }
     var iconPath = imagePath+iconName[iconId]+".png";
     if(isDebug){
        console.log("checkIconInScreen open icon "+iconPath);
     }
     var iconImage = openImage(iconPath);
-    var result = checkImage(screenshot,iconImage,iconPosition[iconId][0],iconPosition[iconId][1],iconPosition[iconId][2],iconPosition[iconId][3]);
+    var result = checkImage(screenshot,iconImage,iconPosition[iconId][0],iconPosition[iconId][1],iconPosition[iconId][2],iconPosition[iconId][3],threshold);
     releaseImage(screenshot);
     releaseImage(iconImage);
     if(isDebug){
