@@ -27,10 +27,10 @@ function saveCropIcon(id){
     var width = iconPosition[id][2];
     var height = iconPosition[id][3];
     var filepath = path+"/cropImage/"+iconName[id]+".png";
-    var screenShot = getScreenshot();
-    var crop = cropImage(screenShot,x,y,width,height);
+    var screenshot = getScreenshotResize();
+    var crop = cropImage(screenshot,x,y,width,height);
     saveImage(crop,filepath);
-    releaseImage(screenShot);
+    releaseImage(screenshot);
     releaseImage(crop);
     console.log("save crop at "+filepath);
 }
@@ -130,7 +130,7 @@ function isBattleSkillSpaceDialog(){
 	if(server == "TW"){
 		return false;
 	}
-	return checkIconInScreen(40);
+	return checkIconInScreen(40,0.75);
 }
 
 function isBattleUltFailedDialog(){
