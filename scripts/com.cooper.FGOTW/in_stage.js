@@ -137,7 +137,7 @@ function useClothesSkill(skill,target1,target2){
         }
         console.log("使用衣服技能-選擇目標");
         selectSkillTarget(target1);
-    }else if(target1!=undefined && target2 !=undefined){
+    }else if(target1!=undefined && target2 !=undefined && target2 >= 0 && skill == 2){
         console.log("使用衣服技能-選擇換人目標");
         changePlayer(target1,target2);
     }
