@@ -1,5 +1,5 @@
 var loadApiCnt = 0;
-var version = "V2.17";
+var version = "V2.19";
 var isDebug = false;
 
 var defaultScreenSize = [1280,720];
@@ -34,6 +34,7 @@ function startScript(loopTime,script,scriptName){
             sendNormalMessage (runningScriptName, "Start loop "+(loop+1)+"/"+loopTime);
         }
         spaceUltColor = 2;
+        isReplay = false;
         runScript(script);
     }
     isScriptRunning = false;

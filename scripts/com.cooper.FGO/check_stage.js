@@ -60,11 +60,7 @@ function isSelectFriendPage(){
 }
 
 function isSelectFriendRefreshDialog(){
-	if(server == "TW"){
-		return checkIconInScreen(3);
-	}else{
-		return checkIconListInScreen([3,31],false);		
-	}
+	return checkIconListInScreen([3,31],false);
 }
 
 function isSelectFriendEnd(){
@@ -164,7 +160,7 @@ function isAddFriendPage(){
 	if(server == "TW"){
 		return checkIconInScreen(14);
 	}else{
-		return checkIconListInScreen([14,30],false);
+		return checkIconListInScreen([14,30],false,0.8);
 	}
 }
 
