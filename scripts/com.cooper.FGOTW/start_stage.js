@@ -1,4 +1,6 @@
 //-----------------------------------------------------select stage
+var isReplay = false;
+
 function selectStage(useApple){
     if(!isScriptRunning){
         return;
@@ -11,6 +13,7 @@ function selectStage(useApple){
     console.log("-選擇關卡-");
 
     if(isStageRestart()){
+        isReplay = true;
         tapScale(800,560);
         sleep(500);
     } else if(!isMainPage()){
@@ -399,6 +402,10 @@ function selectTeam(team){
     if(team < 0 || team >= 10){
         return;
     }
+    if(isReplay){
+        console.log("連續戰鬥，選擇隊伍省略");        
+        return;        
+    }
     if(isBattleMainPage()){
         console.log("已進入戰鬥，選擇隊伍省略");
         sleep(500);
@@ -420,6 +427,10 @@ function selectTeam(team){
 function startQuest(useItem){
     if(!isScriptRunning){
         return;
+    }
+    if(isReplay){
+        console.log("連續戰鬥，進入關卡省略");        
+        return;        
     }
     if(isBattleMainPage()){
         console.log("已進入戰鬥，進入關卡省略");

@@ -51,7 +51,7 @@ function isItemOrServantFullDialog(){
 }
 
 function isUseAppleDialog(){
-	return checkIconInScreen(1);
+	return checkIconInScreen(1,0.75);
 }
 
 //select friend
@@ -140,9 +140,19 @@ function isBattleStageFailedDialog(){
 
 //finish
 function isFinishBondPage(){
-	if(checkIconListInScreen([9,10],false)){
+	if(checkIconInScreen(9)){
 		sleep(1500);
-		return checkIconListInScreen([9,10],false);
+		if(checkIconInScreen(9)){
+			console.log("結算畫面");
+			return true;
+		}
+	}
+	if(checkIconInScreen(10)){
+		sleep(5000);
+		if(checkIconInScreen(10)){
+			console.log("結算畫面(升絆)");
+			return true;
+		}
 	}
 	return false;
 }
