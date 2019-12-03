@@ -230,10 +230,7 @@ function waitUntilPlayerCanMoveOrFinish(){
             }
         }
         if(isFinishBondPage()){
-            sleep(1500);
-            if(isFinishBondPage()){
-                return false;
-            }
+            return false;
         }
         if(isBattleStageFailedDialog()){
             sleep(1000);
