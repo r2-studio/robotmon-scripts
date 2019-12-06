@@ -70,15 +70,16 @@ function getGUIStr(){
 	if(!config.isRunning) return false;
 	color1 = this.getPixelColor(1200, 35);
 	imgStr = " ";
-	//console.log('color(1200, 35): ' + color1);
+	console.log('color(1200, 35): ' + color1);
 	switch(color1){
-		case "16D0DD": 
+		case "16D0DD", "F7BC46": 
 			return "Main Page";
-		case "0F6B76": 
+		// case "0F6B76": 
+		case "7F6027":
 		  color1 = getPixelColor(50, 30);
 		  //return "Main Page G: " + color1
 		  if(color1 == "3E483F"){
-		    rbm.keepScreenshotPartial(185, 24, 536, 69);
+		    rbm.keepScreenshotPartial(180, 20, 540, 70);
 		    if(rbm.imageExists('levelSelect.png', 0.9)){
 		      imgStr = "levelSelect";
 		    } else if(rbm.imageExists('friendSelect.png', 0.9)){
@@ -87,6 +88,8 @@ function getGUIStr(){
 		      imgStr = "equipmentConfirm";
 		    } else if(rbm.imageExists('crusade.png',0.9)){
 		      imgStr = "crusade";
+		    } else if(rbm.imageExists('donutQ.png',0.9)){
+		      imgStr = "donutQ";
 		    } else {
 		      imgStr = "Main Page G - Exit - Unknown";
 		    }
@@ -117,6 +120,8 @@ function getGUIStr(){
 		      return "crusadeSussess";
 		    } else if(this.findPic(485, 130, 785, 170, 'crusadeResult.png', 0.9)){
 		      return "crusadeResult";
+		    } else if(this.findPic(528, 48, 745, 91, 'donutResult.png', 0.9)){
+		      return "donutResult";
 		    } else {
 		      return "Main Page G - No Exit - Unknown";
 		    }
@@ -335,6 +340,12 @@ function main(puntConfig, questInfo){
       tap(640, 500, 10);
       //tap(640, 630, 10);//不進入
       break;
+    case "donutQ":
+      tap(1000, 340, 10);
+      break;
+    case "donutResult":
+      tap(640, 630, 10);
+      break;
     case "explore-exploring":
       tap(100, 50, 10);
       break;
@@ -509,13 +520,16 @@ function setPuntConfigByQuestName(questName){
       puntConfig.roleNumber[6] = "0"; puntConfig.angle[6] = 80; puntConfig.flyDelay[6] = 650;//主角斧
       break;
 	case "exp2015":
+	  console.log("exp2015");
 	  questInfo.position.x = 640; questInfo.position.y = 400; questInfo.level = 5;
-      puntConfig.centerX = 516; puntConfig.centerY = 270;
+	  setQuestPositionByQuestLevel(5);
+    puntConfig.centerX = 516; puntConfig.centerY = 270;
 	  for(i = 1; i < 11; i++){
-		puntConfig.roleNumber[i] = "-1";
+		puntConfig.roleNumber[i] = "1";
 		puntConfig.angle[i] = 45;
 		puntConfig.flyDelay[i] = 3200;
 	  }
+	  break;
 	case "exp2015-event":
 	  questInfo.position.x = 640; questInfo.position.y = 400; questInfo.level = 25;
       puntConfig.centerX = 516; puntConfig.centerY = 270;
@@ -570,6 +584,26 @@ function setPuntConfigByQuestName(questName){
 	  }
 	  
 	  break;
+	 case "donut":
+      puntConfig.roleNumber[1] = "-2"; puntConfig.angle[1] = 35; puntConfig.flyDelay[1] = 0;
+      puntConfig.roleNumber[2] = "2"; puntConfig.angle[2] = 20; puntConfig.flyDelay[2] = 3000;
+      puntConfig.roleNumber[3] = "-1"; puntConfig.angle[3] = 45; puntConfig.flyDelay[3] = 0;
+      break;
+    case "20191205-EVENT":
+      questInfo.position.x = 330;
+      questInfo.position.y = 90;
+      
+      questInfo.level = 4;
+      setQuestPositionByQuestLevel(questInfo.level)
+      puntConfig.centerX = 480;
+      puntConfig.centerY = 450;
+      puntConfig.warning = 0;
+      for(i = 1; i < 11; i++){
+    		puntConfig.roleNumber[i] = "0";
+    		puntConfig.angle[i] = 45;
+    		puntConfig.flyDelay[i] = 2500;
+  	  }
+      break;
     default:
       break;
   }
@@ -673,17 +707,42 @@ function start(viewSettings){
   console.log('Scripts End');
 }
 
+function devStart(){
+  config.isRunning = true;
+  console.log('Dev Scripts Start');
+  checkOut = -1;
+  friendUse = 0;
+  questInfo.position.x = 330;
+  questInfo.position.y = 90;
+  questInfo.level = 0
+  questInfo.levelPosition.x = 955; 
+  questInfo.levelPosition.y = 300;
+  puntConfig.centerX = 311;
+  puntConfig.centerY = 428;
+  puntConfig.warning = 0;
+  setPuntConfigByQuestName("20191205-EVENT");
+  console.log(questInfo.levelPosition.y);
+  scriptsActive = true;
+  while(scriptsActive){
+    this.main(puntConfig, questInfo);
+    sleep(500);
+  }
+}
+this.devStart();
 // this.start(mySetting);
 // this.stop();
-//config.isRunning = true;
-//console.log(this.getPixelColor(1200, 35));
-//console.log(this.getGUIStr());
 
+//console.log(this.getPixelColor(1200, 35));
+//config.isRunning = true;
+//this.easyPunt(311, 428, 250, 35, 0);
+//this.easyPunt(311, 428, 250, 20, 3000);
+//this.easyPunt(311, 428, 250, 45, 0);
 //config.isRunning = false;
 // if(gui.indexOf("Unknown") >= 0){
 //config.isRunning = true;
 //console.log(this.getGUIStr());
-// this.findPicAttribute('eventBonus-itemGet.png', 0.90);
+//this.findPicAttribute('donutResult.png', 0.90);
 // } else {
 //   console.log("GUI: " + gui);
+    console.log("1234");
 // }
