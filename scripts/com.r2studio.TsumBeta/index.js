@@ -106,10 +106,13 @@ var Button = {
   outReceiveOk: {x: 835, y: 1020 + adjY, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveClose: {x: 530, y: 1300 + adjY},
   outReceiveOne: {x: 840, y: 497 + adjY, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
+  outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {"a":0,"b":146,"g":65,"r":214}},
   outReceiveOneCoin: {x: 291, y: 579 + adjY, color: {r: 232, g: 229, b: 38}},
   outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
+  outReceiveOneRuby2th: {x: 295, y: 651+68*3, color: {r: 224, g: 93, b: 101}}, // ruby
   outReceiveOneAd: { x: 290, y: 812 - 140, color: { r: 90, g: 57, b: 25 } }, // ad
+  outReceiveOneAd2th: { x: 290, y: 672+68*3, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveOneTicket1: {x: 298, y: 569 + adjY, color: {r: 125, g: 188, b: 177}}, // green
   outReceiveOneTicket2: {x: 316, y: 576 + adjY, color: {r: 248, g: 255, b: 253}}, // white
   outIsLoading1: {x: 540, y: 720 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
@@ -1906,7 +1909,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
@@ -1918,6 +1921,7 @@ function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, c
   ts.bubbleItem = bubbleItem;
   ts.isPause = isPause;
   ts.receiveOneItem = receiveOneItem;
+  ts.receiveSecondItem = receiveSecondItem || false;
   ts.recordReceive = recordReceive;
   ts.sentToZero = sentToZero;
   ts.receiveCheckLimit = receiveCheckLimit;
@@ -1934,6 +1938,12 @@ function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, c
   ts.useFan = useFan;
   if (largeImage) {
     ts.resizeRatio = 1;
+  }
+  if (ts.receiveSecondItem) {
+    ts.recordReceive = false;
+    Button.outReceiveOne = Button.outReceiveOne2th;
+    Button.outReceiveOneRuby = Button.outReceiveOneRuby2th;
+    Button.outReceiveOneAd = Button.outReceiveOneAd2th;
   }
   
   if (ts.recordReceive) {

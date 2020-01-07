@@ -22,8 +22,8 @@
     },
     "com.r2studio.TsumBeta": {
       "title": "Disney Tsum Tsum (Beta Testing)",
-      "versionCode": 52,
-      "description": "<b><font color='#2196f3'>🔖 版本 v52 Beta</font></b><ul><li>測試：偵測螢幕高，請在遊戲中啟動腳本</li><li>Testing: detect screen height. Should start script in game.</li></ul>",
+      "versionCode": 53,
+      "description": "<b><font color='#2196f3'>🔖 版本 v53 Beta</font></b><ul><li>收心跳過第一個使用者，解決日版任務Bug</li><li>測試：偵測螢幕高，請在遊戲中啟動腳本</li><li>Testing: detect screen height. Should start script in game.</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
