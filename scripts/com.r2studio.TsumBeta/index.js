@@ -110,7 +110,7 @@ var Button = {
   outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {"a":0,"b":146,"g":65,"r":214}},
   outReceiveOneCoin: {x: 291, y: 579 + adjY, color: {r: 232, g: 229, b: 38}},
   outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
-  outReceiveOneRuby2th: {x: 295, y: 651+68*3, color: {r: 224, g: 93, b: 101}}, // ruby
+  outReceiveOneRuby2th: {x: 295, y: 651+68*3, color: {r: 235, g: 93, b: 105}}, // ruby
   outReceiveOneAd: { x: 290, y: 812 - 140, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveOneAd2th: { x: 290, y: 672+68*3, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveOneTicket1: {x: 298, y: 569 + adjY, color: {r: 125, g: 188, b: 177}}, // green
@@ -1643,7 +1643,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
   while (this.isRunning) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
-    var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 24);
+    var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isAd = isSameColor(Button.outReceiveOneAd.color, this.getColor(img, Button.outReceiveOneAd), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
@@ -1695,7 +1695,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       receiveTime = Date.now();
     }
     
-    if (Date.now() - receiveTime > 2000) {
+    if (Date.now() - receiveTime > 3000) {
       this.tap(Button.outClose);
       this.goFriendPage();
       this.sleep(500);
