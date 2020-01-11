@@ -854,9 +854,9 @@ class LineageM {
 
   getBarPercent(barRect, b1, b2, poison = false) {
     const bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
-    const fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
     const y1 = barRect.th / 3;
     const y2 = barRect.th / 3 * 2;
+    const fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
     let bright1 = 0;
     let bright2 = 0;
     for(let x = 0; x < barRect.tw; x += 1) {

@@ -1002,9 +1002,9 @@ var LineageM = function () {
       var poison = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
       var bar = cropImage(this._img, barRect.tx, barRect.ty, barRect.tw, barRect.th);
-      var fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
       var y1 = barRect.th / 3;
       var y2 = barRect.th / 3 * 2;
+      var fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
       var bright1 = 0;
       var bright2 = 0;
       for (var x = 0; x < barRect.tw; x += 1) {
