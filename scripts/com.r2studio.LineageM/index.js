@@ -326,7 +326,7 @@ var GameInfo = function GameInfo() {
   this.zeroRect = new Rect(0, 0, 1, 1);
   this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
   this.regionTypeRect = new Rect(1710, 470, 1816, 498);
-  this.storeHpRect = new Rect(94, 276, 94 + 100, 276 + 100);
+  this.storeHpRect = new Rect(80, 276, 80 + 120, 276 + 120);
   this.mapSelector = new Rect(56, 339, 350, 937); // h 112
   this.moneyRect = new Rect(990, 40, 1150, 80);
   this.centerRect = new Rect(600, 200, 1400, 800);
@@ -340,6 +340,9 @@ var GameInfo = function GameInfo() {
   this.storeArrow = new Point(260, 560);
   this.storeBuy = new Point(1600, 970);
   this.storeBuy2 = new Point(1130, 882);
+  this.storeSelfOrder = new Point(200, 970);
+  this.storeBuyOrder = new Point(1500, 970);
+  this.storeBuyOrder2 = new Point(1750, 970);
   this.getReward = new Point(1680, 320);
   this.signAlliance = new Point(1820, 252);
 
@@ -357,7 +360,7 @@ var GameInfo = function GameInfo() {
   this.mapMoveBtn = new Point(1588, 986);
   this.mapFloorBtn = new Point(1120, 886);
 
-  this.storeMode = new PageFeature('storeMode', [new FeaturePoint(184, 956, 212, 192, 139, true, 32), new FeaturePoint(220, 984, 15, 14, 10, true, 20), new FeaturePoint(208, 982, 233, 227, 205, true, 20)]);
+  this.storeMode = new PageFeature('storeMode', [new FeaturePoint(116, 862, 224, 155, 46, true, 32), new FeaturePoint(223, 862, 28, 45, 70, true, 32), new FeaturePoint(196, 946, 43, 33, 17, true, 32), new FeaturePoint(692, 710, 0, 0, 0, true, 32), new FeaturePoint(830, 710, 0, 0, 0, true, 32), new FeaturePoint(1487, 944, 25, 22, 16, true, 32)]);
   this.menuOffEvent = new PageFeature('menuOffEvent', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80), new FeaturePoint(1880, 42, 242, 30, 26, true, 30)]);
   this.menuSign = new PageFeature('menuOpenSign', [new FeaturePoint(1652, 250, 242, 30, 26, true, 80)]);
   this.menuMail = new PageFeature('menuOpenMail', [new FeaturePoint(1538, 466, 242, 30, 26, true, 80)]);
@@ -406,7 +409,7 @@ var RoleState = function () {
   _createClass(RoleState, [{
     key: 'print',
     value: function print() {
-      if (this.lastHP !== this.hp || this.lastMP !== this.mp) {
+      if (Math.abs(this.lastHP - this.hp) > 5 || Math.abs(this.lastMP - this.mp) > 5) {
         console.log('\u8840\u91CF\uFF1A' + this.hp + '\uFF0C\u9B54\u91CF\uFF1A' + this.mp);
         this.lastHP = this.hp;
         this.lastMP = this.mp;
@@ -635,7 +638,7 @@ var LineageM = function () {
             }
           }
           if (!isAttacking) {
-            if (!isBuy && (this.config.autoBuyHp !== 0 || this.config.autoBuyArrow !== 0)) {
+            if (!isBuy && autoFirstSet) {
               this.checkAndBuyItems();
               isBuy = true;
             } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
@@ -786,10 +789,17 @@ var LineageM = function () {
           this.slideMapSelector(36);
           this.safeSleep(4000);
         }
-        if (this.findStore()) {
+        var storeType = this.findStore();
+        if (storeType === 1) {
           this.buyItems();
           this.refreshScreen();
           break;
+        } else if (storeType === 2) {
+          this.buyItems();
+          this.refreshScreen();
+          // this.gi.itemBtns[7].tap();
+          // this.safeSleep(4000);
+          // this.refreshScreen();
         } else if (i < tryTimes - 1) {
           console.log('找不到商店，再試一次');
           this.gi.itemBtns[7].tap();
@@ -798,6 +808,9 @@ var LineageM = function () {
         }
       }
     }
+
+    // 0 = no store, 1 = 雜貨電. 2 = others
+
   }, {
     key: 'findStore',
     value: function findStore() {
@@ -808,23 +821,21 @@ var LineageM = function () {
         }
         var dXY = Utils.targetToDevice(stores[k]);
         tap(dXY.x + 5, dXY.y + 5, 50);
-        this.waitForChangeScreen(0.95, 7000);if (!this._loop) {
+        this.waitForChangeScreen(0.7, 7000);if (!this._loop) {
           return false;
         }
         this.safeSleep(1000);
         if (this.gi.storeMode.check(this._img)) {
-          this.gi.storeMode.tap();
-          this.safeSleep(500);if (!this._loop) {
-            return false;
-          }
-          this.refreshScreen();
+          console.log('找到商店');
           var testHpImg = this.gi.storeHpRect.crop(this._img);
-          var s = getIdentityScore(this.images.hpWater, testHpImg);
+          var results = findImages(testHpImg, this.images.hpWater, 0.9, 1);
           releaseImage(testHpImg);
-          if (s > 0.9) {
-            console.log('找到商店');
-            return true;
+          if (results.length > 0 && results[0].score > 0.9) {
+            console.log('找到雜貨店');
+            return 1;
           }
+        } else {
+          console.log('不是商店，換下一個');
         }
         if (this.gi.menuOnBtn.check(this._img)) {
           this.gi.menuOnBtn.tap();
@@ -832,68 +843,29 @@ var LineageM = function () {
         this.safeSleep(2000);
         continue;
       }
-      return false;
+      return 0;
     }
   }, {
     key: 'buyItems',
     value: function buyItems() {
-      if (this.config.autoBuyHp > 0) {
-        this.gi.storeHp.tap();
-        this.gi.store100.tap(Math.min(this.config.autoBuyHp, 10), 200);
-      }
-      sleep(500);if (!this._loop) {
+      console.log('購買自訂清單');
+      this.gi.storeSelfOrder.tap();
+      sleep(2000);if (!this._loop) {
         return false;
       }
-      if (this.config.autoBuyArrow > 0) {
-        this.gi.storeOther.tap();
-        sleep(500);if (!this._loop) {
-          return false;
-        }
-        this.refreshScreen();
-        var arrowPos = findImage(this._img, this.images.arrow);
-        if (arrowPos.score > 0.8) {
-          var dXY = Utils.targetToDevice(arrowPos);
-          tap(dXY.x + 5, dXY.y + 5, 50);
-          this.gi.store1000.tap(Math.min(this.config.autoBuyArrow, 10), 200);
-        }
-      }
-      sleep(500);if (!this._loop) {
+      this.gi.storeBuyOrder.tap();
+      sleep(2000);if (!this._loop) {
         return false;
       }
-      if (this.config.autoBuyHp === -1) {
-        this.gi.storeHp.tap();
-        this.gi.storeMax.tap();
-      }
-      sleep(500);if (!this._loop) {
+      this.gi.storeBuyOrder2.tap();
+      sleep(2000);if (!this._loop) {
         return false;
       }
-      if (this.config.autoBuyArrow === -1) {
-        this.gi.storeArrow.tap();
-        this.gi.storeMax.tap();
-      }
-      this.safeSleep(500);if (!this._loop) {
+      this.gi.storeBuy2.tap();
+      sleep(2000);if (!this._loop) {
         return false;
       }
-      this.refreshScreen();if (!this._loop) {
-        return false;
-      }
-      if (this.gi.storeExceed.check(this._img)) {
-        console.log('購買物品');
-        this.safeSleep(500);if (!this._loop) {
-          return false;
-        }
-        this.gi.storeBuy.tap();
-        this.safeSleep(500);if (!this._loop) {
-          return false;
-        }
-        this.gi.storeBuy2.tap();
-        this.safeSleep(1000);if (!this._loop) {
-          return false;
-        }
-        this.gi.menuOnBtn.tap();
-        return true;
-      }
-      console.log('超過負重，取消購買');
+      console.log('購買自訂清單完成');
       this.gi.menuOnBtn.tap();
       return true;
     }
@@ -1302,8 +1274,7 @@ var DefaultConfig = {
   autoReceiveReward: false,
   autoUseAntidote: false, // take an antidote for the poison, use six button
   goBackInterval: 0, // whether to go back to origin location, check location every n min
-  autoBuyHp: 0, // 1 * 100, -1 => max
-  autoBuyArrow: 0, // 1 * 1000, -1 => max
+  autoFirstSet: false, // 1 * 100, -1 => max
   mapSelect: 0 // move to nth map in safe region
 };
 

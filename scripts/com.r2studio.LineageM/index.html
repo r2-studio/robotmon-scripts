@@ -177,7 +177,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 20.4;
+    VERSION = 21;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
@@ -196,8 +196,7 @@
       autoAttack: true,
       autoReceiveReward: true,
       autoUseAntidote: false, // take an antidote for the poison, use six button
-      autoBuyHp: 0, // 1 * 100, -1 => max
-      autoBuyArrow: 0, // 1 * 1000, -1 => max
+      autoFirstSet: false,
       goBackInterval: 0, // whether to go back to origin location, check location every n min
       mapSelect: 0, // move to nth map in safe region
     };
@@ -235,8 +234,7 @@
                 autoAttack: "自動攻擊",
                 autoReceiveReward: "自動收獎勵、簽到",
                 autoUseAntidote: "自動使用解毒劑 (請將解毒劑放在快捷鍵 6)",
-                autoBuyHp: "自動買紅水 (-1: Max)",
-                autoBuyArrow: "自動買銀箭 (-1: Max)",
+                autoFirstSet: "自動購買第 1 Set",
                 goBackInterval: "回到地圖原點 (0: 不啟動) (僅支援亞丁大陸與中間區域)",
                 mapSelect: "移動指定地圖 (0: 不啟動) (僅支援亞丁大陸1到68號)",
               }
@@ -481,11 +479,7 @@
         if (typeof value === 'boolean') {
           loadSwitchSetting('other', settings, key);
         } else if (typeof value === 'number') {
-          if (key === 'autoBuyHp') {
-            loadButtonSetting('other', settings, key, -1, 10, 1, 1, 100, undefined, undefined, 'text.unit');
-          } else if (key === 'autoBuyArrow') {
-            loadButtonSetting('other', settings, key, -1, 10, 1, 1, 1000, undefined, undefined, 'text.unit');
-          } else if (key === 'goBackInterval') {
+          if (key === 'goBackInterval') {
             loadButtonSetting('other', settings, key, 0, 20, 1, 60000, 1, undefined, 'text.interval', 'text.minutes');
           } else if (key === 'mapSelect') {
             loadButtonSetting('other', settings, key, 0, 68, 1, 1, 1, 10, 'text.map', undefined);
@@ -560,9 +554,12 @@
   </nav>
   <div id="container" class="container">
     <div style="margin: 10px 0px;">
+      V21 久違的更新，修正自動購買物品、Beta版本無法跑
+    </div>
+    <div style="margin: 10px 0px;">
       <div>1️⃣ 請將浮動視窗放在中間上方位置(不要遮蔽住地圖選單亞丁大陸)</div>
-      <div>2️⃣ 支援所有螢幕解析度(請先設定畫面比例為基本比例)</div>
-      <div>3️⃣ 自動買物品功能(使用回卷找到商人，會重試 10 次，第 5 次會飛去燃柳)</div>
+      <div>2️⃣ 支援所有螢幕解析度(請先設定畫面比例為基本比例)(模擬器建議16:9)</div>
+      <div>3️⃣ 自動買物品功能，購買1 SET。(使用回卷找到商人，會重試 10 次，第 5 次會飛去燃柳)</div>
       <div>4️⃣ 快捷鍵 9 為試煉副本的特殊技能按鈕</div>
     </div>
     <ul id="condition" class="list-group"></ul>
