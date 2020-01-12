@@ -638,7 +638,7 @@ var LineageM = function () {
             }
           }
           if (!isAttacking) {
-            if (!isBuy && autoFirstSet) {
+            if (!isBuy && this.config.autoBuyFirstSet) {
               this.checkAndBuyItems();
               isBuy = true;
             } else if (this.config.inHomeUseBtn && Date.now() - useHomeTime > 4000) {
@@ -1274,7 +1274,7 @@ var DefaultConfig = {
   autoReceiveReward: false,
   autoUseAntidote: false, // take an antidote for the poison, use six button
   goBackInterval: 0, // whether to go back to origin location, check location every n min
-  autoFirstSet: false, // 1 * 100, -1 => max
+  autoBuyFirstSet: false, // 1 * 100, -1 => max
   mapSelect: 0 // move to nth map in safe region
 };
 
