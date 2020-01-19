@@ -363,7 +363,7 @@ var GameInfo = function GameInfo() {
   this.storeMode = new PageFeature('storeMode', [new FeaturePoint(116, 862, 224, 155, 46, true, 32), new FeaturePoint(223, 862, 28, 45, 70, true, 32), new FeaturePoint(196, 946, 43, 33, 17, true, 32), new FeaturePoint(692, 710, 0, 0, 0, true, 32), new FeaturePoint(830, 710, 0, 0, 0, true, 32), new FeaturePoint(1487, 944, 25, 22, 16, true, 32)]);
   this.menuOffEvent = new PageFeature('menuOffEvent', [new FeaturePoint(1850, 56, 173, 166, 147, true, 80), new FeaturePoint(1850, 66, 173, 166, 147, true, 80), new FeaturePoint(1860, 76, 173, 166, 147, true, 80), new FeaturePoint(1880, 42, 242, 30, 26, true, 30)]);
   this.menuSign = new PageFeature('menuOpenSign', [new FeaturePoint(1652, 250, 242, 30, 26, true, 80)]);
-  this.menuMail = new PageFeature('menuOpenMail', [new FeaturePoint(1538, 466, 242, 30, 26, true, 80)]);
+  this.menuMail = new PageFeature('menuOpenMail', [new FeaturePoint(1652, 466, 242, 30, 26, true, 80)]);
   this.menuAlliance = new PageFeature('menuOpenAlliance', [new FeaturePoint(1418, 360, 242, 30, 26, true, 80)]);
 
   this.menuOnBtn = new PageFeature('menuOn', [new FeaturePoint(1844, 56, 245, 245, 241, true, 30), new FeaturePoint(1844, 66, 128, 70, 56, true, 30), new FeaturePoint(1844, 76, 245, 220, 215, true, 30)]);
@@ -912,6 +912,7 @@ var LineageM = function () {
         if (!this._loop) {
           return;
         }
+        this.gi.getReward.tap();this.safeSleep(1000);
         this.gi.getReward.tap();this.safeSleep(1000);
         this.gi.getReward.tap();this.safeSleep(1000);
         this.gi.getReward.tap();this.safeSleep(1000);

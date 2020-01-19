@@ -251,7 +251,7 @@ class GameInfo {
       new FeaturePoint(1652, 250, 242, 30, 26, true, 80),
     ]);
     this.menuMail = new PageFeature('menuOpenMail', [
-      new FeaturePoint(1538, 466, 242, 30, 26, true, 80),
+      new FeaturePoint(1652, 466, 242, 30, 26, true, 80),
     ]);
     this.menuAlliance = new PageFeature('menuOpenAlliance', [
       new FeaturePoint(1418, 360, 242, 30, 26, true, 80),
@@ -793,6 +793,7 @@ class LineageM {
       this.gi.menuMail.tap();
       this.waitForChangeScreen(0.9, 5000);
       if (!this._loop) {return;}
+      this.gi.getReward.tap();this.safeSleep(1000);
       this.gi.getReward.tap();this.safeSleep(1000);
       this.gi.getReward.tap();this.safeSleep(1000);
       this.gi.getReward.tap();this.safeSleep(1000);
