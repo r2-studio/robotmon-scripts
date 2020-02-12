@@ -8,7 +8,7 @@ var iconName = ["main","apple","friendPage","friendRefresh","teamPage","teamItem
 "friendRefresh2","friendEnd","friendEnd2","friendEnd3","friendEnd4",
 "friendEmpty","finishNext","friendPointContinue","stageRestart","spaceColor"];
 //TODO: update image for friend end
-var	iconPosition = [[1140,650,100,50],[530,45,200,50],[740,100,150,50],[560,100,160,60],[1135,650,115,50],[400,50,400,50],
+var	iconPosition = [[1140,650,100,50],[530,45,200,50],[740,100,150,50],[560,100,160,60],[1135,650,115,50],[360,630,180,40],
 		[1168,175,60,60],[1168,282,60,60],[1100,630,70,50],[60,150,240,50],[1000,90,230,120],
 		[560,70,150,40],[570,170,140,30],[1080,130,40,40],[60,70,100,55],[600,425,82,40],
 		[500,100,275,50],[580,535,120,40],[0,0,70,80],[450,375,450,72],[525,525,225,50],
