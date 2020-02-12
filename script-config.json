@@ -109,8 +109,8 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 2.21,
-      "description": "<div>V2.21修正部分機型會卡在蘋果畫面的問題<br>V2.16 支援瀏海機，遊戲畫面有黑邊不置中也能使用了!新增指令支援仇凜技2。修正有時升絆會卡住的問題<br>V2.11 可以在戰鬥中開始執行腳本，會自動跳過前面的指令。修正進入選擇好友頁面沒有等跑狗造成的錯誤<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.22,
+      "description": "<div>V2.22 修正情人節活動卡在使用活動道具的問題<br>V2.21修正部分機型會卡在蘋果畫面的問題<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
