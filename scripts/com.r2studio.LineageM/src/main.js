@@ -1159,6 +1159,7 @@ function stop() {
     return;
   }
   lm._loop = false;
+  lm = undefined;
   console.log('📢 停止腳本中 📢');
 }
 
