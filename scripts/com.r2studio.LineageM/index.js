@@ -28,6 +28,23 @@ if (gDeviceWidth / gDeviceHeight > 1.78) {
   gGameHeight = Math.round(gGameWidth / 1.777778);
   gGameOffsetY = (gDeviceHeight - gGameHeight) / 2;
 }
+// for special screen
+if (gDeviceWidth / gDeviceHeight > 1.78) {
+  var _blackX = 0;
+  var _img = getScreenshot();
+  for (var x = 0; x < _wh.width; x++) {
+    var color = getImageColor(_img, x, _wh.height / 2);
+    if (color.r === 0 && color.g === 0 && color.b === 0) {
+      _blackX++;
+    } else {
+      break;
+    }
+  }
+  if (Math.abs(_blackX - gGameOffsetX) >= 6) {
+    gGameOffsetX = _blackX;
+  }
+}
+
 var gRatioTarget = gTargetWidth / gDevWidth;
 var gRatioDevice = gGameWidth / gDevWidth;
 // -- others
@@ -637,6 +654,14 @@ var LineageM = function () {
               break;
             }
           }
+          if (this.rState.isAutoPlay) {
+            console.log('安全區域，關閉自動攻擊');
+            if (this.rState.autoPlayOffCount === 0) {
+              this.gi.autoPlayBtn.tap();
+              sleep(1000);
+            }
+            continue;
+          }
           if (!isAttacking) {
             if (!isBuy && this.config.autoBuyFirstSet) {
               this.checkAndBuyItems();
@@ -715,6 +740,7 @@ var LineageM = function () {
           }
           goBackTime = Date.now();
         }
+        sleep(100);
       }
     }
   }, {
@@ -781,12 +807,13 @@ var LineageM = function () {
     value: function checkAndBuyItems() {
       var tryTimes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
 
-      console.log('嘗試購買物品');
+      console.log('嘗試購買物品');sleep(500);
+      this.refreshScreen();
       for (var i = 0; i < tryTimes && this._loop; i++) {
         if (i == 4) {
           console.log('移動到燃柳村莊，確保有商人');
           this.goToMapPage();
-          this.slideMapSelector(36);
+          this.slideMapSelector(39);
           this.safeSleep(4000);
         }
         var storeType = this.findStore();
@@ -814,10 +841,29 @@ var LineageM = function () {
   }, {
     key: 'findStore',
     value: function findStore() {
-      var stores = findImages(this._img, this.images.store, 0.89, 4, true);
+      var stores = findImages(this._img, this.images.store, 0.90, 4, true);
       for (var k in stores) {
         if (!this._loop) {
           return false;
+        }
+        var blueCount = 0;
+        // for check is right store
+        for (var i = 0; i < 10; i++) {
+          var sx = stores[k].x;
+          var sy = stores[k].y;
+          if (sx < 280 && sy < 144) {
+            continue;
+          }
+          if (sx > 790 && sy < 260) {
+            continue;
+          }
+          var color = getImageColor(this._img, sx + 10, sy + 67 + i);
+          if (color.b * 2 > color.g + color.r) {
+            blueCount++;
+          }
+        }
+        if (blueCount < 6) {
+          continue;
         }
         var dXY = Utils.targetToDevice(stores[k]);
         tap(dXY.x + 5, dXY.y + 5, 50);
@@ -980,8 +1026,8 @@ var LineageM = function () {
       var fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
       var bright1 = 0;
       var bright2 = 0;
-      for (var x = 0; x < barRect.tw; x += 1) {
-        var c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));
+      for (var _x10 = 0; _x10 < barRect.tw; _x10 += 1) {
+        var c = Utils.mergeColor(getImageColor(bar, _x10, y1), getImageColor(bar, _x10, y2));
         var d = Utils.minMaxDiff(c);
         if (d > b1) {
           bright1++;
