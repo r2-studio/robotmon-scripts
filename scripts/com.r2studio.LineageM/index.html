@@ -177,7 +177,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 22;
+    VERSION = 23;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
@@ -482,7 +482,7 @@
           if (key === 'goBackInterval') {
             loadButtonSetting('other', settings, key, 0, 20, 1, 60000, 1, undefined, 'text.interval', 'text.minutes');
           } else if (key === 'mapSelect') {
-            loadButtonSetting('other', settings, key, 0, 68, 1, 1, 1, 10, 'text.map', undefined);
+            loadButtonSetting('other', settings, key, 0, 75, 1, 1, 1, 10, 'text.map', undefined);
           }
         }
       }
@@ -554,7 +554,20 @@
   </nav>
   <div id="container" class="container">
     <div style="margin: 10px 0px;">
-      V22 修正簽到收獎勵，修正自動購買物品、Beta版本無法跑
+      V23
+      <ul>
+        <li>修正腳本只能跑一次</li>
+        <li>修正手機螢幕沒置中</li>
+        <li>提高自動購買物品成功率</li>
+        <li>修正燃柳村莊位置</li>
+        <li>修正地圖清單長度</li>
+      </ul>
+      V22
+      <ul>
+        <li>修正簽到收獎勵</li>
+        <li>修正自動購買物品</li>
+        <li>修正Beta版本無法跑</li>
+      </ul>
     </div>
     <div style="margin: 10px 0px;">
       <div>1️⃣ 請將浮動視窗放在中間上方位置(不要遮蔽住地圖選單亞丁大陸)</div>

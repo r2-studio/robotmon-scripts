@@ -18,10 +18,27 @@ if (gDeviceWidth / gDeviceHeight > 1.78) {
   gGameHeight = Math.round(gGameWidth / 1.777778);
   gGameOffsetY = (gDeviceHeight - gGameHeight) / 2;
 }
+// for special screen
+if (gDeviceWidth / gDeviceHeight > 1.78) {
+  let _blackX = 0;
+  const _img = getScreenshot();
+  for (let x = 0; x < _wh.width; x++) {
+    const color = getImageColor(_img, x, _wh.height / 2);
+    if (color.r === 0 && color.g === 0 && color.b === 0) {
+      _blackX++;
+    } else {
+      break;
+    }
+  }
+  if (Math.abs(_blackX - gGameOffsetX) >= 6) {
+    gGameOffsetX = _blackX;
+  }
+}
+
 const gRatioTarget = gTargetWidth / gDevWidth;
 const gRatioDevice = gGameWidth / gDevWidth;
 // -- others
-const gZeroColor = {r: 0, g: 0, b: 0};
+const gZeroColor = { r: 0, g: 0, b: 0 };
 // == Global variables en
 
 // Utils for sending message
@@ -80,7 +97,7 @@ class Utils {
   }
   static targetToDevice(xy) {
     const r = gRatioDevice / gRatioTarget;
-    return {x: gGameOffsetX + xy.x * r, y: gGameOffsetY + xy.y * r};
+    return { x: gGameOffsetX + xy.x * r, y: gGameOffsetY + xy.y * r };
   }
 }
 Utils.checkCanSendMessage();
@@ -95,7 +112,7 @@ class Rect {
     this.tx = this.x1 * gRatioTarget;
     this.ty = this.y1 * gRatioTarget;
     this.tw = (this.x2 - this.x1) * gRatioTarget;
-    this.th = (this.y2 - this.y1) * gRatioTarget; 
+    this.th = (this.y2 - this.y1) * gRatioTarget;
   }
   crop(img) {
     return cropImage(img, this.tx, this.ty, this.tw, this.th);
@@ -112,7 +129,7 @@ class Point {
     this.dy = gGameOffsetY + this.y * gRatioDevice;
   }
   tap(times = 1, delay = 0) {
-    while(times > 0) {
+    while (times > 0) {
       if (delay > 0) {
         sleep(delay);
       }
@@ -177,7 +194,7 @@ class PageFeature {
     }
   }
   tap(idx = 0) {
-    this.featurPoints[idx].tap(); 
+    this.featurPoints[idx].tap();
   }
 }
 
@@ -234,12 +251,12 @@ class GameInfo {
     this.mapFloorBtn = new Point(1120, 886);
 
     this.storeMode = new PageFeature('storeMode', [
-      new FeaturePoint(116,  862, 224, 155, 46, true, 32),
-      new FeaturePoint(223,  862, 28,  45,  70, true, 32),
-      new FeaturePoint(196,  946, 43,  33,  17, true, 32),
-      new FeaturePoint(692,  710, 0,   0,   0, true, 32),
-      new FeaturePoint(830,  710, 0,   0,   0, true, 32),
-      new FeaturePoint(1487, 944, 25,  22, 16, true, 32),
+      new FeaturePoint(116, 862, 224, 155, 46, true, 32),
+      new FeaturePoint(223, 862, 28, 45, 70, true, 32),
+      new FeaturePoint(196, 946, 43, 33, 17, true, 32),
+      new FeaturePoint(692, 710, 0, 0, 0, true, 32),
+      new FeaturePoint(830, 710, 0, 0, 0, true, 32),
+      new FeaturePoint(1487, 944, 25, 22, 16, true, 32),
     ]);
     this.menuOffEvent = new PageFeature('menuOffEvent', [
       new FeaturePoint(1850, 56, 173, 166, 147, true, 80),
@@ -351,7 +368,7 @@ class RoleState {
 
 class LineageM {
   constructor(config) {
-    this.config = config || {conditions: []};
+    this.config = config || { conditions: [] };
     this.gi = new GameInfo();
     this.rState = new RoleState(this.gi);
     this.localPath = getStoragePath() + `/scripts/com.r2studio.LineageM/images`
@@ -376,8 +393,8 @@ class LineageM {
   }
 
   safeSleep(t) {
-    while(this._loop && t > 0) {
-      t-=100;
+    while (this._loop && t > 0) {
+      t -= 100;
       sleep(100);
     }
   }
@@ -403,7 +420,7 @@ class LineageM {
       return true;
     }
     if (this.rState.isEnter) {
-      console.log('進入遊戲，等待 10 秒');        
+      console.log('進入遊戲，等待 10 秒');
       this.gi.enterBtn.tap();
       this.safeSleep(10 * 1000);
       return true;
@@ -487,7 +504,7 @@ class LineageM {
   }
 
   checkCondiction() {
-    for(let i = 0; i < this.config.conditions.length && this._loop; i++) {
+    for (let i = 0; i < this.config.conditions.length && this._loop; i++) {
       const cd = this.config.conditions[i];
       if (cd.useTime === undefined) {
         cd.useTime = 0;
@@ -502,7 +519,7 @@ class LineageM {
       if (cd.type === 'exp') {
         if (this.rState.exp !== this.tmpExp) {
           this.gi.itemBtns[cd.btn].tap(1, 50);
-          console.log(`使用按鈕 ${cd.btn+1}，條件 ${cd.type} ${cd.op===1?'大於':'小於'} ${cd.value} (${value})`);
+          console.log(`使用按鈕 ${cd.btn + 1}，條件 ${cd.type} ${cd.op === 1 ? '大於' : '小於'} ${cd.value} (${value})`);
           cd.useTime = Date.now();
           break;
         }
@@ -512,7 +529,7 @@ class LineageM {
             continue;
           }
           this.gi.itemBtns[cd.btn].tap(1, 50);
-          console.log(`使用按鈕 ${cd.btn+1}，條件 ${cd.type} ${cd.op===1?'大於':'小於'} ${cd.value} (${value})`);
+          console.log(`使用按鈕 ${cd.btn + 1}，條件 ${cd.type} ${cd.op === 1 ? '大於' : '小於'} ${cd.value} (${value})`);
           cd.useTime = Date.now();
           break;
         }
@@ -520,14 +537,14 @@ class LineageM {
     }
   }
 
-  start() { 
+  start() {
     this._loop = true;
     let goBackTime = Date.now();
     let useHomeTime = Date.now();
     let poisonTime = 0;
     let isBuy = false;
     let receiveTime = 0;
-    while(this._loop) {
+    while (this._loop) {
       this.refreshScreen();
       if (this.checkBeAttacked()) {
         this.sendDangerMessage('你被攻擊了，使用順卷');
@@ -555,6 +572,14 @@ class LineageM {
             isAttacking = false;
             break;
           }
+        }
+        if (this.rState.isAutoPlay) {
+          console.log('安全區域，關閉自動攻擊');
+          if (this.rState.autoPlayOffCount === 0) {
+            this.gi.autoPlayBtn.tap();
+            sleep(1000);
+          }
+          continue;
         }
         if (!isAttacking) {
           if (!isBuy && this.config.autoBuyFirstSet) {
@@ -620,7 +645,7 @@ class LineageM {
         this.isRecordLocation = true;
         continue;
       }
-      
+
       // go back to record location
       if (this.config.goBackInterval != 0 && Date.now() - goBackTime > this.config.goBackInterval) {
         console.log('嘗試走回紀錄點');
@@ -634,12 +659,13 @@ class LineageM {
         }
         goBackTime = Date.now();
       }
+      sleep(100);
     }
   }
 
   waitForChangeScreen(score = 0.8, maxSleep = 10000) {
     const oriImg = clone(this._img);
-    for(let i = 0; i < (maxSleep/500) && this._loop; i++) {
+    for (let i = 0; i < (maxSleep / 500) && this._loop; i++) {
       sleep(400);
       this.refreshScreen();
       const s = getIdentityScore(this._img, oriImg);
@@ -669,7 +695,7 @@ class LineageM {
   sendDangerMessage(msg) {
     console.log('送危險訊息中...');
     const centerImg = this.gi.centerRect.crop(this._img);
-    const rmi = resizeImage(centerImg, this.gi.centerRect.w/2, this.gi.centerRect.h/2);
+    const rmi = resizeImage(centerImg, this.gi.centerRect.w / 2, this.gi.centerRect.h / 2);
     const base64 = getBase64FromImage(rmi);
     releaseImage(rmi);
     releaseImage(centerImg);
@@ -680,7 +706,7 @@ class LineageM {
     if (Utils.canSendMessage()) {
       console.log('送錢訊息中...');
       const moneyImg = this.gi.moneyRect.crop(this._img);
-      const rmi = resizeImage(moneyImg, this.gi.moneyRect.w/2, this.gi.moneyRect.h/2);
+      const rmi = resizeImage(moneyImg, this.gi.moneyRect.w / 2, this.gi.moneyRect.h / 2);
       const base64 = getBase64FromImage(rmi);
       releaseImage(rmi);
       releaseImage(moneyImg);
@@ -689,16 +715,17 @@ class LineageM {
   }
 
   checkAndBuyItems(tryTimes = 10) {
-    console.log('嘗試購買物品');
+    console.log('嘗試購買物品'); sleep(500);
+    this.refreshScreen();
     for (let i = 0; i < tryTimes && this._loop; i++) {
       if (i == 4) {
         console.log('移動到燃柳村莊，確保有商人');
         this.goToMapPage();
-        this.slideMapSelector(36);
+        this.slideMapSelector(39);
         this.safeSleep(4000);
       }
       const storeType = this.findStore();
-      if (storeType === 1) {  
+      if (storeType === 1) {
         this.buyItems();
         this.refreshScreen();
         break;
@@ -719,12 +746,31 @@ class LineageM {
 
   // 0 = no store, 1 = 雜貨電. 2 = others
   findStore() {
-    const stores = findImages(this._img, this.images.store, 0.89, 4, true);
+    const stores = findImages(this._img, this.images.store, 0.90, 4, true);
     for (let k in stores) {
-      if (!this._loop) {return false;}
+      if (!this._loop) { return false; }
+      let blueCount = 0;
+      // for check is right store
+      for (let i = 0; i < 10; i++) {
+        const sx = stores[k].x;
+        const sy = stores[k].y;
+        if (sx < 280 && sy < 144) {
+          continue;
+        }
+        if (sx > 790 && sy < 260) {
+          continue;
+        }
+        var color = getImageColor(this._img, sx + 10, sy + 67 + i);
+        if (color.b * 2 > color.g + color.r) {
+          blueCount++;
+        }
+      }
+      if (blueCount < 6) {
+        continue;
+      }
       const dXY = Utils.targetToDevice(stores[k]);
       tap(dXY.x + 5, dXY.y + 5, 50);
-      this.waitForChangeScreen(0.7, 7000);if (!this._loop) {return false;}
+      this.waitForChangeScreen(0.7, 7000); if (!this._loop) { return false; }
       this.safeSleep(1000);
       if (this.gi.storeMode.check(this._img)) {
         console.log('找到商店');
@@ -750,13 +796,13 @@ class LineageM {
   buyItems() {
     console.log('購買自訂清單');
     this.gi.storeSelfOrder.tap();
-    sleep(2000);if (!this._loop) {return false;}
+    sleep(2000); if (!this._loop) { return false; }
     this.gi.storeBuyOrder.tap();
-    sleep(2000);if (!this._loop) {return false;}
+    sleep(2000); if (!this._loop) { return false; }
     this.gi.storeBuyOrder2.tap();
-    sleep(2000);if (!this._loop) {return false;}
+    sleep(2000); if (!this._loop) { return false; }
     this.gi.storeBuy2.tap();
-    sleep(2000);if (!this._loop) {return false;}
+    sleep(2000); if (!this._loop) { return false; }
     console.log('購買自訂清單完成');
     this.gi.menuOnBtn.tap();
     return true;
@@ -787,28 +833,28 @@ class LineageM {
     }
     this.gi.menuOffEvent.tap();
     this.waitForChangeScreen(0.95, 3000);
-    if (!this._loop) {return;}
+    if (!this._loop) { return; }
     if (this.gi.menuMail.check(this._img)) {
       console.log('自動收取獎勵：信箱');
       this.gi.menuMail.tap();
       this.waitForChangeScreen(0.9, 5000);
-      if (!this._loop) {return;}
-      this.gi.getReward.tap();this.safeSleep(1000);
-      this.gi.getReward.tap();this.safeSleep(1000);
-      this.gi.getReward.tap();this.safeSleep(1000);
-      this.gi.getReward.tap();this.safeSleep(1000);
+      if (!this._loop) { return; }
+      this.gi.getReward.tap(); this.safeSleep(1000);
+      this.gi.getReward.tap(); this.safeSleep(1000);
+      this.gi.getReward.tap(); this.safeSleep(1000);
+      this.gi.getReward.tap(); this.safeSleep(1000);
       this.gi.menuOnBtn.tap();
       this.waitForChangeScreen(0.95, 5000);
-    } 
+    }
     if (this.gi.menuSign.check(this._img)) {
       console.log('自動收取獎勵：登入');
       this.gi.menuSign.tap();
       this.waitForChangeScreen(0.95, 5000);
-      if (!this._loop) {return;}
-      this.gi.getReward.tap();this.safeSleep(500);
+      if (!this._loop) { return; }
+      this.gi.getReward.tap(); this.safeSleep(500);
       this.safeSleep(5000);
-      if (!this._loop) {return;}
-      this.gi.getReward.tap();this.safeSleep(500);
+      if (!this._loop) { return; }
+      this.gi.getReward.tap(); this.safeSleep(500);
       this.gi.menuOnBtn.tap();
       this.waitForChangeScreen(0.95, 5000);
     }
@@ -816,10 +862,10 @@ class LineageM {
       console.log('自動收取獎勵：血盟');
       this.gi.menuAlliance.tap();
       this.waitForChangeScreen(0.9, 5000);
-      if (!this._loop) {return;}
+      if (!this._loop) { return; }
       this.gi.signAlliance.tap();
       this.safeSleep(3000);
-      if (!this._loop) {return;}
+      if (!this._loop) { return; }
       this.gi.menuOnBtn.tap();
       this.waitForChangeScreen(0.95, 5000);
     }
@@ -845,7 +891,7 @@ class LineageM {
     const fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
     let bright1 = 0;
     let bright2 = 0;
-    for(let x = 0; x < barRect.tw; x += 1) {
+    for (let x = 0; x < barRect.tw; x += 1) {
       const c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));
       const d = Utils.minMaxDiff(c);
       if (d > b1) {
@@ -893,7 +939,7 @@ class LineageM {
     const tt = Math.ceil(timeT / times);
     const tb = Math.ceil(timeB / times);
     this.gi.mapController.tapDown();
-    for(let t = 0; t < times && this._loop; t++) {
+    for (let t = 0; t < times && this._loop; t++) {
       if (timeL > 100) {
         console.log('往左移動', tl);
         this.gi.mapControllerL.moveTo();
@@ -955,7 +1001,7 @@ class LineageM {
     }
     if (result === undefined) {
       console.log('無法找到紀錄點');
-      return {x: 0, y: 0};
+      return { x: 0, y: 0 };
     }
     return result;
   }
@@ -975,23 +1021,23 @@ class LineageM {
         return;
       }
       const xy = findImage(this._img, images[i]);
-      switch(i) {
+      switch (i) {
         case 0:
           xy.x = p.x - (xy.x / gRatioTarget) - 120;
           xy.y = p.y - (xy.y / gRatioTarget) - 90;
-        break;
+          break;
         case 1:
           xy.x = p.x - (xy.x / gRatioTarget) + 30;
           xy.y = p.y - (xy.y / gRatioTarget) - 90;
-        break;
+          break;
         case 2:
           xy.x = p.x - (xy.x / gRatioTarget) - 120;
           xy.y = p.y - (xy.y / gRatioTarget) + 30;
-        break;
+          break;
         case 3:
           xy.x = p.x - (xy.x / gRatioTarget) + 30;
           xy.y = p.y - (xy.y / gRatioTarget) + 30;
-        break;
+          break;
       }
       findXYs.push(xy);
       releaseImage(images[i]);
@@ -1047,16 +1093,16 @@ class LineageM {
     };
     move2Top();
     sleep(500);
-    for (let i = 0; i < Math.floor((nth-1)/4) && this._loop; i++) {
+    for (let i = 0; i < Math.floor((nth - 1) / 4) && this._loop; i++) {
       move4down();
     }
-    tap(sDCX, itemsY[(nth-1)%4], 20);
+    tap(sDCX, itemsY[(nth - 1) % 4], 20);
     sleep(500);
-    
+
     this.refreshScreen();
     this.gi.mapMoveBtn.tap();
     this.waitForChangeScreen(0.92, 5000);
-    this.safeSleep(3000); if (!this._loop) {return;}
+    this.safeSleep(3000); if (!this._loop) { return; }
     this.refreshScreen();
     const floorXY1 = findImage(this._img, this.images.floor1);
     if (floorXY1.score > 0.8) {
@@ -1096,16 +1142,16 @@ class LineageM {
         results.push(rs[k]);
       }
     }
-    results.sort((a, b) => {return b.score - a.score;});
+    results.sort((a, b) => { return b.score - a.score; });
     results = results.slice(0, Math.min(maxLength, results.length));
-    results.sort((a, b) => {return a.x - b.x;});
+    results.sort((a, b) => { return a.x - b.x; });
     const numberSize = getImageSize(numbers[0]);
     const nw = numberSize.width;
     const imgSize = getImageSize(img);
     const iw = imgSize.width;
     let px = 0;
     let numberStr = '';
-    for(let i in results) {
+    for (let i in results) {
       const r = results[i];
       if (r.x > p) {
         numberStr += r.number.toString();
@@ -1135,7 +1181,7 @@ const DefaultConfig = {
   autoBuyFirstSet: false, // 1 * 100, -1 => max
   mapSelect: 0, // move to nth map in safe region
 };
- 
+
 let lm = undefined;
 
 function start(config) {
