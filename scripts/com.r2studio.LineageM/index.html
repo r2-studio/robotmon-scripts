@@ -534,10 +534,17 @@
       return tempSettings;
     }
 
+    function onPlayCallback(r) {
+      var wh = JSON.parse(r);
+      JavaScriptInterface.setXY(wh.width * 0.4, wh.height * 0.08);
+      JavaScriptInterface.hideMenu()
+      JavaScriptInterface.runScript('start(\'' + JSON.stringify(getSettings()) + '\');');
+    }
+
     function onEvent(eventType) {
       if (eventType == 'OnPlayClick') {
         console.log('start(\'' + JSON.stringify(getSettings()) + '\');');
-        JavaScriptInterface.runScript('start(\'' + JSON.stringify(getSettings()) + '\');');
+        JavaScriptInterface.runScriptCallback('JSON.stringify(getScreenSize())', 'onPlayCallback');
       } else if (eventType == 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
       }
@@ -556,17 +563,16 @@
     <div style="margin: 10px 0px;">
       V25
       <ul>
+        <li>第5次去綠洲購買購買物品</li>
+        <li>啟動時選單自動縮小歸位</li>
+      </ul>
+      V23
+      <ul>
         <li>修正腳本只能跑一次</li>
         <li>修正手機螢幕沒置中</li>
         <li>提高自動購買物品成功率</li>
         <li>修正燃柳村莊位置</li>
         <li>修正地圖清單長度</li>
-      </ul>
-      V22
-      <ul>
-        <li>修正簽到收獎勵</li>
-        <li>修正自動購買物品</li>
-        <li>修正Beta版本無法跑</li>
       </ul>
     </div>
     <div style="margin: 10px 0px;">
@@ -574,6 +580,8 @@
       <div>2️⃣ 支援所有螢幕解析度(請先設定畫面比例為基本比例)(模擬器建議16:9)</div>
       <div>3️⃣ 自動買物品功能，購買1 SET。(使用回卷找到商人，會重試 10 次，第 5 次會飛去燃柳)</div>
       <div>4️⃣ 快捷鍵 9 為試煉副本的特殊技能按鈕</div>
+      <div>瀏海相機系列手機(Note)，請在手機設定，顯示器隱藏相機缺口</div>
+      <div>如果手機有綠藍光功能，請關閉</div>
     </div>
     <ul id="condition" class="list-group"></ul>
     <ul id="other" class="list-group"></ul>
