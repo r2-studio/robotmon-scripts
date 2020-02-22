@@ -177,7 +177,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 23;
+    VERSION = 25;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
@@ -236,7 +236,7 @@
                 autoUseAntidote: "自動使用解毒劑 (請將解毒劑放在快捷鍵 6)",
                 autoBuyFirstSet: "自動購買第 1 Set",
                 goBackInterval: "回到地圖原點 (0: 不啟動) (僅支援亞丁大陸與中間區域)",
-                mapSelect: "移動指定地圖 (0: 不啟動) (僅支援亞丁大陸1到68號)",
+                mapSelect: "移動指定地圖 (0: 不啟動) (僅支援亞丁大陸75號)",
               }
             }
           }
@@ -534,10 +534,17 @@
       return tempSettings;
     }
 
+    function onPlayCallback(r) {
+      var wh = JSON.parse(r);
+      JavaScriptInterface.setXY(wh.width * 0.4, wh.height * 0.08);
+      JavaScriptInterface.hideMenu()
+      JavaScriptInterface.runScript('start(\'' + JSON.stringify(getSettings()) + '\');');
+    }
+
     function onEvent(eventType) {
       if (eventType == 'OnPlayClick') {
         console.log('start(\'' + JSON.stringify(getSettings()) + '\');');
-        JavaScriptInterface.runScript('start(\'' + JSON.stringify(getSettings()) + '\');');
+        JavaScriptInterface.runScriptCallback('JSON.stringify(getScreenSize())', 'onPlayCallback');
       } else if (eventType == 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
       }
@@ -554,7 +561,11 @@
   </nav>
   <div id="container" class="container">
     <div style="margin: 10px 0px;">
-      V24 修正螢幕尺寸判斷錯誤<br />
+      V25
+      <ul>
+        <li>第5次去綠洲購買購買物品</li>
+        <li>啟動時選單自動縮小歸位</li>
+      </ul>
       V23
       <ul>
         <li>修正腳本只能跑一次</li>
@@ -563,18 +574,14 @@
         <li>修正燃柳村莊位置</li>
         <li>修正地圖清單長度</li>
       </ul>
-      V22
-      <ul>
-        <li>修正簽到收獎勵</li>
-        <li>修正自動購買物品</li>
-        <li>修正Beta版本無法跑</li>
-      </ul>
     </div>
     <div style="margin: 10px 0px;">
       <div>1️⃣ 請將浮動視窗放在中間上方位置(不要遮蔽住地圖選單亞丁大陸)</div>
       <div>2️⃣ 支援所有螢幕解析度(請先設定畫面比例為基本比例)(模擬器建議16:9)</div>
       <div>3️⃣ 自動買物品功能，購買1 SET。(使用回卷找到商人，會重試 10 次，第 5 次會飛去燃柳)</div>
       <div>4️⃣ 快捷鍵 9 為試煉副本的特殊技能按鈕</div>
+      <div>瀏海相機系列手機(Note)，請在手機設定，顯示器隱藏相機缺口</div>
+      <div>如果手機有綠藍光功能，請關閉</div>
     </div>
     <ul id="condition" class="list-group"></ul>
     <ul id="other" class="list-group"></ul>

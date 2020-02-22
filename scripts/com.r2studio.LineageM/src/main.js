@@ -190,7 +190,7 @@ class GameInfo {
     this.zeroRect = new Rect(0, 0, 1, 1);
     this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
-    this.storeHpRect = new Rect(80, 276, 80 + 120, 276 + 120);
+    this.storeHpRect = new Rect(78, 274, 80 + 122, 276 + 122);
     this.mapSelector = new Rect(56, 339, 350, 937); // h 112
     this.moneyRect = new Rect(990, 40, 1150, 80);
     this.centerRect = new Rect(600, 200, 1400, 800);
@@ -207,6 +207,7 @@ class GameInfo {
     this.storeSelfOrder = new Point(200, 970);
     this.storeBuyOrder = new Point(1500, 970);
     this.storeBuyOrder2 = new Point(1750, 970);
+    this.storeSpecial = new Point(1140, 340);
     this.getReward = new Point(1680, 320);
     this.signAlliance = new Point(1820, 252);
 
@@ -336,7 +337,7 @@ class RoleState {
     this.isSelfSkill = false;
     this.isAttacked = false;
     this.hasKillNumber = false;
-    this.autoPlayOffCount = 0;
+    this.autoPlayOffCount = 1;
     this.isPoison = false;
     this.shouldTapMiddle = true;  // determine to tap middle or tap back
   }
@@ -367,6 +368,7 @@ class LineageM {
       normalRegion: openImage(`${this.localPath}/normalRegionType.png`),
       hpWater: openImage(`${this.localPath}/hp.png`),
       store: openImage(`${this.localPath}/store.png`),
+      store2: openImage(`${this.localPath}/store2.png`),
       arrow: openImage(`${this.localPath}/arrow.png`),
       floor1: openImage(`${this.localPath}/floor1.png`),
       floor2: openImage(`${this.localPath}/floor2.png`),
@@ -398,9 +400,9 @@ class LineageM {
 
   checkIsSystemPage() {
     if (this.rState.isLogin) {
-      console.log('登入遊戲，等待 5 秒');
+      console.log('登入遊戲，等待 2 秒');
       this.gi.loginBtn.tap();
-      this.safeSleep(5 * 1000);
+      this.safeSleep(2 * 1000);
       return true;
     }
     if (this.rState.isEnter) {
@@ -558,8 +560,8 @@ class LineageM {
           }
         }
         if (this.rState.isAutoPlay) {
-          console.log('安全區域，關閉自動攻擊');
           if (this.rState.autoPlayOffCount === 0) {
+            console.log('安全區域，關閉自動攻擊');
             this.gi.autoPlayBtn.tap();
             sleep(1000);
           }
@@ -591,6 +593,7 @@ class LineageM {
           console.log('開啟自動攻擊');
           this.gi.autoPlayBtn.tap();
           this.rState.autoPlayOffCount = 0;
+          sleep(600);
           continue;
         }
         if (this.config.autoUseAntidote && this.gi.isPoison && Date.now() - poisonTime > 1500) {
@@ -703,13 +706,34 @@ class LineageM {
     this.refreshScreen();
     for (let i = 0; i < tryTimes && this._loop; i++) {
       if (i == 4) {
-        console.log('移動到燃柳村莊，確保有商人');
+        console.log('移動到綠洲，確保有商人等待4秒');
         this.goToMapPage();
-        this.slideMapSelector(39);
-        this.safeSleep(4000);
+        this.slideMapSelector(41);
+        this.safeSleep(3000);
+        console.log('移動到綠洲，往上移動一些');
+        this.gi.mapController.tapDown();
+        this.safeSleep(1500);
+        this.gi.mapControllerT.moveTo();
+        this.safeSleep(1500);
+        this.gi.mapControllerT.tapUp();
+        this.safeSleep(2200);
+        this.refreshScreen();
+        console.log('尋找商店');
+        const storeType = this.findStore();
+        console.log('storeType', storeType);
+        if (storeType === 1) {
+          this.buyItems();
+          this.refreshScreen();
+          this.gi.itemBtns[7].tap();
+          this.safeSleep(2000);
+          break;
+        }
+        this.gi.itemBtns[7].tap();
+        this.safeSleep(2000);
       }
       const storeType = this.findStore();
       if (storeType === 1) {
+        this.safeSleep(1000);
         this.buyItems();
         this.refreshScreen();
         break;
@@ -730,7 +754,9 @@ class LineageM {
 
   // 0 = no store, 1 = 雜貨電. 2 = others
   findStore() {
-    const stores = findImages(this._img, this.images.store, 0.90, 4, true);
+    const stores1 = findImages(this._img, this.images.store, 0.89, 4, true);
+    const stores2 = findImages(this._img, this.images.store2, 0.89, 4, true);
+    const stores = stores1.concat(stores2);
     for (let k in stores) {
       if (!this._loop) { return false; }
       let blueCount = 0;
@@ -748,25 +774,40 @@ class LineageM {
           break;
         }
         var color = getImageColor(this._img, sx + 10, sy + 67 + i);
-        if (color.b * 2 > color.g + color.r) {
+        if (color.b * 2 > color.g + color.r && color.b > color.r + 30) {
           blueCount++;
         }
       }
-      if (blueCount < 6) {
+      if (blueCount < 4) {
         continue;
       }
       const dXY = Utils.targetToDevice(stores[k]);
+      console.log('可能是商店，打開看看');
       tap(dXY.x + 5, dXY.y + 5, 50);
       this.waitForChangeScreen(0.7, 7000); if (!this._loop) { return false; }
-      this.safeSleep(1000);
+      this.safeSleep(2000);
+      this.refreshScreen();
       if (this.gi.storeMode.check(this._img)) {
-        console.log('找到商店');
         const testHpImg = this.gi.storeHpRect.crop(this._img);
-        const results = findImages(testHpImg, this.images.hpWater, 0.9, 1);
+        const results = findImages(testHpImg, this.images.hpWater, 0.88, 1);
         releaseImage(testHpImg);
-        if (results.length > 0 && results[0].score > 0.9) {
-          console.log('找到雜貨店');
+        console.log('是雜貨店嗎', results.length > 0 ? results[0].score : 0);
+        if (results.length > 0 && results[0].score > 0.88) {
+          console.log('找到雜貨店1');
           return 1;
+        } else {
+          // find method 2
+          let redCount = 0;
+          for (let y = 160; y < 176; y++) {
+            const color = getImageColor(this._img, 70, y);
+            if (1.2 * color.r > (color.g + color.b)) {
+              redCount++;
+            }
+          }
+          if (redCount > 10) {
+            console.log('找到雜貨店2');
+            return 1;
+          }
         }
       } else {
         console.log('不是商店，換下一個');
@@ -1211,7 +1252,9 @@ function testSpecialScreen() {
 
 function start(config) {
   console.log('📢 啟動腳本 📢');
-  testSpecialScreen();
+  // testSpecialScreen();
+  console.log('螢幕位移', gGameOffsetX, gGameWidth);
+  sleep(2000);
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
@@ -1238,6 +1281,7 @@ function stop() {
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
 // lm._loop = true;
+// lm.checkAndBuyItems();
 // console.log(lm.isSafeRegionState());
 // lm.goToMapPage();
 // lm.slideMapSelector(5);
