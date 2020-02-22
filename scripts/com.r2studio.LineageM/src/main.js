@@ -190,7 +190,7 @@ class GameInfo {
     this.zeroRect = new Rect(0, 0, 1, 1);
     this.mapRect = new Rect(384, 217, 1920, 937); // 1536, 720
     this.regionTypeRect = new Rect(1710, 470, 1816, 498);
-    this.storeHpRect = new Rect(80, 276, 80 + 120, 276 + 120);
+    this.storeHpRect = new Rect(78, 274, 80 + 122, 276 + 122);
     this.mapSelector = new Rect(56, 339, 350, 937); // h 112
     this.moneyRect = new Rect(990, 40, 1150, 80);
     this.centerRect = new Rect(600, 200, 1400, 800);
@@ -336,7 +336,7 @@ class RoleState {
     this.isSelfSkill = false;
     this.isAttacked = false;
     this.hasKillNumber = false;
-    this.autoPlayOffCount = 0;
+    this.autoPlayOffCount = 1;
     this.isPoison = false;
     this.shouldTapMiddle = true;  // determine to tap middle or tap back
   }
@@ -398,9 +398,9 @@ class LineageM {
 
   checkIsSystemPage() {
     if (this.rState.isLogin) {
-      console.log('登入遊戲，等待 5 秒');
+      console.log('登入遊戲，等待 2 秒');
       this.gi.loginBtn.tap();
-      this.safeSleep(5 * 1000);
+      this.safeSleep(2 * 1000);
       return true;
     }
     if (this.rState.isEnter) {
@@ -558,8 +558,8 @@ class LineageM {
           }
         }
         if (this.rState.isAutoPlay) {
-          console.log('安全區域，關閉自動攻擊');
           if (this.rState.autoPlayOffCount === 0) {
+            console.log('安全區域，關閉自動攻擊');
             this.gi.autoPlayBtn.tap();
             sleep(1000);
           }
@@ -760,10 +760,10 @@ class LineageM {
       this.waitForChangeScreen(0.7, 7000); if (!this._loop) { return false; }
       this.safeSleep(1000);
       if (this.gi.storeMode.check(this._img)) {
-        console.log('找到商店');
         const testHpImg = this.gi.storeHpRect.crop(this._img);
-        const results = findImages(testHpImg, this.images.hpWater, 0.9, 1);
+        const results = findImages(testHpImg, this.images.hpWater, 0.85, 1);
         releaseImage(testHpImg);
+        console.log('找到商店', results.length > 0 ? results[0].score : 0);
         if (results.length > 0 && results[0].score > 0.9) {
           console.log('找到雜貨店');
           return 1;
@@ -1212,6 +1212,8 @@ function testSpecialScreen() {
 function start(config) {
   console.log('📢 啟動腳本 📢');
   testSpecialScreen();
+  console.log('螢幕位移', gGameOffsetX, gGameWidth);
+  sleep(2000);
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
