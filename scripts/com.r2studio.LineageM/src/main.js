@@ -18,22 +18,6 @@ if (gDeviceWidth / gDeviceHeight > 1.78) {
   gGameHeight = Math.round(gGameWidth / 1.777778);
   gGameOffsetY = (gDeviceHeight - gGameHeight) / 2;
 }
-// for special screen
-if (gDeviceWidth / gDeviceHeight > 1.78) {
-  let _blackX = 0;
-  const _img = getScreenshot();
-  for (let x = 0; x < _wh.width; x++) {
-    const color = getImageColor(_img, x, _wh.height / 2);
-    if (color.r === 0 && color.g === 0 && color.b === 0) {
-      _blackX++;
-    } else {
-      break;
-    }
-  }
-  if (Math.abs(_blackX - gGameOffsetX) >= 6) {
-    gGameOffsetX = _blackX;
-  }
-}
 
 const gRatioTarget = gTargetWidth / gDevWidth;
 const gRatioDevice = gGameWidth / gDevWidth;
@@ -750,15 +734,18 @@ class LineageM {
     for (let k in stores) {
       if (!this._loop) { return false; }
       let blueCount = 0;
+      const sx = stores[k].x;
+      const sy = stores[k].y;
+      if (sx < 280 && sy < 144) {
+        continue;
+      }
+      if (sx > 790 && sy < 260) {
+        continue;
+      }
       // for check is right store
       for (let i = 0; i < 10; i++) {
-        const sx = stores[k].x;
-        const sy = stores[k].y;
-        if (sx < 280 && sy < 144) {
-          continue;
-        }
-        if (sx > 790 && sy < 260) {
-          continue;
+        if (sx + 10 >= gTargetWidth || sy + 67 + i >= gTargetHeight) {
+          break;
         }
         var color = getImageColor(this._img, sx + 10, sy + 67 + i);
         if (color.b * 2 > color.g + color.r) {
@@ -815,16 +802,31 @@ class LineageM {
     releaseImage(img);
   }
 
-  // globalState
+  // globalState 764 240   812 240
   isSafeRegionState() {
     const img = this.gi.regionTypeRect.crop(this._img);
     const safeScore = getIdentityScore(img, this.images.safeRegion);
     const normalScore = getIdentityScore(img, this.images.normalRegion);
     releaseImage(img);
-    if (safeScore > normalScore) {
-      return true;
+    if (safeScore <= normalScore) {
+      return false;
     }
-    return false;
+    let greenColor = 0;
+    let orangeColor = 0;
+    for (let x = 764; x < 812; x++) {
+      const color = getImageColor(this._img, x, 240);
+      if (color.b > 86 && color.b < 110 && color.r < 60 && color.g > 140 && color.g < 200) {
+        greenColor++;
+      }
+      if (color.b < 30 && color.r > 200 && color.g > 90 && color.g < 130
+      ) {
+        orangeColor++;
+      }
+    }
+    if (greenColor > 6 || orangeColor > 6) {
+      return false;
+    }
+    return true;
   }
 
   checkAndAutoGetReward() {
@@ -1184,8 +1186,32 @@ const DefaultConfig = {
 
 let lm = undefined;
 
+function testSpecialScreen() {
+  // for special screen
+  if (gDeviceWidth / gDeviceHeight > 1.78) {
+    let _blackX = 0;
+    const _img = getScreenshot();
+    for (let x = 0; x < gDeviceWidth; x++) {
+      const color = getImageColor(_img, x, gDeviceHeight - 1);
+      if (color.r === 0 && color.g === 0 && color.b === 0) {
+        _blackX++;
+      } else {
+        break;
+      }
+    }
+    releaseImage(_img);
+    _blackX++;
+    if (Math.abs(_blackX - gGameOffsetX) >= 2) {
+      gGameOffsetX = _blackX;
+      console.log("修正特殊螢幕位置", _blackX);
+      sleep(1000);
+    }
+  }
+}
+
 function start(config) {
   console.log('📢 啟動腳本 📢');
+  testSpecialScreen();
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
@@ -1211,7 +1237,8 @@ function stop() {
 
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
-// lm._loop=true;
+// lm._loop = true;
+// console.log(lm.isSafeRegionState());
 // lm.goToMapPage();
 // lm.slideMapSelector(5);
 // lm.buyItems();

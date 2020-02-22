@@ -28,22 +28,6 @@ if (gDeviceWidth / gDeviceHeight > 1.78) {
   gGameHeight = Math.round(gGameWidth / 1.777778);
   gGameOffsetY = (gDeviceHeight - gGameHeight) / 2;
 }
-// for special screen
-if (gDeviceWidth / gDeviceHeight > 1.78) {
-  var _blackX = 0;
-  var _img = getScreenshot();
-  for (var x = 0; x < _wh.width; x++) {
-    var color = getImageColor(_img, x, _wh.height / 2);
-    if (color.r === 0 && color.g === 0 && color.b === 0) {
-      _blackX++;
-    } else {
-      break;
-    }
-  }
-  if (Math.abs(_blackX - gGameOffsetX) >= 6) {
-    gGameOffsetX = _blackX;
-  }
-}
 
 var gRatioTarget = gTargetWidth / gDevWidth;
 var gRatioDevice = gGameWidth / gDevWidth;
@@ -847,15 +831,18 @@ var LineageM = function () {
           return false;
         }
         var blueCount = 0;
+        var sx = stores[k].x;
+        var sy = stores[k].y;
+        if (sx < 280 && sy < 144) {
+          continue;
+        }
+        if (sx > 790 && sy < 260) {
+          continue;
+        }
         // for check is right store
         for (var i = 0; i < 10; i++) {
-          var sx = stores[k].x;
-          var sy = stores[k].y;
-          if (sx < 280 && sy < 144) {
-            continue;
-          }
-          if (sx > 790 && sy < 260) {
-            continue;
+          if (sx + 10 >= gTargetWidth || sy + 67 + i >= gTargetHeight) {
+            break;
           }
           var color = getImageColor(this._img, sx + 10, sy + 67 + i);
           if (color.b * 2 > color.g + color.r) {
@@ -926,7 +913,7 @@ var LineageM = function () {
       releaseImage(img);
     }
 
-    // globalState
+    // globalState 764 240   812 240
 
   }, {
     key: 'isSafeRegionState',
@@ -935,10 +922,24 @@ var LineageM = function () {
       var safeScore = getIdentityScore(img, this.images.safeRegion);
       var normalScore = getIdentityScore(img, this.images.normalRegion);
       releaseImage(img);
-      if (safeScore > normalScore) {
-        return true;
+      if (safeScore <= normalScore) {
+        return false;
       }
-      return false;
+      var greenColor = 0;
+      var orangeColor = 0;
+      for (var x = 764; x < 812; x++) {
+        var color = getImageColor(this._img, x, 240);
+        if (color.b > 86 && color.b < 110 && color.r < 60 && color.g > 140 && color.g < 200) {
+          greenColor++;
+        }
+        if (color.b < 30 && color.r > 200 && color.g > 90 && color.g < 130) {
+          orangeColor++;
+        }
+      }
+      if (greenColor > 6 || orangeColor > 6) {
+        return false;
+      }
+      return true;
     }
   }, {
     key: 'checkAndAutoGetReward',
@@ -1026,8 +1027,8 @@ var LineageM = function () {
       var fc = Utils.mergeColor(getImageColor(bar, 0, y1), getImageColor(bar, 0, y2));
       var bright1 = 0;
       var bright2 = 0;
-      for (var _x10 = 0; _x10 < barRect.tw; _x10 += 1) {
-        var c = Utils.mergeColor(getImageColor(bar, _x10, y1), getImageColor(bar, _x10, y2));
+      for (var x = 0; x < barRect.tw; x += 1) {
+        var c = Utils.mergeColor(getImageColor(bar, x, y1), getImageColor(bar, x, y2));
         var d = Utils.minMaxDiff(c);
         if (d > b1) {
           bright1++;
@@ -1327,8 +1328,32 @@ var DefaultConfig = {
 
 var lm = undefined;
 
+function testSpecialScreen() {
+  // for special screen
+  if (gDeviceWidth / gDeviceHeight > 1.78) {
+    var _blackX = 0;
+    var _img = getScreenshot();
+    for (var x = 0; x < gDeviceWidth; x++) {
+      var color = getImageColor(_img, x, gDeviceHeight - 1);
+      if (color.r === 0 && color.g === 0 && color.b === 0) {
+        _blackX++;
+      } else {
+        break;
+      }
+    }
+    releaseImage(_img);
+    _blackX++;
+    if (Math.abs(_blackX - gGameOffsetX) >= 2) {
+      gGameOffsetX = _blackX;
+      console.log("修正特殊螢幕位置", _blackX);
+      sleep(1000);
+    }
+  }
+}
+
 function start(config) {
   console.log('📢 啟動腳本 📢');
+  testSpecialScreen();
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
@@ -1354,7 +1379,8 @@ function stop() {
 
 // start(DefaultConfig);
 // lm = new LineageM(DefaultConfig);
-// lm._loop=true;
+// lm._loop = true;
+// console.log(lm.isSafeRegionState());
 // lm.goToMapPage();
 // lm.slideMapSelector(5);
 // lm.buyItems();
