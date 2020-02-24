@@ -337,7 +337,7 @@ class RoleState {
     this.isSelfSkill = false;
     this.isAttacked = false;
     this.hasKillNumber = false;
-    this.autoPlayOffCount = 1;
+    this.autoPlayOffCount = 5;
     this.isPoison = false;
     this.shouldTapMiddle = true;  // determine to tap middle or tap back
   }
@@ -531,6 +531,7 @@ class LineageM {
     let isBuy = false;
     let receiveTime = 0;
     while (this._loop) {
+      sleep(100);
       this.refreshScreen();
       if (this.checkBeAttacked()) {
         this.sendDangerMessage('你被攻擊了，使用順卷');
@@ -560,11 +561,9 @@ class LineageM {
           }
         }
         if (this.rState.isAutoPlay) {
-          if (this.rState.autoPlayOffCount === 0) {
-            console.log('安全區域，關閉自動攻擊');
-            this.gi.autoPlayBtn.tap();
-            sleep(1000);
-          }
+          console.log('安全區域，關閉自動攻擊', this.rState.autoPlayOffCount);
+          this.gi.autoPlayBtn.tap();
+          sleep(1000);
           continue;
         }
         if (!isAttacking) {
@@ -646,7 +645,6 @@ class LineageM {
         }
         goBackTime = Date.now();
       }
-      sleep(100);
     }
   }
 
@@ -1252,7 +1250,7 @@ function testSpecialScreen() {
 
 function start(config) {
   console.log('📢 啟動腳本 📢');
-  // testSpecialScreen();
+  testSpecialScreen();
   console.log('螢幕位移', gGameOffsetX, gGameWidth);
   sleep(2000);
   if (typeof config === 'string') {
