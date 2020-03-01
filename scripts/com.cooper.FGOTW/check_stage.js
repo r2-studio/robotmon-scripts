@@ -81,8 +81,7 @@ function isSelectTeamPage(){
 }
 
 function isUseItemDialog(){
-	//TODO:TW
-	return checkIconInScreen(5);
+	return checkIconInScreen(5,0.75);
 }
 
 //battle
