@@ -339,6 +339,8 @@ class RoleState {
     this.hasKillNumber = false;
     this.autoPlayOffCount = 5;
     this.isPoison = false;
+    this.movingScore = 0.9;
+    this.isMovingCount = 0;
     this.shouldTapMiddle = true;  // determine to tap middle or tap back
   }
 
@@ -386,14 +388,24 @@ class LineageM {
   }
 
   refreshScreen() {
+    const startTime = Date.now();
+    const newImg = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
     if (this._img !== 0) {
+      if (this.config.grabMonster) {
+        const s = getIdentityScore(this._img, newImg);
+        if (this.rState.movingScore - s > 0.05) {
+          this.rState.isMovingCount++;
+        } else {
+          this.rState.isMovingCount = 0;
+        }
+        this.rState.movingScore = this.rState.movingScore*0.95 + s*0.05;
+      }
       releaseImage(this._img);
       this._img = 0;
     }
-    const startTime = Date.now();
-    this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
-    if (Date.now() - startTime < 100) {
-      sleep(100);
+    this._img = newImg;
+    if (Date.now() - startTime < 120) {
+      sleep(120);
     }
     return this._img;
   }
@@ -495,6 +507,9 @@ class LineageM {
       if (cd.useTime === undefined) {
         cd.useTime = 0;
       }
+      if (!cd.enabled) {
+        continue;
+      }
       if (Date.now() - cd.useTime < cd.interval) {
         continue;
       }
@@ -527,7 +542,9 @@ class LineageM {
     this._loop = true;
     let goBackTime = Date.now();
     let useHomeTime = Date.now();
-    let poisonTime = 0;
+    let poisonTime = Date.now();
+    let tmpTime = Date.now();
+    let noMonsterTime = Date.now();
     let isBuy = false;
     let receiveTime = 0;
     while (this._loop) {
@@ -580,6 +597,9 @@ class LineageM {
           }
         }
       } else {
+        if (this.rState.isAttacking) {
+          noMonsterTime = Date.now();
+        }
         isBuy = false;
         if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
           this.gi.itemBtns[7].tap(1, 100);
@@ -600,6 +620,26 @@ class LineageM {
           sleep(500);
           this.gi.itemBtns[5].tap();
           poisonTime = Date.now();
+          continue;
+        }
+        const cd = this.config.conditions[0];
+        if (this.config.grabMonster && this.rState.isAttacking && this.rState.isMovingCount > 0 && Date.now() - tmpTime > cd.interval) {
+          tmpTime = Date.now();
+          let value = this.rState[cd.type];
+          if (value > 0.1 && value * cd.op > cd.value * cd.op) {
+            this.gi.itemBtns[cd.btn].tap(1, 50);
+            console.log('尋找怪物, 使用按鈕 1');
+            this.gi.itemBtns[0].tap();
+          } else {
+            console.log('尋找怪物, HP/MP 不滿足');
+          }
+          continue;
+        }
+        if (this.config.autoTeleport && Date.now() - noMonsterTime > 6000) {
+          console.log('沒有怪物, 使用按鈕 7');
+          noMonsterTime = Date.now();
+          this.gi.itemBtns[7-1].tap(2, 200);
+          continue;
         }
       }
 
@@ -843,11 +883,24 @@ class LineageM {
 
   // globalState 764 240   812 240
   isSafeRegionState() {
-    const img = this.gi.regionTypeRect.crop(this._img);
-    const safeScore = getIdentityScore(img, this.images.safeRegion);
-    const normalScore = getIdentityScore(img, this.images.normalRegion);
-    releaseImage(img);
-    if (safeScore <= normalScore) {
+    let bColor = 0;
+    let rColor = 0;
+    let gColor = 0; //gray
+    for (let x = 850; x < 900; x += 2) {
+      let color = getImageColor(this._img, x, 241);
+      if (color.b > color.g + color.r) { // 18
+        bColor++;
+        continue;
+      }
+      if (color.r > color.g + color.b) { // 20
+        rColor++;
+        continue;
+      }
+      if (color.r > 80 && color.g > 80 && color.b > 80) { // 12
+        gColor++;
+      }
+    }
+    if (gColor > bColor || rColor > bColor) {
       return false;
     }
     let greenColor = 0;
@@ -1142,27 +1195,27 @@ class LineageM {
 
     this.refreshScreen();
     this.gi.mapMoveBtn.tap();
-    this.waitForChangeScreen(0.92, 5000);
-    this.safeSleep(3000); if (!this._loop) { return; }
-    this.refreshScreen();
-    const floorXY1 = findImage(this._img, this.images.floor1);
-    if (floorXY1.score > 0.8) {
-      const dXY = Utils.targetToDevice(floorXY1);
-      tap(dXY.x + 5, dXY.y + 5, 50);
-      sleep(1000);
-      this.gi.mapFloorBtn.tap();
-      sleep(1000);
-      return;
-    }
-    const floorXY2 = findImage(this._img, this.images.floor2);
-    if (floorXY2.score > 0.8) {
-      const dXY = Utils.targetToDevice(floorXY2);
-      tap(dXY.x + 5, dXY.y + 5, 50);
-      sleep(1000);
-      this.gi.mapFloorBtn.tap();
-      sleep(1000);
-      return;
-    }
+    // this.waitForChangeScreen(0.92, 5000);
+    // this.safeSleep(3000); if (!this._loop) { return; }
+    // this.refreshScreen();
+    // const floorXY1 = findImage(this._img, this.images.floor1);
+    // if (floorXY1.score > 0.8) {
+    //   const dXY = Utils.targetToDevice(floorXY1);
+    //   tap(dXY.x + 5, dXY.y + 5, 50);
+    //   sleep(1000);
+    //   this.gi.mapFloorBtn.tap();
+    //   sleep(1000);
+    //   return;
+    // }
+    // const floorXY2 = findImage(this._img, this.images.floor2);
+    // if (floorXY2.score > 0.8) {
+    //   const dXY = Utils.targetToDevice(floorXY2);
+    //   tap(dXY.x + 5, dXY.y + 5, 50);
+    //   sleep(1000);
+    //   this.gi.mapFloorBtn.tap();
+    //   sleep(1000);
+    //   return;
+    // }
   }
 
   getImageNumber(img, numbers, maxLength = 8) {
@@ -1221,6 +1274,8 @@ const DefaultConfig = {
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   autoBuyFirstSet: false, // 1 * 100, -1 => max
   mapSelect: 0, // move to nth map in safe region
+  grabMonster: false,
+  autoTeleport: true,
 };
 
 let lm = undefined;

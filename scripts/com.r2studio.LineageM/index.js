@@ -405,6 +405,8 @@ var RoleState = function () {
     this.hasKillNumber = false;
     this.autoPlayOffCount = 5;
     this.isPoison = false;
+    this.movingScore = 0.9;
+    this.isMovingCount = 0;
     this.shouldTapMiddle = true; // determine to tap middle or tap back
   }
 
@@ -462,14 +464,24 @@ var LineageM = function () {
   }, {
     key: 'refreshScreen',
     value: function refreshScreen() {
+      var startTime = Date.now();
+      var newImg = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
       if (this._img !== 0) {
+        if (this.config.grabMonster) {
+          var s = getIdentityScore(this._img, newImg);
+          if (this.rState.movingScore - s > 0.05) {
+            this.rState.isMovingCount++;
+          } else {
+            this.rState.isMovingCount = 0;
+          }
+          this.rState.movingScore = this.rState.movingScore * 0.95 + s * 0.05;
+        }
         releaseImage(this._img);
         this._img = 0;
       }
-      var startTime = Date.now();
-      this._img = getScreenshotModify(gGameOffsetX, gGameOffsetY, gGameWidth, gGameHeight, gTargetWidth, gTargetHeight, 80);
-      if (Date.now() - startTime < 100) {
-        sleep(100);
+      this._img = newImg;
+      if (Date.now() - startTime < 120) {
+        sleep(120);
       }
       return this._img;
     }
@@ -575,6 +587,9 @@ var LineageM = function () {
         if (cd.useTime === undefined) {
           cd.useTime = 0;
         }
+        if (!cd.enabled) {
+          continue;
+        }
         if (Date.now() - cd.useTime < cd.interval) {
           continue;
         }
@@ -608,7 +623,9 @@ var LineageM = function () {
       this._loop = true;
       var goBackTime = Date.now();
       var useHomeTime = Date.now();
-      var poisonTime = 0;
+      var poisonTime = Date.now();
+      var tmpTime = Date.now();
+      var noMonsterTime = Date.now();
       var isBuy = false;
       var receiveTime = 0;
       while (this._loop) {
@@ -661,6 +678,9 @@ var LineageM = function () {
             }
           }
         } else {
+          if (this.rState.isAttacking) {
+            noMonsterTime = Date.now();
+          }
           isBuy = false;
           if (this.config.dangerousGoHome && this.rState.hp < 25 && this.rState.hp > 0.1) {
             this.gi.itemBtns[7].tap(1, 100);
@@ -681,6 +701,26 @@ var LineageM = function () {
             sleep(500);
             this.gi.itemBtns[5].tap();
             poisonTime = Date.now();
+            continue;
+          }
+          var cd = this.config.conditions[0];
+          if (this.config.grabMonster && this.rState.isAttacking && this.rState.isMovingCount > 0 && Date.now() - tmpTime > cd.interval) {
+            tmpTime = Date.now();
+            var value = this.rState[cd.type];
+            if (value > 0.1 && value * cd.op > cd.value * cd.op) {
+              this.gi.itemBtns[cd.btn].tap(1, 50);
+              console.log('尋找怪物, 使用按鈕 1');
+              this.gi.itemBtns[0].tap();
+            } else {
+              console.log('尋找怪物, HP/MP 不滿足');
+            }
+            continue;
+          }
+          if (this.config.autoTeleport && Date.now() - noMonsterTime > 6000) {
+            console.log('沒有怪物, 使用按鈕 7');
+            noMonsterTime = Date.now();
+            this.gi.itemBtns[7 - 1].tap(2, 200);
+            continue;
           }
         }
 
@@ -957,21 +997,37 @@ var LineageM = function () {
   }, {
     key: 'isSafeRegionState',
     value: function isSafeRegionState() {
-      var img = this.gi.regionTypeRect.crop(this._img);
-      var safeScore = getIdentityScore(img, this.images.safeRegion);
-      var normalScore = getIdentityScore(img, this.images.normalRegion);
-      releaseImage(img);
-      if (safeScore <= normalScore) {
+      var bColor = 0;
+      var rColor = 0;
+      var gColor = 0; //gray
+      for (var x = 850; x < 900; x += 2) {
+        var color = getImageColor(this._img, x, 241);
+        if (color.b > color.g + color.r) {
+          // 18
+          bColor++;
+          continue;
+        }
+        if (color.r > color.g + color.b) {
+          // 20
+          rColor++;
+          continue;
+        }
+        if (color.r > 80 && color.g > 80 && color.b > 80) {
+          // 12
+          gColor++;
+        }
+      }
+      if (gColor > bColor || rColor > bColor) {
         return false;
       }
       var greenColor = 0;
       var orangeColor = 0;
-      for (var x = 764; x < 812; x++) {
-        var color = getImageColor(this._img, x, 240);
-        if (color.b > 86 && color.b < 110 && color.r < 60 && color.g > 140 && color.g < 200) {
+      for (var _x9 = 764; _x9 < 812; _x9++) {
+        var _color2 = getImageColor(this._img, _x9, 240);
+        if (_color2.b > 86 && _color2.b < 110 && _color2.r < 60 && _color2.g > 140 && _color2.g < 200) {
           greenColor++;
         }
-        if (color.b < 30 && color.r > 200 && color.g > 90 && color.g < 130) {
+        if (_color2.b < 30 && _color2.r > 200 && _color2.g > 90 && _color2.g < 130) {
           orangeColor++;
         }
       }
@@ -1272,29 +1328,27 @@ var LineageM = function () {
 
       this.refreshScreen();
       this.gi.mapMoveBtn.tap();
-      this.waitForChangeScreen(0.92, 5000);
-      this.safeSleep(3000);if (!this._loop) {
-        return;
-      }
-      this.refreshScreen();
-      var floorXY1 = findImage(this._img, this.images.floor1);
-      if (floorXY1.score > 0.8) {
-        var dXY = Utils.targetToDevice(floorXY1);
-        tap(dXY.x + 5, dXY.y + 5, 50);
-        sleep(1000);
-        this.gi.mapFloorBtn.tap();
-        sleep(1000);
-        return;
-      }
-      var floorXY2 = findImage(this._img, this.images.floor2);
-      if (floorXY2.score > 0.8) {
-        var _dXY = Utils.targetToDevice(floorXY2);
-        tap(_dXY.x + 5, _dXY.y + 5, 50);
-        sleep(1000);
-        this.gi.mapFloorBtn.tap();
-        sleep(1000);
-        return;
-      }
+      // this.waitForChangeScreen(0.92, 5000);
+      // this.safeSleep(3000); if (!this._loop) { return; }
+      // this.refreshScreen();
+      // const floorXY1 = findImage(this._img, this.images.floor1);
+      // if (floorXY1.score > 0.8) {
+      //   const dXY = Utils.targetToDevice(floorXY1);
+      //   tap(dXY.x + 5, dXY.y + 5, 50);
+      //   sleep(1000);
+      //   this.gi.mapFloorBtn.tap();
+      //   sleep(1000);
+      //   return;
+      // }
+      // const floorXY2 = findImage(this._img, this.images.floor2);
+      // if (floorXY2.score > 0.8) {
+      //   const dXY = Utils.targetToDevice(floorXY2);
+      //   tap(dXY.x + 5, dXY.y + 5, 50);
+      //   sleep(1000);
+      //   this.gi.mapFloorBtn.tap();
+      //   sleep(1000);
+      //   return;
+      // }
     }
   }, {
     key: 'getImageNumber',
@@ -1362,7 +1416,9 @@ var DefaultConfig = {
   autoUseAntidote: false, // take an antidote for the poison, use six button
   goBackInterval: 0, // whether to go back to origin location, check location every n min
   autoBuyFirstSet: false, // 1 * 100, -1 => max
-  mapSelect: 0 // move to nth map in safe region
+  mapSelect: 0, // move to nth map in safe region
+  grabMonster: false,
+  autoTeleport: true
 };
 
 var lm = undefined;

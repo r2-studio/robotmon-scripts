@@ -177,7 +177,7 @@
     }
 
     TAG = "LineageM";
-    VERSION = 25;
+    VERSION = 26;
     DEFAULT_CONFIG = {
       conditions: [
         {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
@@ -199,6 +199,8 @@
       autoBuyFirstSet: false,
       goBackInterval: 0, // whether to go back to origin location, check location every n min
       mapSelect: 0, // move to nth map in safe region
+      grabMonster: false,
+      autoTeleport: true,
     };
     var settings;
 
@@ -237,6 +239,8 @@
                 autoBuyFirstSet: "自動購買第 1 Set",
                 goBackInterval: "回到地圖原點 (0: 不啟動) (僅支援亞丁大陸與中間區域)",
                 mapSelect: "移動指定地圖 (0: 不啟動) (僅支援亞丁大陸75號)",
+                grabMonster: "自動開怪，使用按鈕1，根據按鈕1條件使用",
+                autoTeleport: "6秒沒怪物，自動瞬移，按鈕7",
               }
             }
           }
@@ -526,9 +530,7 @@
       var tempConditions = [];
       for (var index = 0; index < settings.conditions.length; index++) {
         var condition = settings.conditions[index];
-        if (condition.enabled) {
-          tempConditions.push(condition);
-        }
+        tempConditions.push(condition);
       }
       tempSettings.conditions = tempConditions;
       return tempSettings;
@@ -561,6 +563,12 @@
   </nav>
   <div id="container" class="container">
     <div style="margin: 10px 0px;">
+      V26
+      <ul>
+        <li>自動開怪，使用按鈕1，根據按鈕1條件使用</li>
+        <li>6秒沒攻擊，自動瞬移，按鈕7</li>
+        <li>更改辨識安全區域方法</li>
+      </ul>
       V25
       <ul>
         <li>第5次去綠洲購買購買物品</li>
