@@ -142,9 +142,9 @@ function isBattleStageFailedDialog(){
 
 //finish
 function isFinishBondPage(){
-	if(checkIconInScreen(9)){
+	if(checkIconInScreen(9,0.8)){
 		sleep(1500);
-		if(checkIconInScreen(9)){
+		if(checkIconInScreen(9,0.8)){
 			console.log("結算畫面");
 			return true;
 		}
@@ -152,6 +152,13 @@ function isFinishBondPage(){
 	if(checkIconInScreen(10)){
 		sleep(5000);
 		if(checkIconInScreen(10)){
+			if(isBattleMainPage()){
+				return false;
+			}
+			sleep(5000);
+			if(isBattleMainPage()){
+				return false;
+			}
 			console.log("結算畫面(升絆)");
 			return true;
 		}

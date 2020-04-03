@@ -311,6 +311,7 @@ function finishQuest(){
 }
 
 function clickSwimLoop(){
+    return;
     if(server == "JP"){
         return;
     }

@@ -6,17 +6,20 @@ var iconName = ["main","apple","friendPage","friendRefresh","teamPage","teamItem
 "friendPointTen","friendPointNew","friendPointReload","friendPointItemFull","friendPointServantFull",
 "selectStageItemFull","selectStageServantFull","finishDrop","finish3","addFriend2",
 "friendRefresh2","friendEnd","friendEnd2","friendEnd3","friendEnd4",
-"friendEmpty","finishNext","friendPointContinue","stageRestart","spaceColor"];
+"friendEmpty","finishNext","friendPointContinue","stageRestart","spaceColor",
+"swim1"];
 //TODO: update image for friend end
-var	iconPosition = [[1140,650,100,50],[530,45,200,50],[740,100,150,50],[560,100,160,60],[1135,650,115,50],[360,630,180,40],
+var	iconPosition = [[1140,650,100,50],[530,45,200,50],[740,100,150,50],[560,100,160,60],[1135,650,115,50],[400,50,400,50],
 		[1168,175,60,60],[1168,282,60,60],[1100,630,70,50],[60,150,240,50],[1000,90,230,120],
 		[560,70,150,40],[570,170,140,30],[1080,130,40,40],[60,70,100,55],[600,425,82,40],
 		[500,100,275,50],[580,535,120,40],[0,0,70,80],[450,375,450,72],[525,525,225,50],
 		[750,525,160,50],[1015,650,150,50],[700,650,125,42],[325,150,600,125],[325,150,600,125],
 		[325,150,600,125],[325,150,600,125],[150,70,170,40],[700,350,280,40],[60,70,100,55],
 		[560,100,160,60],[1220,685,40,30],[1220,685,40,30],[100,600,400,100],[100,600,400,100],
-		[450,420,350,40],[1050,660,120,40],[700,650,125,42],[760,540,160,50],[460,160,360,60]];
+		[450,420,350,40],[1050,660,120,40],[700,650,125,42],[760,540,160,50],[460,160,360,60],
+		[203,30,100,12]];
 if(server == "JP"){
+	iconPosition[5]=[360,630,180,40];
 	iconPosition[11]=[250,40,140,30];
 }
 
@@ -78,8 +81,7 @@ function isSelectTeamPage(){
 }
 
 function isUseItemDialog(){
-	//TODO:TW
-	return checkIconInScreen(5);
+	return checkIconInScreen(5,0.75);
 }
 
 //battle
@@ -140,9 +142,9 @@ function isBattleStageFailedDialog(){
 
 //finish
 function isFinishBondPage(){
-	if(checkIconInScreen(9)){
+	if(checkIconInScreen(9,0.8)){
 		sleep(1500);
-		if(checkIconInScreen(9)){
+		if(checkIconInScreen(9,0.8)){
 			console.log("結算畫面");
 			return true;
 		}
@@ -150,6 +152,13 @@ function isFinishBondPage(){
 	if(checkIconInScreen(10)){
 		sleep(5000);
 		if(checkIconInScreen(10)){
+			if(isBattleMainPage()){
+				return false;
+			}
+			sleep(5000);
+			if(isBattleMainPage()){
+				return false;
+			}
 			console.log("結算畫面(升絆)");
 			return true;
 		}
@@ -212,6 +221,10 @@ function isFriendPointContinue(){
 
 function isPresentBoxFull(){
 	return checkIconInScreen(26);
+}
+
+function isSwimEvent(){
+	return checkIconInScreen(41);
 }
 
 function checkAllPage(){
