@@ -275,6 +275,7 @@ function finishQuest(){
     while(isScriptRunning){
         if(isMainPage()){
             sleep(3000);
+            clickSwimLoop();
             return;
         }else if(isStageRestart()){
             sleep(1000);
@@ -291,12 +292,14 @@ function finishQuest(){
         } else if(isItemPage()){
             sleep(1000);
             if(isMainPage()){
+                clickSwimLoop();
                 return;
             }
             sleep(2000);
             if(isItemPage()){
                 sleep(1000);
                 if(isMainPage()){
+                    clickSwimLoop();
                     sleep(3000);
                     return;
                 }
@@ -305,6 +308,37 @@ function finishQuest(){
             }
         }
     }
+}
+
+function clickSwimLoop(){
+    return;
+    if(server == "JP"){
+        return;
+    }
+    if(!isSwimEvent()){
+        return;
+    }
+    sleep(3000);
+    while(!clickSwim()){
+        sleep(100);
+    }
+    sleep(3000);
+}
+
+function clickSwim(){
+    var result = false;
+    var screenShot = getScreenshotResize();
+    var cropScreen = cropImage(screenShot,500,0,640,720);
+    var icon = openImage("/sdcard/robotmon/scripts/com.cooper.FGOTW/image_tw/swim2.png");
+    var find = findImage(cropScreen ,icon);
+    if(find.score > 0.9){
+    tapScale(500+find.x,find.y,500);
+    result = true;
+    }
+    releaseImage(screenShot);
+    releaseImage(icon);
+    releaseImage(cropScreen);
+    return result;
 }
 
 function setSpaceUltColor(color){    
