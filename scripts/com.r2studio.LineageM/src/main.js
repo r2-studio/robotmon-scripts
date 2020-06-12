@@ -398,7 +398,7 @@ class LineageM {
         } else {
           this.rState.isMovingCount = 0;
         }
-        this.rState.movingScore = this.rState.movingScore*0.95 + s*0.05;
+        this.rState.movingScore = this.rState.movingScore * 0.95 + s * 0.05;
       }
       releaseImage(this._img);
       this._img = 0;
@@ -638,7 +638,7 @@ class LineageM {
         if (this.config.autoTeleport && Date.now() - noMonsterTime > 6000) {
           console.log('沒有怪物, 使用按鈕 7');
           noMonsterTime = Date.now();
-          this.gi.itemBtns[7-1].tap(2, 200);
+          this.gi.itemBtns[7 - 1].tap(2, 200);
           continue;
         }
       }
