@@ -212,15 +212,17 @@ class GameInfo {
     this.signAlliance = new Point(1820, 252);
 
     this.itemBtns = [
-      new Point(810, 960),
-      new Point(930, 960),
-      new Point(1050, 960),
+      new Point(730, 960),
+      new Point(840, 960),
+      new Point(960, 960),
+      new Point(1060, 960),
       new Point(1180, 960),
-      new Point(1440, 960),
-      new Point(1560, 960),
-      new Point(1690, 960),
-      new Point(1810, 960),
-      new Point(1310, 960), // special skills
+      new Point(1400, 960),
+      new Point(1510, 960),
+      new Point(1620, 960),
+      new Point(1730, 960),
+      new Point(1840, 960),
+      new Point(1280, 960), // special
     ];
 
     this.unknownBtn = new Point(1100, 800);
