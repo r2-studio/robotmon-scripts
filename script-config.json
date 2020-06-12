@@ -62,8 +62,8 @@
     },
     "com.r2studio.LineageM": {
       "title": "Lineage M / 天堂M 無課救星",
-      "versionCode": 26,
-      "description": "<h3>天堂M 無課救星</h3><ul><li>自動開怪，使用按鈕1，根據按鈕1條件使用</li><li>6秒沒攻擊，自動瞬移，按鈕7</li><li>更改辨識安全區域方法</li><li>⭐⭐⭐大幅提升腳本速度⭐⭐⭐</li><li>支援所有螢幕解析度</li><li>自動買水買銀箭</li><li>HP 與 MP 條件設定使用按鈕</li><li>回到地圖原點</li><li>移動到指定地圖</li><li>安全區域瞬移</li><li>被攻擊瞬移</li><li>使用回卷直到安全區域</li><li>斷線重新連線</li><li>自動攻擊</li><li>自動使用解毒劑</li><li>試煉副本輔助按紐</li></ul>",
+      "versionCode": 27,
+      "description": "<h3>天堂M 無課救星</h3><ul><li>更新按鈕位置</li><li>自動開怪，使用按鈕1，根據按鈕1條件使用</li><li>6秒沒攻擊，自動瞬移，按鈕7</li><li>更改辨識安全區域方法</li><li>⭐⭐⭐大幅提升腳本速度⭐⭐⭐</li><li>支援所有螢幕解析度</li><li>自動買水買銀箭</li><li>HP 與 MP 條件設定使用按鈕</li><li>回到地圖原點</li><li>移動到指定地圖</li><li>安全區域瞬移</li><li>被攻擊瞬移</li><li>使用回卷直到安全區域</li><li>斷線重新連線</li><li>自動攻擊</li><li>自動使用解毒劑</li><li>試煉副本輔助按紐</li></ul>",
       "packageName": "com.gamania.lineagem",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LineageM/index.zip",
       "dependencies": [

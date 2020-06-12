@@ -160,35 +160,37 @@
   </style>
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/10.0.7/i18next.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.js"></script>
 
   <script>
     if (typeof String.prototype.startsWith != 'function') {
       // see below for better implementation!
-      String.prototype.startsWith = function (str){
+      String.prototype.startsWith = function (str) {
         return this.indexOf(str) === 0;
       };
     }
 
     TAG = "LineageM";
-    VERSION = 26;
+    VERSION = 27;
     DEFAULT_CONFIG = {
       conditions: [
-        {type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false},
-        {type: 'mp', op: 1, value: 80, btn: 1, interval: 500, enabled: false},
-        {type: 'mp', op: -1, value: 80, btn: 2, interval: 1500, enabled: false},
-        {type: 'hp', op: -1, value: 80, btn: 3, interval: 1000, enabled: false},
-        {type: 'hp', op: -1, value: 80, btn: 4, interval: 1000, enabled: false},
-        {type: 'hp', op: -1, value: 80, btn: 5, interval: 1000, enabled: false},
-        {type: 'hp', op: -1, value: 25, btn: 6, interval: 1000, enabled: false},
-        {type: 'hp', op: -1, value: 25, btn: 7, interval: 1000, enabled: false},
-        {type: 'hp', op: 1, value: 50, btn: 8, interval: 2000, enabled: false},
+        { type: 'hp', op: -1, value: 80, btn: 0, interval: 500, enabled: false },
+        { type: 'mp', op: 1, value: 80, btn: 1, interval: 500, enabled: false },
+        { type: 'mp', op: -1, value: 80, btn: 2, interval: 1500, enabled: false },
+        { type: 'hp', op: -1, value: 80, btn: 3, interval: 1000, enabled: false },
+        { type: 'hp', op: -1, value: 80, btn: 4, interval: 1000, enabled: false },
+        { type: 'hp', op: -1, value: 80, btn: 5, interval: 1000, enabled: false },
+        { type: 'hp', op: -1, value: 25, btn: 6, interval: 1000, enabled: false },
+        { type: 'hp', op: -1, value: 25, btn: 7, interval: 1000, enabled: false },
+        { type: 'hp', op: 1, value: 50, btn: 8, interval: 1000, enabled: false },
+        { type: 'hp', op: -1, value: 25, btn: 9, interval: 1000, enabled: false },
+        { type: 'hp', op: 1, value: 50, btn: 10, interval: 1000, enabled: false },
       ],
       inHomeUseBtn: false, // if in safe region use 3th button, like 瞬移.
       beAttackedRandTeleport: true,
@@ -254,7 +256,7 @@
           }
         }
       });
-      i18next.on('languageChanged', function() {
+      i18next.on('languageChanged', function () {
         if (localStorage !== undefined) {
           localStorage.setItem(getLocaleKey(), i18next.language);
         }
@@ -559,10 +561,14 @@
 
 <body>
   <nav class="navbar navbar-custom" role="navigation">
-   <a id="version" class="navbar-brand"></a>
+    <a id="version" class="navbar-brand"></a>
   </nav>
   <div id="container" class="container">
     <div style="margin: 10px 0px;">
+      V27
+      <ul>
+        <li>更新按鈕位置，按鈕11為中間位置</li>
+      </ul>
       V26
       <ul>
         <li>自動開怪，使用按鈕1，根據按鈕1條件使用</li>

@@ -212,15 +212,17 @@ class GameInfo {
     this.signAlliance = new Point(1820, 252);
 
     this.itemBtns = [
-      new Point(810, 960),
-      new Point(930, 960),
-      new Point(1050, 960),
+      new Point(730, 960),
+      new Point(840, 960),
+      new Point(960, 960),
+      new Point(1060, 960),
       new Point(1180, 960),
-      new Point(1440, 960),
-      new Point(1560, 960),
-      new Point(1690, 960),
-      new Point(1810, 960),
-      new Point(1310, 960), // special skills
+      new Point(1400, 960),
+      new Point(1510, 960),
+      new Point(1620, 960),
+      new Point(1730, 960),
+      new Point(1840, 960),
+      new Point(1280, 960), // special
     ];
 
     this.unknownBtn = new Point(1100, 800);
@@ -398,7 +400,7 @@ class LineageM {
         } else {
           this.rState.isMovingCount = 0;
         }
-        this.rState.movingScore = this.rState.movingScore*0.95 + s*0.05;
+        this.rState.movingScore = this.rState.movingScore * 0.95 + s * 0.05;
       }
       releaseImage(this._img);
       this._img = 0;
@@ -638,7 +640,7 @@ class LineageM {
         if (this.config.autoTeleport && Date.now() - noMonsterTime > 6000) {
           console.log('沒有怪物, 使用按鈕 7');
           noMonsterTime = Date.now();
-          this.gi.itemBtns[7-1].tap(2, 200);
+          this.gi.itemBtns[7 - 1].tap(2, 200);
           continue;
         }
       }
