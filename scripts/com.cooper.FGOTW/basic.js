@@ -1,5 +1,5 @@
 var loadApiCnt = 0;
-var version = "V2.24";
+var version = "V2.25";
 var isDebug = false;
 
 var defaultScreenSize = [1280,720];
