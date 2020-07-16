@@ -176,11 +176,7 @@ function isFinishNext(){
 }
 
 function isAddFriendPage(){
-	if(server == "TW"){
-		return checkIconInScreen(14);
-	}else{
-		return checkIconListInScreen([14,30],false,0.8);
-	}
+	return checkIconListInScreen([14,30],false,0.8);
 }
 
 function isItemPage(){
