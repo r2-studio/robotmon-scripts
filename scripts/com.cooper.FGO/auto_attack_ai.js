@@ -16,7 +16,7 @@ var servantExistHeight = 12;
 var skillUsedImage;
 var skillUsedPositionX = [32,126,220,350,443,537,669,763,856];
 if(server=="JP"){
-    skillUsedPositionX = [31,124,218,348,442,536,667,761,855];
+    skillUsedPositionX = [37,125,213,355,442,531,672,760,848];
 }
 var skillUsedPositionY = 600;
 var skillUsedSize = 16;
@@ -269,7 +269,13 @@ function updateSkillUsed(screenshot){
     }
     var result = [];
     for(var i=0;i<9;i++){
-        result[i] = checkImage(screenshot,skillUsedImage,skillUsedPositionX[i],skillUsedPositionY,skillUsedSize,skillUsedSize,0.7);
+        result[i] = false;
+        for(var offset = -5; offset<=5;offset++){
+            if(checkImage(screenshot,skillUsedImage,skillUsedPositionX[i] + offset,skillUsedPositionY,skillUsedSize,skillUsedSize,0.65)){
+                result[i] = true;
+                break;
+            }
+        }
     }
     if(needRelease){
         releaseImage(screenshot);

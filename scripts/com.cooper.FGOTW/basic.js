@@ -1,5 +1,5 @@
 var loadApiCnt = 0;
-var version = "V2.27";
+var version = "V2.28";
 var isDebug = false;
 
 var defaultScreenSize = [1280,720];
@@ -33,7 +33,7 @@ function startScript(loopTime,script,scriptName){
             console.log("Start script loop "+(loop+1)+"/"+loopTime);
             sendNormalMessage (runningScriptName, "Start loop "+(loop+1)+"/"+loopTime);
         }
-        spaceUltColor = 2;
+        spaceUltColor = -1;
         isReplay = false;
         runScript(script);
     }
@@ -463,6 +463,21 @@ function saveCropImage2(name,l,t,w,h){
     var y = t;
     var filepath = path+"/"+name+".png";
     var screenShot = getScreenshot();
+    var crop = cropImage(screenShot,x,y,width,height);
+    saveImage(crop,filepath);
+    releaseImage(screenShot);
+    releaseImage(crop);
+    console.log("save crop at "+filepath);
+}
+
+function saveCropImage2Resize(name,l,t,w,h){
+    var path = getStoragePath();
+    var width = w;
+    var height = h;
+    var x = l;
+    var y = t;
+    var filepath = path+"/"+name+".png";
+    var screenShot = getScreenshotResize();
     var crop = cropImage(screenShot,x,y,width,height);
     saveImage(crop,filepath);
     releaseImage(screenShot);
