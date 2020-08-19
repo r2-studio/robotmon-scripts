@@ -7,7 +7,7 @@ var iconName = ["main","apple","friendPage","friendRefresh","teamPage","teamItem
 "selectStageItemFull","selectStageServantFull","finishDrop","finish3","addFriend2",
 "friendRefresh2","friendEnd","friendEnd2","friendEnd3","friendEnd4",
 "friendEmpty","finishNext","friendPointContinue","stageRestart","spaceColor",
-"swim1"];
+"swim1","emiyaColor"];
 //TODO: update image for friend end
 var	iconPosition = [[1140,650,100,50],[530,45,200,50],[740,100,150,50],[560,100,160,60],[1135,650,115,50],[400,50,400,50],
 		[1168,175,60,60],[1168,282,60,60],[1115,640,70,50],[60,150,240,50],[1000,90,230,120],
@@ -17,7 +17,7 @@ var	iconPosition = [[1140,650,100,50],[530,45,200,50],[740,100,150,50],[560,100,
 		[325,150,600,125],[325,150,600,125],[150,70,170,40],[700,350,280,40],[60,70,100,55],
 		[560,100,160,60],[1220,685,40,30],[1220,685,40,30],[100,600,400,100],[100,600,400,100],
 		[450,420,350,40],[1050,660,120,40],[700,650,125,42],[760,540,160,50],[460,160,360,60],
-		[203,30,100,12]];
+		[203,30,100,12],[460,160,360,60]];
 if(server == "JP"){
 	iconPosition[5]=[360,630,180,40];
 	iconPosition[11]=[250,40,140,30];
@@ -129,6 +129,13 @@ function isBattleSkillSpaceDialog(){
 		return false;
 	}
 	return checkIconInScreen(40,0.75);
+}
+
+function isBattleSkillEmiyaDialog(){
+	if(server == "TW"){
+		return false;
+	}
+	return checkIconInScreen(42,0.75);
 }
 
 function isBattleUltFailedDialog(){

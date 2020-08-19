@@ -150,12 +150,12 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
     }
     </style>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <link rel="stylesheet" href="./jquery/bootstrap.min.css">
+    <script src="./jquery/jquery.min.js"></script>
+    <script src="./jquery/bootstrap.min.js"></script>
+    <link href="./jquery/select2.min.css" rel="stylesheet" />
+    <script src="./jquery/select2.min.js"></script>
+    <script src="./jquery/bootbox.min.js"></script>
 
     <script>
     //var server = "JP"
@@ -698,7 +698,7 @@ function getCurrentScript(){
                     case "結束關卡":
                     newScript+='finishQuest();';
                     break;
-                    case "設定宇宙伊斯塔寶具顏色":
+                    case "設定技能改變寶具顏色":
                     newScript+="setSpaceUltColor("+$("#spaceUltColor"+itemId).val()+");";
                     break;
                     case "使用技能":
@@ -766,13 +766,13 @@ function getGetBox(id){
         '<label>注意 自動重置開啟時，中獎後會點擊重置按鈕，想抽乾前十箱請小心</label>');
 }
 function getSpaceUltItem(id){
-    return getCommandItem(id,"設定宇宙伊斯塔寶具顏色",
+    return getCommandItem(id,"設定技能改變寶具顏色",
         '<li><label>寶具顏色&nbsp;&nbsp;</label>'+
         '<select id = "spaceUltColor'+id+'">'+
         '<option value = "2" selected>綠</option>'+
         '<option value = "1">藍</option>'+
         '<option value = "0">紅</option></select></li>'+
-        '<label>寶具顏色預設為綠色，執行此指令後，使用技能會選擇指定的顏色</label>');
+        '<label>執行此指令後，使用改變寶具顏色的技能會選擇指定的顏色</label>');
 }
 function getUseSkillItem(id){
     return getCommandItem(id,"使用技能",
@@ -1654,7 +1654,7 @@ function onLog(message) {
               <button id="addFinish" type="button">結束關卡</button>
           </div><br><br><br>
           <div  class="pull-left" style="margin-top:-4px">
-              <button id="addSpaceUlt" type="button">設定宇宙伊斯塔寶具顏色</button>
+              <button id="addSpaceUlt" type="button">設定技能改變寶具顏色</button>
           </div><br><br>
           <div  class="pull-left" style="margin-top:-4px">
               <button id="addSkill" type="button">使用技能</button>

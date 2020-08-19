@@ -15,6 +15,7 @@ var cardPositionY = 517;
 var ultPositionX = [400,625,900];
 var ultPositionY = 125;
 
+var emiyaUltPositionX = [750,450];
 var spaceUltPositionX = [900,600,300];
 var spaceUltPositionY = 450;
 var spaceUltColor = 2;
@@ -61,11 +62,18 @@ function useSkill(player,skill,target){
     }
     if(isBattleSkillSpaceDialog()){
         if(spaceUltColor == undefined || spaceUltColor < 0 || spaceUltColor > 2){
-            console.log("reset color "+spaceUltColor);
+            console.log("未指定顏色，設為綠色");
             spaceUltColor = 2;
         }
         console.log("使用技能-宇宙伊斯塔寶具顏色 "+colorName[spaceUltColor]);
         tapScale(spaceUltPositionX[spaceUltColor],spaceUltPositionY);
+    }else if(isBattleSkillEmiyaDialog()){
+        if(spaceUltColor == undefined || spaceUltColor < 0 || spaceUltColor >= 2){
+            console.log("未指定顏色，設為藍色");
+            spaceUltColor = 1;
+        }
+        console.log("使用技能-紅A寶具顏色 "+colorName[spaceUltColor]);
+        tapScale(emiyaUltPositionX[spaceUltColor],spaceUltPositionY);
     }else if(isBattleSkillTargetDialog()){
         console.log("使用技能-選擇目標");
         if(target == undefined || target < 0){
@@ -343,7 +351,7 @@ function clickSwim(){
 
 function setSpaceUltColor(color){    
     spaceUltColor = color;
-    console.log("設定宇宙伊斯塔寶具顏色 - "+colorName[spaceUltColor]);
+    console.log("設定改變寶具顏色 - "+colorName[spaceUltColor]);
 }
 
 loadApiCnt++;
