@@ -29,6 +29,7 @@ function useSkill(player,skill,target){
         return;
     }
     console.log("使用技能 從者 "+(player+1)+", 技能 "+(skill+1)+", 目標 "+(target+1));
+    skillUsedInLoop[player*3+skill] = true;
     tapScale(skillPositionX[player*3+skill],skillPositionY);
     sleep(1000);
     if(!isScriptRunning){
@@ -179,6 +180,9 @@ function changePlayer(target1,target2){
         return;
     }
     console.log("交換從者 "+(target1+1) +","+(target2+1));
+    skillUsedInLoop[target1 * 3] = false;
+    skillUsedInLoop[target1 * 3 + 1] = false;
+    skillUsedInLoop[target1 * 3 + 2] = false;
     tapScale(138 +(200*target1),368);
     sleep(300);
     tapScale(138 +(200*target2),368);
