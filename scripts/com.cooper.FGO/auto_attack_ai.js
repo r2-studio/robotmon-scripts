@@ -100,6 +100,7 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
 
     servantInited = false;
     servantAliveMessage = [true,true,true];
+    skillUsedInLoop = [false,false,false,false,false,false,false,false,false];
     loadAllImage();
 
     var lastStage = -1;    
@@ -270,6 +271,11 @@ function updateSkillUsed(screenshot){
     var result = [];
     for(var i=0;i<9;i++){
         result[i] = false;
+        if(!skillUsedInLoop[i]){
+            //force use skill if not used in this game
+            //console.log("force use skill");
+            continue;
+        }
         for(var offset = -5; offset<=5;offset++){
             if(checkImage(screenshot,skillUsedImage,skillUsedPositionX[i] + offset,skillUsedPositionY,skillUsedSize,skillUsedSize,0.65)){
                 result[i] = true;
