@@ -109,15 +109,15 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 2.29,
-      "description": "<div>V2.29 自動戰鬥指令中，第一次使用技能不判斷已施放避免漏放<br>V2.28 修正夜神模擬器介面問題，修正已施放技能的判斷,支援紅A技能寶具變色<br>V2.24 改善結束關卡指令判斷<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.31,
+      "description": "<div>V2.31 修正部分機型會卡在自動戰鬥指令的問題<br>V2.29 自動戰鬥指令中，第一次使用技能不判斷已施放避免漏放<br>V2.28 修正夜神模擬器介面問題，修正已施放技能的判斷,支援紅A技能寶具變色<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 2.29,
-      "description": "<div>V2.29 自動戰鬥指令中，第一次使用技能不判斷已施放避免漏放<br>V2.28 修正夜神模擬器介面問題<br>V2.27 修正FGO台版V1.55.0 介面更新造成無法使用的問題<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.31,
+      "description": "<div>V2.31 修正部分機型會卡在自動戰鬥指令的問題<br>V2.29 自動戰鬥指令中，第一次使用技能不判斷已施放避免漏放<br>V2.28 修正夜神模擬器介面問題<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
