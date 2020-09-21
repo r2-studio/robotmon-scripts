@@ -116,6 +116,7 @@ function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1
             }
             break;
         }
+        sleep(1000);
         var currentStage = getCurrentStage();
         if(until!=0 && until <= currentStage){
             console.log("進入第"+(currentStage+1)+"波，自動戰鬥結束");
