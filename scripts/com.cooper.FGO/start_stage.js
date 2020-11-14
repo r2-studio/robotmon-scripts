@@ -16,7 +16,17 @@ function selectStage(useApple){
         isReplay = true;
         tapScale(800,560);
         sleep(500);
-    } else if(!isMainPage()){
+    }else if(isStageRestartEvent()){
+        isReplay = true;
+        if(lastTimeUseItem < 0){
+            tapScale(900,560);
+        }else{
+            tapScale(600,560);
+            sleep(1500);
+            selectItem(lastTimeUseItem);
+        }
+        sleep(500);
+    }else if(!isMainPage()){
         console.log("不在主畫面-選擇關卡失敗");
         console.log("若FGO並未置中，請確認黑邊數值是否正確");
         isScriptRunning = false;
@@ -445,31 +455,33 @@ function startQuest(useItem){
     tapScale(1150,667);
     sleep(1500);
     if(isUseItemDialog()){
+        lastTimeUseItem = useItem;
         if(useItem == undefined || useItem == -1){
             console.log("不使用道具");
             tapScale(820,650);
             return;
         }
-        var y = itemPositionY[useItem];
-        if(useItem > 2){
-            y = 500;
-            for(var i = 0; i < useItem - 2; i++){
-                swipeScale(400,500,400,300,20);
-                sleep(1000);
-            }
-        }
-        console.log("使用道具");
-        tapScale(650,y);
-        sleep(1000);
-        tapScale(827,555);
-        sleep(3000);
-        if(isUseItemDialog()){
-            isScriptRunning = false;
-            console.log("道具不足");
-            sendUrgentMessage(runningScriptName,"道具不足");
-            return;
-        }
+        selectItem(useItem);
     }
+}
+
+function selectItem(item){
+    var y = itemPositionY[item % 3];
+    if(item > 2){
+        swipeScale(400,600,400,50,500);
+        sleep(1000);
+    }
+    console.log("使用道具");
+    tapScale(650,y);
+    sleep(1000);
+    if(isUseItemDialog()){
+        isScriptRunning = false;
+        console.log("道具不足");
+        sendUrgentMessage(runningScriptName,"道具不足");
+        return;
+    }
+    tapScale(827,555);
+    sleep(3000);
 }
 
 loadApiCnt++;
