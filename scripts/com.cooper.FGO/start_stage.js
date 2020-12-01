@@ -4,7 +4,8 @@ var isReplay = false;
 function selectStage(useApple){
     if(!isScriptRunning){
         return;
-    }    
+    }
+    sleep(1000); 
     if(isBattleMainPage()){
         console.log("已進入戰鬥，選擇關卡省略");
         sleep(500);
