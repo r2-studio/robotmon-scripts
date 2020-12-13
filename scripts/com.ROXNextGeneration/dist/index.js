@@ -1,1 +1,246 @@
-!function(){var e={660:function(e){function o(){console.log("Called");var e=getScreenshot(),o=getImageColor(e,548,240);releaseImage(e);var r=!1;if(o.r>125&&o.r<200&&o.g>140&&o.g<210&&o.b>140&&o.b<210&&(tap(548,240,50),tap(548,240,50),r=!0),!r)return console.log("can not finish",o.r,o.g,o.b),!1;sleep(2e3);for(var n=0;n<60;n++){e=getScreenshot(),o=getImageColor(e,548,240),releaseImage(e);var l=!1;if(o.r>140&&o.r<180&&o.g>180&&o.g<220&&o.b>110&&o.b<140&&(tap(548,240,100),l=!0,console.log("done")),sleep(200),l)break}return!0}function r(e,o,r){return e.r>o[0]-r&&e.r<o[0]+r&&e.g>o[1]-r&&e.g<o[1]+r&&e.b>o[2]-r&&e.b<o[2]+r}for(var n=0;n<500;n++){console.log("start finishing...");var l=!1,s=o();s||0!=l||(l=!0,tap(600,63,50),sleep(3e3),tap(295,142,50),sleep(3e3),tap(321,165,50),sleep(3e3),tap(625,46,50),sleep(3e3)),t=void 0,g=void 0,a=void 0,t=getScreenshot(),g=getImageColor(t,399,146),a=getImageColor(t,400,131),releaseImage(t),!(!r(g,[237,227,193],20)||!r(a,[171,157,95],20))&&1==l&&tap(399,146,50),console.log("isFish : ",s),sleep(3e3),console.log("finish done",n+1)}var t,g,a;e.exports.fish=o}},o={};function r(n){if(o[n])return o[n].exports;var l=o[n]={exports:{}};return e[n](l,l.exports,r),l.exports}!function(){function e(){var e=getScreenshot(),o=getImageColor(e,548,240);releaseImage(e);var r=!1;if(o.r>125&&o.r<200&&o.g>140&&o.g<210&&o.b>140&&o.b<210&&(tap(548,240,50),tap(548,240,50),r=!0),!r)return console.log("can not finish",o.r,o.g,o.b),!1;sleep(2e3);for(var n=0;n<60;n++){e=getScreenshot(),o=getImageColor(e,548,240),releaseImage(e);var l=!1;if(o.r>140&&o.r<180&&o.g>180&&o.g<220&&o.b>110&&o.b<140&&(tap(548,240,100),l=!0,console.log("done")),sleep(200),l)break}return!0}r(660).fish(),console.log("Hello");for(var o=0;o<500;o++)console.log("start finishing..."),e(),console.log("isFish : "),sleep(3e3),console.log("finish done",o+1);console.log("Hello2")}()}();
+/******/ (function() { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 660:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+var unit = __webpack_require__(778);
+
+function FishManager() {
+  this.init();
+}
+FishManager.prototype.init = function () {
+  console.log("FishManager Init");
+}
+
+FishManager.prototype.fish = function () {
+  var img = getScreenshot();
+  var c = getImageColor(img, 548, 240);
+  releaseImage(img);
+  var start = false;
+  if (
+    c.r > 125 &&
+    c.r < 200 &&
+    c.g > 140 &&
+    c.g < 210 &&
+    c.b > 140 &&
+    c.b < 210
+  ) {
+    tap(548, 240, 50);
+    tap(548, 240, 50);
+    start = true;
+  }
+  if (!start) {
+    console.log('can not finish', c.r, c.g, c.b);
+    return false;
+  }
+  sleep(2000);
+  for (var i = 0; i < 60; i++) {
+    var img = getScreenshot();
+    var c = getImageColor(img, 548, 240);
+    releaseImage(img);
+    var done = false;
+    if (
+      c.r > 140 &&
+      c.r < 180 &&
+      c.g > 180 &&
+      c.g < 220 &&
+      c.b > 110 &&
+      c.b < 140
+    ) {
+      tap(548, 240, 100);
+      done = true;
+      console.log('done');
+    }
+    sleep(200);
+    if (done) {
+      break;
+    }
+  }
+  return true;
+}
+
+FishManager.prototype.checkArrive = function () {
+  var img = getScreenshot();
+  var c1 = getImageColor(img, 399, 146);
+  var c2 = getImageColor(img, 400, 131);
+  releaseImage(img);
+  var isArrive = false;
+  if (unit.sameColor(c1, [237, 227, 193]) && unit.sameColor(c2, [171, 157, 95])) {
+    return true;
+  }
+  return false;
+}
+FishManager.prototype.moveToFish = function () {
+  tap(600, 63, 50);
+  sleep(3000);
+  tap(295, 142, 50);
+  sleep(3000);
+  tap(321, 165, 50);
+  sleep(3000);
+  tap(625, 46, 50);
+  sleep(3000);
+}
+
+FishManager.prototype.autoFish = function () {
+  for (var i = 0; i < 500; i++) {
+    console.log('start finishing...');
+    var moveing = false;
+    var isFish = this.fish();
+    if (!isFish && moveing == false) {
+      moveing = true;
+      this.moveToFish();
+    }
+    if (this.checkArrive() && moveing == true)
+      tap(399, 146, 50);
+
+    console.log('isFish : ', isFish);
+    sleep(3000);
+    console.log('finish done', i + 1);
+  }
+}
+
+//var f = new FishManager();
+//f.moveToFish();
+module.exports = FishManager;
+
+/***/ }),
+
+/***/ 507:
+/***/ (function(module) {
+
+
+function TaskManager() {
+  this.init();
+}
+TaskManager.prototype.init = function () {
+  console.log("TaskManager Init");
+}
+
+TaskManager.prototype.autoTask = function () {
+  console.log("autoTask");
+}
+
+TaskManager.prototype.moveToTask = function () {
+  console.log("moveToTask");
+  tap(518, 24, 50);
+  sleep(3000);
+  tap(444, 25, 50);
+  sleep(3000);
+  tap(322, 228, 50);
+  sleep(3000);
+  tap(322, 293, 50);
+  sleep(3000);
+}
+
+TaskManager.prototype.acceptTask = function () {
+  console.log("acceptTask");
+  var diff = 120;
+  for (var i = 0; i < 5; ++i) {
+    tap(116 + (diff * i), 116, 50);
+    sleep(3000);
+    tap(328, 283, 50);
+    sleep(3000);
+    tap(96  + (diff * i), 231, 50);
+    sleep(3000);
+    tap(328, 283, 50);
+    sleep(3000);
+  }
+}
+
+TaskManager.prototype.doTask = function () {
+  console.log("doTask");
+}
+
+//var t = new TaskManager();
+//t.moveToTask();
+module.exports = TaskManager;
+
+/***/ }),
+
+/***/ 778:
+/***/ (function(module) {
+
+
+function sameColor(color, target, range) {
+  if (range == undefined) {
+    range = 20;
+  }
+  if (
+    color.r > target[0] - range &&
+    color.r < target[0] + range &&
+    color.g > target[1] - range &&
+    color.g < target[1] + range &&
+    color.b > target[2] - range &&
+    color.b < target[2] + range
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function isSameColor(c1, c2, diff) {
+  if (diff == undefined) {
+    diff = 20;
+  }
+  if (Math.abs(c1.r - c2.r) > diff) {
+    return false;
+  }
+  if (Math.abs(c1.g - c2.g) > diff) {
+    return false;
+  }
+  if (Math.abs(c1.b - c2.b) > diff) {
+    return false;
+  }
+  if (Math.abs(c1.a - c2.a) > diff) {
+    return false;
+  }
+  return true;
+}
+
+module.exports.sameColor = sameColor;
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+!function() {
+var FishManager = __webpack_require__(660);
+var TaskManager = __webpack_require__(507);
+
+function main() {
+  var fishManager = new FishManager();
+  var taskManager = new TaskManager();
+  //fishManager.autoFish();
+  taskManager.acceptTask();
+}
+main()
+console.log("Done!");
+}();
+/******/ })()
+;

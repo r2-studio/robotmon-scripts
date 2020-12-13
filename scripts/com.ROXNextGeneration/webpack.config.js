@@ -6,6 +6,9 @@ module.exports = {
   resolve: {
     extensions: [".js"],
   },
+  optimization: {
+    minimize: false,
+  },
   output: {
     filename: "index.js",
     path: path.resolve(__dirname, "dist"),

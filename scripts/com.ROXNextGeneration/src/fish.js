@@ -1,15 +1,13 @@
-const unit = require('./unit.js');
+var unit = require('./unit.js');
 
-function FishManager()
-{
+function FishManager() {
   this.init();
 }
-
-FishManager.prototype.init = function() {
-  console.log("finsManager init");
+FishManager.prototype.init = function () {
+  console.log("FishManager Init");
 }
 
-FishManager.prototype.fish =  function() {
+FishManager.prototype.fish = function () {
   var img = getScreenshot();
   var c = getImageColor(img, 548, 240);
   releaseImage(img);
@@ -56,7 +54,7 @@ FishManager.prototype.fish =  function() {
   return true;
 }
 
-FishManager.prototype.checkArrive = function() {
+FishManager.prototype.checkArrive = function () {
   var img = getScreenshot();
   var c1 = getImageColor(img, 399, 146);
   var c2 = getImageColor(img, 400, 131);
@@ -67,7 +65,7 @@ FishManager.prototype.checkArrive = function() {
   }
   return false;
 }
-FishManager.prototype.moveToFish = function() {
+FishManager.prototype.moveToFish = function () {
   tap(600, 63, 50);
   sleep(3000);
   tap(295, 142, 50);
@@ -78,21 +76,24 @@ FishManager.prototype.moveToFish = function() {
   sleep(3000);
 }
 
-FishManager.prototype.autoFish = function() {
+FishManager.prototype.autoFish = function () {
   for (var i = 0; i < 500; i++) {
     console.log('start finishing...');
     var moveing = false;
-    var isFish = fish();
+    var isFish = this.fish();
     if (!isFish && moveing == false) {
       moveing = true;
-      moveToFish();
+      this.moveToFish();
     }
-    if (checkArrive() && moveing == true)
+    if (this.checkArrive() && moveing == true)
       tap(399, 146, 50);
-  
+
     console.log('isFish : ', isFish);
     sleep(3000);
     console.log('finish done', i + 1);
   }
 }
-module.exports.fish = FishManager;
+
+//var f = new FishManager();
+//f.moveToFish();
+module.exports = FishManager;
