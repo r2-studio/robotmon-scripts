@@ -109,8 +109,8 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 2.35,
-      "description": "<div>V2.35 16:9手機與夜神模擬器支援新介面，其他比例手機還請再等候改版<br>V2.33 改善結束關卡指令的辨識<br>V2.32 修正新關卡背景會誤判從者狀態視窗打開的問題<br>V2.31 修正部分機型會卡在自動戰鬥指令的問題<br>V2.29 自動戰鬥指令中，第一次使用技能不判斷已施放避免漏放<br>V2.28 修正夜神模擬器介面問題，修正已施放技能的判斷,支援紅A技能寶具變色<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.36,
+      "description": "<div>目前版本仍不支援16:9以外裝置使用自動周回功能<br>V2.36 修復自動換箱功能，修復第幾波的辨識<br>V2.33 改善結束關卡指令的辨識<br>V2.32 修正新關卡背景會誤判從者狀態視窗打開的問題<br>V2.31 修正部分機型會卡在自動戰鬥指令的問題<br>V2.29 自動戰鬥指令中，第一次使用技能不判斷已施放避免漏放<br>V2.28 修正夜神模擬器介面問題，修正已施放技能的判斷,支援紅A技能寶具變色<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
