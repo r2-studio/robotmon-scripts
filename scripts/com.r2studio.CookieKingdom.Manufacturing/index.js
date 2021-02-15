@@ -301,29 +301,21 @@ function JobScheduling() {
         }
     }
 
-    if (!checkIsPage(pageSecondItemEnabled)) {
-        return;
-    } else {
-        if (checkIsPage(pageSecondItemHasOneDigits)) {
-            console.log('add 2nd item to > 10')
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
-            if (!handleNotEnoughStock()) {
-                itemsAdd ++;
-            }
-        }    
-    }
+    if (checkIsPage(pageSecondItemEnabled) && checkIsPage(pageSecondItemHasOneDigits)) {
+        console.log('add 2nd item to > 10')
+        qTap(pageSecondItemEnabled);
+        sleep(config.sleepAnimate);
+        if (!handleNotEnoughStock()) {
+            itemsAdd ++;
+        }
+    }    
 
-    if (!checkIsPage(pageThirdItemEnabled)) {
-        // return;
-    } else {
-        if (checkIsPage(pageThirdItemHasOneDigits)) {
-            console.log('add 3rd item to > 10')
-            qTap(pageThirdItemEnabled);
-            sleep(config.sleepAnimate);
-            if (!handleNotEnoughStock()) {
-                itemsAdd ++;
-            }
+    if (checkIsPage(pageThirdItemEnabled) && checkIsPage(pageThirdItemHasOneDigits)) {
+        console.log('add 3rd item to > 10')
+        qTap(pageThirdItemEnabled);
+        sleep(config.sleepAnimate);
+        if (!handleNotEnoughStock()) {
+            itemsAdd ++;
         }
     }
 
@@ -355,7 +347,7 @@ function JobScheduling() {
     }
 
     if (!checkIsPage(pageThirdItemEnabled)) {
-        // return;
+        return;
     } else {
         if (!checkIsPage(pageThirdItemHasThreeDigits)) {
             console.log('add 3rd item to > 100')
@@ -537,5 +529,5 @@ function start() {
   }
   
   
-//   start();
-  JobScheduling()
+  start();
+//   JobScheduling()
