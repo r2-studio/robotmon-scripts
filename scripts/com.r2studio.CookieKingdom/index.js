@@ -912,6 +912,7 @@ return act;
 }
 
 function start() {
+  config.run = true;
 
   for (var i = 1; i < 1000; i++) {
       var runMain = false;
