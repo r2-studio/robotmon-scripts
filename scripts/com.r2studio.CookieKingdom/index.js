@@ -273,7 +273,7 @@ function handleInputKingdomName() {
           tap(27, 327, 20);
           tap(27, 327, 20);
   
-          typing("Xookie" + Math.ceil(Math.random() * 10000), 10000);
+          typing("Xookie" + Math.ceil(Math.random() * 100) + Date.now().toString().substr(13 - 3), 100);
           sleep(config.sleepAnimate*2);
           qTap([{x: 594, y: 322}]);
           qTap([{x: 329, y: 233}]); //check conflict
@@ -930,4 +930,3 @@ start();
 
 // handleBattle();
 // handleInputKingdomName();
-

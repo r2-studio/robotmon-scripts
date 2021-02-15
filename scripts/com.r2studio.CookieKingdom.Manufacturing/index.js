@@ -143,6 +143,16 @@ function JobScheduling() {
         }
     }
 
+    pageFirstItemEnabled = [
+        {x: 569, y: 119, r: 121, g: 207, b: 12},
+    ]
+    pageSecondItemEnabled = [
+        {x: 571, y: 223, r: 121, g: 207, b: 12},
+    ]
+    pageThirdItemEnabled = [
+        {x: 568, y: 329, r: 121, g: 207, b: 14},
+    ]
+
     if (checkIsPage(pageWoodFarm) && isNoThirdFigure){
         console.log('add wood')
         qTap(pageWoodFarm)
@@ -177,10 +187,17 @@ function JobScheduling() {
         console.log('Powder farm')
         if (isNoThirdFigure) {
             console.log('add Powder')
-            qTap(pagePowderFarm)    
-            qTap(pagePowderFarm)    
-            qTap(pagePowderFarm)    
-            qTap(pagePowderFarm)    
+
+            if (checkIsPage(pageSecondItemEnabled)) {
+                qTap(pageSecondItemEnabled);
+                qTap(pageSecondItemEnabled);
+                qTap(pageSecondItemEnabled);
+            } else {
+                qTap(pagePowderFarm)
+                qTap(pagePowderFarm)
+                qTap(pagePowderFarm)
+                qTap(pagePowderFarm)    
+            }
             return true;
         }
     }
@@ -188,10 +205,19 @@ function JobScheduling() {
         console.log('Barry farm')
         if (isNoThirdFigure) {
             console.log('... add more')
-            qTap(pageBarryFarm)    
-            qTap(pageBarryFarm)    
-            qTap(pageBarryFarm)    
-            qTap(pageBarryFarm)    
+
+            if (checkIsPage(pageSecondItemEnabled)) {
+                qTap(pageSecondItemEnabled);
+                qTap(pageSecondItemEnabled);
+                qTap(pageSecondItemEnabled);
+            }
+            else {
+                qTap(pageBarryFarm)
+                qTap(pageBarryFarm)
+                qTap(pageBarryFarm)
+                qTap(pageBarryFarm)
+    
+            }
             return true;
         }
     }
@@ -210,20 +236,11 @@ function JobScheduling() {
     pageFirstItemHasThreeDigits = [
         {x: 436, y: 107, r: 77, g: 71, b: 65}
     ]
-    pageFirstItemEnabled = [
-        {x: 569, y: 119, r: 121, g: 207, b: 12},
-    ]
     pageSecondItemHasThreeDigits = [
         {x: 436, y: 215, r: 77, g: 71, b: 65}
     ]
-    pageSecondItemEnabled = [
-        {x: 571, y: 223, r: 121, g: 207, b: 12},
-    ]
     pageThirdItemHasThreeDigits = [
         {x: 436, y: 320, r: 77, g: 71, b: 65}
-    ]
-    pageThirdItemEnabled = [
-        {x: 568, y: 329, r: 121, g: 207, b: 14},
     ]
     if (!checkIsPage(pageFirstItemHasThreeDigits) && checkIsPage(pageFirstItemEnabled)) {
         console.log('add 1st item')
