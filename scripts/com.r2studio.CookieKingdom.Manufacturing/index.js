@@ -132,15 +132,14 @@ function JobScheduling() {
     pageAlreadyProducing = [
         {x: 459, y: 39, r: 54, g: 173, b: 224},
         {x: 400, y: 48, r: 60, g: 70, b: 105},
-        {x: 402, y: 93, r: 243, g: 233, b: 223}
     ]
     if (checkIsPage(pageAnyProduction)) {
         qTap(pnt(48, 74));
         sleep(config.sleepAnimate);
-        if (checkIsPage(pageAlreadyProducing)) {
-            qTap(pageAlreadyProducing);
-            sleep(config.sleepAnimate * 2);
-        }
+    }
+    if (checkIsPage(pageAlreadyProducing)) {
+        qTap(pageAlreadyProducing);
+        sleep(config.sleepAnimate * 2);
     }
 
     pageFirstItemEnabled = [
@@ -156,18 +155,24 @@ function JobScheduling() {
     if (checkIsPage(pageWoodFarm) && isNoThirdFigure){
         console.log('add wood')
         qTap(pageWoodFarm)
+        sleep(config.sleep);
         qTap(pageWoodFarm)
+        sleep(config.sleep);
         qTap(pageWoodFarm)
+        sleep(config.sleep);
         qTap(pageWoodFarm)
         return true;
     }
     else if (checkIsPage(pageBeanFarm)){
         console.log('bean farm')
         if (isNoThirdFigure) {
-            console.log('add bean')
+            console.log('... add more')
             qTap(pageBeanFarm)    
+            sleep(config.sleep);
             qTap(pageBeanFarm)    
+            sleep(config.sleep);
             qTap(pageBeanFarm)    
+            sleep(config.sleep);
             qTap(pageBeanFarm)    
             return true;
         }
@@ -175,10 +180,13 @@ function JobScheduling() {
     else if (checkIsPage(pageSugarFarm)){
         console.log('sugar farm')
         if (isNoThirdFigure) {
-            console.log('add sugar')
+            console.log('... add more')
             qTap(pageSugarFarm)    
+            sleep(config.sleep);
             qTap(pageSugarFarm)    
+            sleep(config.sleep);
             qTap(pageSugarFarm)    
+            sleep(config.sleep);
             qTap(pageSugarFarm)    
             return true;
         }
@@ -186,15 +194,20 @@ function JobScheduling() {
     else if (checkIsPage(pagePowderFarm)){
         console.log('Powder farm')
         if (isNoThirdFigure) {
-            console.log('add Powder')
+            console.log('... add more')
 
             if (checkIsPage(pageSecondItemEnabled)) {
                 qTap(pageSecondItemEnabled);
+                sleep(config.sleep);
+                qTap(pageSecondItemEnabled);
+                sleep(config.sleep);
                 qTap(pageSecondItemEnabled);
                 qTap(pageSecondItemEnabled);
             } else {
                 qTap(pagePowderFarm)
+                sleep(config.sleep);
                 qTap(pagePowderFarm)
+                sleep(config.sleep);
                 qTap(pagePowderFarm)
                 qTap(pagePowderFarm)    
             }
@@ -208,15 +221,19 @@ function JobScheduling() {
 
             if (checkIsPage(pageSecondItemEnabled)) {
                 qTap(pageSecondItemEnabled);
+                sleep(config.sleep);
                 qTap(pageSecondItemEnabled);
+                sleep(config.sleep);
                 qTap(pageSecondItemEnabled);
             }
             else {
                 qTap(pageBarryFarm)
+                sleep(config.sleep);
                 qTap(pageBarryFarm)
+                sleep(config.sleep);
                 qTap(pageBarryFarm)
+                sleep(config.sleep);
                 qTap(pageBarryFarm)
-    
             }
             return true;
         }
@@ -226,36 +243,246 @@ function JobScheduling() {
         if (isNoThirdFigure) {
             console.log('... add more')
             qTap(pageMilkFarm)    
+            sleep(config.sleep);
             qTap(pageMilkFarm)    
+            sleep(config.sleep);
             qTap(pageMilkFarm)    
+            sleep(config.sleep);
             qTap(pageMilkFarm)    
             return true;
         }
     }
 
+    pageFirstItemEnabled = [
+        {x: 587, y: 122, r: 121, g: 207, b: 12}
+    ]
+    pageSecondItemEnabled = [
+        {x: 587, y: 230, r: 121, g: 207, b: 12}
+    ]
+    pageThirdItemEnabled = [
+        {x: 587, y: 332, r: 121, g: 207, b: 12}
+    ]
+
+    pageFirstItemHasOneDigits = [
+        {x: 446, y: 107, r: 255, g: 255, b: 255},
+        {x: 437, y: 107, r: 255, g: 255, b: 255}
+    ]
+
+    pageSecondItemHasOneDigits = [
+        {x: 446, y: 213, r: 255, g: 255, b: 255},
+        {x: 437, y: 213, r: 255, g: 255, b: 255}
+    ]
+
+    pageThirdItemHasOneDigits = [
+        {x: 446, y: 320, r: 255, g: 255, b: 255},
+        {x: 437, y: 320, r: 255, g: 255, b: 255}
+    ]
+
+    //rgb(77,71,65)
     pageFirstItemHasThreeDigits = [
         {x: 436, y: 107, r: 77, g: 71, b: 65}
     ]
+    //rgb(203,201,199)
     pageSecondItemHasThreeDigits = [
-        {x: 436, y: 215, r: 77, g: 71, b: 65}
+        {x: 437, y: 212, r: 65, g: 58, b: 51}
     ]
     pageThirdItemHasThreeDigits = [
         {x: 436, y: 320, r: 77, g: 71, b: 65}
     ]
-    if (!checkIsPage(pageFirstItemHasThreeDigits) && checkIsPage(pageFirstItemEnabled)) {
-        console.log('add 1st item')
+
+    itemsAdd = 0;
+    // add < 10
+    if (checkIsPage(pageFirstItemHasOneDigits)) {
+        console.log('add 1st item to > 10')
         qTap(pageFirstItemEnabled);
         sleep(config.sleepAnimate);
+        if (!handleNotEnoughStock()) {
+            itemsAdd ++;
+        }
     }
-    if (!checkIsPage(pageSecondItemHasThreeDigits) && checkIsPage(pageSecondItemEnabled)) {
-        console.log('add 2nd item')
-        qTap(pageSecondItemEnabled);
-        sleep(config.sleepAnimate);
+
+    if (!checkIsPage(pageSecondItemEnabled)) {
+        return;
+    } else {
+        if (checkIsPage(pageSecondItemHasOneDigits)) {
+            console.log('add 2nd item to > 10')
+            qTap(pageSecondItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }    
     }
-    if (!checkIsPage(pageThirdItemHasThreeDigits) && checkIsPage(pageThirdItemEnabled)) {
-        console.log('add 3rd item')
-        qTap(pageThirdItemEnabled);
+
+    if (!checkIsPage(pageThirdItemEnabled)) {
+        // return;
+    } else {
+        if (checkIsPage(pageThirdItemHasOneDigits)) {
+            console.log('add 3rd item to > 10')
+            qTap(pageThirdItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }
+    }
+
+    if (itemsAdd > 2) {
+        return true;
+    }
+
+    // add 10 < x < 100
+    if (!checkIsPage(pageFirstItemHasThreeDigits) && checkIsPage(pageFirstItemEnabled)) {
+        console.log('add 1st item to > 100')
+        qTap(pageFirstItemEnabled);
         sleep(config.sleepAnimate);
+        if (!handleNotEnoughStock()) {
+            itemsAdd ++;
+        }
+    }
+
+    if (!checkIsPage(pageSecondItemEnabled)) {
+        return;
+    } else {
+        if (!checkIsPage(pageSecondItemHasThreeDigits)) {
+            console.log('add 2nd item to > 100')
+            qTap(pageSecondItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }    
+    }
+
+    if (!checkIsPage(pageThirdItemEnabled)) {
+        // return;
+    } else {
+        if (!checkIsPage(pageThirdItemHasThreeDigits)) {
+            console.log('add 3rd item to > 100')
+            qTap(pageThirdItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }
+    }
+
+    if (itemsAdd > 2) {
+        return true;
+    }
+
+    // === tool shop ===
+
+    // end of tool shop ===
+    
+    // Slide to buttom
+    tapDown(515, 340, 40, 0);
+    sleep(config.sleep);
+    moveTo(515, 150, 40, 0);
+    sleep(config.sleep);
+    moveTo(515, -1500, 40, 0);
+    sleep(config.sleep);
+    tapUp(515, -150, 40, 0);
+    sleep(config.sleepAnimate * 2);
+
+    pageFirstItemHasOneDigits = [
+        {x: 446, y: 112, r: 255, g: 255, b: 255},
+        {x: 437, y: 112, r: 255, g: 255, b: 255}
+    ]
+    pageSecondItemHasOneDigits = [
+        {x: 446, y: 217, r: 255, g: 255, b: 255},
+        {x: 437, y: 217, r: 255, g: 255, b: 255}
+    ]
+    pageThirdItemHasOneDigits = [
+        {x: 446, y: 324, r: 255, g: 255, b: 255},
+        {x: 437, y: 324, r: 255, g: 255, b: 255}
+    ]
+
+    pageSecondItemHasThreeDigits = [
+        {x: 436, y: 217, r: 77, g: 71, b: 65}
+    ]
+    pageThirdItemHasThreeDigits = [
+        {x: 436, y: 324, r: 77, g: 71, b: 65}
+    ]
+
+    // add < 10
+    if (!checkIsPage(pageFirstItemEnabled)) {
+        return;
+    } else {
+        if (checkIsPage(pageFirstItemHasOneDigits)) {
+            console.log('add 4th item to > 10')
+            qTap(pageFirstItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }
+    }
+
+    if (!checkIsPage(pageSecondItemEnabled)) {
+        return;
+    } else {
+        if (checkIsPage(pageSecondItemHasOneDigits)) {
+            console.log('add 5th item to > 10')
+            qTap(pageSecondItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }    
+    }
+
+    if (!checkIsPage(pageThirdItemEnabled)) {
+        // return;
+    } else {
+        if (checkIsPage(pageThirdItemHasOneDigits)) {
+            console.log('add 6th item to > 10')
+            qTap(pageThirdItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }
+    }
+
+    if (itemsAdd > 2) {
+        return true;
+    }
+
+    // add 10 < x < 100
+    if (!checkIsPage(pageFirstItemHasThreeDigits) && checkIsPage(pageFirstItemEnabled)) {
+        console.log('add 4th item to > 100')
+        qTap(pageFirstItemEnabled);
+        sleep(config.sleepAnimate);
+        if (!handleNotEnoughStock()) {
+            itemsAdd ++;
+        }
+    }
+
+    if (!checkIsPage(pageSecondItemEnabled)) {
+        return;
+    } else {
+        if (!checkIsPage(pageSecondItemHasThreeDigits)) {
+            console.log('add 5th item to > 100')
+            qTap(pageSecondItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }    
+    }
+
+    if (!checkIsPage(pageThirdItemEnabled)) {
+        // return;
+    } else {
+        if (!checkIsPage(pageThirdItemHasThreeDigits)) {
+            console.log('add 6th item to > 100')
+            qTap(pageThirdItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }
+        }
     }
 }
 
@@ -270,6 +497,7 @@ function handleNotEnoughStock() {
         console.log('quiting not enougth stock')
         qTap(pageNotEnoughStock);
         sleep(config.sleep);
+        return true;
     }
 
     pageTwoItemNotEnoughStock = [
@@ -278,12 +506,14 @@ function handleNotEnoughStock() {
         {x: 420, y: 203, r: 243, g: 233, b: 223},
         {x: 416, y: 246, r: 219, g: 207, b: 199}
     ]
-
     if (checkIsPage(pageTwoItemNotEnoughStock)) {
         console.log('quiting not enougth stock 2')
         qTap(pageTwoItemNotEnoughStock);
         sleep(config.sleep);
+        return true;
     }
+
+    return false;
 }
 
 function start() {
@@ -297,6 +527,7 @@ function start() {
         handleNotEnoughStock();
         sleep(config.sleep);
         qTap(pnt(349, 174)); // next
+        sleep(config.sleepAnimate);
 
         if (config.run == false) {
             console.log('jobs done!')
@@ -306,4 +537,5 @@ function start() {
   }
   
   
-  start()
+//   start();
+  JobScheduling()
