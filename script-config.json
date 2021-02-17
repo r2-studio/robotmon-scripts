@@ -30,14 +30,14 @@
     },
     "com.r2studio.CookieKingdm": {
       "title": "CookieKingdom",
-      "versionCode": 1.2,
+      "versionCode": 1.3,
       "description": "<b><font color='#2196f3'>版本 v1</font></b><ul><li>薑餅人王國</li><li>跑跑薑餅人新作，首抽專用</li><li>只支援模擬器 360x640, 120dpi, 建議用模擬器執行</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
       "dependencies": []
     },
     "com.r2studio.CookieKingdom.Manufacturing": {
-      "title": "CookieKingdom Factoio",
+      "title": "CookieKingdom Factorio",
       "versionCode": 1.2,
       "description": "<b><font color='#2196f3'>版本 v1</font></b><ul><li>薑餅人王國</li><li>跑跑薑餅人新作，代工生產專用</li><li>只支援模擬器 360x640, 120dpi, 建議用模擬器執行</li></ul>",
       "packageName": "com.devsisters.ck",
