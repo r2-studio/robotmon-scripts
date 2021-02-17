@@ -64,12 +64,6 @@ pageFirstBattleMission = [
   {x: 617, y: 147, r: 56, g: 20, b: 15}
 ]
 
-//First battle does not have 3 stars
-// pageFirstBattleIsWon = [
-//     {x: 225, y: 83, r: 48, g: 135, b: 211},
-//     {x: 390, y: 84, r: 52, g: 137, b: 215}
-// ]
-
 pageBattleIsWon = [
   // victory flag
   // {x: 225, y: 83, r: 48, g: 135, b: 211},
@@ -110,7 +104,7 @@ pageInQuestRoutes = [
   {x: 458, y: 22, r: 8, g: 144, b: 255},
   {x: 354, y: 26, r: 238, g: 170, b: 0},
   {x: 282, y: 17, r: 240, g: 50, b: 93},
-  {x: 62, y: 342, r: 42, g: 72, b: 106}
+  {x: 23, y: 313, r: 251, g: 235, b: 174}
 ]
 
 pageInVillate = [
@@ -356,11 +350,17 @@ function handleBattle() {
 function handleFirstBattleMisson() {
   if(checkIsPage(pageFirstBattleMission)) {
       console.log('handleFirstBattleMisson');
+      // tap the tree 3 times
       qTap(pageFirstBattleMission);
-      sleep(config.sleepAnimate);
+      sleep(config.sleep);
+      qTap(pageFirstBattleMission);
+      sleep(config.sleep);
+      qTap(pageFirstBattleMission);
+      sleep(config.sleep);
 
       // todo: check page
       qTap(pnt(498, 321));
+      sleep(config.sleep);
       qTap(pnt(543, 327));
       qTap(pnt(543, 327));
 
@@ -416,42 +416,46 @@ function handleCloseStoryDialog() {
 function handleMakeCookie() {
   if (checkIsPage(pageMakeCookie)) {
       console.log("handleMakeCookie")
+
       qTap(pageMakeCookie);
       sleep(config.sleepAnimate*2);
       qTap(pnt(75, 132));
-      qTap(pnt(449, 311));
-      qTap(pnt(449, 311));
-      qTap(pageSkipBtn);
-      qTap(pageSkipBtn);
-      sleep(config.sleepAnimate*2);
-      qTap(pageSkipBtn);
-      qTap(pageSkipBtn);
+      sleep(config.sleep);
 
-      // rgb(18,86,120), rgb(56,167,231)
-      pageCloseFirstCookie = [
-          // {x: 625, y: 20, r: 18, g: 86, b: 120}
-          {x: 625, y: 19, r: 62, g: 164, b: 232},
-          {x: 483, y: 316, r: 20, g: 61, b: 3}
-      ];
-      // sleep(15000);
-      for (i = 0; i < 30; i ++ ) {
-          console.log('checking first cookie: ', i)
-          if (checkIsPage(pageCloseFirstCookie)) {
-              qTap(pageCloseFirstCookie);
-              sleep(config.sleepAnimate);
-              qTap(pageCloseFirstCookie);
-              sleep(config.sleepAnimate);
-              qTap(pageCloseFirstCookie);
+      console.log('making normal cookies')
+      qTap(pnt(439, 304));
+      sleep(config.sleepAnimate);
+      qTap(pnt(439, 304));
+      sleep(config.sleepAnimate);
+
+      pageCanMakeOneCookie = [
+        {x: 626, y: 19, r: 51, g: 170, b: 221},
+        {x: 392, y: 89, r: 247, g: 112, b: 182},
+        {x: 475, y: 123, r: 255, g: 243, b: 239}
+      ]
+      pageMakingCookieSkip = [
+          {x: 570, y: 31, r: 109, g: 175, b: 216}
+      ]
+      while(true) {
+          if (checkIsPage(pageCanMakeOneCookie)) {
+              qTap(pageCanMakeOneCookie)
+              sleep(config.sleepAnimate*2);
               break;
           }
-          qTap(pageCloseFirstCookie);
-          sleep(1000);
+          console.log('keep pushing skip')
+          qTap(pageMakingCookieSkip);
+          sleep(config.sleepAnimate);
       }
 
-      pageGetReword = [ {x: 320, y: 262, r: 52, g: 54, b: 49}];
+      pageGetReword = [
+        {x: 352, y: 259, r: 121, g: 207, b: 12},
+        {x: 352, y: 115, r: 178, g: 50, b: 32}
+      ];
       for (i = 0; i < 20; i ++ ) {
+          console.log('collecting make cookie reward: ', i)
           if (checkIsPage(pageGetReword)) {
               qTap(pageGetReword);
+              sleep(config.sleep);
               qTap(pageGetReword);
               break;
           }
@@ -530,7 +534,9 @@ function handleMakeAllCookies() {
       for(var i = 0; i < 10; i ++ ) {
           console.log('making $3000 cookies: ', i)
           qTap(pnt(563, 303));
-          sleep(config.sleepAnimate * 2);
+          sleep(config.sleepAnimate);
+          qTap(pnt(563, 303));
+          sleep(config.sleepAnimate);
 
           pageNotEnoughDiamond = [{x: 319, y: 182, r: 6, g: 130, b: 253}];
           if (checkIsPage(pageNotEnoughDiamond)) {
@@ -557,6 +563,9 @@ function handleMakeAllCookies() {
       for(var i = 0; i < 30; i ++ ) {
           console.log('making normal cookies')
           qTap(pnt(439, 304));
+          sleep(config.sleepAnimate);
+          qTap(pnt(439, 304));
+          sleep(config.sleepAnimate);
 
           pageNotEnoughDiamond = [{x: 319, y: 182, r: 6, g: 130, b: 253}];
           if (checkIsPage(pageNotEnoughDiamond)) {
@@ -565,6 +574,7 @@ function handleMakeAllCookies() {
               sleep(config.sleepAnimate * 2);
               break;
           }
+          qTap(pnt(365, 245));
 
           pageCanMakeOneCookie = [
               {x: 488, y: 315, r: 60, g: 181, b: 8}
@@ -633,60 +643,62 @@ function handleMakeAllCookies() {
 
 function handleTryGetNextQuest() {
   if (checkIsPage(pageInQuestRoutes)){
-      // Find & tap the quest
-      var questFound = false
-      if (!checkIsPage(pageHasQuestInMiddle) || !checkIsPage(pageHasQuestInMiddle2)) {
-          handleFindNextQuest();
-      }
+    console.log('handleTryGetNextQuest')
 
-      if (checkIsPage(pageHasQuestInMiddle)) {
-          qTap(pageHasQuestInMiddle);
-          sleep(config.sleepAnimate);
-          questFound = true;
-      } else if (checkIsPage(pageHasQuestInMiddle2)) {
-          qTap(pageHasQuestInMiddle2);
-          sleep(config.sleepAnimate);
-          questFound = true;
-      }
+    // Find & tap the quest
+    var questFound = false
+    if (!checkIsPage(pageHasQuestInMiddle) || !checkIsPage(pageHasQuestInMiddle2)) {
+        handleFindNextQuest();
+    }
 
-      console.log('=> ', questFound)
+    if (checkIsPage(pageHasQuestInMiddle)) {
+        qTap(pageHasQuestInMiddle);
+        sleep(config.sleepAnimate);
+        questFound = true;
+    } else if (checkIsPage(pageHasQuestInMiddle2)) {
+        qTap(pageHasQuestInMiddle2);
+        sleep(config.sleepAnimate);
+        questFound = true;
+    }
 
-      if (questFound) {
-          // Do Quest
-          qTap(pnt(495, 316));
-          sleep(config.sleepAnimate);
+    console.log('=> ', questFound)
 
-          // tap setup team
-          qTap(pnt(51, 334));
-          sleep(config.sleepAnimate);
-          qTap(pnt(38, 316));
-          sleep(config.sleepAnimate);
-          qTap(pnt(614, 21));
-          sleep(config.sleepAnimate);
-          qTap(pnt(614, 21));
-          sleep(config.sleepAnimate);
-          qTap(pnt(135, 333));
-          sleep(config.sleepAnimate);
-          qTap(pnt(552, 325));
-          sleep(config.sleepAnimate);
+    if (questFound) {
+        // Do Quest
+        qTap(pnt(495, 316));
+        sleep(config.sleepAnimate);
 
-          //battle
-          handleBattle();
-          sleep(5000);
+        // tap setup team
+        qTap(pnt(51, 334));
+        sleep(config.sleepAnimate);
+        qTap(pnt(38, 316));
+        sleep(config.sleepAnimate);
+        qTap(pnt(614, 21));
+        sleep(config.sleepAnimate);
+        qTap(pnt(614, 21));
+        sleep(config.sleepAnimate);
+        qTap(pnt(135, 333));
+        sleep(config.sleepAnimate);
+        qTap(pnt(552, 325));
+        sleep(config.sleepAnimate);
 
-          pageGetReward = [
-              {x: 353, y: 257, r: 121, g: 207, b: 12},
-              {x: 353, y: 114, r: 178, g: 50, b: 32}
-          ];
-          for (i = 0; i < 70; i ++) {
-              console.log('looking for battle reward: ', i)
-              if (checkIsPage(pageGetReward)) {
-                  qTap(pageGetReward)
-                  break;
-              }
-              sleep(1000);
-          }
-  
+        //battle
+        handleBattle();
+        sleep(5000);
+
+        pageGetReward = [
+            {x: 353, y: 257, r: 121, g: 207, b: 12},
+            {x: 353, y: 114, r: 178, g: 50, b: 32}
+        ];
+        for (i = 0; i < 70; i ++) {
+            console.log('looking for battle reward: ', i)
+            if (checkIsPage(pageGetReward)) {
+                qTap(pageGetReward)
+                break;
+            }
+            sleep(1000);
+        }
+
       }
       return true;
   }
@@ -784,17 +796,31 @@ function handelStuck() {
       return true;
   }
 
-  // pageInMailContent = [
-  //     {x: 468, y: 73, r: 56, g: 167, b: 231},
-  //     {x: 356, y: 82, r: 60, g: 70, b: 105},
-  //     {x: 376, y: 164, r: 243, g: 233, b: 223}
-  // ]
-  // if (checkIsPage(pageInMailContent)) {
-  //     qTap(pageInMailContent);
-  //     sleep(config.sleep);
-  //     qTap(pnt(608, 23));
-  //     return true;
-  // }
+  pageInWarehouse = [
+    {x: 554, y: 18, r: 56, g: 167, b: 231},
+    {x: 489, y: 23, r: 55, g: 64, b: 105},
+    {x: 543, y: 249, r: 44, g: 46, b: 60},
+    {x: 537, y: 322, r: 102, g: 221, b: 0}
+  ]
+  if (checkIsPage(pageInWarehouse)) {
+    console.log('handle stuck: leave warehouse page');
+    qTap(pageInWarehouse);
+    sleep(config.sleep);
+    return true;
+  }
+
+  pageInBuildingConstruction = [
+    {x: 628, y: 17, r: 56, g: 167, b: 231},
+    {x: 297, y: 16, r: 163, g: 8, b: 32},
+    {x: 55, y: 89, r: 163, g: 22, b: 6},
+    {x: 34, y: 116, r: 255, g: 255, b: 255}
+  ]
+  if (checkIsPage(pageInBuildingConstruction)) {
+    console.log('handle stuck: leave pageInBuildingConstruction')
+    qTap(pageInBuildingConstruction);
+    sleep(config.sleep);
+    return true;
+  }
 
   pageInLoginIntro = [
       {x: 296, y: 249, r: 12, g: 167, b: 223},
@@ -827,6 +853,12 @@ function handelStuck() {
 }
 
 function tapRandom() {
+
+  pageInMainUI = [
+
+  ]
+
+
   console.log('not sure what to do, pause 0s')
   // sleep(6000)
 
@@ -899,10 +931,11 @@ if (config.finishBattles >= 2) {
 }
 
 if (!act) {
-  handelStuck();
+  act = handelStuck();
+  console.log('act: ', act)
 }
 
-if (!isAct && !checkIsPage(pageInVillate) && !checkIsPage(pageInQuestRoutes)) {
+if (!act && !checkIsPage(pageInVillate) && !checkIsPage(pageInQuestRoutes)) {
   console.log('handleStuck wont work, tap random');
   tapRandom();
 }
