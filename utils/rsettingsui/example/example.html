@@ -8,11 +8,15 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
 />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/rsettingsui/dist/rsettingsui.css"
+/>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-<script src="../dist/rsettingsui.umd.js"></script>
-<link rel="stylesheet" href="../dist/rsettingsui.css" />
-
-<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/rsettingsui/dist/rsettingsui.umd.js"></script>
+<body>
+  <div id="app"></div>
+</body>
 
 <script>
   var settings = {
@@ -75,7 +79,7 @@
                       },
                       events: {
                         change: function(value) {
-                          console.log(value)
+                          console.log(value);
                           settings.sliderA = value;
                         },
                       },
