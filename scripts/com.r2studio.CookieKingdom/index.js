@@ -267,7 +267,7 @@ function handleInputKingdomName() {
           tap(27, 327, 20);
           tap(27, 327, 20);
   
-          typing("Xookie" + Math.ceil(Math.random() * 100) + Date.now().toString().substr(13 - 3), 100);
+          typing("Cookie" + Math.ceil(Math.random() * 100) + Date.now().toString().substr(13 - 3), 100);
           sleep(config.sleepAnimate*2);
           qTap([{x: 594, y: 322}]);
           qTap([{x: 329, y: 233}]); //check conflict
@@ -455,7 +455,7 @@ function handleMakeCookie() {
           console.log('collecting make cookie reward: ', i)
           if (checkIsPage(pageGetReword)) {
               qTap(pageGetReword);
-              sleep(config.sleep);
+              sleep(config.sleepAnimate);
               qTap(pageGetReword);
               break;
           }
@@ -491,6 +491,7 @@ function handleGetAllMails() {
       qTap(pageHasMail);
       qTap(pnt(548, 321));
       qTap(pnt(548, 321));
+      sleep(config.sleepAnimate * 2);
 
       pageCloseMailBox = [{x: 617, y: 19, r: 56, g: 167, b: 231}];
       for (i = 0; i < 60; i ++) {
@@ -661,7 +662,7 @@ function handleTryGetNextQuest() {
         questFound = true;
     }
 
-    console.log('=> ', questFound)
+    console.log('questFound: ', questFound)
 
     if (questFound) {
         // Do Quest
