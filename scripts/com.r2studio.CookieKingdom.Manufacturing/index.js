@@ -61,6 +61,13 @@ pageMilkFarm = [
     {x: 269, y: 169, r: 255, g: 254, b: 241}
 ]
 
+pageCottomFarm = [
+    {x: 582, y: 119, r: 121, g: 207, b: 12},
+    {x: 528, y: 87, r: 254, g: 231, b: 251},
+    {x: 428, y: 92, r: 255, g: 241, b: 255},
+    {x: 252, y: 169, r: 251, g: 233, b: 179},
+    {x: 192, y: 136, r: 254, g: 224, b: 242}
+]
 
 function pnt(x, y) {
 return {x: x, y: y};
@@ -117,17 +124,91 @@ if (release) {
 return isPage;
 }
 
+function handleToolShopShovels() {
+    pageToolShop = [
+        {x: 280, y: 179, r: 254, g: 235, b: 182},
+        {x: 304, y: 157, r: 138, g: 146, b: 171},
+        {x: 414, y: 75, r: 135, g: 143, b: 170},
+        {x: 413, y: 84, r: 183, g: 190, b: 211}
+    ]
+    if (checkIsPage(pageToolShop)) {
+        console.log('Is tool shop, check adding shovel')
+        tapDown(515, 319, 40, 0);
+        sleep(config.sleep);
+        moveTo(515, 280, 40, 0);
+        sleep(config.sleep);
+        moveTo(515, 230, 40, 0);
+        sleep(config.sleep);
+        moveTo(515, 200, 40, 0);
+        sleep(config.sleep);
+        moveTo(515, 176, 40, 0);
+        sleep(config.sleep);
+        tapUp(515, 176, 40, 0);
+        sleep(config.sleepAnimate * 2);
+    
+        pageShovelEnabled = [
+            {x: 575, y: 336, r: 121, g: 207, b: 12},
+            {x: 539, y: 296, r: 253, g: 253, b: 253},
+            {x: 420, y: 310, r: 81, g: 98, b: 125},
+            {x: 409, y: 297, r: 70, g: 98, b: 146}
+        ]
+        pageShovelOneDigits = [
+            {x: 438, y: 323, r: 255, g: 255, b: 255},
+            {x: 446, y: 321, r: 255, g: 255, b: 255}
+        ]
+        pageShovelTwoDigits = [
+            {x: 448, y: 321, r: 255, g: 255, b: 255},
+            {x: 449, y: 324, r: 255, g: 255, b: 255},
+            {x: 435, y: 326, r: 255, g: 255, b: 255},
+            {x: 435, y: 322, r: 255, g: 255, b: 255}
+    
+        ]
+    
+        if (checkIsPage(pageShovelEnabled)){
+            if (checkIsPage(pageShovelOneDigits)) {
+                console.log('Shovel < 10, add 4');
+                qTap(pageShovelEnabled);
+                sleep(config.sleepAnimate);
+                qTap(pageShovelEnabled);
+                sleep(config.sleepAnimate);
+                qTap(pageShovelEnabled);
+                sleep(config.sleepAnimate);
+                qTap(pageShovelEnabled);
+                sleep(config.sleepAnimate);
+            }
+            else if (checkIsPage(pageShovelTwoDigits)){
+                console.log('10 < Shovel < 100, add 2');
+                qTap(pageShovelEnabled);
+                sleep(config.sleepAnimate);
+                qTap(pageShovelEnabled);
+                sleep(config.sleepAnimate);
+            }
+            else {
+                console.log('failed to count shovels')
+            }
+        }
+        else {
+            console.log('cannot find shovels')
+        }
+    
+    }
+    else {
+        console.log('Not in tool shop, skip shovel check')
+    }    
+}
+
 function JobScheduling() {
     isNoThirdFigure = checkIsPage(pageBaseProductNoThirdFigure);
-    console.log('no 3rd figure => ', isNoThirdFigure)
+    console.log('if stock < 99: ', isNoThirdFigure)
     if (!isNoThirdFigure) {
         console.log('> 99, no need to add more')
         return true;
     }
 
+    //rgb(166,104,65)
     pageAnyProduction = [
         {x: 33, y: 56, r: 166, g: 104, b: 65},
-        {x: 32, y: 106, r: 166, g: 104, b: 65},
+        //{x: 32, y: 106, r: 166, g: 104, b: 65},
     ]
     pageAlreadyProducing = [
         {x: 459, y: 39, r: 54, g: 173, b: 224},
@@ -252,6 +333,17 @@ function JobScheduling() {
             return true;
         }
     }
+    else if (checkIsPage(pageCottomFarm)){
+        console.log('Cottom farm', checkIsPage(pageBaseProductNoThirdFigure))
+        if (isNoThirdFigure) {
+            console.log('... add more')
+            qTap(pageCottomFarm)    
+            sleep(config.sleep);
+            qTap(pageCottomFarm)    
+            sleep(config.sleep);
+            return true;
+        }
+    }
 
     pageFirstItemEnabled = [
         {x: 587, y: 122, r: 121, g: 207, b: 12}
@@ -364,7 +456,7 @@ function JobScheduling() {
     }
 
     // === tool shop ===
-
+    handleToolShopShovels();
     // end of tool shop ===
     
     // Slide to buttom
@@ -375,7 +467,7 @@ function JobScheduling() {
     moveTo(515, -1500, 40, 0);
     sleep(config.sleep);
     tapUp(515, -150, 40, 0);
-    sleep(config.sleepAnimate * 2);
+    sleep(config.sleepAnimate * 3);
 
     pageFirstItemHasOneDigits = [
         {x: 446, y: 112, r: 255, g: 255, b: 255},
@@ -399,6 +491,7 @@ function JobScheduling() {
 
     // add < 10
     if (!checkIsPage(pageFirstItemEnabled)) {
+        console.log('1st item is not enabled')
         return;
     } else {
         if (checkIsPage(pageFirstItemHasOneDigits)) {
@@ -412,7 +505,8 @@ function JobScheduling() {
     }
 
     if (!checkIsPage(pageSecondItemEnabled)) {
-        return;
+        console.log('2nd item is not enabled')
+        // return;
     } else {
         if (checkIsPage(pageSecondItemHasOneDigits)) {
             console.log('add 5th item to > 10')
@@ -425,6 +519,7 @@ function JobScheduling() {
     }
 
     if (!checkIsPage(pageThirdItemEnabled)) {
+        console.log('3rd item is not enabled')
         // return;
     } else {
         if (checkIsPage(pageThirdItemHasOneDigits)) {
@@ -437,9 +532,9 @@ function JobScheduling() {
         }
     }
 
-    if (itemsAdd > 2) {
-        return true;
-    }
+    // if (itemsAdd > 2) {
+    //     return true;
+    // }
 
     // add 10 < x < 100
     if (!checkIsPage(pageFirstItemHasThreeDigits) && checkIsPage(pageFirstItemEnabled)) {
