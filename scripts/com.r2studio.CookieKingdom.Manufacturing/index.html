@@ -326,7 +326,7 @@
       }
 
       // This is where we send the locale to the start function
-      lang = localStorage.getItem('taptitan2Language');
+      lang = localStorage.getItem('');
       if (lang === 'zh-TW') {
         command += 'true);';
         console.log('啟動命令: ' + command);
@@ -478,7 +478,7 @@
 
   <script>
     $(function () {
-      $('#version').html('Tap Titans 2 Automated v' + VERSION);
+      $('#version').html('Cookie Run: Kingdom Factorio Automated v' + VERSION);
 
       loadSettings(settings);
       genSettings($('#settings'), settings);

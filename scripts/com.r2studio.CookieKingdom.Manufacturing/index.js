@@ -216,7 +216,7 @@ function JobScheduling() {
     ]
     if (checkIsPage(pageAnyProduction)) {
         qTap(pnt(48, 74));
-        sleep(config.sleepAnimate);
+        sleep(config.sleepAnimate * 2);
     }
     if (checkIsPage(pageAlreadyProducing)) {
         qTap(pageAlreadyProducing);
@@ -236,11 +236,11 @@ function JobScheduling() {
     if (checkIsPage(pageWoodFarm) && isNoThirdFigure){
         console.log('add wood')
         qTap(pageWoodFarm)
-        sleep(config.sleep);
+        sleep(config.sleepAnimate);
         qTap(pageWoodFarm)
-        sleep(config.sleep);
+        sleep(config.sleepAnimate);
         qTap(pageWoodFarm)
-        sleep(config.sleep);
+        sleep(config.sleepAnimate);
         qTap(pageWoodFarm)
         return true;
     }
@@ -249,11 +249,11 @@ function JobScheduling() {
         if (isNoThirdFigure) {
             console.log('... add more')
             qTap(pageBeanFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageBeanFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageBeanFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageBeanFarm)    
             return true;
         }
@@ -263,11 +263,11 @@ function JobScheduling() {
         if (isNoThirdFigure) {
             console.log('... add more')
             qTap(pageSugarFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageSugarFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageSugarFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageSugarFarm)    
             return true;
         }
@@ -279,17 +279,19 @@ function JobScheduling() {
 
             if (checkIsPage(pageSecondItemEnabled)) {
                 qTap(pageSecondItemEnabled);
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pageSecondItemEnabled);
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pageSecondItemEnabled);
+                sleep(config.sleepAnimate);
                 qTap(pageSecondItemEnabled);
             } else {
                 qTap(pagePowderFarm)
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pagePowderFarm)
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pagePowderFarm)
+                sleep(config.sleepAnimate);
                 qTap(pagePowderFarm)    
             }
             return true;
@@ -302,18 +304,19 @@ function JobScheduling() {
 
             if (checkIsPage(pageSecondItemEnabled)) {
                 qTap(pageSecondItemEnabled);
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pageSecondItemEnabled);
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pageSecondItemEnabled);
+                sleep(config.sleepAnimate);
             }
             else {
                 qTap(pageBarryFarm)
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pageBarryFarm)
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pageBarryFarm)
-                sleep(config.sleep);
+                sleep(config.sleepAnimate);
                 qTap(pageBarryFarm)
             }
             return true;
@@ -324,11 +327,11 @@ function JobScheduling() {
         if (isNoThirdFigure) {
             console.log('... add more')
             qTap(pageMilkFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageMilkFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageMilkFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageMilkFarm)    
             return true;
         }
@@ -338,9 +341,10 @@ function JobScheduling() {
         if (isNoThirdFigure) {
             console.log('... add more')
             qTap(pageCottomFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
             qTap(pageCottomFarm)    
-            sleep(config.sleep);
+            sleep(config.sleepAnimate);
+            qTap(pageCottomFarm)    
             return true;
         }
     }
