@@ -574,7 +574,7 @@ function JobScheduling() {
     if (!checkIsPage(pageSecondItemEnabled)) {
         return;
     } else {
-        if (goodsOneStock < 58) {
+        if (goodsTwoStock < 58) {
             console.log('add 2nd item to > 58')
             qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
