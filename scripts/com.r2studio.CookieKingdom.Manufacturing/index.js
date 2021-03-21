@@ -13,14 +13,12 @@ pageBaseProductNoThirdFigure = [
     {x: 362, y: 19, r: 35, g: 30, b: 20},
     {x: 360, y: 16, r: 35, g: 30, b: 20},
     {x: 358, y: 19, r: 35, g: 30, b: 20},
-
 ]
 
 pageWoodFarm = [
     {x: 584, y: 118, r: 121, g: 207, b: 12},
-    {x: 206, y: 180, r: 251, g: 233, b: 182},
-    {x: 205, y: 183, r: 251, g: 235, b: 182},
     {x: 434, y: 73, r: 174, g: 98, b: 73},
+    {x: 528, y: 82, r: 145, g: 85, b: 56}
 ]
 
 pageBeanFarm = [
@@ -34,39 +32,37 @@ pageBeanFarm = [
 pageSugarFarm = [
     {x: 586, y: 119, r: 121, g: 207, b: 12},
     {x: 426, y: 69, r: 237, g: 245, b: 245},
-    {x: 276, y: 105, r: 217, g: 233, b: 232},
-    {x: 171, y: 170, r: 142, g: 161, b: 178}
+    {x: 307, y: 13, r: 250, g: 252, b: 252},
+    {x: 523, y: 81, r: 236, g: 245, b: 244},
+    {x: 428, y: 95, r: 254, g: 254, b: 254}
 ]
 
 pagePowderFarm = [
     {x: 582, y: 119, r: 121, g: 207, b: 12},
     {x: 315, y: 24, r: 159, g: 117, b: 52},
     {x: 435, y: 91, r: 158, g: 117, b: 51},
-    {x: 182, y: 185, r: 255, g: 239, b: 195},
-    {x: 169, y: 190, r: 231, g: 149, b: 74}
+    {x: 528, y: 89, r: 235, g: 207, b: 138}
 ]
 
 pageBarryFarm = [
     {x: 571, y: 116, r: 121, g: 207, b: 13},
     {x: 304, y: 21, r: 190, g: 37, b: 37},
     {x: 409, y: 89, r: 174, g: 10, b: 24},
-    {x: 236, y: 142, r: 250, g: 232, b: 181},
-    {x: 220, y: 159, r: 213, g: 23, b: 39}
+    {x: 528, y: 87, r: 0, g: 242, b: 240}
 ]
 
 pageMilkFarm = [
     {x: 587, y: 121, r: 121, g: 207, b: 12},
     {x: 303, y: 25, r: 238, g: 245, b: 241},
     {x: 418, y: 91, r: 246, g: 246, b: 238},
-    {x: 269, y: 169, r: 255, g: 254, b: 241}
+    {x: 526, y: 89, r: 255, g: 253, b: 235}
 ]
 
 pageCottomFarm = [
     {x: 582, y: 119, r: 121, g: 207, b: 12},
     {x: 528, y: 87, r: 254, g: 231, b: 251},
     {x: 428, y: 92, r: 255, g: 241, b: 255},
-    {x: 252, y: 169, r: 251, g: 233, b: 179},
-    {x: 192, y: 136, r: 254, g: 224, b: 242}
+
 ]
 
 function pnt(x, y) {
@@ -217,13 +213,13 @@ function compare( a, b ) {
 }
 
 goodsLocation = {
-    1: rect(430, 101, 18, 12),
-    2: rect(430, 206, 20, 12),
-    3: rect(430, 314, 20, 12),
-    4: rect(430, 106, 18, 12),
-    5: rect(432, 212, 18, 12),
-    6: rect(432, 317, 18, 12),
-    shovel: rect(432, 317, 18, 16),
+    1: rect(430, 101, 22, 12),
+    2: rect(430, 206, 22, 12),
+    3: rect(430, 314, 22, 12),
+    4: rect(430, 106, 22, 12),
+    5: rect(430, 212, 22, 12),
+    6: rect(430, 317, 22, 12),
+    shovel: rect(430, 317, 22, 16),
 }  
 
 function ocrResultToInt(results) {
@@ -303,7 +299,7 @@ function ocrProductStorage(rect) {
 
 function ocrMaterialStorage() {
     var img = getScreenshot();
-    var croppedImage = cropImage(img, 338, 8, 49, 26);
+    var croppedImage = cropImage(img, 353, 10, 30, 18);
     // var croppedImage = cropImage(img, 430, 311, 23, 15);
     releaseImage(img);
 
@@ -529,6 +525,9 @@ function JobScheduling() {
     var goodsTwoStock = ocrProductStorage(goodsLocation[2])
     var goodsThreeStock = ocrProductStorage(goodsLocation[3])
     console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock);
+    if (goodsOneStock === -1 && goodsTwoStock === -1 && goodsThreeStock === -1) {
+        console.log('OCR count failed, skip this round')
+    }
 
     if (goodsOneStock < 10) {
         console.log('add 1st item from ' + goodsOneStock + ' to > 10')
@@ -639,6 +638,9 @@ function JobScheduling() {
     var goodsFiveStock = ocrProductStorage(goodsLocation[5])
     var goodsSixStock = ocrProductStorage(goodsLocation[6])
     console.log('In stock: ', goodsFourStock, goodsFiveStock, goodsSixStock);
+    if (goodsFourStock === -1 && goodsFiveStock === -1 && goodsSixStock === -1) {
+        console.log('2nd OCR count failed, skip this round')
+    }
 
     // add < 10
     if (!checkIsPage(pageFirstItemEnabled)) {
