@@ -535,6 +535,8 @@ function JobScheduling() {
         console.log('add 1st item from ' + goodsOneStock + ' to > 10')
         qTap(pageFirstItemEnabled);
         sleep(config.sleepAnimate);
+        qTap(pageFirstItemEnabled);
+        sleep(config.sleepAnimate);
         if (!handleNotEnoughStock()) {
             itemsAdd ++;
         }
@@ -544,6 +546,8 @@ function JobScheduling() {
         console.log('add 2nd item from ' + goodsTwoStock + ' to > 10')
         qTap(pageSecondItemEnabled);
         sleep(config.sleepAnimate);
+        qTap(pageSecondItemEnabled);
+        sleep(config.sleepAnimate);
         if (!handleNotEnoughStock()) {
             itemsAdd ++;
         }
@@ -551,6 +555,8 @@ function JobScheduling() {
 
     if (checkIsPage(pageThirdItemEnabled) && goodsThreeStock < 10) {
         console.log('add 3rd item from ' + goodsThreeStock + ' to > 10')
+        qTap(pageThirdItemEnabled);
+        sleep(config.sleepAnimate);
         qTap(pageThirdItemEnabled);
         sleep(config.sleepAnimate);
         if (!handleNotEnoughStock()) {
