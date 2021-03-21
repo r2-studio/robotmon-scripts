@@ -188,7 +188,8 @@ function handleToolShopShovels() {
                 sleep(config.sleepAnimate);
             }
             else {
-                console.log('failed to count shovels')
+                console.log('shovels > 58, skipping');
+                return;
             }
             handleNotEnoughStock();
         }
@@ -526,7 +527,8 @@ function JobScheduling() {
     var goodsThreeStock = ocrProductStorage(goodsLocation[3])
     console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock);
     if (goodsOneStock === -1 && goodsTwoStock === -1 && goodsThreeStock === -1) {
-        console.log('OCR count failed, skip this round')
+        console.log('OCR count failed, skip this round');
+        return true;
     }
 
     if (goodsOneStock < 10) {
@@ -639,7 +641,8 @@ function JobScheduling() {
     var goodsSixStock = ocrProductStorage(goodsLocation[6])
     console.log('In stock: ', goodsFourStock, goodsFiveStock, goodsSixStock);
     if (goodsFourStock === -1 && goodsFiveStock === -1 && goodsSixStock === -1) {
-        console.log('2nd OCR count failed, skip this round')
+        console.log('2nd OCR count failed, skip this round');
+        return true;
     }
 
     // add < 10
