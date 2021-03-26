@@ -136,17 +136,17 @@ function handleToolShopShovels() {
     ]
     if (checkIsPage(pageToolShop)) {
         console.log('Is tool shop, check adding shovel')
-        tapDown(515, 319, 40, 0);
+        tapDown(430, 319, 40, 0);
         sleep(config.sleep * 2);
-        moveTo(515, 280, 40, 0);
+        moveTo(430, 280, 40, 0);
         sleep(config.sleep * 2);
-        moveTo(515, 230, 40, 0);
+        moveTo(430, 230, 40, 0);
         sleep(config.sleep * 2);
-        moveTo(515, 200, 40, 0);
+        moveTo(430, 200, 40, 0);
         sleep(config.sleep * 2);
-        moveTo(515, 176, 40, 0);
+        moveTo(430, 176, 40, 0);
         sleep(config.sleep * 2);
-        tapUp(515, 176, 40, 0);
+        tapUp(430, 176, 40, 0);
         sleep(config.sleepAnimate * 2);
 
         pageShovelEnabled = [
@@ -614,13 +614,13 @@ function JobScheduling() {
     // end of tool shop ===
     
     // Slide to buttom
-    tapDown(515, 340, 40, 0);
+    tapDown(430, 340, 40, 0);
     sleep(config.sleep);
-    moveTo(515, 150, 40, 0);
+    moveTo(430, 150, 40, 0);
     sleep(config.sleep);
-    moveTo(515, -1500, 40, 0);
+    moveTo(430, -1500, 40, 0);
     sleep(config.sleep);
-    tapUp(515, -150, 40, 0);
+    tapUp(430, -150, 40, 0);
     sleep(config.sleepAnimate * 3);
 
     // pageFirstItemHasOneDigits = [
