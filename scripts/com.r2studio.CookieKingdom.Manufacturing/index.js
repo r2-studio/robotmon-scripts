@@ -1,6 +1,9 @@
 config = {
     sleep: 240,
     sleepAnimate: 800,
+
+    materialsTarget: 260,
+    goodsTarget: 55,
   
     run: true,
 }
@@ -158,10 +161,6 @@ function handleToolShopShovels() {
         var shovelStock = ocrProductStorage(goodsLocation['shovel'])
         console.log('Shovel enable: ' + checkIsPage(pageShovelEnabled) + ' , stock: ' + shovelStock);
 
-        // pageShovelOneDigits = [
-        //     {x: 438, y: 323, r: 255, g: 255, b: 255},
-        //     {x: 446, y: 321, r: 255, g: 255, b: 255}
-        // ]
         // pageShovelTwoDigits = [
         //     {x: 448, y: 321, r: 255, g: 255, b: 255},
         //     {x: 449, y: 324, r: 255, g: 255, b: 255},
@@ -181,15 +180,15 @@ function handleToolShopShovels() {
                 qTap(pageShovelEnabled);
                 sleep(config.sleepAnimate);
             }
-            else if (shovelStock < 58){
-                console.log('10 < Shovel < 58, add 2');
+            else if (shovelStock < config.goodsTarget){
+                console.log('10 < Shovel < ', config.goodsTarget, ', add 2');
                 qTap(pageShovelEnabled);
                 sleep(config.sleepAnimate);
                 qTap(pageShovelEnabled);
                 sleep(config.sleepAnimate);
             }
             else {
-                console.log('shovels > 58, skipping');
+                console.log('shovels > ', config.goodsTarget, ', skipping');
                 return;
             }
             handleNotEnoughStock();
@@ -200,7 +199,7 @@ function handleToolShopShovels() {
     
     }
     else {
-        console.log('Not in tool shop, skip shovel check')
+        // console.log('Not in tool shop, skip shovel check')
     }
 }
 
@@ -338,152 +337,142 @@ function ocrMaterialStorage() {
     return count;
 }
 
-function JobScheduling() {
-    // isNoThirdFigure = checkIsPage(pageBaseProductNoThirdFigure);
-    // console.log('if stock < 99: ', isNoThirdFigure)
-    // if (!isNoThirdFigure) {
-    //     console.log('> 99, no need to add more')
-    //     return true;
-    // }
+function SwipeProductionMenuToBottom() {
+    tapDown(430, 340, 40, 0);
+    sleep(config.sleep);
+    moveTo(430, 150, 40, 0);
+    sleep(config.sleep);
+    moveTo(430, -1000, 40, 0);
+    sleep(config.sleep);
+    tapUp(430, -1000, 40, 0);
+    sleep(config.sleepAnimate * 3);    
+}
 
-    //rgb(166,104,65)
-    pageAnyProduction = [
-        {x: 20, y: 43, r: 166, g: 104, b: 65},
-        {x: 80, y: 44, r: 166, g: 104, b: 65}
-    ]
-    pageAlreadyProducing = [
-        {x: 459, y: 39, r: 54, g: 173, b: 224},
-        {x: 400, y: 48, r: 60, g: 70, b: 105},
-    ]
-    if (checkIsPage(pageAnyProduction)) {
-        qTap(pnt(48, 74));
-        sleep(config.sleepAnimate * 2);
-    }
-    if (checkIsPage(pageAlreadyProducing)) {
-        qTap(pageAlreadyProducing);
-        sleep(config.sleepAnimate * 2);
-    }
+function SwipeProductionMenuToTop() {
+    tapDown(430, 52, 40, 0);
+    sleep(config.sleep);
+    moveTo(430, 350, 40, 0);
+    sleep(config.sleep);
+    moveTo(430, 1000, 40, 0);
+    sleep(config.sleep);
+    tapUp(430, 1000, 40, 0);
+    sleep(config.sleepAnimate * 3);    
+}
 
-    var materialCount = ocrMaterialStorage();
-    if (materialCount == -1) {
-        console.log('This is not a material production');
-    } else if (materialCount >= 100) {
-        console.log('Skip as stock enough: ', materialCount);
-        return;
-    } else {
-        console.log('Material stock: ', materialCount)
-        pageFirstItemEnabled = [
-            {x: 569, y: 119, r: 121, g: 207, b: 12},
-        ]
-        pageSecondItemEnabled = [
-            {x: 571, y: 223, r: 121, g: 207, b: 12},
-        ]
-        pageThirdItemEnabled = [
-            {x: 568, y: 329, r: 121, g: 207, b: 14},
-        ]
-    
-        if (checkIsPage(pageWoodFarm)){
-            console.log('wood farm, add more')
-            qTap(pageWoodFarm)
+function handleMaterialProduction() {
+    pageFirstItemEnabled = [
+        {x: 569, y: 119, r: 121, g: 207, b: 12},
+    ]
+    pageSecondItemEnabled = [
+        {x: 571, y: 223, r: 121, g: 207, b: 12},
+    ]
+    pageThirdItemEnabled = [
+        {x: 568, y: 329, r: 121, g: 207, b: 14},
+    ]
+
+    if (checkIsPage(pageWoodFarm)){
+        console.log('wood farm, add more')
+        qTap(pageWoodFarm)
+        sleep(config.sleepAnimate);
+        qTap(pageWoodFarm)
+        sleep(config.sleepAnimate);
+        qTap(pageWoodFarm)
+        sleep(config.sleepAnimate);
+        qTap(pageWoodFarm)
+        return true;
+    }
+    else if (checkIsPage(pageBeanFarm)){
+        console.log('bean farm, add more')
+        qTap(pageBeanFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageBeanFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageBeanFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageBeanFarm)    
+        return true;
+    }
+    else if (checkIsPage(pageSugarFarm)){
+        console.log('sugar farm, add more')
+        qTap(pageSugarFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageSugarFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageSugarFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageSugarFarm)    
+        return true;
+    }
+    else if (checkIsPage(pagePowderFarm)){
+        console.log('Powder farm, add more')
+        if (checkIsPage(pageSecondItemEnabled)) {
+            qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
-            qTap(pageWoodFarm)
+            qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
-            qTap(pageWoodFarm)
+            qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
-            qTap(pageWoodFarm)
-            return true;
-        }
-        else if (checkIsPage(pageBeanFarm)){
-            console.log('bean farm, add more')
-            qTap(pageBeanFarm)    
+            qTap(pageSecondItemEnabled);
+        } else {
+            qTap(pagePowderFarm)
             sleep(config.sleepAnimate);
-            qTap(pageBeanFarm)    
+            qTap(pagePowderFarm)
             sleep(config.sleepAnimate);
-            qTap(pageBeanFarm)    
+            qTap(pagePowderFarm)
             sleep(config.sleepAnimate);
-            qTap(pageBeanFarm)    
-            return true;
-        }
-        else if (checkIsPage(pageSugarFarm)){
-            console.log('sugar farm, add more')
-            qTap(pageSugarFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageSugarFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageSugarFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageSugarFarm)    
-            return true;
-        }
-        else if (checkIsPage(pagePowderFarm)){
-            console.log('Powder farm, add more')
-            if (checkIsPage(pageSecondItemEnabled)) {
-                qTap(pageSecondItemEnabled);
-                sleep(config.sleepAnimate);
-                qTap(pageSecondItemEnabled);
-                sleep(config.sleepAnimate);
-                qTap(pageSecondItemEnabled);
-                sleep(config.sleepAnimate);
-                qTap(pageSecondItemEnabled);
-            } else {
-                qTap(pagePowderFarm)
-                sleep(config.sleepAnimate);
-                qTap(pagePowderFarm)
-                sleep(config.sleepAnimate);
-                qTap(pagePowderFarm)
-                sleep(config.sleepAnimate);
-                qTap(pagePowderFarm)    
-            }
-            return true;
-        }
-        else if (checkIsPage(pageBarryFarm)){
-            console.log('Barry farm, add more')
-            if (checkIsPage(pageSecondItemEnabled)) {
-                qTap(pageSecondItemEnabled);
-                sleep(config.sleepAnimate);
-                qTap(pageSecondItemEnabled);
-                sleep(config.sleepAnimate);
-                qTap(pageSecondItemEnabled);
-                sleep(config.sleepAnimate);
-                qTap(pageSecondItemEnabled);
-                sleep(config.sleepAnimate);
-            }
-            else {
-                qTap(pageBarryFarm)
-                sleep(config.sleepAnimate);
-                qTap(pageBarryFarm)
-                sleep(config.sleepAnimate);
-                qTap(pageBarryFarm)
-                sleep(config.sleepAnimate);
-                qTap(pageBarryFarm)
-            }
-            return true;
-        }
-        else if (checkIsPage(pageMilkFarm)){
-            console.log('Milk farm, add more')
-            qTap(pageMilkFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageMilkFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageMilkFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageMilkFarm)    
-            return true;
-        }
-        else if (checkIsPage(pageCottomFarm)){
-            console.log('Cottom farm, add more')
-            qTap(pageCottomFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageCottomFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageCottomFarm)    
-            sleep(config.sleepAnimate);
-            qTap(pageCottomFarm)    
-            return true;
+            qTap(pagePowderFarm)    
         }
         return true;
     }
+    else if (checkIsPage(pageBarryFarm)){
+        console.log('Barry farm, add more')
+        if (checkIsPage(pageSecondItemEnabled)) {
+            qTap(pageSecondItemEnabled);
+            sleep(config.sleepAnimate);
+            qTap(pageSecondItemEnabled);
+            sleep(config.sleepAnimate);
+            qTap(pageSecondItemEnabled);
+            sleep(config.sleepAnimate);
+            qTap(pageSecondItemEnabled);
+            sleep(config.sleepAnimate);
+        }
+        else {
+            qTap(pageBarryFarm)
+            sleep(config.sleepAnimate);
+            qTap(pageBarryFarm)
+            sleep(config.sleepAnimate);
+            qTap(pageBarryFarm)
+            sleep(config.sleepAnimate);
+            qTap(pageBarryFarm)
+        }
+        return true;
+    }
+    else if (checkIsPage(pageMilkFarm)){
+        console.log('Milk farm, add more')
+        qTap(pageMilkFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageMilkFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageMilkFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageMilkFarm)    
+        return true;
+    }
+    else if (checkIsPage(pageCottomFarm)){
+        console.log('Cottom farm, add more')
+        qTap(pageCottomFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageCottomFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageCottomFarm)    
+        sleep(config.sleepAnimate);
+        qTap(pageCottomFarm)    
+        return true;
+    }
+}
 
+function makeGoodsToTarget(target, orderAmount) {
+    var itemsAdd = 0;
     pageFirstItemEnabled = [
         {x: 587, y: 122, r: 121, g: 207, b: 12}
     ]
@@ -493,21 +482,6 @@ function JobScheduling() {
     pageThirdItemEnabled = [
         {x: 587, y: 332, r: 121, g: 207, b: 12}
     ]
-
-    // pageFirstItemHasOneDigits = [
-    //     {x: 446, y: 107, r: 255, g: 255, b: 255},
-    //     {x: 437, y: 107, r: 255, g: 255, b: 255}
-    // ]
-
-    // pageSecondItemHasOneDigits = [
-    //     {x: 446, y: 213, r: 255, g: 255, b: 255},
-    //     {x: 437, y: 213, r: 255, g: 255, b: 255}
-    // ]
-
-    // pageThirdItemHasOneDigits = [
-    //     {x: 446, y: 320, r: 255, g: 255, b: 255},
-    //     {x: 437, y: 320, r: 255, g: 255, b: 255}
-    // ]
 
     // //rgb(77,71,65)
     // pageFirstItemHasThreeDigits = [
@@ -521,107 +495,66 @@ function JobScheduling() {
     //     {x: 436, y: 320, r: 77, g: 71, b: 65}
     // ]
 
-    itemsAdd = 0;
     // add < 10
     var goodsOneStock = ocrProductStorage(goodsLocation[1])
     var goodsTwoStock = ocrProductStorage(goodsLocation[2])
     var goodsThreeStock = ocrProductStorage(goodsLocation[3])
-    console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock);
+    console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock, 'target: ', target);
     if (goodsOneStock === -1 && goodsTwoStock === -1 && goodsThreeStock === -1) {
         console.log('OCR count failed, skip this round');
-        return true;
+        return itemsAdd;
     }
 
-    if (goodsOneStock < 10) {
-        console.log('add 1st item from ' + goodsOneStock + ' to > 10')
-        qTap(pageFirstItemEnabled);
-        sleep(config.sleepAnimate);
-        qTap(pageFirstItemEnabled);
-        sleep(config.sleepAnimate);
-        if (!handleNotEnoughStock()) {
-            itemsAdd ++;
-        }
-    }
-
-    if (checkIsPage(pageSecondItemEnabled) && goodsTwoStock < 10) {
-        console.log('add 2nd item from ' + goodsTwoStock + ' to > 10')
-        qTap(pageSecondItemEnabled);
-        sleep(config.sleepAnimate);
-        qTap(pageSecondItemEnabled);
-        sleep(config.sleepAnimate);
-        if (!handleNotEnoughStock()) {
-            itemsAdd ++;
-        }
-    }    
-
-    if (checkIsPage(pageThirdItemEnabled) && goodsThreeStock < 10) {
-        console.log('add 3rd item from ' + goodsThreeStock + ' to > 10')
-        qTap(pageThirdItemEnabled);
-        sleep(config.sleepAnimate);
-        qTap(pageThirdItemEnabled);
-        sleep(config.sleepAnimate);
-        if (!handleNotEnoughStock()) {
-            itemsAdd ++;
-        }
-    }
-
-    if (itemsAdd > 2) {
-        return true;
-    }
-
-    // add 10 < x < 60
-    if (goodsOneStock < 58) {
-        console.log('add 1st item to > 58')
-        qTap(pageFirstItemEnabled);
-        sleep(config.sleepAnimate);
-        if (!handleNotEnoughStock()) {
-            itemsAdd ++;
+    if (goodsOneStock < target) {
+        console.log('add 1st item from ' + goodsOneStock + ' to > ', target);
+        for (i = 0; i < orderAmount; i ++){
+            qTap(pageFirstItemEnabled);
+            sleep(config.sleepAnimate);
+            if (!handleNotEnoughStock()) {
+                itemsAdd ++;
+            }    
         }
     }
 
     if (!checkIsPage(pageSecondItemEnabled)) {
-        return;
-    } else {
-        if (goodsTwoStock < 58) {
-            console.log('add 2nd item to > 58')
+        console.log('2nd item is not enabled')
+        return itemsAdd;
+    }
+    else if (goodsTwoStock < target) {
+        console.log('add 2nd item from ' + goodsTwoStock + ' to > ', target);
+        for (i = 0; i < orderAmount; i ++){
             qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
             if (!handleNotEnoughStock()) {
                 itemsAdd ++;
             }
-        }    
+        }
     }
 
     if (!checkIsPage(pageThirdItemEnabled)) {
-        return;
-    } else {
-        if (goodsThreeStock < 58) {
-            console.log('add 3rd item to > 58')
+        console.log('3rd item is not enabled')
+        return itemsAdd;
+    }
+    else if (goodsThreeStock < target) {
+        console.log('add 3rd item from ' + goodsThreeStock + ' to > ', target);
+        for (i = 0; i < orderAmount; i ++){
             qTap(pageThirdItemEnabled);
             sleep(config.sleepAnimate);
             if (!handleNotEnoughStock()) {
                 itemsAdd ++;
-            }
+            }    
         }
     }
 
-    if (itemsAdd > 3) {
+    if (itemsAdd > 4) {
         return true;
     }
 
     // === tool shop only ===
     handleToolShopShovels();
     // end of tool shop ===
-    
-    // Slide to buttom
-    tapDown(430, 340, 40, 0);
-    sleep(config.sleep);
-    moveTo(430, 150, 40, 0);
-    sleep(config.sleep);
-    moveTo(430, -1500, 40, 0);
-    sleep(config.sleep);
-    tapUp(430, -150, 40, 0);
-    sleep(config.sleepAnimate * 3);
+
+    SwipeProductionMenuToBottom();
 
     // pageFirstItemHasOneDigits = [
     //     {x: 446, y: 112, r: 255, g: 255, b: 255},
@@ -646,89 +579,101 @@ function JobScheduling() {
     var goodsFourStock = ocrProductStorage(goodsLocation[4])
     var goodsFiveStock = ocrProductStorage(goodsLocation[5])
     var goodsSixStock = ocrProductStorage(goodsLocation[6])
-    console.log('In stock: ', goodsFourStock, goodsFiveStock, goodsSixStock);
+    console.log('In stock: ', goodsFourStock, goodsFiveStock, goodsSixStock, ' target: ', target);
     if (goodsFourStock === -1 && goodsFiveStock === -1 && goodsSixStock === -1) {
         console.log('2nd OCR count failed, skip this round');
+        SwipeProductionMenuToTop();
         return true;
     }
 
-    // add < 10
     if (!checkIsPage(pageFirstItemEnabled)) {
         console.log('4th item is not enabled')
-        return;
+        SwipeProductionMenuToTop();
+        return itemsAdd;
     } else {
-        if (goodsFourStock < 10) {
-            console.log('add 4th item from ' + goodsFourStock + ' to > 10')
-            qTap(pageFirstItemEnabled);
-            sleep(config.sleepAnimate);
-            if (!handleNotEnoughStock()) {
-                itemsAdd ++;
+        if (goodsFourStock < target) {
+            console.log('add 4th item from ' + goodsFourStock + ' to > ', target);
+            for (i = 0; i < orderAmount; i ++){
+                qTap(pageFirstItemEnabled);
+                sleep(config.sleepAnimate);
+                if (!handleNotEnoughStock()) {
+                    itemsAdd ++;
+                }    
             }
         }
     }
 
     if (!checkIsPage(pageSecondItemEnabled)) {
         console.log('5th item is not enabled')
-        // return;
+        SwipeProductionMenuToTop();
+        return itemsAdd;
     } else {
-        if (goodsFiveStock < 10) {
-            console.log('add 5th item from ' + goodsFiveStock + ' to > 10')
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
-            if (!handleNotEnoughStock()) {
-                itemsAdd ++;
+        if (goodsFiveStock < target) {
+            console.log('add 5th item from ' + goodsFiveStock + ' to > ', target);
+            for (i = 0; i < orderAmount; i ++){
+                qTap(pageSecondItemEnabled);
+                sleep(config.sleepAnimate);
+                if (!handleNotEnoughStock()) {
+                    itemsAdd ++;
+                }
             }
         }    
     }
 
     if (!checkIsPage(pageThirdItemEnabled)) {
         console.log('6th item is not enabled')
-        // return;
+        SwipeProductionMenuToTop();
+        return itemsAdd;
     } else {
-        if (goodsSixStock < 10) {
-            console.log('add 6th item from ' + goodsSixStock + ' to > 10')
-            qTap(pageThirdItemEnabled);
-            sleep(config.sleepAnimate);
-            if (!handleNotEnoughStock()) {
-                itemsAdd ++;
+        if (goodsSixStock < target) {
+            console.log('add 6th item from ' + goodsSixStock + ' to > ', target);
+            for (i = 0; i < orderAmount; i ++){
+                qTap(pageThirdItemEnabled);
+                sleep(config.sleepAnimate);
+                if (!handleNotEnoughStock()) {
+                    itemsAdd ++;
+                }
             }
         }
     }
 
-    // add 10 < x < 100
-    if (goodsFourStock < 58 && checkIsPage(pageFirstItemEnabled)) {
-        console.log('add 4th item to > 58')
-        qTap(pageFirstItemEnabled);
-        sleep(config.sleepAnimate);
-        if (!handleNotEnoughStock()) {
-            itemsAdd ++;
-        }
+    SwipeProductionMenuToTop();
+    return itemsAdd;
+}
+
+function JobScheduling() {
+    // isNoThirdFigure = checkIsPage(pageBaseProductNoThirdFigure);
+    // console.log('if stock < 99: ', isNoThirdFigure)
+    // if (!isNoThirdFigure) {
+    //     console.log('> 99, no need to add more')
+    //     return true;
+    // }
+
+    //rgb(166,104,65)
+    pageAnyProduction = [
+        {x: 20, y: 43, r: 166, g: 104, b: 65},
+        {x: 80, y: 44, r: 166, g: 104, b: 65}
+    ]
+    if (checkIsPage(pageAnyProduction)) {
+        // might need this check later
     }
 
-    if (!checkIsPage(pageSecondItemEnabled)) {
+    var materialCount = ocrMaterialStorage();
+    if (materialCount == -1) {
+        console.log('This is not a material production');
+    } else if (materialCount >= config.materialsTarget) {
+        console.log('Skip as stock enough: ', materialCount);
         return;
     } else {
-        if (goodsFiveStock < 58) {
-            console.log('add 5th item to > 58')
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
-            if (!handleNotEnoughStock()) {
-                itemsAdd ++;
-            }
-        }    
+        console.log('Material stock: ', materialCount, ', target: ', config.materialsTarget)
+        handleMaterialProduction();
+        return true;
     }
 
-    if (!checkIsPage(pageThirdItemEnabled)) {
-        // return;
-    } else {
-        if (goodsSixStock < 58) {
-            console.log('add 6th item to > 58')
-            qTap(pageThirdItemEnabled);
-            sleep(config.sleepAnimate);
-            if (!handleNotEnoughStock()) {
-                itemsAdd ++;
-            }
-        }
+    var itemsAdd = makeGoodsToTarget(10, 2);
+    console.log('add: ', itemsAdd)
+    if (itemsAdd < 3) {
+        makeGoodsToTarget(config.goodsTarget, 1);
     }
 }
 
@@ -796,7 +741,10 @@ function handleNotEnoughStock() {
     return false;
 }
 
-function start() {
+function start(materialsTarget, goodsTarget) {
+    console.log('start with: ', materialsTarget, goodsTarget);
+    config.materialsTarget = materialsTarget !== undefined ? materialsTarget : config.materialsTarget
+    config.goodsTarget = goodsTarget !== undefined ? goodsTarget : config.goodsTarget
 
     for (var i = 1; i < 100000000; i++) {
         var runMain = false;
@@ -816,9 +764,12 @@ function start() {
     }
   }
   
-   start();
+start();
 //   JobScheduling()
 // ocrMaterialStorage();
 // ocrProductStorage(goodsLocation[2]);
 // ocrProductStorage(rect(433, 315, 16, 12));
 // ocrProductStorage(goodsLocation['shovel'])
+// SwipeProductionMenuToBottom();
+// SwipeProductionMenuToTop();
+// makeGoodsToTarget(10, 1)
