@@ -1,6 +1,7 @@
 config = {
     sleep: 240,
     sleepAnimate: 800,
+    localPath: getStoragePath() + '/scripts/com.r2studio.CookieKingdom.Manufacturing_beta/assets',
 
     materialsTarget: 260,
     goodsTarget: 55,
@@ -741,6 +742,26 @@ function handleNotEnoughStock() {
     return false;
 }
 
+function handleWelcomePage() {
+    pageWelcome = [
+        {x: 627, y: 19, r: 56, g: 167, b: 231},
+        {x: 58, y: 42, r: 141, g: 152, b: 186},
+        {x: 58, y: 96, r: 56, g: 64, b: 85},
+        {x: 62, y: 213, r: 54, g: 64, b: 87},
+        {x: 82, y: 319, r: 54, g: 64, b: 87},
+        {x: 582, y: 33, r: 54, g: 64, b: 87},
+    ]
+
+    if (checkIsPage(pageWelcome)) {
+        console.log('In welcome page, quitting');
+        qTap(pageWelcome);
+        sleep(config.sleepAnimate);
+    } else {
+        console.log('Confirmed not in welcome page');
+    }
+}
+
+
 function start(materialsTarget, goodsTarget) {
     console.log('start with: ', materialsTarget, goodsTarget);
     config.materialsTarget = materialsTarget !== undefined ? materialsTarget : config.materialsTarget
@@ -761,15 +782,35 @@ function start(materialsTarget, goodsTarget) {
             console.log('jobs done!')
             break;
         }
+
+        if (!act) {
+            handleWelcomePage()
+        }
     }
   }
-  
-start();
+
+// start();
 //   JobScheduling()
 // ocrMaterialStorage();
 // ocrProductStorage(goodsLocation[2]);
 // ocrProductStorage(rect(433, 315, 16, 12));
 // ocrProductStorage(goodsLocation['shovel'])
-// SwipeProductionMenuToBottom();
-// SwipeProductionMenuToTop();
-// makeGoodsToTarget(10, 1)
+
+function handleFindAndTapCandyHouse() {
+    var candy = openImage(config.localPath+'/candy.png');
+    // var house = openImage('assets/candy.png');
+    var img = getScreenshot();
+
+    // var foundResults = findImages(img, house, 0.8, 10, true);
+    // console.log('> ', JSON.stringify(foundResults));
+
+    // var foundResults = findImages(img, candy, 0.8, 10, true);
+    // console.log('> ', JSON.stringify(foundResults));
+
+
+    releaseImage(img);
+    releaseImage(candy);
+    // releaseImage(house);
+}
+
+handleFindAndTapCandyHouse();
