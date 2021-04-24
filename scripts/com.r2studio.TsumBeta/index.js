@@ -750,56 +750,34 @@ function detectOffsetYInGame() {
   var img = getScreenshot();
   // var img = openImage('/sdcard/img2.jpg');
   var size = getImageSize(img);
-  console.log(size.width, size.height);
-  var top = 0;
-  var bottom = size.height;
-  var detectState = 'init';
-  for (var y = 0; y < size.height * 0.3; y++) {
-    // from 37 190 234 to // 57 136 192
+  console.log('deviceW', size.width, 'deviceH', size.height);
+  var centerY = Math.floor(size.height / 2);
+  
+  // find top black
+  var topBlackY = 0;
+  for (var y = centerY; y >= 0; y--) {
     var color = getImageColor(img, size.width*0.9, y);
-    // console.log(y, color.r, color.g, color.b);
-    if (detectState == 'init' && isSameColor({r: 35, g: 190, b: 235}, color, 12)) {
-      detectState = 'findInGame';
-    } else if (detectState == 'findInGame' && isSameColor({r: 60, g: 136, b: 192}, color, 10)) {
-      detectState = 'findOffsetTop';
-      top = y;
+    if (isSameColor({r: 0, g: 0, b: 0}, color, 6)) {
+      // black color found
+      topBlackY = y;
       break;
     }
   }
-  if (detectState != 'findOffsetTop') {
-    console.log('Detect Top error:', top);
-  }
-  detectState = 'init';
-  for (var y = bottom - 1; y > size.height * 0.7; y--) {
-    var color = getImageColor(img, size.width*0.9, y);
-    // console.log(y, color.r, color.g, color.b);
-    if (detectState == 'init' && isSameColor({r: 35, g: 190, b: 235}, color, 10)) {
-      detectState = 'findInGame';
-    } else if (detectState == 'findInGame' && isSameColor({r: 60, g: 106, b: 174}, color, 12)) {
-      detectState = 'findOffsetBottom';
-      bottom = y;
-      break;
-    }
-  }
-  saveImage(img, '/sdcard/tsum_detect_'+top+'_'+bottom+'_'+'.png');
-  releaseImage(img);
+  console.log('topBlackY', topBlackY);
 
-  if (detectState != 'findOffsetBottom') {
-    console.log('[E]Detect Bottom', bottom);
+  var bottomBlackY = size.height;
+  for (var y = centerY; y < size.height; y++) {
+    var color = getImageColor(img, size.width*0.9, y);
+    if (isSameColor({r: 0, g: 0, b: 0}, color, 6)) {
+      // black color found
+      bottomBlackY = y;
+      break;
+    }
   }
-  var detectedHeight = bottom - top;
-  var shouldHeight = size.width * 1.5;
-  if (detectedHeight < shouldHeight*0.95 || detectedHeight > shouldHeight*1.05) {
-    console.log('[E]Detect Height:', detectedHeight, 'should', shouldHeight);
-  }
-  console.log('Detect TB', detectedHeight, '('+bottom+'-'+top+')', shouldHeight);
-  var centerH = (bottom - top)/2 + top;
-  var startY = Math.floor(centerH - shouldHeight/2)+1;
-  var endY = Math.floor(centerH + shouldHeight/2);
-  var diff = (size.width/9*16 - size.width*1.5) / 2;
-  var offsetY = -Math.floor(startY - diff);
-  console.log('Detect SY', startY, 'EY', endY, 'OffsetY', offsetY);
-  return offsetY;
+  console.log('bottomBlackY', bottomBlackY);
+  console.log('screenHeight', bottomBlackY - topBlackY + 1);
+  releaseImage(img);
+  return -topBlackY;
 }
 
 // Tsum struct
@@ -869,30 +847,18 @@ function Tsum(isJP, detect, logs) {
 
 Tsum.prototype.init = function(detect) {
   log(this.logs.calculateScreenSize);
-
   var isFat = false;
-  var realWidth = this.screenHeight / 16 * 9;
   if (this.screenHeight / this.screenWidth < 1.5) {
     isFat = true;
     this.gameHeight = this.screenHeight;
     this.gameWidth = this.screenHeight / 1.5;
     this.gameOffsetY = Math.floor((this.gameWidth * 16 / 9 - this.gameHeight) / 2);
     this.gameOffsetX = Math.floor((this.gameWidth - this.screenWidth) / 2);
-  } else if (realWidth > this.screenWidth) {
-    this.gameWidth = realWidth;
-    this.gameHeight = this.screenHeight;
-    this.gameOffsetX = Math.floor((this.gameWidth - this.screenWidth) / 2);
-    this.gameOffsetY = 0;
-  } else if (realWidth < this.screenWidth) {
+  } else {
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.screenWidth / 9 * 16;
     this.gameOffsetX = 0;
     this.gameOffsetY = Math.floor((this.gameHeight - this.screenHeight) / 2);
-  } else {
-    this.gameWidth = this.screenWidth;
-    this.gameHeight = this.screenHeight;
-    this.gameOffsetX = 0;
-    this.gameOffsetY = 0;
   }
 
   if (detect) {
