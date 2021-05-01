@@ -1,7 +1,10 @@
 config = {
+    account: '123',
+    password: '456',
     sleep: 240,
     sleepAnimate: 800,
-    localPath: getStoragePath() + '/scripts/com.r2studio.CookieKingdom.Manufacturing_beta/assets',
+    sleepWhenDoubleLoginInMinutes: 40,
+    localPath: getStoragePath() + '/scripts/com.r2studio.CookieKingdom.Manufacturing.beta/images',
 
     materialsTarget: 260,
     goodsTarget: 55,
@@ -81,18 +84,18 @@ function rect(x, y, width, height) {
 }
 
 function rgb(r, g, b) {
-return {r:r, g:g, b:b}
+    return {r:r, g:g, b:b}
 }
 
 function qTap(page, sleepTime) {
-if (sleepTime == undefined) {
-    sleepTime = config.sleep;
-}
-if (Array.isArray(page)) {
-    page = page[0];
-}
-tap(page.x, page.y, sleepTime);
-sleep(sleepTime);
+    if (sleepTime == undefined) {
+        sleepTime = config.sleep;
+    }
+    if (Array.isArray(page)) {
+        page = page[0];
+    }
+    tap(page.x, page.y, sleepTime);
+    sleep(sleepTime);
 }
 
 function isSameColor(c1, c2, diff) {
@@ -723,19 +726,19 @@ function handleNotEnoughStock() {
     }
 
     pageAnErrorHasOccuredWhileProcessing = [
-        {x: 348, y: 246, r: 121, g: 207, b: 12},
-        {x: 297, y: 247, r: 121, g: 207, b: 12},
-        {x: 233, y: 108, r: 60, g: 70, b: 105},
-        {x: 410, y: 108, r: 60, g: 70, b: 105},
-        {x: 430, y: 134, r: 243, g: 233, b: 223},
-        {x: 419, y: 247, r: 219, g: 207, b: 199},
-        {x: 252, y: 245, r: 219, g: 207, b: 199},
-        {x: 212, y: 247, r: 219, g: 207, b: 199},
+        {x: 297, y: 241, r: 121, g: 207, b: 12},
+        {x: 429, y: 101, r: 60, g: 70, b: 105},
+        {x: 432, y: 137, r: 243, g: 233, b: 223},
+        {x: 427, y: 252, r: 219, g: 207, b: 199},
+        {x: 334, y: 242, r: 121, g: 207, b: 12},
+        {x: 306, y: 241, r: 121, g: 207, b: 12},
+        {x: 303, y: 241, r: 121, g: 207, b: 12},
+        {x: 212, y: 244, r: 219, g: 207, b: 199}
     ]
     if (checkIsPage(pageAnErrorHasOccuredWhileProcessing)) {
         console.log('quiting pageAnErrorHasOccuredWhileProcessing')
         qTap(pageAnErrorHasOccuredWhileProcessing);
-        sleep(config.sleep);
+        sleep(sleepWhenDoubleLogin);
         return true;
     }
 
@@ -744,21 +747,104 @@ function handleNotEnoughStock() {
 
 function handleWelcomePage() {
     pageWelcome = [
-        {x: 627, y: 19, r: 56, g: 167, b: 231},
-        {x: 58, y: 42, r: 141, g: 152, b: 186},
-        {x: 58, y: 96, r: 56, g: 64, b: 85},
-        {x: 62, y: 213, r: 54, g: 64, b: 87},
-        {x: 82, y: 319, r: 54, g: 64, b: 87},
-        {x: 582, y: 33, r: 54, g: 64, b: 87},
+        {x: 499, y: 328, r: 96, g: 31, b: 76},
+        {x: 577, y: 329, r: 93, g: 30, b: 74},
+        {x: 612, y: 296, r: 227, g: 165, b: 40},
+        {x: 547, y: 304, r: 253, g: 239, b: 125},
+        {x: 463, y: 297, r: 227, g: 165, b: 40},
+        {x: 591, y: 268, r: 191, g: 48, b: 57},
+        {x: 480, y: 270, r: 243, g: 60, b: 56}
+    ]
+
+    // TODO: Need to handle login event
+
+    pageAnnouncement = [
+        {x: 610, y: 20, r: 56, g: 167, b: 231},
+        {x: 619, y: 19, r: 255, g: 255, b: 255},
+        {x: 628, y: 18, r: 56, g: 167, b: 231},
+        {x: 585, y: 48, r: 54, g: 64, b: 87},
+        {x: 584, y: 288, r: 54, g: 64, b: 87},
+        {x: 59, y: 77, r: 141, g: 152, b: 186},
+        {x: 58, y: 136, r: 56, g: 64, b: 85},
+        {x: 58, y: 323, r: 54, g: 64, b: 87}
     ]
 
     if (checkIsPage(pageWelcome)) {
         console.log('In welcome page, quitting');
-        qTap(pageWelcome);
+        qTap(pnt(324, 329));
         sleep(config.sleepAnimate);
+
+        while(true) {
+            if (checkIsPage(pageAnnouncement)) {
+                qTap(pageAnnouncement);
+                sleep(config.sleepAnimate);
+                break;
+            }
+            qTap(pnt(324, 329));
+            sleep(3000);
+            console.log('tap middle and wait for announce page');
+        }
+        handleFindAndTapCandyHouse();
     } else {
         console.log('Confirmed not in welcome page');
     }
+}
+
+function handleFindAndTapCandyHouse() {
+    pageInProduction = [
+        {x: 609, y: 19, r: 56, g: 167, b: 231},
+        {x: 617, y: 19, r: 255, g: 255, b: 255},
+        {x: 625, y: 18, r: 34, g: 85, b: 119},
+        {x: 619, y: 331, r: 166, g: 104, b: 65},
+        {x: 19, y: 321, r: 166, g: 104, b: 65}
+    ]
+
+    if (checkIsPage(pageInProduction))
+    {
+        qTap(pageInProduction);
+        sleep(config.sleepAnimate*2);
+    }
+
+    // Tap the candy
+    var candy = openImage(config.localPath+'/candy.png');
+    var img = getScreenshot();
+
+    var foundResults = findImages(img, candy, 0.9, 5, true);
+    console.log('> ', JSON.stringify(foundResults));
+    if (foundResults.length > 0){
+        var bestFit = foundResults[0];
+        for (var j in foundResults) {
+            if (foundResults[j]['score'] > bestFit['score']){
+                bestFit = foundResults[j];
+            }
+        }
+        qTap(bestFit);
+    }
+    console.log('> ', JSON.stringify(bestFit));
+
+    releaseImage(img);
+    releaseImage(candy);
+
+    // Tap the sugar house
+    var sugarHouse = openImage(config.localPath+'/sugarHouse.png');
+    img = getScreenshot();
+
+    var foundResults = findImages(img, sugarHouse, 0.92, 3, true);
+    console.log('> ', JSON.stringify(foundResults));
+    if (foundResults.length > 0){
+        var bestFit = foundResults[0];
+        for (var j in foundResults) {
+            if (foundResults[j]['score'] > bestFit['score']){
+                bestFit = foundResults[j];
+            }
+        }
+        qTap(bestFit);
+        sleep(config.sleepAnimate*2);
+    }
+    console.log('>> ', JSON.stringify(bestFit));
+
+    releaseImage(img);
+    releaseImage(sugarHouse);
 }
 
 
@@ -778,6 +864,10 @@ function start(materialsTarget, goodsTarget) {
         qTap(pnt(349, 174)); // next
         sleep(config.sleepAnimate);
 
+        if (i%32 == 0) {
+            handleFindAndTapCandyHouse();
+        }
+
         if (config.run == false) {
             console.log('jobs done!')
             break;
@@ -789,28 +879,24 @@ function start(materialsTarget, goodsTarget) {
     }
   }
 
-// start();
+start();
 //   JobScheduling()
 // ocrMaterialStorage();
 // ocrProductStorage(goodsLocation[2]);
 // ocrProductStorage(rect(433, 315, 16, 12));
 // ocrProductStorage(goodsLocation['shovel'])
 
-function handleFindAndTapCandyHouse() {
-    var candy = openImage(config.localPath+'/candy.png');
-    // var house = openImage('assets/candy.png');
-    var img = getScreenshot();
 
-    // var foundResults = findImages(img, house, 0.8, 10, true);
-    // console.log('> ', JSON.stringify(foundResults));
+// Tsum.prototype.startApp = function() {
+//     if (!this.autoLaunch) {
+//       return;
+//     }
+//     log(this.logs.startTsumTsumApp);
+//     if (this.isJP) {
+//       execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
+//     } else {
+//       execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
+//     }
+//     this.sleep(3000);
+//   }
 
-    // var foundResults = findImages(img, candy, 0.8, 10, true);
-    // console.log('> ', JSON.stringify(foundResults));
-
-
-    releaseImage(img);
-    releaseImage(candy);
-    // releaseImage(house);
-}
-
-handleFindAndTapCandyHouse();
