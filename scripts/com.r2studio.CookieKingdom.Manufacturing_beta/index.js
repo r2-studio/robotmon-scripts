@@ -738,7 +738,7 @@ function handleNotEnoughStock() {
     if (checkIsPage(pageAnErrorHasOccuredWhileProcessing)) {
         console.log('quiting pageAnErrorHasOccuredWhileProcessing')
         qTap(pageAnErrorHasOccuredWhileProcessing);
-        sleep(sleepWhenDoubleLogin);
+        sleep(sleepWhenDoubleLoginInMinutes * 60 * 1000);
         return true;
     }
 
