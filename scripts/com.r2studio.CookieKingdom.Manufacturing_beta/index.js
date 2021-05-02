@@ -3,7 +3,7 @@ config = {
     password: '456',
     sleep: 240,
     sleepAnimate: 800,
-    sleepWhenDoubleLoginInMinutes: 40,
+    sleepWhenDoubleLoginInMinutes: 30,
     localPath: getStoragePath() + '/scripts/com.r2studio.CookieKingdom.Manufacturing.beta/images',
 
     materialsTarget: 260,
@@ -504,9 +504,9 @@ function makeGoodsToTarget(target, orderAmount) {
     var goodsTwoStock = ocrProductStorage(goodsLocation[2])
     var goodsThreeStock = ocrProductStorage(goodsLocation[3])
     console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock, 'target: ', target);
-    if (goodsOneStock === -1 && goodsTwoStock === -1 && goodsThreeStock === -1) {
+    if (goodsOneStock === -1 || goodsTwoStock === -1 || goodsThreeStock === -1) {
         console.log('OCR count failed, skip this round');
-        return itemsAdd;
+        return -1;
     }
 
     if (goodsOneStock < target) {
@@ -587,7 +587,7 @@ function makeGoodsToTarget(target, orderAmount) {
     if (goodsFourStock === -1 && goodsFiveStock === -1 && goodsSixStock === -1) {
         console.log('2nd OCR count failed, skip this round');
         SwipeProductionMenuToTop();
-        return true;
+        return -1;
     }
 
     if (!checkIsPage(pageFirstItemEnabled)) {
@@ -667,7 +667,7 @@ function JobScheduling() {
         console.log('This is not a material production');
     } else if (materialCount >= config.materialsTarget) {
         console.log('Skip as stock enough: ', materialCount);
-        return;
+        return true;
     } else {
         console.log('Material stock: ', materialCount, ', target: ', config.materialsTarget)
         handleMaterialProduction();
@@ -676,9 +676,16 @@ function JobScheduling() {
 
     var itemsAdd = makeGoodsToTarget(10, 2);
     console.log('add: ', itemsAdd)
-    if (itemsAdd < 3) {
-        makeGoodsToTarget(config.goodsTarget, 1);
+    if (itemsAdd == -1) {
+        return false;
+    } else if (itemsAdd < 3) {
+        itemsAdd = makeGoodsToTarget(config.goodsTarget, 1);
+        if (itemsAdd == -1) {
+            return false;
+        }
     }
+
+    return true;
 }
 
 function handleNotEnoughStock() {
@@ -708,24 +715,28 @@ function handleNotEnoughStock() {
         return true;
     }
 
-    pageNotEnoughRequiredItems = [
-        {x: 354, y: 241, r: 121, g: 207, b: 12},
-        {x: 297, y: 247, r: 121, g: 207, b: 12},
-        {x: 233, y: 108, r: 60, g: 70, b: 105},
-        {x: 426, y: 108, r: 60, g: 70, b: 105},
-        {x: 430, y: 134, r: 243, g: 233, b: 223},
-        {x: 419, y: 247, r: 219, g: 207, b: 199},
-        {x: 252, y: 245, r: 219, g: 207, b: 199},
-        {x: 212, y: 247, r: 219, g: 207, b: 199},
-    ]
-    if (checkIsPage(pageNotEnoughRequiredItems)) {
-        console.log('quiting pageNotEnoughRequiredItems')
-        qTap(pageNotEnoughRequiredItems);
-        sleep(config.sleep);
-        return true;
-    }
+    // pageNotEnoughRequiredItems = [
+    //     {x: 354, y: 241, r: 121, g: 207, b: 12},
+    //     {x: 297, y: 247, r: 121, g: 207, b: 12},
+    //     {x: 233, y: 108, r: 60, g: 70, b: 105},
+    //     {x: 426, y: 108, r: 60, g: 70, b: 105},
+    //     {x: 430, y: 134, r: 243, g: 233, b: 223},
+    //     {x: 419, y: 247, r: 219, g: 207, b: 199},
+    //     {x: 252, y: 245, r: 219, g: 207, b: 199},
+    //     {x: 212, y: 247, r: 219, g: 207, b: 199},
+    // ]
+    // if (checkIsPage(pageNotEnoughRequiredItems)) {
+    //     console.log('quiting pageNotEnoughRequiredItems')
+    //     qTap(pageNotEnoughRequiredItems);
+    //     sleep(config.sleep);
+    //     return true;
+    // }
 
-    pageAnErrorHasOccuredWhileProcessing = [
+    return false;
+}
+
+function handleRelogin() {
+    pageReloginOrNetworkError = [
         {x: 297, y: 241, r: 121, g: 207, b: 12},
         {x: 429, y: 101, r: 60, g: 70, b: 105},
         {x: 432, y: 137, r: 243, g: 233, b: 223},
@@ -735,14 +746,15 @@ function handleNotEnoughStock() {
         {x: 303, y: 241, r: 121, g: 207, b: 12},
         {x: 212, y: 244, r: 219, g: 207, b: 199}
     ]
-    if (checkIsPage(pageAnErrorHasOccuredWhileProcessing)) {
-        console.log('quiting pageAnErrorHasOccuredWhileProcessing')
-        qTap(pageAnErrorHasOccuredWhileProcessing);
-        sleep(sleepWhenDoubleLoginInMinutes * 60 * 1000);
+    if (checkIsPage(pageReloginOrNetworkError)) {
+        console.log('quiting pageReloginOrNetworkError')
+        qTap(pageReloginOrNetworkError);
+        for (var i = 0; i < config.sleepWhenDoubleLoginInMinutes; i++) {
+            sleep(60 * 1000);
+            console.log('Detect relogin, wait: ', i, '/', config.sleepWhenDoubleLoginInMinutes, 'mins to restart...');
+        }
         return true;
     }
-
-    return false;
 }
 
 function handleWelcomePage() {
@@ -788,6 +800,27 @@ function handleWelcomePage() {
     } else {
         console.log('Confirmed not in welcome page');
     }
+}
+
+function handleAnnouncement() {
+    pageAnnouncement = [
+        {x: 610, y: 20, r: 56, g: 167, b: 231},
+        {x: 619, y: 19, r: 255, g: 255, b: 255},
+        {x: 628, y: 18, r: 56, g: 167, b: 231},
+        {x: 585, y: 48, r: 54, g: 64, b: 87},
+        {x: 584, y: 288, r: 54, g: 64, b: 87},
+        {x: 59, y: 77, r: 141, g: 152, b: 186},
+        {x: 58, y: 136, r: 56, g: 64, b: 85},
+        {x: 58, y: 323, r: 54, g: 64, b: 87}
+    ]
+
+    if (checkIsPage(pageAnnouncement)) {
+        console.log('found announcement page, leaving')
+        qTap(pageAnnouncement);
+        sleep(config.sleepAnimate);
+        return true;
+    }
+    return false;
 }
 
 function handleFindAndTapCandyHouse() {
@@ -873,8 +906,15 @@ function start(materialsTarget, goodsTarget) {
             break;
         }
 
-        if (!act) {
-            handleWelcomePage()
+        // if (!act) {
+        if (i%2 == 0) {
+
+            handleRelogin();
+            handleWelcomePage(); // TODO: need to call handleAnnouncement()
+
+            if (handleAnnouncement()){
+                handleFindAndTapCandyHouse();
+            }
         }
     }
   }
@@ -886,6 +926,7 @@ start();
 // ocrProductStorage(rect(433, 315, 16, 12));
 // ocrProductStorage(goodsLocation['shovel'])
 
+//TODO: Auto restart, Auto input id/pwd, add find all houses
 
 // Tsum.prototype.startApp = function() {
 //     if (!this.autoLaunch) {
