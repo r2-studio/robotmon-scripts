@@ -8,83 +8,83 @@ config = {
 
     materialsTarget: 260,
     goodsTarget: 55,
-  
+
     run: true,
 }
 
 factoryType = ['wood', 'bean', 'sugar', 'tool', 'powder', 'bean_2', 'wood_2', 'powder_2', 'berry', 'berry_2', 'poweder_3', 'berry_3'];
 
 pageBaseProductNoThirdFigure = [
-    {x: 362, y: 23, r: 35, g: 30, b: 20},
-    {x: 358, y: 23, r: 35, g: 30, b: 20},
-    {x: 362, y: 19, r: 35, g: 30, b: 20},
-    {x: 360, y: 16, r: 35, g: 30, b: 20},
-    {x: 358, y: 19, r: 35, g: 30, b: 20},
+    { x: 362, y: 23, r: 35, g: 30, b: 20 },
+    { x: 358, y: 23, r: 35, g: 30, b: 20 },
+    { x: 362, y: 19, r: 35, g: 30, b: 20 },
+    { x: 360, y: 16, r: 35, g: 30, b: 20 },
+    { x: 358, y: 19, r: 35, g: 30, b: 20 },
 ]
 
 pageWoodFarm = [
-    {x: 584, y: 118, r: 121, g: 207, b: 12},
-    {x: 434, y: 73, r: 174, g: 98, b: 73},
-    {x: 528, y: 82, r: 145, g: 85, b: 56}
+    { x: 584, y: 118, r: 121, g: 207, b: 12 },
+    { x: 434, y: 73, r: 174, g: 98, b: 73 },
+    { x: 528, y: 82, r: 145, g: 85, b: 56 }
 ]
 
 pageBeanFarm = [
-    {x: 590, y: 121, r: 121, g: 207, b: 12},
-    {x: 311, y: 22, r: 0, g: 255, b: 247},
-    {x: 427, y: 83, r: 0, g: 253, b: 251},
-    {x: 152, y: 179, r: 219, g: 171, b: 130},
-    {x: 425, y: 82, r: 2, g: 252, b: 250}
+    { x: 590, y: 121, r: 121, g: 207, b: 12 },
+    { x: 311, y: 22, r: 0, g: 255, b: 247 },
+    { x: 427, y: 83, r: 0, g: 253, b: 251 },
+    { x: 152, y: 179, r: 219, g: 171, b: 130 },
+    { x: 425, y: 82, r: 2, g: 252, b: 250 }
 ]
 
 pageSugarFarm = [
-    {x: 586, y: 119, r: 121, g: 207, b: 12},
-    {x: 426, y: 69, r: 237, g: 245, b: 245},
-    {x: 307, y: 13, r: 250, g: 252, b: 252},
-    {x: 523, y: 81, r: 236, g: 245, b: 244},
-    {x: 428, y: 95, r: 254, g: 254, b: 254}
+    { x: 586, y: 119, r: 121, g: 207, b: 12 },
+    { x: 426, y: 69, r: 237, g: 245, b: 245 },
+    { x: 307, y: 13, r: 250, g: 252, b: 252 },
+    { x: 523, y: 81, r: 236, g: 245, b: 244 },
+    { x: 428, y: 95, r: 254, g: 254, b: 254 }
 ]
 
 pagePowderFarm = [
-    {x: 582, y: 119, r: 121, g: 207, b: 12},
-    {x: 315, y: 24, r: 159, g: 117, b: 52},
-    {x: 435, y: 91, r: 158, g: 117, b: 51},
-    {x: 528, y: 89, r: 235, g: 207, b: 138}
+    { x: 582, y: 119, r: 121, g: 207, b: 12 },
+    { x: 315, y: 24, r: 159, g: 117, b: 52 },
+    { x: 435, y: 91, r: 158, g: 117, b: 51 },
+    { x: 528, y: 89, r: 235, g: 207, b: 138 }
 ]
 
 pageBarryFarm = [
-    {x: 587, y: 123, r: 121, g: 207, b: 12},
-    {x: 425, y: 86, r: 194, g: 38, b: 46},
-    {x: 429, y: 79, r: 32, g: 116, b: 40},
-    {x: 306, y: 19, r: 190, g: 38, b: 44},
-    {x: 524, y: 90, r: 163, g: 31, b: 35},
+    { x: 587, y: 123, r: 121, g: 207, b: 12 },
+    { x: 425, y: 86, r: 194, g: 38, b: 46 },
+    { x: 429, y: 79, r: 32, g: 116, b: 40 },
+    { x: 306, y: 19, r: 190, g: 38, b: 44 },
+    { x: 524, y: 90, r: 163, g: 31, b: 35 },
 ]
 
 pageMilkFarm = [
-    {x: 587, y: 121, r: 121, g: 207, b: 12},
-    {x: 303, y: 25, r: 238, g: 245, b: 241},
-    {x: 418, y: 91, r: 246, g: 246, b: 238},
-    {x: 526, y: 89, r: 255, g: 253, b: 235}
+    { x: 587, y: 121, r: 121, g: 207, b: 12 },
+    { x: 303, y: 25, r: 238, g: 245, b: 241 },
+    { x: 418, y: 91, r: 246, g: 246, b: 238 },
+    { x: 526, y: 89, r: 255, g: 253, b: 235 }
 ]
 
 pageCottomFarm = [
-    {x: 582, y: 119, r: 121, g: 207, b: 12},
-    {x: 528, y: 87, r: 254, g: 231, b: 251},
-    {x: 428, y: 92, r: 255, g: 241, b: 255},
+    { x: 582, y: 119, r: 121, g: 207, b: 12 },
+    { x: 528, y: 87, r: 254, g: 231, b: 251 },
+    { x: 428, y: 92, r: 255, g: 241, b: 255 },
 
 ]
 
 function pnt(x, y) {
-    return {x: x, y: y};
+    return { x: x, y: y };
 }
 
 function rect(x, y, width, height) {
     return {
-        x:x, y:y, width:width, height:height
+        x: x, y: y, width: width, height: height
     }
 }
 
 function rgb(r, g, b) {
-    return {r:r, g:g, b:b}
+    return { r: r, g: g, b: b }
 }
 
 function qTap(page, sleepTime) {
@@ -99,47 +99,50 @@ function qTap(page, sleepTime) {
 }
 
 function isSameColor(c1, c2, diff) {
-if (diff === undefined) {
-    diff = 35;
-}
-// console.log(JSON.stringify(c1), JSON.stringify(c2), diff);
-if (Math.abs(c1.r - c2.r) < diff && Math.abs(c1.g - c2.g) < diff && Math.abs(c1.b - c2.b) < diff) {
-    return true;
-}
-return false;
+    if (diff === undefined) {
+        diff = 35;
+    }
+    // console.log(JSON.stringify(c1), JSON.stringify(c2), diff);
+    if (Math.abs(c1.r - c2.r) < diff && Math.abs(c1.g - c2.g) < diff && Math.abs(c1.b - c2.b) < diff) {
+        return true;
+    }
+    return false;
 }
 
 function checkIsPage(page, diff, img) {
-var release = false;
-if (img === undefined) {
-    img = getScreenshot();
-    release = true;
-}
-var whSize = getImageSize(img);
-if (whSize.width === 360) {
-    throw new Error('ROBroken');
-}
-var isPage = true;
-for (var i in page) {
-    var cbtn = page[i];
-    var color = getImageColor(img, cbtn.x, cbtn.y);
-    if (!isSameColor(cbtn, color, diff)) {
-    isPage = false;
-    break;
+    var release = false;
+    if (img === undefined) {
+        img = getScreenshot();
+        release = true;
     }
-}
-if (release) {
-    releaseImage(img);
-}
-return isPage;
+    var whSize = getImageSize(img);
+    if (whSize.width === 360) {
+        console.log('image size is incorrect, restart CookieKingdom')
+        execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
+        sleep(config.sleepAnimate * 2);
+        img = getScreenshot();
+    }
+    var isPage = true;
+    for (var i in page) {
+        var cbtn = page[i];
+        var color = getImageColor(img, cbtn.x, cbtn.y);
+        if (!isSameColor(cbtn, color, diff)) {
+            isPage = false;
+            break;
+        }
+    }
+    if (release) {
+        releaseImage(img);
+    }
+    return isPage;
 }
 
 function handleToolShopShovels() {
     pageToolShop = [
-        {x: 280, y: 179, r: 254, g: 235, b: 182},
-        {x: 304, y: 157, r: 138, g: 146, b: 171},
-        {x: 414, y: 75, r: 135, g: 143, b: 170},
-        {x: 413, y: 84, r: 183, g: 190, b: 211}
+        { x: 280, y: 179, r: 254, g: 235, b: 182 },
+        { x: 304, y: 157, r: 138, g: 146, b: 171 },
+        { x: 414, y: 75, r: 135, g: 143, b: 170 },
+        { x: 413, y: 84, r: 183, g: 190, b: 211 }
     ]
     if (checkIsPage(pageToolShop)) {
         console.log('Is tool shop, check adding shovel')
@@ -157,10 +160,10 @@ function handleToolShopShovels() {
         sleep(config.sleepAnimate * 2);
 
         pageShovelEnabled = [
-            {x: 575, y: 336, r: 121, g: 207, b: 12},
-            {x: 539, y: 296, r: 253, g: 253, b: 253},
-            {x: 420, y: 310, r: 81, g: 98, b: 125},
-            {x: 409, y: 297, r: 70, g: 98, b: 146}
+            { x: 575, y: 336, r: 121, g: 207, b: 12 },
+            { x: 539, y: 296, r: 253, g: 253, b: 253 },
+            { x: 420, y: 310, r: 81, g: 98, b: 125 },
+            { x: 409, y: 297, r: 70, g: 98, b: 146 }
         ]
         var shovelStock = ocrProductStorage(goodsLocation['shovel'])
         console.log('Shovel enable: ' + checkIsPage(pageShovelEnabled) + ' , stock: ' + shovelStock);
@@ -171,8 +174,8 @@ function handleToolShopShovels() {
         //     {x: 435, y: 326, r: 255, g: 255, b: 255},
         //     {x: 435, y: 322, r: 255, g: 255, b: 255}
         // ]
-    
-        if (checkIsPage(pageShovelEnabled)){
+
+        if (checkIsPage(pageShovelEnabled)) {
             if (shovelStock < 10) {
                 console.log('Shovel < 10, add 4');
                 qTap(pageShovelEnabled);
@@ -184,7 +187,7 @@ function handleToolShopShovels() {
                 qTap(pageShovelEnabled);
                 sleep(config.sleepAnimate);
             }
-            else if (shovelStock < config.goodsTarget){
+            else if (shovelStock < config.goodsTarget) {
                 console.log('10 < Shovel < ', config.goodsTarget, ', add 2');
                 qTap(pageShovelEnabled);
                 sleep(config.sleepAnimate);
@@ -200,19 +203,19 @@ function handleToolShopShovels() {
         else {
             console.log('cannot find shovels')
         }
-    
+
     }
     else {
         // console.log('Not in tool shop, skip shovel check')
     }
 }
 
-function compare( a, b ) {
-    if ( a.x < b.x ){
-      return -1;
+function compare(a, b) {
+    if (a.x < b.x) {
+        return -1;
     }
-    if ( a.x > b.x ){
-      return 1;
+    if (a.x > b.x) {
+        return 1;
     }
     return 0;
 }
@@ -225,7 +228,7 @@ goodsLocation = {
     5: rect(430, 212, 22, 12),
     6: rect(430, 317, 22, 12),
     shovel: rect(430, 317, 22, 16),
-}  
+}
 
 function ocrResultToInt(results) {
     if (results.length == 0) {
@@ -233,7 +236,7 @@ function ocrResultToInt(results) {
     }
 
     var digit_width = 5;
-    for (var i in results){
+    for (var i in results) {
         if (results[i].target == '1') {
             // 1 is very thin so we set the width to 4
             digit_width = 4;
@@ -243,16 +246,16 @@ function ocrResultToInt(results) {
 
     count = "";
     var idx = 1;
-    while(idx < results.length) {
+    while (idx < results.length) {
         if (results[idx].x - results[idx - 1].x < digit_width) {
             // results[i].score > results[i - 1].score ? results.splice(i - 1, 1) : results.splice(i, 1);
             if (results[idx].score > results[idx - 1].score) {
                 results.splice(idx - 1, 1);
-            } else{
+            } else {
                 results.splice(idx, 1);
             }
         } else {
-            idx ++;
+            idx++;
         }
         // console.log('>>', idx, JSON.stringify(results))
     }
@@ -290,7 +293,7 @@ function ocrProductStorage(rect) {
             results.push(foundResults[j]);
         }
     }
-    results.sort( compare );
+    results.sort(compare);
     console.log('=> ', JSON.stringify(results));
 
     for (var i in numbers) {
@@ -329,7 +332,7 @@ function ocrMaterialStorage() {
             results.push(foundResults[j]);
         }
     }
-    results.sort( compare );
+    results.sort(compare);
     console.log('=> ', JSON.stringify(results));
 
     for (var i in numbers) {
@@ -349,7 +352,7 @@ function SwipeProductionMenuToBottom() {
     moveTo(430, -1000, 40, 0);
     sleep(config.sleep);
     tapUp(430, -1000, 40, 0);
-    sleep(config.sleepAnimate * 3);    
+    sleep(config.sleepAnimate * 3);
 }
 
 function SwipeProductionMenuToTop() {
@@ -360,21 +363,21 @@ function SwipeProductionMenuToTop() {
     moveTo(430, 1000, 40, 0);
     sleep(config.sleep);
     tapUp(430, 1000, 40, 0);
-    sleep(config.sleepAnimate * 3);    
+    sleep(config.sleepAnimate * 3);
 }
 
 function handleMaterialProduction() {
     pageFirstItemEnabled = [
-        {x: 569, y: 119, r: 121, g: 207, b: 12},
+        { x: 569, y: 119, r: 121, g: 207, b: 12 },
     ]
     pageSecondItemEnabled = [
-        {x: 571, y: 223, r: 121, g: 207, b: 12},
+        { x: 571, y: 223, r: 121, g: 207, b: 12 },
     ]
     pageThirdItemEnabled = [
-        {x: 568, y: 329, r: 121, g: 207, b: 14},
+        { x: 568, y: 329, r: 121, g: 207, b: 14 },
     ]
 
-    if (checkIsPage(pageWoodFarm)){
+    if (checkIsPage(pageWoodFarm)) {
         console.log('wood farm, add more')
         qTap(pageWoodFarm)
         sleep(config.sleepAnimate);
@@ -385,29 +388,29 @@ function handleMaterialProduction() {
         qTap(pageWoodFarm)
         return true;
     }
-    else if (checkIsPage(pageBeanFarm)){
+    else if (checkIsPage(pageBeanFarm)) {
         console.log('bean farm, add more')
-        qTap(pageBeanFarm)    
+        qTap(pageBeanFarm)
         sleep(config.sleepAnimate);
-        qTap(pageBeanFarm)    
+        qTap(pageBeanFarm)
         sleep(config.sleepAnimate);
-        qTap(pageBeanFarm)    
+        qTap(pageBeanFarm)
         sleep(config.sleepAnimate);
-        qTap(pageBeanFarm)    
+        qTap(pageBeanFarm)
         return true;
     }
-    else if (checkIsPage(pageSugarFarm)){
+    else if (checkIsPage(pageSugarFarm)) {
         console.log('sugar farm, add more')
-        qTap(pageSugarFarm)    
+        qTap(pageSugarFarm)
         sleep(config.sleepAnimate);
-        qTap(pageSugarFarm)    
+        qTap(pageSugarFarm)
         sleep(config.sleepAnimate);
-        qTap(pageSugarFarm)    
+        qTap(pageSugarFarm)
         sleep(config.sleepAnimate);
-        qTap(pageSugarFarm)    
+        qTap(pageSugarFarm)
         return true;
     }
-    else if (checkIsPage(pagePowderFarm)){
+    else if (checkIsPage(pagePowderFarm)) {
         console.log('Powder farm, add more')
         if (checkIsPage(pageSecondItemEnabled)) {
             qTap(pageSecondItemEnabled);
@@ -424,11 +427,11 @@ function handleMaterialProduction() {
             sleep(config.sleepAnimate);
             qTap(pagePowderFarm)
             sleep(config.sleepAnimate);
-            qTap(pagePowderFarm)    
+            qTap(pagePowderFarm)
         }
         return true;
     }
-    else if (checkIsPage(pageBarryFarm)){
+    else if (checkIsPage(pageBarryFarm)) {
         console.log('Barry farm, add more')
         if (checkIsPage(pageSecondItemEnabled)) {
             qTap(pageSecondItemEnabled);
@@ -451,26 +454,26 @@ function handleMaterialProduction() {
         }
         return true;
     }
-    else if (checkIsPage(pageMilkFarm)){
+    else if (checkIsPage(pageMilkFarm)) {
         console.log('Milk farm, add more')
-        qTap(pageMilkFarm)    
+        qTap(pageMilkFarm)
         sleep(config.sleepAnimate);
-        qTap(pageMilkFarm)    
+        qTap(pageMilkFarm)
         sleep(config.sleepAnimate);
-        qTap(pageMilkFarm)    
+        qTap(pageMilkFarm)
         sleep(config.sleepAnimate);
-        qTap(pageMilkFarm)    
+        qTap(pageMilkFarm)
         return true;
     }
-    else if (checkIsPage(pageCottomFarm)){
+    else if (checkIsPage(pageCottomFarm)) {
         console.log('Cottom farm, add more')
-        qTap(pageCottomFarm)    
+        qTap(pageCottomFarm)
         sleep(config.sleepAnimate);
-        qTap(pageCottomFarm)    
+        qTap(pageCottomFarm)
         sleep(config.sleepAnimate);
-        qTap(pageCottomFarm)    
+        qTap(pageCottomFarm)
         sleep(config.sleepAnimate);
-        qTap(pageCottomFarm)    
+        qTap(pageCottomFarm)
         return true;
     }
 }
@@ -478,13 +481,13 @@ function handleMaterialProduction() {
 function makeGoodsToTarget(target, orderAmount) {
     var itemsAdd = 0;
     pageFirstItemEnabled = [
-        {x: 587, y: 122, r: 121, g: 207, b: 12}
+        { x: 587, y: 122, r: 121, g: 207, b: 12 }
     ]
     pageSecondItemEnabled = [
-        {x: 587, y: 230, r: 121, g: 207, b: 12}
+        { x: 587, y: 230, r: 121, g: 207, b: 12 }
     ]
     pageThirdItemEnabled = [
-        {x: 587, y: 332, r: 121, g: 207, b: 12}
+        { x: 587, y: 332, r: 121, g: 207, b: 12 }
     ]
 
     // //rgb(77,71,65)
@@ -511,12 +514,12 @@ function makeGoodsToTarget(target, orderAmount) {
 
     if (goodsOneStock < target) {
         console.log('add 1st item from ' + goodsOneStock + ' to > ', target);
-        for (i = 0; i < orderAmount; i ++){
+        for (i = 0; i < orderAmount; i++) {
             qTap(pageFirstItemEnabled);
             sleep(config.sleepAnimate);
             if (!handleNotEnoughStock()) {
-                itemsAdd ++;
-            }    
+                itemsAdd++;
+            }
         }
     }
 
@@ -526,11 +529,11 @@ function makeGoodsToTarget(target, orderAmount) {
     }
     else if (goodsTwoStock < target) {
         console.log('add 2nd item from ' + goodsTwoStock + ' to > ', target);
-        for (i = 0; i < orderAmount; i ++){
+        for (i = 0; i < orderAmount; i++) {
             qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
             if (!handleNotEnoughStock()) {
-                itemsAdd ++;
+                itemsAdd++;
             }
         }
     }
@@ -541,12 +544,12 @@ function makeGoodsToTarget(target, orderAmount) {
     }
     else if (goodsThreeStock < target) {
         console.log('add 3rd item from ' + goodsThreeStock + ' to > ', target);
-        for (i = 0; i < orderAmount; i ++){
+        for (i = 0; i < orderAmount; i++) {
             qTap(pageThirdItemEnabled);
             sleep(config.sleepAnimate);
             if (!handleNotEnoughStock()) {
-                itemsAdd ++;
-            }    
+                itemsAdd++;
+            }
         }
     }
 
@@ -597,12 +600,12 @@ function makeGoodsToTarget(target, orderAmount) {
     } else {
         if (goodsFourStock < target) {
             console.log('add 4th item from ' + goodsFourStock + ' to > ', target);
-            for (i = 0; i < orderAmount; i ++){
+            for (i = 0; i < orderAmount; i++) {
                 qTap(pageFirstItemEnabled);
                 sleep(config.sleepAnimate);
                 if (!handleNotEnoughStock()) {
-                    itemsAdd ++;
-                }    
+                    itemsAdd++;
+                }
             }
         }
     }
@@ -614,14 +617,14 @@ function makeGoodsToTarget(target, orderAmount) {
     } else {
         if (goodsFiveStock < target) {
             console.log('add 5th item from ' + goodsFiveStock + ' to > ', target);
-            for (i = 0; i < orderAmount; i ++){
+            for (i = 0; i < orderAmount; i++) {
                 qTap(pageSecondItemEnabled);
                 sleep(config.sleepAnimate);
                 if (!handleNotEnoughStock()) {
-                    itemsAdd ++;
+                    itemsAdd++;
                 }
             }
-        }    
+        }
     }
 
     if (!checkIsPage(pageThirdItemEnabled)) {
@@ -631,11 +634,11 @@ function makeGoodsToTarget(target, orderAmount) {
     } else {
         if (goodsSixStock < target) {
             console.log('add 6th item from ' + goodsSixStock + ' to > ', target);
-            for (i = 0; i < orderAmount; i ++){
+            for (i = 0; i < orderAmount; i++) {
                 qTap(pageThirdItemEnabled);
                 sleep(config.sleepAnimate);
                 if (!handleNotEnoughStock()) {
-                    itemsAdd ++;
+                    itemsAdd++;
                 }
             }
         }
@@ -655,11 +658,11 @@ function JobScheduling() {
 
     //rgb(166,104,65)
     pageAnyProduction = [
-        {x: 20, y: 43, r: 166, g: 104, b: 65},
-        {x: 80, y: 44, r: 166, g: 104, b: 65}
+        {x: 20, y: 294, r: 166, g: 104, b: 65},
+        {x: 80, y: 300, r: 166, g: 104, b: 65}
     ]
-    if (checkIsPage(pageAnyProduction)) {
-        // might need this check later
+    if (!checkIsPage(pageAnyProduction)) {
+        return false;
     }
 
     var materialCount = ocrMaterialStorage();
@@ -690,10 +693,10 @@ function JobScheduling() {
 
 function handleNotEnoughStock() {
     pageNotEnoughStock = [
-        {x: 428, y: 98, r: 56, g: 167, b: 231},
-        {x: 345, y: 104, r: 60, g: 70, b: 105},
-        {x: 370, y: 176, r: 243, g: 233, b: 223},
-        {x: 349, y: 247, r: 121, g: 207, b: 12}
+        { x: 428, y: 98, r: 56, g: 167, b: 231 },
+        { x: 345, y: 104, r: 60, g: 70, b: 105 },
+        { x: 370, y: 176, r: 243, g: 233, b: 223 },
+        { x: 349, y: 247, r: 121, g: 207, b: 12 }
     ]
     if (checkIsPage(pageNotEnoughStock)) {
         console.log('quiting not enougth stock')
@@ -703,10 +706,10 @@ function handleNotEnoughStock() {
     }
 
     pageTwoItemNotEnoughStock = [
-        {x: 444, y: 98, r: 56, g: 166, b: 231},
-        {x: 375, y: 105, r: 60, g: 70, b: 105},
-        {x: 420, y: 203, r: 243, g: 233, b: 223},
-        {x: 416, y: 246, r: 219, g: 207, b: 199}
+        { x: 444, y: 98, r: 56, g: 166, b: 231 },
+        { x: 375, y: 105, r: 60, g: 70, b: 105 },
+        { x: 420, y: 203, r: 243, g: 233, b: 223 },
+        { x: 416, y: 246, r: 219, g: 207, b: 199 }
     ]
     if (checkIsPage(pageTwoItemNotEnoughStock)) {
         console.log('quiting not enougth stock 2')
@@ -737,14 +740,14 @@ function handleNotEnoughStock() {
 
 function handleRelogin() {
     pageReloginOrNetworkError = [
-        {x: 297, y: 241, r: 121, g: 207, b: 12},
-        {x: 429, y: 101, r: 60, g: 70, b: 105},
-        {x: 432, y: 137, r: 243, g: 233, b: 223},
-        {x: 427, y: 252, r: 219, g: 207, b: 199},
-        {x: 334, y: 242, r: 121, g: 207, b: 12},
-        {x: 306, y: 241, r: 121, g: 207, b: 12},
-        {x: 303, y: 241, r: 121, g: 207, b: 12},
-        {x: 212, y: 244, r: 219, g: 207, b: 199}
+        { x: 297, y: 241, r: 121, g: 207, b: 12 },
+        { x: 429, y: 101, r: 60, g: 70, b: 105 },
+        { x: 432, y: 137, r: 243, g: 233, b: 223 },
+        { x: 427, y: 252, r: 219, g: 207, b: 199 },
+        { x: 334, y: 242, r: 121, g: 207, b: 12 },
+        { x: 306, y: 241, r: 121, g: 207, b: 12 },
+        { x: 303, y: 241, r: 121, g: 207, b: 12 },
+        { x: 212, y: 244, r: 219, g: 207, b: 199 }
     ]
     if (checkIsPage(pageReloginOrNetworkError)) {
         console.log('quiting pageReloginOrNetworkError')
@@ -759,26 +762,26 @@ function handleRelogin() {
 
 function handleWelcomePage() {
     pageWelcome = [
-        {x: 499, y: 328, r: 96, g: 31, b: 76},
-        {x: 577, y: 329, r: 93, g: 30, b: 74},
-        {x: 612, y: 296, r: 227, g: 165, b: 40},
-        {x: 547, y: 304, r: 253, g: 239, b: 125},
-        {x: 463, y: 297, r: 227, g: 165, b: 40},
-        {x: 591, y: 268, r: 191, g: 48, b: 57},
-        {x: 480, y: 270, r: 243, g: 60, b: 56}
+        { x: 499, y: 328, r: 96, g: 31, b: 76 },
+        { x: 577, y: 329, r: 93, g: 30, b: 74 },
+        { x: 612, y: 296, r: 227, g: 165, b: 40 },
+        { x: 547, y: 304, r: 253, g: 239, b: 125 },
+        { x: 463, y: 297, r: 227, g: 165, b: 40 },
+        { x: 591, y: 268, r: 191, g: 48, b: 57 },
+        { x: 480, y: 270, r: 243, g: 60, b: 56 }
     ]
 
     // TODO: Need to handle login event
 
     pageAnnouncement = [
-        {x: 610, y: 20, r: 56, g: 167, b: 231},
-        {x: 619, y: 19, r: 255, g: 255, b: 255},
-        {x: 628, y: 18, r: 56, g: 167, b: 231},
-        {x: 585, y: 48, r: 54, g: 64, b: 87},
-        {x: 584, y: 288, r: 54, g: 64, b: 87},
-        {x: 59, y: 77, r: 141, g: 152, b: 186},
-        {x: 58, y: 136, r: 56, g: 64, b: 85},
-        {x: 58, y: 323, r: 54, g: 64, b: 87}
+        { x: 610, y: 20, r: 56, g: 167, b: 231 },
+        { x: 619, y: 19, r: 255, g: 255, b: 255 },
+        { x: 628, y: 18, r: 56, g: 167, b: 231 },
+        { x: 585, y: 48, r: 54, g: 64, b: 87 },
+        { x: 584, y: 288, r: 54, g: 64, b: 87 },
+        { x: 59, y: 77, r: 141, g: 152, b: 186 },
+        { x: 58, y: 136, r: 56, g: 64, b: 85 },
+        { x: 58, y: 323, r: 54, g: 64, b: 87 }
     ]
 
     if (checkIsPage(pageWelcome)) {
@@ -786,7 +789,7 @@ function handleWelcomePage() {
         qTap(pnt(324, 329));
         sleep(config.sleepAnimate);
 
-        while(true) {
+        while (true) {
             if (checkIsPage(pageAnnouncement)) {
                 qTap(pageAnnouncement);
                 sleep(config.sleepAnimate);
@@ -804,14 +807,14 @@ function handleWelcomePage() {
 
 function handleAnnouncement() {
     pageAnnouncement = [
-        {x: 610, y: 20, r: 56, g: 167, b: 231},
-        {x: 619, y: 19, r: 255, g: 255, b: 255},
-        {x: 628, y: 18, r: 56, g: 167, b: 231},
-        {x: 585, y: 48, r: 54, g: 64, b: 87},
-        {x: 584, y: 288, r: 54, g: 64, b: 87},
-        {x: 59, y: 77, r: 141, g: 152, b: 186},
-        {x: 58, y: 136, r: 56, g: 64, b: 85},
-        {x: 58, y: 323, r: 54, g: 64, b: 87}
+        { x: 610, y: 20, r: 56, g: 167, b: 231 },
+        { x: 619, y: 19, r: 255, g: 255, b: 255 },
+        { x: 628, y: 18, r: 56, g: 167, b: 231 },
+        { x: 585, y: 48, r: 54, g: 64, b: 87 },
+        { x: 584, y: 288, r: 54, g: 64, b: 87 },
+        { x: 59, y: 77, r: 141, g: 152, b: 186 },
+        { x: 58, y: 136, r: 56, g: 64, b: 85 },
+        { x: 58, y: 323, r: 54, g: 64, b: 87 }
     ]
 
     if (checkIsPage(pageAnnouncement)) {
@@ -825,29 +828,28 @@ function handleAnnouncement() {
 
 function handleFindAndTapCandyHouse() {
     pageInProduction = [
-        {x: 609, y: 19, r: 56, g: 167, b: 231},
-        {x: 617, y: 19, r: 255, g: 255, b: 255},
-        {x: 625, y: 18, r: 34, g: 85, b: 119},
-        {x: 619, y: 331, r: 166, g: 104, b: 65},
-        {x: 19, y: 321, r: 166, g: 104, b: 65}
+        { x: 609, y: 19, r: 56, g: 167, b: 231 },
+        { x: 617, y: 19, r: 255, g: 255, b: 255 },
+        { x: 625, y: 18, r: 34, g: 85, b: 119 },
+        { x: 619, y: 331, r: 166, g: 104, b: 65 },
+        { x: 19, y: 321, r: 166, g: 104, b: 65 }
     ]
 
-    if (checkIsPage(pageInProduction))
-    {
+    if (checkIsPage(pageInProduction)) {
         qTap(pageInProduction);
-        sleep(config.sleepAnimate*2);
+        sleep(config.sleepAnimate * 2);
     }
 
     // Tap the candy
-    var candy = openImage(config.localPath+'/candy.png');
+    var candy = openImage(config.localPath + '/candy.png');
     var img = getScreenshot();
 
     var foundResults = findImages(img, candy, 0.9, 5, true);
     console.log('> ', JSON.stringify(foundResults));
-    if (foundResults.length > 0){
+    if (foundResults.length > 0) {
         var bestFit = foundResults[0];
         for (var j in foundResults) {
-            if (foundResults[j]['score'] > bestFit['score']){
+            if (foundResults[j]['score'] > bestFit['score']) {
                 bestFit = foundResults[j];
             }
         }
@@ -859,20 +861,20 @@ function handleFindAndTapCandyHouse() {
     releaseImage(candy);
 
     // Tap the sugar house
-    var sugarHouse = openImage(config.localPath+'/sugarHouse.png');
+    var sugarHouse = openImage(config.localPath + '/sugarHouse.png');
     img = getScreenshot();
 
     var foundResults = findImages(img, sugarHouse, 0.92, 3, true);
     console.log('> ', JSON.stringify(foundResults));
-    if (foundResults.length > 0){
+    if (foundResults.length > 0) {
         var bestFit = foundResults[0];
         for (var j in foundResults) {
-            if (foundResults[j]['score'] > bestFit['score']){
+            if (foundResults[j]['score'] > bestFit['score']) {
                 bestFit = foundResults[j];
             }
         }
         qTap(bestFit);
-        sleep(config.sleepAnimate*2);
+        sleep(config.sleepAnimate * 2);
     }
     console.log('>> ', JSON.stringify(bestFit));
 
@@ -887,17 +889,17 @@ function start(materialsTarget, goodsTarget) {
     config.goodsTarget = goodsTarget !== undefined ? goodsTarget : config.goodsTarget
 
     for (var i = 1; i < 100000000; i++) {
-        var runMain = false;
         console.log("start loop", i);
-  
+
         var act = JobScheduling();
         sleep(config.sleep);
         handleNotEnoughStock();
         sleep(config.sleep);
         qTap(pnt(349, 174)); // next
         sleep(config.sleepAnimate);
+        console.log('act: ', act)
 
-        if (i%32 == 0) {
+        if (i % 32 == 0) {
             handleFindAndTapCandyHouse();
         }
 
@@ -906,18 +908,22 @@ function start(materialsTarget, goodsTarget) {
             break;
         }
 
-        // if (!act) {
-        if (i%2 == 0) {
-
-            handleRelogin();
-            handleWelcomePage(); // TODO: need to call handleAnnouncement()
-
-            if (handleAnnouncement()){
+        if (!act) {
+            if (handleRelogin()) {
+                continue;
+            }
+            else if (handleWelcomePage()) {
+                // TODO: need to call handleAnnouncement()
+                continue;
+            } else if (handleAnnouncement()) {
                 handleFindAndTapCandyHouse();
+                continue;
+            } else if (handleFindAndTapCandyHouse()){
+                continue;
             }
         }
     }
-  }
+}
 
 start();
 //   JobScheduling()
@@ -927,17 +933,3 @@ start();
 // ocrProductStorage(goodsLocation['shovel'])
 
 //TODO: Auto restart, Auto input id/pwd, add find all houses
-
-// Tsum.prototype.startApp = function() {
-//     if (!this.autoLaunch) {
-//       return;
-//     }
-//     log(this.logs.startTsumTsumApp);
-//     if (this.isJP) {
-//       execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
-//     } else {
-//       execute('am start -n com.linecorp.LGTMTMG/.TsumTsum');
-//     }
-//     this.sleep(3000);
-//   }
-
