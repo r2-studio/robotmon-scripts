@@ -899,7 +899,7 @@ function start(materialsTarget, goodsTarget) {
         sleep(config.sleepAnimate);
         console.log('act: ', act)
 
-        if (i % 32 == 0) {
+        if (i % 40 == 0) {
             handleFindAndTapCandyHouse();
         }
 
