@@ -844,8 +844,8 @@ function handleFindAndTapCandyHouse() {
     var candy = openImage(config.localPath + '/candy.png');
     var img = getScreenshot();
 
-    var foundResults = findImages(img, candy, 0.9, 5, true);
-    console.log('> ', JSON.stringify(foundResults));
+    var foundResults = findImages(img, candy, 0.92, 5, true);
+    console.log('candies > ', JSON.stringify(foundResults));
     if (foundResults.length > 0) {
         var bestFit = foundResults[0];
         for (var j in foundResults) {
@@ -853,9 +853,9 @@ function handleFindAndTapCandyHouse() {
                 bestFit = foundResults[j];
             }
         }
+        console.log('best candy > ', JSON.stringify(bestFit));
         qTap(bestFit);
     }
-    console.log('> ', JSON.stringify(bestFit));
 
     releaseImage(img);
     releaseImage(candy);
@@ -865,7 +865,7 @@ function handleFindAndTapCandyHouse() {
     img = getScreenshot();
 
     var foundResults = findImages(img, sugarHouse, 0.92, 3, true);
-    console.log('> ', JSON.stringify(foundResults));
+    console.log('houses > ', JSON.stringify(foundResults));
     if (foundResults.length > 0) {
         var bestFit = foundResults[0];
         for (var j in foundResults) {
@@ -873,21 +873,23 @@ function handleFindAndTapCandyHouse() {
                 bestFit = foundResults[j];
             }
         }
+        console.log('best house >> ', JSON.stringify(bestFit));
         qTap(bestFit);
         sleep(config.sleepAnimate * 2);
     }
-    console.log('>> ', JSON.stringify(bestFit));
 
     releaseImage(img);
     releaseImage(sugarHouse);
 }
 
+function stop() {}
 
 function start(materialsTarget, goodsTarget) {
     console.log('start with: ', materialsTarget, goodsTarget);
     config.materialsTarget = materialsTarget !== undefined ? materialsTarget : config.materialsTarget
     config.goodsTarget = goodsTarget !== undefined ? goodsTarget : config.goodsTarget
 
+    handleFindAndTapCandyHouse();
     for (var i = 1; i < 100000000; i++) {
         console.log("start loop", i);
 
@@ -925,7 +927,7 @@ function start(materialsTarget, goodsTarget) {
     }
 }
 
-start();
+// start();
 //   JobScheduling()
 // ocrMaterialStorage();
 // ocrProductStorage(goodsLocation[2]);
@@ -933,3 +935,4 @@ start();
 // ocrProductStorage(goodsLocation['shovel'])
 
 //TODO: Auto restart, Auto input id/pwd, add find all houses
+// handleFindAndTapCandyHouse()
