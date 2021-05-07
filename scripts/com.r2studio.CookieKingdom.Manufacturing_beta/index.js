@@ -1,6 +1,6 @@
 config = {
-    account: '123',
-    password: '456',
+    account: 'moonminv2@gmail.com',
+    password: '12qwaszx',
     sleep: 240,
     sleepAnimate: 800,
     sleepWhenDoubleLoginInMinutes: 30,
@@ -8,7 +8,9 @@ config = {
 
     materialsTarget: 260,
     goodsTarget: 55,
+    jobFailedBeforeGetCandy: 5,
 
+    jobFailedCount: 0,
     run: true,
 }
 
@@ -789,6 +791,8 @@ function handleWelcomePage() {
         qTap(pnt(324, 329));
         sleep(config.sleepAnimate);
 
+        handleInputLoginInfo();
+
         while (true) {
             if (checkIsPage(pageAnnouncement)) {
                 qTap(pageAnnouncement);
@@ -911,6 +915,11 @@ function start(materialsTarget, goodsTarget) {
         }
 
         if (!act) {
+            config.jobFailedCount ++;
+            if (config.jobFailedCount < config.jobFailedBeforeGetCandy) {
+                continue;
+            }
+
             if (handleRelogin()) {
                 continue;
             }
@@ -923,6 +932,8 @@ function start(materialsTarget, goodsTarget) {
             } else if (handleFindAndTapCandyHouse()){
                 continue;
             }
+        } else {
+            config.jobFailedCount = 0;
         }
     }
 }
@@ -936,3 +947,97 @@ function start(materialsTarget, goodsTarget) {
 
 //TODO: Auto restart, Auto input id/pwd, add find all houses
 // handleFindAndTapCandyHouse()
+
+// function handleInputLoginInfo() {
+//     pageInputAge = [
+//         {x: 243, y: 276, r: 254, g: 94, b: 0},
+//         {x: 401, y: 274, r: 254, g: 94, b: 0},
+//         {x: 416, y: 248, r: 255, g: 255, b: 255},
+//         {x: 403, y: 101, r: 255, g: 255, b: 255},
+//         {x: 404, y: 66, r: 60, g: 60, b: 60},
+//         {x: 408, y: 210, r: 254, g: 94, b: 0},
+//         {x: 232, y: 216, r: 254, g: 94, b: 0}
+//     ]
+
+//     // TODO: update the download resource page
+//     pageCanDownloadResources = [
+
+//     ]
+
+//     pageChooseLoginMethod = [
+//         {x: 395, y: 245, r: 255, g: 255, b: 255},
+//         {x: 392, y: 203, r: 255, g: 255, b: 255},
+//         {x: 384, y: 162, r: 255, g: 255, b: 255},
+//         {x: 389, y: 125, r: 255, g: 255, b: 255},
+//         {x: 250, y: 244, r: 255, g: 107, b: 19},
+//         {x: 246, y: 201, r: 66, g: 103, b: 178},
+//         {x: 250, y: 165, r: 0, g: 1, b: 0},
+//         {x: 276, y: 84, r: 255, g: 95, b: 0}
+//     ]
+
+//     if (checkIsPage(pageInputAge)){
+//         console.log('start input age');
+//         qTap(pnt(285 + Math.random() * 35, 213));
+//         sleep(config.sleep);
+//         qTap(pageInputAge);
+//         sleep(config.sleep);
+//         qTap(pnt(450, 222));
+//         sleep(config.sleep);
+
+//         if (checkIsPage(pageChooseLoginMethod)) {
+//             qTap(pageChooseLoginMethod);
+//             sleep(config.sleepAnimate);
+//         } else {
+//             console.log('cannot find login options')
+//             return false;
+//         }
+
+//         pageEnterEmail = [
+//             {x: 402, y: 157, r: 255, g: 255, b: 255},
+//             {x: 406, y: 63, r: 60, g: 60, b: 60},
+//             {x: 294, y: 54, r: 95, g: 95, b: 95},
+//             {x: 392, y: 194, r: 200, g: 200, b: 200}
+//         ]
+//         if (checkIsPage(pageEnterEmail)){
+//             qTap(pageEnterEmail);
+//             typing(config.account);
+//             sleep(config.sleep);
+//             qTap(pnt(370, 190));
+//         } else {
+//             console.log('cannot find input email field');
+//         }
+
+//         pageEnterpassword = [
+//             {x: 374, y: 150, r: 255, g: 255, b: 255},
+//             {x: 381, y: 56, r: 60, g: 60, b: 60},
+//             {x: 266, y: 50, r: 60, g: 60, b: 60},
+//             {x: 401, y: 120, r: 255, g: 255, b: 255},
+//             {x: 393, y: 188, r: 200, g: 200, b: 200},
+//             {x: 358, y: 307, r: 255, g: 255, b: 255}
+//         ]
+//         if (checkIsPage(pageEnterpassword)){
+//             qTap(pageEnterpassword);
+//             typing(config.password);
+//             sleep(config.sleep);
+
+//             if (!checkIsPage(
+//                 [{x: 376, y: 186, r: 254, g: 94, b: 0}])
+//             ) {
+//                 sendEvent("gameStatus", "login-failed")
+//                 console.log('wrong password length')
+//                 return false;
+//             }
+//             qTap(pnt(370, 190));
+//             sleep(config.sleepAnimate);
+//         } else {
+//             sendEvent("gameStatus", "login-failed")
+//             console.log('cannot find input email field');
+//             return false;
+//         }
+//     }
+// }
+
+
+// sendEvent("gameStatus", "login-failed")
+// sendEvent("running", "");
+// handleInputLoginInfo()
