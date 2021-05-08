@@ -2,8 +2,8 @@
   "scripts": {
     "com.andy.rox": {
       "title": "*RO 新世代*",
-      "versionCode": 2,
-      "description": "<h3>RO 新世代</h3><ul><li>自動主線</li><li>自動告示板任務</li><li>自動商會任務</li><li>自動公會任務</li><li>自動釣魚</li><li>自動挖礦</li><li>自動前往目的掛機</li><li>自動獲得祝福</li><li>自動重新連線</li><li>自動復活</li></ul>",
+      "versionCode": 3,
+      "description": "<h3>RO 新世代 完全免費版 無限時間</h3><ul><li>自動主線</li><li>自動告示板任務</li><li>自動商會任務</li><li>自動公會任務</li><li>自動釣魚</li><li>自動挖礦</li><li>自動前往目的掛機</li><li>自動獲得祝福</li><li>自動重新連線</li><li>自動復活</li></ul>",
       "packageName": "com.play.rogt",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.andy.rox/index.zip",
       "dependencies": []
