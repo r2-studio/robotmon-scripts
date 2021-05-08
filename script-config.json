@@ -1,5 +1,13 @@
 {
   "scripts": {
+    "com.andy.rox": {
+      "title": "*RO 新世代*",
+      "versionCode": 2,
+      "description": "<h3>RO 新世代</h3><ul><li>自動主線</li><li>自動告示板任務</li><li>自動商會任務</li><li>自動公會任務</li><li>自動釣魚</li><li>自動挖礦</li><li>自動前往目的掛機</li><li>自動獲得祝福</li><li>自動重新連線</li><li>自動復活</li></ul>",
+      "packageName": "com.play.rogt",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.andy.rox/index.zip",
+      "dependencies": []
+    },
     "com.r2studio.EndlessFrontier": {
       "title": "Endless Frontier / 無盡的邊疆",
       "versionCode": 19,
@@ -10,8 +18,16 @@
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
       ]
     },
+    "com.r2studio.lgtm2": {
+      "title": "Disney Tsum Tsum Stadium",
+      "versionCode": 3,
+      "description": "<h3>Robotmon TsumTsum Stadium</h3><ul><li>Auto Play</li><li>Receive hearts</li><li>Send hearts</li></ul>",
+      "packageName": "com.linecorp.LGTM2",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.lgtm2/index.zip",
+      "dependencies": []
+    },
     "com.r2studio.Tsum": {
-      "title": "Disney Tsum Tsum",
+      "title": "Disney Tsum Tsum (Old v51)",
       "versionCode": 51,
       "description": "<b><font color='#2196f3'>🔖 版本 v51</font></b><ul><li>1️⃣ Delete Ad (忽略廣告)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
@@ -21,11 +37,35 @@
       ]
     },
     "com.r2studio.TsumBeta": {
-      "title": "Disney Tsum Tsum (Beta Testing)",
-      "versionCode": 54,
-      "description": "<b><font color='#2196f3'>🔖 版本 v54 Beta</font></b><ul><li>收心跳過第一個使用者，解決日版任務Bug</li><li>測試：偵測螢幕高，請在遊戲中啟動腳本</li><li>Testing: detect screen height. Should start script in game.</li></ul>",
+      "title": "Disney Tsum Tsum",
+      "versionCode": 55,
+      "description": "<b><font color='#2196f3'>🔖 版本 v55 Beta</font></b><ul><li>更新特殊螢幕尺寸、解決長螢幕偵測錯誤</li><li>Debug detect screen size. And update special screen size</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
+      "dependencies": []
+    },
+    "com.r2studio.CookieKingdm": {
+      "title": "CookieKingdom",
+      "versionCode": 1.3,
+      "description": "<b><font color='#2196f3'>版本 v1</font></b><ul><li>薑餅人王國</li><li>跑跑薑餅人新作，首抽專用</li><li>只支援模擬器 360x640, 120dpi, 建議用模擬器執行</li></ul>",
+      "packageName": "com.devsisters.ck",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
+      "dependencies": []
+    },
+    "com.r2studio.CookieKingdom.Manufacturing": {
+      "title": "CookieKingdom Factorio",
+      "versionCode": 1.92,
+      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>24x7 non-stop production</li><li>Simulators only, 360x640, 120dpi</li><li>v1.4 New feature: Shovels production</li><li>v1.5 New feature: target to build everything to 60</li><li>v1.8 Correct number reading parameters</li></ul>",
+      "packageName": "com.devsisters.ck",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.Manufacturing/index.zip",
+      "dependencies": []
+    },
+    "com.r2studio.CookieKingdom.Manufacturing.beta": {
+      "title": "CookieKingdom Factorio *beta*",
+      "versionCode": 2.26,
+      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>24x7 non-stop production</li><li>Simulators only, 360x640, 120dpi</li><li>v1.4 New feature: Shovels production</li><li>v1.5 New feature: target to build everything to 60</li><li>v1.8 Correct number reading parameters</li></ul>",
+      "packageName": "com.devsisters.ck",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.Manufacturing_beta/index.zip",
       "dependencies": []
     },
     "com.r2studio.MarvelFutureFight": {
@@ -109,8 +149,8 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 2.35,
-      "description": "<div>V2.35 16:9手機與夜神模擬器支援新介面，其他比例手機還請再等候改版<br>V2.33 改善結束關卡指令的辨識<br>V2.32 修正新關卡背景會誤判從者狀態視窗打開的問題<br>V2.31 修正部分機型會卡在自動戰鬥指令的問題<br>V2.29 自動戰鬥指令中，第一次使用技能不判斷已施放避免漏放<br>V2.28 修正夜神模擬器介面問題，修正已施放技能的判斷,支援紅A技能寶具變色<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 2.36,
+      "description": "<div>目前版本仍不支援16:9以外裝置使用<br>V2.36 修復自動換箱功能，修復第幾波的辨識<br>V2.33 改善結束關卡指令的辨識<br><br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },

@@ -8,7 +8,7 @@ var clothSkillX = [900,987,1075];
 var clothSkillY = 317;
 var enemyPositionX = [580,340,115];
 var enemyPositionY = 42;
-var currentStagePosition = [860,12,25,25];
+var currentStagePosition = [878,12,25,25];
 
 var cardPositionX = [125,400,625,900,1175];
 var cardPositionY = 517;
