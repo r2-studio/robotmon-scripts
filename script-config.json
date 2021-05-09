@@ -62,7 +62,7 @@
     },
     "com.r2studio.CookieKingdom.Manufacturing.beta": {
       "title": "CookieKingdom Factorio *beta*",
-      "versionCode": 2.26,
+      "versionCode": 2.27,
       "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>24x7 non-stop production</li><li>Simulators only, 360x640, 120dpi</li><li>v1.4 New feature: Shovels production</li><li>v1.5 New feature: target to build everything to 60</li><li>v1.8 Correct number reading parameters</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.Manufacturing_beta/index.zip",

@@ -1,15 +1,16 @@
 config = {
-    account: 'moonminv2@gmail.com',
-    password: '12qwaszx',
     sleep: 240,
     sleepAnimate: 800,
     sleepWhenDoubleLoginInMinutes: 30,
     localPath: getStoragePath() + '/scripts/com.r2studio.CookieKingdom.Manufacturing.beta/images',
 
+    account: 'moonminv2@gmail.com',
+    password: '12qwaszx',
     materialsTarget: 260,
     goodsTarget: 55,
-    jobFailedBeforeGetCandy: 5,
+    worksBeforeCollectCandy: 40,
 
+    jobFailedBeforeGetCandy: 5,
     jobFailedCount: 0,
     run: true,
 }
@@ -756,6 +757,7 @@ function handleRelogin() {
         qTap(pageReloginOrNetworkError);
         for (var i = 0; i < config.sleepWhenDoubleLoginInMinutes; i++) {
             sleep(60 * 1000);
+            sendEvent("running", "");
             console.log('Detect relogin, wait: ', i, '/', config.sleepWhenDoubleLoginInMinutes, 'mins to restart...');
         }
         return true;
@@ -790,8 +792,6 @@ function handleWelcomePage() {
         console.log('In welcome page, quitting');
         qTap(pnt(324, 329));
         sleep(config.sleepAnimate);
-
-        handleInputLoginInfo();
 
         while (true) {
             if (checkIsPage(pageAnnouncement)) {
@@ -886,12 +886,145 @@ function handleFindAndTapCandyHouse() {
     releaseImage(sugarHouse);
 }
 
+function handleInputLoginInfo() {
+    pageInputAge = [
+        {x: 243, y: 276, r: 254, g: 94, b: 0},
+        {x: 401, y: 274, r: 254, g: 94, b: 0},
+        {x: 416, y: 248, r: 255, g: 255, b: 255},
+        {x: 403, y: 101, r: 255, g: 255, b: 255},
+        {x: 404, y: 66, r: 60, g: 60, b: 60},
+        {x: 408, y: 210, r: 254, g: 94, b: 0},
+        {x: 232, y: 216, r: 254, g: 94, b: 0}
+    ]
+    if (checkIsPage(pageInputAge)){
+        console.log('start input age');
+        qTap(pnt(285 + Math.random() * 35, 213));
+        sleep(config.sleep);
+        qTap(pageInputAge);
+        sleep(config.sleep);
+        qTap(pnt(450, 222));
+        sleep(config.sleepAnimate);
+    } else {
+        console.log('did not find input age page, return')
+        return false;
+    }
+
+    // TODO: update the download resource page
+    pageCanDownloadResources = [
+        {x: 346, y: 240, r: 121, g: 207, b: 12},
+        {x: 420, y: 237, r: 219, g: 207, b: 199},
+        {x: 418, y: 172, r: 243, g: 233, b: 223},
+        {x: 412, y: 103, r: 60, g: 70, b: 105},
+        {x: 219, y: 98, r: 60, g: 70, b: 105},
+        {x: 221, y: 250, r: 219, g: 207, b: 199}
+    ]
+    if (checkIsPage(pageCanDownloadResources)){
+        console.log('start download resources');
+        qTap(pageCanDownloadResources);
+        sleep(config.sleepAnimate);
+
+        for (var i = 0; i < 6; i ++) {
+            // wait for yellow bar (download progress bar) disapper
+            if (!checkIsPage([{x: 16, y: 349, r: 255, g: 210, b: 76}])){
+                console.log('download finished');
+                break;
+            }
+            console.log('wait for download: ', i);
+            sleep(10000);
+        }
+    }
+
+    pageChooseLoginMethod = [
+        {x: 395, y: 245, r: 255, g: 255, b: 255},
+        {x: 392, y: 203, r: 255, g: 255, b: 255},
+        {x: 384, y: 162, r: 255, g: 255, b: 255},
+        {x: 389, y: 125, r: 255, g: 255, b: 255},
+        {x: 250, y: 244, r: 255, g: 107, b: 19},
+        {x: 246, y: 201, r: 66, g: 103, b: 178},
+        {x: 250, y: 165, r: 0, g: 1, b: 0},
+        {x: 276, y: 84, r: 255, g: 95, b: 0}
+    ]
+    for (var i = 0; i < 6; i ++) {
+        if (checkIsPage(pageChooseLoginMethod)) {
+            qTap(pageChooseLoginMethod);
+            sleep(config.sleepAnimate);
+            break;
+        } else {
+            console.log('waiting for pageChooseLoginMethod: ', i);
+            sleep(10000);
+        }
+    }
+
+    pageEnterEmail = [
+        {x: 402, y: 157, r: 255, g: 255, b: 255},
+        {x: 406, y: 63, r: 60, g: 60, b: 60},
+        {x: 294, y: 54, r: 95, g: 95, b: 95},
+        {x: 392, y: 194, r: 200, g: 200, b: 200}
+    ]
+    for (var i = 0; i < 2; i ++) {
+        if (checkIsPage(pageEnterEmail)){
+            console.log('inputing user email')
+            qTap(pageEnterEmail);
+            typing(config.account, 100);
+            sleep(config.sleepAnimate);
+            qTap(pnt(370, 190));
+            sleep(config.sleepAnimate);
+            break;
+        } else {
+            console.log('cannot find input email field');
+            sleep(10000);
+        }    
+    }
+
+    pageEnterpassword = [
+        {x: 374, y: 150, r: 255, g: 255, b: 255},
+        {x: 381, y: 56, r: 60, g: 60, b: 60},
+        {x: 266, y: 50, r: 60, g: 60, b: 60},
+        {x: 401, y: 120, r: 255, g: 255, b: 255},
+        {x: 393, y: 188, r: 200, g: 200, b: 200},
+        {x: 358, y: 307, r: 255, g: 255, b: 255}
+    ]
+    for (var i = 0; i < 2; i ++) {
+        if (checkIsPage(pageEnterpassword)){
+            qTap(pageEnterpassword);
+            typing(config.password, 100);
+            sleep(config.sleep);
+    
+            if (!checkIsPage(
+                [{x: 376, y: 186, r: 254, g: 94, b: 0}])
+            ) {
+                sendEvent("gameStatus", "login-failed")
+                console.log('wrong password length')
+                return false;
+            }
+            qTap(pnt(370, 190));
+            sleep(config.sleepAnimate);
+            sendEvent("gameStatus", "login-success")
+
+            // Touch here to start:
+            qTap(pnt(370, 190));
+            return true;
+        } else {
+            console.log('waiting for input password field');
+            sleep(10000);
+        }
+    }
+    sendEvent("gameStatus", "login-failed")
+    console.log('cannot find input email field');
+    return false;
+}
+
 function stop() {}
 
-function start(materialsTarget, goodsTarget) {
-    console.log('start with: ', materialsTarget, goodsTarget);
-    config.materialsTarget = materialsTarget !== undefined ? materialsTarget : config.materialsTarget
-    config.goodsTarget = goodsTarget !== undefined ? goodsTarget : config.goodsTarget
+function start(inputJson) {
+    inputConfig = JSON.parse(inputJson)
+
+    console.log('start with: ', inputConfig.materialsTarget, inputConfig.goodsTarget);
+    config.materialsTarget = inputConfig.materialsTarget;
+    config.goodsTarget = inputConfig.goodsTarget;
+
+    
+    // USE Object.Assign!!!!!!!!!!!!!!!!!!!!
 
     handleFindAndTapCandyHouse();
     for (var i = 1; i < 100000000; i++) {
@@ -905,7 +1038,7 @@ function start(materialsTarget, goodsTarget) {
         sleep(config.sleepAnimate);
         console.log('act: ', act)
 
-        if (i % 40 == 0) {
+        if (i % config.worksBeforeCollectCandy == 0) {
             handleFindAndTapCandyHouse();
         }
 
@@ -917,28 +1050,52 @@ function start(materialsTarget, goodsTarget) {
         if (!act) {
             config.jobFailedCount ++;
             if (config.jobFailedCount < config.jobFailedBeforeGetCandy) {
+                console.log(config.jobFailedCount + '/' + config.jobFailedBeforeGetCandy + ' jobFail, continue');
+                sleep(1000);
                 continue;
             }
+            console.log('max job fails reached, check for handling: ', config.jobFailedCount);
 
             if (handleRelogin()) {
+                console.log('just handleRelogin()');
+                config.jobFailedCount = 0;
+                continue;
+            }
+            else if (handleInputLoginInfo()) {
+                console.log('just handleInputLoginInfo()');
+                for (var i = 0; j < 20; i ++){
+                    if (handleWelcomePage()) {
+                        console.log('login, wait for handleWelcomePage()')
+                        config.jobFailedCount = 0;
+                        break;
+                    }
+                    sleep(3000);
+                }
                 continue;
             }
             else if (handleWelcomePage()) {
-                // TODO: need to call handleAnnouncement()
+                console.log('just handleWelcomePage()');
+                handleAnnouncement();
+                config.jobFailedCount = 0;
                 continue;
             } else if (handleAnnouncement()) {
+                console.log('just handleAnnouncement()');
                 handleFindAndTapCandyHouse();
+                config.jobFailedCount = 0;
                 continue;
             } else if (handleFindAndTapCandyHouse()){
+                console.log('just handleFindAndTapCandyHouse()');
+                config.jobFailedCount = 0;
                 continue;
             }
         } else {
             config.jobFailedCount = 0;
+            sendEvent("running", "");
         }
     }
 }
 
-// start();
+start(JSON.stringify({'materialsTarget': 260, 'goodsTarget': 40}))
 //   JobScheduling()
 // ocrMaterialStorage();
 // ocrProductStorage(goodsLocation[2]);
@@ -948,96 +1105,5 @@ function start(materialsTarget, goodsTarget) {
 //TODO: Auto restart, Auto input id/pwd, add find all houses
 // handleFindAndTapCandyHouse()
 
-// function handleInputLoginInfo() {
-//     pageInputAge = [
-//         {x: 243, y: 276, r: 254, g: 94, b: 0},
-//         {x: 401, y: 274, r: 254, g: 94, b: 0},
-//         {x: 416, y: 248, r: 255, g: 255, b: 255},
-//         {x: 403, y: 101, r: 255, g: 255, b: 255},
-//         {x: 404, y: 66, r: 60, g: 60, b: 60},
-//         {x: 408, y: 210, r: 254, g: 94, b: 0},
-//         {x: 232, y: 216, r: 254, g: 94, b: 0}
-//     ]
-
-//     // TODO: update the download resource page
-//     pageCanDownloadResources = [
-
-//     ]
-
-//     pageChooseLoginMethod = [
-//         {x: 395, y: 245, r: 255, g: 255, b: 255},
-//         {x: 392, y: 203, r: 255, g: 255, b: 255},
-//         {x: 384, y: 162, r: 255, g: 255, b: 255},
-//         {x: 389, y: 125, r: 255, g: 255, b: 255},
-//         {x: 250, y: 244, r: 255, g: 107, b: 19},
-//         {x: 246, y: 201, r: 66, g: 103, b: 178},
-//         {x: 250, y: 165, r: 0, g: 1, b: 0},
-//         {x: 276, y: 84, r: 255, g: 95, b: 0}
-//     ]
-
-//     if (checkIsPage(pageInputAge)){
-//         console.log('start input age');
-//         qTap(pnt(285 + Math.random() * 35, 213));
-//         sleep(config.sleep);
-//         qTap(pageInputAge);
-//         sleep(config.sleep);
-//         qTap(pnt(450, 222));
-//         sleep(config.sleep);
-
-//         if (checkIsPage(pageChooseLoginMethod)) {
-//             qTap(pageChooseLoginMethod);
-//             sleep(config.sleepAnimate);
-//         } else {
-//             console.log('cannot find login options')
-//             return false;
-//         }
-
-//         pageEnterEmail = [
-//             {x: 402, y: 157, r: 255, g: 255, b: 255},
-//             {x: 406, y: 63, r: 60, g: 60, b: 60},
-//             {x: 294, y: 54, r: 95, g: 95, b: 95},
-//             {x: 392, y: 194, r: 200, g: 200, b: 200}
-//         ]
-//         if (checkIsPage(pageEnterEmail)){
-//             qTap(pageEnterEmail);
-//             typing(config.account);
-//             sleep(config.sleep);
-//             qTap(pnt(370, 190));
-//         } else {
-//             console.log('cannot find input email field');
-//         }
-
-//         pageEnterpassword = [
-//             {x: 374, y: 150, r: 255, g: 255, b: 255},
-//             {x: 381, y: 56, r: 60, g: 60, b: 60},
-//             {x: 266, y: 50, r: 60, g: 60, b: 60},
-//             {x: 401, y: 120, r: 255, g: 255, b: 255},
-//             {x: 393, y: 188, r: 200, g: 200, b: 200},
-//             {x: 358, y: 307, r: 255, g: 255, b: 255}
-//         ]
-//         if (checkIsPage(pageEnterpassword)){
-//             qTap(pageEnterpassword);
-//             typing(config.password);
-//             sleep(config.sleep);
-
-//             if (!checkIsPage(
-//                 [{x: 376, y: 186, r: 254, g: 94, b: 0}])
-//             ) {
-//                 sendEvent("gameStatus", "login-failed")
-//                 console.log('wrong password length')
-//                 return false;
-//             }
-//             qTap(pnt(370, 190));
-//             sleep(config.sleepAnimate);
-//         } else {
-//             sendEvent("gameStatus", "login-failed")
-//             console.log('cannot find input email field');
-//             return false;
-//         }
-//     }
-// }
-
 
 // sendEvent("gameStatus", "login-failed")
-// sendEvent("running", "");
-// handleInputLoginInfo()

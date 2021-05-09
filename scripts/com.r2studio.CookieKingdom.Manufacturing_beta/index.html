@@ -232,6 +232,19 @@
       ],
       [
       {
+          id: 'account',
+          title: 'account',
+          title_zh_TW: '帳號',
+          default: "aaa@gmail.com",
+
+        },        {
+          id: 'password',
+          title: 'password',
+          title_zh_TW: '密碼',
+          default: "",
+        },
+        {
+          id: 'materialsTarget',
           title: 'Material production target',
           title_zh_TW: '原料生產目標',
           default: 260,
@@ -240,12 +253,22 @@
           min: 80,
         },
         {
+          id: 'goodsTarget',
           title: 'Goods production target',
           title_zh_TW: '製作品生產目標',
           default: 55,
           step: 5,
           max: 160,
           min: 20,
+        },
+        {
+          id: 'worksBeforeCollectCandy',
+          title: 'Check buildings before collect candy',
+          title_zh_TW: '收集糖果前排程的生產建築數',
+          default: 40,
+          step: 5,
+          max: 10,
+          min: 100,
         },
       ],
       
@@ -327,10 +350,12 @@
 
     function genStartCommand(settings) {
       var command = 'start(';
+      var configJson = {};
       for (var i in settings) {
         for (var g in settings[i]) {
           var id = i + '_' + g;
           var setting = settings[i][g];
+          configJson[setting.id] = setting.default;
           if (typeof setting.default === 'boolean') {
             command += $('#setting_value_' + id).is(':checked') + ', ';
           } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
@@ -353,6 +378,8 @@
         console.log('Start command: ' + command);
       }
 
+      console.log('>> configJson: ', JSON.stringify(configJson))
+      command = "start(" + JSON.stringify(configJson) + ');';
       return command;
     }
 
