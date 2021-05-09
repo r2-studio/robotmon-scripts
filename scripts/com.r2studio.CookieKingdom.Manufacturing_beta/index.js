@@ -811,14 +811,13 @@ function handleWelcomePage() {
 
 function handleAnnouncement() {
     pageAnnouncement = [
-        { x: 610, y: 20, r: 56, g: 167, b: 231 },
-        { x: 619, y: 19, r: 255, g: 255, b: 255 },
-        { x: 628, y: 18, r: 56, g: 167, b: 231 },
-        { x: 585, y: 48, r: 54, g: 64, b: 87 },
-        { x: 584, y: 288, r: 54, g: 64, b: 87 },
-        { x: 59, y: 77, r: 141, g: 152, b: 186 },
-        { x: 58, y: 136, r: 56, g: 64, b: 85 },
-        { x: 58, y: 323, r: 54, g: 64, b: 87 }
+        {x: 610, y: 19, r: 56, g: 167, b: 231},
+        {x: 619, y: 19, r: 255, g: 255, b: 255},
+        {x: 628, y: 18, r: 56, g: 167, b: 231},
+        {x: 59, y: 219, r: 54, g: 64, b: 87},
+        {x: 71, y: 317, r: 54, g: 64, b: 87},
+        {x: 19, y: 114, r: 63, g: 0, b: 9},
+        {x: 25, y: 321, r: 75, g: 75, b: 75}
     ]
 
     if (checkIsPage(pageAnnouncement)) {
@@ -1035,8 +1034,8 @@ function start(inputConfig) {
     console.log('start with: ', inputConfig.materialsTarget, inputConfig.goodsTarget);
     config.materialsTarget = inputConfig.materialsTarget;
     config.goodsTarget = inputConfig.goodsTarget;
+    config.worksBeforeCollectCandy = inputConfig.worksBeforeCollectCandy;
 
-    
     // USE Object.Assign!!!!!!!!!!!!!!!!!!!!
 
     handleFindAndTapCandyHouse();
