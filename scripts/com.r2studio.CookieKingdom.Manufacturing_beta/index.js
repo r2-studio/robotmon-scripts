@@ -1014,11 +1014,24 @@ function handleInputLoginInfo() {
     return false;
 }
 
+function handleNextProductionBuilding() {
+    pageInProduction = [
+        { x: 609, y: 19, r: 56, g: 167, b: 231 },
+        { x: 617, y: 19, r: 255, g: 255, b: 255 },
+        { x: 625, y: 18, r: 34, g: 85, b: 119 },
+        { x: 619, y: 331, r: 166, g: 104, b: 65 },
+        { x: 19, y: 321, r: 166, g: 104, b: 65 }
+    ]
+
+    if (checkIsPage(pageInProduction)) {
+        qTap(pnt(349, 174)); // next
+        sleep(config.sleepAnimate * 2);
+    }
+}
+
 function stop() {}
 
-function start(inputJson) {
-    inputConfig = JSON.parse(inputJson)
-
+function start(inputConfig) {
     console.log('start with: ', inputConfig.materialsTarget, inputConfig.goodsTarget);
     config.materialsTarget = inputConfig.materialsTarget;
     config.goodsTarget = inputConfig.goodsTarget;
@@ -1034,9 +1047,8 @@ function start(inputJson) {
         sleep(config.sleep);
         handleNotEnoughStock();
         sleep(config.sleep);
-        qTap(pnt(349, 174)); // next
-        sleep(config.sleepAnimate);
-        console.log('act: ', act)
+        handleNextProductionBuilding();
+        console.log('performed  act: ', act)
 
         if (i % config.worksBeforeCollectCandy == 0) {
             handleFindAndTapCandyHouse();
