@@ -1095,7 +1095,7 @@ function start(inputJson) {
     }
 }
 
-start(JSON.stringify({'materialsTarget': 260, 'goodsTarget': 40}))
+// start(JSON.stringify({'materialsTarget': 260, 'goodsTarget': 40}))
 //   JobScheduling()
 // ocrMaterialStorage();
 // ocrProductStorage(goodsLocation[2]);
