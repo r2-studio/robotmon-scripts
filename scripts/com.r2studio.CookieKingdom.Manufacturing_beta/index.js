@@ -858,6 +858,7 @@ function handleFindAndTapCandyHouse() {
         }
         console.log('best candy > ', JSON.stringify(bestFit));
         qTap(bestFit);
+        sleep(config.sleepAnimate * 2);
     }
 
     releaseImage(img);
