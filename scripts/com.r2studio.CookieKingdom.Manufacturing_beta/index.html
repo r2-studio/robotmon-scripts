@@ -356,15 +356,18 @@
         for (var g in settings[i]) {
           var id = i + '_' + g;
           var setting = settings[i][g];
-          configJson[setting.id] = setting.default;
           if (typeof setting.default === 'boolean') {
             command += $('#setting_value_' + id).is(':checked') + ', ';
+            configJson[setting.id] = $('#setting_value_' + id).is(':checked');
           } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
             command += '"' + setting.default + '", ';
+            configJson[setting.id] = '"' + setting.default + '"';
           } else if (typeof setting.default === 'number') {
             command += $('#setting_value_' + id).val() + ', ';
+            configJson[setting.id] = $('#setting_value_' + id).val();
           } else if (typeof setting.default === 'string') {
             command += '"' + $('#setting_value_' + id).val() + '", ';
+            configJson[setting.id] = '"' + $('#setting_value_' + id).val() + '"';
           }
         }
       }
