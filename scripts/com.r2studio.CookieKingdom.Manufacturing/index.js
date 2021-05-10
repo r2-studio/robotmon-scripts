@@ -732,8 +732,9 @@ function handleNotEnoughStock() {
         {x: 212, y: 247, r: 219, g: 207, b: 199},
     ]
     if (checkIsPage(pageAnErrorHasOccuredWhileProcessing)) {
-        console.log('quiting pageAnErrorHasOccuredWhileProcessing')
+        console.log('found pageAnErrorHasOccuredWhileProcessing, stopping')
         qTap(pageAnErrorHasOccuredWhileProcessing);
+        config.run = false;
         sleep(config.sleep);
         return true;
     }
@@ -764,7 +765,7 @@ function start(materialsTarget, goodsTarget) {
     }
   }
   
-start();
+// start();
 //   JobScheduling()
 // ocrMaterialStorage();
 // ocrProductStorage(goodsLocation[2]);
