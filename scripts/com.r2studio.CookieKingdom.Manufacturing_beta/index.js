@@ -35,8 +35,8 @@ pageBeanFarm = [
     { x: 590, y: 121, r: 121, g: 207, b: 12 },
     { x: 311, y: 22, r: 0, g: 255, b: 247 },
     { x: 427, y: 83, r: 0, g: 253, b: 251 },
-    { x: 152, y: 179, r: 219, g: 171, b: 130 },
-    { x: 425, y: 82, r: 2, g: 252, b: 250 }
+    { x: 425, y: 82, r: 2, g: 252, b: 250 },
+    {x: 526, y: 89, r: 0, g: 254, b: 251}
 ]
 
 pageSugarFarm = [
@@ -868,7 +868,7 @@ function handleFindAndTapCandyHouse() {
     var sugarHouse = openImage(config.localPath + '/sugarHouse.png');
     img = getScreenshot();
 
-    var foundResults = findImages(img, sugarHouse, 0.92, 3, true);
+    var foundResults = findImages(img, sugarHouse, 0.88, 3, true);
     console.log('houses > ', JSON.stringify(foundResults));
     if (foundResults.length > 0) {
         var bestFit = foundResults[0];
@@ -879,6 +879,8 @@ function handleFindAndTapCandyHouse() {
         }
         console.log('best house >> ', JSON.stringify(bestFit));
         qTap(bestFit);
+        sleep(config.sleepAnimate);
+        qTap(bestFit); // prevent when there are sugar cube to collect
         sleep(config.sleepAnimate * 3);
     }
 
@@ -905,11 +907,9 @@ function handleInputLoginInfo() {
         qTap(pnt(450, 222));
         sleep(config.sleepAnimate);
     } else {
-        console.log('did not find input age page, return')
-        return false;
+        console.log('did not find input age page, skipping')
     }
 
-    // TODO: update the download resource page
     pageCanDownloadResources = [
         {x: 346, y: 240, r: 121, g: 207, b: 12},
         {x: 420, y: 237, r: 219, g: 207, b: 199},
@@ -1119,3 +1119,4 @@ function start(inputConfig) {
 
 
 // sendEvent("gameStatus", "login-failed")
+
