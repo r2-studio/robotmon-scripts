@@ -1036,6 +1036,8 @@ function start(inputConfig) {
     config.materialsTarget = inputConfig.materialsTarget;
     config.goodsTarget = inputConfig.goodsTarget;
     config.worksBeforeCollectCandy = inputConfig.worksBeforeCollectCandy;
+    config.account = inputConfig.account;
+    config.password = inputConfig.password;
 
     // USE Object.Assign!!!!!!!!!!!!!!!!!!!!
 
