@@ -879,7 +879,7 @@ function handleFindAndTapCandyHouse() {
         }
         console.log('best house >> ', JSON.stringify(bestFit));
         qTap(bestFit);
-        sleep(config.sleepAnimate);
+        sleep(config.sleepAnimate * 2);
         qTap(bestFit); // prevent when there are sugar cube to collect
         sleep(config.sleepAnimate * 3);
     }
