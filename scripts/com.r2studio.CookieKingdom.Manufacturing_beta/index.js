@@ -9,6 +9,7 @@ config = {
     materialsTarget: 260,
     goodsTarget: 55,
     worksBeforeCollectCandy: 40,
+    isCollecCandy: true,
 
     jobFailedBeforeGetCandy: 5,
     jobFailedCount: 0,
@@ -138,6 +139,18 @@ function checkIsPage(page, diff, img) {
         releaseImage(img);
     }
     return isPage;
+}
+
+function mergeObject(target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];
+        for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key];
+            }
+        }
+    }
+    return target;
 }
 
 function handleToolShopShovels() {
@@ -1033,15 +1046,12 @@ function stop() {}
 
 function start(inputConfig) {
     console.log('start with: ', inputConfig.materialsTarget, inputConfig.goodsTarget);
-    config.materialsTarget = inputConfig.materialsTarget;
-    config.goodsTarget = inputConfig.goodsTarget;
-    config.worksBeforeCollectCandy = inputConfig.worksBeforeCollectCandy;
-    config.account = inputConfig.account;
-    config.password = inputConfig.password;
+    config = mergeObject(config, inputConfig)
 
-    // USE Object.Assign!!!!!!!!!!!!!!!!!!!!
+    if (config.isCollecCandy) {
+        handleFindAndTapCandyHouse();
+    }
 
-    handleFindAndTapCandyHouse();
     for (var i = 1; i < 100000000; i++) {
         console.log("start loop", i);
 
@@ -1052,7 +1062,7 @@ function start(inputConfig) {
         handleNextProductionBuilding();
         console.log('performed  act: ', act)
 
-        if (i % config.worksBeforeCollectCandy == 0) {
+        if (config.isCollecCandy && i % config.worksBeforeCollectCandy == 0) {
             handleFindAndTapCandyHouse();
         }
 
@@ -1075,6 +1085,23 @@ function start(inputConfig) {
                 config.jobFailedCount = 0;
                 continue;
             }
+            else if (handleWelcomePage()) {
+                console.log('just handleWelcomePage()');
+                handleAnnouncement();
+                config.jobFailedCount = 0;
+                continue;
+            }
+            else if (handleAnnouncement()) {
+                console.log('just handleAnnouncement()');
+                handleFindAndTapCandyHouse();
+                config.jobFailedCount = 0;
+                continue;
+            }
+            else if (handleFindAndTapCandyHouse()){
+                console.log('just handleFindAndTapCandyHouse()');
+                config.jobFailedCount = 0;
+                continue;
+            }
             else if (handleInputLoginInfo()) {
                 console.log('just handleInputLoginInfo()');
                 for (var i = 0; j < 20; i ++){
@@ -1085,21 +1112,6 @@ function start(inputConfig) {
                     }
                     sleep(3000);
                 }
-                continue;
-            }
-            else if (handleWelcomePage()) {
-                console.log('just handleWelcomePage()');
-                handleAnnouncement();
-                config.jobFailedCount = 0;
-                continue;
-            } else if (handleAnnouncement()) {
-                console.log('just handleAnnouncement()');
-                handleFindAndTapCandyHouse();
-                config.jobFailedCount = 0;
-                continue;
-            } else if (handleFindAndTapCandyHouse()){
-                console.log('just handleFindAndTapCandyHouse()');
-                config.jobFailedCount = 0;
                 continue;
             }
         } else {
