@@ -373,7 +373,7 @@
             configJson[setting.id] = $('#setting_value_' + id).val();
           } else if (typeof setting.default === 'string') {
             command += '"' + $('#setting_value_' + id).val() + '", ';
-            configJson[setting.id] = '"' + $('#setting_value_' + id).val() + '"';
+            configJson[setting.id] = $('#setting_value_' + id).val();
           }
         }
       }
