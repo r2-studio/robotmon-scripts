@@ -7,7 +7,7 @@ config = {
     account: 'moonminv2@gmail.com',
     password: '12qwaszx',
     materialsTarget: 260,
-    goodsTarget: 55,
+    goodsTarget: 50,
     worksBeforeCollectCandy: 40,
     isCollecCandy: true,
 
@@ -193,18 +193,14 @@ function handleToolShopShovels() {
 
         if (checkIsPage(pageShovelEnabled)) {
             if (shovelStock < 10) {
-                console.log('Shovel < 10, add 4');
-                qTap(pageShovelEnabled);
-                sleep(config.sleepAnimate);
-                qTap(pageShovelEnabled);
-                sleep(config.sleepAnimate);
+                console.log('Shovel < 10, add 2');
                 qTap(pageShovelEnabled);
                 sleep(config.sleepAnimate);
                 qTap(pageShovelEnabled);
                 sleep(config.sleepAnimate);
             }
             else if (shovelStock < config.goodsTarget) {
-                console.log('10 < Shovel < ', config.goodsTarget, ', add 2');
+                console.log('10 < ', shovelStock , ' < ', config.goodsTarget, ', add 2');
                 qTap(pageShovelEnabled);
                 sleep(config.sleepAnimate);
                 qTap(pageShovelEnabled);
