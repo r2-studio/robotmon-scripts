@@ -389,6 +389,7 @@ function handleMaterialProduction() {
         { x: 568, y: 329, r: 121, g: 207, b: 14 },
     ]
 
+    // TODO: tap second production
     if (checkIsPage(pageWoodFarm)) {
         console.log('wood farm, add more')
         qTap(pageWoodFarm)
@@ -689,6 +690,10 @@ function JobScheduling() {
         return true;
     }
 
+    // TODO: if no enough at first time, skip second check
+    // TODO: count items produced
+    // TODO: record not enough resources (keep list of all items)
+
     var itemsAdd = makeGoodsToTarget(10, 2);
     console.log('add: ', itemsAdd)
     if (itemsAdd == -1) {
@@ -963,6 +968,8 @@ function handleInputLoginInfo() {
             sleep(10000);
         }
     }
+
+    // TODO: consider skip
 
     pageEnterEmail = [
         {x: 402, y: 157, r: 255, g: 255, b: 255},
