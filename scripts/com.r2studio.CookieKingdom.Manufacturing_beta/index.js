@@ -979,7 +979,7 @@ function handleInputLoginInfo() {
     ]
     for (var i = 0; i < 2; i ++) {
         if (checkIsPage(pageEnterEmail)){
-            console.log('inputing user email')
+            console.log('inputing user email ', config.account)
             qTap(pageEnterEmail);
             typing(config.account, 100);
             sleep(config.sleepAnimate);
