@@ -275,7 +275,8 @@ function ocrResultToInt(results) {
     for (var i in results) {
         count += results[i].target;
     }
-    return count;
+    
+    return parseInt(count, 10);
 }
 
 function ocrProductStorage(rect) {
@@ -520,6 +521,7 @@ function makeGoodsToTarget(target, orderAmount) {
     var goodsTwoStock = ocrProductStorage(goodsLocation[2])
     var goodsThreeStock = ocrProductStorage(goodsLocation[3])
     console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock, 'target: ', target);
+    console.log('type: ', typeof(goodsOneStock), typeof(target))
     if (goodsOneStock === -1 || goodsTwoStock === -1 || goodsThreeStock === -1) {
         console.log('OCR count failed, skip this round');
         return -1;
@@ -695,7 +697,7 @@ function JobScheduling() {
     // TODO: record not enough resources (keep list of all items)
 
     var itemsAdd = makeGoodsToTarget(10, 2);
-    console.log('add: ', itemsAdd)
+    console.log('add: ', itemsAdd, ' items')
     if (itemsAdd == -1) {
         return false;
     } else if (itemsAdd < 3) {
@@ -780,12 +782,13 @@ function handleRelogin() {
 
 function handleWelcomePage() {
     pageWelcome = [
-        {x: 181, y: 252, r: 231, g: 58, b: 56},
-        {x: 134, y: 252, r: 251, g: 245, b: 120},
-        {x: 127, y: 297, r: 253, g: 235, b: 122},
-        {x: 69, y: 284, r: 239, g: 191, b: 64},
-        {x: 38, y: 253, r: 241, g: 60, b: 55},
-        {x: 64, y: 320, r: 251, g: 241, b: 147}
+        {x: 25, y: 288, r: 225, g: 163, b: 42},
+        {x: 41, y: 255, r: 243, g: 60, b: 56},
+        {x: 131, y: 255, r: 253, g: 217, b: 52},
+        {x: 177, y: 257, r: 181, g: 48, b: 60},
+        {x: 204, y: 282, r: 225, g: 163, b: 40},
+        {x: 67, y: 324, r: 103, g: 19, b: 36},
+        {x: 160, y: 326, r: 104, g: 21, b: 38}
     ]
 
     // TODO: Need to handle login event
@@ -1041,6 +1044,10 @@ function handleNextProductionBuilding() {
         qTap(pnt(349, 174)); // next
         sleep(config.sleepAnimate * 2);
     }
+}
+
+function handleTryHitBackToKingdom() {
+
 }
 
 function stop() {}

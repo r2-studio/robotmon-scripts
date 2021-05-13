@@ -256,7 +256,8 @@ function ocrResultToInt(results) {
     for (var i in results) {
         count += results[i].target;
     }
-    return count;
+
+    return parseInt(count, 10);
 }
 
 function ocrProductStorage(rect) {
@@ -671,7 +672,7 @@ function JobScheduling() {
     }
 
     var itemsAdd = makeGoodsToTarget(10, 2);
-    console.log('add: ', itemsAdd)
+    console.log('add: ', itemsAdd, ' items')
     if (itemsAdd < 3) {
         makeGoodsToTarget(config.goodsTarget, 1);
     }
