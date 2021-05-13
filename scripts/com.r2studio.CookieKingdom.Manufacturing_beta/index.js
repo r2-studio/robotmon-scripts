@@ -780,13 +780,12 @@ function handleRelogin() {
 
 function handleWelcomePage() {
     pageWelcome = [
-        { x: 499, y: 328, r: 96, g: 31, b: 76 },
-        { x: 577, y: 329, r: 93, g: 30, b: 74 },
-        { x: 612, y: 296, r: 227, g: 165, b: 40 },
-        { x: 547, y: 304, r: 253, g: 239, b: 125 },
-        { x: 463, y: 297, r: 227, g: 165, b: 40 },
-        { x: 591, y: 268, r: 191, g: 48, b: 57 },
-        { x: 480, y: 270, r: 243, g: 60, b: 56 }
+        {x: 181, y: 252, r: 231, g: 58, b: 56},
+        {x: 134, y: 252, r: 251, g: 245, b: 120},
+        {x: 127, y: 297, r: 253, g: 235, b: 122},
+        {x: 69, y: 284, r: 239, g: 191, b: 64},
+        {x: 38, y: 253, r: 241, g: 60, b: 55},
+        {x: 64, y: 320, r: 251, g: 241, b: 147}
     ]
 
     // TODO: Need to handle login event
@@ -948,14 +947,14 @@ function handleInputLoginInfo() {
     }
 
     pageChooseLoginMethod = [
-        {x: 395, y: 245, r: 255, g: 255, b: 255},
+        {x: 307, y: 239, r: 255, g: 95, b: 0},
+        {x: 272, y: 78, r: 255, g: 95, b: 0},
+        {x: 360, y: 78, r: 255, g: 255, b: 255},
+        {x: 301, y: 125, r: 66, g: 133, b: 244},
+        {x: 318, y: 119, r: 255, g: 255, b: 255},
+        {x: 283, y: 167, r: 0, g: 1, b: 0},
+        {x: 308, y: 169, r: 255, g: 255, b: 255},
         {x: 392, y: 203, r: 255, g: 255, b: 255},
-        {x: 384, y: 162, r: 255, g: 255, b: 255},
-        {x: 389, y: 125, r: 255, g: 255, b: 255},
-        {x: 250, y: 244, r: 255, g: 107, b: 19},
-        {x: 246, y: 201, r: 66, g: 103, b: 178},
-        {x: 250, y: 165, r: 0, g: 1, b: 0},
-        {x: 276, y: 84, r: 255, g: 95, b: 0}
     ]
     for (var i = 0; i < 6; i ++) {
         if (checkIsPage(pageChooseLoginMethod)) {
@@ -1123,7 +1122,7 @@ function start(inputConfig) {
     }
 }
 
-// start(JSON.stringify({'materialsTarget': 260, 'goodsTarget': 40}))
+// start(config)
 //   JobScheduling()
 // ocrMaterialStorage();
 // ocrProductStorage(goodsLocation[2]);
