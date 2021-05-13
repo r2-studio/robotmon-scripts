@@ -272,7 +272,7 @@
           min: 10,
         },
         {
-          id: 'isCollecCandy',
+          id: 'isCollectCandy',
           title: 'Collect Candy House',
           title_zh_TW: '收星星糖',
           default: true
@@ -389,7 +389,7 @@
       }
 
       console.log('>> configJson: ', JSON.stringify(configJson))
-      command = "start(" + JSON.stringify(configJson) + ');';
+      command = "start('" + JSON.stringify(configJson) + "');";
       return command;
     }
 
