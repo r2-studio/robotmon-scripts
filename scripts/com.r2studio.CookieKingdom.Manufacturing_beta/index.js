@@ -101,12 +101,15 @@ function rgb(r, g, b) {
 
 function qTap(page, sleepTime) {
     if (sleepTime == undefined) {
-        sleepTime = config.sleep;
+        sleepTime = 10;
     }
     if (Array.isArray(page)) {
         page = page[0];
     }
-    tap(page.x, page.y, sleepTime);
+    // tap(page.x, page.y, sleepTime);
+    tapDown(page.x, page.y, 10);
+    sleep(sleepTime);
+    tapUp(page.x, page.y, 10);
     sleep(sleepTime);
 }
 
@@ -1057,25 +1060,17 @@ function handleNextProductionBuilding() {
 }
 
 function handleTryHitBackToKingdom() {
+    console.log('trying to resolve stuch by hitting back')
     pageNotifyQuit = [
-        {x: 302, y: 254, r: 12, g: 167, b: 223},
-        {x: 228, y: 100, r: 60, g: 70, b: 105},
-        {x: 429, y: 91, r: 60, g: 70, b: 105},
-        {x: 206, y: 226, r: 243, g: 233, b: 223},
-        {x: 227, y: 256, r: 219, g: 207, b: 199},
-        {x: 318, y: 260, r: 219, g: 207, b: 199},
-        {x: 393, y: 254, r: 121, g: 207, b: 12},
-        {x: 411, y: 252, r: 219, g: 207, b: 199},
-        {x: 271, y: 138, r: 46, g: 46, b: 46},
-        {x: 284, y: 143, r: 210, g: 201, b: 193},
-        {x: 315, y: 143, r: 171, g: 165, b: 159},
-        {x: 345, y: 143, r: 46, g: 46, b: 46},
-        {x: 354, y: 143, r: 46, g: 46, b: 46},
-        {x: 364, y: 145, r: 192, g: 185, b: 177},
-        {x: 552, y: 339, r: 24, g: 38, b: 54},
-        {x: 415, y: 319, r: 76, g: 16, b: 16},
-        {x: 55, y: 341, r: 21, g: 38, b: 56},
-        {x: 27, y: 317, r: 127, g: 127, b: 127}
+        {x: 299, y: 249, r: 12, g: 165, b: 219},
+        {x: 258, y: 249, r: 19, g: 21, b: 22},
+        {x: 215, y: 255, r: 217, g: 205, b: 195},
+        {x: 344, y: 256, r: 121, g: 205, b: 12},
+        {x: 354, y: 249, r: 155, g: 155, b: 155},
+        {x: 277, y: 140, r: 88, g: 86, b: 82},
+        {x: 285, y: 142, r: 217, g: 209, b: 199},
+        {x: 258, y: 98, r: 60, g: 70, b: 104},
+        {x: 358, y: 140, r: 46, g: 46, b: 46}
     ]
 
     for (var i = 0; i < 4; i ++) {
