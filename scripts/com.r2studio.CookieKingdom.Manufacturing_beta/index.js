@@ -405,29 +405,29 @@ function handleMaterialProduction() {
     // TODO: tap second production
     if (checkIsPage(pageWoodFarm)) {
         console.log('wood farm, add more')
-        qTap(pageWoodFarm, 300);
+        qTap(pageWoodFarm, 800);
         sleep(config.sleepAnimate);
         return true;
     }
     else if (checkIsPage(pageBeanFarm)) {
         console.log('bean farm, add more')
-        qTap(pageBeanFarm, 300)
+        qTap(pageBeanFarm, 800)
         sleep(config.sleepAnimate);
         return true;
     }
     else if (checkIsPage(pageSugarFarm)) {
         console.log('sugar farm, add more')
-        qTap(pageSugarFarm, 300)
+        qTap(pageSugarFarm, 800)
         sleep(config.sleepAnimate);
         return true;
     }
     else if (checkIsPage(pagePowderFarm)) {
         console.log('Powder farm, add more')
         if (checkIsPage(pageSecondItemEnabled)) {
-            qTap(pageSecondItemEnabled, 300);
+            qTap(pageSecondItemEnabled, 800);
             sleep(config.sleepAnimate);
         } else {
-            qTap(pagePowderFarm, 300)
+            qTap(pagePowderFarm, 800)
             sleep(config.sleepAnimate);
         }
         return true;
@@ -435,7 +435,7 @@ function handleMaterialProduction() {
     else if (checkIsPage(pageBarryFarm)) {
         console.log('Barry farm, add more')
         if (checkIsPage(pageSecondItemEnabled)) {
-            qTap(pageSecondItemEnabled);
+            qTap(pageSecondItemEnabled, 800);
             sleep(config.sleepAnimate);
             qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
@@ -445,7 +445,7 @@ function handleMaterialProduction() {
             sleep(config.sleepAnimate);
         }
         else {
-            qTap(pageBarryFarm)
+            qTap(pageBarryFarm, 800)
             sleep(config.sleepAnimate);
             qTap(pageBarryFarm)
             sleep(config.sleepAnimate);
@@ -457,7 +457,7 @@ function handleMaterialProduction() {
     }
     else if (checkIsPage(pageMilkFarm)) {
         console.log('Milk farm, add more')
-        qTap(pageMilkFarm)
+        qTap(pageMilkFarm, 800)
         sleep(config.sleepAnimate);
         qTap(pageMilkFarm)
         sleep(config.sleepAnimate);
@@ -468,7 +468,7 @@ function handleMaterialProduction() {
     }
     else if (checkIsPage(pageCottomFarm)) {
         console.log('Cottom farm, add more')
-        qTap(pageCottomFarm)
+        qTap(pageCottomFarm, 800)
         sleep(config.sleepAnimate);
         qTap(pageCottomFarm)
         sleep(config.sleepAnimate);
