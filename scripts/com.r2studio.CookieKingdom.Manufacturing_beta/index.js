@@ -77,6 +77,14 @@ pageCottomFarm = [
 
 ]
 
+pageInProduction = [
+    { x: 609, y: 19, r: 56, g: 167, b: 231 },
+    { x: 617, y: 19, r: 255, g: 255, b: 255 },
+    { x: 625, y: 18, r: 34, g: 85, b: 119 },
+    { x: 619, y: 331, r: 166, g: 104, b: 65 },
+    { x: 19, y: 321, r: 166, g: 104, b: 65 }
+]
+
 function pnt(x, y) {
     return { x: x, y: y };
 }
@@ -121,9 +129,9 @@ function checkIsPage(page, diff, img) {
     }
     var whSize = getImageSize(img);
     if (whSize.width === 360) {
-        console.log('image size is incorrect, restart CookieKingdom')
+        console.log('image size is incorrect, restart CookieKingdom for 10s')
         execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
-        sleep(config.sleepAnimate * 2);
+        sleep(10000);
         img = getScreenshot();
     }
     var isPage = true;
@@ -146,6 +154,7 @@ function mergeObject(target) {
         var source = arguments[i];
         for (var key in source) {
             if (source.hasOwnProperty(key)) {
+                // console.log('merge type: ', key, source[key], typeof(source[key]))
                 target[key] = source[key];
             }
         }
@@ -393,55 +402,30 @@ function handleMaterialProduction() {
     // TODO: tap second production
     if (checkIsPage(pageWoodFarm)) {
         console.log('wood farm, add more')
-        qTap(pageWoodFarm)
+        qTap(pageWoodFarm, 300);
         sleep(config.sleepAnimate);
-        qTap(pageWoodFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageWoodFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageWoodFarm)
         return true;
     }
     else if (checkIsPage(pageBeanFarm)) {
         console.log('bean farm, add more')
-        qTap(pageBeanFarm)
+        qTap(pageBeanFarm, 300)
         sleep(config.sleepAnimate);
-        qTap(pageBeanFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageBeanFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageBeanFarm)
         return true;
     }
     else if (checkIsPage(pageSugarFarm)) {
         console.log('sugar farm, add more')
-        qTap(pageSugarFarm)
+        qTap(pageSugarFarm, 300)
         sleep(config.sleepAnimate);
-        qTap(pageSugarFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageSugarFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageSugarFarm)
         return true;
     }
     else if (checkIsPage(pagePowderFarm)) {
         console.log('Powder farm, add more')
         if (checkIsPage(pageSecondItemEnabled)) {
-            qTap(pageSecondItemEnabled);
+            qTap(pageSecondItemEnabled, 300);
             sleep(config.sleepAnimate);
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
-            qTap(pageSecondItemEnabled);
         } else {
-            qTap(pagePowderFarm)
+            qTap(pagePowderFarm, 300)
             sleep(config.sleepAnimate);
-            qTap(pagePowderFarm)
-            sleep(config.sleepAnimate);
-            qTap(pagePowderFarm)
-            sleep(config.sleepAnimate);
-            qTap(pagePowderFarm)
         }
         return true;
     }
@@ -804,7 +788,7 @@ function handleWelcomePage() {
     ]
 
     if (checkIsPage(pageWelcome)) {
-        console.log('In welcome page, quitting');
+        console.log('In welcome page, entering game');
         qTap(pnt(324, 329));
         sleep(config.sleepAnimate);
 
@@ -845,14 +829,6 @@ function handleAnnouncement() {
 }
 
 function handleFindAndTapCandyHouse() {
-    pageInProduction = [
-        { x: 609, y: 19, r: 56, g: 167, b: 231 },
-        { x: 617, y: 19, r: 255, g: 255, b: 255 },
-        { x: 625, y: 18, r: 34, g: 85, b: 119 },
-        { x: 619, y: 331, r: 166, g: 104, b: 65 },
-        { x: 19, y: 321, r: 166, g: 104, b: 65 }
-    ]
-
     if (checkIsPage(pageInProduction)) {
         qTap(pageInProduction);
         sleep(config.sleepAnimate * 2);
@@ -873,7 +849,7 @@ function handleFindAndTapCandyHouse() {
         }
         console.log('best candy > ', JSON.stringify(bestFit));
         qTap(bestFit);
-        sleep(config.sleepAnimate * 2);
+        sleep(config.sleepAnimate * 3);
     }
 
     releaseImage(img);
@@ -884,6 +860,9 @@ function handleFindAndTapCandyHouse() {
     img = getScreenshot();
 
     var foundResults = findImages(img, sugarHouse, 0.88, 3, true);
+    releaseImage(img);
+    releaseImage(sugarHouse);
+
     console.log('houses > ', JSON.stringify(foundResults));
     if (foundResults.length > 0) {
         var bestFit = foundResults[0];
@@ -897,13 +876,14 @@ function handleFindAndTapCandyHouse() {
         sleep(config.sleepAnimate * 2);
         qTap(bestFit); // prevent when there are sugar cube to collect
         sleep(config.sleepAnimate * 3);
+        return true;
     }
 
-    releaseImage(img);
-    releaseImage(sugarHouse);
+    return false;
 }
 
 function handleInputLoginInfo() {
+    var isInputAge = false;
     pageInputAge = [
         {x: 243, y: 276, r: 254, g: 94, b: 0},
         {x: 401, y: 274, r: 254, g: 94, b: 0},
@@ -913,19 +893,28 @@ function handleInputLoginInfo() {
         {x: 408, y: 210, r: 254, g: 94, b: 0},
         {x: 232, y: 216, r: 254, g: 94, b: 0}
     ]
-    for (var i = 0; i < 6; i ++) {
-        if (checkIsPage(pageInputAge)){
-            console.log('start input age');
-            qTap(pnt(285 + Math.random() * 35, 213));
-            sleep(config.sleep);
-            qTap(pageInputAge);
-            sleep(config.sleep);
-            qTap(pnt(450, 222));
-            sleep(config.sleepAnimate);
-        } else {
-            console.log('did not find input age page, wait 10s: ', i);
-            sleep(10000);
-        }
+    if (checkIsPage(pageInputAge)){
+        console.log('start input age');
+        qTap(pnt(285 + Math.random() * 35, 213));
+        sleep(config.sleep);
+        qTap(pageInputAge);
+        sleep(config.sleep);
+        qTap(pnt(450, 222));
+        sleep(config.sleepAnimate * 2);
+    }
+
+    pageTermsOfServices = [
+        {x: 447, y: 233, r: 66, g: 66, b: 66},
+        {x: 329, y: 126, r: 66, g: 66, b: 66},
+        {x: 452, y: 126, r: 66, g: 66, b: 66},
+        {x: 458, y: 216, r: 66, g: 66, b: 66},
+        {x: 286, y: 216, r: 66, g: 66, b: 66},
+        {x: 179, y: 126, r: 66, g: 66, b: 66},
+    ]
+    if (checkIsPage(pageTermsOfServices)) {
+        console.log('accept term of service');
+        qTap(pageTermsOfServices);
+        sleep(config.sleepAnimate * 2);
     }
 
     pageCanDownloadResources = [
@@ -939,19 +928,21 @@ function handleInputLoginInfo() {
     if (checkIsPage(pageCanDownloadResources)){
         console.log('start download resources');
         qTap(pageCanDownloadResources);
-        sleep(config.sleepAnimate);
+        sleep(4000);
 
-        for (var i = 0; i < 6; i ++) {
+        for (var i = 0; i < 18; i ++) {
             // wait for yellow bar (download progress bar) disapper
             if (!checkIsPage([{x: 16, y: 349, r: 255, g: 210, b: 76}])){
                 console.log('download finished');
                 break;
             }
             console.log('wait for download: ', i);
-            sleep(10000);
+            sleep(3000);
         }
     }
 
+    var findLoginTime = isInputAge ? 18 : 6;
+    var isChooseLogin = false
     pageChooseLoginMethod = [
         {x: 307, y: 239, r: 255, g: 95, b: 0},
         {x: 272, y: 78, r: 255, g: 95, b: 0},
@@ -962,73 +953,89 @@ function handleInputLoginInfo() {
         {x: 308, y: 169, r: 255, g: 255, b: 255},
         {x: 392, y: 203, r: 255, g: 255, b: 255},
     ]
-    for (var i = 0; i < 6; i ++) {
+    for (var i = 0; i < findLoginTime; i ++) {
         if (checkIsPage(pageChooseLoginMethod)) {
+            console.log('choose to login via email');
+            isChooseLogin = true;
             qTap(pageChooseLoginMethod);
             sleep(config.sleepAnimate);
             break;
         } else {
             console.log('waiting for pageChooseLoginMethod: ', i);
-            sleep(10000);
+            sleep(3000);
         }
+    }
+    if (!isChooseLogin) {
+        console.log('did not see email input, skipping handleInputLoginInfo');
+        return false;
     }
 
     // TODO: consider skip
 
+    var inputEmail = false;
     pageEnterEmail = [
-        {x: 402, y: 157, r: 255, g: 255, b: 255},
-        {x: 406, y: 63, r: 60, g: 60, b: 60},
-        {x: 294, y: 54, r: 95, g: 95, b: 95},
-        {x: 392, y: 194, r: 200, g: 200, b: 200}
+        {x: 375, y: 152, r: 255, g: 255, b: 255},
+        {x: 372, y: 59, r: 60, g: 60, b: 60},
+        {x: 297, y: 52, r: 60, g: 60, b: 60},
+        {x: 279, y: 53, r: 60, g: 60, b: 60},
+        {x: 312, y: 192, r: 200, g: 200, b: 200},
+        {x: 297, y: 152, r: 255, g: 255, b: 255}
     ]
-    for (var i = 0; i < 2; i ++) {
+    for (var i = 0; i < 10; i ++) {
         if (checkIsPage(pageEnterEmail)){
             console.log('inputing user email ', config.account)
+            inputEmail = true;
             qTap(pageEnterEmail);
             typing(config.account, 100);
             sleep(config.sleepAnimate);
+            qTap(pnt(370, 190));
             qTap(pnt(370, 190));
             sleep(config.sleepAnimate);
             break;
         } else {
             console.log('cannot find input email field');
-            sleep(10000);
+            sleep(3000);
         }    
     }
 
-    pageEnterpassword = [
-        {x: 374, y: 150, r: 255, g: 255, b: 255},
-        {x: 381, y: 56, r: 60, g: 60, b: 60},
-        {x: 266, y: 50, r: 60, g: 60, b: 60},
-        {x: 401, y: 120, r: 255, g: 255, b: 255},
-        {x: 393, y: 188, r: 200, g: 200, b: 200},
-        {x: 358, y: 307, r: 255, g: 255, b: 255}
-    ]
-    for (var i = 0; i < 2; i ++) {
-        if (checkIsPage(pageEnterpassword)){
-            qTap(pageEnterpassword);
-            typing(config.password, 100);
-            sleep(config.sleep);
-    
-            if (!checkIsPage(
-                [{x: 376, y: 186, r: 254, g: 94, b: 0}])
-            ) {
-                sendEvent("gameStatus", "login-failed")
-                console.log('wrong password length')
-                return false;
-            }
-            qTap(pnt(370, 190));
-            sleep(config.sleepAnimate);
-            sendEvent("gameStatus", "login-success")
+    if (inputEmail) {
+        pageEnterpassword = [
+            {x: 374, y: 150, r: 255, g: 255, b: 255},
+            {x: 381, y: 56, r: 60, g: 60, b: 60},
+            {x: 266, y: 50, r: 60, g: 60, b: 60},
+            {x: 401, y: 120, r: 255, g: 255, b: 255},
+            {x: 393, y: 188, r: 200, g: 200, b: 200},
+            {x: 358, y: 307, r: 255, g: 255, b: 255}
+        ]
+        for (var i = 0; i < 2; i ++) {
+            if (checkIsPage(pageEnterpassword)){
+                qTap(pageEnterpassword);
+                typing(config.password, 100);
+                sleep(config.sleep);
+                qTap(pageEnterpassword);
+                sleep(config.sleep);
 
-            // Touch here to start:
-            qTap(pnt(370, 190));
-            return true;
-        } else {
-            console.log('waiting for input password field');
-            sleep(10000);
+                if (!checkIsPage(
+                    [{x: 376, y: 186, r: 254, g: 94, b: 0}])
+                ) {
+                    sendEvent("gameStatus", "login-failed")
+                    console.log('wrong password length')
+                    return false;
+                }
+                qTap(pnt(370, 190));
+                sleep(config.sleepAnimate);
+                sendEvent("gameStatus", "login-success")
+    
+                // Touch here to start:
+                qTap(pnt(370, 190));
+                return true;
+            } else {
+                console.log('waiting for input password field');
+                sleep(10000);
+            }
         }
     }
+
     sendEvent("gameStatus", "login-failed")
     console.log('cannot find input email field');
     return false;
@@ -1071,14 +1078,15 @@ function handleTryHitBackToKingdom() {
         {x: 27, y: 317, r: 127, g: 127, b: 127}
     ]
 
-    for (var i = 0; i < 5; i ++) {
+    for (var i = 0; i < 4; i ++) {
         if (checkIsPage(pageNotifyQuit)) {
             console.log('Found quit notification, should be in kingdom');
             keycode('BACK', 1000);
+            sleep(config.sleepAnimate);
             return true;
         }
         keycode('BACK', 1000);
-        sleep(config.sleep);
+        sleep(config.sleepAnimate * 2);
     }
     return false;
 }
@@ -1091,6 +1099,7 @@ function start(inputConfig) {
     inputConfig = JSON.parse(inputConfig);
     console.log('start with: ', inputConfig.materialsTarget, inputConfig.goodsTarget);
     config = mergeObject(config, inputConfig)
+    // TODO: inputConfig.goodsTarget seems to be string
 
     if (config.isCollectCandy) {
         console.log('try collect candy')
@@ -1148,10 +1157,10 @@ function start(inputConfig) {
                 continue;
             }
             else if (handleInputLoginInfo()) {
-                console.log('just handleInputLoginInfo()');
-                for (var i = 0; j < 20; i ++){
+                console.log('login, wait for handleWelcomePage()')
+                for (var j = 0; j < 20; j ++){
                     if (handleWelcomePage()) {
-                        console.log('login, wait for handleWelcomePage()')
+                        handleFindAndTapCandyHouse();
                         config.jobFailedCount = 0;
                         break;
                     }
@@ -1171,15 +1180,26 @@ function start(inputConfig) {
     }
 }
 
-// start(JSON.stringfy(config))
+// start(JSON.stringify(config))
 //   JobScheduling()
-// ocrMaterialStorage();
-// ocrProductStorage(goodsLocation[2]);
-// ocrProductStorage(rect(433, 315, 16, 12));
-// ocrProductStorage(goodsLocation['shovel'])
-
-//TODO: Auto restart, Auto input id/pwd, add find all houses
-// handleFindAndTapCandyHouse()
-
 
 // sendEvent("gameStatus", "login-failed")
+
+// handleGotoKingdomPage()
+function handleGotoKingdomPage() {
+    console.log('trying to get to kingdom page')
+
+    pageInKingdomPage = []
+    if (checkIsPage(pageInKingdomPage)) {
+        console.log('already in kingdom')
+        return true;
+    }
+
+    if (checkIsPage(pageInProduction)) {
+        console.log('In production, hit back to kingdom page')
+        keycode('BACK', 1000);
+        return true;
+    }
+
+    return handleTryHitBackToKingdom();
+}

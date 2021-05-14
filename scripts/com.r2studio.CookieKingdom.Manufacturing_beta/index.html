@@ -370,7 +370,7 @@
             configJson[setting.id] = setting.default;
           } else if (typeof setting.default === 'number') {
             command += $('#setting_value_' + id).val() + ', ';
-            configJson[setting.id] = $('#setting_value_' + id).val();
+            configJson[setting.id] =setting.default;
           } else if (typeof setting.default === 'string') {
             command += '"' + $('#setting_value_' + id).val() + '", ';
             configJson[setting.id] = $('#setting_value_' + id).val();
