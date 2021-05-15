@@ -14,6 +14,9 @@ config = {
     jobFailedBeforeGetCandy: 5,
     jobFailedCount: 0,
     run: true,
+    isXR: true,
+    findCookieHouseV2: true,
+    locationId: 0,
 }
 
 factoryType = ['wood', 'bean', 'sugar', 'tool', 'powder', 'bean_2', 'wood_2', 'powder_2', 'berry', 'berry_2', 'poweder_3', 'berry_3'];
@@ -77,6 +80,17 @@ pageCottomFarm = [
 
 ]
 
+pageInKingdomVillage = [
+    {x: 248, y: 15, r: 241, g: 51, b: 92},
+    {x: 321, y: 15, r: 255, g: 238, b: 17},
+    {x: 428, y: 14, r: 0, g: 193, b: 255},
+    {x: 517, y: 22, r: 235, g: 161, b: 89},
+    {x: 551, y: 15, r: 251, g: 239, b: 215},
+    {x: 617, y: 308, r: 71, g: 122, b: 190},
+    {x: 27, y: 225, r: 223, g: 156, b: 77},
+    {x: 19, y: 111, r: 190, g: 3, b: 37}
+]
+
 pageInProduction = [
     { x: 609, y: 19, r: 56, g: 167, b: 231 },
     { x: 617, y: 19, r: 255, g: 255, b: 255 },
@@ -111,6 +125,13 @@ function qTap(page, sleepTime) {
     sleep(sleepTime);
     tapUp(page.x, page.y, 10);
     sleep(sleepTime);
+}
+
+function tapRandom(x1, y1, x2, y2, sleepTime) {
+    var x = x1 + Math.random() * (x2 - x1);
+    var y = y1 + Math.random() * (y2 - y1);
+    console.log('tap: ', x, y)
+    qTap(pnt(x, y), sleepTime);
 }
 
 function isSameColor(c1, c2, diff) {
@@ -801,9 +822,9 @@ function handleWelcomePage() {
                 sleep(config.sleepAnimate);
                 break;
             }
-            qTap(pnt(324, 329));
+            qTap(pnt(50, 329));
             sleep(3000);
-            console.log('tap middle and wait for announce page');
+            console.log('tap and wait for announce page');
         }
         handleFindAndTapCandyHouse();
     } else {
@@ -831,17 +852,14 @@ function handleAnnouncement() {
     return false;
 }
 
-function handleFindAndTapCandyHouse() {
-    if (checkIsPage(pageInProduction)) {
-        qTap(pageInProduction);
-        sleep(config.sleepAnimate * 2);
-    }
-
-    // Tap the candy
+function findAndTapCandy() {
     var candy = getImageFromBase64("iVBORw0KGgoAAAANSUhEUgAAABMAAAAQCAYAAAD0xERiAAAAA3NCSVQICAjb4U/gAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAOrSURBVDhPTZRraBxVFMd/985zs5vsZkmwicWkFg0IYg3Y0oIlUqlaECpIiRAsFBGLqC2IH9riF+kHFUREUvBRRbGgUazoF0WUttjWtJWQmkLSGE1rXibR5rGzO8/r2VDQO5y7OzP3nPN/3Dtq+rd3jNJgiIijkNnREXaefZieI/eSSx1++nAQryHBy0NbweNwz0Ze/mGIj28dIdfgY0myZzu4roOaHOs3jq1ROmH0lyEev/ggD7x4Hx8V23mqukCrSrhH3vW66xmL/sCxMhoci+fODDHQMSF5Nq7vQEsz2lIRaVxhamIcWxaGxqIvlyNTjqBNUHJZlseYnqfk5yg7Ho24a0W8go9bFsgtTUyPXEOZ6KQhS4jCgKPnS3zX0k5X93psoEHmLnI8Kv+kt5RYkgiwSPHxOIGAoMoXX53l9HZpYMyogRtsOxmzeXe34IgFkYhIJghseqTQDrn7b9Ru/vpr82DtopSEpwcuoKKlz8xDX97Gvr1bpCM8ITEiMS8xI7FHov78/+OKrFisVeuuEUuE8mz/J+extVZcHZ/j08VxcsrCdhv5JqvIAqFi2czky+ynIGQNX8fzBOkkRmSxjbinWOOQSsFcAiqtfG60r9h4OOX+F7bgyYKdfpGBdFGIZtLNpmRpCpLVaJalyCqJbAc3s/G1FrIJR/ovMP9SG1rMk2FhlE9z1aVQczm1HNAcujQl4qigmI4jfo+rLBifVLeSqmZmxZJrGcxK0WRZoInatjKK3nc1ux7bRC4SmkLHFuqdeUmU6x+TMMiqIHB5vXGDzPVEOLB8ldUsJNMpTp1O3bY0VQxNKjqKHsVMkU+1hEMuVpRSm5ZYaEYuWt69GSyuFeqPF+Qe7qzdTWdlE08+0833l+akWBCIcJq95VZ6y83sLhXZkRe5QxEpEq1Ch7JQt0PDZG2FQ0vTTFUCkiTlL8aZcId56+Bl7mhKUX9eedus6+hk8yuaIALHGIbf2MXQ9RqnbtRIBEIgseKFLLsxsZOI8KkYkXL82V/Fzoi5fpdEmOhMBPx7aZUfDwZcOhTQtU4zIxus3fO53RZ3BLUnUmzzm9lT6MSrOWTimmU08+/ZzB3zqEuVmkzOpnaYOvczcRITpgnH9wU88tq3a/unu+SzwRJxpeuxE8NcD5bpy7cRy8b64MBlOYXmZiFFlGWoM+/3mUb5aliFMrds3YrvuGw/mscSh9xKRY5KA0U/4vSrAXc938BKNaOWJELNYrUSkWW67iNhEvIvXjKLGJ5QEOoAAAAASUVORK5CYII=");
     var img = getScreenshot();
 
     var foundResults = findImages(img, candy, 0.92, 5, true);
+    releaseImage(img);
+    releaseImage(candy);
+
     console.log('candies > ', JSON.stringify(foundResults));
     if (foundResults.length > 0) {
         var bestFit = foundResults[0];
@@ -853,10 +871,93 @@ function handleFindAndTapCandyHouse() {
         console.log('best candy > ', JSON.stringify(bestFit));
         qTap(bestFit);
         sleep(config.sleepAnimate * 3);
+        return true;
+    }
+    return false;
+}
+
+function swipeFromToPoint(fromPnt, toPnt, steps) {
+    steps = steps == undefined? 2: steps
+
+    tapDown(fromPnt.x, fromPnt.y, 40, 0);
+    sleep(80);
+
+    step_x = (toPnt.x - fromPnt.x) / steps;
+    step_y = (toPnt.x - toPnt.y) / steps;
+    for (var i = 0; i < steps; i ++) {
+        moveTo(step_x, step_y, 40, 0);
+        sleep(80);
     }
 
-    releaseImage(img);
-    releaseImage(candy);
+    moveTo(toPnt.x, toPnt.y, 40, 0);
+    sleep(80);
+    tapUp(toPnt.x, toPnt.y, 40, 0);
+    sleep(config.sleepAnimate * 3);
+
+}
+
+function goFindHouseInSpecificLocation(id) {
+    handleGotoKingdomPage();
+
+    if (id == 1) {
+        swipeFromToPoint(pnt(110, 260), pnt(500, 70));
+        tapRandom(75, 95, 553, 285);
+        sleep(config.sleepAnimate);
+        if (!checkIsPage(pageInProduction)) {
+            handleGotoKingdomPage();
+            swipeFromToPoint(pnt(500, 70), pnt(110, 260));
+            return false;
+        }
+        else
+        {
+            console.log('found production in location: ', id);
+            config.locationId = id;
+            return true;
+        }
+    }
+
+}
+
+function handleFindAndTapCandyHouseV2() {
+    if (checkIsPage(pageInProduction)) {
+        keycode('BACK', 1000);
+        sleep(config.sleepAnimate * 2);
+    }
+
+    // while find 7 times
+
+    // Tap the candy
+    // for (var i = 0; i < 7; i ++) {
+    //     console.log('looking for candys...')
+    //     if (findAndTapCandy()) {
+    //         console.log("Found and tap candy");
+    //         break;
+    //     }
+    // }
+
+    // while find 7 times
+
+    // Try find production building
+    // for (var i = 0; i < 1; i ++) {
+        goFindHouseInSpecificLocation(1);
+    // }
+
+    return false;
+}
+
+function handleFindAndTapCandyHouse() {
+    if (config.findCookieHouseV2) {
+        handleFindAndTapCandyHouseV2();
+        return;
+    }
+
+    if (checkIsPage(pageInProduction)) {
+        qTap(pageInProduction);
+        sleep(config.sleepAnimate * 2);
+    }
+
+    // Tap the candy
+    findAndTapCandy();
 
     // Tap the sugar house
     var sugarHouse = getImageFromBase64("/9j/4AAQSkZJRgABAQEAkACQAAD/4QBaRXhpZgAATU0AKgAAAAgABQMBAAUAAAABAAAASgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOxFESAAQAAAABAAAOxAAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIAFMAXwMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AOL+M3jDTf2UtV13wf4J8UW+uHRZpbHUvEx8PR6OLe4RvLntrK1WR1VQ0aq0hVS7xudrgpIvkXw/8CaD46tLzUNQ1jVNL1i+nUwW0UsStsGcyzGaNzJNIW/hIKqi5LlsR/pP+07/AME2vD+u/GabxhNpejyahqV0ZLiwvEMIuH8pgWRVPlySHaX3lQxCHLn7w8v8Qf8ABPbwRfxXdv8AZZrfUmT7TbwWE0kkjIB1QHczq+3jCkgk9T8o/K8yzTC5Zm0sNUw15VHeySaabdmkm9N7K1lrZI8/N/FjGYPEUsBQVRSiviT1d9NHF316tq72ex8b+MP2b2mktbiy1GTUjGjKYb90Vycg5TYipyODwOg5PbgfFPgbWvCt1Y293ZzWmntchy4IdIG2NgArlRuJHcYOepavpjxd4FjtvHPiO38JaxNeWVteW8GiXmoxFhe2iW8Xm703IfMWWWYnOwujW8gBR4y3E+JvBHjb4mfDS+ju/D9rp+hXc4Fn4jHnGaKaN8FfJyYsFScxSbZ4ZkQ71KMj/dY/h6g6aq4RX5tEo25U9d9rWe9nv0Pp8BRrrNp43Ma7jNpe0VTmbnF2921m3pZpbdT0r9gT41w+O/h7Lpsxa41jQYisMYI/0m23FVZCcbsMvl55wFXJyxr6Q+BPw2h+N/jsWOraTqOi6pDqsFyzXNm6RSWkMcbzQrcJyZm3RkAlQqSbgxO0D8/f2aPHkf7PHx78L31tpMlzZ/Dy2n/4SCCWNlttUjZ4i0ZbPLPGrTopJVWaMsCFZa/ZKT9o/wALTaHpsXwvbQvFniLx0f7T06G2nCWxEwBN/fSDmCAfKGZwGYgRqC3A/IMZkM6eYy9jBtzdkuqd9u2u6P16WdpZfCm3ol8XRqyt56bPvbzPOf8Agqx8StC+DX7EfiLTbjWLfT9U1pLez0y2uJDNPqG25hMoKtuaRfL3B2fKnfhiS4B8P/4Jv3//AA3Rqd1pepW9tpOpeHoozeXUAPkXqMHCuIQRtf5eQrKhzkAfdrxv/gpB8Y/BGg+D/G2mamx+KPxUktprfUPEc7mOw0Jo8kxWSAkFUZWwq5XLMdxyyn2n/gg3pMfh34yeOlhbMdzZ2qopP+rbNw3Bzk8KfyrXibheeXKhRxdm566X7xTVzzMhzStOhiMRQXLyr3e7sm7tfkfpB8LP2e/CvwiijbSdPjN5GD/pk2GmyQQccALwSPlAyOua8wsPFOi+GviFr3gGa/i/4SFNWu9Tt4r13X7fBeM14Bbg/u38lWeJlBL7VBKBShr3RwzD5pP1r5L/AG84PhFoWpya34w8UJZahKFV7JFW4MzxFQhCAFtysFzt3MuA20YzX0HCudYfKK3LKNoS0slrfpZLVvy6/ifK4jLq2cVGqk2523d3b17L8EeWfGzUNT+Inx8ul1rUL68uNRvnh01BE15JMIV2YjgjVnkYxwAABfn27mbAZq93+KPxq8J/BD9k7Q/B/irUrH/hIZNOtEv7WyJuZZbpWje5dEjyz/vgxbaCQG3HA5r5d+FcHxR+PltPD8EfBcXg/wAP3SC2u/GviJUha6hzwiMQTJGMEbF8xQCCVRjmuF/bt/4J4al+y/4D8NfEXRvit428QfEDxN4ih8Oai08oOjzx/wBn3tzkWswkIkQWwUNvxg8KCa+64oeY8SYVUKcFhaEE3epfmeju+WKfIrX+LXrY8WH1PhzmxXtY168dVFXUE07+9Kzbtu0lrtc+tPD/AO0VZ2SL4f8AENnN4g8LqAqgkfaNPYEbXt2ODxgYUkAFV27cHPrfhnwjop8Pw32gXg1DSbkAR3gdpXz12SlyXVxu+6/PP1A+Tr6wkhEcjIypMCUbHDYODXQfBv4pat8KvF0c+m3tva218yxXsV2rvZzx5x+9RQWwATyoLAEgdSD9dLBUZVFiIwXP3sr28nuj8/p8sZqTSv3tr9533xX/AOCenw1+KcN9N/YsPh7Xb6b7Sdc0WKO01BJMYzv2lZFOSTHIrxljuKFvmri/h9+xF4q+DXjpdS0v4gadHYmeNZ/+JDKt7qFojKTbzOL37PI20Moma2MiB22FdxB+3PDem6b8bvhtpd54W1LTpo7OWVZlVpfKSR9rOqsyB8KcYygyD2xiuP1z4Ta9Y62IL5IofMZhFL+8aBwMnh1UheAThsH2rSjiYqPJt5HqznUm+ebcvN6nxf8Atgf8EqNH/a6vLP8A4RnUpPAuoNG0GqrpOkpMmtWoJfZIishVlJf94rZKu6sGBG31L9mb4FWf7LfhCz8M6DaWY0axQvJdzFftN7McfO6qiqqhQFAzkKijJwSfojRvhats4kk1C4ZypUiyG3gjBxI2AQRkEY71zvxW+N/gP9mp4ItXutNsb6ZBJHCwe8vZASVDrEoLhcggsF2g9xWLeDoSlipJRb3k7JdN29OiHjM0qQwyp16vLTj3aSXzfqz5D/4Kc/8ABOKb9tX4WXmueGdLudA8ZRssMl9b2JkXWrdo5E2SoPmYBzEN6qzBN3UAAeI/8E8/jIv7Cvxt8TWHxe0vVPAes29lBd/Y9Qt3Vr+NTLCZLVtuLhMzg/J8wwdyqQQPrj4i/wDBV7QrS1nj0vTdcvrxWKJ9paO2tmXP3sxtI3fgFAT3214n8aPEEn7TGn2918RNa8M6XJotmur6BYW+lJfLqMsm7ETMom8nKrhkmcDds3R9WX894vx2S5p7OE6zc4O8XCzSV02ryaj001vf7iMj8T8PlrnSi/bwkmpJaWVmvibSW70udP8A8NsfGj/goPql5onwR8O/8I74dhcR3mvakyxLAp9SQw5wylQJCy5+RSCR0vhP9jf4K/sw65Dqvxa8f+H/ABd8QpEWWZvEOpxRwwj1W2kcswGcBpNwwuQExiqfwXv7bWPgsuueNvEWsWmk6fcS2Vna29yuk2CwjGY44bFIfNQlSpSTzf8AVE8ciu4+CXi34ZeILO40bwXY6Pp8MilprGLTVs1n4AY7doD+/U4619VkOX5BgvZywrXPNXTk17Rp9r6r0ikn2PRxPHDx1OFKE1TjLVQT5brzW7fm7+rPdDr0Os29lJY3Md1bXEKTxzwyB42gPKFWGQVbtjgjcQeK+Of2u/GmpftOfFPV/hvJqun+DdJ+FWu22pw3b2z3VxrN3PpXXcfkgjSK+kXBjlLsv3kzivULL4Mat8EtUm1P4X3FpYWtw4kvPCt87Lo12d2WaAqC1nMVJG6MNGcLuiPWvnPxz4mF5+114ykutN1jS9S8XW1nqkljdWcgbSzBbRWhSWUKYHDmJmjkhkkVgGB2MArfaRwtOcZRmlJNNWfno015q67fM8WUYTm1W+Fpr7z27W/BzW3gG0tvMa6utMgUGZgA05C4diBxluWwO9efzLu+orJ/Z0/aw/4XZ8PdPuI9W0+41qG1T+07RPL86GTlSzRgkorsrFc4yCPpW9qAVrhmRfLVjkKOi+1eXhqinFOOzOSVSFSKnDax13wo+OviH4Z654TOg+Ws2j6rNJIkkhWO/t7r7PHNA/BwuIFYHBwwU4yvP2l8Wtde40m/a8v47WaaJw82QsdjbjkgE4wMDLMcE4J4AUD4F8KRbvFGmDgFruIc/wC+K94/4KhfA/xN+0P+z1r+k+Drnb4isbiLULOykm8u31YxKQbWXPykMGJXcQolSIkqAWGOMjKL56cbySbS2u+iuP21WNCfs1zNJtK9ru21+lzjfHP/AAVq8L/C/TLbRfD2myfEDVLN/s7XFrdfZrGRAPk2TeW5kbBA+RWU9Q5OQPktfDWtfHT9oPxd4gs/+Eg03VNY1m6vLrw/eaXJdNao3zqGZAPLxnAbBByq4JIU+H/Blta8f37WWraTfabdabG/2loYm8iFkKK6OcHy3DSKCGz1X5iTivvX/gl74B07V/H/AI2ury6muP7GtLX7TClx/rjcPI26Vh8+/wDdDbyM7myTX5rUxmLxWbQyvOKKcZXfLZq2jacWmn011afkfm2HxmZZlmCwOcUrRb91aLltF6prVtu2rdrXVu3jc/7I3ibxLo41rQ00zxHbzsvGm6ghPO0k/vQmCAQ2CAenqK9B+Gn7G/jLxBp1vY3kqaDplzMJpNP84z3G9dyq3lR5jZypOG3khX55yte7S6jpetft56Jb6HJEul/2PZRXUEe7yLmUPd+YGJ4mbHk5Y5+6MnIFfV9lp0UVmojXyVYBgsYEYX8FA/WvajwPkcJqrGLlF9Oa60fda6W7n1NHgnA0K0nJST6pu3n2T1XnseBf8MrWPi34Paf4Tv8ARLl7Cx8qFJrq5+z+VHEiqhATbIr5ByykAhiMYJq98LP2HvDfw0vGvNPWOC8uMK9wpkumZfRWc4TPQ7QM4Gc4r3jTtPX7FczhuYZ1g4HLEoHOfwZenvVi301o9W0+3mb/AEm3tGmmVm2rNJ5eCvYdXBGem3PvX0sqNH2qrckeaKsnZXS8m7s+mWX0HONTkXMkknZXSW1nvpr/AEzzy5+H+i+HQnmW9xeSSDOya42lB6/IBXzB+3N8WPhb8HvjB8HLX4h2lvY6LdXWrancXcQlaSGGGzFuImZWMwjkmu4mwnBa2UkEDK/Zd/p0N1pSx/ao7qWWdriUwOHVPlVVUN0wMHoepNfmd/wU9j1wft26LfWmveN/Buk/8IXHpOj6hoesz6bHrEv2ye4vYkuLdgWKbbUvEWB/doxUqAa6cRjlhsNUxM2/di27JyfbRXW17vVaa3Msyr+ww06vZdub8Lq/nqvU+U/2UDovw3+L7avJrEej6XtnhFnPA0vmQyNuWLzgThlKxlpCBuKHgbjj7UMEHirzNQ01YIdLuG82B/tAkjWNvmQB/wCMbSMEZJGD3r4J1TTWayt5Le2j8u3ixJLF/wAtRkkMQOB8uBkDnaSSSTX2R+yXOvxC/ZnsbhZlfUPD076bJGSd8qDLrgeixsg/IV208BRoQ/2fRXvb1FLCxoLlgtDpI7eO21K3EcxkZZVywUqucjpnn8wK+8fEOkXGreLbi2s4GmfIYqvbIGST0Aye9fCVlF5uqWyj+KZAP++hX6Q2Os/2bfXC7QUMg34HJO0c/lj8qyxEmmmuz/Q0wkea6Pkb4m/8E4JvA/7QVj8VvDFna65cCK8i1jw3q15I+laqtykucsyStAqTSmYosbozRjCxsSx8L/Y//wCCq3h2w8C61b/FC+0Xwna6UlhDo0emWzTQ6lcP9sF5HaxW0YiKI0du4J6eflpDuWv0S/aJ8IaT8ZPgJ4r8K6hqF3p9p4o0u40s3Nodt1bNLGVEsf8AtoSGGeMqM8V+Kum/CDw1ffGLxF4G8RahrM2k/DW4vrDTXk1Z7a4uo4pUgae4ljMbMSkVuBt2qoO3BAWvJxUq08VQq211je9rqzaT3va11ofVZXg8G8LiZ1/iSi1aKckuZXs3a172auewf8EtL+xT9uIPbq9npPirUdRufDkE8sZmFrbm8kWJlR2CSJBLAWTOV3DqOa/QT9qn9svw7+yp4btZryx1LXNSv5HgtrOzCoiuqbj50zkJEvT+8xzwpw2PzJ/ZIk1Dwn+1fo+n6LqF9b6PqF3LpPhbULabzlhLNDJInmAk7j+9BMhLSIiZLJsr9k5PiC9vat9niWCYhQjRQhQw5zuJzz9PeuXL41q2DcITjzKU0mtUveb+e/c5eMKE54h+wbpylCDTkrv4UtnZbK2+58bfD39tv9or4qXD3nhH4b6bFoOpSFoANLu71clQoLXiyRR5ChOVC8enWvUvCmk/H3xhqlpd+MNW+H/hPSfN2XdnDHJeXrqCMlPLkkAJ5wWmyCMlT0PsX/CSXF5HM13czSjIwrMdvfoK4f4rfG7wz8KLS3uPEmtWunG8cxWVthpbu/k/5528CAyzSf7Eas3tW+ByXFRq89avKb7JJL7kr/ifG4bK6kLOviJzfryr7lt8nY0P+ED064I+0XmsapLnILssI/I7yfzFfDf/AAVx/ae0a18PD4M6Npcc19aXttqGvzzwn7P5flNLFbglg8khaSGUsPkVQFBLFlT6m0f4n6z8WLSVbGeTwLYmRomGoQ51KdQSA6lBJFArdcMWkA6rGRint+z5b61a3Fuul6PrkMkvmzySSxXRnkP8cjSEsze784A9K9fMcHXrUnSjU9m31t08tkvVarprqaZrh8TisO6OEqKm39px5tOtlda+d9D8fPFfhK4+FWm6esl099oV67Ry306COeMsSI1ZcAKmdik92EeFXMpep4H+J/iD4aarI2h6tf6ZcBlaWGKQhJTtym+M/K3ytkbgeGBFfop+wdcfCT4efD7wtq3iDwZEmvT2tpqK6/d+bqjR3Ztl3yqJmd7d8MBmAc7uigV7r+1F+zt4D/ag0HzNf8H2c2o2lqV0/X5FMWrW4XcyrHNGRIYsszbHcruzujNdWDqQpyfuytJ3bb6vsm3p5X07H0WOxUsRJQnb3EoqyS0WivZK/ruz548J6HGn2LULq5hjhW9t4Iw8gDSu0qLg88E54HUmvuvxJ4msPCFlqmpapeW9jYWZ8yaeeQRxxrsXqxIA+pOK/AP9of8Abt0H4yfBzQfCr2msJdzTWw1fV3jVG0+WJlSaWCMMFnbaznaWQBZF6EnZ9+f8FwdAuPhd+xv8L/Dmn6lqF3pNj4nsNMkmubp5Li9S20e8ZGmcnMhLwRSEkncyZOe/l4zFKMpuOvIn966fgeDRxnL7R01flX4nefF7/gsJ8KfB/ii5srZtY8YlVkgd9Jt1NmrDgKJpHTcCeRJEHU9QSOD+Xr+Pr66+FlvGsd9/wiun6v8Aanupp2uGuXdCreVOw+VHk875AH/eGZskjKc7o+uaLrDWsa6utx51vHLM4t3j+yyksGifdwcbQwZSQVdSdpyB1Xi3wreabpGteHfCd1cax4TOoi+0iPVobeJlBZCWlUF9jkLj92zcErna7g/m+ZZlXxbX1tcvK7paW9U3q3bvZHVkfFUcqxmLwWdVnh5um3G3Kru3MuWb0crfZXV2avY9g/Ym+IvhXwL+0x4Z8WWc91/wi+s+JLDT7fTzNNNc6fcsbaMPIJPvRpI0jb1L7UnxgF9lftFHujyyBnX+IKC2Pyr8w/8AgjN8O/hl8TNU8QaT4j8PaJrvxm0qdrhdD1PRBHpemaejRgXFopVY/N3zBjkxviUsikEs+z+2j+zd4B1/xZ4B0P4Uw6Q3irxFPfHXYdM8RNqtrYKjxFXmUyzGHhnO1SANrKN5ANejgeJJ0K/1ONFy5veTtyp3drKycW9tL6LZWRvxVxJTlllPN8HD2nuxjaU/3kpXUVZKLu7vV6dfn9Sft7ftEP8AC79nbxhdeGfGnhHw943sdPa40yHUr62E8jRkPIkUEjZkmaNXCLtbMhUYIr82f2dv+Co+n/D27uL7W/AdrrHifUo8ap4nu9cnbUdQHy/LuaCVlXgERI0cSkcBa/Qnw3/wTr8Ia18KLLwvqXhDSLnTrWMCS9voRb3U8uAGn81MSq7f3lI4+UfKMV+Qv/BR39liT9gn9qy+8Gx3U1/4d1Kzi1jRLuVgZJbWUuhD7QAGWWKVPdVVv4q/WcFjKNC1PEpWlbVPZ9na2nZ/gjzZYqdOMZ1la6V7O9n2vZelz9wf2VvE/gv9pf4J6H480X7U1nqikvp7yLjTpF+VoZNvO4HDAZHysvBByfRdUsNQQqtm0MNvH/q4YR5YUfTof88Cvyt/4N8v2qT4X+L+u/Cu+u3Ol+NYW1PSo2kYpFqEEZMgVegMtupLMSP+PWMc5FfrJcagloV8yOSTjJVW2kfjg459qzx1CVOu0tVuu1n/AFY642lE/MD4bahMvhXwPb7v3M3hqOR12jlkjtQpz14Dt+f0r9Db2Z2VULMVjt2CgnhRnOB+Z/M0UVNvdiaS/iy/rqz8q/2CP2fPBI8WtazeGdJv7TVIvCl9dQX8IvIZZp9KtriV9ku5QWluJmIAAw+PugAfUX/Bf6xhuP2ZfBMbINn/AAsG3QAfLhTo2oggY6cUUVw59GMXNRVtP8gwtOPtWrK11+Z+Pl9qUy+KvlYKJpGVwFAB+Ut06Zz3616b8E/EF1rOk2SzGELb2wVBFBHD0lb5jsUbmOTlmyzdyaKK/M8ZCLoyuu52eKlCn/Y2ZT5Vf2dJ3trf2tr3726ndWei2er+M7S7urW3mvJpEtnuGjHnGIvym/723k8Z719xf8EcdPt7HxvqV1Db28d02hT5mEa+YcXcQxuxnGO3Tgegoorzci1zGgn/ADf+2yP5g4Dk55pSctbN/wDtp93NM13eDzGaT5u56V+Nn/BypbRt+2T4UlK/vI/Aunqp9Ab/AFTP8h+VFFfsGO/3afp+sT+gc1/3Wf8AXVHyN+xZ4s1Lwl+0j4B1DTbyazvLPxHp7wyxnlT9pj49CCCQQcggkEEEiv6UNfUR6rcBRjkfyBoorowcm8JRb7P9DDKJN0Vc/9k=");
@@ -886,6 +987,15 @@ function handleFindAndTapCandyHouse() {
 }
 
 function handleInputLoginInfo() {
+    if (handleAnnouncement()) {
+        console.log('Found announcement page, handleInputLoginInfo success');
+        return true;
+    }
+    if (checkIsPage(pageInKingdomVillage)) {
+        console.log('Found pageInKingdomVillage, handleInputLoginInfo success');
+        return true;
+    }
+
     var isInputAge = false;
     pageInputAge = [
         {x: 243, y: 276, r: 254, g: 94, b: 0},
@@ -920,6 +1030,26 @@ function handleInputLoginInfo() {
         sleep(config.sleepAnimate * 2);
     }
 
+    pageCannotFindLoginInfo = [
+        {x: 44, y: 255, r: 119, g: 30, b: 27},
+        {x: 65, y: 323, r: 49, g: 10, b: 17},
+        {x: 22, y: 289, r: 112, g: 81, b: 19},
+        {x: 315, y: 242, r: 88, g: 149, b: 8},
+        {x: 299, y: 247, r: 121, g: 205, b: 12},
+        {x: 248, y: 245, r: 217, g: 205, b: 195},
+        {x: 259, y: 108, r: 60, g: 70, b: 104},
+        {x: 231, y: 163, r: 81, g: 81, b: 80},
+        {x: 373, y: 177, r: 80, g: 80, b: 80},
+        {x: 337, y: 178, r: 80, g: 80, b: 80},
+        {x: 241, y: 178, r: 80, g: 80, b: 80},
+        {x: 222, y: 182, r: 241, g: 231, b: 219}
+    ]
+    if (checkIsPage(pageCannotFindLoginInfo)) {
+        console.log("quit can't find login info page")
+        keycode('BACK', 1000);
+        sleep(config.sleepAnimate);
+    }
+
     pageCanDownloadResources = [
         {x: 346, y: 240, r: 121, g: 207, b: 12},
         {x: 420, y: 237, r: 219, g: 207, b: 199},
@@ -944,7 +1074,7 @@ function handleInputLoginInfo() {
         }
     }
 
-    var findLoginTime = isInputAge ? 18 : 6;
+    var findLoginTime = isInputAge ? 20 : 6;
     var isChooseLogin = false
     pageChooseLoginMethod = [
         {x: 307, y: 239, r: 255, g: 95, b: 0},
@@ -969,7 +1099,8 @@ function handleInputLoginInfo() {
         }
     }
     if (!isChooseLogin) {
-        console.log('did not see email input, skipping handleInputLoginInfo');
+        console.log('did not see email input, tap lower left and skip handleInputLoginInfo');
+        qTap(pnt(50, 329));
         return false;
     }
 
@@ -1096,6 +1227,22 @@ function start(inputConfig) {
     config = mergeObject(config, inputConfig)
     // TODO: inputConfig.goodsTarget seems to be string
 
+    if (config.isXR) {
+        while(!handleInputLoginInfo()) {
+            console.log('XR: trying to login');
+        }
+        handleFindAndTapCandyHouse();
+        // for (var j = 0; j < 20; j ++){
+        //     if (handleWelcomePage()) {
+        //         handleFindAndTapCandyHouse();
+        //         config.jobFailedCount = 0;
+        //         break;
+        //     }
+        //     sleep(3000);
+        //     console.log('waiting for annoucement page...')
+        // }
+    }
+
     if (config.isCollectCandy) {
         console.log('try collect candy')
         handleFindAndTapCandyHouse();
@@ -1154,7 +1301,7 @@ function start(inputConfig) {
             else if (handleInputLoginInfo()) {
                 console.log('login, wait for handleWelcomePage()')
                 for (var j = 0; j < 20; j ++){
-                    if (handleWelcomePage()) {
+                    if (handleWelcomePage() || handleAnnouncement()) {
                         handleFindAndTapCandyHouse();
                         config.jobFailedCount = 0;
                         break;
@@ -1163,7 +1310,7 @@ function start(inputConfig) {
                 }
                 continue;
             }
-            else if (handleTryHitBackToKingdom()){
+            else if (config.jobFailedCount %21 > 0 && handleTryHitBackToKingdom()){
                 console.log('just handleTryHitBackToKingdom()');
                 config.jobFailedCount = 0;
                 continue;
@@ -1184,8 +1331,7 @@ function start(inputConfig) {
 function handleGotoKingdomPage() {
     console.log('trying to get to kingdom page')
 
-    pageInKingdomPage = []
-    if (checkIsPage(pageInKingdomPage)) {
+    if (checkIsPage(pageInKingdomVillage)) {
         console.log('already in kingdom')
         return true;
     }
@@ -1198,3 +1344,12 @@ function handleGotoKingdomPage() {
 
     return handleTryHitBackToKingdom();
 }
+
+
+// handleFindAndTapCandyHouseV2();
+
+// start_pt = pnt(211, 33)
+// end_pt = pnt(1000, 500)
+// swipeFromToPoint(start_pt, end_pt, 4);
+// console.log('<>')
+// swipeFromToPoint(end_pt, start_pt, 4);

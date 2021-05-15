@@ -277,6 +277,12 @@
           title_zh_TW: '收星星糖',
           default: true
         },
+        {
+          id: 'findCookieHouseV2',
+          title: 'Randomly search for cookie house',
+          title_zh_TW: '隨機點擊尋找餅乾屋',
+          default: true
+        },
       ],
       
     ];
@@ -389,6 +395,7 @@
       }
 
       console.log('>> configJson: ', JSON.stringify(configJson))
+      configJson.isXR = false;
       command = "start('" + JSON.stringify(configJson) + "');";
       return command;
     }
