@@ -15,7 +15,7 @@ config = {
     jobFailedCount: 0,
     run: true,
     isXR: true,
-    findCookieHouseV2: true,
+    findCookieHouseV2: false,
     locationId: 0,
 }
 
