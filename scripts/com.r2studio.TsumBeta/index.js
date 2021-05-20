@@ -861,7 +861,8 @@ Tsum.prototype.init = function(detect) {
     this.gameOffsetY = Math.floor((this.gameHeight - this.screenHeight) / 2);
   }
 
-  if (detect) {
+  if (detect && this.screenHeight / this.screenWidth > 1.777777) {
+    log('detect screen size (special screen ratio)');
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.gameWidth * 1.5;
     this.gameOffsetX = 0;
