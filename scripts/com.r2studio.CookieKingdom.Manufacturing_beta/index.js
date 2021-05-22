@@ -1207,7 +1207,7 @@ function handleInputLoginInfo() {
 
     if (!isChooseLogin) {
         pageKingdomLogo = [
-            {x: 22, y: 276, r: 225, g: 163, b: 40},
+            {x: 55, y: 277, r: 235, g: 181, b: 56},
             {x: 24, y: 296, r: 225, g: 163, b: 40},
             {x: 32, y: 286, r: 229, g: 167, b: 44},
             {x: 65, y: 325, r: 101, g: 22, b: 36},
@@ -1339,19 +1339,11 @@ function start(inputConfig) {
     // TODO: inputConfig.goodsTarget seems to be string
 
     if (config.isXR) {
-        while(!handleInputLoginInfo()) {
+        while(!checkIsPage(pageInKingdomVillage)) {
+            handleInputLoginInfo();
             console.log('XR: trying to login');
         }
         handleFindAndTapCandyHouse();
-        // for (var j = 0; j < 20; j ++){
-        //     if (handleWelcomePage()) {
-        //         handleFindAndTapCandyHouse();
-        //         config.jobFailedCount = 0;
-        //         break;
-        //     }
-        //     sleep(3000);
-        //     console.log('waiting for annoucement page...')
-        // }
     }
 
     if (config.isCollectCandy) {
@@ -1370,7 +1362,7 @@ function start(inputConfig) {
         console.log('performed  act: ', act)
 
         if (config.isCollectCandy && ((Date.now() - config.lastCollectCandyTime) / 60000) > config.worksBeforeCollectCandy) {
-            console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000), ' just passed'));
+            console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
             config.lastCollectCandyTime = Date.now();
             handleFindAndTapCandyHouse();
         }
@@ -1389,7 +1381,12 @@ function start(inputConfig) {
             }
             console.log('max job fails reached, check for handling: ', config.jobFailedCount);
 
-            if (handleRelogin()) {
+            if (checkIsPage(pageInProduction)) {
+                console.log('in production, continue work');
+                config.jobFailedCount = 0;
+                continue;
+            }
+            else if (handleRelogin()) {
                 console.log('just handleRelogin()');
                 config.jobFailedCount = 0;
                 continue;
@@ -1431,6 +1428,7 @@ function start(inputConfig) {
         } else {
             config.jobFailedCount = 0;
             sendEvent("running", "");
+            console.log('Cookie action successfully at: ',  new Date().toLocaleString());
         }
     }
 }
