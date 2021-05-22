@@ -992,7 +992,7 @@ function findHouseInSpecificLocation(tryCount) {
 
     for (var i = 0; i < tryCount; i ++) {
         tapRandom(75, 95, 553, 285);
-        sleep(config.sleepAnimate);
+        sleep(config.sleepAnimate * 2);
          if (checkIsPage(pageInProduction)) {
              console.log('found production in try: ', i)
             return true;
@@ -1004,7 +1004,10 @@ function findHouseInSpecificLocation(tryCount) {
 }
 
 function handleFindAndTapCandyHouseV2() {
-    var directions = [Directions.NE, Directions.SE, Directions.SW, Directions.SW, Directions.NE, Directions.NW]
+    // var directions = [Directions.NE, Directions.SE, Directions.SW, Directions.SW, Directions.NE, Directions.NW]
+    var directions = [
+        Directions.SE, Directions.SW, Directions.NW, Directions.NE,
+        Directions.NE, Directions.SE, Directions.SW, Directions.NW]
 
     if (checkIsPage(pageInProduction)) {
         keycode('BACK', 1000);
@@ -1419,6 +1422,6 @@ function start(inputConfig) {
     }
 }
 
-start(JSON.stringify(config))
+// start(JSON.stringify(config))
 
 // sendEvent("gameStatus", "login-failed")
