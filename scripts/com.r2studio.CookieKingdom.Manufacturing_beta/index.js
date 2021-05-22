@@ -15,8 +15,8 @@ config = {
     jobFailedCount: 0,
     run: true,
     isXR: true,
-    findCookieHouseV2: false,
-    locationId: 0,
+    findCookieHouseV2: true,
+    findProductionTimes: 8,
 }
 
 factoryType = ['wood', 'bean', 'sugar', 'tool', 'powder', 'bean_2', 'wood_2', 'powder_2', 'berry', 'berry_2', 'poweder_3', 'berry_3'];
@@ -115,7 +115,7 @@ function rgb(r, g, b) {
 
 function qTap(page, sleepTime) {
     if (sleepTime == undefined) {
-        sleepTime = 10;
+        sleepTime = 0;
     }
     if (Array.isArray(page)) {
         page = page[0];
@@ -153,9 +153,9 @@ function checkIsPage(page, diff, img) {
     }
     var whSize = getImageSize(img);
     if (whSize.width === 360) {
-        console.log('image size is incorrect, restart CookieKingdom for 10s')
+        console.log('image size is incorrect, restart CookieKingdom wait 20s')
         execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
-        sleep(10000);
+        sleep(20000);
         img = getScreenshot();
     }
     var isPage = true;
@@ -217,6 +217,9 @@ function handleToolShopShovels() {
         var shovelStock = ocrProductStorage(goodsLocation['shovel'])
         console.log('Shovel enable: ' + checkIsPage(pageShovelEnabled) + ' , stock: ' + shovelStock);
 
+        if (shovelStock == -1) {
+            console.log('ocr failed, skip this shovel check')
+        }
         // pageShovelTwoDigits = [
         //     {x: 448, y: 321, r: 255, g: 255, b: 255},
         //     {x: 449, y: 324, r: 255, g: 255, b: 255},
@@ -810,6 +813,16 @@ function handleWelcomePage() {
         {x: 19, y: 114, r: 63, g: 0, b: 9},
         {x: 25, y: 321, r: 75, g: 75, b: 75}
     ]
+    pageProductionList = [
+        {x: 315, y: 12, r: 204, g: 8, b: 40},
+        {x: 420, y: 9, r: 240, g: 172, b: 2},
+        {x: 526, y: 11, r: 0, g: 193, b: 255},
+        {x: 71, y: 303, r: 158, g: 125, b: 97},
+        {x: 133, y: 338, r: 154, g: 96, b: 69},
+        {x: 497, y: 302, r: 158, g: 126, b: 97},
+        {x: 627, y: 302, r: 160, g: 129, b: 101}
+        
+    ]
 
     if (checkIsPage(pageWelcome)) {
         console.log('In welcome page, entering game');
@@ -821,6 +834,9 @@ function handleWelcomePage() {
                 qTap(pageAnnouncement);
                 sleep(config.sleepAnimate);
                 break;
+            } else if (checkIsPage(pageProductionList)) {
+                keycode('BACK', 1000);                
+                // break;
             }
             qTap(pnt(50, 329));
             sleep(3000);
@@ -876,72 +892,144 @@ function findAndTapCandy() {
     return false;
 }
 
+var Directions = Object.freeze({
+    NE: pnt(-480, 245),
+    NW: pnt(460, 255),
+    SE: pnt(-460, -255),
+    SW: pnt(480, -245)
+})
+function swipeDirection(direction) {
+    tapableArea = {
+        fromPnt: pnt(75, 95),
+        endPnt: pnt(550, 285)
+    }
+
+    for (var i = 0; i < 10; i ++) {
+        var x = tapableArea.fromPnt.x + Math.random() * (tapableArea.endPnt.x - tapableArea.fromPnt.x);
+        var y = tapableArea.fromPnt.y + Math.random() * (tapableArea.endPnt.y - tapableArea.fromPnt.y);
+    
+        fromPnt = pnt(x, y);
+        toPnt = pnt(x + direction.x, y + direction.y);
+        if (swipeFromToPoint(fromPnt, toPnt)) {
+            console.log('swip successfully')
+            return true;
+        }
+        else {
+            console.log('pickup house, try again')
+        }
+    }
+    return false;
+}
+
+function swipeBackToCenter() {
+    for (var i = 0; i < 10; i ++){
+        if (swipeFromToPoint(pnt(66, 100), pnt(1500, 1000))) {
+            break;
+        }
+    }
+    swipeDirection(Directions.SE)
+    sleep(1000)
+    swipeDirection(Directions.SE)
+    sleep(1000)
+    swipeDirection(Directions.SE)
+    sleep(1000)
+}
+
 function swipeFromToPoint(fromPnt, toPnt, steps) {
-    steps = steps == undefined? 2: steps
+
+    tap(fromPnt.x, fromPnt.y, 100);
+    sleep(config.sleepAnimate * 3);
+    if (!checkIsPage(pageInKingdomVillage)) {
+        console.log('swipe failed, try again')
+        keycode('BACK', 100);
+        return false;
+    }
+
+    steps = steps == undefined? 4: steps
+    step_x = (toPnt.x - fromPnt.x) / steps;
+    step_y = (toPnt.y - fromPnt.y) / steps;
 
     tapDown(fromPnt.x, fromPnt.y, 40, 0);
-    sleep(80);
+    sleep(250);
 
-    step_x = (toPnt.x - fromPnt.x) / steps;
-    step_y = (toPnt.x - toPnt.y) / steps;
     for (var i = 0; i < steps; i ++) {
-        moveTo(step_x, step_y, 40, 0);
+        moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0);
+        // console.log('in pnt: ', fromPnt.x + step_x * i, fromPnt.y + step_y * i)
         sleep(80);
     }
 
     moveTo(toPnt.x, toPnt.y, 40, 0);
-    sleep(80);
+    sleep(800);
     tapUp(toPnt.x, toPnt.y, 40, 0);
-    sleep(config.sleepAnimate * 3);
+    sleep(config.sleepAnimate);
 
+    if (!checkIsPage(pageInKingdomVillage)) {
+        keycode('BACK', 100);
+    }
+    return true;
 }
 
-function goFindHouseInSpecificLocation(id) {
-    handleGotoKingdomPage();
+function handleGotoKingdomPage() {
+    console.log('trying to get to kingdom page')
 
-    if (id == 1) {
-        swipeFromToPoint(pnt(110, 260), pnt(500, 70));
-        tapRandom(75, 95, 553, 285);
-        sleep(config.sleepAnimate);
-        if (!checkIsPage(pageInProduction)) {
-            handleGotoKingdomPage();
-            swipeFromToPoint(pnt(500, 70), pnt(110, 260));
-            return false;
-        }
-        else
-        {
-            console.log('found production in location: ', id);
-            config.locationId = id;
-            return true;
-        }
+    if (checkIsPage(pageInKingdomVillage)) {
+        console.log('already in kingdom')
+        return true;
     }
 
+    if (checkIsPage(pageInProduction)) {
+        console.log('In production, hit back to kingdom page')
+        keycode('BACK', 1000);
+        return true;
+    }
+
+    return handleTryHitBackToKingdom();
+}
+
+function findHouseInSpecificLocation(tryCount) {
+    handleGotoKingdomPage();
+    tryCount = tryCount == undefined ? 3 : tryCount;
+
+    for (var i = 0; i < tryCount; i ++) {
+        tapRandom(75, 95, 553, 285);
+        sleep(config.sleepAnimate);
+         if (checkIsPage(pageInProduction)) {
+             console.log('found production in try: ', i)
+            return true;
+        }
+        console.log('try another random point for production');
+        handleGotoKingdomPage();
+    }
+    return false;
 }
 
 function handleFindAndTapCandyHouseV2() {
+    var directions = [Directions.NE, Directions.SE, Directions.SW, Directions.SW, Directions.NE, Directions.NW]
+
     if (checkIsPage(pageInProduction)) {
         keycode('BACK', 1000);
         sleep(config.sleepAnimate * 2);
     }
 
-    // while find 7 times
+    findAndTapCandy();
 
-    // Tap the candy
-    // for (var i = 0; i < 7; i ++) {
-    //     console.log('looking for candys...')
-    //     if (findAndTapCandy()) {
-    //         console.log("Found and tap candy");
-    //         break;
-    //     }
-    // }
+    if (findHouseInSpecificLocation(config.findProductionTimes)){
+        console.log('find house v2 success, start working')
+        return true;
+    }
 
-    // while find 7 times
+    swipeBackToCenter();
+    for (var i = 0; i < directions.length; i ++) {
+        if (swipeDirection(directions[i])) {
 
-    // Try find production building
-    // for (var i = 0; i < 1; i ++) {
-        goFindHouseInSpecificLocation(1);
-    // }
+            findAndTapCandy();
 
+            if (findHouseInSpecificLocation(3)){
+                console.log('find house v2 success, start working')
+                return true;
+            }
+        }
+    }
     return false;
 }
 
@@ -991,8 +1079,12 @@ function handleInputLoginInfo() {
         console.log('Found announcement page, handleInputLoginInfo success');
         return true;
     }
-    if (checkIsPage(pageInKingdomVillage)) {
+    else if (checkIsPage(pageInKingdomVillage)) {
         console.log('Found pageInKingdomVillage, handleInputLoginInfo success');
+        return true;
+    }
+    else if (checkIsPage(pageInProduction)) {
+        console.log('Found in production, no need to relogin')
         return true;
     }
 
@@ -1059,9 +1151,9 @@ function handleInputLoginInfo() {
         {x: 221, y: 250, r: 219, g: 207, b: 199}
     ]
     if (checkIsPage(pageCanDownloadResources)){
-        console.log('start download resources');
+        console.log('start download resources, wait 10 secs');
         qTap(pageCanDownloadResources);
-        sleep(4000);
+        sleep(10000);
 
         for (var i = 0; i < 18; i ++) {
             // wait for yellow bar (download progress bar) disapper
@@ -1098,13 +1190,26 @@ function handleInputLoginInfo() {
             sleep(3000);
         }
     }
-    if (!isChooseLogin) {
-        console.log('did not see email input, tap lower left and skip handleInputLoginInfo');
-        qTap(pnt(50, 329));
-        return false;
-    }
 
-    // TODO: consider skip
+    if (!isChooseLogin) {
+        pageKingdomLogo = [
+            {x: 22, y: 276, r: 225, g: 163, b: 40},
+            {x: 24, y: 296, r: 225, g: 163, b: 40},
+            {x: 32, y: 286, r: 229, g: 167, b: 44},
+            {x: 65, y: 325, r: 101, g: 22, b: 36},
+            {x: 107, y: 327, r: 239, g: 223, b: 122},
+            {x: 162, y: 327, r: 94, g: 21, b: 33},
+            {x: 178, y: 291, r: 233, g: 177, b: 52},
+            {x: 189, y: 295, r: 56, g: 30, b: 20},
+            {x: 182, y: 252, r: 237, g: 60, b: 56},
+            {x: 110, y: 240, r: 223, g: 66, b: 42},
+            {x: 59, y: 252, r: 255, g: 217, b: 52},
+            {x: 66, y: 251, r: 56, g: 30, b: 20}
+        ]
+        console.log('did not see email input, but found kingdom log, tapping logo');
+        qTap(pageKingdomLogo);
+        return true;
+    }
 
     var inputEmail = false;
     pageEnterEmail = [
@@ -1176,14 +1281,6 @@ function handleInputLoginInfo() {
 }
 
 function handleNextProductionBuilding() {
-    pageInProduction = [
-        { x: 609, y: 19, r: 56, g: 167, b: 231 },
-        { x: 617, y: 19, r: 255, g: 255, b: 255 },
-        { x: 625, y: 18, r: 34, g: 85, b: 119 },
-        { x: 619, y: 331, r: 166, g: 104, b: 65 },
-        { x: 19, y: 321, r: 166, g: 104, b: 65 }
-    ]
-
     if (checkIsPage(pageInProduction)) {
         qTap(pnt(349, 174)); // next
         sleep(config.sleepAnimate * 2);
@@ -1322,34 +1419,6 @@ function start(inputConfig) {
     }
 }
 
-// start(JSON.stringify(config))
-//   JobScheduling()
+start(JSON.stringify(config))
 
 // sendEvent("gameStatus", "login-failed")
-
-// handleGotoKingdomPage()
-function handleGotoKingdomPage() {
-    console.log('trying to get to kingdom page')
-
-    if (checkIsPage(pageInKingdomVillage)) {
-        console.log('already in kingdom')
-        return true;
-    }
-
-    if (checkIsPage(pageInProduction)) {
-        console.log('In production, hit back to kingdom page')
-        keycode('BACK', 1000);
-        return true;
-    }
-
-    return handleTryHitBackToKingdom();
-}
-
-
-// handleFindAndTapCandyHouseV2();
-
-// start_pt = pnt(211, 33)
-// end_pt = pnt(1000, 500)
-// swipeFromToPoint(start_pt, end_pt, 4);
-// console.log('<>')
-// swipeFromToPoint(end_pt, start_pt, 4);
