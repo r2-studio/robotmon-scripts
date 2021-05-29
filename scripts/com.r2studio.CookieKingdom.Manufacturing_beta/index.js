@@ -1259,10 +1259,24 @@ function handleInputLoginInfo() {
             {x: 381, y: 56, r: 60, g: 60, b: 60},
             {x: 266, y: 50, r: 60, g: 60, b: 60},
             {x: 401, y: 120, r: 255, g: 255, b: 255},
-            {x: 393, y: 188, r: 200, g: 200, b: 200},
-            {x: 358, y: 307, r: 255, g: 255, b: 255}
+            {x: 316, y: 305, r: 152, g: 152, b: 152}
+        ]
+        pageEnterTwoPasswords = [
+            {x: 243, y: 307, r: 255, g: 255, b: 255},
+            {x: 377, y: 229, r: 200, g: 200, b: 200},
+            {x: 367, y: 176, r: 255, g: 255, b: 255},
+            {x: 371, y: 50, r: 60, g: 60, b: 60},
+            {x: 319, y: 53, r: 230, g: 230, b: 230},
+            {x: 244, y: 309, r: 200, g: 200, b: 200}
         ]
         for (var i = 0; i < 15; i ++) {
+            if (checkIsPage(pageEnterTwoPasswords)) {
+                config.run = false;
+                sendEvent("gameStatus", "login-failed")
+                console.log('This account id does not exist')
+                return false;
+            }
+
             if (checkIsPage(pageEnterpassword)){
                 qTap(pageEnterpassword);
                 typing(config.password, 3000);
@@ -1270,21 +1284,21 @@ function handleInputLoginInfo() {
                 typing('\n', 200);
                 sleep(config.sleep);
                 qTap(pageEnterpassword);
-                sleep(config.sleep);
+                sleep(5000);
 
-                // if (!checkIsPage(
-                //     [{x: 376, y: 186, r: 254, g: 94, b: 0}])
-                // ) {
-                //     sendEvent("gameStatus", "login-failed")
-                //     console.log('wrong password length')
-                //     return false;
-                // }
+                if (checkIsPage(pageEnterpassword)) {
+                    config.run = false;
+                    sendEvent("gameStatus", "login-failed")
+                    console.log('still in password page, either password too short, wrong password, or it is a new id that devPlay ask to input password twice')
+                    return false;
+                }
+
                 qTap(pnt(370, 190));
                 sleep(config.sleepAnimate);
                 sendEvent("gameStatus", "login-success")
     
                 // Touch here to start:
-                qTap(pnt(370, 190));
+                console.log('successfully input password')
                 return true;
             } else {
                 console.log('waiting for input password field');
@@ -1363,28 +1377,31 @@ function getCurrentApp() {
     return [app, activity];
 }
 
-function stop() {}
+function stop() {
+    config.run = true;
+}
 
 function start(inputConfig) {
     console.log('inputConfig: ', inputConfig)
 
     inputConfig = JSON.parse(inputConfig);
-    console.log('start with: ', inputConfig.materialsTarget, inputConfig.goodsTarget);
     config = mergeObject(config, inputConfig)
+    console.log('start with: ', config.materialsTarget, config.goodsTarget, config.run);
     // TODO: inputConfig.goodsTarget seems to be string
 
-    if (config.isXR) {
-        if (getCurrentApp()[0] !== "com.devsisters.ck") {
-            console.log('Cookie not active, restart CookieKingdom and wait 20s')
-            execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
-            sleep(20000);
-        }
+    if (getCurrentApp()[0] !== "com.devsisters.ck") {
+        console.log('Cookie not active, restart CookieKingdom and wait 20s')
+        execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
+        sleep(20000);
+    }
 
-        while(!checkIsPage(pageInKingdomVillage)) {
-            handleInputLoginInfo();
-            console.log('XR: trying to login');
-        }
-        handleFindAndTapCandyHouse();
+    while(!checkIsPage(pageInKingdomVillage) && config.run) {
+        handleInputLoginInfo();
+        console.log('Trying to login');
+    }
+    if (!config.run) {
+        console.log('wrong login info, stopping');
+        return;
     }
 
     if (config.isCollectCandy) {
@@ -1394,9 +1411,6 @@ function start(inputConfig) {
 
     for (var i = 1; i < 100000000; i++) {
         console.log("start loop", i);
-        // sendEvent("running", "");
-        // sleep(10000);
-        // continue
 
         var act = JobScheduling();
         sleep(config.sleep);
@@ -1452,11 +1466,6 @@ function start(inputConfig) {
                 execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
                 sleep(20000);
             }
-            else if (handleFindAndTapCandyHouse()){
-                console.log('just handleFindAndTapCandyHouse()');
-                config.jobFailedCount = 0;
-                continue;
-            }
             else if (handleInputLoginInfo()) {
                 console.log('login, wait for handleWelcomePage()')
                 for (var j = 0; j < 20; j ++){
@@ -1467,6 +1476,11 @@ function start(inputConfig) {
                     }
                     sleep(3000);
                 }
+                continue;
+            }
+            else if (handleFindAndTapCandyHouse()){
+                console.log('just handleFindAndTapCandyHouse()');
+                config.jobFailedCount = 0;
                 continue;
             }
             else if (config.jobFailedCount %21 > 0 && handleTryHitBackToKingdom()){
