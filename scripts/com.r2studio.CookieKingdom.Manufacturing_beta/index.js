@@ -1032,10 +1032,12 @@ function findHouseInSpecificLocation(tryCount) {
 }
 
 function handleFindAndTapCandyHouseV2() {
-    // var directions = [Directions.NE, Directions.SE, Directions.SW, Directions.SW, Directions.NE, Directions.NW]
+    // var directions = [
+    //     Directions.SE, Directions.SW, Directions.NW, Directions.NE,
+    //     Directions.NE, Directions.SE, Directions.SW, Directions.NW]
     var directions = [
-        Directions.SE, Directions.SW, Directions.NW, Directions.NE,
-        Directions.NE, Directions.SE, Directions.SW, Directions.NW]
+        Directions.SW, Directions.SE, Directions.NE, Directions.NE,
+        Directions.NW, Directions.SW]
 
     if (checkIsPage(pageInProduction)) {
         keycode('BACK', 1000);
@@ -1234,7 +1236,7 @@ function handleInputLoginInfo() {
         {x: 312, y: 192, r: 200, g: 200, b: 200},
         {x: 297, y: 152, r: 255, g: 255, b: 255}
     ]
-    for (var i = 0; i < 10; i ++) {
+    for (var i = 0; i < 15; i ++) {
         if (checkIsPage(pageEnterEmail)){
             console.log('inputing user email ', config.account)
             inputEmail = true;
@@ -1247,7 +1249,7 @@ function handleInputLoginInfo() {
             break;
         } else {
             console.log('cannot find input email field');
-            sleep(3000);
+            sleep(2000);
         }    
     }
 
@@ -1260,21 +1262,23 @@ function handleInputLoginInfo() {
             {x: 393, y: 188, r: 200, g: 200, b: 200},
             {x: 358, y: 307, r: 255, g: 255, b: 255}
         ]
-        for (var i = 0; i < 2; i ++) {
+        for (var i = 0; i < 15; i ++) {
             if (checkIsPage(pageEnterpassword)){
                 qTap(pageEnterpassword);
-                typing(config.password, 100);
+                typing(config.password, 3000);
+                sleep(config.sleep);
+                typing('\n', 200);
                 sleep(config.sleep);
                 qTap(pageEnterpassword);
                 sleep(config.sleep);
 
-                if (!checkIsPage(
-                    [{x: 376, y: 186, r: 254, g: 94, b: 0}])
-                ) {
-                    sendEvent("gameStatus", "login-failed")
-                    console.log('wrong password length')
-                    return false;
-                }
+                // if (!checkIsPage(
+                //     [{x: 376, y: 186, r: 254, g: 94, b: 0}])
+                // ) {
+                //     sendEvent("gameStatus", "login-failed")
+                //     console.log('wrong password length')
+                //     return false;
+                // }
                 qTap(pnt(370, 190));
                 sleep(config.sleepAnimate);
                 sendEvent("gameStatus", "login-success")
@@ -1284,12 +1288,14 @@ function handleInputLoginInfo() {
                 return true;
             } else {
                 console.log('waiting for input password field');
-                sleep(10000);
+                sleep(2000);
             }
         }
     }
 
-    sendEvent("gameStatus", "login-failed")
+    //TODO 帳號打錯會進入教學關卡
+
+    // sendEvent("gameStatus", "login-failed")
     console.log('cannot find input email field');
     return false;
 }
@@ -1328,6 +1334,35 @@ function handleTryHitBackToKingdom() {
     return false;
 }
 
+function getCurrentApp() {
+    var result = execute('dumpsys activity top');
+    var lines = result.split('\n');
+    var app = '';
+    var activity = '';
+    for (var i = 0; i < lines.length; i ++) {
+      var line = lines[i]
+      var p = line.indexOf('ACTIVITY');
+      if (p !== -1) {
+        app = '';
+        activity = '';
+        var isApp = true;
+        for (var i = p + 9; i < line.length; i++) {
+          var c = line[i];
+          if (c === ' ') {
+          } else if (c === '/') {
+            isApp = false;
+          } else if (isApp) {
+            app += c;
+          } else {
+            activity += c;
+          }
+        }
+      }
+    }
+    console.log('>>', app, activity)
+    return [app, activity];
+}
+
 function stop() {}
 
 function start(inputConfig) {
@@ -1339,6 +1374,12 @@ function start(inputConfig) {
     // TODO: inputConfig.goodsTarget seems to be string
 
     if (config.isXR) {
+        if (getCurrentApp()[0] !== "com.devsisters.ck") {
+            console.log('Cookie not active, restart CookieKingdom and wait 20s')
+            execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
+            sleep(20000);
+        }
+
         while(!checkIsPage(pageInKingdomVillage)) {
             handleInputLoginInfo();
             console.log('XR: trying to login');
@@ -1353,6 +1394,9 @@ function start(inputConfig) {
 
     for (var i = 1; i < 100000000; i++) {
         console.log("start loop", i);
+        // sendEvent("running", "");
+        // sleep(10000);
+        // continue
 
         var act = JobScheduling();
         sleep(config.sleep);
@@ -1402,6 +1446,11 @@ function start(inputConfig) {
                 handleFindAndTapCandyHouse();
                 config.jobFailedCount = 0;
                 continue;
+            }
+            else if (getCurrentApp()[0] !== "com.devsisters.ck") {
+                console.log('Cookie not active, restart CookieKingdom and wait 20s')
+                execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
+                sleep(20000);
             }
             else if (handleFindAndTapCandyHouse()){
                 console.log('just handleFindAndTapCandyHouse()');
