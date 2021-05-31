@@ -1124,15 +1124,26 @@ function handleInputLoginInfo() {
         sleep(config.sleepAnimate * 2);
     }
 
+    // TOS page will change when login page change
     pageTermsOfServices = [
         {x: 447, y: 233, r: 66, g: 66, b: 66},
         {x: 329, y: 126, r: 66, g: 66, b: 66},
         {x: 452, y: 126, r: 66, g: 66, b: 66},
         {x: 458, y: 216, r: 66, g: 66, b: 66},
         {x: 286, y: 216, r: 66, g: 66, b: 66},
-        {x: 179, y: 126, r: 66, g: 66, b: 66},
+        {x: 179, y: 126, r: 66, g: 66, b: 66}
     ]
-    if (checkIsPage(pageTermsOfServices)) {
+    pageTermsOfServices2 = [
+        {x: 447, y: 230, r: 255, g: 255, b: 255},
+        {x: 43, y: 257, r: 96, g: 24, b: 22},
+        {x: 181, y: 257, r: 95, g: 24, b: 22},
+        {x: 31, y: 289, r: 92, g: 67, b: 18},
+        {x: 203, y: 285, r: 90, g: 65, b: 16},
+        {x: 161, y: 329, r: 37, g: 8, b: 13},
+        {x: 246, y: 230, r: 255, g: 255, b: 255},
+        {x: 179, y: 132, r: 255, g: 255, b: 255},
+    ]
+    if (checkIsPage(pageTermsOfServices) || checkIsPage(pageTermsOfServices2)) {
         console.log('accept term of service');
         qTap(pageTermsOfServices);
         sleep(config.sleepAnimate * 2);
@@ -1194,8 +1205,19 @@ function handleInputLoginInfo() {
         {x: 308, y: 169, r: 255, g: 255, b: 255},
         {x: 392, y: 203, r: 255, g: 255, b: 255},
     ]
+    // pageChooseLoginMethod2 is for Android 7
+    pageChooseLoginMethod2 = [
+        {x: 251, y: 130, r: 249, g: 251, b: 254},
+        {x: 251, y: 170, r: 0, g: 1, b: 0},
+        {x: 247, y: 201, r: 66, g: 103, b: 178},
+        {x: 252, y: 240, r: 255, g: 95, b: 0},
+        {x: 374, y: 125, r: 255, g: 255, b: 255},
+        {x: 371, y: 166, r: 255, g: 255, b: 255},
+        {x: 374, y: 203, r: 255, g: 255, b: 255},
+        {x: 375, y: 245, r: 255, g: 255, b: 255}
+    ]
     for (var i = 0; i < findLoginTime; i ++) {
-        if (checkIsPage(pageChooseLoginMethod)) {
+        if (checkIsPage(pageChooseLoginMethod) || checkIsPage(pageChooseLoginMethod2)) {
             console.log('choose to login via email');
             isChooseLogin = true;
             qTap(pageChooseLoginMethod);
@@ -1395,7 +1417,7 @@ function start(inputConfig) {
         sleep(20000);
     }
 
-    while(!checkIsPage(pageInKingdomVillage) && config.run) {
+    while(!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageInProduction) && config.run) {
         handleInputLoginInfo();
         console.log('Trying to login');
     }
