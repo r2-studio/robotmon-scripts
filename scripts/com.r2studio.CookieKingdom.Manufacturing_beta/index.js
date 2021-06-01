@@ -963,9 +963,10 @@ function swipeBackToCenter() {
     sleep(1000)
 }
 
-function swipeFromToPoint(fromPnt, toPnt, steps) {
+function swipeFromToPoint(fromPnt, toPnt, steps, id) {
+    id === undefined ? 0 : id;
 
-    tap(fromPnt.x, fromPnt.y, 100);
+    tap(fromPnt.x, fromPnt.y, 100, id);
     sleep(config.sleepAnimate * 3);
     if (!checkIsPage(pageInKingdomVillage)) {
         console.log('swipe failed, try again')
@@ -977,18 +978,18 @@ function swipeFromToPoint(fromPnt, toPnt, steps) {
     step_x = (toPnt.x - fromPnt.x) / steps;
     step_y = (toPnt.y - fromPnt.y) / steps;
 
-    tapDown(fromPnt.x, fromPnt.y, 40, 0);
+    tapDown(fromPnt.x, fromPnt.y, 40, 0, id);
     sleep(250);
 
     for (var i = 0; i < steps; i ++) {
-        moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0);
+        moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0, id);
         // console.log('in pnt: ', fromPnt.x + step_x * i, fromPnt.y + step_y * i)
         sleep(80);
     }
 
-    moveTo(toPnt.x, toPnt.y, 40, 0);
+    moveTo(toPnt.x, toPnt.y, 40, 0, id);
     sleep(800);
-    tapUp(toPnt.x, toPnt.y, 40, 0);
+    tapUp(toPnt.x, toPnt.y, 40, 0, id);
     sleep(config.sleepAnimate);
 
     if (!checkIsPage(pageInKingdomVillage)) {
@@ -1521,3 +1522,24 @@ function start(inputConfig) {
 // start(JSON.stringify(config))
 
 // sendEvent("gameStatus", "login-failed")
+
+
+function zoomOut() {
+    tapDown(550, 72, 100, 0);
+    tapDown(92, 270, 100, 1);
+    
+    moveTo(450, 120, 40, 0);
+    moveTo(220, 210, 40, 1);
+    
+    moveTo(341, 200, 40, 0);
+    moveTo(341, 200, 40, 1);
+    
+    tapUp(341, 200, 100, 0);
+    tapUp(341, 200, 100, 1);
+    
+    return true;
+}
+
+zoomOut()
+zoomOut()
+zoomOut()
