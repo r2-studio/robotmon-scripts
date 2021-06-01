@@ -427,7 +427,6 @@ function handleMaterialProduction() {
         { x: 568, y: 329, r: 121, g: 207, b: 14 },
     ]
 
-    // TODO: tap second production
     if (checkIsPage(pageWoodFarm)) {
         console.log('wood farm, add more')
         qTap(pageWoodFarm, 800);
@@ -464,19 +463,12 @@ function handleMaterialProduction() {
             sleep(config.sleepAnimate);
             qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
         }
         else {
             qTap(pageBarryFarm, 800)
             sleep(config.sleepAnimate);
             qTap(pageBarryFarm)
             sleep(config.sleepAnimate);
-            qTap(pageBarryFarm)
-            sleep(config.sleepAnimate);
-            qTap(pageBarryFarm)
         }
         return true;
     }
@@ -486,9 +478,6 @@ function handleMaterialProduction() {
         sleep(config.sleepAnimate);
         qTap(pageMilkFarm)
         sleep(config.sleepAnimate);
-        qTap(pageMilkFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageMilkFarm)
         return true;
     }
     else if (checkIsPage(pageCottomFarm)) {
@@ -497,9 +486,6 @@ function handleMaterialProduction() {
         sleep(config.sleepAnimate);
         qTap(pageCottomFarm)
         sleep(config.sleepAnimate);
-        qTap(pageCottomFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageCottomFarm)
         return true;
     }
 }
