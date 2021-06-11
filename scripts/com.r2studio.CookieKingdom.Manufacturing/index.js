@@ -158,6 +158,9 @@ function checkIsPage(page, diff, img) {
         execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
         sleep(20000);
         img = getScreenshot();
+    } else if (whSize.height !== 360 || whSize.width !== 640) {
+        console.log('Reboot nox as screen size incorrect: ', whSize.height, whSize.width, " (h/w)");
+        execute('/system/bin/reboot -p');
     }
     var isPage = true;
     for (var i in page) {
@@ -427,7 +430,6 @@ function handleMaterialProduction() {
         { x: 568, y: 329, r: 121, g: 207, b: 14 },
     ]
 
-    // TODO: tap second production
     if (checkIsPage(pageWoodFarm)) {
         console.log('wood farm, add more')
         qTap(pageWoodFarm, 800);
@@ -464,19 +466,12 @@ function handleMaterialProduction() {
             sleep(config.sleepAnimate);
             qTap(pageSecondItemEnabled);
             sleep(config.sleepAnimate);
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
-            qTap(pageSecondItemEnabled);
-            sleep(config.sleepAnimate);
         }
         else {
             qTap(pageBarryFarm, 800)
             sleep(config.sleepAnimate);
             qTap(pageBarryFarm)
             sleep(config.sleepAnimate);
-            qTap(pageBarryFarm)
-            sleep(config.sleepAnimate);
-            qTap(pageBarryFarm)
         }
         return true;
     }
@@ -486,9 +481,6 @@ function handleMaterialProduction() {
         sleep(config.sleepAnimate);
         qTap(pageMilkFarm)
         sleep(config.sleepAnimate);
-        qTap(pageMilkFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageMilkFarm)
         return true;
     }
     else if (checkIsPage(pageCottomFarm)) {
@@ -497,9 +489,6 @@ function handleMaterialProduction() {
         sleep(config.sleepAnimate);
         qTap(pageCottomFarm)
         sleep(config.sleepAnimate);
-        qTap(pageCottomFarm)
-        sleep(config.sleepAnimate);
-        qTap(pageCottomFarm)
         return true;
     }
 }
@@ -963,9 +952,10 @@ function swipeBackToCenter() {
     sleep(1000)
 }
 
-function swipeFromToPoint(fromPnt, toPnt, steps) {
+function swipeFromToPoint(fromPnt, toPnt, steps, id) {
+    id === undefined ? 0 : id;
 
-    tap(fromPnt.x, fromPnt.y, 100);
+    tap(fromPnt.x, fromPnt.y, 100, id);
     sleep(config.sleepAnimate * 3);
     if (!checkIsPage(pageInKingdomVillage)) {
         console.log('swipe failed, try again')
@@ -977,18 +967,18 @@ function swipeFromToPoint(fromPnt, toPnt, steps) {
     step_x = (toPnt.x - fromPnt.x) / steps;
     step_y = (toPnt.y - fromPnt.y) / steps;
 
-    tapDown(fromPnt.x, fromPnt.y, 40, 0);
+    tapDown(fromPnt.x, fromPnt.y, 40, 0, id);
     sleep(250);
 
     for (var i = 0; i < steps; i ++) {
-        moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0);
+        moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0, id);
         // console.log('in pnt: ', fromPnt.x + step_x * i, fromPnt.y + step_y * i)
         sleep(80);
     }
 
-    moveTo(toPnt.x, toPnt.y, 40, 0);
+    moveTo(toPnt.x, toPnt.y, 40, 0, id);
     sleep(800);
-    tapUp(toPnt.x, toPnt.y, 40, 0);
+    tapUp(toPnt.x, toPnt.y, 40, 0, id);
     sleep(config.sleepAnimate);
 
     if (!checkIsPage(pageInKingdomVillage)) {
@@ -1400,7 +1390,8 @@ function getCurrentApp() {
 }
 
 function stop() {
-    config.run = true;
+    config.run = false;
+    console.log('stop clicked, change config.run = false')
 }
 
 function start(inputConfig) {

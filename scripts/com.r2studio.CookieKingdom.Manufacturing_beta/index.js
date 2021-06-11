@@ -158,6 +158,9 @@ function checkIsPage(page, diff, img) {
         execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
         sleep(20000);
         img = getScreenshot();
+    } else if (whSize.height !== 360 || whSize.width !== 640) {
+        console.log('Reboot nox as screen size incorrect: ', whSize.height, whSize.width, " (h/w)");
+        execute('/system/bin/reboot -p');
     }
     var isPage = true;
     for (var i in page) {
@@ -1387,7 +1390,8 @@ function getCurrentApp() {
 }
 
 function stop() {
-    config.run = true;
+    config.run = false;
+    console.log('stop clicked, change config.run = false')
 }
 
 function start(inputConfig) {
