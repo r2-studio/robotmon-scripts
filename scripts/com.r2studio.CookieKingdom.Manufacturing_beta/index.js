@@ -1396,10 +1396,11 @@ function stop() {
 
 function start(inputConfig) {
     console.log('inputConfig: ', inputConfig)
+    config.run = true;
 
     inputConfig = JSON.parse(inputConfig);
     config = mergeObject(config, inputConfig)
-    console.log('start with: ', config.materialsTarget, config.goodsTarget, config.run);
+    console.log('start with config: ', JSON.stringify(config));
     // TODO: inputConfig.goodsTarget seems to be string
 
     if (getCurrentApp()[0] !== "com.devsisters.ck") {
@@ -1514,22 +1515,22 @@ function start(inputConfig) {
 // sendEvent("gameStatus", "login-failed")
 
 
-function zoomOut() {
-    tapDown(550, 72, 100, 0);
-    tapDown(92, 270, 100, 1);
+// function zoomOut() {
+//     tapDown(550, 72, 100, 0);
+//     tapDown(92, 270, 100, 1);
     
-    moveTo(450, 120, 40, 0);
-    moveTo(220, 210, 40, 1);
+//     moveTo(450, 120, 40, 0);
+//     moveTo(220, 210, 40, 1);
     
-    moveTo(341, 200, 40, 0);
-    moveTo(341, 200, 40, 1);
+//     moveTo(341, 200, 40, 0);
+//     moveTo(341, 200, 40, 1);
     
-    tapUp(341, 200, 100, 0);
-    tapUp(341, 200, 100, 1);
+//     tapUp(341, 200, 100, 0);
+//     tapUp(341, 200, 100, 1);
     
-    return true;
-}
+//     return true;
+// }
 
-zoomOut()
-zoomOut()
-zoomOut()
+// zoomOut()
+// zoomOut()
+// zoomOut()

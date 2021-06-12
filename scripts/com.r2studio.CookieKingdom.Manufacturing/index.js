@@ -1396,10 +1396,11 @@ function stop() {
 
 function start(inputConfig) {
     console.log('inputConfig: ', inputConfig)
+    config.run = true;
 
     inputConfig = JSON.parse(inputConfig);
     config = mergeObject(config, inputConfig)
-    console.log('start with: ', config.materialsTarget, config.goodsTarget, config.run);
+    console.log('start with config: ', JSON.stringify(config));
     // TODO: inputConfig.goodsTarget seems to be string
 
     if (getCurrentApp()[0] !== "com.devsisters.ck") {
