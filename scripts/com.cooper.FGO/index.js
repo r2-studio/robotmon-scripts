@@ -5,6 +5,10 @@ var itemPath;
 var server;
 var loadApiCnt;
 
+var havePlan = false;
+var freeMode = false;
+var version = "V3.01";
+
 function start(loopTime,script,scriptName){
     startScript(loopTime,script,scriptName);
 }
@@ -14,6 +18,7 @@ function stop(){
 }
 
 function initServer(){
+    havePlan = (getUserPlan() == 3) && !freeMode;
     var path = getStoragePath();
     if(server == "JP"){
         console.log("JP server");
@@ -25,13 +30,13 @@ function initServer(){
         packagePath = path+"/scripts/com.cooper.FGOTW/";
         imagePath = packagePath+"image_tw/"
     }
-    itemPath = path+"/FGOV2/";
+    itemPath = path+"/FGOV3/";
 }
 
 function loadApi(){
     console.log("start load api");
     loadApiCnt = 0;
-    var apiList = ["basic","start_stage","in_stage","auto_attack_ai","get_box","check_stage"];
+    var apiList = ["basic","screen","start_stage","in_stage","auto_attack_ai","get_box","check_stage","friend"];
     for(var i = 0;i<apiList.length;i++){
         var s = readFile(packagePath+apiList[i]+".js");
         if(s == undefined || s.length == 0){
@@ -61,34 +66,26 @@ function initHTML(serverString){
     if(firstTime.length == 0 || firstTime.lastIndexOf("exit", 0) === 0){
         console.log("First time run script, init basic item");
         execute("mkdir "+itemPath);
-        sleep(300);
+        sleep(500);
         execute("mkdir "+itemPath+"script");
-        sleep(500);
-        execute("cp "+packagePath+"BasicItem/script3.js "+itemPath+"script/自動周回.js");
-        sleep(500);
-        execute("cp "+packagePath+"BasicItem/script2.js "+itemPath+"script/抽箱.js");
-        sleep(500);
-        execute("cp "+packagePath+"BasicItem/script1.js "+itemPath+"script/友抽.js");
         sleep(500);
         execute("mkdir "+itemPath+"friend_servant");
         sleep(500);
-        execute("cp "+packagePath+"BasicItem/friend1.png "+itemPath+"friend_servant/孔明.png");
-        sleep(500);
-        execute("cp "+packagePath+"BasicItem/friend2.png "+itemPath+"friend_servant/梅林.png");
-        sleep(500);
         execute("mkdir "+itemPath+"friend_item");
         sleep(500);
-        execute("cp "+packagePath+"BasicItem/item1.png "+itemPath+"friend_item/絆.png");
+
+        execute("cp "+packagePath+"BasicItem/default.js "+itemPath+"script/自動周回.js");
         sleep(500);
-        execute("cp "+packagePath+"BasicItem/item2.png "+itemPath+"friend_item/QP.png");
-        // if(server == "JP"){
-        // execute("cp "+packagePath+"BasicItem/friend3.png "+itemPath+"friend_servant/術師匠.png");
-        // sleep(500);
-        // execute("cp "+packagePath+"BasicItem/item3.png "+itemPath+"friend_item/絆2.png");
-        // sleep(500);
-        // execute("cp "+packagePath+"BasicItem/item4.png "+itemPath+"friend_item/QP2.png");
-        // sleep(500);            
-        // }
+
+        execute("cp "+packagePath+"BasicItem/cskadi.png "+itemPath+"friend_servant/C_Skadi.png");
+        sleep(500);
+        execute("cp "+packagePath+"BasicItem/csaber.png "+itemPath+"friend_servant/C_Saber.png");
+        sleep(500);
+
+        execute("cp "+packagePath+"BasicItem/qp.png "+itemPath+"friend_item/QP.png");
+        sleep(500);
+        execute("cp "+packagePath+"BasicItem/kitune.png "+itemPath+"friend_item/絆.png");
+        sleep(500);
     }
     var scriptList = execute("ls "+itemPath+"script").replace(/.js/g,'').replace(/ /g,'').replace(/\r\n|\n/g,",");
     if(scriptList.slice(-1)==','){
@@ -102,5 +99,5 @@ function initHTML(serverString){
     if(itemList.slice(-1)==','){
       itemList = itemList.slice(0,-1);
     }
-    return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version;
+    return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version+';'+havePlan;
 }
