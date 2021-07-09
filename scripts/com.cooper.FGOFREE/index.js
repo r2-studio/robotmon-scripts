@@ -5,9 +5,9 @@ var itemPath;
 var server;
 var loadApiCnt;
 
+var version = "V3.01";
 var havePlan = false;
 var freeMode = true;
-var version = "V3.01";
 
 function start(loopTime,script,scriptName){
     startScript(loopTime,script,scriptName);
@@ -75,17 +75,17 @@ function initHTML(serverString){
         sleep(500);
 
         execute("cp "+packagePath+"BasicItem/default.js "+itemPath+"script/自動周回.js");
-        sleep(500);
+        sleep(1000);
 
-        execute("cp "+packagePath+"BasicItem/cskadi.png "+itemPath+"friend_servant/C_Skadi.png");
-        sleep(500);
         execute("cp "+packagePath+"BasicItem/csaber.png "+itemPath+"friend_servant/C_Saber.png");
-        sleep(500);
+        sleep(1500);
+        execute("cp "+packagePath+"BasicItem/cskadi.png "+itemPath+"friend_servant/C_Skadi.png");
+        sleep(1500);
 
         execute("cp "+packagePath+"BasicItem/qp.png "+itemPath+"friend_item/QP.png");
-        sleep(500);
+        sleep(1500);
         execute("cp "+packagePath+"BasicItem/kitune.png "+itemPath+"friend_item/絆.png");
-        sleep(500);
+        sleep(1500);
     }
     var scriptList = execute("ls "+itemPath+"script").replace(/.js/g,'').replace(/ /g,'').replace(/\r\n|\n/g,",");
     if(scriptList.slice(-1)==','){
