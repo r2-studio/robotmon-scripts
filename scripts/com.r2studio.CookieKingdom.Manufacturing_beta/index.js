@@ -6,27 +6,87 @@ config = {
 
   account: 'default_xrobotmon_account@gmail.com',
   password: '',
-  autoCollectMailIntervalInMins: 30,
-  autoCollectFountainIntervalInMins: 30,
-  autoCollectTrainIntervalInMins: 30,
+  autoCollectMailIntervalInMins: 40,
+  autoCollectFountainIntervalInMins: 40,
+  autoCollectTrainIntervalInMins: 20,
+  autoSendHotAirBallonIntervalInMins: 20,
   autoCollectDailyReward: true,
   materialsTarget: 260,
   goodsTarget: 60,
   worksBeforeCollectCandy: 40,
-  isCollectCandy: true,
   helpTapGreenCheck: true,
 
   jobFailedBeforeGetCandy: 4,
   jobFailedCount: 0,
+  lastNetworkIssueOccurTime: 0,
+  networkIssueCount: 0,
+  networkIssueCountThreasHold: 20,
   lastCollectCandyTime: 0,
   lastCollectMail: 0,
   lastCollectFountain: 0,
   lastCollectTrain: 0,
+  lastSendHotAirBallonIntervalInMins: 0,
   lastCollectDailyReward: 0,
   run: true,
   isXR: true,
-  findCookieHouseV2: true,
   findProductionTimes: 8,
+
+  stock_axe: 60,
+  stock_pickaxe: 60,
+  stock_saw: 60,
+  stock_shovel: 60,
+  stock_stack: 60,
+  stock_tongs: 60,
+  stock_hammer: 60,
+  stock_jellybeanJam: 60,
+  stock_jellyJam: 60,
+  stock_toffeeJam: 60,
+  stock_pomegranateJam: 60,
+  stock_sparkleberryJam: 60,
+  stock_pineconeBirdyToy: 60,
+  stock_acornLamp: 60,
+  stock_cuckooClock: 60,
+  stock_dreamcatcher: 60,
+  stock_heartyRye: 60,
+  stock_tartJampie: 60,
+  stock_ginkgoFocaccia: 60,
+  stock_glazedDonuts: 60,
+  stock_flyffyCastella: 60,
+  stock_goldenCroissant: 60,
+  stock_hotJellyStew: 60,
+  stock_bearJellyBurger: 60,
+  stock_candyPasta: 60,
+  stock_fluffyOmurice: 60,
+  stock_jellyDeluxePizza: 60,
+  stock_fancyJellybeanMeal: 60,
+  stock_biscuitPlanter: 60,
+  stock_shinyGlass: 60,
+  stock_gleamyBead: 60,
+  stock_colorfulBowl: 60,
+  stock_candyFlower: 60,
+  stock_happyPlanter: 60,
+  stock_candyBouquet: 60,
+  stock_lollipopFlowerBasket: 60,
+  stock_bellFlowerBouquet: 60,
+  stock_glitteringYogurtWeeath: 60,
+  stock_cream: 60,
+  stock_butter: 60,
+  stock_homemadeCheese: 60,
+  stock_jellybeanLatte: 60,
+  stock_bubblyBoba: 60,
+  stock_sweetberryJuicy: 60,
+  stock_cloudPillow: 60,
+  stock_bearJellyToy: 60,
+  stock_pitayaDragonToy: 60,
+  stock_creamRootBeer: 60,
+  stock_redberryJuice: 60,
+  stock_vintageRootBottle: 60,
+  stock_spookyMuffin: 60,
+  stock_strawberryCake: 60,
+  stock_partyCake: 60,
+  stock_glazedRing: 60,
+  stock_rubyberryBrooch: 40,
+  stock_bearJellyCrown: 40,
 };
 
 factoryType = [
@@ -165,6 +225,54 @@ pageCanGotoKingdom = [
   {x: 442, y: 318, r: 146, g: 80, b: 69}
 ]
 
+var anErrorHasOccuredMessageScreen = {
+  x: 222,
+  y: 160,
+  width: 198,
+  height: 25,
+
+  targetY: 4,
+  lookingForColor: { r: 80, g: 80, b: 80 },
+  targetColorCount: 83,
+  targetColorThreashold: 5
+}
+
+var theNetworkIsUnstableMessageScreen = {
+  x: 222,
+  y: 160,
+  width: 198,
+  height: 25,
+
+  targetY: 4,
+  lookingForColor: { r: 80, g: 80, b: 80 },
+  targetColorCount: 51,
+  targetColorThreashold: 5
+}
+
+var anUnknownErrorHasOccurMessageScreen = {
+  x: 222,
+  y: 160,
+  width: 198,
+  height: 25,
+
+  targetY: 4,
+  lookingForColor: { r: 80, g: 80, b: 80 },
+  targetColorCount: 79,
+  targetColorThreashold: 3
+}
+
+var theReloginIntoAnotherDeviceMessageScreen = {
+  x: 222,
+  y: 160,
+  width: 198,
+  height: 25,
+
+  targetY: 4,
+  lookingForColor: { r: 80, g: 80, b: 80 },
+  targetColorCount: 74,
+  targetColorThreashold: 5
+}
+
 function pnt(x, y) {
   return { x: x, y: y };
 }
@@ -273,6 +381,31 @@ function waitUntilSeePage(page, secsToWait) {
   return false;
 }
 
+function checkScreenMessage(messageScreen) {
+  pageMessageWindow = [
+    {x: 424, y: 101, r: 57, g: 69, b: 107},
+    {x: 431, y: 128, r: 243, g: 233, b: 223},
+    {x: 429, y: 244, r: 219, g: 207, b: 199}
+  ]
+  if (!checkIsPage(pageMessageWindow)) {
+    return false;
+  }
+
+  var img = getScreenshot();
+  var croppedImage = cropImage(img, messageScreen.x, messageScreen.y, messageScreen.width, messageScreen.height);
+
+  var whSize = getImageSize(croppedImage);
+
+  var cnt = 0;
+  for (var i = 0; i < whSize.width; i ++) {
+      if (isSameColor(getImageColor(croppedImage, i, messageScreen.targetY), messageScreen.lookingForColor)) {
+          cnt ++;
+      }
+  }
+  // console.log('>> ', cnt, messageScreen.targetColorCount)
+  return Math.abs(messageScreen.targetColorCount - cnt) < messageScreen.targetColorThreashold ? true : false;
+}
+
 function handleToolShopShovels() {
   pageToolShop = [
     { x: 420, y: 191, r: 178, g: 16, b: 13 },
@@ -306,12 +439,6 @@ function handleToolShopShovels() {
     if (shovelStock == -1) {
       console.log('ocr failed, skip this shovel check');
     }
-    // pageShovelTwoDigits = [
-    //     {x: 448, y: 321, r: 255, g: 255, b: 255},
-    //     {x: 449, y: 324, r: 255, g: 255, b: 255},
-    //     {x: 435, y: 326, r: 255, g: 255, b: 255},
-    //     {x: 435, y: 322, r: 255, g: 255, b: 255}
-    // ]
 
     if (checkIsPage(pageShovelEnabled)) {
       if (shovelStock < 10) {
@@ -703,7 +830,7 @@ function makeGoodsToTarget(target, orderAmount) {
   if (goodsFourStock === -1 || goodsFiveStock === -1 || goodsSixStock === -1) {
     console.log('2nd OCR count failed, skip this round');
     SwipeProductionMenuToTop();
-    return -1;
+    return itemsAdd;
   }
 
   if (!checkIsPage(pageFirstItemEnabled)) {
@@ -809,6 +936,28 @@ function JobScheduling() {
 }
 
 function handleNotEnoughStock() {
+  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+    return false;
+  }
+  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+    return false;
+  }
+  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+    return false;
+  }
+
   pageNotEnoughStock = [
     { x: 428, y: 98, r: 56, g: 167, b: 231 },
     { x: 345, y: 104, r: 60, g: 70, b: 105 },
@@ -835,27 +984,44 @@ function handleNotEnoughStock() {
     return true;
   }
 
-  // pageNotEnoughRequiredItems = [
-  //     {x: 354, y: 241, r: 121, g: 207, b: 12},
-  //     {x: 297, y: 247, r: 121, g: 207, b: 12},
-  //     {x: 233, y: 108, r: 60, g: 70, b: 105},
-  //     {x: 426, y: 108, r: 60, g: 70, b: 105},
-  //     {x: 430, y: 134, r: 243, g: 233, b: 223},
-  //     {x: 419, y: 247, r: 219, g: 207, b: 199},
-  //     {x: 252, y: 245, r: 219, g: 207, b: 199},
-  //     {x: 212, y: 247, r: 219, g: 207, b: 199},
-  // ]
-  // if (checkIsPage(pageNotEnoughRequiredItems)) {
-  //     console.log('quiting pageNotEnoughRequiredItems')
-  //     qTap(pageNotEnoughRequiredItems);
-  //     sleep(config.sleep);
-  //     return true;
-  // }
-
   return false;
 }
 
 function handleRelogin() {
+  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+    return false;
+  }
+  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+    return false;
+  }
+  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+    return false;
+  }
+
+  if (checkScreenMessage(theReloginIntoAnotherDeviceMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found theReloginIntoAnotherDeviceMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+    for (var i = 0; i < config.sleepWhenDoubleLoginInMinutes; i++) {
+      sleep(60 * 1000);
+      sendEvent('running', '');
+      console.log('Detect relogin, wait: ', i, '/', config.sleepWhenDoubleLoginInMinutes, 'mins to restart...');
+    }
+    return true;
+  }
   if (checkIsPage(pageReloginOrNetworkError)) {
     console.log('quiting pageReloginOrNetworkError');
     qTap(pageReloginOrNetworkError);
@@ -1110,6 +1276,7 @@ function handleGotoKingdomPage() {
   if (checkIsPage(pageInProduction)) {
     console.log('In production, hit back to kingdom page');
     keycode('BACK', 1000);
+    waitUntilSeePage(pageInKingdomVillage, 8);
     return true;
   }
 
@@ -1504,6 +1671,26 @@ function handleNextProductionBuilding() {
 function handleTryHitBackToKingdom() {
   console.log('trying to resolve stuck by hitting back');
 
+  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+  }
+  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+  }
+  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
+    config.lastNetworkIssueOccurTime = Date.now();
+    config.networkIssueCount ++;
+    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
+    keycode('BACK', 1000);
+  }
+
+
   for (var i = 0; i < 4; i++) {
     if (checkIsPage(pageInKingdomVillage)) {
       console.log('Found pageInKingdomVillage, return');
@@ -1616,7 +1803,7 @@ function gotoCastle() {
   pageInCookieHead = [
     { x: 186, y: 38, r: 22, g: 32, b: 47 },
     { x: 483, y: 30, r: 253, g: 72, b: 196 },
-    { x: 426, y: 96, r: 60, g: 78, b: 121 },
+    {x: 605, y: 98, r: 60, g: 78, b: 121},
     { x: 512, y: 97, r: 60, g: 78, b: 121 },
   ];
 
@@ -1729,6 +1916,13 @@ function handleTrain() {
     { x: 522, y: 17, r: 0, g: 193, b: 255 },
     { x: 541, y: 21, r: 54, g: 33, b: 26 },
   ];
+  pageTrainNotEnoughGoods = [
+    {x: 436, y: 30, r: 56, g: 165, b: 231},
+    {x: 221, y: 40, r: 60, g: 70, b: 105},
+    {x: 222, y: 100, r: 243, g: 233, b: 223},
+    {x: 211, y: 300, r: 219, g: 207, b: 199},
+    {x: 357, y: 300, r: 121, g: 207, b: 12}
+  ]
   if (checkIsPage(pageTrainNotCollapsed)) {
     qTap(pageTrainNotCollapsed);
     sleep(config.sleepAnimate * 2);
@@ -1736,15 +1930,33 @@ function handleTrain() {
     qTap(pnt(265, 103));
     sleep(config.sleepAnimate);
     qTap(pnt(178, 104));
-    sleep(config.sleepAnimate);
+    sleep(config.sleepAnimate * 2);
+    if (checkIsPage(pageTrainNotEnoughGoods)) {
+      console.log('not enough goods in train 1');
+      qTap(pageTrainNotEnoughGoods);
+      sleep(config.sleepAnimate);
+    }
+
     qTap(pnt(192, 208));
     sleep(config.sleepAnimate);
     qTap(pnt(270, 208));
-    sleep(config.sleepAnimate);
+    sleep(config.sleepAnimate * 2);
+    if (checkIsPage(pageTrainNotEnoughGoods)) {
+      console.log('not enough goods in train 2');
+      qTap(pageTrainNotEnoughGoods);
+      sleep(config.sleepAnimate);
+    }
+
     qTap(pnt(282, 307));
     sleep(config.sleepAnimate);
     qTap(pnt(204, 303));
-    sleep(10000);
+    sleep(config.sleepAnimate * 2);
+    if (checkIsPage(pageTrainNotEnoughGoods)) {
+      console.log('not enough goods in train 3');
+      qTap(pageTrainNotEnoughGoods);
+      sleep(config.sleepAnimate);
+    }
+    sleep(9000);
 
     var imageSendAll = getImageFromBase64(
       'iVBORw0KGgoAAAANSUhEUgAAAEsAAAAxCAYAAACS91RNAAAAA3NCSVQICAjb4U/gAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAA0mSURBVGhD7VsJdBRFGv66e67cEAiHgAECBEGQI3Iop1nkEBAEFmVXVx6+RdYFLx4KD1ZcAc3j8Ip47e4TheByugRkww3hEINyJSFkCAkkgdyTazJnd+9f1TMkKGzYZTJo9Jup6a7q6uqqr///r/+v7hE2nLuqwgOZkqTtXgeTJKCZUUSYQUKITgRtYBSoLiWF0u2AtQHBc1XaF4T6GlShsh4rbF+GfK33teDHCU7aOtxAoV1Bbo1Tq3uD+rcK4Z91yPKCdZcRZxCB84cPIDlxEyzFhdrACPUN51ZQPyn/Kzwk/gBefhhRDvpxK1SPH9HQtEUrDBg5Fv1HjOb5QBqkURI1YaB7yMYsqiJU2gobMoksb4siu8Mq0o4lY/PqVdBTBaNOAlWFeJtj83aQcaQ1dZsN3gTqjRgjeIfICHMwwiijUh8ET8/YyCXq3HNzX8GAQQ/CQN1jZTpRhI7tk+AIGzML67Qu4rXfjaMDAmqCy/DmJ+3gKAhEQZuj2mGDTAzXqd4YoBihc0lwu93Y+nQXXsRu47bERM+NpY9nzMIWc/G10b/21GNQZTdeebs/fv/As1QSzcsr6RNvbgcphNFJFDcmCGT8mM0h6JQAOByBODi7DaqrgMQdiZo4epRA2JJFZFH9vzw5EWF3BeO5ed3xRP8V2tE6eD4tAEF2gyfXeKDT6RBgIqUxGEjIaniZYtfh4J+7obJKxfYd23kZAzNHyDh1nIyYgtCxSTck6qPSPgiwB2iK28iSm8ZfZQNKK5yorKAymKALMGDwh+lcBffv36+RQOBa9eXKN2GAG0OHNvUU1yI+oycqcio8ucYI5oNoSXYAliKyy0439ESMWy7FiuW1wiPqyeSTC4VJ64opqyInJ5t+VXx3cTde/S4cRUVFsNDnlwMZFs9wh64t0HY8ENN3JaJpKLP45bzSp+X9sOBkM2yqmApBJL8k1EEeBbkOlH4pUImwMouMCCGMNFXCzq938nIpSC8trii3InpCMZwuRoiiTZmedDuQneQ9Z8gwH3Dh3G4X8k7KsJUr0JHHZwxmN8hT8f9EVZGCvO/dKM5SYLOoCAgTIDHn0EeQdDUwb2uJ3Nw8TBj/KMRSUjPWvFf0fAWXTcXxtQ4cWKpHp6rpmNxjCWJbz4P76BAcep9EPY/HK7eF83tcqD7UF/dYZ+FcApmM8x4fwEewWrXZv7CggPvrzPw3CHLpjuftDsfRvamIf/8DzH15LhYvfh3btu5Et4hYlGRRXEeSV12soOKqguoS8mAojmOgiRkOmrbLLssoSHej5KKMmjKypHX4dTtUZO53Ycoj07Fk0XJEt3wA+Wd8SxbDtbBM+JGH6TsRvnhMxtTHnkLr1q2RnJyMvn37Yvjw4YiLi0NGmhllOTL2rrRh+8s6pCzriC2zVSQtq8GFZBf2v2fDhllOHFjQDKnxnXBqRQdsecGJ4587UJqj4PsNDmyYbYUttymaNWvGr8fCl7Jc35LFbBcD48ug/xFZvjPiTGLcbu1ier0ely9fxsGDB7Bg4au4YsnEhcNu9AqdhvRv8/Ft8knknC3FiE6zcWi1A80tQ3HpTDUyUrPx7dGTlE7jeFIWyo60x57lNlQc6ob17x4i9SjCuHHj+DUYWc4aX09CFD0SUUy6JNHYcGoY3FzA+vUJKC0txYABA5CdnY2lS5chvGUQwttLaKpG4+OPPiVbaSH1XMyPx8UtR7vg+8hBNkCkAJadu2HDBk40k9Dn/vgiXHktuCoPHDgQKSkpyMzM9FyR4GuuCJoaahrXYGR1GKhHSUU+evfujc8++wxGoxHz58/H5oSvkX/KjdEjx0KSJJw+fRrBwcEoLCzkHRs7diycThdv48SJE5g6dSoWLlzI81FRUZgyeSoiIiKwefNm9OvXD8eOHePHGg61pqnByGrRRURkfx0KSvIwffp0dO/eHZWVlRgyZAi6Rt0Hk5ECMsKoUaMwd+5c9OjRA1lZWbA7HHwFwAuyq6iqoqjWg5AQiuYJFy5c4Ft/ga22iIw43y/EUaxFBjzUHYX33/4A06Y9gZ49e/JglcFms12TiLS0NMTGxmLixIlYvXo14t56Cy6XJlkMEltM8sBut+Obb77h+3PmzOGTRXS0tjLC4fthXAMz7w0mWZVXga6RfTBz5iysW5eATZs2wWQycfXJNJ/H7j27sGbNGi5xe/fuxb59+7BkyRLoTAIcDjtvQ5ZliESWomgTRU1NDXbtSsKKFSu4TZs3bx63hwwq+RXM0W1ICIMHD2YLhnhgVapPQ5qM3U4kLXWgR9cY9OrVi9slJkVJSUmI6EwCTbepkJzIQQ8O4m4Fk5rDhw/janUGnOV6PDLqUSI1E5dKz0C1BmPUiDE4m3oW5uw0OKwqmoQ1QUxMDMLDw/lsu3tvEno+acX904yeHvgGR1+8j08c7GY2GFml2TKSP3Ig+5gbTqvCJyrJIKD1PSL6/8HEw5Ljn9u5IymTg8nm6MBwAdEP6VBZoKLgnEx1gOgRBhTRfjE5poYAoNMQPWootLmU4oatgjmyKnTUbqtuOjz0khGtaetL+IUsdoHqUgUlFxSUXiJCyAw1aSuiZRcJYXdp2s9iu2KzFvpINEbmUjTvKBEZCuyVWiNhd0mwV1C+mgwsnRYeKcEQKKCigDz/fIW3YQwR0ITabNZR5MT5ErVk7WlAsuoBC11YLFdMYY9C+82IhJYkdaIocKmqJBJYPNacCLRT6OPNt+gkcdL9BUYWW4Lft39fwxn4+sDU9FC8jCjLDHS1zkTKx0bkfS9zSTnxDwldK2dCdzIWKevt1+VPbXV4WvAfmAjJFMjeMbLSdroQ034c3l75HlbErcJvH/4TThIRLPYLdnbCstdX4oVZ83HxiHxd/kKy74Pl+sGeN9LM7Mn5FWx1ga0YTH5siqcEmDx5Ci6fkLnEeVcfmP/H7FfdfHWRf8lizyH5s0hKd4SsEiLEVW7C6NGjkZeXhyNHjuDee+9FZKvOKM4kMuqYTpk9Ubgu79nxExw0MzGyRIFsZkN6vTdDepILI38zBoGBgUhMTMRXX33FyyeRpF1Nq0dy6hDnD9jddlhd5OKUlRJZfr44c8bNTAVJ7RjYWheTLIYpU6bAcsXPHboFuFUZmRSS+F0NS7MVOCwGjBkzhucTEhJw9Kj2egCLHzvcHeXv+1cvmPKJIlNDP4OFQSNjxyAoKAj5+fk4ePAgT95VhMmTSOJ+esLF4X/JIm9+3LjxfH/RokUYNmwYTzNmzOBl48ePh+JZbFfIW2WrDtfl78AbBN43c6TIyMjFTM7ajSziwW1Dg8WKO9Yex7lzGdi8eROM4S6ERIgwp+XiSv4VvPPOO7iYlcWDbrZSUenOR0mBBWdPa/kaXT56T/JtsPzfYN6uPaV/eNIYiAoZL3/i7hgdbIarSNj6dwS3r8GEt4LweHwQIu8XsXbjJ7haYUZgaye27foSZy8cQ5dhOrTs4a7NP0TRtZ/B1/tIuIS+A2NUiSLU4e+a/RIbsocK7KGoIqvQGwVEREl8daGI/CunTYXiEriquZ0UspKkN2kjwmlVYS3T8uF3iwgmSfQPVOx4tgMnKm7dagh9iCxWPGp1DpX52eP7yUNHZLXlZC1fG+8x8CRlJTJTxzvgof6EoXBOGASoFHOJpgAylsScorSnwoZXw58diBJTgAlBdivE/oP6sUVKmEtKiMlfJYuDaKid9lT07NMNJkc5xOlzpvMFt8zMXO+xX8GYovTJdxaioxoTnrkHZcZcCqZJrFSFiiyhiKODCvsXwC+YMOZ/KqqATy8KcF0JICGTodfbgECXZuA7d+uMLnu0528fZ9EULeiokm8X/n8uUElYGAfstYKO/26FDl1bk+zwfwJASLlygDswsyY/D7vNgdSZ6fykV/pqnit7PsedMoL3rZJGBZrx7EGhfNdgtXLtYui8pg1Mbj1WrmNhGPl/qgThX6mvMVHiIjb/6S9QLbiRM+MSP4EhtgnQvn0oWhoMjVI7C8uq4NCpWJfh9JQAHf/WCiFSIFZ+8Qx/NZcUk6unsCP9ddqQlyw0hw0ReOOpxVCDgYzHU3k1DhIsUecvr9m/UFwaHV702tgRqAJWrX2G52sFhGRql/mvlJfgVoxwqgF8+XTBk/EkdpokWWLLUN6pDC7UMt+YEOYIRnCeAeH7tBdOmGCsIom6EYTdmW8QZZ4cQVUDUaG0hY2IS/xwI9KPn4GO/SuKPk4Kh0SaKXRELjvFJdhpK0EnsL+nCSSsRsprjbFnbTL7oS9bu2b13B7CdaTqOoFmFzYTs7rexH5YwU3ADnnTjcBUhfVT68EtwHM9hbyBHjGRmPHSw1r5TSDsMy+rvTad7FDCYJXDOSkGNQQtlFYIJHocNNQqIqeSUgvSU0U9j0oxl4bP9FmFpNrhUsIRIoYhGG2pNBBWoYa8lGqEqU5IRE6NaoFDLef1TWQnTHo9TcsmPkj2sgwji83B3r/q/RBMYRw0x9zId2ZGgsZMfaAKrEGfA/gPla3E2EIuQrcAAAAASUVORK5CYII='
@@ -1784,15 +1996,33 @@ function handleTrain() {
     qTap(pnt(265, 103));
     sleep(config.sleepAnimate);
     qTap(pnt(178, 104));
-    sleep(config.sleepAnimate);
+    sleep(config.sleepAnimate * 2);
+    if (checkIsPage(pageTrainNotEnoughGoods)) {
+      console.log('not enough goods in train 1');
+      qTap(pageTrainNotEnoughGoods);
+      sleep(config.sleepAnimate);
+    }
+
     qTap(pnt(192, 208));
     sleep(config.sleepAnimate);
     qTap(pnt(270, 208));
-    sleep(config.sleepAnimate);
+    sleep(config.sleepAnimate * 2);
+    if (checkIsPage(pageTrainNotEnoughGoods)) {
+      console.log('not enough goods in train 2');
+      qTap(pageTrainNotEnoughGoods);
+      sleep(config.sleepAnimate);
+    }
+
     qTap(pnt(282, 307));
     sleep(config.sleepAnimate);
     qTap(pnt(204, 303));
-    sleep(10000);
+    sleep(config.sleepAnimate * 2);
+    if (checkIsPage(pageTrainNotEnoughGoods)) {
+      console.log('not enough goods in train 3');
+      qTap(pageTrainNotEnoughGoods);
+      sleep(config.sleepAnimate);
+    }
+    sleep(9000);
 
     var imageSendAll = getImageFromBase64(
       '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'
@@ -1870,32 +2100,138 @@ function handleGetDailyRewards() {
       { x: 523, y: 19, r: 4, g: 131, b: 255 },
       { x: 418, y: 19, r: 255, g: 206, b: 1 },
     ];
-    if (checkIsPage(pageDailyGift)) {
-      qTap(pnt(115, 153));
-      sleep(config.sleepAnimate * 2);
-      qTap(pageDailyGift);
-      sleep(config.sleepAnimate * 2);
+    qTap(pnt(115, 153));
+    sleep(config.sleepAnimate * 2);
+    qTap(pageDailyGift);
+    sleep(config.sleepAnimate * 2);
 
-      pageDailyGiftClaimed = [
-        { x: 510, y: 325, r: 125, g: 125, b: 125 },
-        { x: 614, y: 324, r: 125, g: 125, b: 125 },
-        { x: 416, y: 20, r: 255, g: 207, b: 0 },
-      ];
-      for (var i = 0; i < 10; i++) {
-        if (!checkIsPage(pageDailyGiftClaimed)) {
-          qTap(pageDailyGiftClaimed);
-        } else {
-          console.log('daily gacha gift successfully claimed');
-          handleGotoKingdomPage();
-          return true;
-        }
+    pageDailyGiftClaimed = [
+      { x: 510, y: 325, r: 125, g: 125, b: 125 },
+      { x: 614, y: 324, r: 125, g: 125, b: 125 },
+      { x: 416, y: 20, r: 255, g: 207, b: 0 },
+    ];
+    for (var i = 0; i < 10; i++) {
+      if (!checkIsPage(pageDailyGiftClaimed)) {
+        qTap(pageDailyGiftClaimed);
+      } else {
+        console.log('daily gacha gift successfully claimed');
+        handleGotoKingdomPage();
+        return true;
       }
+    }
 
-      console.log('daily gacha gift NOT successfully claimed');
+    console.log('daily gacha gift NOT successfully claimed');
+    handleGotoKingdomPage();
+    return false;
+  }
+}
+
+function handleHotAirBallon() {
+  console.log('handleHotAirBallon: ', new Date())
+  handleGotoKingdomPage();
+
+  pageHotAirBallonReady = [
+    {x: 164, y: 312, r: 148, g: 0, b: 0},
+    {x: 153, y: 326, r: 255, g: 109, b: 200},
+    {x: 27, y: 321, r: 252, g: 252, b: 252},
+    {x: 24, y: 332, r: 101, g: 41, b: 41}
+  ]
+  pageCollapsedaffairs = [
+    {x: 97, y: 327, r: 255, g: 221, b: 136},
+    {x: 116, y: 330, r: 134, g: 183, b: 249},
+    {x: 125, y: 342, r: 38, g: 71, b: 96},
+    {x: 110, y: 324, r: 162, g: 90, b: 227}
+  ]
+  pageInHotAirBallon = [
+    {x: 270, y: 330, r: 255, g: 211, b: 0},
+    {x: 158, y: 331, r: 12, g: 167, b: 223},
+    {x: 184, y: 312, r: 223, g: 175, b: 97},
+    {x: 331, y: 312, r: 142, g: 88, b: 65},
+    {x: 565, y: 84, r: 255, g: 251, b: 235}
+  ]
+  pageChooseBallonDestination = [
+    {x: 285, y: 15, r: 208, g: 161, b: 89},
+    {x: 319, y: 7, r: 91, g: 61, b: 45},
+    {x: 352, y: 18, r: 210, g: 162, b: 89},
+    {x: 616, y: 15, r: 56, g: 165, b: 231}
+  ]
+  pageCanStartBallonTrip = [
+    {x: 580, y: 330, r: 121, g: 207, b: 12},
+    {x: 478, y: 327, r: 241, g: 51, b: 92},
+    {x: 417, y: 330, r: 12, g: 167, b: 223},
+    {x: 437, y: 316, r: 138, g: 85, b: 60}
+  ]
+
+  if (checkIsPage(pageCollapsedaffairs)) {
+    qTap(pageCollapsedaffairs);
+    sleep(config.sleepAnimate * 2);
+    qTap(pnt(108, 173));
+    sleep(2000);
+    if (!waitUntilSeePage(pageInHotAirBallon, 8)) {
+      console.log('Cannot find pageInHotAirBallon, should be flying');
       handleGotoKingdomPage();
       return false;
     }
   }
+
+  else if (checkIsPage(pageHotAirBallonReady)) {
+    qTap(pageHotAirBallonReady);
+    sleep(2000);
+    if (!waitUntilSeePage(pageInHotAirBallon, 8)) {
+      console.log('Cannot find pageInHotAirBallon, should be flying');
+      handleGotoKingdomPage();
+      return false;
+    }
+  }
+
+  // Tap Change location
+  qTap(pnt(420, 328));
+  if (!waitUntilSeePage(pageChooseBallonDestination, 8)) {
+    console.log('Cannot find the pageChooseBallonDestination, quitting');
+    handleGotoKingdomPage();
+  }
+
+  tapDown(626, 268, 40, 0);
+  sleep(config.sleep);
+  moveTo(400, 268, 40, 0);
+  sleep(config.sleep);
+  moveTo(-2000, 268, 40, 0);
+  sleep(config.sleep);
+  tapUp(-2000, 268, 40, 0);
+  sleep(config.sleepAnimate * 3);
+
+  for (var i = 0; i < 4; i ++) {
+    for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
+      for (var yLocation = 85; yLocation < 285; yLocation += 70) {
+        qTap(pnt(xLocation, yLocation));
+        sleep(2000);
+
+        if (!checkIsPage(pageChooseBallonDestination) || checkIsPage(pageInHotAirBallon)) {
+          console.log('ballon destination choosed successfully, i, x, y = ', i, xLocation, yLocation)
+          i = 10;
+          xLocation = 0;
+          yLocation = 500;
+        }
+      }
+    }
+
+    tapDown(50, 268, 40, 0);
+    sleep(config.sleep);
+    moveTo(250, 268, 40, 0);
+    sleep(config.sleep);
+    moveTo(600, 268, 40, 0);
+    sleep(config.sleep);
+    tapUp(600, 268, 40, 0);
+    sleep(config.sleepAnimate * 3);
+  }
+
+  qTap(pnt(250, 330));  // Tap Auto
+  sleep(config.sleepAnimate);
+  qTap(pageCanStartBallonTrip);
+  sleep(config.sleepAnimate * 2);
+
+  console.log('Successfully sent ballon')
+  handleGotoKingdomPage();
 }
 
 function stop() {
@@ -1958,6 +2294,15 @@ function start(inputConfig) {
       config.lastCollectDailyReward = Date.now();
       handleGetDailyRewards();
     }
+    
+    if (
+      config.autoSendHotAirBallonIntervalInMins != 0 &&
+      (Date.now() - config.lastSendHotAirBallonIntervalInMins) / 60000 > config.autoSendHotAirBallonIntervalInMins
+    ) {
+      console.log('Check hot air ballon: ', (Date.now() - config.lastCollectTrain) / 60000, ' mins just passed');
+      config.lastSendHotAirBallonIntervalInMins = Date.now();
+      handleHotAirBallon();
+    }
     if (
       config.autoCollectTrainIntervalInMins != 0 &&
       (Date.now() - config.lastCollectTrain) / 60000 > config.autoCollectTrainIntervalInMins
@@ -1974,7 +2319,7 @@ function start(inputConfig) {
       config.lastCollectFountain = Date.now();
       findAndTapFountain();
     }
-    if (config.isCollectCandy && (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy) {
+    if (config.worksBeforeCollectCandy != 0 && (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy) {
       console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
       config.lastCollectCandyTime = Date.now();
       handleFindAndTapCandyHouse();
@@ -1986,6 +2331,14 @@ function start(inputConfig) {
     sleep(config.sleep);
     handleNextProductionBuilding();
     console.log('performed  act: ', act);
+
+    if ((Date.now() - config.lastNetworkIssueOccurTime) / 1000 > 180) {
+      config.networkIssueCount = 0;
+    }
+    if (config.networkIssueCount > config.networkIssueCountThreasHold) {
+      console.log('Reboot nox as too many network error: ', config.networkIssueCount, ' in ', (Date.now() - config.lastNetworkIssueOccurTime) / 1000, ' secs');
+      execute('/system/bin/reboot -p');
+    }
 
     if (!act) {
       config.jobFailedCount++;
