@@ -5,7 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.01";
+var version = "V3.02";
 var havePlan = false;
 var freeMode = false;
 

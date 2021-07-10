@@ -1,7 +1,9 @@
 //-----------------------------------------------------in quest
-//var skillPositionX = [75,225,375,562,712,802,1050,1200,1350];
-var skillPositionX = [75,207,339,552,683,816,1028,1160,1292];
-var skillPositionY = 850;
+var skillPositionX = [66,198,330,542,674,806,1018,1150,1282];
+var skillPositionY = 824;
+var skillSmallOffset = 132;
+var skillLargeOffset = 476;
+
 var skillTargetX = [487,937,1387];
 var skillTargetY = 637;
 var clothSkillOffsetX = 130;
@@ -25,25 +27,39 @@ var useMargin = undefined;
 //----------------------------------------------Battle main page
 function setInStageMargin(){
     useMargin = 0;
-    var leftMargin = defaultMarginX;
+    /*
+        skill left edge  
+        1920:66,198,330,542,674,806,1018,1150,1282
+        2160:186
+            y:824
+        2170:141,273,405,617,749,881
+            y:792
+        2268:141,
+    */
+   /* enemy left edge
+        1920:13,,764
+        2040:73,,824
+        2160:133,884
+        2170:128,880
+        2280:128,880
+   */
     currentStagePosition[0] = realScreenSize[0] / screenScale[0] - 656;
-    if(resolution > 18/9){
-        leftMargin = 75;
-        skillPositionY = 850 - 24;
-    }
-    skillPositionX[0] = 75 + leftMargin;
-    skillPositionX[1] = 225 + leftMargin;
-    skillPositionX[2] = 375 + leftMargin;
-    skillPositionX[3] = 562 + leftMargin;
-    skillPositionX[4] = 712 + leftMargin;
-    skillPositionX[5] = 802 + leftMargin;
-    skillPositionX[6] = 1050 + leftMargin;
-    skillPositionX[7] = 1200 + leftMargin;
-    skillPositionX[8] = 1350 + leftMargin;
 
-    enemyPositionX[0] = 870 + leftMargin;
-    enemyPositionX[1] = 510 + leftMargin;
-    enemyPositionX[2] = 172 + leftMargin;
+    var enemyLeftMargin = defaultMarginX;
+    var skillLeftEdge = 66 + defaultMarginX;
+    if(resolution > 18/9){
+        enemyLeftMargin = 75;
+        skillLeftEdge = 141;
+        skillPositionY = 824 - 32;
+    }
+
+    for(var i = 0; i < 9; i++){
+        skillPositionX[i] = skillLeftEdge + skillSmallOffset * (i % 3) + skillLargeOffset *　Math.floor(i / 3);
+    }
+    console.log(skillPositionX);
+    enemyPositionX[0] = 870 + enemyLeftMargin;
+    enemyPositionX[1] = 510 + enemyLeftMargin;
+    enemyPositionX[2] = 172 + enemyLeftMargin;
 }
 
 function useSkill(player,skill,target){

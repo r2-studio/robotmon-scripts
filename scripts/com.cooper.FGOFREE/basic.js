@@ -1,5 +1,4 @@
 var loadApiCnt = 0;
-var version = "V3.01";
 
 var runningScriptName = "";
 var isDebug = false;
@@ -98,7 +97,7 @@ function getScreenshotResize(){
 
 function checkImage(screenshot,icon,x,y,width,height,threshold){
     if(isDebug){
-       console.log("checkImage");
+        console.log("checkImage",x,y,width,height);
     }
     if(threshold == undefined){
         threshold = 0.85;
@@ -108,6 +107,9 @@ function checkImage(screenshot,icon,x,y,width,height,threshold){
     releaseImage(crop);
     if(isDebug){
         console.log("checkImage reslut "+find.score +" threshold "+threshold);
+    }
+    if(find == undefined){
+        return false;
     }
     if(find.score > threshold){
         return true;
