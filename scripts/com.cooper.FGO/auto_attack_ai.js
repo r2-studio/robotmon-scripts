@@ -14,8 +14,7 @@ var servantExistHeight = 18;
 
 //skill
 var skillUsedImage;
-var skillUsedPositionOffsetX = -19;
-var skillUsedPositionY = 900;
+var skillUsedPositionOffset = [-9,77];
 var skillUsedSize = 24;
 
 //card
@@ -51,9 +50,6 @@ var ultLightnessOffset = 140;
 var allServentDieFlag = false;
 */
 function setAutoAttackMargin(){
-    if(resolution > 18/9){
-        skillUsedPositionY = 600 - 24;
-    }
     //skillUsedPositionOffsetX
     //servantAliveX = ;
     //servantAliveY
@@ -286,7 +282,8 @@ function updateSkillUsed(screenshot){
             continue;
         }
         for(var offset = -5; offset<=5;offset++){
-            if(checkImage(screenshot,skillUsedImage,skillPositionX[i] + skillUsedPositionOffsetX + offset,skillUsedPositionY,skillUsedSize,skillUsedSize,0.65)){
+            if(checkImage(screenshot,skillUsedImage,skillPositionX[i] + skillUsedPositionOffset[0] + offset,
+                skillPositionY + skillUsedPositionOffset[1], skillUsedSize, skillUsedSize,0.65)){
                 result[i] = true;
                 break;
             }
