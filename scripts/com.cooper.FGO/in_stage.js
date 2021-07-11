@@ -1,4 +1,5 @@
 //-----------------------------------------------------in quest
+//var skillPositionX = [75,225,375,562,712,802,1050,1200,1350];
 var skillPositionX = [66,198,330,542,674,806,1018,1150,1282];
 var skillPositionY = 824;
 var skillSmallOffset = 132;

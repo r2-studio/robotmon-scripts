@@ -5,7 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.02";
+var version = "V3.03";
 var havePlan = false;
 var freeMode = false;
 
@@ -18,7 +18,8 @@ function stop(){
 }
 
 function initServer(){
-    havePlan = (getUserPlan() == 3) && !freeMode;
+    //havePlan = (getUserPlan() == 3) && !freeMode;
+    havePlan = true;
     var path = getStoragePath();
     if(server == "JP"){
         console.log("JP server");
