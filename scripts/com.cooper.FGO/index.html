@@ -158,7 +158,8 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
     <script>
     var server = "JP"
     // var server = "TW"
-    var havePlan = false;
+    var freeMode = false;
+
     var version = "";
     var commandId = 0;
     var scriptCnt = 0;
@@ -176,7 +177,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
             $("#loopTime").val(n);
         });
         $("#loopTimePlus").click(function() {
-            if(!havePlan){
+            if(freeMode){
                 return;
             }
             var t = $("#loopTime").val();
@@ -189,7 +190,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
             $("#loopTime").val(n);
         });
         $("#loopTimePlus5").click(function() {
-            if(!havePlan){
+            if(freeMode){
                 return;
             }
             var t = $("#loopTime").val();
@@ -202,7 +203,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
             $("#loopTime").val(n);
         });
         $("#loopTimeMinus").click(function() {
-            if(!havePlan){
+            if(freeMode){
                 return;
             }
             var t = $("#loopTime").val();
@@ -218,7 +219,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
             $("#loopTime").val(n);
         });
         $("#loopTimeInfinite").click(function() {
-            if(!havePlan){
+            if(freeMode){
                 return;
             }
             $("#loopTime").val("無限");
@@ -544,7 +545,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
         setTimeout(function(){
         JavaScriptInterface.showMenu();
         JavaScriptInterface.runScriptCallback('initHTML("'+server+'");',"initHTML");
-        }, 500);
+        }, 1500);
     });
 function insertNewCommand(newCmd){
     if(insertDirection == 1){
@@ -1170,7 +1171,6 @@ function initHTML(result){
         return;
     }
     result = result.split(';');
-    havePlan = (result[5] == "true");
     if(result[4] == undefined){
         $("#serverMessage").text("請重新開啟腳本以完成更新");
         return;
@@ -1210,7 +1210,7 @@ function initHTML(result){
         $("#serverMessage").text("台服 "+version+" 啟動成功 - 其他伺服器版本請至腳本商店下載");
     }
 
-    if(!havePlan){
+    if(freeMode){
         var tmp = $("#serverMessage").text();
         $("#serverMessage").text(tmp+"\n此為免費試用版，無法連續周回。正式版請訂閱Robotmon FGO方案!\n");
         $("#serverMessage").html($("#serverMessage").html().replace(/\n/g,'<br/>'));
