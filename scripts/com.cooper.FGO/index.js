@@ -5,7 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.04";
+var version = "V3.05";
 
 function start(loopTime,script,scriptName){
     startScript(loopTime,script,scriptName);
@@ -96,7 +96,7 @@ function initHTML(serverString){
     if(itemList.slice(-1)==','){
       itemList = itemList.slice(0,-1);
     }
-    return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version+';'+havePlan;
+    return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version;
 }
 
 console.log("load index.jx finish");
