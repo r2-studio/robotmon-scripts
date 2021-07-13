@@ -366,10 +366,13 @@ function mergeObject(target) {
   return target;
 }
 
-function waitUntilSeePage(page, secsToWait) {
-  console.log('waiting for page: ', JSON.stringify(page));
+function waitUntilSeePage(page, secsToWait, tapPnt) {
+  console.log('waiting for page: ', JSON.stringify(page), tapPnt);
   for (var i = 0; i < secsToWait; i++) {
     if (!checkIsPage(page)) {
+      if (tapPnt != undefined && tapPnt.x != undefined && tapPnt.y != undefined) {
+        qTap(tapPnt);
+      }
       sleep(1000);
       continue;
     } else {
@@ -2098,7 +2101,7 @@ function handleGetDailyRewards() {
 }
 
 function handleHotAirBallon() {
-  console.log('handleHotAirBallon: ', new Date())
+  console.log('start handleHotAirBallon: ', new Date())
   handleGotoKingdomPage();
 
   pageHotAirBallonReady = [
@@ -2134,11 +2137,12 @@ function handleHotAirBallon() {
   ]
 
   if (checkIsPage(pageCollapsedaffairs)) {
+    console.log('Found collapsed kingdom affairs');
     qTap(pageCollapsedaffairs);
     sleep(config.sleepAnimate * 2);
     qTap(pnt(108, 173));
     sleep(2000);
-    if (!waitUntilSeePage(pageInHotAirBallon, 6)) {
+    if (!waitUntilSeePage(pageInHotAirBallon, 12, pnt(1, 1))) {
       console.log('Cannot find pageInHotAirBallon, should be flying');
       handleGotoKingdomPage();
 
@@ -2149,14 +2153,18 @@ function handleHotAirBallon() {
     }
   }
   else if (checkIsPage(pageHotAirBallonReady)) {
+    console.log('Found hot air ballon ready');
     qTap(pageHotAirBallonReady);
     sleep(2000);
-    if (!waitUntilSeePage(pageInHotAirBallon, 6)) {
+    if (!waitUntilSeePage(pageInHotAirBallon, 12, pnt(1, 1))) {
       console.log('Cannot find pageInHotAirBallon, should be flying');
       handleGotoKingdomPage();
 
       return false;
     }
+  } else {
+    console.log('Did not find either hot air ballon, skipping');
+    return false;
   }
 
   // Tap Change location
