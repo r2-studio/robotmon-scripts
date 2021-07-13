@@ -216,14 +216,14 @@ pageReloginOrNetworkError = [
 ];
 
 pageCanGotoKingdom = [
-  {x: 601, y: 322, r: 187, g: 22, b: 31},
-  {x: 606, y: 326, r: 235, g: 191, b: 113},
-  {x: 603, y: 333, r: 87, g: 46, b: 54},
-  {x: 621, y: 310, r: 56, g: 92, b: 134},
-  {x: 540, y: 328, r: 220, g: 149, b: 73},
-  {x: 490, y: 322, r: 134, g: 18, b: 10},
-  {x: 442, y: 318, r: 146, g: 80, b: 69}
-]
+  { x: 601, y: 322, r: 187, g: 22, b: 31 },
+  { x: 606, y: 326, r: 235, g: 191, b: 113 },
+  { x: 603, y: 333, r: 87, g: 46, b: 54 },
+  { x: 621, y: 310, r: 56, g: 92, b: 134 },
+  { x: 540, y: 328, r: 220, g: 149, b: 73 },
+  { x: 490, y: 322, r: 134, g: 18, b: 10 },
+  { x: 442, y: 318, r: 146, g: 80, b: 69 },
+];
 
 var anErrorHasOccuredMessageScreen = {
   x: 222,
@@ -234,8 +234,8 @@ var anErrorHasOccuredMessageScreen = {
   targetY: 4,
   lookingForColor: { r: 80, g: 80, b: 80 },
   targetColorCount: 83,
-  targetColorThreashold: 5
-}
+  targetColorThreashold: 5,
+};
 
 var theNetworkIsUnstableMessageScreen = {
   x: 222,
@@ -246,8 +246,8 @@ var theNetworkIsUnstableMessageScreen = {
   targetY: 4,
   lookingForColor: { r: 80, g: 80, b: 80 },
   targetColorCount: 51,
-  targetColorThreashold: 5
-}
+  targetColorThreashold: 5,
+};
 
 var anUnknownErrorHasOccurMessageScreen = {
   x: 222,
@@ -258,8 +258,8 @@ var anUnknownErrorHasOccurMessageScreen = {
   targetY: 4,
   lookingForColor: { r: 80, g: 80, b: 80 },
   targetColorCount: 79,
-  targetColorThreashold: 3
-}
+  targetColorThreashold: 3,
+};
 
 var theReloginIntoAnotherDeviceMessageScreen = {
   x: 222,
@@ -270,8 +270,8 @@ var theReloginIntoAnotherDeviceMessageScreen = {
   targetY: 4,
   lookingForColor: { r: 80, g: 80, b: 80 },
   targetColorCount: 74,
-  targetColorThreashold: 5
-}
+  targetColorThreashold: 5,
+};
 
 function pnt(x, y) {
   return { x: x, y: y };
@@ -383,10 +383,10 @@ function waitUntilSeePage(page, secsToWait) {
 
 function checkScreenMessage(messageScreen) {
   pageMessageWindow = [
-    {x: 424, y: 101, r: 57, g: 69, b: 107},
-    {x: 431, y: 128, r: 243, g: 233, b: 223},
-    {x: 429, y: 244, r: 219, g: 207, b: 199}
-  ]
+    { x: 424, y: 101, r: 57, g: 69, b: 107 },
+    { x: 431, y: 128, r: 243, g: 233, b: 223 },
+    { x: 429, y: 244, r: 219, g: 207, b: 199 },
+  ];
   if (!checkIsPage(pageMessageWindow)) {
     return false;
   }
@@ -397,10 +397,10 @@ function checkScreenMessage(messageScreen) {
   var whSize = getImageSize(croppedImage);
 
   var cnt = 0;
-  for (var i = 0; i < whSize.width; i ++) {
-      if (isSameColor(getImageColor(croppedImage, i, messageScreen.targetY), messageScreen.lookingForColor)) {
-          cnt ++;
-      }
+  for (var i = 0; i < whSize.width; i++) {
+    if (isSameColor(getImageColor(croppedImage, i, messageScreen.targetY), messageScreen.lookingForColor)) {
+      cnt++;
+    }
   }
   // console.log('>> ', cnt, messageScreen.targetColorCount)
   return Math.abs(messageScreen.targetColorCount - cnt) < messageScreen.targetColorThreashold ? true : false;
@@ -938,21 +938,21 @@ function JobScheduling() {
 function handleNotEnoughStock() {
   if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
     return false;
   }
   if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
     return false;
   }
   if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
     return false;
@@ -990,21 +990,21 @@ function handleNotEnoughStock() {
 function handleRelogin() {
   if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
     return false;
   }
   if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
     return false;
   }
   if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
     return false;
@@ -1012,7 +1012,7 @@ function handleRelogin() {
 
   if (checkScreenMessage(theReloginIntoAnotherDeviceMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found theReloginIntoAnotherDeviceMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
     for (var i = 0; i < config.sleepWhenDoubleLoginInMinutes; i++) {
@@ -1120,7 +1120,7 @@ function findAndTapCandy() {
   releaseImage(img);
   releaseImage(candy);
 
-  console.log('candies > ', JSON.stringify(foundResults));
+  // console.log('candies > ', JSON.stringify(foundResults));
   if (foundResults.length > 0) {
     var bestFit = foundResults[0];
     for (var j in foundResults) {
@@ -1512,14 +1512,14 @@ function handleInputLoginInfo() {
   ];
   // Smaller icons (Android 7)
   pageChooseLoginMethod2 = [
-    {x: 251, y: 245, r: 255, g: 95, b: 0},
-    {x: 373, y: 243, r: 255, g: 255, b: 255},
-    {x: 247, y: 203, r: 66, g: 103, b: 178},
-    {x: 252, y: 205, r: 255, g: 255, b: 255},
-    {x: 250, y: 166, r: 0, g: 1, b: 0},
-    {x: 249, y: 123, r: 234, g: 67, b: 53},
-    {x: 250, y: 127, r: 255, g: 255, b: 255}
-  ]
+    { x: 251, y: 245, r: 255, g: 95, b: 0 },
+    { x: 373, y: 243, r: 255, g: 255, b: 255 },
+    { x: 247, y: 203, r: 66, g: 103, b: 178 },
+    { x: 252, y: 205, r: 255, g: 255, b: 255 },
+    { x: 250, y: 166, r: 0, g: 1, b: 0 },
+    { x: 249, y: 123, r: 234, g: 67, b: 53 },
+    { x: 250, y: 127, r: 255, g: 255, b: 255 },
+  ];
   for (var i = 0; i < findLoginTime; i++) {
     if (checkIsPage(pageChooseLoginMethod)) {
       console.log('choose to login via email');
@@ -1527,7 +1527,7 @@ function handleInputLoginInfo() {
       qTap(pageChooseLoginMethod);
       sleep(config.sleepAnimate);
       break;
-    } else if (checkIsPage(pageChooseLoginMethod2)){
+    } else if (checkIsPage(pageChooseLoginMethod2)) {
       console.log('choose to login via email 2');
       isChooseLogin = true;
       qTap(pageChooseLoginMethod2);
@@ -1575,16 +1575,16 @@ function handleInputLoginInfo() {
     }
   }
 
-  var checkPasswordTimes = inputEmail ? 15 : 3
+  var checkPasswordTimes = inputEmail ? 15 : 3;
   pageEnterpassword = [
-    {x: 370, y: 150, r: 255, g: 255, b: 255},
-    {x: 390, y: 189, r: 200, g: 200, b: 200},
-    {x: 314, y: 190, r: 200, g: 200, b: 200},
-    {x: 309, y: 189, r: 200, g: 200, b: 200},
-    {x: 301, y: 115, r: 255, g: 255, b: 255},
-    {x: 387, y: 53, r: 60, g: 60, b: 60},
-    {x: 298, y: 53, r: 60, g: 60, b: 60},
-    {x: 322, y: 52, r: 60, g: 60, b: 60}
+    { x: 370, y: 150, r: 255, g: 255, b: 255 },
+    { x: 390, y: 189, r: 200, g: 200, b: 200 },
+    { x: 314, y: 190, r: 200, g: 200, b: 200 },
+    { x: 309, y: 189, r: 200, g: 200, b: 200 },
+    { x: 301, y: 115, r: 255, g: 255, b: 255 },
+    { x: 387, y: 53, r: 60, g: 60, b: 60 },
+    { x: 298, y: 53, r: 60, g: 60, b: 60 },
+    { x: 322, y: 52, r: 60, g: 60, b: 60 },
   ];
 
   pageEnterTwoPasswords = [
@@ -1673,23 +1673,22 @@ function handleTryHitBackToKingdom() {
 
   if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
   }
   if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
   }
   if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount ++;
+    config.networkIssueCount++;
     console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
   }
-
 
   for (var i = 0; i < 4; i++) {
     if (checkIsPage(pageInKingdomVillage)) {
@@ -1698,12 +1697,12 @@ function handleTryHitBackToKingdom() {
     }
 
     pageChooseWhereToGo = [
-      {x: 100, y: 315, r: 36, g: 74, b: 28},
-      {x: 315, y: 315, r: 28, g: 36, b: 48},
-      {x: 321, y: 20, r: 255, g: 193, b: 6},
-      {x: 425, y: 16, r: 0, g: 193, b: 255},
-      {x: 551, y: 24, r: 247, g: 231, b: 207}
-    ]
+      { x: 100, y: 315, r: 36, g: 74, b: 28 },
+      { x: 315, y: 315, r: 28, g: 36, b: 48 },
+      { x: 321, y: 20, r: 255, g: 193, b: 6 },
+      { x: 425, y: 16, r: 0, g: 193, b: 255 },
+      { x: 551, y: 24, r: 247, g: 231, b: 207 },
+    ];
     if (checkIsPage(pageChooseWhereToGo)) {
       qTap(pageChooseWhereToGo);
       console.log('Found pageChooseWhereToGo, tap first to goto Kingdom');
@@ -1803,7 +1802,7 @@ function gotoCastle() {
   pageInCookieHead = [
     { x: 186, y: 38, r: 22, g: 32, b: 47 },
     { x: 483, y: 30, r: 253, g: 72, b: 196 },
-    {x: 605, y: 98, r: 60, g: 78, b: 121},
+    { x: 605, y: 98, r: 60, g: 78, b: 121 },
     { x: 512, y: 97, r: 60, g: 78, b: 121 },
   ];
 
@@ -1886,6 +1885,77 @@ function findAndTapFountain() {
   return true;
 }
 
+function handleTrainStation() {
+  pageInTrainStation = [
+    { x: 619, y: 11, r: 56, g: 165, b: 231 },
+    { x: 20, y: 29, r: 170, g: 46, b: 54 },
+    { x: 219, y: 27, r: 93, g: 48, b: 32 },
+    { x: 368, y: 24, r: 93, g: 48, b: 32 },
+    { x: 411, y: 19, r: 255, g: 208, b: 2 },
+    { x: 522, y: 17, r: 0, g: 193, b: 255 },
+    { x: 541, y: 21, r: 54, g: 33, b: 26 },
+  ];
+
+  if (!waitUntilSeePage(pageInTrainStation, 5)) {
+    console.log("Wait but not find train station, skipping")
+    return false;
+  }
+
+  qTap(pnt(265, 103));
+  sleep(config.sleepAnimate);
+  qTap(pnt(178, 104));
+  sleep(config.sleepAnimate * 2);
+  if (checkIsPage(pageTrainNotEnoughGoods)) {
+    console.log('not enough goods in train 1');
+    qTap(pageTrainNotEnoughGoods);
+    sleep(config.sleepAnimate);
+  }
+
+  qTap(pnt(192, 208));
+  sleep(config.sleepAnimate);
+  qTap(pnt(270, 208));
+  sleep(config.sleepAnimate * 2);
+  if (checkIsPage(pageTrainNotEnoughGoods)) {
+    console.log('not enough goods in train 2');
+    qTap(pageTrainNotEnoughGoods);
+    sleep(config.sleepAnimate);
+  }
+
+  qTap(pnt(282, 307));
+  sleep(config.sleepAnimate);
+  qTap(pnt(204, 303));
+  sleep(config.sleepAnimate * 2);
+  if (checkIsPage(pageTrainNotEnoughGoods)) {
+    console.log('not enough goods in train 3');
+    qTap(pageTrainNotEnoughGoods);
+    sleep(config.sleepAnimate);
+  }
+  sleep(9000);
+
+  var imageSendAll = getImageFromBase64(
+    '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'
+  );
+  var img = getScreenshot();
+
+  var foundResults = findImages(img, imageSendAll, 0.92, 5, true);
+  console.log('Found send trains at: ', JSON.stringify(foundResults));
+  releaseImage(img);
+  releaseImage(imageSendAll);
+
+  for (var i in foundResults) {
+    console.log('> ', foundResults[i]);
+    sendTrainBtn = foundResults[i];
+    sendTrainBtn.x += 30;
+    sendTrainBtn.y += 20;
+    qTap(foundResults[i]);
+    sleep(config.sleepAnimate);
+  }
+
+  qTap(pageInTrainStation);
+  sleep(config.sleepAnimate);
+  console.log('Tried to sent ', foundResults.length, "trains")
+}
+
 function handleTrain() {
   console.log('try to handle train');
   if (!checkIsPage(pageInKingdomVillage)) {
@@ -1900,86 +1970,38 @@ function handleTrain() {
     { x: 26, y: 321, r: 252, g: 252, b: 252 },
   ];
   pageTrainCollapsed = [
-    {x: 98, y: 327, r: 255, g: 228, b: 143},
-    {x: 91, y: 327, r: 222, g: 52, b: 66},
-    {x: 127, y: 345, r: 41, g: 65, b: 99},
-    {x: 26, y: 322, r: 255, g: 255, b: 255},
-    {x: 22, y: 329, r: 82, g: 26, b: 11},
-    {x: 28, y: 273, r: 255, g: 247, b: 206}
+    { x: 98, y: 327, r: 255, g: 228, b: 143 },
+    { x: 91, y: 327, r: 222, g: 52, b: 66 },
+    { x: 127, y: 345, r: 41, g: 65, b: 99 },
+    { x: 26, y: 322, r: 255, g: 255, b: 255 },
+    { x: 22, y: 329, r: 82, g: 26, b: 11 },
+    { x: 28, y: 273, r: 255, g: 247, b: 206 },
   ];
-  pageInTrainStation = [
-    { x: 619, y: 11, r: 56, g: 165, b: 231 },
-    { x: 20, y: 29, r: 170, g: 46, b: 54 },
-    { x: 219, y: 27, r: 93, g: 48, b: 32 },
-    { x: 368, y: 24, r: 93, g: 48, b: 32 },
-    { x: 411, y: 19, r: 255, g: 208, b: 2 },
-    { x: 522, y: 17, r: 0, g: 193, b: 255 },
-    { x: 541, y: 21, r: 54, g: 33, b: 26 },
-  ];
-  pageTrainNotEnoughGoods = [
-    {x: 436, y: 30, r: 56, g: 165, b: 231},
-    {x: 221, y: 40, r: 60, g: 70, b: 105},
-    {x: 222, y: 100, r: 243, g: 233, b: 223},
-    {x: 211, y: 300, r: 219, g: 207, b: 199},
-    {x: 357, y: 300, r: 121, g: 207, b: 12}
+  pageTrainUncollapsed = [
+    {x: 109, y: 231, r: 255, g: 223, b: 142},
+    {x: 120, y: 235, r: 219, g: 46, b: 73},
+    {x: 105, y: 321, r: 75, g: 116, b: 160},
+    {x: 106, y: 328, r: 255, g: 255, b: 255}
   ]
+  pageTrainNotEnoughGoods = [
+    { x: 436, y: 30, r: 56, g: 165, b: 231 },
+    { x: 221, y: 40, r: 60, g: 70, b: 105 },
+    { x: 222, y: 100, r: 243, g: 233, b: 223 },
+    { x: 211, y: 300, r: 219, g: 207, b: 199 },
+    { x: 357, y: 300, r: 121, g: 207, b: 12 },
+  ];
   if (checkIsPage(pageTrainNotCollapsed)) {
     qTap(pageTrainNotCollapsed);
     sleep(config.sleepAnimate * 2);
 
-    qTap(pnt(265, 103));
-    sleep(config.sleepAnimate);
-    qTap(pnt(178, 104));
+    handleTrainStation();
+  } else if (checkIsPage(pageTrainUncollapsed)) {
+    qTap(pageTrainUncollapsed);
     sleep(config.sleepAnimate * 2);
-    if (checkIsPage(pageTrainNotEnoughGoods)) {
-      console.log('not enough goods in train 1');
-      qTap(pageTrainNotEnoughGoods);
-      sleep(config.sleepAnimate);
-    }
 
-    qTap(pnt(192, 208));
-    sleep(config.sleepAnimate);
-    qTap(pnt(270, 208));
-    sleep(config.sleepAnimate * 2);
-    if (checkIsPage(pageTrainNotEnoughGoods)) {
-      console.log('not enough goods in train 2');
-      qTap(pageTrainNotEnoughGoods);
-      sleep(config.sleepAnimate);
-    }
-
-    qTap(pnt(282, 307));
-    sleep(config.sleepAnimate);
-    qTap(pnt(204, 303));
-    sleep(config.sleepAnimate * 2);
-    if (checkIsPage(pageTrainNotEnoughGoods)) {
-      console.log('not enough goods in train 3');
-      qTap(pageTrainNotEnoughGoods);
-      sleep(config.sleepAnimate);
-    }
-    sleep(9000);
-
-    var imageSendAll = getImageFromBase64(
-      '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'
-    );
-    var img = getScreenshot();
-
-    var foundResults = findImages(img, imageSendAll, 0.92, 5, true);
-    console.log('Found send not collapsed trains at: ', JSON.stringify(foundResults));
-    releaseImage(img);
-    releaseImage(imageSendAll);
-
-    for (var i in foundResults) {
-      console.log('> ', foundResults[i]);
-      sendTrainBtn = foundResults[i];
-      sendTrainBtn.x += 30;
-      sendTrainBtn.y += 20;
-      qTap(foundResults[i]);
-      sleep(config.sleepAnimate);
-    }
-
-    qTap(pageInTrainStation);
-    sleep(config.sleepAnimate);
-  } else if (checkIsPage(pageTrainCollapsed)) {
+    handleTrainStation();
+  }
+   else if (checkIsPage(pageTrainCollapsed)) {
     qTap(pageTrainCollapsed);
     sleep(config.sleepAnimate);
 
@@ -1993,58 +2015,7 @@ function handleTrain() {
     qTap(pageTrainArrived);
     sleep(config.sleepAnimate * 2);
 
-    qTap(pnt(265, 103));
-    sleep(config.sleepAnimate);
-    qTap(pnt(178, 104));
-    sleep(config.sleepAnimate * 2);
-    if (checkIsPage(pageTrainNotEnoughGoods)) {
-      console.log('not enough goods in train 1');
-      qTap(pageTrainNotEnoughGoods);
-      sleep(config.sleepAnimate);
-    }
-
-    qTap(pnt(192, 208));
-    sleep(config.sleepAnimate);
-    qTap(pnt(270, 208));
-    sleep(config.sleepAnimate * 2);
-    if (checkIsPage(pageTrainNotEnoughGoods)) {
-      console.log('not enough goods in train 2');
-      qTap(pageTrainNotEnoughGoods);
-      sleep(config.sleepAnimate);
-    }
-
-    qTap(pnt(282, 307));
-    sleep(config.sleepAnimate);
-    qTap(pnt(204, 303));
-    sleep(config.sleepAnimate * 2);
-    if (checkIsPage(pageTrainNotEnoughGoods)) {
-      console.log('not enough goods in train 3');
-      qTap(pageTrainNotEnoughGoods);
-      sleep(config.sleepAnimate);
-    }
-    sleep(9000);
-
-    var imageSendAll = getImageFromBase64(
-      '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'
-    );
-    var img = getScreenshot();
-
-    var foundResults = findImages(img, imageSendAll, 0.92, 5, true);
-    console.log('Found send trains at: ', JSON.stringify(foundResults));
-    releaseImage(img);
-    releaseImage(imageSendAll);
-
-    for (var i in foundResults) {
-      console.log('> ', foundResults[i]);
-      sendTrainBtn = foundResults[i];
-      sendTrainBtn.x += 30;
-      sendTrainBtn.y += 20;
-      qTap(foundResults[i]);
-      sleep(config.sleepAnimate);
-    }
-
-    qTap(pageInTrainStation);
-    sleep(config.sleepAnimate);
+    handleTrainStation();
   }
 }
 
@@ -2167,19 +2138,23 @@ function handleHotAirBallon() {
     sleep(config.sleepAnimate * 2);
     qTap(pnt(108, 173));
     sleep(2000);
-    if (!waitUntilSeePage(pageInHotAirBallon, 8)) {
+    if (!waitUntilSeePage(pageInHotAirBallon, 6)) {
       console.log('Cannot find pageInHotAirBallon, should be flying');
       handleGotoKingdomPage();
+
+      if (!checkIsPage(pageCollapsedaffairs)) {
+        qTap(pageCollapsedaffairs);
+      }
       return false;
     }
   }
-
   else if (checkIsPage(pageHotAirBallonReady)) {
     qTap(pageHotAirBallonReady);
     sleep(2000);
-    if (!waitUntilSeePage(pageInHotAirBallon, 8)) {
+    if (!waitUntilSeePage(pageInHotAirBallon, 6)) {
       console.log('Cannot find pageInHotAirBallon, should be flying');
       handleGotoKingdomPage();
+
       return false;
     }
   }
@@ -2232,6 +2207,10 @@ function handleHotAirBallon() {
 
   console.log('Successfully sent ballon')
   handleGotoKingdomPage();
+
+  if (!checkIsPage(pageCollapsedaffairs)) {
+    qTap(pageCollapsedaffairs);
+  }
 }
 
 function stop() {
@@ -2253,7 +2232,7 @@ function start(inputConfig) {
     sleep(20000);
   }
 
-  if (config.account !== "default_xrobotmon_account@gmail.com") {
+  if (config.account !== 'default_xrobotmon_account@gmail.com') {
     while (!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageInProduction) && config.run) {
       if (checkIsPage(pageNotifyQuit)) {
         console.log('found pageNotifyQuit while trying to login, hit back');
@@ -2336,7 +2315,13 @@ function start(inputConfig) {
       config.networkIssueCount = 0;
     }
     if (config.networkIssueCount > config.networkIssueCountThreasHold) {
-      console.log('Reboot nox as too many network error: ', config.networkIssueCount, ' in ', (Date.now() - config.lastNetworkIssueOccurTime) / 1000, ' secs');
+      console.log(
+        'Reboot nox as too many network error: ',
+        config.networkIssueCount,
+        ' in ',
+        (Date.now() - config.lastNetworkIssueOccurTime) / 1000,
+        ' secs'
+      );
       execute('/system/bin/reboot -p');
     }
 
