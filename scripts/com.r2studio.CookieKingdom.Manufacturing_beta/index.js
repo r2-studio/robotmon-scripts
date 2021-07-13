@@ -9,7 +9,7 @@ config = {
   autoCollectMailIntervalInMins: 40,
   autoCollectFountainIntervalInMins: 40,
   autoCollectTrainIntervalInMins: 20,
-  autoSendHotAirBallonIntervalInMins: 20,
+  autoSendHotAirBallonIntervalInMins: 40,
   autoCollectDailyReward: true,
   materialsTarget: 260,
   goodsTarget: 60,
