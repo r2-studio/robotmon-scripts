@@ -5,7 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.07";
+var version = "V3.08";
 
 function start(loopTime,script,scriptName){
     startScript(loopTime,script,scriptName);
@@ -15,46 +15,10 @@ function stop(){
     stopScript();
 }
 
-function initServer(){
-    var path = getStoragePath();
-    if(server == "JP"){
-        console.log("JP server");
-        packagePath = path+"/scripts/com.cooper.FGO/";
-        imagePath = packagePath+"image_jp/"
-    }
-    else if(server == "TW"){
-        console.log("TW server");
-        packagePath = path+"/scripts/com.cooper.FGOTW/";
-        imagePath = packagePath+"image_tw/"
-    }
-    itemPath = path+"/FGOV3/";
-}
-
-function loadApi(){
-    console.log("start load api");
-    loadApiCnt = 0;
-    var apiList = ["basic","screen","start_stage","in_stage","auto_attack_ai","get_box","check_stage","friend"];
-    for(var i = 0;i<apiList.length;i++){
-        var s = readFile(packagePath+apiList[i]+".js");
-        if(s == undefined || s.length == 0){
-            console.log("load api failed");
-            return false;
-        }
-        runScript(s);
-    }
-    if(loadApiCnt == apiList.length){
-        console.log("load api success");
-        return true;
-    }else{
-        console.log("load api failed");
-        return false;        
-    }
-}
-
 function initHTML(serverString){
-    server = serverString;
-    console.log("Init server "+server);
-    initServer();
+    console.log("initHTML",serverString);
+    server = serverString.split(",")[0];
+    initServer(serverString.split(",")[1]);
 
     if(!loadApi()){
         return;
@@ -98,5 +62,48 @@ function initHTML(serverString){
     }
     return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version;
 }
+
+function initServer(free){
+    var path = getStoragePath();
+    if(server == "JP"){
+        console.log("JP server");
+        packagePath = path+"/scripts/com.cooper.FGO/";
+        if(free){
+            packagePath = path+"/scripts/com.cooper.FGOFREE/";
+        }
+        imagePath = packagePath+"image_jp/"
+    }
+    else if(server == "TW"){
+        console.log("TW server");
+        packagePath = path+"/scripts/com.cooper.FGOTW/";
+        if(free){
+            //packagePath = path+"/scripts/com.cooper.FGOTWFREE/";
+        }
+        imagePath = packagePath+"image_tw/"
+    }
+    itemPath = path+"/FGOV3/";
+}
+
+function loadApi(){
+    console.log("start load api");
+    loadApiCnt = 0;
+    var apiList = ["basic","screen","start_stage","in_stage","auto_attack_ai","get_box","check_stage","friend"];
+    for(var i = 0;i<apiList.length;i++){
+        var s = readFile(packagePath+apiList[i]+".js");
+        if(s == undefined || s.length == 0){
+            console.log("load api failed");
+            return false;
+        }
+        runScript(s);
+    }
+    if(loadApiCnt == apiList.length){
+        console.log("load api success");
+        return true;
+    }else{
+        console.log("load api failed");
+        return false;        
+    }
+}
+
 
 console.log("load index.jx finish");
