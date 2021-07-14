@@ -544,7 +544,7 @@ ga('set', 'historyImportTask', null); // Disable history checking (requires read
         
         setTimeout(function(){
         JavaScriptInterface.showMenu();
-        JavaScriptInterface.runScriptCallback('initHTML("'+server+'");',"initHTML");
+        JavaScriptInterface.runScriptCallback('initHTML("'+server+','+freeMode+'");',"initHTML");
         }, 1500);
     });
 function insertNewCommand(newCmd){
