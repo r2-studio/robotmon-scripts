@@ -39,9 +39,10 @@ function setMarginIcon(){
 	
 		icon["battleMain2"][0] = realScreenSize[0] / screenScale[0] - 265;
 		iconMargin["battleMain2"] = true;
+
+		icon["friendPointContinue"][1] = 975 - 22;
 	}
 }
-
 function checkIconListInScreen(iconList,allPass,threshold){
     if(threshold == undefined){
         threshold = 0.85;

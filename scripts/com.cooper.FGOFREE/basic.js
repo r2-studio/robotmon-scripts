@@ -12,6 +12,13 @@ function startScript(loopTime,script,scriptName){
     initScreenSize();
     isScriptRunning = true;
     runningScriptName = scriptName;
+    var plan = getUserPlan();
+    console.log("使用者方案ID為 "+plan);
+    if(plan == undefined || plan == 0){
+        console.log("未訂閱?");
+    }else if(plan != 3){
+        console.log("請記得取消訂閱60元方案");
+    }
     var next = 1;
     if(loopTime < 0){
         next = 0;
@@ -22,17 +29,18 @@ function startScript(loopTime,script,scriptName){
             break;
         }
         if(next == 0){
-            console.log("Start script");
+            console.log("開始執行腳本 無限次數");
             sendNormalMessage (runningScriptName, "Start loop");
         }else{
-            console.log("Start script loop "+(loop+1)+"/"+loopTime);
+            console.log("開始執行腳本 "+(loop+1)+"/"+loopTime);
             sendNormalMessage (runningScriptName, "Start loop "+(loop+1)+"/"+loopTime);
         }
         skillUsedInLoop = [false,false,false,false,false,false,false,false,false];
         spaceUltColor = -1;
         isReplay = false;
         runScript(script);
-        if(!havePlan){
+        if(plan == undefined || plan == 0){
+            console.log("方案ID為"+plan+","+getUserPlan()+"，判斷未訂閱方案，結束周回");
             break;
         }
     }

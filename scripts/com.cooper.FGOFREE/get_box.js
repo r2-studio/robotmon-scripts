@@ -23,13 +23,17 @@ function getBox(newBox,fast){
     while(isScriptRunning){
         sleep(1500);
         if(checkIsBoxFinish()){
-            break;
+            if(newBox){
+                resetBox();
+            }else{
+                break;
+            }
         }
         for(var t = 0;t<checkTime;t++){
             if(!isScriptRunning){
                 break;
             }
-            tapScale(600 + defaultMarginX,715);
+            tapScale(600,715);
             sleep(waitTime);
         }
     }
@@ -59,14 +63,15 @@ function resetBox(){
     console.log("重置箱子");
     clickIcon("boxReset");
     sleep(1000);
-    tapScale(1275 + defaultMarginX,850);
+    tapScale(1275,850);
     waitLoading();
     sleep(1000);
-    tapScale(937 + defaultMarginX,850);
+    tapScale(937,850);
     sleep(1000);
 }
 
 function getFriendPoint(){
+    console.log("執行友抽");
     while(isScriptRunning){
         if(!isFriendPointMainPage()){
             console.log("請移到友抽畫面再執行");
@@ -94,10 +99,13 @@ function getFriendPoint(){
         sleep(1000);
         while(isScriptRunning){
             sleep(2000);
+            /*
             if(isFriendPointReload()){
                 tapScale(1125,975);
                 break;
-            }else if(isFriendPointNew()){
+            }else 
+            */
+            if(isFriendPointNew()){
                 tapScale(1635,1012);
             }else if(isItemPage()){
                 tapScale(67,60);
@@ -113,7 +121,7 @@ function getFriendPoint(){
                 sleep(1000);
             }
             else {
-                tapScale(1125,975);
+                tapScale(1125,10);
             }
         }
         sleep(2000);

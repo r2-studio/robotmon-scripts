@@ -1,4 +1,5 @@
 //-----------------------------------------------------in quest
+//var skillPositionX = [75,225,375,562,712,802,1050,1200,1350];
 var skillPositionX = [66,198,330,542,674,806,1018,1150,1282];
 var skillPositionY = 824;
 var skillSmallOffset = 132;
@@ -56,7 +57,6 @@ function setInStageMargin(){
     for(var i = 0; i < 9; i++){
         skillPositionX[i] = skillLeftEdge + skillSmallOffset * (i % 3) + skillLargeOffset *　Math.floor(i / 3);
     }
-    console.log(skillPositionX);
     enemyPositionX[0] = 870 + enemyLeftMargin;
     enemyPositionX[1] = 510 + enemyLeftMargin;
     enemyPositionX[2] = 172 + enemyLeftMargin;

@@ -57,7 +57,6 @@ function setInStageMargin(){
     for(var i = 0; i < 9; i++){
         skillPositionX[i] = skillLeftEdge + skillSmallOffset * (i % 3) + skillLargeOffset *　Math.floor(i / 3);
     }
-    console.log(skillPositionX);
     enemyPositionX[0] = 870 + enemyLeftMargin;
     enemyPositionX[1] = 510 + enemyLeftMargin;
     enemyPositionX[2] = 172 + enemyLeftMargin;

@@ -5,9 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.02";
-var havePlan = false;
-var freeMode = true;
+var version = "V3.06";
 
 function start(loopTime,script,scriptName){
     startScript(loopTime,script,scriptName);
@@ -18,7 +16,6 @@ function stop(){
 }
 
 function initServer(){
-    havePlan = (getUserPlan() == 3) && !freeMode;
     var path = getStoragePath();
     if(server == "JP"){
         console.log("JP server");
@@ -99,5 +96,7 @@ function initHTML(serverString){
     if(itemList.slice(-1)==','){
       itemList = itemList.slice(0,-1);
     }
-    return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version+';'+havePlan;
+    return scriptList+';'+servantList+';'+itemList+';'+itemPath+';'+version;
 }
+
+console.log("load index.jx finish");
