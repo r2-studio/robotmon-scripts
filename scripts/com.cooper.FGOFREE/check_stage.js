@@ -355,7 +355,7 @@ icon["boxFull"] = [712,600,487,300];
 icon["boxReset"] = [1657,330,142,30];
 
 function isGetBoxNoPoint(){
-	return checkIconInScreen("boxNoPoint");
+	return checkIconInScreen("boxNoPoint",0.7);
 }
 
 function isGetBoxFull(){
