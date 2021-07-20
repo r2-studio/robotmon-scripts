@@ -181,11 +181,10 @@ pageInKingdomVillage = [
 ];
 
 pageInProduction = [
-  { x: 609, y: 19, r: 56, g: 167, b: 231 },
-  { x: 617, y: 19, r: 255, g: 255, b: 255 },
-  { x: 625, y: 18, r: 34, g: 85, b: 119 },
-  { x: 619, y: 331, r: 166, g: 104, b: 65 },
-  { x: 19, y: 321, r: 166, g: 104, b: 65 },
+  {x: 21, y: 45, r: 166, g: 104, b: 65},
+  {x: 21, y: 64, r: 166, g: 104, b: 65},
+  {x: 20, y: 106, r: 166, g: 104, b: 65},
+  {x: 20, y: 137, r: 166, g: 104, b: 65}
 ];
 
 pageNotifyQuit = [
@@ -970,7 +969,7 @@ function makeGoodsToTargetV2(target) {
       if (handleNotEnoughStock()) {
         break;
       }
-      else if (latestCount != -1 && availableSlots != latestCount) {
+      else if (checkIsPage(pageInProduction) && availableSlots != latestCount) {
         availableSlots = latestCount
         break;
       }
@@ -988,7 +987,7 @@ function makeGoodsToTargetV2(target) {
 }
 
 function countProductionSlotAvailable() {
-  var emptySlots = -1;
+  var emptySlots = 0;
   if (identifyPointColor(pnt(50, 269), {r: 146, g:88, b:52}) > 0.98) {
     emptySlots ++;
   }
@@ -1326,7 +1325,7 @@ function findAndTapProductionHouse() {
         qTap(house); // prevent when there are sugar cube to collect
       }
 
-      if (!waitUntilSeePage(pageInProduction, 8)) {
+      if (waitUntilSeePage(pageInProduction, 8)) {
         console.log('Found production house successfully: ', key);
         return true;
       } else {
