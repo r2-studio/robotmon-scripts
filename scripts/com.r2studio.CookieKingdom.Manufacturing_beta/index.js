@@ -967,8 +967,11 @@ function makeGoodsToTargetV2(target) {
 
     for (var timer = 0; timer < 6; timer ++) {
       var latestCount = countProductionSlotAvailable();
-      if (availableSlots != latestCount || handleNotEnoughStock()) {
-        availableSlots =latestCount
+      if (handleNotEnoughStock()) {
+        break;
+      }
+      else if (latestCount != -1 && availableSlots != latestCount) {
+        availableSlots = latestCount
         break;
       }
       sleep(1000);
@@ -985,7 +988,7 @@ function makeGoodsToTargetV2(target) {
 }
 
 function countProductionSlotAvailable() {
-  var emptySlots = 0;
+  var emptySlots = -1;
   if (identifyPointColor(pnt(50, 269), {r: 146, g:88, b:52}) > 0.98) {
     emptySlots ++;
   }
@@ -2953,6 +2956,7 @@ function start(inputConfig) {
     }
 
     var act = JobScheduling();
+    console.log('JobScheduling result: ', act)
     sleep(config.sleep);
     handleNotEnoughStock();
     sleep(config.sleep);
