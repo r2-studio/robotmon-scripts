@@ -180,6 +180,7 @@ pageInKingdomVillage = [
   { x: 19, y: 111, r: 190, g: 3, b: 37 },
 ];
 
+  //rgb(166,104,65)
 pageInProduction = [
   {x: 21, y: 45, r: 166, g: 104, b: 65},
   {x: 21, y: 64, r: 166, g: 104, b: 65},
@@ -987,6 +988,7 @@ function makeGoodsToTargetV2(target) {
 }
 
 function countProductionSlotAvailable() {
+  console.log('countProductionSlotAvailable')
   var emptySlots = 0;
   if (identifyPointColor(pnt(50, 269), {r: 146, g:88, b:52}) > 0.98) {
     emptySlots ++;
@@ -1004,6 +1006,7 @@ function countProductionSlotAvailable() {
     emptySlots ++;
   }
 
+  console.log('countProductionSlotAvailable: ', emptySlots)
   return emptySlots;
 }
 
@@ -1015,12 +1018,7 @@ function JobScheduling() {
   //     return true;
   // }
 
-  //rgb(166,104,65)
-  pageAnyProduction = [
-    { x: 20, y: 294, r: 166, g: 104, b: 65 },
-    { x: 80, y: 300, r: 166, g: 104, b: 65 },
-  ];
-  if (!checkIsPage(pageAnyProduction)) {
+  if (!checkIsPage(pageInProduction)) {
     return false;
   }
 
@@ -2048,11 +2046,11 @@ function handleTrainStation() {
     return false;
   }
 
-  qTap(pnt(265, 103));
+  qTap(pnt(255, 100));
   sleep(config.sleepAnimate);
-  qTap(pnt(225, 103));
+  qTap(pnt(210, 100));
   sleep(config.sleepAnimate);
-  qTap(pnt(178, 104));
+  qTap(pnt(170, 100));
   sleep(config.sleepAnimate * 2);
   if (checkIsPage(pageTrainNotEnoughGoods)) {
     console.log('not enough goods in train 1');
@@ -2060,11 +2058,11 @@ function handleTrainStation() {
     sleep(config.sleepAnimate);
   }
 
-  qTap(pnt(270, 208));
+  qTap(pnt(255, 208));
   sleep(config.sleepAnimate);
-  qTap(pnt(230, 208));
+  qTap(pnt(210, 208));
   sleep(config.sleepAnimate);
-  qTap(pnt(192, 208));
+  qTap(pnt(170, 208));
   sleep(config.sleepAnimate * 2);
   if (checkIsPage(pageTrainNotEnoughGoods)) {
     console.log('not enough goods in train 2');
@@ -2072,11 +2070,11 @@ function handleTrainStation() {
     sleep(config.sleepAnimate);
   }
 
-  qTap(pnt(282, 307));
+  qTap(pnt(255, 307));
   sleep(config.sleepAnimate);
-  qTap(pnt(240, 307));
+  qTap(pnt(210, 307));
   sleep(config.sleepAnimate);
-  qTap(pnt(204, 303));
+  qTap(pnt(170, 303));
   sleep(config.sleepAnimate * 2);
   if (checkIsPage(pageTrainNotEnoughGoods)) {
     console.log('not enough goods in train 3');
@@ -2337,7 +2335,10 @@ function identityColor(e1, e2) {
 }
 
 function identifyPointColor(pnt, color) {
-  return identityColor(getImageColor(getScreenshot(), pnt.x, pnt.y), color);
+  var img = getScreenshot()
+  var imgColor = getImageColor(img, pnt.x, pnt.y)
+  releaseImage(img);
+  return identityColor(imgColor, color);
 }
 
 function recognizeWishingTreeRequirements(words, devImg, maxLength, thres, overlapRatio) {
