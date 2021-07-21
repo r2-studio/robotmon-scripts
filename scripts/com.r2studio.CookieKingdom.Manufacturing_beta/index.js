@@ -2760,6 +2760,22 @@ function handleHotAirBallon() {
   }
 }
 
+function handleSkipRemoveGroundGuide() {
+  pageGnomeTeachRemoveGround = [
+    {x: 610, y: 25, r: 5, g: 14, b: 20},
+    {x: 20, y: 132, r: 56, g: 35, b: 22},
+    {x: 213, y: 147, r: 60, g: 36, b: 20},
+    {x: 210, y: 162, r: 255, g: 243, b: 239},
+    {x: 299, y: 82, r: 212, g: 110, b: 127},
+  ]
+
+  if (checkIsPage(pageGnomeTeachRemoveGround)) {
+    console.log('found pageGnomeTeachRemoveGround')
+    qTap(pageGnomeTeachRemoveGround)
+    sleep(config.sleepAnimate)
+  }
+}
+
 function stop() {
   for (var i = 0; i < numberImages.length; i++) {
     releaseImage(numberImages[i].img);
@@ -3138,6 +3154,8 @@ function start(inputConfig) {
         console.log('Popped cookie kingdom is not responding window, tap wait');
         qTap(pageCookieKingdomIsNotResponding);
         sleep(3000);
+      } else if (handleSkipRemoveGroundGuide()) {
+        console.log('successfully resolved stuck by pageGnomeTeachRemoveGround')
       } else if (handleGotoKingdomPage()) {
         console.log('just handleGotoKingdomPage(), start looking for productions');
         handleFindAndTapCandyHouse();
