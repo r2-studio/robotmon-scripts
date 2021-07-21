@@ -423,6 +423,7 @@ function isMessageWindowWithDiamond() {
     console.log('Found dialog diamond icon at: ', JSON.stringify(foundResults));
     return true
   }
+  return false;
 }
 
 function checkScreenMessage(messageScreen) {
@@ -574,7 +575,7 @@ function ocrProductStorage(rect) {
   // var croppedImage = cropImage(img, 430, 311, 23, 15);
   releaseImage(img);
 
-  console.log('about to load ocr image for: ', JSON.stringify(rect));
+  // console.log('about to load ocr image for: ', JSON.stringify(rect));
   results = [];
   for (var i in bNumbers) {
     // numbers[i] = bgrToGray(numbers[i], 40)
@@ -599,7 +600,7 @@ function ocrMaterialStorage() {
   // var croppedImage = cropImage(img, 430, 311, 23, 15);
   releaseImage(img);
 
-  console.log('about to load ocr material images');
+  // console.log('about to load ocr material images');
   results = [];
   for (var i in wNumbers) {
     // numbers[i] = bgrToGray(numbers[i], 40)
@@ -967,12 +968,15 @@ function makeGoodsToTargetV2(target) {
       continue;
     } else if (stock['id'] == 0) {
       console.log('add 1st item from ' + goodsOneStock + ' to > ', target);
+      SwipeProductionMenuToTop();
       qTap(pageFirstItemEnabled, 800);
     } else if (stock['id'] == 1) {
       console.log('add 2nd item from ' + goodsTwoStock + ' to > ', target);
+      SwipeProductionMenuToTop();
       qTap(pageSecondItemEnabled, 800);
     } else if (stock['id'] == 2) {
       console.log('add 3rd item from ' + goodsThreeStock + ' to > ', target);
+      SwipeProductionMenuToTop();
       qTap(pageThirdItemEnabled, 800);
     } else if (stock['id'] == 3) {
       console.log('add 4th item from ' + goodsFourStock + ' to > ', target);
@@ -1058,7 +1062,7 @@ function JobScheduling() {
     console.log('No available production slot, skip this production');
     return true;
   }
-  console.log('emptySlots: ', emptySlots);
+  // console.log('emptySlots: ', emptySlots);
 
   var materialCount = ocrMaterialStorage();
   if (materialCount == -1) {
@@ -3000,15 +3004,15 @@ function start(inputConfig) {
       console.log('Collect mail: ', (Date.now() - config.lastCollectMail) / 60000, ' mins just passed');
       config.lastCollectMail = Date.now();
       handleAutoCollectMail();
-    } else {
-      console.log('not handleAutoCollectMail:', (Date.now() - config.lastCollectMail) / 60000);
+    // } else {
+    //   console.log('not handleAutoCollectMail:', (Date.now() - config.lastCollectMail) / 60000);
     }
     if (config.autoCollectDailyReward && (Date.now() - config.lastCollectDailyReward) / 60000 > 21600) {
       console.log('Collect daily reward: ', (Date.now() - config.lastCollectDailyReward) / 60000, ' mins just passed');
       config.lastCollectDailyReward = Date.now();
       handleGetDailyRewards();
-    } else {
-      console.log('not handleGetDailyRewards:', (Date.now() - config.lastCollectMail) / 60000);
+    // } else {
+    //   console.log('not handleGetDailyRewards:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3018,8 +3022,8 @@ function start(inputConfig) {
       console.log('Check hot air ballon: ', (Date.now() - config.lastSendHotAirBallon) / 60000, ' mins just passed');
       config.lastSendHotAirBallon = Date.now();
       handleHotAirBallon();
-    } else {
-      console.log('not handleHotAirBallon:', (Date.now() - config.lastCollectMail) / 60000);
+    // } else {
+    //   console.log('not handleHotAirBallon:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3029,8 +3033,8 @@ function start(inputConfig) {
       console.log('Collect train: ', (Date.now() - config.lastCollectTrain) / 60000, ' mins just passed');
       config.lastCollectTrain = Date.now();
       handleTrain();
-    } else {
-      console.log('not handleTrain:', (Date.now() - config.lastCollectMail) / 60000);
+    // } else {
+    //   console.log('not handleTrain:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3049,8 +3053,8 @@ function start(inputConfig) {
         config.lastFulfillWishes = Date.now();
         handleWishingTree();
       }
-    } else {
-      console.log('not handleWishingTree:', (Date.now() - config.lastCollectMail) / 60000);
+    // } else {
+    //   console.log('not handleWishingTree:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3060,8 +3064,8 @@ function start(inputConfig) {
       console.log('Collect fountain: ', (Date.now() - config.lastCollectFountain) / 60000, ' just passed');
       config.lastCollectFountain = Date.now();
       findAndTapFountain();
-    } else {
-      console.log('not findAndTapFountain:', (Date.now() - config.lastCollectMail) / 60000);
+    // } else {
+    //   console.log('not findAndTapFountain:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3071,12 +3075,12 @@ function start(inputConfig) {
       console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
       config.lastCollectCandyTime = Date.now();
       handleFindAndTapCandyHouse();
-    } else {
-      console.log('not handleFindAndTapCandyHouse:', (Date.now() - config.lastCollectMail) / 60000);
+    // } else {
+    //   console.log('not handleFindAndTapCandyHouse:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     var act = JobScheduling();
-    console.log('JobScheduling result: ', act);
+    // console.log('JobScheduling result: ', act);
     sleep(config.sleep);
     handleNotEnoughStock();
     sleep(config.sleep);
