@@ -14,6 +14,7 @@ config = {
   autoFulfillWishesIntervalInMins: 11,
   alwaysFulfillWishes: false,
   wishingTreeSafetyStock: 40,
+  autoPvPIntervalInMins: 30,
   materialsTarget: 300,
   goodsTarget: 60,
   worksBeforeCollectCandy: 40,
@@ -32,6 +33,7 @@ config = {
   lastSendHotAirBallon: 0,
   lastCollectDailyReward: 0,
   lastFulfillWishes: 0,
+  lastAutoPvP: 0,
   run: true,
   isXR: true,
   findProductionTimes: 8,
@@ -398,6 +400,31 @@ function waitUntilSeePage(page, secsToWait, tappingPnt, earlyQuitPage) {
   return false;
 }
 
+function isMessageWindowWithDiamond() {
+  pageIsDialog = [
+    {x: 412, y: 106, r: 60, g: 70, b: 105},
+    {x: 415, y: 139, r: 243, g: 233, b: 223},
+    {x: 410, y: 250, r: 219, g: 207, b: 199}
+  ]
+  if (!checkIsPage(pageIsDialog)) {
+    return false;
+  }
+
+  var dialogDiamond = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQEAYABgAAD/4QA6RXhpZgAATU0AKgAAAAgAA1EQAAEAAAABAQAAAFERAAQAAAABAAAAAFESAAQAAAABAAAAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAKAAsDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDS/ao8YeBf2lr7S5rf4JaPaXnhDTG0+4kv1gu9ctp4pJLhjNOYcqwEiOCp8pgweMmJkxz3w1uf2hpPAeltp9r8O0sTAPs6+JdVvL7VVj/hE89vEscpAxhwCWXaWZ23O1/9oSCNv2zvghamNfs2uLrMeoxY/d6gttarNbLMvSQQyu7xhs7GdmXBJNe+V+B+NHi/gsw4H4cy/C5Nh6N6cql7OajyynRcIJ2lGMnHnacpfZjrycz/AJp4fyetg8wxeJr15VXOSSUrpLRS+FPkvZpXjCOzfVo//9k='
+  );
+  var img = getScreenshot();
+
+  var foundResults = findImages(img, dialogDiamond, 0.92, 5, true);
+  releaseImage(img);
+  releaseImage(dialogDiamond);
+
+  if (foundResults.length > 0) {
+    console.log('Found dialog diamond icon at: ', JSON.stringify(foundResults));
+    return true
+  }
+}
+
 function checkScreenMessage(messageScreen) {
   pageMessageWindow = [
     { x: 424, y: 101, r: 57, g: 69, b: 107 },
@@ -476,7 +503,8 @@ function handleToolShopShovels() {
       }
       handleNotEnoughStock();
     } else {
-      console.log('cannot find shovels');
+      console.log('shovel not enabled, swipe to top');
+      SwipeProductionMenuToTop();
     }
   } else {
     // console.log('Not in tool shop, skip shovel check');
@@ -983,7 +1011,6 @@ function makeGoodsToTargetV2(target) {
 }
 
 function countProductionSlotAvailable() {
-  console.log('countProductionSlotAvailable');
   var emptySlots = 0;
   if (identifyPointColor(pnt(50, 269), { r: 146, g: 88, b: 52 }) > 0.98) {
     emptySlots++;
@@ -2025,13 +2052,10 @@ function findAndTapFountain() {
 
 function handleTrainStation() {
   pageInTrainStation = [
-    { x: 619, y: 11, r: 56, g: 165, b: 231 },
-    { x: 20, y: 29, r: 170, g: 46, b: 54 },
-    { x: 219, y: 27, r: 93, g: 48, b: 32 },
-    { x: 368, y: 24, r: 93, g: 48, b: 32 },
-    { x: 411, y: 19, r: 255, g: 208, b: 2 },
-    { x: 522, y: 17, r: 0, g: 193, b: 255 },
-    { x: 541, y: 21, r: 54, g: 33, b: 26 },
+    {x: 411, y: 19, r: 255, g: 208, b: 2},
+    {x: 393, y: 12, r: 93, g: 48, b: 32},
+    {x: 10, y: 355, r: 56, g: 34, b: 28},
+    {x: 605, y: 327, r: 130, g: 22, b: 31}
   ];
 
   if (!waitUntilSeePage(pageInTrainStation, 5)) {
@@ -2045,7 +2069,7 @@ function handleTrainStation() {
   sleep(config.sleepAnimate);
   qTap(pnt(170, 100));
   sleep(config.sleepAnimate * 2);
-  if (checkIsPage(pageTrainNotEnoughGoods)) {
+  if (checkIsPage(pageTrainNotEnoughGoods) || isMessageWindowWithDiamond()) {
     console.log('not enough goods in train 1');
     qTap(pageTrainNotEnoughGoods);
     sleep(config.sleepAnimate);
@@ -2057,7 +2081,7 @@ function handleTrainStation() {
   sleep(config.sleepAnimate);
   qTap(pnt(170, 208));
   sleep(config.sleepAnimate * 2);
-  if (checkIsPage(pageTrainNotEnoughGoods)) {
+  if (checkIsPage(pageTrainNotEnoughGoods) || isMessageWindowWithDiamond()) {
     console.log('not enough goods in train 2');
     qTap(pageTrainNotEnoughGoods);
     sleep(config.sleepAnimate);
@@ -2069,7 +2093,7 @@ function handleTrainStation() {
   sleep(config.sleepAnimate);
   qTap(pnt(170, 303));
   sleep(config.sleepAnimate * 2);
-  if (checkIsPage(pageTrainNotEnoughGoods)) {
+  if (checkIsPage(pageTrainNotEnoughGoods) || isMessageWindowWithDiamond()) {
     console.log('not enough goods in train 3');
     qTap(pageTrainNotEnoughGoods);
     sleep(config.sleepAnimate);
@@ -2948,7 +2972,16 @@ function start(inputConfig) {
     }
   }
 
-  if (!checkIsPage(pageInProduction)) {
+  if (checkIsPage(pageInProduction)) {
+    console.log('Already in production, reset all side tasks');
+    config.lastCollectMail = Date.now();
+    config.lastCollectDailyReward = Date.now();
+    config.lastSendHotAirBallon = Date.now();
+    config.lastCollectTrain = Date.now();
+    config.lastFulfillWishes = Date.now();
+    config.lastCollectFountain = Date.now();
+    config.lastCollectCandyTime = Date.now();
+  } else {
     handleGotoKingdomPage();
   }
 
