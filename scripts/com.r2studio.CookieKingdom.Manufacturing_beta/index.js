@@ -992,7 +992,7 @@ function makeGoodsToTargetV2(target) {
       qTap(pageThirdItemEnabled, 800);
     }
 
-    for (var timer = 0; timer < 6; timer++) {
+    for (var timer = 0; timer < 4; timer++) {
       var latestCount = countProductionSlotAvailable();
       if (handleNotEnoughStock()) {
         break;
@@ -1015,6 +1015,7 @@ function makeGoodsToTargetV2(target) {
 }
 
 function countProductionSlotAvailable() {
+  // flower ring will misunderstood
   var emptySlots = 0;
   if (identifyPointColor(pnt(50, 269), { r: 146, g: 88, b: 52 }) > 0.98) {
     emptySlots++;
@@ -2187,6 +2188,7 @@ function handleTrain() {
 
     handleTrainStation();
   }
+  handleTryHitBackToKingdom();
 }
 
 function handleGetDailyRewards() {
