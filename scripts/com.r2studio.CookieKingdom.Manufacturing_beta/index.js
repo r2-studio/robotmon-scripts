@@ -14,12 +14,14 @@ config = {
   autoFulfillWishesIntervalInMins: 11,
   alwaysFulfillWishes: false,
   wishingTreeSafetyStock: 40,
-  autoPvPIntervalInMins: 30,
+  autoPvPIntervalInMins: 0,
+  autoPvPTargetScoreLimit: 50000,
   materialsTarget: 300,
   goodsTarget: 60,
   worksBeforeCollectCandy: 40,
   productionFocusOnMin: true,
   helpTapGreenCheck: true,
+  pvpCELimit: 250000,
 
   jobFailedBeforeGetCandy: 4,
   jobFailedCount: 0,
@@ -402,10 +404,10 @@ function waitUntilSeePage(page, secsToWait, tappingPnt, earlyQuitPage) {
 
 function isMessageWindowWithDiamond() {
   pageIsDialog = [
-    {x: 412, y: 106, r: 60, g: 70, b: 105},
-    {x: 415, y: 139, r: 243, g: 233, b: 223},
-    {x: 410, y: 250, r: 219, g: 207, b: 199}
-  ]
+    { x: 412, y: 106, r: 60, g: 70, b: 105 },
+    { x: 415, y: 139, r: 243, g: 233, b: 223 },
+    { x: 410, y: 250, r: 219, g: 207, b: 199 },
+  ];
   if (!checkIsPage(pageIsDialog)) {
     return false;
   }
@@ -421,7 +423,7 @@ function isMessageWindowWithDiamond() {
 
   if (foundResults.length > 0) {
     console.log('Found dialog diamond icon at: ', JSON.stringify(foundResults));
-    return true
+    return true;
   }
   return false;
 }
@@ -2057,10 +2059,11 @@ function findAndTapFountain() {
 
 function handleTrainStation() {
   pageInTrainStation = [
-    {x: 411, y: 19, r: 255, g: 208, b: 2},
-    {x: 393, y: 12, r: 93, g: 48, b: 32},
-    {x: 10, y: 355, r: 56, g: 34, b: 28},
-    {x: 605, y: 327, r: 130, g: 22, b: 31}
+    {x: 618, y: 11, r: 56, g: 165, b: 231 },
+    { x: 411, y: 19, r: 255, g: 208, b: 2 },
+    { x: 393, y: 12, r: 93, g: 48, b: 32 },
+    { x: 10, y: 355, r: 56, g: 34, b: 28 },
+    { x: 605, y: 327, r: 130, g: 22, b: 31 },
   ];
 
   if (!waitUntilSeePage(pageInTrainStation, 5)) {
@@ -2089,8 +2092,7 @@ function handleTrainStation() {
   if (checkIsPage(pageTrainNotEnoughGoods) || isMessageWindowWithDiamond()) {
     console.log('not enough goods in train 2');
     qTap(pageTrainNotEnoughGoods);
-    sleep(config.sleepAnimate);
-  }
+    sleep(config.sleepAnimate);}
 
   qTap(pnt(255, 307));
   sleep(config.sleepAnimate);
@@ -2348,6 +2350,27 @@ var b64Nd_3 =
 var b64NE =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAMAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9eYJvKlmUOCplyBvUEfKoxyD6UUWipcXd0ZkDETYBP0x/Siv5lTg9z9T07H//2Q==';
 
+var b64_0 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDr/h3F+zro9pqVx8cPC3gK6sdQ1V7z4coPAqu1t4ZdIxZxOUtwQwdZyQ+X55PSiiiv5WWWrEfvHVmvJOy002t5a+Z7nPbof//Z';
+var b64_1 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDE/YA8EfB/4zfsZ+AfGHjz4C/DqbUo9Pu7KS7sfBFnD9pSDULqNJJP3ZaSQqF3SMdzEZNFFFfyhn1avQzzFU6c5KKqTSSb0XMz26STpxb7I//Z';
+var b64_2 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDB17w947+F/g7wX4Y+K37PXgb4s+IG8IW91qPi2ewsdPGZpppFtUjWGPKQoyxhyoLbT2xRRRX8u4fF+1pKcoK7u9HOK36KMlFLySSR7bjZ7n//2Q==';
+var b64_3 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDR8Kan8KPAHwr8F6F+0x4E8LTeL28MxzX8viDwjaX0ro003llJLK3WMRbMbVI3rzuNFFFfzHhsup4yiq8pyi5XdouyV3slbRdj2XNxdj//2Q==';
+var b64_4 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAYDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5e8YeE/2I9Q/4JneCfDnwn+JujDV7Dx1HJ4k1y+8J3wvbq7m00vNEz+Rjyo3wqBWIKgE85ooor8zwOGrYeVaCrzf7yTu+VvV3f2TslO9tFsf/2Q==';
+var b64_5 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwCx4/8A2P8A4h+Pn0fx5qvjqy+Bses6FBc6f8PtU+CXgjXWtbYl1jlju7W1l3xyBSwWV2mHO/tRRRX8kYLOcwq4aMk4xWuns6btr3lCUn6yk2+rPflTgn/wWf/Z';
+var b64_6 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzr4t/En/ghh8Y9U0nxX8XPjV4g0fyfD1nZ+GNL8E3PiOC1ttIiQrbpJC1gEgnz5m9Id0WSGDMzMaKKK/LcPwXThRUYY/ExS2SqKy/8kO14ht3cV9x/9k=';
+var b64_7 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDxC8/4KF/DX4HfD3wD4E+L8Ok+J/FJ8CWN/rmrXPge03NLdGS4WIGOBFIjikjjyBzs6miiivzDBcFZJjMLGvUT5p+87NJXbvokrJdl0O2WIqRdj//Z';
+var b64_8 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAYDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDyX9pC4+Blh/wTm+F2qjwDoKR3P9grY6hJo6GGd10q5F2YlSETxkzbDIZXbe2GXgUUUV+QcO4RSwlR88v4lRb9pNfja78zvrSakvRH/9k=';
+var b64_9 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDW0L48/wDBIjwt8PPCWu/tF/s9aZb3/irw1Brnh7Rrz4RaPv0jSZmdbe08yxV0nCmORhLIxmYSDzApG0FFFfgOG4OweMpe2liK0bt6RqWS1a0VvL/M9V15J2svuP/Z';
+
 function identityColor(e1, e2) {
   var mean = (e1.r + e2.r) / 2;
   var r = e1.r - e2.r;
@@ -2456,6 +2479,114 @@ function wish(refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status) {
     failedCount: 0,
     requireFulfilled: 0,
   };
+}
+
+function getCEs() {
+  var img = getScreenshot();
+  var croppedImage1 = cropImage(img, 282, 106, 40, 8);
+  var croppedImage2 = cropImage(img, 282, 162, 40, 8);
+  var croppedImage3 = cropImage(img, 282, 219, 40, 8);
+  var croppedImage4 = cropImage(img, 282, 276, 40, 8);
+
+  var value1 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage1, 6, 0.85, 0.7) || 0;
+  var value2 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage2, 6, 0.85, 0.7) || 0;
+  var value3 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage3, 6, 0.85, 0.7) || 0;
+  var value4 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage4, 6, 0.85, 0.7) || 0;
+
+  releaseImage(croppedImage1);
+  releaseImage(croppedImage2);
+  releaseImage(croppedImage3);
+  releaseImage(croppedImage4);
+  releaseImage(img);
+  return [value1, value2, value3, value4];
+}
+
+function handlePVP(ceLimit) {
+  if (ceLimit === undefined) {
+    ceLimit = 250000;
+  }
+  console.log('handlePVP: ', new Date());
+  if (!checkIsPage(pageInKingdomVillage)) {
+    handleGotoKingdomPage();
+    waitUntilSeePage(pageInKingdomVillage, 8);
+  }
+  console.log('go to pvp page');
+  tap(571, 325, 100); // play button
+  sleep(3000);
+  tap(509, 272, 100); // PVP button
+  sleep(3000);
+
+  var battleY = [108, 162, 223, 275];
+  var kingdomArena = [
+    { x: 181, y: 267, r: 56, g: 167, b: 231 },
+    { x: 181, y: 306, r: 56, g: 167, b: 231 },
+    { x: 182, y: 335, r: 48, g: 76, b: 109 },
+    { x: 373, y: 327, r: 41, g: 35, b: 33 },
+    { x: 296, y: 70, r: 65, g: 58, b: 56 },
+  ];
+
+  if (!checkIsPage(kingdomArena)) {
+    console.log('go kingdomArena failed');
+    return;
+  }
+
+  var crystaisRefresh = [
+    { x: 243, y: 100, r: 57, g: 69, b: 107 },
+    { x: 324, y: 78, r: 255, g: 255, b: 255 },
+    { x: 443, y: 92, r: 57, g: 166, b: 231 },
+    { x: 402, y: 134, r: 247, g: 235, b: 222 },
+    { x: 351, y: 250, r: 123, g: 207, b: 8 },
+    { x: 408, y: 251, r: 222, g: 207, b: 198 },
+  ];
+  tap(560, 330, 100); // Free Refresh
+  sleep(3000);
+
+  if (checkIsPage(crystaisRefresh)) {
+    console.log('crystaisRefreshPage');
+    tap(436, 90, 100); // X cancel
+    sleep(3000);
+  }
+
+  var battleFinishPage = [
+    {x: 56, y: 331, r: 247, g: 89, b: 24},
+    {x: 584, y: 332, r: 8, g: 166, b: 222},
+    {x: 606, y: 24, r: 57, g: 169, b: 231},
+  ];
+
+  console.log('go kingdomArena success');
+  var ces = getCEs();
+  for (var i = 0; i < ces.length; i++) {
+    var ce = ces[i];
+    if (ce < ceLimit) {
+      console.log('Battle with', i, 'ce', ce);
+      tap(590, battleY[i], 100);
+      sleep(3000);
+      if (checkIsPage(kingdomArena)) {
+        // already battled
+        console.log('Battle with', i, 'failed. Already Battled');
+        continue;
+      }
+      tap(550, 320, 100); // start battle
+      // wait for battle finish
+      for (var j = 0; j < 30 && config.run; j++) {
+        console.log('Waiting for battle', j);
+        sleep(2000);
+        tap(320, 265, 100); // center
+        sleep(2000);
+        if (checkIsPage(battleFinishPage)) {
+          console.log('Battle finished', j);
+          tap(616, 323, 100); // Exit button
+          tap(616, 323, 100); // Exit button
+          waitUntilSeePage(kingdomArena, 25);
+          sleep(2000);
+          break;
+        }
+      }
+    } else {
+      console.log('Not to battle with', i, 'ce', ce);
+    }
+  }
+  console.log('done');
 }
 
 function handleWishingTree() {
@@ -2777,6 +2908,10 @@ function handleSkipRemoveGroundGuide() {
 }
 
 function stop() {
+  for (var i = 0; i < numberImagesPVP.length; i++) {
+    releaseImage(numberImagesPVP[i].img);
+  }
+
   for (var i = 0; i < numberImages.length; i++) {
     releaseImage(numberImages[i].img);
   }
@@ -2793,10 +2928,24 @@ function stop() {
   console.log('stop clicked, change config.run = false');
 }
 
+var numberImagesPVP = [];
 var numberImages = [];
 var bNumbers = [];
 var wNumbers = [];
 function loadImages() {
+  numberImagesPVP = [
+    { char: '0', img: getImageFromBase64(b64_0) },
+    { char: '1', img: getImageFromBase64(b64_1) },
+    { char: '2', img: getImageFromBase64(b64_2) },
+    { char: '3', img: getImageFromBase64(b64_3) },
+    { char: '4', img: getImageFromBase64(b64_4) },
+    { char: '5', img: getImageFromBase64(b64_5) },
+    { char: '6', img: getImageFromBase64(b64_6) },
+    { char: '7', img: getImageFromBase64(b64_7) },
+    { char: '8', img: getImageFromBase64(b64_8) },
+    { char: '9', img: getImageFromBase64(b64_9) },
+  ];
+
   numberImages = [
     { char: '0', img: getImageFromBase64(b64N0_1) },
     { char: '0', img: getImageFromBase64(b64N0_2) },
@@ -3022,15 +3171,11 @@ function start(inputConfig) {
       console.log('Collect mail: ', (Date.now() - config.lastCollectMail) / 60000, ' mins just passed');
       config.lastCollectMail = Date.now();
       handleAutoCollectMail();
-    // } else {
-    //   console.log('not handleAutoCollectMail:', (Date.now() - config.lastCollectMail) / 60000);
     }
     if (config.autoCollectDailyReward && (Date.now() - config.lastCollectDailyReward) / 60000 > 21600) {
       console.log('Collect daily reward: ', (Date.now() - config.lastCollectDailyReward) / 60000, ' mins just passed');
       config.lastCollectDailyReward = Date.now();
       handleGetDailyRewards();
-    // } else {
-    //   console.log('not handleGetDailyRewards:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3040,8 +3185,6 @@ function start(inputConfig) {
       console.log('Check hot air ballon: ', (Date.now() - config.lastSendHotAirBallon) / 60000, ' mins just passed');
       config.lastSendHotAirBallon = Date.now();
       handleHotAirBallon();
-    // } else {
-    //   console.log('not handleHotAirBallon:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3051,8 +3194,6 @@ function start(inputConfig) {
       console.log('Collect train: ', (Date.now() - config.lastCollectTrain) / 60000, ' mins just passed');
       config.lastCollectTrain = Date.now();
       handleTrain();
-    // } else {
-    //   console.log('not handleTrain:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3071,8 +3212,6 @@ function start(inputConfig) {
         config.lastFulfillWishes = Date.now();
         handleWishingTree();
       }
-    // } else {
-    //   console.log('not handleWishingTree:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3082,8 +3221,6 @@ function start(inputConfig) {
       console.log('Collect fountain: ', (Date.now() - config.lastCollectFountain) / 60000, ' just passed');
       config.lastCollectFountain = Date.now();
       findAndTapFountain();
-    // } else {
-    //   console.log('not findAndTapFountain:', (Date.now() - config.lastCollectMail) / 60000);
     }
 
     if (
@@ -3093,8 +3230,15 @@ function start(inputConfig) {
       console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
       config.lastCollectCandyTime = Date.now();
       handleFindAndTapCandyHouse();
-    // } else {
-    //   console.log('not handleFindAndTapCandyHouse:', (Date.now() - config.lastCollectMail) / 60000);
+    }
+
+    if (
+      config.autoPvPIntervalInMins != 0 &&
+      (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins
+    ) {
+      console.log('AutoPvP: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
+      config.lastCollectCandyTime = Date.now();
+      handlePVP(config.autoPvPTargetScoreLimit);
     }
 
     var act = JobScheduling();

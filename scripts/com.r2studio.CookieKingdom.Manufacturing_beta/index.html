@@ -133,7 +133,7 @@
     }
 
     .setting_input_value {
-      width: 50px;
+      width: 70px;
       text-align: center;
     }
 
@@ -205,7 +205,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <script>
-    VERSION = 2.78;
+    VERSION = 2.91;
 
     var settings = [
       [
@@ -331,6 +331,24 @@
           step: 10,
           max: 300,
           min: 0,
+        },
+        {
+          id: 'autoPvPIntervalInMins',
+          title: 'Try to auto PvP every given minutes (set to 0 to skip this task)',
+          title_zh_TW: '每隔若干分鐘自動進行PVP對戰(設為0則不會進行)',
+          default: 0,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'autoPvPTargetScoreLimit',
+          title: 'Auto PvP target power cannot exceed this value',
+          title_zh_TW: '自動PvP時，對手戰力不能高於這個數值',
+          default: 100000,
+          step: 5000,
+          max: 900000,
+          min: 10000,
         },
       ],
     ];
