@@ -15,7 +15,7 @@ config = {
   alwaysFulfillWishes: false,
   wishingTreeSafetyStock: 40,
   autoPvPIntervalInMins: 0,
-  autoPvPTargetScoreLimit: 50000,
+  autoPvPTargetScoreLimit: 200000,
   materialsTarget: 300,
   goodsTarget: 60,
   worksBeforeCollectCandy: 40,
@@ -2059,7 +2059,7 @@ function findAndTapFountain() {
 
 function handleTrainStation() {
   pageInTrainStation = [
-    {x: 618, y: 11, r: 56, g: 165, b: 231 },
+    { x: 618, y: 11, r: 56, g: 165, b: 231 },
     { x: 411, y: 19, r: 255, g: 208, b: 2 },
     { x: 393, y: 12, r: 93, g: 48, b: 32 },
     { x: 10, y: 355, r: 56, g: 34, b: 28 },
@@ -2092,7 +2092,8 @@ function handleTrainStation() {
   if (checkIsPage(pageTrainNotEnoughGoods) || isMessageWindowWithDiamond()) {
     console.log('not enough goods in train 2');
     qTap(pageTrainNotEnoughGoods);
-    sleep(config.sleepAnimate);}
+    sleep(config.sleepAnimate);
+  }
 
   qTap(pnt(255, 307));
   sleep(config.sleepAnimate);
@@ -2548,9 +2549,9 @@ function handlePVP(ceLimit) {
   }
 
   var battleFinishPage = [
-    {x: 56, y: 331, r: 247, g: 89, b: 24},
-    {x: 584, y: 332, r: 8, g: 166, b: 222},
-    {x: 606, y: 24, r: 57, g: 169, b: 231},
+    { x: 56, y: 331, r: 247, g: 89, b: 24 },
+    { x: 584, y: 332, r: 8, g: 166, b: 222 },
+    { x: 606, y: 24, r: 57, g: 169, b: 231 },
   ];
 
   console.log('go kingdomArena success');
@@ -2893,17 +2894,17 @@ function handleHotAirBallon() {
 
 function handleSkipRemoveGroundGuide() {
   pageGnomeTeachRemoveGround = [
-    {x: 610, y: 25, r: 5, g: 14, b: 20},
-    {x: 20, y: 132, r: 56, g: 35, b: 22},
-    {x: 213, y: 147, r: 60, g: 36, b: 20},
-    {x: 210, y: 162, r: 255, g: 243, b: 239},
-    {x: 299, y: 82, r: 212, g: 110, b: 127},
-  ]
+    { x: 610, y: 25, r: 5, g: 14, b: 20 },
+    { x: 20, y: 132, r: 56, g: 35, b: 22 },
+    { x: 213, y: 147, r: 60, g: 36, b: 20 },
+    { x: 210, y: 162, r: 255, g: 243, b: 239 },
+    { x: 299, y: 82, r: 212, g: 110, b: 127 },
+  ];
 
   if (checkIsPage(pageGnomeTeachRemoveGround)) {
-    console.log('found pageGnomeTeachRemoveGround')
-    qTap(pageGnomeTeachRemoveGround)
-    sleep(config.sleepAnimate)
+    console.log('found pageGnomeTeachRemoveGround');
+    qTap(pageGnomeTeachRemoveGround);
+    sleep(config.sleepAnimate);
   }
 }
 
@@ -3152,6 +3153,7 @@ function start(inputConfig) {
     config.lastFulfillWishes = Date.now();
     config.lastCollectFountain = Date.now();
     config.lastCollectCandyTime = Date.now();
+    config.lastAutoPvP = Date.now();
   } else {
     handleGotoKingdomPage();
   }
@@ -3232,12 +3234,9 @@ function start(inputConfig) {
       handleFindAndTapCandyHouse();
     }
 
-    if (
-      config.autoPvPIntervalInMins != 0 &&
-      (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins
-    ) {
-      console.log('AutoPvP: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
-      config.lastCollectCandyTime = Date.now();
+    if (config.autoPvPIntervalInMins != 0 && (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins) {
+      console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
+      config.lastAutoPvP = Date.now();
       handlePVP(config.autoPvPTargetScoreLimit);
     }
 
@@ -3299,7 +3298,7 @@ function start(inputConfig) {
         qTap(pageCookieKingdomIsNotResponding);
         sleep(3000);
       } else if (handleSkipRemoveGroundGuide()) {
-        console.log('successfully resolved stuck by pageGnomeTeachRemoveGround')
+        console.log('successfully resolved stuck by pageGnomeTeachRemoveGround');
       } else if (handleGotoKingdomPage()) {
         console.log('just handleGotoKingdomPage(), start looking for productions');
         handleFindAndTapCandyHouse();
