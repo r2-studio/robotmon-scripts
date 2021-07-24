@@ -14,8 +14,8 @@ config = {
   autoFulfillWishesIntervalInMins: 11,
   alwaysFulfillWishes: false,
   wishingTreeSafetyStock: 40,
-  autoPvPIntervalInMins: 0,
-  autoPvPTargetScoreLimit: 200000,
+  autoPvPIntervalInMins: 30,
+  autoPvPTargetScoreLimit: 400000,
   materialsTarget: 300,
   goodsTarget: 60,
   worksBeforeCollectCandy: 40,
@@ -960,6 +960,14 @@ function makeGoodsToTargetV2(target) {
 
   stocks.sort(dynamicSort('value'));
   console.log('stocks: ', JSON.stringify(stocks));
+  pageLockedGood = [
+    {x: 351, y: 244, r: 121, g: 207, b: 12},
+    {x: 305, y: 244, r: 121, g: 207, b: 12},
+    {x: 425, y: 244, r: 219, g: 207, b: 199},
+    {x: 425, y: 105, r: 60, g: 70, b: 105},
+    {x: 417, y: 297, r: 235, g: 219, b: 207},
+    {x: 381, y: 316, r: 237, g: 237, b: 229}
+  ]
 
   for (var id in stocks) {
     var stock = stocks[id];
@@ -997,6 +1005,9 @@ function makeGoodsToTargetV2(target) {
     for (var timer = 0; timer < 4; timer++) {
       var latestCount = countProductionSlotAvailable();
       if (handleNotEnoughStock()) {
+        break;
+      } else if (checkIsPage(pageLockedGood)) {
+        qTap(pageLockedGood);
         break;
       } else if (checkIsPage(pageInProduction) && availableSlots != latestCount) {
         availableSlots = latestCount;
