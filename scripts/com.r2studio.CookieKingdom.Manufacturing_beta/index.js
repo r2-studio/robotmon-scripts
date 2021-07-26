@@ -285,6 +285,26 @@ var theReloginIntoAnotherDeviceMessageScreen = {
   targetColorThreashold: 5,
 };
 
+function isPntInNoTapZone(pnt) {
+  var noTapZone = {
+    x: 85,
+    y: 0,
+    w: 285,
+    h: 80,
+  }
+
+  if (config.isXR) {
+    return false;
+  }
+
+  if (pnt.x > noTapZone.x && pnt.x < noTapZone.x + noTapZone.w &&
+    pnt.y > noTapZone.y && pnt.y < noTapZone.y + noTapZone.h) {
+    return true;
+  }
+
+  return false;
+}
+
 function pnt(x, y) {
   return { x: x, y: y };
 }
@@ -1299,16 +1319,19 @@ function findAndTapCandy() {
 
   // console.log('candies > ', JSON.stringify(foundResults));
   if (foundResults.length > 0) {
-    var bestFit = foundResults[0];
+    var bestFit = { 'score': 0 };
     for (var j in foundResults) {
-      if (foundResults[j]['score'] > bestFit['score']) {
+      if (!isPntInNoTapZone(foundResults[j]) && foundResults[j]['score'] > bestFit['score']) {
         bestFit = foundResults[j];
       }
     }
-    console.log('best candy > ', JSON.stringify(bestFit));
-    qTap(bestFit);
-    sleep(config.sleepAnimate * 3);
-    return true;
+
+    if (bestFit['score'] > 0.85) {
+      console.log('best candy > ', JSON.stringify(bestFit));
+      qTap(bestFit);
+      sleep(config.sleepAnimate * 3);
+      return true;
+    }
   }
   return false;
 }
@@ -1350,23 +1373,31 @@ function findAndTapProductionHouse() {
 
     if (foundResults.length > 0) {
       console.log('found house >> ', key, JSON.stringify(foundResults));
-      var house = foundResults[0];
-      // Need to add offset to images
-      house.x += 20;
-      house.y += 20;
-      qTap(house);
-      sleep(config.sleepAnimate * 3);
-
-      if (!waitUntilSeePage(pageInProduction, 2)) {
-        qTap(house); // prevent when there are sugar cube to collect
+      var house = { 'score': 0 };
+      for (var j in foundResults) {
+        if (!isPntInNoTapZone(foundResults[j]) && foundResults[j]['score'] > house['score']) {
+          house = foundResults[j];
+        }
       }
 
-      if (waitUntilSeePage(pageInProduction, 8)) {
-        console.log('Found production house successfully: ', key);
-        return true;
-      } else {
-        console.log('Assume found house but failed, go back to kingdom page: ', key);
-        handleTryHitBackToKingdom();
+      if (house['score'] > 0.88) {
+        // Need to add offset to images
+        house.x += 20;
+        house.y += 20;
+        qTap(house);
+        sleep(config.sleepAnimate * 3);
+
+        if (!waitUntilSeePage(pageInProduction, 2)) {
+          qTap(house); // prevent when there are sugar cube to collect
+        }
+
+        if (waitUntilSeePage(pageInProduction, 8)) {
+          console.log('Found production house successfully: ', key);
+          return true;
+        } else {
+          console.log('Assume found house but failed, go back to kingdom page: ', key);
+          handleTryHitBackToKingdom();
+        }
       }
     }
   }
@@ -1545,7 +1576,7 @@ function handleFindAndTapCandyHouse() {
         releaseImage(img);
         releaseImage(greenChecked);
 
-        if (foundResults.length > 0) {
+        if (foundResults.length > 0 && !isPntInNoTapZone(foundResults[0])) {
           console.log('Fount green checked, tap it');
           qTap(foundResults[0]);
         }
@@ -2040,14 +2071,21 @@ function findAndTapFountain() {
   releaseImage(img);
   releaseImage(checked);
 
-  if (foundResults.length > 0) {
+  if (foundResults.length > 0 && !isPntInNoTapZone(foundResults[0])) {
     console.log('Fount fountain full check icon, tap it');
     qTap(foundResults[0]);
   } else {
     console.log("Can't find fountain full image, try tap it");
     qTap(pnt(499, 295));
     sleep(config.sleep);
+    qTap(pnt(545, 295));
+    sleep(config.sleep);
+    qTap(pnt(430, 359));
+    sleep(config.sleep);
     qTap(pnt(490, 359));
+    sleep(config.sleep);
+    qTap(pnt(540, 359));
+    sleep(config.sleep);
   }
 
   // Tap Fountain
@@ -2817,6 +2855,11 @@ function handleHotAirBallon() {
     { x: 125, y: 342, r: 38, g: 71, b: 96 },
     { x: 110, y: 324, r: 162, g: 90, b: 227 },
   ];
+  pageUnCollapsedBallon = [
+    {x: 205, y: 327, r: 255, g: 109, b: 200},
+    {x: 157, y: 327, r: 255, g: 223, b: 142},
+    {x: 95, y: 332, r: 134, g: 183, b: 249}
+  ]
   pageInHotAirBallon = [
     { x: 270, y: 330, r: 255, g: 211, b: 0 },
     { x: 158, y: 331, r: 12, g: 167, b: 223 },
@@ -2825,10 +2868,9 @@ function handleHotAirBallon() {
     { x: 565, y: 84, r: 255, g: 251, b: 235 },
   ];
   pageChooseBallonDestination = [
-    { x: 285, y: 15, r: 208, g: 161, b: 89 },
-    { x: 319, y: 7, r: 91, g: 61, b: 45 },
-    { x: 352, y: 18, r: 210, g: 162, b: 89 },
-    { x: 616, y: 15, r: 56, g: 165, b: 231 },
+    {x: 615, y: 14, r: 56, g: 165, b: 231},
+    {x: 567, y: 31, r: 125, g: 89, b: 54},
+    {x: 545, y: 8, r: 54, g: 32, b: 24}
   ];
   pageCanStartBallonTrip = [
     { x: 580, y: 330, r: 121, g: 207, b: 12 },
@@ -2893,11 +2935,12 @@ function handleHotAirBallon() {
         qTap(pnt(xLocation, yLocation));
         sleep(2000);
 
-        if (!checkIsPage(pageChooseBallonDestination) || checkIsPage(pageInHotAirBallon)) {
+        if (!checkIsPage(pageChooseBallonDestination) && checkIsPage(pageInHotAirBallon)) {
           console.log('ballon destination choosed successfully, i, x, y = ', i, xLocation, yLocation);
           i = 10;
           xLocation = 0;
           yLocation = 500;
+          break;
         }
       }
     }
@@ -2912,7 +2955,8 @@ function handleHotAirBallon() {
     sleep(config.sleepAnimate * 3);
   }
 
-  if (waitUntilSeePage(pageInHotAirBallon, 5)) {
+  if (waitUntilSeePage(pageInHotAirBallon, 10)) {
+    sleep(1500)
     qTap(pnt(250, 330)); // Tap Auto
     sleep(config.sleepAnimate);
     qTap(pageCanStartBallonTrip);
@@ -2922,7 +2966,7 @@ function handleHotAirBallon() {
 
   handleGotoKingdomPage();
 
-  if (!checkIsPage(pageCollapsedaffairs)) {
+  if (!checkIsPage(pageCollapsedaffairs) &&!checkIsPage(pageUnCollapsedBallon)) {
     qTap(pageCollapsedaffairs);
   }
 }
@@ -3281,6 +3325,9 @@ function start(inputConfig) {
       console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
       config.lastAutoPvP = Date.now();
       handlePVP(config.autoPvPTargetScoreLimit);
+    }
+    else {
+      console.log('Not AutoPvP: ', config.autoPvPIntervalInMins != 0 && (Date.now() - config.lastAutoPvP) / 60000, config.autoPvPIntervalInMins, config.autoPvPIntervalInMins != 0 && (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins)
     }
 
     // Production must be last
