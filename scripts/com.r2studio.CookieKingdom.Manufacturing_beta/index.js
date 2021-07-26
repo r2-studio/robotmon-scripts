@@ -3174,8 +3174,13 @@ function start(inputConfig) {
 
   checkAndRestartApp()
 
-  if (config.account !== 'default_xrobotmon_account@gmail.com' && config.account !== 'aaa@gmail.com') {
+  if (config.isXR || (!config.isXR && (config.account !== 'default_xrobotmon_account@gmail.com' && config.account !== 'aaa@gmail.com'))) {
+    var loginStartTime = Date.now();
     while (!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageInProduction) && config.run) {
+      if ((Date.now() - loginStartTime) / 60000 > 5) {
+        console.log('startup login check take longer than 5 mins, skipping')
+        break;
+      }
       if (checkIsPage(pageNotifyQuit)) {
         console.log('found pageNotifyQuit while trying to login, hit back');
         qTap(pageNotifyQuit);
@@ -3201,6 +3206,7 @@ function start(inputConfig) {
     config.lastCollectCandyTime = Date.now();
     config.lastAutoPvP = Date.now();
   } else {
+    console.log('Start by running all the checks first')
     handleGotoKingdomPage();
   }
 
@@ -3271,6 +3277,13 @@ function start(inputConfig) {
       findAndTapFountain();
     }
 
+    if (config.autoPvPIntervalInMins != 0 && (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins) {
+      console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
+      config.lastAutoPvP = Date.now();
+      handlePVP(config.autoPvPTargetScoreLimit);
+    }
+
+    // Production must be last
     if (
       config.worksBeforeCollectCandy != 0 &&
       (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy
@@ -3278,12 +3291,6 @@ function start(inputConfig) {
       console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
       config.lastCollectCandyTime = Date.now();
       handleFindAndTapCandyHouse();
-    }
-
-    if (config.autoPvPIntervalInMins != 0 && (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins) {
-      console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
-      config.lastAutoPvP = Date.now();
-      handlePVP(config.autoPvPTargetScoreLimit);
     }
 
     var act = JobScheduling();
