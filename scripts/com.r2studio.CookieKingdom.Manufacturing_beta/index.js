@@ -14,7 +14,8 @@ config = {
   autoFulfillWishesIntervalInMins: 11,
   alwaysFulfillWishes: false,
   wishingTreeSafetyStock: 40,
-  autoPvPIntervalInMins: 30,
+  wishingTreeMaxFillingMins: 5,
+  autoPvPIntervalInMins: 0,
   autoPvPTargetScoreLimit: 400000,
   materialsTarget: 300,
   goodsTarget: 60,
@@ -174,7 +175,6 @@ pageCottomFarm = [
 ];
 
 pageInKingdomVillage = [
-  { x: 248, y: 15, r: 241, g: 51, b: 92 },
   { x: 321, y: 15, r: 255, g: 238, b: 17 },
   { x: 428, y: 14, r: 0, g: 193, b: 255 },
   { x: 517, y: 22, r: 235, g: 161, b: 89 },
@@ -345,8 +345,7 @@ function checkIsPage(page, diff, img) {
   var whSize = getImageSize(img);
   if (whSize.width === 360) {
     console.log('image size is incorrect, restart CookieKingdom wait 20s');
-    execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
-    sleep(20000);
+    checkAndRestartApp();
     img = getScreenshot();
   } else if (whSize.height !== 360 || whSize.width !== 640) {
     console.log('Reboot nox as screen size incorrect: ', whSize.height, whSize.width, ' (h/w)');
@@ -1379,6 +1378,10 @@ var Directions = Object.freeze({
   NW: pnt(460, 255),
   SE: pnt(-460, -255),
   SW: pnt(480, -245),
+  S: pnt(0, -250),
+  N: pnt(0, 250),
+  E: pnt(-460, 0),
+  W: pnt(460, 0),
 });
 function swipeDirection(direction) {
   tapableArea = {
@@ -1399,6 +1402,7 @@ function swipeDirection(direction) {
       console.log('pickup house, try again');
     }
   }
+  handleGotoKingdomPage();
   return false;
 }
 
@@ -1429,11 +1433,11 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage) {
   for (var i = 0; i < steps; i++) {
     moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0, id);
     // console.log('in pnt: ', fromPnt.x + step_x * i, fromPnt.y + step_y * i)
-    sleep(80);
+    sleep(100);
   }
 
   moveTo(toPnt.x, toPnt.y, 40, 0, id);
-  sleep(800);
+  sleep(1500);
   tapUp(toPnt.x, toPnt.y, 40, 0, id);
   sleep(config.sleepAnimate);
 
@@ -1935,7 +1939,7 @@ function getCurrentApp() {
       }
     }
   }
-  console.log('Current app: ', app, activity);
+  // console.log('Current app: ', app, activity);
   return [app, activity];
 }
 
@@ -2082,11 +2086,11 @@ function handleTrainStation() {
     return false;
   }
 
-  qTap(pnt(255, 100));
+  qTap(pnt(255, 110));
   sleep(config.sleepAnimate);
-  qTap(pnt(210, 100));
+  qTap(pnt(210, 110));
   sleep(config.sleepAnimate);
-  qTap(pnt(170, 100));
+  qTap(pnt(170, 110));
   sleep(config.sleepAnimate * 2);
   if (checkIsPage(pageTrainNotEnoughGoods) || isMessageWindowWithDiamond()) {
     console.log('not enough goods in train 1');
@@ -2565,6 +2569,13 @@ function handlePVP(ceLimit) {
     { x: 606, y: 24, r: 57, g: 169, b: 231 },
   ];
 
+  var pageNoArenaTicket = [
+    {x: 314, y: 111, r: 228, g: 121, b: 37},
+    {x: 347, y: 104, r: 36, g: 46, b: 65},
+    {x: 414, y: 120, r: 243, g: 233, b: 223},
+    {x: 300, y: 259, r: 12, g: 167, b: 223}
+  ]
+
   console.log('go kingdomArena success');
   var ces = getCEs();
   for (var i = 0; i < ces.length; i++) {
@@ -2585,6 +2596,12 @@ function handlePVP(ceLimit) {
         sleep(2000);
         tap(320, 265, 100); // center
         sleep(2000);
+        if (checkIsPage(pageNoArenaTicket)) {
+          console.log('No arena ticket, finish auto pvp')
+          qTap(pageNoArenaTicket);
+          handleGotoKingdomPage();
+          return;
+        }
         if (checkIsPage(battleFinishPage)) {
           console.log('Battle finished', j);
           tap(616, 323, 100); // Exit button
@@ -2633,13 +2650,11 @@ function handleWishingTree() {
     { x: 106, y: 177, r: 255, g: 109, b: 200 },
   ];
   pageInWishingTree = [
-    { x: 610, y: 20, r: 56, g: 166, b: 231 },
-    { x: 235, y: 44, r: 255, g: 0, b: 73 },
-    { x: 277, y: 26, r: 255, g: 44, b: 121 },
-    { x: 298, y: 30, r: 223, g: 175, b: 191 },
-    { x: 388, y: 27, r: 255, g: 46, b: 121 },
-    { x: 410, y: 21, r: 237, g: 202, b: 8 },
-    { x: 520, y: 20, r: 4, g: 136, b: 255 },
+    {x: 385, y: 24, r: 255, g: 46, b: 121},
+    {x: 411, y: 20, r: 255, g: 206, b: 2},
+    {x: 516, y: 17, r: 25, g: 212, b: 255},
+    {x: 599, y: 9, r: 101, g: 62, b: 186},
+    {x: 503, y: 28, r: 105, g: 56, b: 81}
   ];
 
   if (checkIsPage(pageNotCollapsedWisingTree)) {
@@ -2664,7 +2679,14 @@ function handleWishingTree() {
     { x: 427, y: 171, r: 243, g: 233, b: 223 },
     { x: 403, y: 240, r: 219, g: 207, b: 199 },
   ];
+
+  var wishingTreeStartTime = Date.now();
   while (true) {
+    if ((Date.now() - wishingTreeStartTime) / 60000 > config.wishingTreeMaxFillingMins) {
+      console.log('Run wishing tree longer than ', config.wishingTreeMaxFillingMins, ' mins, ending this task');
+      return true;
+    }
+
     allDailyRewardCollect = [
       { x: 59, y: 242, r: 247, g: 247, b: 247 },
       { x: 60, y: 256, r: 138, g: 138, b: 138 },
@@ -2727,7 +2749,7 @@ function handleWishingTree() {
             wishes[idx].failedCount++;
             break;
           } else {
-            console.log('wish ', idx, ' req ', req, ' can be fulfilled');
+            // console.log('wish ', idx, ' req ', req, ' can be fulfilled');
             wishes[idx].requireFulfilled++;
           }
         } else {
@@ -2890,12 +2912,14 @@ function handleHotAirBallon() {
     sleep(config.sleepAnimate * 3);
   }
 
-  qTap(pnt(250, 330)); // Tap Auto
-  sleep(config.sleepAnimate);
-  qTap(pageCanStartBallonTrip);
-  sleep(config.sleepAnimate * 2);
+  if (waitUntilSeePage(pageInHotAirBallon, 5)) {
+    qTap(pnt(250, 330)); // Tap Auto
+    sleep(config.sleepAnimate);
+    qTap(pageCanStartBallonTrip);
+    sleep(config.sleepAnimate * 2);
+    console.log('Successfully sent ballon');
+  }
 
-  console.log('Successfully sent ballon');
   handleGotoKingdomPage();
 
   if (!checkIsPage(pageCollapsedaffairs)) {
@@ -2916,6 +2940,21 @@ function handleSkipRemoveGroundGuide() {
     console.log('found pageGnomeTeachRemoveGround');
     qTap(pageGnomeTeachRemoveGround);
     sleep(config.sleepAnimate);
+  }
+}
+
+function checkAndRestartApp() {
+  if (getCurrentApp()[0] !== 'com.devsisters.ck') {
+    console.log('Cookie not active, restart CookieKingdom and wait 20s');
+    rtn = execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
+
+    if (rtn == 'signal: aborted') {
+      // MEmu
+      execute(
+        "ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity"
+      );
+    }
+    sleep(20000);
   }
 }
 
@@ -3133,13 +3172,9 @@ function start(inputConfig) {
 
   loadImages();
 
-  if (getCurrentApp()[0] !== 'com.devsisters.ck') {
-    console.log('Cookie not active, restart CookieKingdom and wait 20s');
-    execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
-    sleep(20000);
-  }
+  checkAndRestartApp()
 
-  if (config.account !== 'default_xrobotmon_account@gmail.com') {
+  if (config.account !== 'default_xrobotmon_account@gmail.com' && config.account !== 'aaa@gmail.com') {
     while (!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageInProduction) && config.run) {
       if (checkIsPage(pageNotifyQuit)) {
         console.log('found pageNotifyQuit while trying to login, hit back');
@@ -3185,7 +3220,7 @@ function start(inputConfig) {
       config.lastCollectMail = Date.now();
       handleAutoCollectMail();
     }
-    if (config.autoCollectDailyReward && (Date.now() - config.lastCollectDailyReward) / 60000 > 21600) {
+    if (config.autoCollectDailyReward && (Date.now() - config.lastCollectDailyReward) / 60000 > 240) {
       console.log('Collect daily reward: ', (Date.now() - config.lastCollectDailyReward) / 60000, ' mins just passed');
       config.lastCollectDailyReward = Date.now();
       handleGetDailyRewards();
@@ -3302,8 +3337,7 @@ function start(inputConfig) {
         continue;
       } else if (getCurrentApp()[0] !== 'com.devsisters.ck') {
         console.log('Cookie not active, restart CookieKingdom and wait 20s');
-        execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
-        sleep(20000);
+        checkAndRestartApp();
       } else if (checkIsPage(pageCookieKingdomIsNotResponding)) {
         console.log('Popped cookie kingdom is not responding window, tap wait');
         qTap(pageCookieKingdomIsNotResponding);
