@@ -2932,7 +2932,13 @@ function handleHotAirBallon() {
 
   handleGotoKingdomPage();
 
-  if (!checkIsPage(pageCollapsedaffairs)) {
+  pageTrainUncollapsed = [
+    { x: 109, y: 231, r: 255, g: 223, b: 142 },
+    { x: 120, y: 235, r: 219, g: 46, b: 73 },
+    { x: 105, y: 321, r: 75, g: 116, b: 160 },
+    { x: 106, y: 328, r: 255, g: 255, b: 255 },
+  ];
+  if (checkIsPage(pageTrainUncollapsed)) {
     qTap(pageCollapsedaffairs);
   }
 }
