@@ -2045,10 +2045,14 @@ function findAndTapFountain() {
     console.log('Fount fountain full check icon, tap it');
     qTap(foundResults[0]);
   } else {
-    console.log("Can't find fountain full image, try tap it");
-    qTap(pnt(499, 295));
-    sleep(config.sleep);
+    console.log("Can't find fountain full image, try to tap it");
     qTap(pnt(490, 359));
+    sleep(config.sleepAnimate);
+
+    qTap(pnt(499, 295));
+    sleep(config.sleepAnimate);
+    qTap(pnt(540, 295));
+    sleep(config.sleepAnimate);
   }
 
   // Tap Fountain
@@ -2066,6 +2070,7 @@ function findAndTapFountain() {
     qTap(pageInFountain);
     sleep(config.sleepAnimate * 3);
     handleTryHitBackToKingdom();
+    console.log('Tapped fountain successfully');
   } else {
     handleTryHitBackToKingdom();
     console.log('Failed to claim fountain, did not see fountain screen');
@@ -2894,7 +2899,11 @@ function handleHotAirBallon() {
         qTap(pnt(xLocation, yLocation));
         sleep(2000);
 
-        if (!checkIsPage(pageChooseBallonDestination) || checkIsPage(pageInHotAirBallon)) {
+        if (waitUntilSeePage(pageChooseBallonDestination, 5)) {
+          continue;
+        }
+
+        if (checkIsPage(pageInHotAirBallon)) {
           console.log('ballon destination choosed successfully, i, x, y = ', i, xLocation, yLocation);
           i = 10;
           xLocation = 0;
@@ -2903,17 +2912,17 @@ function handleHotAirBallon() {
       }
     }
 
-    tapDown(50, 268, 40, 0);
+    tapDown(30, 268, 40, 0);
     sleep(config.sleep);
     moveTo(250, 268, 40, 0);
     sleep(config.sleep);
-    moveTo(600, 268, 40, 0);
-    sleep(config.sleep);
-    tapUp(600, 268, 40, 0);
+    moveTo(620, 268, 40, 0);
+    sleep(1100);
+    tapUp(620, 268, 40, 0);
     sleep(config.sleepAnimate * 3);
   }
 
-  if (waitUntilSeePage(pageInHotAirBallon, 5)) {
+  if (waitUntilSeePage(pageInHotAirBallon, 8)) {
     qTap(pnt(250, 330)); // Tap Auto
     sleep(config.sleepAnimate);
     qTap(pageCanStartBallonTrip);
