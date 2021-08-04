@@ -23,6 +23,7 @@ config = {
   productionFocusOnMin: true,
   helpTapGreenCheck: true,
   pvpCELimit: 250000,
+  buildTowardsTheLeft: true,
 
   jobFailedBeforeGetCandy: 4,
   jobFailedCount: 0,
@@ -539,14 +540,6 @@ function ocrResultToInt(results) {
   }
 
   var digit_width = 4;
-  for (var i in results) {
-    if (results[i].target == '1') {
-      // 1 is very thin so we set the width to 4
-      digit_width = 4;
-      break;
-    }
-  }
-
   count = '';
   var idx = 1;
   while (idx < results.length) {
@@ -957,7 +950,7 @@ function makeGoodsToTargetV2(target) {
     });
   }
 
-  console.log('unsorted stocks: ', JSON.stringify(stocks));
+  // console.log('unsorted stocks: ', JSON.stringify(stocks));
   stocks.sort(dynamicSort('value'));
   console.log('stocks: ', JSON.stringify(stocks));
   pageLockedGood = [
@@ -1294,7 +1287,7 @@ function findAndTapCandy() {
   );
   var img = getScreenshot();
 
-  var foundResults = findImages(img, candy, 0.85, 5, true);
+  var foundResults = findImages(img, candy, 0.93, 5, true);
   releaseImage(img);
   releaseImage(candy);
 
@@ -1384,7 +1377,7 @@ var Directions = Object.freeze({
   E: pnt(-460, 0),
   W: pnt(460, 0),
 });
-function swipeDirection(direction) {
+function swipeDirection(direction, finishSwipeWhenInProduction) {
   tapableArea = {
     fromPnt: pnt(165, 58),
     endPnt: pnt(566, 285),
@@ -1396,6 +1389,22 @@ function swipeDirection(direction) {
 
     fromPnt = pnt(x, y);
     toPnt = pnt(x + direction.x, y + direction.y);
+    if (finishSwipeWhenInProduction) {
+      if (swipeFromToPoint(fromPnt, toPnt, 8, 0, pageInProduction)) {
+        console.log('swip successfully');
+        return true;
+      } else {
+        console.log('pickup house, try again');
+      }
+    }
+    else {
+      if (swipeFromToPoint(fromPnt, toPnt, 8, 0)) {
+        console.log('swip successfully');
+        return true;
+      } else {
+        console.log('pickup house, try again');
+      }
+    }
     if (swipeFromToPoint(fromPnt, toPnt, 8, 0, pageInProduction)) {
       console.log('swip successfully');
       return true;
@@ -1413,13 +1422,13 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage) {
   tap(fromPnt.x, fromPnt.y, 100, id);
   sleep(config.sleepAnimate * 3);
 
-  if (checkIsPage(stopIfFoundPage)) {
+  if (stopIfFoundPage != undefined && checkIsPage(stopIfFoundPage)) {
     console.log('Swiping but accedential got into the desired page, return');
     return true;
   }
 
   if (!checkIsPage(pageInKingdomVillage)) {
-    console.log('swipe failed, try again');
+    console.log('swipe failed, try again: ', fromPnt.x, fromPnt.y);
     keycode('BACK', 100);
     return false;
   }
@@ -1429,7 +1438,7 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage) {
   step_y = (toPnt.y - fromPnt.y) / steps;
 
   tapDown(fromPnt.x, fromPnt.y, 40, 0, id);
-  sleep(200);
+  sleep(100);
 
   for (var i = 0; i < steps; i++) {
     moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0, id);
@@ -1500,17 +1509,19 @@ function findHouseInNotSureWhere(tryCount) {
 }
 
 function handleFindAndTapCandyHouse() {
-  // var directions = [
-  //   Directions.NE, Directions.SW, Directions.E, Directions.W
-  // ]
   var directions = [
-    Directions.SE,
-    Directions.SW,
-    Directions.SE,
-    Directions.NE,
-    Directions.NE,
-    Directions.NW,
-    Directions.SW,
+    Directions.S,
+    Directions.S,
+    Directions.E,
+    Directions.E,
+    Directions.E,
+    Directions.E,
+    Directions.E,
+    Directions.N,
+    Directions.W,
+    Directions.W,
+    Directions.W,
+    Directions.W,
   ];
 
   if (!checkIsPage(pageInKingdomVillage)) {
@@ -1531,7 +1542,7 @@ function handleFindAndTapCandyHouse() {
 
   for (var i = 0; i < directions.length; i++) {
     // TODO: this does not show properly
-    console.log('going towards: ', directions[i]);
+    console.log('going towards: ', i);
     if (swipeDirection(directions[i])) {
       collectCandySuccess == false ? findAndTapCandy() : collectCandySuccess;
 
@@ -1559,7 +1570,7 @@ function handleFindAndTapCandyHouse() {
         console.log('already found house using image match, start working');
         return true;
       } else if (collectCandySuccess && findHouseInNotSureWhere(config.findProductionTimes)) {
-        console.log('find house v2 success, start working');
+        console.log('find house in random tap success, start working');
         return true;
       }
     }
@@ -1856,7 +1867,12 @@ function handleInputLoginInfo() {
 
 function handleNextProductionBuilding() {
   if (checkIsPage(pageInProduction)) {
-    qTap(pnt(349, 174)); // next
+    if (config.buildTowardsTheLeft) {
+      qTap(pnt(110, 174)); // next
+    }
+    else {
+      qTap(pnt(349, 174)); // next
+    }
     sleep(config.sleepAnimate * 2);
   }
 }
@@ -2879,7 +2895,7 @@ function handleHotAirBallon() {
 
   // Tap Change location
   qTap(pnt(420, 328));
-  if (!waitUntilSeePage(pageChooseBallonDestination, 8)) {
+  if (!waitUntilSeePage(pageChooseBallonDestination, 8, pnt(420, 328))) {
     console.log('Cannot find the pageChooseBallonDestination, quitting');
     handleGotoKingdomPage();
   }
