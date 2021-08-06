@@ -51,14 +51,17 @@ function initScreenSize(){
     setAutoAttackMargin();
 }
 
+
 function getBlackEdge(){
+    sleep(2000);
     var screenshot = getScreenshot();
     var imageSize = getImageSize(screenshot);
     var w = imageSize.width;
     var h = imageSize.height;
-    for(var j = 0; j < 3; j++){
+    blackEdge = [undefined,undefined,undefined,undefined];
+    for(var j = 1; j <= 3; j++){
         for(var i = 0;i<w;i++){
-            if(i >= blackEdge[0]){
+            if(blackEdge[0] != undefined && i >= blackEdge[0]){
                 break;
             }
             var color = getImageColor(screenshot,i,h/4 * j);
@@ -68,7 +71,7 @@ function getBlackEdge(){
             }
         }
         for(var i = 0;i<h;i++){
-            if(i >= blackEdge[1]){
+            if(blackEdge[1] != undefined && i >= blackEdge[1]){
                 break;
             }
             var color = getImageColor(screenshot,w/4 * j,i);
@@ -78,7 +81,7 @@ function getBlackEdge(){
             }
         }
         for(var i =w-1;i>=0;i--){
-            if(i <= blackEdge[2]){
+            if(blackEdge[2] != undefined && i <= blackEdge[2]){
                 break;
             }
             var color = getImageColor(screenshot,i,h/4 * j);
@@ -88,7 +91,7 @@ function getBlackEdge(){
             }
         }
         for(var i = h-1;i>=0;i--){
-            if(i <= blackEdge[3]){
+            if(blackEdge[3] != undefined && i <= blackEdge[3]){
                 break;
             }
             var color = getImageColor(screenshot,w/4 * j,i);
@@ -96,6 +99,11 @@ function getBlackEdge(){
                 blackEdge[3] = i;
                 break;
             }
+        }
+    }
+    for(var i = 0;i < 4; i++){
+        if(blackEdge[i] == undefined){
+            blackEdge[i] = 0;
         }
     }
     console.log("取得黑邊 "+blackEdge);

@@ -5,7 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.09";
+var version = "V3.10";
 
 function start(loopTime,script,scriptName){
     startScript(loopTime,script,scriptName);
@@ -16,7 +16,6 @@ function stop(){
 }
 
 function initHTML(serverString){
-    console.log("initHTML",serverString);
     server = serverString;
     initServer();
 
