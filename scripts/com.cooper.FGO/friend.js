@@ -23,6 +23,16 @@ var reloadPosition = 1237;
 var barMargin = 0;
 
 function setFriendMargin(){
+    if(resolution <= 16 / 9){
+	    friendX = 76;
+	    friendServantPosition[0][0] = friendX;
+	    friendServantPosition[1][0] = friendX;
+	    friendItemPosition[0][0] = friendX;
+	    friendItemPosition[1][0] = friendX;
+	    positionX[0] = 600;
+	    positionX[1] = 1200;
+        return;
+    }
     var offset = defaultMarginX;
     barMargin = offset;
     if(resolution > 18 / 9){
@@ -269,7 +279,7 @@ function checkFriendIsFriend(screenshot,lineY){
     if(isDebug){
         console.log("checkFriendIsFriend " +lineY);
     }
-    return checkPixel(defaultMarginX + 1722,lineY+198,227,255,177,screenshot);
+    return checkPixel(friendX + 1646, lineY + 198,227,255,177,screenshot);
 }
 
 function reloadFriend(){

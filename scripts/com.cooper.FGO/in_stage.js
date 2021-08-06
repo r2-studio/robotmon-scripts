@@ -27,6 +27,15 @@ var colorName = ["紅","藍","綠"];
 var useMargin = undefined;
 //----------------------------------------------Battle main page
 function setInStageMargin(){
+    if(resolution <= 16 / 9){
+        useMargin = undefined;
+        currentStagePosition[0] = 1317;    
+        skillPositionX = [66,198,330,542,674,806,1018,1150,1282];
+        skillPositionY = 824;
+        enemyPositionX = [870,510,172]
+        return;
+    }
+    
     useMargin = 0;
     /*
         skill left edge  

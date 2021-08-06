@@ -3,6 +3,34 @@ var iconMargin = [];
 
 function setMarginIcon(){
 	if(resolution < 17 / 9){
+		//default
+		icon["main"][0] = 1710;
+		iconMargin["main"] = undefined;
+
+		icon["teamPage"][0] = 1702;
+		icon["teamPage"][1] = 975;
+		iconMargin["teamPage"] = undefined;
+
+		icon["friendPage"][0] = 1110;
+		iconMargin["friendPage"] = undefined;
+
+		icon["friendEnd"][0] = 1852;
+		iconMargin["friendEnd"] = undefined;
+
+		icon["friendEnd3"][0] = 1852;
+		iconMargin["friendEnd3"] = undefined;
+
+
+		icon["battleMain1"][0] = 1752;
+		iconMargin["battleMain1"] = undefined;
+	
+		icon["battleMain2"][0] = 1752;
+		iconMargin["battleMain2"] = undefined;
+
+		icon["battleMain3"][0] = 1672;
+		iconMargin["battleMain3"] = undefined;
+
+		icon["friendPointContinue"][1] = 975;
 		return;
 	}
 	icon["main"][0] = realScreenSize[0] / screenScale[0] - 337;
@@ -199,7 +227,7 @@ icon["battleServant1"] =  [375,90,210,45];
 icon["battleServant2"] =  [375,90,210,45];
 icon["battleSkill"] =  [855,255,210,45];
 icon["battleTarget"] =  [1620,195,60,60];
-icon["spaceColor"] = [690,240,540,90];
+icon["spaceColor"] = [690,288,540,45];
 icon["emiyaColor"] = [690,240,540,90];
 icon["ultFailed"] = [900,637,123,60];
 icon["skillFailed"] = [870,802,180,60];
@@ -250,6 +278,9 @@ function isBattleSkillTargetDialog(){
 }
 
 function isBattleSkillSpaceDialog(){
+	if(isBattleSkillEmiyaDialog()){
+		return false;
+	}
 	return checkIconInScreen("spaceColor",0.75);
 }
 
@@ -304,10 +335,10 @@ function isItemPage(){
 }
 
 //friendPoint-----------------------------------------------
-icon["friendPointMain"] = [675,562,675,108];
-icon["friendPointFree"] = [787,787,337,75];
+icon["friendPointMain"] = [675,538,675,108];
+icon["friendPointFree"] = [787,740,337,75];
 icon["friendPointContinue"] = [1050,975,187,63];
-icon["friendPointTen"] = [1125,787,240,75];
+icon["friendPointTen"] = [1125,740,240,75];
 icon["friendPointServantFull"] = [487,225,900,187];
 icon["friendPointItemFull"] = [487,225,900,187];
 
