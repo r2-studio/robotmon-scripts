@@ -149,17 +149,10 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.07,
-      "description": "<div>此為正式版，建議先使用試用版，確定運作順利再訂閱方案<br><br>V3.07修正寬螢幕抽箱與友抽功能<br>V3.05修正誤判沒有訂閱方案的問題<br>V3.02修正無法辨識已使用技能的問題，修正寬螢幕無法辨識好友從者的問題<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.09,
+      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.09修正6周年介面更動導致無法友抽的問題，修正部分關卡背景造成無法啟動腳本的問題，修正太空伊絲塔部分靈基無法選擇寶具顏色的問題<br>V3.07修正寬螢幕抽箱與友抽功能<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
-    },
-    "com.cooper.FGOFREE": {
-      "title": "Fate/Grand Order 日服 試用版",
-      "versionCode": 3.08,
-      "description": "<div>此為免費試用版，無法重複執行腳本<br><br>V3.08修正試用版啟動失敗的問題<br>V3.07修正寬螢幕抽箱與友抽功能<br>V3.02修正無法辨識已使用技能的問題，修正寬螢幕無法辨識好友從者的問題<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
-      "packageName": "com.xiaomeng.fategrandorder",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOFREE/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",

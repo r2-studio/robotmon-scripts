@@ -44,11 +44,11 @@ function initScreenSize(){
 
     if(resolution > 16 / 9){
         defaultMarginX = (realScreenSize[0] / screenScale[0] - defaultScreenSize[0]) / 2;
-        setMarginIcon();
-        setFriendMargin();
-        setInStageMargin();
-        setAutoAttackMargin();
     }
+    setMarginIcon();
+    setFriendMargin();
+    setInStageMargin();
+    setAutoAttackMargin();
 }
 
 function getBlackEdge(){
@@ -56,32 +56,46 @@ function getBlackEdge(){
     var imageSize = getImageSize(screenshot);
     var w = imageSize.width;
     var h = imageSize.height;
-    for(var i = 0;i<w;i++){
-        var color = getImageColor(screenshot,i,h/4);
-        if(color.r != 0 || color.g != 0 || color.b != 0){
-            blackEdge[0] = i;
-            break;
+    for(var j = 0; j < 3; j++){
+        for(var i = 0;i<w;i++){
+            if(i >= blackEdge[0]){
+                break;
+            }
+            var color = getImageColor(screenshot,i,h/4 * j);
+            if(color.r != 0 || color.g != 0 || color.b != 0){
+                blackEdge[0] = i;
+                break;
+            }
         }
-    }
-    for(var i = 0;i<h;i++){
-        var color = getImageColor(screenshot,w/4,i);
-        if(color.r != 0 || color.g != 0 || color.b != 0){
-            blackEdge[1] = i;
-            break;
+        for(var i = 0;i<h;i++){
+            if(i >= blackEdge[1]){
+                break;
+            }
+            var color = getImageColor(screenshot,w/4 * j,i);
+            if(color.r != 0 || color.g != 0 || color.b != 0){
+                blackEdge[1] = i;
+                break;
+            }
         }
-    }
-    for(var i =w-1;i>=0;i--){
-        var color = getImageColor(screenshot,i,h/4);
-        if(color.r != 0 || color.g != 0 || color.b != 0){
-            blackEdge[2] = i;
-            break;
+        for(var i =w-1;i>=0;i--){
+            if(i <= blackEdge[2]){
+                break;
+            }
+            var color = getImageColor(screenshot,i,h/4 * j);
+            if(color.r != 0 || color.g != 0 || color.b != 0){
+                blackEdge[2] = i;
+                break;
+            }
         }
-    }
-    for(var i = h-1;i>=0;i--){
-        var color = getImageColor(screenshot,w/4,i);
-        if(color.r != 0 || color.g != 0 || color.b != 0){
-            blackEdge[3] = i;
-            break;
+        for(var i = h-1;i>=0;i--){
+            if(i <= blackEdge[3]){
+                break;
+            }
+            var color = getImageColor(screenshot,w/4 * j,i);
+            if(color.r != 0 || color.g != 0 || color.b != 0){
+                blackEdge[3] = i;
+                break;
+            }
         }
     }
     console.log("取得黑邊 "+blackEdge);
