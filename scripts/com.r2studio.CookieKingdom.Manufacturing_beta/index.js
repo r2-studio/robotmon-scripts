@@ -428,12 +428,14 @@ function isMessageWindowWithDiamond() {
   return false;
 }
 
-function checkScreenMessage(messageScreen) {
-  pageMessageWindow = [
-    { x: 424, y: 101, r: 57, g: 69, b: 107 },
-    { x: 431, y: 128, r: 243, g: 233, b: 223 },
-    { x: 429, y: 244, r: 219, g: 207, b: 199 },
-  ];
+function checkScreenMessage(messageScreen, pageMessageWindow) {
+  if (pageMessageWindow === undefined) {
+    pageMessageWindow = [
+      { x: 424, y: 101, r: 57, g: 69, b: 107 },
+      { x: 431, y: 128, r: 243, g: 233, b: 223 },
+      { x: 429, y: 244, r: 219, g: 207, b: 199 },
+    ];
+  }
   if (!checkIsPage(pageMessageWindow)) {
     return false;
   }
@@ -625,7 +627,7 @@ function SwipeProductionMenuToBottom() {
 }
 
 function SwipeProductionMenuToTop() {
-  tapDown(430, 52, 40, 0);
+  tapDown(430, 80, 40, 0);
   sleep(config.sleep);
   moveTo(430, 350, 40, 0);
   sleep(config.sleep);
@@ -998,6 +1000,7 @@ function makeGoodsToTargetV2(target) {
     for (var timer = 0; timer < 4; timer++) {
       var latestCount = countProductionSlotAvailable();
       if (handleNotEnoughStock()) {
+        sleep(800)
         break;
       } else if (checkIsPage(pageLockedGood)) {
         qTap(pageLockedGood);
@@ -1768,7 +1771,7 @@ function handleInputLoginInfo() {
       inputEmail = true;
       qTap(pageEnterEmail);
       sleep(config.sleepAnimate);
-      typing(config.account, 2000);
+      typing(config.account, 3000);
       // sleep(3000);
       typing('\n', 200);
       sleep(config.sleepAnimate);
@@ -1791,14 +1794,42 @@ function handleInputLoginInfo() {
     { x: 322, y: 52, r: 60, g: 60, b: 60 },
   ];
 
+  // Check if wrong password set. Any red string in this area means wrong password
+  pageEnteredPassword = [
+    { x: 370, y: 150, r: 255, g: 255, b: 255 },
+    { x: 301, y: 115, r: 255, g: 255, b: 255 },
+    { x: 387, y: 53, r: 60, g: 60, b: 60 },
+    { x: 298, y: 53, r: 60, g: 60, b: 60 },
+    { x: 322, y: 52, r: 60, g: 60, b: 60 },
+  ];
+  var wrongPasswordMessageScreen = {
+    x: 225,
+    y: 162,
+    width: 75,
+    height: 13,
+    targetY: 4,
+    lookingForColor: { r: 244, g: 191, b: 191 },
+    targetColorCount: 8,
+    targetColorThreashold: 1,
+  };
+  var passwordTooShortMessageScreen = {
+    x: 225,
+    y: 162,
+    width: 75,
+    height: 13,
+    targetY: 4,
+    lookingForColor: { r: 244, g: 191, b: 191 },
+    targetColorCount: 2,
+    targetColorThreashold: 0,
+  };
+
   pageEnterTwoPasswords = [
-    // TODO: confirm work in 1.16
     { x: 243, y: 307, r: 255, g: 255, b: 255 },
     { x: 377, y: 229, r: 200, g: 200, b: 200 },
     { x: 367, y: 176, r: 255, g: 255, b: 255 },
     { x: 371, y: 50, r: 60, g: 60, b: 60 },
     { x: 319, y: 53, r: 230, g: 230, b: 230 },
-    { x: 244, y: 309, r: 200, g: 200, b: 200 },
+    {x: 404, y: 184, r: 187, g: 187, b: 188}
   ];
   for (var i = 0; i < checkPasswordTimes; i++) {
     if (checkIsPage(pageEnterTwoPasswords)) {
@@ -1818,6 +1849,20 @@ function handleInputLoginInfo() {
       qTap(pageEnterpassword);
       sleep(5000);
 
+      if (checkIsPage(pageEnteredPassword)) {
+        if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
+          console.log('DevPlay report password too short');
+          config.run = false;
+          sendEvent('gameStatus', 'login-failed');
+          return false;
+          }
+        if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
+          console.log('DevPlay report wrong password');
+          config.run = false;
+          sendEvent('gameStatus', 'login-failed');
+          return false;
+          }
+      }
       if (checkIsPage(pageEnterpassword)) {
         config.run = false;
         sendEvent('gameStatus', 'login-failed');
@@ -2253,18 +2298,26 @@ function handleGetDailyRewards() {
     sleep(config.sleepAnimate * 4);
 
     pageNecessities = [
-      { x: 117, y: 180, r: 239, g: 38, b: 29 },
-      { x: 10, y: 181, r: 40, g: 40, b: 52 },
-      { x: 6, y: 232, r: 40, g: 40, b: 52 },
+      {x: 114, y: 177, r: 255, g: 108, b: 108},
+      {x: 113, y: 195, r: 40, g: 40, b: 52},
+      {x: 25, y: 18, r: 163, g: 163, b: 165}
     ];
+    pageIsDailyFreePackage = [
+      {x: 181, y: 186, r: 13, g: 203, b: 252},
+      {x: 190, y: 204, r: 255, g: 255, b: 255},
+      {x: 235, y: 220, r: 242, g: 121, b: 189},
+      {x: 253, y: 166, r: 255, g: 253, b: 166}
+    ]
     if (checkIsPage(pageNecessities)) {
       qTap(pageNecessities);
       sleep(config.sleepAnimate * 4);
 
-      qTap(pnt(265, 323));
-      sleep(config.sleepAnimate);
-      qTap(pnt(265, 323));
-      sleep(config.sleepAnimate);
+      if(checkIsPage(pageIsDailyFreePackage)){
+        qTap(pnt(265, 323));
+        sleep(config.sleepAnimate);
+        qTap(pnt(265, 323));
+        sleep(config.sleepAnimate);
+      }
     }
     handleGotoKingdomPage();
   }
