@@ -10,6 +10,7 @@ config = {
   autoCollectFountainIntervalInMins: 40,
   autoCollectTrainIntervalInMins: 20,
   autoSendHotAirBallonIntervalInMins: 40,
+  isHotAirBallonGotoEp3: false,
   autoCollectDailyReward: true,
   autoFulfillWishesIntervalInMins: 11,
   alwaysFulfillWishes: false,
@@ -23,6 +24,7 @@ config = {
   productionFocusOnMin: true,
   helpTapGreenCheck: true,
   pvpCELimit: 250000,
+  autoCollectTropicalIslandsIntervalInMins: 40,
   buildTowardsTheLeft: true,
 
   jobFailedBeforeGetCandy: 4,
@@ -38,6 +40,7 @@ config = {
   lastCollectDailyReward: 0,
   lastFulfillWishes: 0,
   lastAutoPvP: 0,
+  lastCollectTropicalIsland: 0,
   run: true,
   isXR: true,
   findProductionTimes: 8,
@@ -380,12 +383,21 @@ function mergeObject(target) {
   return target;
 }
 
-function waitUntilSeePage(page, secsToWait, tappingPnt, earlyQuitPage) {
-  console.log('waiting for page with 1st pnt: ', JSON.stringify(page[0]), tappingPnt);
+function waitUntilSeePage(page, secsToWait, tappingPage, earlyQuitPage) {
+  console.log('waiting for page with 1st pnt: ', JSON.stringify(page[0]), secsToWait, ' secs');
+  if (secsToWait === undefined) {
+    secsToWait = 5;
+  }
+
   for (var i = 0; i < secsToWait; i++) {
     if (!checkIsPage(page)) {
-      if (tappingPnt != undefined) {
-        qTap(tappingPnt);
+      if (tappingPage != undefined) {
+        if (tappingPage.x, tappingPage.y, tappingPage.r, tappingPage.g, tappingPage.b && checkIsPage(tappingPage)) {
+          qTap(tappingPage);
+        }
+        else {
+          qTap(tappingPage);
+        }
       }
       if (earlyQuitPage != undefined && checkIsPage(earlyQuitPage)) {
         console.log('waitUntilSeePage but found earlyQuitPage, return false');
@@ -1486,8 +1498,9 @@ function handleGotoKingdomPage() {
     sleep(config.sleepAnimate * 2);
 
     qTap(pnt(100, 200));
-    sleep(3000);
-    return true;
+    if (waitUntilSeePage(pageInKingdomVillage, 10)) {
+      return true;
+    }
   }
 
   return handleTryHitBackToKingdom();
@@ -1967,8 +1980,7 @@ function handleTryHitBackToKingdom() {
     if (checkIsPage(pageNotifyQuit)) {
       console.log('Found quit notification, should be in kingdom');
       keycode('BACK', 1000);
-      sleep(config.sleepAnimate);
-      return true;
+      return waitUntilSeePage(pageInKingdomVillage, 6);
     }
     keycode('BACK', 1000);
     sleep(config.sleepAnimate * 2);
@@ -2311,6 +2323,8 @@ function handleGetDailyRewards() {
     if (checkIsPage(pageNecessities)) {
       qTap(pageNecessities);
       sleep(config.sleepAnimate * 4);
+      qTap(pageNecessities);
+      sleep(config.sleepAnimate * 4);
 
       if(checkIsPage(pageIsDailyFreePackage)){
         qTap(pnt(265, 323));
@@ -2643,6 +2657,12 @@ function handlePVP(ceLimit) {
     { x: 584, y: 332, r: 8, g: 166, b: 222 },
     { x: 606, y: 24, r: 57, g: 169, b: 231 },
   ];
+  var battleDefeatPage = [
+    {x: 243, y: 58, r: 69, g: 90, b: 105},
+    {x: 280, y: 54, r: 46, g: 46, b: 46},
+    {x: 410, y: 57, r: 60, g: 92, b: 95},
+    {x: 397, y: 48, r: 142, g: 158, b: 158}
+  ]
 
   var pageNoArenaTicket = [
     {x: 314, y: 111, r: 228, g: 121, b: 37},
@@ -2678,10 +2698,14 @@ function handlePVP(ceLimit) {
           return;
         }
         if (checkIsPage(battleFinishPage)) {
-          console.log('Battle finished', j);
-          tap(616, 323, 100); // Exit button
-          tap(616, 323, 100); // Exit button
-          waitUntilSeePage(kingdomArena, 25);
+          console.log('Battle finished, won: ', j);
+          waitUntilSeePage(kingdomArena, 25, pnt(616, 323));
+          sleep(2000);
+          break;
+        }
+        if (checkIsPage(battleDefeatPage)) {
+          console.log('Battle finished, lost: ', j);
+          waitUntilSeePage(kingdomArena, 25, pnt(616, 323));
           sleep(2000);
           break;
         }
@@ -2690,7 +2714,9 @@ function handlePVP(ceLimit) {
       console.log('Not to battle with', i, 'ce', ce);
     }
   }
-  console.log('done');
+
+  console.log('finish pvp, goto kingdom');
+  handleGotoKingdomPage()
 }
 
 function handleWishingTree() {
@@ -2947,48 +2973,70 @@ function handleHotAirBallon() {
   }
 
   // Tap Change location
-  qTap(pnt(420, 328));
-  if (!waitUntilSeePage(pageChooseBallonDestination, 8, pnt(420, 328))) {
+  pageChangeLocation = [
+    {x: 354, y: 339, r: 12, g: 167, b: 223},
+    {x: 416, y: 335, r: 12, g: 167, b: 223},
+    {x: 436, y: 344, r: 142, g: 88, b: 65}
+  ]
+  qTap(pageChangeLocation);
+  sleep(2000);
+  if (!waitUntilSeePage(pageChooseBallonDestination, 8, pageChangeLocation)) {
     console.log('Cannot find the pageChooseBallonDestination, quitting');
     handleGotoKingdomPage();
   }
 
-  tapDown(626, 268, 40, 0);
-  sleep(config.sleep);
-  moveTo(400, 268, 40, 0);
-  sleep(config.sleep);
-  moveTo(-2000, 268, 40, 0);
-  sleep(config.sleep);
-  tapUp(-2000, 268, 40, 0);
-  sleep(config.sleepAnimate * 3);
+  if (config.isHotAirBallonGotoEp3) {
+    sleep(2000);
+    tapDown(50, 268, 40, 0);
+    sleep(config.sleep);
+    moveTo(400, 268, 40, 0);
+    sleep(config.sleep);
+    moveTo(2000, 268, 40, 0);
+    sleep(config.sleep);
+    tapUp(2000, 268, 40, 0);
+    sleep(config.sleepAnimate * 3);
 
-  for (var i = 0; i < 4; i++) {
-    for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
-      for (var yLocation = 85; yLocation < 285; yLocation += 70) {
-        qTap(pnt(xLocation, yLocation));
-        sleep(2000);
-
-        if (waitUntilSeePage(pageChooseBallonDestination, 5)) {
-          continue;
-        }
-
-        if (checkIsPage(pageInHotAirBallon)) {
-          console.log('ballon destination choosed successfully, i, x, y = ', i, xLocation, yLocation);
-          i = 10;
-          xLocation = 0;
-          yLocation = 500;
+    qTap(pnt(510, 190));
+    sleep(2000);
+  }
+  else {
+    tapDown(626, 268, 40, 0);
+    sleep(config.sleep);
+    moveTo(400, 268, 40, 0);
+    sleep(config.sleep);
+    moveTo(-2000, 268, 40, 0);
+    sleep(1100);
+    tapUp(-2000, 268, 40, 0);
+    sleep(config.sleepAnimate * 3);
+  
+    for (var i = 0; i < 4; i++) {
+      for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
+        for (var yLocation = 85; yLocation < 285; yLocation += 70) {
+          qTap(pnt(xLocation, yLocation));
+          sleep(2000);
+  
+          if (waitUntilSeePage(pageChooseBallonDestination, 5)) {
+            continue;
+          }
+  
+          if (checkIsPage(pageInHotAirBallon)) {
+            console.log('ballon destination choosed successfully, i, x, y = ', i, xLocation, yLocation);
+            i = 10;
+            xLocation = 0;
+            yLocation = 500;
+          }
         }
       }
+  
+      tapDown(30, 268, 40, 0);
+      sleep(config.sleep);
+      moveTo(250, 268, 40, 0);
+      sleep(config.sleep);
+      moveTo(620, 268, 40, 0);
+      sleep(1100);
+      tapUp(620, 268, 40, 0);
+      sleep(config.sleepAnimate * 3);
     }
-
-    tapDown(30, 268, 40, 0);
-    sleep(config.sleep);
-    moveTo(250, 268, 40, 0);
-    sleep(config.sleep);
-    moveTo(620, 268, 40, 0);
-    sleep(1100);
-    tapUp(620, 268, 40, 0);
-    sleep(config.sleepAnimate * 3);
   }
 
   if (waitUntilSeePage(pageInHotAirBallon, 8)) {
@@ -3026,6 +3074,136 @@ function handleSkipRemoveGroundGuide() {
     qTap(pageGnomeTeachRemoveGround);
     sleep(config.sleepAnimate);
   }
+}
+
+function handleCollectIslandResources() {
+  pageCanGoSodaIsland = [
+    {x: 326, y: 97, r: 187, g: 187, b: 187},
+    {x: 201, y: 316, r: 28, g: 36, b: 48},
+    {x: 400, y: 317, r: 20, g: 62, b: 65},
+  ]
+  pageInTropicalIsland = [
+    {x: 253, y: 332, r: 192, g: 126, b: 68},
+    {x: 276, y: 333, r: 255, g: 105, b: 122},
+    {x: 295, y: 338, r: 237, g: 237, b: 229}
+  ]
+
+  if (!checkIsPage(pageInTropicalIsland)) {
+    handleGotoKingdomPage();
+
+    sleep(1500)
+    qTap(pnt(560, 330));
+  
+    if (waitUntilSeePage(pageCanGoSodaIsland, 9)) {
+      qTap(pageCanGoSodaIsland);
+  
+      if (!waitUntilSeePage(pageInTropicalIsland, 6, pageCanGoSodaIsland)) {
+        console.log("Can't goto tropical island page in 6 secs, skipping this task")
+        return false;
+      }
+    } else {
+      console.log("Can't find goto tropical island page in 6 secs, skipping this task")
+      return false;
+    }
+  } else {
+    console.log('already in tropical islands')
+  }
+
+  // Auto collect sunbeds
+  pageSunbeds = [
+    {x: 52, y: 323, r: 238, g: 68, b: 119},
+    {x: 61, y: 336, r: 44, g: 77, b: 110}
+  ]
+  pageHasCrispyCookie = [
+    {x: 429, y: 128, r: 121, g: 207, b: 16},
+    {x: 438, y: 127, r: 215, g: 242, b: 157}
+  ]
+  pageHasNoCrispyCookie = [
+    {x: 425, y: 111, r: 44, g: 46, b: 60},
+    {x: 422, y: 132, r: 44, g: 46, b: 60}
+  ]
+  if (waitUntilSeePage(pageHasCrispyCookie, 8, pageSunbeds, pageHasNoCrispyCookie)) {
+    console.log('try to release crispy cookies')
+    for (var i = 0; i < 50; i ++) {
+      if (checkIsPage(pageHasCrispyCookie)) {
+        qTap(pageHasCrispyCookie);
+        sleep(1000);
+        console.log('wait another time')
+      } else {
+        break;
+      }
+    }
+
+    keycode('BACK', 1000);
+    sleep(2000);
+  }
+  else {
+    console.log('No cookies need to be free')
+    keycode('BACK', 1000);
+    sleep(2000);
+  }
+
+  // Auto clear red sword
+  pageReadyToClearRedSword = [
+    {x: 531, y: 324, r: 121, g: 207, b: 12},
+    {x: 456, y: 28, r: 241, g: 53, b: 60},
+    {x: 494, y: 23, r: 252, g: 246, b: 216},
+    {x: 572, y: 327, r: 60, g: 70, b: 105},
+  ]
+  pageBattleToClearSodaIsland = [
+    {x: 601, y: 326, r: 121, g: 207, b: 12},
+    {x: 623, y: 313, r: 60, g: 70, b: 105},
+    {x: 573, y: 84, r: 254, g: 253, b: 251},
+    {x: 165, y: 335, r: 121, g: 207, b: 12}
+  ]
+  pageBattleFinished = [
+    {x: 609, y: 330, r: 12, g: 167, b: 223},
+    {x: 310, y: 27, r: 217, g: 45, b: 67},
+    {x: 296, y: 67, r: 106, g: 138, b: 162},
+    {x: 413, y: 68, r: 50, g: 137, b: 215}
+  ]
+  pageBattleFailed = []
+  var redSword = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAaABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9J/2kf+CnngbwiqeE9AXUtJF7ZS3E+sPpVxcPaWcckMU1zKbdJEsrdXuIEN1O6opmUZViCPkXSvHnwB+OXxR8Sal8adSu7vwrpUdpafDzxJo/ivUNP0uG5EP2i+uvtmm3cDSzkvDEDJugh+yhVlMs80K7P7Neh/Hzxb+0b8SPiX8G9QsrzQtM8PaNpOv2XiOOSKK81QPNcW9hY3USfuTHbzSXM5cTANdWq7F83zIpvFPhP4G/HyK60r4fxy+CPFcsst5c2FxZ+Ut1JuDSyG3R/IulZ5Q0txbsX8x08yQlfLP8ueLPF3GGAwTvhqtHCzty4unaUYO/vRlFRk6WqSUpJqWtvL+gMvjwrl+cV+H6clFwa5lGT9o7LRybfvJPdR+Ha2pFqX7Mv7RdtfzR/DP9ubXtE0EyFtM0nWPCljrNxaRt83lm9uf31woJO1pSzhNoZ3ILkr5C134R/s1fDXVJPA/7Rn7MWoan4309UTxHqun+MrY299OVDfaYQ+owMkUissiIYYyiuF2LtxRXzuCyrjmrg6c6XFsHFxi0/q9GV00rPmc7y06vV7s+iVCnbSvFLs6k016rl0Z+in/BLXwpB8Sv2BPFWm+A5Ld9c134zeJLfxPqUzB3smN1HD5mM5LLp0VqqKCOPL5AryH/AIKHfHX4b6neQ/sN/B1YLq28M6vb3HjDxlpOohW0KW1nEsVjZXED749SeaNTcOCDDE0qN+9mGz5A+M/xa+Kvwt/4J3eLrD4Y/EzxB4cg1b9oe4tdUh0HWp7NLyCXw5pfmxSiJ1EiPk7lbIbPINXfBul6ZoPhex0nQ9OgsrWK1Tyra0hWONMjJwqgAZJJ+pr+ic0z6thuG6ODhBWqQs29dGrNWt1PnOBfCfJ+KvF7Msdj6rlHC1ZNQt8TUmld32T1atrs3Y6RfhV8EdTL6l8QNDTxfrNxK8l/4i8VxR3d/eMzEgyy7VztBCKAAFRFUABRRWWZJMn5z+dFfBU63soKEEkloktEktkl0R/X8OD8ihFRjRjZf3V/kf/Z'
+  );
+
+
+  for (var i = 0; i < 10; i ++) {
+    var img = getScreenshot();
+
+    var foundResults = findImages(img, redSword, 0.8, 5, true);
+    console.log('Found redSword icon at: ', JSON.stringify(foundResults));
+    releaseImage(img);
+
+    if (foundResults.length > 0) {
+      qTap(foundResults[0]);
+
+      if (waitUntilSeePage(pageReadyToClearRedSword, 8)) {
+        console.log('pageReadyToClearRedSword');
+        qTap(pageReadyToClearRedSword);
+
+        if (waitUntilSeePage(pageBattleToClearSodaIsland, 8)) {
+          console.log('pageBattleToClearSodaIsland');
+          qTap(pageBattleToClearSodaIsland);
+          sleep(1500);
+          qTap(pageBattleToClearSodaIsland);
+          sleep(1500);
+
+          if (waitUntilSeePage(pageBattleFinished, 600, pnt(323, 337))) {
+            console.log('Successfully cleared a red sword');
+            qTap(pageBattleFinished);
+          } else {
+            console.log('failed to clear the sword')
+            qTap(pageBattleFinished);
+          }
+          waitUntilSeePage(pageInTropicalIsland, 10)
+        }
+      }
+    }
+  }
+  releaseImage(redSword);
+
+  //TODO: tap collect resources
 }
 
 function checkAndRestartApp() {
@@ -3381,6 +3559,12 @@ function start(inputConfig) {
       console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
       config.lastAutoPvP = Date.now();
       handlePVP(config.autoPvPTargetScoreLimit);
+    }
+
+    if (config.autoCollectTropicalIslandsIntervalInMins != 0 && (Date.now() - config.lastCollectTropicalIsland) / 60000 > config.autoCollectTropicalIslandsIntervalInMins) {
+      console.log('Collect Tropical island: ', (Date.now() - config.lastCollectTropicalIsland) / 60000, ' just passed');
+      config.lastCollectTropicalIsland = Date.now();
+      handleCollectIslandResources();
     }
 
     var act = JobScheduling();
