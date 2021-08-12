@@ -1559,7 +1559,7 @@ function handleFindAndTapCandyHouse() {
   for (var i = 0; i < directions.length; i++) {
     // TODO: this does not show properly
     console.log('going towards: ', i);
-    if (swipeDirection(directions[i])) {
+    if (swipeDirection(directions[i], true)) {
       collectCandySuccess == false ? findAndTapCandy() : collectCandySuccess;
 
       if (config.helpTapGreenCheck) {
@@ -3093,10 +3093,10 @@ function handleCollectIslandResources() {
 
     sleep(1500)
     qTap(pnt(560, 330));
-  
+
     if (waitUntilSeePage(pageCanGoSodaIsland, 9)) {
       qTap(pageCanGoSodaIsland);
-  
+
       if (!waitUntilSeePage(pageInTropicalIsland, 6, pageCanGoSodaIsland)) {
         console.log("Can't goto tropical island page in 6 secs, skipping this task")
         return false;
@@ -3128,10 +3128,16 @@ function handleCollectIslandResources() {
       if (checkIsPage(pageHasCrispyCookie)) {
         qTap(pageHasCrispyCookie);
         sleep(1000);
-        console.log('wait another time')
+        // console.log('wait another time')
       } else {
         break;
       }
+    }
+
+    if (!checkIsPage(pageHasNoCrispyCookie)) {
+      console.log('found wet cookie, skipping this task');
+      handleGotoKingdomPage();
+      return false;
     }
 
     keycode('BACK', 1000);
@@ -3168,10 +3174,15 @@ function handleCollectIslandResources() {
   );
 
 
-  for (var i = 0; i < 10; i ++) {
-    var img = getScreenshot();
+  var img = getScreenshot();
+  var foundResults = findImages(img, redSword, 0.8, 5, true);
+  console.log('Found', foundResults.length, 'redSword icon');
+  releaseImage(img);
 
-    var foundResults = findImages(img, redSword, 0.8, 5, true);
+  for (var i = 0; i < foundResults.length; i ++) {
+    img = getScreenshot();
+
+    foundResults = findImages(img, redSword, 0.8, 5, true);
     console.log('Found redSword icon at: ', JSON.stringify(foundResults));
     releaseImage(img);
 
@@ -3204,6 +3215,8 @@ function handleCollectIslandResources() {
   releaseImage(redSword);
 
   //TODO: tap collect resources
+
+  handleGotoKingdomPage();
 }
 
 function checkAndRestartApp() {
@@ -3534,6 +3547,7 @@ function start(inputConfig) {
         console.log('Fulfill wishes: ', (Date.now() - config.lastFulfillWishes) / 60000, ' mins just passed');
         config.lastFulfillWishes = Date.now();
         handleWishingTree();
+        sendEvent('running', '');
       }
     }
 
@@ -3559,12 +3573,14 @@ function start(inputConfig) {
       console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
       config.lastAutoPvP = Date.now();
       handlePVP(config.autoPvPTargetScoreLimit);
+      sendEvent('running', '');
     }
 
     if (config.autoCollectTropicalIslandsIntervalInMins != 0 && (Date.now() - config.lastCollectTropicalIsland) / 60000 > config.autoCollectTropicalIslandsIntervalInMins) {
       console.log('Collect Tropical island: ', (Date.now() - config.lastCollectTropicalIsland) / 60000, ' just passed');
       config.lastCollectTropicalIsland = Date.now();
       handleCollectIslandResources();
+      sendEvent('running', '');
     }
 
     var act = JobScheduling();
