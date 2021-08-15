@@ -50,10 +50,11 @@ var ultLightnessOffset = 140;
 var allServentDieFlag = false;
 */
 function setAutoAttackMargin(){
-    //skillUsedPositionOffsetX
-    //servantAliveX = ;
-    //servantAliveY
-    //servantExistX
+    if(server == "TW"){        
+        skillUsedPositionOffset = [-5,82];
+        offsetDisableX = [89,196];
+        return;
+    }
 }
 
 function autoAttack(until,mainColor,sameColor,weak,die,p0ult,p0s0,p0t0,p0s1,p0t1,p0s2,p0t2,p1ult,p1s0,p1t0,p1s1,p1t1,p1s2,p1t2,p2ult,p2s0,p2t0,p2s1,p2t1,p2s2,p2t2,ultColor){

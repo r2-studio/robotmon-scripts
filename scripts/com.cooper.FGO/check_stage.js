@@ -2,6 +2,18 @@ var icon = [];
 var iconMargin = [];
 
 function setMarginIcon(){
+	if(server == "TW"){		
+		icon["main"] =  [1710,984,150,75];
+		icon["friendEnd"] = [1832,1027,60,45];
+		icon["battleServant1"] =  [375,70,210,45];
+		icon["battleServant2"] =  [375,70,210,45];
+		icon["finishNext"] =  [1575,980,180,60];
+
+		icon["friendPointMain"] = [625,538,675,108];
+		icon["friendPointFree"] = [787,790,337,75];
+		icon["friendPointTen"] = [1125,790,240,75];
+		return;
+	}
 	if(resolution < 17 / 9){
 		//default
 		icon["main"][0] = 1710;
@@ -164,7 +176,6 @@ function isMainPage(){
 }
 
 function isStageRestart(){
-	//TODO:TW
 	return checkIconInScreen("stageRestart");
 }
 
@@ -213,7 +224,7 @@ icon["teamPage"] =  [1702,975,172,75];
 function isSelectTeamPage(){
 	return checkIconInScreen("teamPage");
 }
-
+	
 function isUseItemDialog(){
 	//TODO
 	return false;
@@ -354,12 +365,6 @@ function isFriendPointTen(){
 	return checkIconInScreen("friendPointTen");
 }
 
-/*
-function isFriendPointReload(){
-	//TODO: need check
-	return checkIconInScreen("friendPointReload");
-}
-*/
 function isFriendPointNew(){
 	//TODO: need check
 	//return checkIconInScreen(22);

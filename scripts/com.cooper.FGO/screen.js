@@ -27,7 +27,16 @@ function initScreenSize(){
     resolution = w/h;
     var wo = w;
     var ho = h;
-    if(resolution < 16/9){
+    if(server == "TW"){
+        if(w * 9 < h * 16){
+            h = wo * 9 / 16;
+            blueEdge[1] = (ho - h) / 2;
+        }else if(w * 9 > h * 16){
+            w = ho * 16 / 9;
+            blueEdge[0] = (wo - w) / 2;
+        }
+        resolution = 16 / 9;
+    }else if(resolution < 16/9){
         h = wo * 9 / 16;
         blueEdge[1] = (ho - h) / 2;
         resolution = 16 / 9;

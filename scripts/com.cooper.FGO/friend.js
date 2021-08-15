@@ -261,7 +261,7 @@ function checkStar(screenshot,lineY){
     var notG = 0;
     for(var i=0;i<friendStarSize;i++){
         for(var j=0;j<friendStarSize;j++){
-            var color = getImageColor(screenshot,defaultMarginX + friendX + friendStarXOffset+i,friendStarY+j);
+            var color = getImageColor(screenshot,friendX + friendStarXOffset+i,friendStarY+j);
             if(color.g>color.r && color.g > color.b){
                 isG++;
             }else{
