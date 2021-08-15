@@ -27,6 +27,12 @@ var colorName = ["紅","藍","綠"];
 var useMargin = undefined;
 //----------------------------------------------Battle main page
 function setInStageMargin(){
+    if(server == "TW"){        
+        currentStagePosition = [1301,23,19,29];
+        skillPositionX = [50,191,332,526,667,808,1005,1146,1287];
+        skillPositionY = 817;
+        return;
+    }
     if(resolution <= 16 / 9){
         useMargin = undefined;
         currentStagePosition[0] = 1317;    
