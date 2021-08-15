@@ -912,7 +912,7 @@ function dynamicSort(property) {
   };
 }
 
-function makeGoodsToTargetV2(target) {
+function makeGoodsToTargetV2(target, prework) {
   // TODO: recognize building to reduce drop order time
   var itemsAdd = 0;
   pageFirstItemEnabled = [{ x: 587, y: 122, r: 121, g: 207, b: 12 }];
@@ -978,32 +978,34 @@ function makeGoodsToTargetV2(target) {
   for (var id in stocks) {
     var stock = stocks[id];
 
+    prework === true ? productionTarget = target - id * 10 : productionTarget = target;
+
     if (stock['value'] === -1) {
       continue;
-    } else if (stock['value'] >= target) {
+    } else if (stock['value'] >= productionTarget) {
       continue;
     } else if (stock['id'] == 0) {
-      console.log('add 1st item from ' + goodsOneStock + ' to > ', target);
+      console.log('add 1st item from ' + goodsOneStock + ' to > ', productionTarget);
       SwipeProductionMenuToTop();
       qTap(pageFirstItemEnabled, 800);
     } else if (stock['id'] == 1) {
-      console.log('add 2nd item from ' + goodsTwoStock + ' to > ', target);
+      console.log('add 2nd item from ' + goodsTwoStock + ' to > ', productionTarget);
       SwipeProductionMenuToTop();
       qTap(pageSecondItemEnabled, 800);
     } else if (stock['id'] == 2) {
-      console.log('add 3rd item from ' + goodsThreeStock + ' to > ', target);
+      console.log('add 3rd item from ' + goodsThreeStock + ' to > ', productionTarget);
       SwipeProductionMenuToTop();
       qTap(pageThirdItemEnabled, 800);
     } else if (stock['id'] == 3) {
-      console.log('add 4th item from ' + goodsFourStock + ' to > ', target);
+      console.log('add 4th item from ' + goodsFourStock + ' to > ', productionTarget);
       SwipeProductionMenuToBottom();
       qTap(pageFirstItemEnabled, 800);
     } else if (stock['id'] == 4) {
-      console.log('add 5th item from ' + goodsFiveStock + ' to > ', target);
+      console.log('add 5th item from ' + goodsFiveStock + ' to > ', productionTarget);
       SwipeProductionMenuToBottom();
       qTap(pageSecondItemEnabled, 800);
     } else if (stock['id'] == 5) {
-      console.log('add 6th item from ' + goodsSixStock + ' to > ', target);
+      console.log('add 6th item from ' + goodsSixStock + ' to > ', productionTarget);
       SwipeProductionMenuToBottom();
       qTap(pageThirdItemEnabled, 800);
     }
@@ -1102,7 +1104,14 @@ function JobScheduling() {
   // TODO: record not enough resources (keep list of all items)
 
   if (config.productionFocusOnMin) {
-    makeGoodsToTargetV2(config.goodsTarget);
+    // Prework = true will order decreased stock for high level products
+    makeGoodsToTargetV2(config.goodsTarget, true);
+
+    // And rerun one without prework if has enough space
+    if (countProductionSlotAvailable() > 0) {
+      console.log('still have space after prework, keep producing');
+      makeGoodsToTargetV2(config.goodsTarget, false);
+    }
     return true;
   } else {
     var itemsAdd = makeGoodsToTarget(10, 2);
@@ -1893,7 +1902,7 @@ function handleInputLoginInfo() {
 
       // Touch here to start:
       console.log('successfully input password, tap (1,1) for 10s');
-      for (var i = 0; 1 < 10; i++) {
+      for (var i = 0; i < 10; i++) {
         if (checkIsPage(pageAnnouncement) || checkIsPage(pageInKingdomVillage)) {
           console.log('found announcement page, return from handleInputLoginInfo');
           return true;
@@ -1953,6 +1962,8 @@ function handleTryHitBackToKingdom() {
     console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
   }
+
+  checkAndRestartApp();
 
   for (var i = 0; i < 4; i++) {
     if (checkIsPage(pageInKingdomVillage)) {
@@ -2686,7 +2697,7 @@ function handlePVP(ceLimit) {
       for (var j = 0; j < 30 && config.run; j++) {
         console.log('Waiting for battle', j);
         sleep(2000);
-        tap(320, 265, 100); // center
+        tap(320, 350, 100); // center-bottom
         sleep(2000);
         if (checkIsPage(pageNoArenaTicket)) {
           console.log('No arena ticket, finish auto pvp');
@@ -2696,14 +2707,17 @@ function handlePVP(ceLimit) {
         }
         if (checkIsPage(battleFinishPage)) {
           console.log('Battle finished, won: ', j);
-          waitUntilSeePage(kingdomArena, 25, pnt(616, 323));
-          sleep(2000);
+          waitUntilSeePage(kingdomArena, 25, pnt(616, 323), crystaisRefresh);
           break;
         }
         if (checkIsPage(battleDefeatPage)) {
           console.log('Battle finished, lost: ', j);
-          waitUntilSeePage(kingdomArena, 25, pnt(616, 323));
-          sleep(2000);
+          waitUntilSeePage(kingdomArena, 25, pnt(616, 323), crystaisRefresh);
+          break;
+        }
+        if (checkIsPage(crystaisRefresh)) {
+          console.log('crystaisRefreshPage');
+          tap(436, 90, 100); // X cancel
           break;
         }
       }
@@ -2994,12 +3008,19 @@ function handleHotAirBallon() {
       sleep(config.sleep);
       tapUp(2000, 268, 40, 0);
       sleep(config.sleepAnimate * 3);
-  
-      qTap(pnt(510, 190));
-      sleep(2000);  
+
+      tapDown(50, 268, 40, 0);
+      sleep(config.sleep);
+      moveTo(400, 268, 40, 0);
+      sleep(config.sleep);
+      moveTo(2000, 268, 40, 0);
+      sleep(config.sleep);
+      tapUp(2000, 268, 40, 0);
+      sleep(config.sleepAnimate * 3);
     }
-  }
-  else {
+    qTap(pnt(510, 190));
+    sleep(2000);
+  } else {
     tapDown(626, 268, 40, 0);
     sleep(config.sleep);
     moveTo(400, 268, 40, 0);
@@ -3109,6 +3130,18 @@ function handleCollectIslandResources() {
     console.log('already in tropical islands');
   }
 
+  // Collect resource if ready
+  pageResourceisReady = [
+    { x: 370, y: 330, r: 123, g: 207, b: 8 },
+    { x: 278, y: 333, r: 255, g: 108, b: 118 }
+  ]
+  if (checkIsPage(pageResourceisReady)) {
+    console.log('successfully collected tropical island resources');
+    qTap(pageResourceisReady);
+    sleep(config.sleepAnimate);
+    waitUntilSeePage(pageInTropicalIsland, 6);
+  }
+
   // Auto collect sunbeds
   pageSunbeds = [
     { x: 52, y: 323, r: 238, g: 68, b: 119 },
@@ -3177,6 +3210,10 @@ function handleCollectIslandResources() {
     { x: 399, y: 48, r: 140, g: 158, b: 156 },
     { x: 553, y: 325, r: 61, g: 180, b: 4 },
   ];
+  pageFoundOctopus = [
+    { x: 500, y: 330, r: 8, g: 166, b: 222 }, // exit
+    { x: 360, y: 243, r: 229, g: 18, b: 50 },
+  ]
   pageAutoUseSkillEnabled = [{ x: 28, y: 291, r: 223, g: 221, b: 1 }];
   pageSpeedBoostEnabled = [{ x: 19, y: 333, r: 249, g: 245, b: 0 }];
   var redSword = getImageFromBase64(
@@ -3217,35 +3254,47 @@ function handleCollectIslandResources() {
             return true;
           }
 
-          if (!checkIsPage(pageAutoUseSkillEnabled)) {
-            console.log('Island battle skill not enabled, enable it');
-            qTap(pageAutoUseSkillEnabled);
-            sleep(1500);
-          }
-          if (!checkIsPage(pageSpeedBoostEnabled)) {
-            console.log('Island battle speed boost not enabled, enable it');
-            qTap(pageSpeedBoostEnabled);
-            sleep(1500);
-            qTap(pageSpeedBoostEnabled);
-            sleep(1500);
+          for (var j = 0; j < 600; j ++) {
+            if (!checkIsPage(pageAutoUseSkillEnabled)) {
+              console.log('Island battle skill not enabled, enable it');
+              qTap(pageAutoUseSkillEnabled);
+              sleep(1500);
+            }
+            if (!checkIsPage(pageSpeedBoostEnabled)) {
+              console.log('Island battle speed boost not enabled, enable it');
+              qTap(pageSpeedBoostEnabled);
+              sleep(1500);
+              qTap(pageSpeedBoostEnabled);
+              sleep(1500);
+            }
+
+            if (checkIsPage(pageFoundOctopus)) {
+              console.log('Island battle found octopus, exit');
+              qTap(pageFoundOctopus);
+              sleep(1500);
+            }
+
+            if (checkIsPage(pageBattleFinished)) {
+              console.log('Successfully cleared a red sword');
+              qTap(pageBattleFinished);
+              sleep(1500);
+              break;
+            } else if (checkIsPage(pageBattleFailed)) {
+              console.log('failed to clear the sword, stop clearing red swords');
+              qTap(pageBattleFailed);
+              i = 999;
+              break;
+            }
+
+            sleep(1000);
           }
 
-          if (waitUntilSeePage(pageBattleFinished, 590, pnt(323, 337), pageBattleFailed)) {
-            console.log('Successfully cleared a red sword');
-            qTap(pageBattleFinished);
-          } else {
-            console.log('failed to clear the sword');
-            qTap(pageBattleFailed);
-            break;
-          }
           waitUntilSeePage(pageInTropicalIsland, 10);
         }
       }
     }
   }
   releaseImage(redSword);
-
-  //TODO: tap collect resources
 
   handleGotoKingdomPage();
   return true;
@@ -3520,6 +3569,7 @@ function start(inputConfig) {
     config.lastCollectFountain = Date.now();
     config.lastCollectCandyTime = Date.now();
     config.lastAutoPvP = Date.now();
+    config.lastCollectTropicalIsland = Date.now();
   } else {
     handleGotoKingdomPage();
   }
