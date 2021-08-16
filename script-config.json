@@ -1,5 +1,13 @@
 {
   "scripts": {
+    "com.r2studio.popcat": {
+      "title": "*POPCAT 台灣爭光*",
+      "versionCode": 1,
+      "description": "<h3>POPCAT 台灣爭光</h3><ul><li>每秒點擊100次每次五根手指頭同時點</li></ul>",
+      "packageName": "kr.pe.lala.popcat",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.popcat/index.zip",
+      "dependencies": []
+    },
     "com.andy.rox": {
       "title": "*RO 新世代*",
       "versionCode": 3,
