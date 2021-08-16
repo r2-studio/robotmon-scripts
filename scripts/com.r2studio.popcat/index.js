@@ -17,6 +17,7 @@ function loop() {
     count++;
     if (count % 50 === 0) {
       console.log('click', count, '* 5 times');
+      sleep(1000);
     }
   }
 }
