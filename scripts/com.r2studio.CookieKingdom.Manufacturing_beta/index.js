@@ -11,6 +11,7 @@ config = {
   autoCollectTrainIntervalInMins: 20,
   autoSendHotAirBallonIntervalInMins: 40,
   isHotAirBallonGotoEp3: false,
+  ballonKeepCurrentDestination: false,
   autoCollectDailyReward: true,
   autoFulfillWishesIntervalInMins: 11,
   alwaysFulfillWishes: false,
@@ -32,6 +33,7 @@ config = {
   lastNetworkIssueOccurTime: 0,
   networkIssueCount: 0,
   networkIssueCountThreasHold: 20,
+  lastGotoProduction: 0,
   lastCollectCandyTime: 0,
   lastCollectMail: 0,
   lastCollectFountain: 0,
@@ -950,7 +952,7 @@ function makeGoodsToTargetV2(target, prework) {
     var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
     var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
     var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
-    SwipeProductionMenuToTop();
+    // SwipeProductionMenuToTop();
 
     [goodsOneStock, goodsTwoStock, goodsThreeStock, goodsFourStock, goodsFiveStock, goodsSixStock].forEach(function (
       value,
@@ -964,8 +966,12 @@ function makeGoodsToTargetV2(target, prework) {
   }
 
   // console.log('unsorted stocks: ', JSON.stringify(stocks));
-  stocks.sort(dynamicSort('value'));
-  console.log('stocks: ', JSON.stringify(stocks));
+  if (!prework) {
+    stocks.sort(dynamicSort('value'));
+    console.log('sorted stocks: ', JSON.stringify(stocks));
+  } else {
+    console.log('prework, unsorted stocks: ', JSON.stringify(stocks));
+  }
   pageLockedGood = [
     { x: 351, y: 244, r: 121, g: 207, b: 12 },
     { x: 305, y: 244, r: 121, g: 207, b: 12 },
@@ -1110,6 +1116,7 @@ function JobScheduling() {
     // And rerun one without prework if has enough space
     if (countProductionSlotAvailable() > 0) {
       console.log('still have space after prework, keep producing');
+      SwipeProductionMenuToTop()
       makeGoodsToTargetV2(config.goodsTarget, false);
     }
     return true;
@@ -1558,6 +1565,7 @@ function handleFindAndTapCandyHouse() {
 
   if (collectCandySuccess && findAndTapProductionHouse()) {
     console.log('already found house using image match, start working');
+    config.lastGotoProduction = Date.now();
     return true;
   }
 
@@ -1588,12 +1596,15 @@ function handleFindAndTapCandyHouse() {
 
       if (checkIsPage(pageInProduction) && i > 2) {
         console.log('found production when swipping, start working, times swipped: ', i);
+        config.lastGotoProduction = Date.now();
         return true;
       } else if (collectCandySuccess && findAndTapProductionHouse()) {
         console.log('already found house using image match, start working');
+        config.lastGotoProduction = Date.now();
         return true;
       } else if (collectCandySuccess && findHouseInNotSureWhere(config.findProductionTimes)) {
         console.log('find house in random tap success, start working');
+        config.lastGotoProduction = Date.now();
         return true;
       }
     }
@@ -2984,21 +2995,21 @@ function handleHotAirBallon() {
   }
 
   // Tap Change location
-  pageChangeLocation = [
-    { x: 354, y: 339, r: 12, g: 167, b: 223 },
-    { x: 416, y: 335, r: 12, g: 167, b: 223 },
-    { x: 436, y: 344, r: 142, g: 88, b: 65 },
-  ];
-  qTap(pageChangeLocation);
-  sleep(2000);
-  if (!waitUntilSeePage(pageChooseBallonDestination, 8, pageChangeLocation)) {
-    console.log('Cannot find the pageChooseBallonDestination, quitting');
-    handleGotoKingdomPage();
-  }
+  if (!config.ballonKeepCurrentDestination) {
+    pageChangeLocation = [
+      { x: 354, y: 339, r: 12, g: 167, b: 223 },
+      { x: 416, y: 335, r: 12, g: 167, b: 223 },
+      { x: 436, y: 344, r: 142, g: 88, b: 65 },
+    ];
+    qTap(pageChangeLocation);
+    sleep(2000);
+    if (!waitUntilSeePage(pageChooseBallonDestination, 8, pageChangeLocation)) {
+      console.log('Cannot find the pageChooseBallonDestination, quitting');
+      handleGotoKingdomPage();
+    }
 
-  if (config.isHotAirBallonGotoEp3) {
-    // Do not change the ballon target for Robotmon users
-    if (config.isXR) {
+    if (config.isHotAirBallonGotoEp3) {
+      console.log('ballon going to ep3')
       sleep(2000);
       tapDown(50, 268, 40, 0);
       sleep(config.sleep);
@@ -3017,48 +3028,51 @@ function handleHotAirBallon() {
       sleep(config.sleep);
       tapUp(2000, 268, 40, 0);
       sleep(config.sleepAnimate * 3);
-    }
-    qTap(pnt(510, 190));
-    sleep(2000);
-  } else {
-    tapDown(626, 268, 40, 0);
-    sleep(config.sleep);
-    moveTo(400, 268, 40, 0);
-    sleep(config.sleep);
-    moveTo(-2000, 268, 40, 0);
-    sleep(1100);
-    tapUp(-2000, 268, 40, 0);
-    sleep(config.sleepAnimate * 3);
 
-    for (var i = 0; i < 4; i++) {
-      for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
-        for (var yLocation = 85; yLocation < 285; yLocation += 70) {
-          qTap(pnt(xLocation, yLocation));
-          sleep(2000);
-
-          if (waitUntilSeePage(pageChooseBallonDestination, 5)) {
-            continue;
-          }
-
-          if (checkIsPage(pageInHotAirBallon)) {
-            console.log('ballon destination choosed successfully, i, x, y = ', i, xLocation, yLocation);
-            i = 10;
-            xLocation = 0;
-            yLocation = 500;
+      qTap(pnt(510, 190));
+      sleep(2000);
+    } else {
+      console.log('ballon going to the latest map')
+      tapDown(626, 268, 40, 0);
+      sleep(config.sleep);
+      moveTo(400, 268, 40, 0);
+      sleep(config.sleep);
+      moveTo(-2000, 268, 40, 0);
+      sleep(1100);
+      tapUp(-2000, 268, 40, 0);
+      sleep(config.sleepAnimate * 3);
+  
+      for (var i = 0; i < 4; i++) {
+        for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
+          for (var yLocation = 85; yLocation < 285; yLocation += 70) {
+            qTap(pnt(xLocation, yLocation));
+            sleep(2000);
+  
+            if (waitUntilSeePage(pageChooseBallonDestination, 5)) {
+              continue;
+            }
+  
+            if (checkIsPage(pageInHotAirBallon)) {
+              console.log('ballon destination choosed successfully, i, x, y = ', i, xLocation, yLocation);
+              i = 10;
+              xLocation = 0;
+              yLocation = 500;
+            }
           }
         }
-      }
 
-      tapDown(30, 268, 40, 0);
-      sleep(config.sleep);
-      moveTo(250, 268, 40, 0);
-      sleep(config.sleep);
-      moveTo(620, 268, 40, 0);
-      sleep(1100);
-      tapUp(620, 268, 40, 0);
-      sleep(config.sleepAnimate * 3);
+        tapDown(30, 268, 40, 0);
+        sleep(config.sleep);
+        moveTo(250, 268, 40, 0);
+        sleep(config.sleep);
+        moveTo(620, 268, 40, 0);
+        sleep(1100);
+        tapUp(620, 268, 40, 0);
+        sleep(config.sleepAnimate * 3);
+      }
     }
   }
+  return
 
   if (waitUntilSeePage(pageInHotAirBallon, 8)) {
     qTap(pnt(250, 330)); // Tap Auto
@@ -3097,6 +3111,119 @@ function handleSkipRemoveGroundGuide() {
   }
 }
 
+function handleAutoBattleInIslands(item) {
+  // Auto clear red sword
+  pageReadyToClearRedSword = [
+    { x: 531, y: 324, r: 121, g: 207, b: 12 },
+    { x: 456, y: 28, r: 241, g: 53, b: 60 },
+    { x: 494, y: 23, r: 252, g: 246, b: 216 },
+    { x: 572, y: 327, r: 60, g: 70, b: 105 },
+  ];
+  pageBattleToClearSodaIsland = [
+    { x: 601, y: 326, r: 121, g: 207, b: 12 },
+    { x: 623, y: 313, r: 60, g: 70, b: 105 },
+    { x: 573, y: 84, r: 254, g: 253, b: 251 },
+    { x: 165, y: 335, r: 121, g: 207, b: 12 },
+  ];
+  pageBattleHasWetCookieCannotStart = [
+    { x: 350, y: 250, r: 123, g: 207, b: 8 },
+    { x: 420, y: 200, r: 247, g: 235, b: 222 },
+    { x: 400, y: 100, r: 57, g: 69, b: 107 },
+  ];
+  pageBattleFinished = [
+    { x: 609, y: 330, r: 12, g: 167, b: 223 },
+    // { x: 310, y: 27, r: 217, g: 45, b: 67 },
+    // { x: 296, y: 67, r: 106, g: 138, b: 162 },
+    { x: 413, y: 68, r: 50, g: 137, b: 215 },
+  ];
+  pageBattleFailed = [
+    {x: 414, y: 56, r: 58, g: 91, b: 94},
+    {x: 381, y: 65, r: 46, g: 46, b: 46},
+    {x: 619, y: 21, r: 56, g: 165, b: 231}
+  ];
+  pageFoundOctopus = [
+    { x: 500, y: 330, r: 8, g: 166, b: 222 }, // exit
+    { x: 360, y: 243, r: 229, g: 18, b: 50 },
+  ]
+  pageAutoUseSkillEnabled = [{ x: 28, y: 291, r: 223, g: 221, b: 1 }];
+  pageSpeedBoostEnabled = [{ x: 19, y: 333, r: 249, g: 245, b: 0 }];
+
+  var img = getScreenshot();
+  foundResults = findImages(img, item, 0.8, 5, true);
+  console.log('Found item icon at: ', JSON.stringify(foundResults));
+  releaseImage(img);
+
+  for (var i = 0; i < foundResults.length; i++) {
+    img = getScreenshot();
+
+    foundResults = findImages(img, item, 0.8, 5, true);
+    console.log('Found item icon at: ', JSON.stringify(foundResults));
+    releaseImage(img);
+
+    if (foundResults.length > 0) {
+      qTap(foundResults[0]);
+
+      if (waitUntilSeePage(pageReadyToClearRedSword, 8)) {
+        console.log('pageReadyToClearRedSword');
+        qTap(pageReadyToClearRedSword);
+
+        if (waitUntilSeePage(pageBattleToClearSodaIsland, 8)) {
+          console.log('pageBattleToClearSodaIsland');
+          qTap(pageBattleToClearSodaIsland);
+          sleep(1500);
+          qTap(pageBattleToClearSodaIsland);
+          sleep(15000);
+
+          if (checkIsPage(pageBattleHasWetCookieCannotStart)) {
+            console.log('Has wet cookie cannot start the battle, skip this task');
+            qTap(pageBattleHasWetCookieCannotStart);
+            sleep(config.sleepAnimate);
+            handleGotoKingdomPage();
+            return true;
+          }
+
+          for (var j = 0; j < 600; j ++) {
+            if (!checkIsPage(pageAutoUseSkillEnabled)) {
+              console.log('Island battle skill not enabled, enable it');
+              qTap(pageAutoUseSkillEnabled);
+              sleep(1500);
+            }
+            if (!checkIsPage(pageSpeedBoostEnabled)) {
+              console.log('Island battle speed boost not enabled, enable it');
+              qTap(pageSpeedBoostEnabled);
+              sleep(1500);
+              qTap(pageSpeedBoostEnabled);
+              sleep(1500);
+            }
+
+            if (checkIsPage(pageFoundOctopus)) {
+              console.log('Island battle found octopus, exit');
+              qTap(pageFoundOctopus);
+              sleep(1500);
+            }
+
+            if (checkIsPage(pageBattleFinished)) {
+              console.log('Successfully cleared a red sword');
+              qTap(pageBattleFinished);
+              sleep(1500);
+              break;
+            } else if (checkIsPage(pageBattleFailed)) {
+              console.log('failed to clear the sword, stop clearing red swords');
+              qTap(pageBattleFailed);
+              i = 999;
+              break;
+            }
+
+            sleep(1000);
+          }
+
+          waitUntilSeePage(pageInTropicalIsland, 10);
+        }
+      }
+    }
+  }
+}
+
 function handleCollectIslandResources() {
   pageCanGoSodaIsland = [
     { x: 326, y: 97, r: 187, g: 187, b: 187 },
@@ -3105,10 +3232,9 @@ function handleCollectIslandResources() {
   ];
   pageInTropicalIsland = [
     { x: 253, y: 332, r: 192, g: 126, b: 68 },
-    { x: 276, y: 333, r: 255, g: 105, b: 122 },
-    { x: 295, y: 338, r: 237, g: 237, b: 229 },
+    {x: 275, y: 319, r: 207, g: 139, b: 88}
   ];
-
+  
   if (!checkIsPage(pageInTropicalIsland)) {
     handleGotoKingdomPage();
 
@@ -3181,120 +3307,19 @@ function handleCollectIslandResources() {
     sleep(2000);
   }
 
-  // Auto clear red sword
-  pageReadyToClearRedSword = [
-    { x: 531, y: 324, r: 121, g: 207, b: 12 },
-    { x: 456, y: 28, r: 241, g: 53, b: 60 },
-    { x: 494, y: 23, r: 252, g: 246, b: 216 },
-    { x: 572, y: 327, r: 60, g: 70, b: 105 },
-  ];
-  pageBattleToClearSodaIsland = [
-    { x: 601, y: 326, r: 121, g: 207, b: 12 },
-    { x: 623, y: 313, r: 60, g: 70, b: 105 },
-    { x: 573, y: 84, r: 254, g: 253, b: 251 },
-    { x: 165, y: 335, r: 121, g: 207, b: 12 },
-  ];
-  pageBattleHasWetCookieCannotStart = [
-    { x: 350, y: 250, r: 123, g: 207, b: 8 },
-    { x: 420, y: 200, r: 247, g: 235, b: 222 },
-    { x: 400, y: 100, r: 57, g: 69, b: 107 },
-  ];
-  pageBattleFinished = [
-    { x: 609, y: 330, r: 12, g: 167, b: 223 },
-    { x: 310, y: 27, r: 217, g: 45, b: 67 },
-    { x: 296, y: 67, r: 106, g: 138, b: 162 },
-    { x: 413, y: 68, r: 50, g: 137, b: 215 },
-  ];
-  pageBattleFailed = [
-    { x: 279, y: 64, r: 41, g: 44, b: 41 },
-    { x: 399, y: 48, r: 140, g: 158, b: 156 },
-    { x: 553, y: 325, r: 61, g: 180, b: 4 },
-  ];
-  pageFoundOctopus = [
-    { x: 500, y: 330, r: 8, g: 166, b: 222 }, // exit
-    { x: 360, y: 243, r: 229, g: 18, b: 50 },
-  ]
-  pageAutoUseSkillEnabled = [{ x: 28, y: 291, r: 223, g: 221, b: 1 }];
-  pageSpeedBoostEnabled = [{ x: 19, y: 333, r: 249, g: 245, b: 0 }];
+  // Clear battles
   var redSword = getImageFromBase64(
     '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAaABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9J/2kf+CnngbwiqeE9AXUtJF7ZS3E+sPpVxcPaWcckMU1zKbdJEsrdXuIEN1O6opmUZViCPkXSvHnwB+OXxR8Sal8adSu7vwrpUdpafDzxJo/ivUNP0uG5EP2i+uvtmm3cDSzkvDEDJugh+yhVlMs80K7P7Neh/Hzxb+0b8SPiX8G9QsrzQtM8PaNpOv2XiOOSKK81QPNcW9hY3USfuTHbzSXM5cTANdWq7F83zIpvFPhP4G/HyK60r4fxy+CPFcsst5c2FxZ+Ut1JuDSyG3R/IulZ5Q0txbsX8x08yQlfLP8ueLPF3GGAwTvhqtHCzty4unaUYO/vRlFRk6WqSUpJqWtvL+gMvjwrl+cV+H6clFwa5lGT9o7LRybfvJPdR+Ha2pFqX7Mv7RdtfzR/DP9ubXtE0EyFtM0nWPCljrNxaRt83lm9uf31woJO1pSzhNoZ3ILkr5C134R/s1fDXVJPA/7Rn7MWoan4309UTxHqun+MrY299OVDfaYQ+owMkUissiIYYyiuF2LtxRXzuCyrjmrg6c6XFsHFxi0/q9GV00rPmc7y06vV7s+iVCnbSvFLs6k016rl0Z+in/BLXwpB8Sv2BPFWm+A5Ld9c134zeJLfxPqUzB3smN1HD5mM5LLp0VqqKCOPL5AryH/AIKHfHX4b6neQ/sN/B1YLq28M6vb3HjDxlpOohW0KW1nEsVjZXED749SeaNTcOCDDE0qN+9mGz5A+M/xa+Kvwt/4J3eLrD4Y/EzxB4cg1b9oe4tdUh0HWp7NLyCXw5pfmxSiJ1EiPk7lbIbPINXfBul6ZoPhex0nQ9OgsrWK1Tyra0hWONMjJwqgAZJJ+pr+ic0z6thuG6ODhBWqQs29dGrNWt1PnOBfCfJ+KvF7Msdj6rlHC1ZNQt8TUmld32T1atrs3Y6RfhV8EdTL6l8QNDTxfrNxK8l/4i8VxR3d/eMzEgyy7VztBCKAAFRFUABRRWWZJMn5z+dFfBU63soKEEkloktEktkl0R/X8OD8ihFRjRjZf3V/kf/Z'
   );
+  var whiteSword = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAdABcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9t/i/+0J8G/gF4bg8W/GD4hab4c0y6v0soL/VrgRRNMyO+3J6ARxyyMxwqRxSSMVRGYfKn7Z/7T3hfx/8evD3wX/4XB4g0TwPaeCIvFE/iLwB43m0satd30lzb2KTahYsHt7WKK1up8FhHcvLB8w8jElX9rK/+KPiD9tbwEfg5q9vrV74a+Hev6lrPhnUENvBpdvMY4YL2O+Ri1veXVyqWcatFKGt11AqYwsok8U1j4W/A34qy6vpPgnQ7n4ceM7i6uZNd0D7FDAZ54vLWa4ntI38m82+fEGubd8lpFR5sgoPwPxh4/4i4Zy+rQw+Eq06M1FLGQUZwpyum1ONpON1onKKTvZdbfd8G5TkmNzOlHF1lzNN+zXxW1Skk7XS3drvt0Z9Efsp/tIfGL4WfHvw1+zL8SviDrPxB8O+M7G9/wCEX17WhbyatolzZW6zPFcywpGbuykiVttzIjTRz7I5ZZvtMZjK88/4JZeDfht8HfFmr+DviHHqcfxkOmXkzC7vJbnTF8Om/Hl/2O3+qit9xtRcJtine4TzJIwjQMSvuvDGvmdXgjCVMwxscZUkr+1jazi37qbTacorST7pni8VQwdHPKtPDU3CMdLNWvb7SXRPdHb/ALNM154o+Ov7VPiXTon1nxHY614Z0bStKluwEhtINDS6tQNzKEQ3WoXzscjOWHJBzxP7V3gbQND8OWH7HPhbUrfUfij4uYX9trps/PuPDlq8q/a/EkhDxvb+UFaO2JYeddLDHh0Sdkq+NPgB8XPDn7QnjPxn8IP2odZ8Caf4u0uy0nxraeGfD9kb7U5dPe7S3uY7y6Sb7K3l3JQ7I9+I0IcEDHQfCf4R+A/gtY3sHgfS5/tmrXX2rXtc1S/lvdS1e5Ocz3d3OzzXEnJwXY7QcKFGBX2qqTlgJ4SUE4ycua+qak3pbzTtrt5nyuJwGFq5vTzBzd4RhypXVpRSWr7XV7K99ro6z9mT4G6X8CNR8Q+Itc+Kuq+M/EWvzRQP4j1+0toLqLS7febSx220ccRWNpriQuqK0kk7sRjaqlWtGN1qupR2H2ny/M3fPtzjCk9OPSiuPA4HB5XhIYXCU406cFaMYpKKXZJaJHfXxFfGVnWrScpPdvc//9k='
+  )
 
-  var img = getScreenshot();
-  var foundResults = findImages(img, redSword, 0.8, 5, true);
-  console.log('Found', foundResults.length, 'redSword icon');
-  releaseImage(img);
+  handleAutoBattleInIslands(redSword)
+  handleAutoBattleInIslands(whiteSword)
 
-  for (var i = 0; i < foundResults.length; i++) {
-    img = getScreenshot();
-
-    foundResults = findImages(img, redSword, 0.8, 5, true);
-    console.log('Found redSword icon at: ', JSON.stringify(foundResults));
-    releaseImage(img);
-
-    if (foundResults.length > 0) {
-      qTap(foundResults[0]);
-
-      if (waitUntilSeePage(pageReadyToClearRedSword, 8)) {
-        console.log('pageReadyToClearRedSword');
-        qTap(pageReadyToClearRedSword);
-
-        if (waitUntilSeePage(pageBattleToClearSodaIsland, 8)) {
-          console.log('pageBattleToClearSodaIsland');
-          qTap(pageBattleToClearSodaIsland);
-          sleep(1500);
-          qTap(pageBattleToClearSodaIsland);
-          sleep(15000);
-
-          if (checkIsPage(pageBattleHasWetCookieCannotStart)) {
-            console.log('Has wet cookie cannot start the battle, skip this task');
-            qTap(pageBattleHasWetCookieCannotStart);
-            sleep(config.sleepAnimate);
-            handleGotoKingdomPage();
-            return true;
-          }
-
-          for (var j = 0; j < 600; j ++) {
-            if (!checkIsPage(pageAutoUseSkillEnabled)) {
-              console.log('Island battle skill not enabled, enable it');
-              qTap(pageAutoUseSkillEnabled);
-              sleep(1500);
-            }
-            if (!checkIsPage(pageSpeedBoostEnabled)) {
-              console.log('Island battle speed boost not enabled, enable it');
-              qTap(pageSpeedBoostEnabled);
-              sleep(1500);
-              qTap(pageSpeedBoostEnabled);
-              sleep(1500);
-            }
-
-            if (checkIsPage(pageFoundOctopus)) {
-              console.log('Island battle found octopus, exit');
-              qTap(pageFoundOctopus);
-              sleep(1500);
-            }
-
-            if (checkIsPage(pageBattleFinished)) {
-              console.log('Successfully cleared a red sword');
-              qTap(pageBattleFinished);
-              sleep(1500);
-              break;
-            } else if (checkIsPage(pageBattleFailed)) {
-              console.log('failed to clear the sword, stop clearing red swords');
-              qTap(pageBattleFailed);
-              i = 999;
-              break;
-            }
-
-            sleep(1000);
-          }
-
-          waitUntilSeePage(pageInTropicalIsland, 10);
-        }
-      }
-    }
-  }
   releaseImage(redSword);
+  releaseImage(whiteSword);
 
   handleGotoKingdomPage();
   return true;
@@ -3582,90 +3607,93 @@ function start(inputConfig) {
       break;
     }
 
-    if (
-      config.autoCollectMailIntervalInMins != 0 &&
-      (Date.now() - config.lastCollectMail) / 60000 > config.autoCollectMailIntervalInMins
-    ) {
-      console.log('Collect mail: ', (Date.now() - config.lastCollectMail) / 60000, ' mins just passed');
-      handleAutoCollectMail();
-      config.lastCollectMail = Date.now();
-    }
-    if (config.autoCollectDailyReward && (Date.now() - config.lastCollectDailyReward) / 60000 > 240) {
-      console.log('Collect daily reward: ', (Date.now() - config.lastCollectDailyReward) / 60000, ' mins just passed');
-      handleGetDailyRewards();
-      config.lastCollectDailyReward = Date.now();
-    }
-
-    if (
-      config.autoSendHotAirBallonIntervalInMins != 0 &&
-      (Date.now() - config.lastSendHotAirBallon) / 60000 > config.autoSendHotAirBallonIntervalInMins
-    ) {
-      console.log('Check hot air ballon: ', (Date.now() - config.lastSendHotAirBallon) / 60000, ' mins just passed');
-      handleHotAirBallon();
-      config.lastSendHotAirBallon = Date.now();
-    }
-
-    if (
-      config.autoCollectTrainIntervalInMins != 0 &&
-      (Date.now() - config.lastCollectTrain) / 60000 > config.autoCollectTrainIntervalInMins
-    ) {
-      console.log('Collect train: ', (Date.now() - config.lastCollectTrain) / 60000, ' mins just passed');
-      handleTrain();
-      config.lastCollectTrain = Date.now();
-    }
-
-    if (
-      config.autoFulfillWishesIntervalInMins != 0 &&
-      (Date.now() - config.lastFulfillWishes) / 60000 > config.autoFulfillWishesIntervalInMins
-    ) {
-      if (config.wishAlreadyFulfilled && !config.alwaysFulfillWishes) {
-        console.log(
-          'Wish daily reward already collected, skipping: ',
-          (Date.now() - config.lastFulfillWishes) / 60000,
-          ' mins just passed'
-        );
-        config.lastFulfillWishes = Date.now();
-      } else {
-        console.log('Fulfill wishes: ', (Date.now() - config.lastFulfillWishes) / 60000, ' mins just passed');
-        handleWishingTree();
-        config.lastFulfillWishes = Date.now();
+    if ((Date.now() - config.lastGotoProduction) / 60000 > 10) {
+      console.log('Check other tasks as we have produce for: ', (Date.now() - config.lastGotoProduction) / 60000, ' mins');
+      if (
+        config.autoCollectMailIntervalInMins != 0 &&
+        (Date.now() - config.lastCollectMail) / 60000 > config.autoCollectMailIntervalInMins
+      ) {
+        console.log('Collect mail: ', (Date.now() - config.lastCollectMail) / 60000, ' mins just passed');
+        handleAutoCollectMail();
+        config.lastCollectMail = Date.now();
+      }
+      if (config.autoCollectDailyReward && (Date.now() - config.lastCollectDailyReward) / 60000 > 240) {
+        console.log('Collect daily reward: ', (Date.now() - config.lastCollectDailyReward) / 60000, ' mins just passed');
+        handleGetDailyRewards();
+        config.lastCollectDailyReward = Date.now();
+      }
+  
+      if (
+        config.autoSendHotAirBallonIntervalInMins != 0 &&
+        (Date.now() - config.lastSendHotAirBallon) / 60000 > config.autoSendHotAirBallonIntervalInMins
+      ) {
+        console.log('Check hot air ballon: ', (Date.now() - config.lastSendHotAirBallon) / 60000, ' mins just passed');
+        handleHotAirBallon();
+        config.lastSendHotAirBallon = Date.now();
+      }
+  
+      if (
+        config.autoCollectTrainIntervalInMins != 0 &&
+        (Date.now() - config.lastCollectTrain) / 60000 > config.autoCollectTrainIntervalInMins
+      ) {
+        console.log('Collect train: ', (Date.now() - config.lastCollectTrain) / 60000, ' mins just passed');
+        handleTrain();
+        config.lastCollectTrain = Date.now();
+      }
+  
+      if (
+        config.autoFulfillWishesIntervalInMins != 0 &&
+        (Date.now() - config.lastFulfillWishes) / 60000 > config.autoFulfillWishesIntervalInMins
+      ) {
+        if (config.wishAlreadyFulfilled && !config.alwaysFulfillWishes) {
+          console.log(
+            'Wish daily reward already collected, skipping: ',
+            (Date.now() - config.lastFulfillWishes) / 60000,
+            ' mins just passed'
+          );
+          config.lastFulfillWishes = Date.now();
+        } else {
+          console.log('Fulfill wishes: ', (Date.now() - config.lastFulfillWishes) / 60000, ' mins just passed');
+          handleWishingTree();
+          config.lastFulfillWishes = Date.now();
+          sendEvent('running', '');
+        }
+      }
+  
+      if (
+        config.autoCollectFountainIntervalInMins != 0 &&
+        (Date.now() - config.lastCollectFountain) / 60000 > config.autoCollectFountainIntervalInMins
+      ) {
+        console.log('Collect fountain: ', (Date.now() - config.lastCollectFountain) / 60000, ' just passed');
+        findAndTapFountain();
+        config.lastCollectFountain = Date.now();
+      }
+  
+      if (
+        config.worksBeforeCollectCandy != 0 &&
+        (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy
+      ) {
+        console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
+        handleFindAndTapCandyHouse();
+        config.lastCollectCandyTime = Date.now();
+      }
+  
+      if (config.autoPvPIntervalInMins != 0 && (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins) {
+        console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
+        handlePVP(config.autoPvPTargetScoreLimit);
+        config.lastAutoPvP = Date.now();
         sendEvent('running', '');
       }
-    }
-
-    if (
-      config.autoCollectFountainIntervalInMins != 0 &&
-      (Date.now() - config.lastCollectFountain) / 60000 > config.autoCollectFountainIntervalInMins
-    ) {
-      console.log('Collect fountain: ', (Date.now() - config.lastCollectFountain) / 60000, ' just passed');
-      findAndTapFountain();
-      config.lastCollectFountain = Date.now();
-    }
-
-    if (
-      config.worksBeforeCollectCandy != 0 &&
-      (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy
-    ) {
-      console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
-      handleFindAndTapCandyHouse();
-      config.lastCollectCandyTime = Date.now();
-    }
-
-    if (config.autoPvPIntervalInMins != 0 && (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins) {
-      console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
-      handlePVP(config.autoPvPTargetScoreLimit);
-      config.lastAutoPvP = Date.now();
-      sendEvent('running', '');
-    }
-
-    if (
-      config.autoCollectTropicalIslandsIntervalInMins != 0 &&
-      (Date.now() - config.lastCollectTropicalIsland) / 60000 > config.autoCollectTropicalIslandsIntervalInMins
-    ) {
-      console.log('Collect Tropical island: ', (Date.now() - config.lastCollectTropicalIsland) / 60000, ' just passed');
-      handleCollectIslandResources();
-      config.lastCollectTropicalIsland = Date.now();
-      sendEvent('running', '');
+  
+      if (
+        config.autoCollectTropicalIslandsIntervalInMins != 0 &&
+        (Date.now() - config.lastCollectTropicalIsland) / 60000 > config.autoCollectTropicalIslandsIntervalInMins
+      ) {
+        console.log('Collect Tropical island: ', (Date.now() - config.lastCollectTropicalIsland) / 60000, ' just passed');
+        handleCollectIslandResources();
+        config.lastCollectTropicalIsland = Date.now();
+        sendEvent('running', '');
+      }
     }
 
     var act = JobScheduling();
