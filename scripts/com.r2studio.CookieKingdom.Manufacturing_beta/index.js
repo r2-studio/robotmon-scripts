@@ -190,6 +190,38 @@ pageInKingdomVillage = [
   { x: 19, y: 111, r: 190, g: 3, b: 37 },
 ];
 
+var pageInFountain = [
+  { x: 504, y: 305, r: 121, g: 207, b: 12 },
+  { x: 362, y: 60, r: 190, g: 147, b: 38 },
+  { x: 442, y: 57, r: 195, g: 200, b: 196 },
+  { x: 489, y: 27, r: 60, g: 70, b: 105 },
+  { x: 513, y: 67, r: 243, g: 233, b: 223 },
+];
+
+var pageInHotAirBallon = [
+  { x: 270, y: 330, r: 255, g: 211, b: 0 },
+  { x: 158, y: 331, r: 12, g: 167, b: 223 },
+  { x: 184, y: 312, r: 223, g: 175, b: 97 },
+  { x: 331, y: 312, r: 142, g: 88, b: 65 },
+  { x: 565, y: 84, r: 255, g: 251, b: 235 },
+];
+
+var pageInTrainStation = [
+  { x: 618, y: 11, r: 56, g: 165, b: 231 },
+  { x: 411, y: 19, r: 255, g: 208, b: 2 },
+  { x: 393, y: 12, r: 93, g: 48, b: 32 },
+  { x: 10, y: 355, r: 56, g: 34, b: 28 },
+  { x: 605, y: 327, r: 130, g: 22, b: 31 },
+];
+
+var pageTrainNotEnoughGoods = [
+  { x: 477, y: 28, r: 55, g: 163, b: 229 },
+  { x: 221, y: 40, r: 60, g: 70, b: 105 },
+  { x: 222, y: 100, r: 243, g: 233, b: 223 },
+  { x: 211, y: 300, r: 219, g: 207, b: 199 },
+  { x: 357, y: 300, r: 121, g: 207, b: 12 },
+];
+
 //rgb(166,104,65)
 pageInProduction = [
   { x: 609, y: 19, r: 56, g: 167, b: 231 },
@@ -1584,7 +1616,9 @@ function handleFindAndTapCandyHouse() {
         var img = getScreenshot();
 
         var foundResults = findImages(img, greenChecked, 0.92, 5, true);
-        console.log('Found green Checked icon at: ', JSON.stringify(foundResults));
+        if (foundResults.length > 0) {
+          console.log('Found green Checked icon at: ', JSON.stringify(foundResults));
+        }
         releaseImage(img);
         releaseImage(greenChecked);
 
@@ -2114,6 +2148,22 @@ function gotoCastle() {
   sleep(config.sleepAnimate * 3);
 }
 
+function handleInFountain() {
+  if (waitUntilSeePage(pageInFountain, 8)) {
+    qTap(pageInFountain);
+    sleep(config.sleepAnimate);
+    qTap(pageInFountain);
+    sleep(config.sleepAnimate * 3);
+    handleTryHitBackToKingdom();
+
+    waitUntilSeePage(pageInKingdomVillage, 6, pnt(1, 1))
+    console.log('Tapped fountain successfully');
+  } else {
+    handleTryHitBackToKingdom();
+    console.log('Failed to claim fountain, did not see fountain screen');
+  }
+}
+
 function findAndTapFountain() {
   console.log('about to claim fountain');
   if (!checkIsPage(pageInKingdomVillage)) {
@@ -2148,37 +2198,12 @@ function findAndTapFountain() {
   }
 
   // Tap Fountain
-  pageInFountain = [
-    { x: 504, y: 305, r: 121, g: 207, b: 12 },
-    { x: 362, y: 60, r: 190, g: 147, b: 38 },
-    { x: 442, y: 57, r: 195, g: 200, b: 196 },
-    { x: 489, y: 27, r: 60, g: 70, b: 105 },
-    { x: 513, y: 67, r: 243, g: 233, b: 223 },
-  ];
+  handleInFountain();
 
-  if (waitUntilSeePage(pageInFountain, 8)) {
-    qTap(pageInFountain);
-    sleep(config.sleepAnimate);
-    qTap(pageInFountain);
-    sleep(config.sleepAnimate * 3);
-    handleTryHitBackToKingdom();
-    console.log('Tapped fountain successfully');
-  } else {
-    handleTryHitBackToKingdom();
-    console.log('Failed to claim fountain, did not see fountain screen');
-  }
   return true;
 }
 
 function handleTrainStation() {
-  pageInTrainStation = [
-    { x: 618, y: 11, r: 56, g: 165, b: 231 },
-    { x: 411, y: 19, r: 255, g: 208, b: 2 },
-    { x: 393, y: 12, r: 93, g: 48, b: 32 },
-    { x: 10, y: 355, r: 56, g: 34, b: 28 },
-    { x: 605, y: 327, r: 130, g: 22, b: 31 },
-  ];
-
   if (!waitUntilSeePage(pageInTrainStation, 5)) {
     console.log('Wait but not find train station, skipping');
     return false;
@@ -2270,13 +2295,6 @@ function handleTrain() {
     { x: 120, y: 235, r: 219, g: 46, b: 73 },
     { x: 105, y: 321, r: 75, g: 116, b: 160 },
     { x: 106, y: 328, r: 255, g: 255, b: 255 },
-  ];
-  pageTrainNotEnoughGoods = [
-    { x: 436, y: 30, r: 56, g: 165, b: 231 },
-    { x: 221, y: 40, r: 60, g: 70, b: 105 },
-    { x: 222, y: 100, r: 243, g: 233, b: 223 },
-    { x: 211, y: 300, r: 219, g: 207, b: 199 },
-    { x: 357, y: 300, r: 121, g: 207, b: 12 },
   ];
   if (checkIsPage(pageTrainNotCollapsed)) {
     qTap(pageTrainNotCollapsed);
@@ -2924,29 +2942,12 @@ function handleWishingTree() {
   }
 }
 
-function handleHotAirBallon() {
-  console.log('start handleHotAirBallon: ', new Date());
-  handleGotoKingdomPage();
+function handleInHotAirBallon() {
+  if (!waitUntilSeePage(pageInHotAirBallon, 5)) {
+    console.log('Wait but not find pageInHotAirBallon station, skipping');
+    return false;
+  }
 
-  pageHotAirBallonReady = [
-    { x: 205, y: 326, r: 255, g: 109, b: 200 },
-    { x: 198, y: 324, r: 255, g: 109, b: 200 },
-    { x: 204, y: 313, r: 255, g: 109, b: 200 },
-    { x: 57, y: 344, r: 40, g: 66, b: 97 },
-  ];
-  pageCollapsedaffairs = [
-    { x: 97, y: 327, r: 255, g: 221, b: 136 },
-    { x: 116, y: 330, r: 134, g: 183, b: 249 },
-    { x: 125, y: 342, r: 38, g: 71, b: 96 },
-    { x: 110, y: 324, r: 162, g: 90, b: 227 },
-  ];
-  pageInHotAirBallon = [
-    { x: 270, y: 330, r: 255, g: 211, b: 0 },
-    { x: 158, y: 331, r: 12, g: 167, b: 223 },
-    { x: 184, y: 312, r: 223, g: 175, b: 97 },
-    { x: 331, y: 312, r: 142, g: 88, b: 65 },
-    { x: 565, y: 84, r: 255, g: 251, b: 235 },
-  ];
   pageChooseBallonDestination = [
     { x: 285, y: 15, r: 208, g: 161, b: 89 },
     { x: 319, y: 7, r: 91, g: 61, b: 45 },
@@ -2959,40 +2960,6 @@ function handleHotAirBallon() {
     { x: 417, y: 330, r: 12, g: 167, b: 223 },
     { x: 437, y: 316, r: 138, g: 85, b: 60 },
   ];
-  pageBallonFlying = [
-    { x: 525, y: 16, r: 0, g: 193, b: 255 },
-    { x: 365, y: 316, r: 119, g: 224, b: 0 },
-  ];
-
-  if (checkIsPage(pageCollapsedaffairs)) {
-    console.log('Found collapsed kingdom affairs');
-    qTap(pageCollapsedaffairs);
-    sleep(config.sleepAnimate * 2);
-    qTap(pnt(108, 173));
-    sleep(2000);
-    if (!waitUntilSeePage(pageInHotAirBallon, 12, pnt(1, 1), pageBallonFlying)) {
-      console.log('Cannot find pageInHotAirBallon, should be flying');
-      handleGotoKingdomPage();
-
-      if (!checkIsPage(pageCollapsedaffairs)) {
-        qTap(pageCollapsedaffairs);
-      }
-      return false;
-    }
-  } else if (checkIsPage(pageHotAirBallonReady)) {
-    console.log('Found hot air ballon ready');
-    qTap(pageHotAirBallonReady);
-    sleep(2000);
-    if (!waitUntilSeePage(pageInHotAirBallon, 12, pnt(1, 1), pageBallonFlying)) {
-      console.log('Cannot find pageInHotAirBallon, should be flying');
-      handleGotoKingdomPage();
-
-      return false;
-    }
-  } else {
-    console.log('Did not find either hot air ballon, skipping');
-    return false;
-  }
 
   // Tap Change location
   if (!config.ballonKeepCurrentDestination) {
@@ -3013,6 +2980,15 @@ function handleHotAirBallon() {
       sleep(2000);
       tapDown(50, 268, 40, 0);
       sleep(config.sleep);
+      moveTo(200, 268, 40, 0);
+      sleep(config.sleep);
+      moveTo(2000, 268, 40, 0);
+      sleep(config.sleep);
+      tapUp(2000, 268, 40, 0);
+      sleep(config.sleepAnimate * 3);
+
+      tapDown(300, 268, 40, 0);
+      sleep(config.sleep);
       moveTo(400, 268, 40, 0);
       sleep(config.sleep);
       moveTo(2000, 268, 40, 0);
@@ -3020,16 +2996,7 @@ function handleHotAirBallon() {
       tapUp(2000, 268, 40, 0);
       sleep(config.sleepAnimate * 3);
 
-      tapDown(50, 268, 40, 0);
-      sleep(config.sleep);
-      moveTo(400, 268, 40, 0);
-      sleep(config.sleep);
-      moveTo(2000, 268, 40, 0);
-      sleep(config.sleep);
-      tapUp(2000, 268, 40, 0);
-      sleep(config.sleepAnimate * 3);
-
-      qTap(pnt(510, 190));
+      qTap(pnt(510, 190)); // EP3
       sleep(2000);
     } else {
       console.log('ballon going to the latest map')
@@ -3072,7 +3039,6 @@ function handleHotAirBallon() {
       }
     }
   }
-  return
 
   if (waitUntilSeePage(pageInHotAirBallon, 8)) {
     qTap(pnt(250, 330)); // Tap Auto
@@ -3093,6 +3059,61 @@ function handleHotAirBallon() {
   if (checkIsPage(pageTrainUncollapsed)) {
     qTap(pageCollapsedaffairs);
   }
+  return;
+}
+
+function handleGotoHotAirBallon() {
+  console.log('start handleGotoHotAirBallon: ', new Date());
+  handleGotoKingdomPage();
+
+  pageHotAirBallonReady = [
+    { x: 205, y: 326, r: 255, g: 109, b: 200 },
+    { x: 198, y: 324, r: 255, g: 109, b: 200 },
+    { x: 204, y: 313, r: 255, g: 109, b: 200 },
+    { x: 57, y: 344, r: 40, g: 66, b: 97 },
+  ];
+  pageCollapsedaffairs = [
+    { x: 97, y: 327, r: 255, g: 221, b: 136 },
+    { x: 116, y: 330, r: 134, g: 183, b: 249 },
+    { x: 125, y: 342, r: 38, g: 71, b: 96 },
+    { x: 110, y: 324, r: 162, g: 90, b: 227 },
+  ];
+  pageBallonFlying = [
+    { x: 525, y: 16, r: 0, g: 193, b: 255 },
+    { x: 365, y: 316, r: 119, g: 224, b: 0 },
+  ];
+
+  if (checkIsPage(pageCollapsedaffairs)) {
+    console.log('Found collapsed kingdom affairs');
+    qTap(pageCollapsedaffairs);
+    sleep(config.sleepAnimate * 2);
+    qTap(pnt(108, 173));
+    sleep(2000);
+    if (!waitUntilSeePage(pageInHotAirBallon, 12, pnt(1, 1), pageBallonFlying)) {
+      console.log('Cannot find pageInHotAirBallon, should be flying');
+      handleGotoKingdomPage();
+
+      if (!checkIsPage(pageCollapsedaffairs)) {
+        qTap(pageCollapsedaffairs);
+      }
+      return false;
+    }
+  } else if (checkIsPage(pageHotAirBallonReady)) {
+    console.log('Found hot air ballon ready');
+    qTap(pageHotAirBallonReady);
+    sleep(2000);
+    if (!waitUntilSeePage(pageInHotAirBallon, 12, pnt(1, 1), pageBallonFlying)) {
+      console.log('Cannot find pageInHotAirBallon, should be flying');
+      handleGotoKingdomPage();
+
+      return false;
+    }
+  } else {
+    console.log('Did not find either hot air ballon, skipping');
+    return false;
+  }
+
+  return handleInHotAirBallon();
 }
 
 function handleSkipRemoveGroundGuide() {
@@ -3340,7 +3361,54 @@ function checkAndRestartApp() {
   }
 }
 
+function findSpecificImageInScreen(img) {
+  var img = getScreenshot();
+  var foundResults = findImages(img, greenCheckedWriteBackground, 0.92, 5, true);
+  console.log('Found green Checked icon at: ', JSON.stringify(foundResults));
+  releaseImage(img);
+  return foundResults;
+}
+
+function handleTryResolveGreenChecks() {
+  var foundResults = findSpecificImageInScreen(greenCheckedWriteBackground)
+  if (foundResults.length === 0) {
+    console.log('Confirmed no green check in this screen, back to kingdom');
+    handleTryHitBackToKingdom();
+    return false;
+  }
+
+  var cnt = 0;
+  console.log(foundResults = findSpecificImageInScreen(greenCheckedWriteBackground), foundResults.length,  cnt < 10)
+  while(foundResults.length > 0 && cnt < 10) {
+    console.log('Fount green checked, tap it: ', JSON.stringify(foundResults));
+    qTap(foundResults[0]);
+    sleep(4000)
+
+    if (checkIsPage(pageInTrainStation)) {
+      console.log('green check leads to train station')
+      handleTrainStation()
+    }
+    else if (checkIsPage(pageInFountain)) {
+      console.log('green check leads to fountain')
+      handleInFountain()
+    }
+    else if (waitUntilSeePage(pageInHotAirBallon), 8, pnt(1,1)) {
+      console.log('green check leads to hot air ballon')
+      handleInHotAirBallon();
+    }
+    waitUntilSeePage(pageInKingdomVillage, 6, pnt(1,1))
+
+    cnt ++;
+    foundResults = findSpecificImageInScreen(greenCheckedWriteBackground)
+  }
+
+  releaseImage(greenCheckedWriteBackground);
+  return true;
+}
+
 function stop() {
+  releaseImage(greenCheckedWriteBackground);
+
   for (var i = 0; i < numberImagesPVP.length; i++) {
     releaseImage(numberImagesPVP[i].img);
   }
@@ -3361,11 +3429,16 @@ function stop() {
   console.log('stop clicked, change config.run = false');
 }
 
+var greenCheckedWriteBackground;
 var numberImagesPVP = [];
 var numberImages = [];
 var bNumbers = [];
 var wNumbers = [];
 function loadImages() {
+  greenCheckedWriteBackground = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAVABoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9hfHH7cngXwTe6hql/wCDPFN74N0HUZdP8U/EfTrCB9F0W6iz50cuZ1uZliOVmntoJoLZklE8kX2e48rsfi/8e/BfwR+HV78TPGlxcPZWnlR29rptqbi61C5mkWK3tLaJfmmnmleOKONeWd1HfNfnd+2X4A+IX7OHj6XxFbXMl98NfEuvXd5pF4u8t4d1nUb2S6ubO56jyLq8uJpYLjgLLM1u+Abbd5roX7REHgL4axWWoeM9Re18KxXI8MR6nPGmneDNOaLZMbIIokMsivJbo0hc21uxtbQRx3Dxn8Pz7xbxnDObYzL8fgJKcUnQcZcyq3dl9lct9NuZq0lva/wWZ8dYLJMzq4LH05QaV6b39ptpHTdt2++7R7l+0l+0j8TLrwVc/FW1+IXijTvireL5XhDSPCfjG+bTNO1WXK6dolrp0Eq2WsNvwJ7i8gnM7yTunk20UCQ/ofHrzmNTMFVyo3KpyAe4BwM/kK+Hf2Df2Zr/AE68sv2qPjx4cuLfxZPZungzw9qi/vPCthMuHd4+iajcIcTPy0UWLdSB55m+qv8AhID/AM9j+dfU+HeC4tw+W1MbxHiHPEYhqXs7JQoxSsoRS6tazfV97Xf02TrMZ4b22M0lPXl/lXb17nkfxGs9C+JHhjV/ht458PWup6JqltLZanp92m6O5hddrK3pkHqMEHkHIBrwH4S/8E+/hp8MviDpfjrWfHniTxZH4euVuvD+l+JTaPHb3S4MV1M8UCSXc0RGYnlZtjYkIaVUlUor6zFZZl2OrUq2IoxnOm7wbSbi+6b2Z0YnL8Di61OrWpRlKm7xbSbi+6b2PpTT/FWoyXSQShWDuASeozxWodUuAcYoorsb1O+KTWp//9k='
+  );
+
   numberImagesPVP = [
     { char: '0', img: getImageFromBase64(b64_0) },
     { char: '1', img: getImageFromBase64(b64_1) },
@@ -3628,7 +3701,7 @@ function start(inputConfig) {
         (Date.now() - config.lastSendHotAirBallon) / 60000 > config.autoSendHotAirBallonIntervalInMins
       ) {
         console.log('Check hot air ballon: ', (Date.now() - config.lastSendHotAirBallon) / 60000, ' mins just passed');
-        handleHotAirBallon();
+        handleGotoHotAirBallon();
         config.lastSendHotAirBallon = Date.now();
       }
   
@@ -3731,7 +3804,12 @@ function start(inputConfig) {
         console.log('in production, continue work');
         config.jobFailedCount = 0;
         continue;
-      } else if (handleRelogin()) {
+      } else if (handleTryResolveGreenChecks()) {
+        console.log('just handleTryResolveGreenChecks()');
+        config.jobFailedCount = 0;
+        continue;
+      }
+      else if (handleRelogin()) {
         console.log('just handleRelogin()');
         config.jobFailedCount = 0;
         continue;
