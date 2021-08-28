@@ -368,6 +368,8 @@ function finishQuest(){
                     sleep(3000);
                     return;
                 }
+                console.log("掉落禮裝");                
+                sendUrgentMessage (runningScriptName, "掉落禮裝");
                 tapScale(67,60);
                 sleep(1500);
             }
