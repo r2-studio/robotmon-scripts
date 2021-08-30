@@ -157,8 +157,8 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.12,
-      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.12 修正無法判斷好友禮裝突滿的問題<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.14,
+      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.14 修正無法辨識卡片剋職的問題，修正部分關卡背景導致技能使用失敗的問題<br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },

@@ -30,10 +30,10 @@ function startScript(loopTime,script,scriptName){
         }
         if(next == 0){
             console.log("開始執行腳本 無限次數");
-            sendNormalMessage (runningScriptName, "Start loop");
+            sendNormalMessage (runningScriptName, "開始執行腳本 無限次數");
         }else{
             console.log("開始執行腳本 "+(loop+1)+"/"+loopTime);
-            sendNormalMessage (runningScriptName, "Start loop "+(loop+1)+"/"+loopTime);
+            sendNormalMessage (runningScriptName, "開始執行腳本 "+(loop+1)+"/"+loopTime);
         }
         skillUsedInLoop = [false,false,false,false,false,false,false,false,false];
         spaceUltColor = -1;

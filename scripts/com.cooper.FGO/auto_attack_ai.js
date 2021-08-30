@@ -24,12 +24,16 @@ var servantAliveMessage;
 var cardList = [];
 var cardStatus = []; // -1:null 0:disable 1:weak 2:resist
 var cardWidth = 225;
-var cardHeight = 97;
+var cardHeight = 75;
 
-var updateCardListX = [94,478,861,1248,1638];
-var updateCardListY = 802;
-var updateCardListOffsetWeakX = 172;
-var updateCardListOffsetWeakY = [-232,-255];
+var cardListX = [94,478,861,1248,1638];
+var cardListY = 608;
+var cardMoveRange = 12;
+var cardColorOffset = [0,199];
+
+var cardListOffsetWeakX = 172;
+var cardListOffsetWeakY = -120;
+var cardListWeakMoveRange = 90;
 var weakW = 75;
 var weakH = 22;
 
@@ -162,6 +166,7 @@ function attackAI(mainColor,sameColor,weak,die,ult,skill,currentStage){
                     case 0:
                         isScriptRunning = false;
                         console.log("從者退場，停止腳本");
+                        sendUrgentMessage(runningScriptName,"從者退場，停止腳本");
                     return;
                     case 1:
                         if(!skillUsed[i*3+j] && servantExist[i]){
@@ -305,9 +310,12 @@ function updateUltList(){
 function updateCardList(){
     var cardImageScore = [];
     var screenshot = getScreenshotResize();
-    //get card color
     for(var i=0;i<5;i++){
-        var cropCard = cropImage(screenshot,updateCardListX[i] + defaultMarginX,updateCardListY,cardWidth,cardHeight);
+        //get card color
+        var cropCard = cropImage(screenshot,
+            cardListX[i] + defaultMarginX + cardColorOffset[0],
+            cardListY + cardColorOffset[1],
+            cardWidth, cardHeight + cardMoveRange);
         for(var k=0;k<3;k++){
             var find = findImage(cropCard,cardImage[k]);
             if(cardImageScore[i] == undefined || find.score > cardImageScore[i]){
@@ -316,40 +324,42 @@ function updateCardList(){
             }
         }
         releaseImage(cropCard);
-    }
-    //get card status
-    for(var i=0;i<5;i++){
+
+        //get card status
         cardStatus[i] = -1;
         var cropDisable = [];
-        var cropWeak = [];
         for(var j=0;j<2;j++){
             cropDisable[j] = cropImage(screenshot,
-                (updateCardListX[i] + defaultMarginX + offsetDisableX[j])- 1,
-                updateCardListY + offsetDisableY,
+                (cardListX[i] + defaultMarginX + offsetDisableX[j])- 1,
+                cardListY + offsetDisableY,
                 disableW+2,
                 disableH+15);
-            cropWeak[j] = cropImage(screenshot,
-                (updateCardListX[i] + defaultMarginX + updateCardListOffsetWeakX)- 1,
-                updateCardListY + updateCardListOffsetWeakY[j],
-                weakW+5,
-                weakH+15);
         }
+        var cropWeak = cropImage(screenshot,
+            cardListX[i] + defaultMarginX + cardListOffsetWeakX,
+            cardListY + cardListOffsetWeakY,
+            weakW + 1,
+            weakH + cardMoveRange + cardListWeakMoveRange);
         if(findImage(cropDisable[0],cardImage[5]).score>=0.85 && findImage(cropDisable[1],cardImage[6]).score>=0.85) {
             cardStatus[i] = 0;
-        }else if(findImage(cropWeak[0],cardImage[3]).score>=0.85){
+        }else if(findImage(cropWeak,cardImage[3]).score>=0.85){
             cardStatus[i] = 1;
-        }else if(findImage(cropWeak[1],cardImage[4]).score>=0.85){
+        }else if(findImage(cropWeak,cardImage[4]).score>=0.85){
             cardStatus[i] = 2;
         }
+        
         for(var j=0;j<2;j++){
             releaseImage(cropDisable[j]);
-            releaseImage(cropWeak[j]);
         }
+        releaseImage(cropWeak);
     }
+
     releaseImage(screenshot);
     if(isDebug){
-        console.log("Color:"+cardList);
-        console.log("Status:"+cardStatus);
+        console.log("Color 0:B 1:N 2:Q");
+        console.log(cardList);
+        console.log("Status -1:x 0:disable 1:weak 2:resist");
+        console.log(cardStatus);
     }
 }
 
