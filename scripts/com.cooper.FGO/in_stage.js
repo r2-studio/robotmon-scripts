@@ -143,7 +143,7 @@ function useSkill(player,skill,target){
     //     console.log("無法偵測目標從者視窗，強迫選擇好友");
     //     selectSkillTarget(target);
     }else{
-        console.log("使用技能-技能動畫中");
+        //console.log("使用技能-技能動畫中");
     }
 }
 
@@ -308,7 +308,8 @@ function waitUntilPlayerCanMoveOrFinish(){
         }
         if(isBattleStageFailedDialog()){
             sleep(1000);
-            if(isBattleStageFailedDialog()){
+            if(isBattleStageFailedDialog()){                
+                sendUrgentMessage(runningScriptName,"戰鬥失敗，停止腳本");
                 return false;
             }
         }
@@ -368,6 +369,8 @@ function finishQuest(){
                     sleep(3000);
                     return;
                 }
+                console.log("掉落禮裝");                
+                sendUrgentMessage (runningScriptName, "掉落禮裝");
                 tapScale(67,60);
                 sleep(1500);
             }
