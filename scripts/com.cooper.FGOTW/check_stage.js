@@ -307,6 +307,7 @@ icon["finishNext"] =  [1575,933,180,60];
 icon["stageRestart"] =  [1140,810,240,75];
 icon["stageFailed"] = [750,150,412,75];
 icon["addFriend"] = [1710,135,120,37];
+icon["itemPage"] = [32,35,66,45];
 
 function isBattleStageFailedDialog(){
 	//TODO: need check
@@ -332,6 +333,7 @@ function isFinishDropDialoge(){
 	//TODO: need check
 	//TODO:TW
 	//return checkIconInScreen(28);
+	//return checkIconInScreen();
 	return false;
 }
 
@@ -341,8 +343,7 @@ function isAddFriendPage(){
 }
 
 function isItemPage(){
-	//TODO:
-	return false;
+	return checkIconInScreen("itemPage");;
 }
 
 //friendPoint-----------------------------------------------

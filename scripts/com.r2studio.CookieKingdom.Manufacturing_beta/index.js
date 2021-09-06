@@ -17,12 +17,12 @@ config = {
   alwaysFulfillWishes: false,
   wishingTreeSafetyStock: 40,
   wishingTreeMaxFillingMins: 5,
+  wishingTreeRefreshGoldenWishes: true,
   autoPvPIntervalInMins: 0,
   autoPvPTargetScoreLimit: 400000,
   materialsTarget: 300,
   goodsTarget: 60,
   worksBeforeCollectCandy: 40,
-  productionFocusOnMin: true,
   helpTapGreenCheck: true,
   pvpCELimit: 250000,
   autoCollectTropicalIslandsIntervalInMins: 40,
@@ -43,11 +43,11 @@ config = {
   lastFulfillWishes: 0,
   lastAutoPvP: 0,
   lastCollectTropicalIsland: 0,
+  lastTryResolveGreenChecks: 0,
   run: true,
   isXR: true,
   findProductionTimes: 8,
   wishRefreshThreashold: 5,
-  wishAlreadyFulfilled: false,
 
   stock_axe: 60,
   stock_pickaxe: 60,
@@ -190,6 +190,16 @@ pageInKingdomVillage = [
   { x: 19, y: 111, r: 190, g: 3, b: 37 },
 ];
 
+var pageAnnouncement = [
+  { x: 610, y: 19, r: 56, g: 167, b: 231 },
+  { x: 619, y: 19, r: 255, g: 255, b: 255 },
+  { x: 628, y: 18, r: 56, g: 167, b: 231 },
+  { x: 59, y: 219, r: 54, g: 64, b: 87 },
+  { x: 71, y: 317, r: 54, g: 64, b: 87 },
+  { x: 19, y: 114, r: 63, g: 0, b: 9 },
+  { x: 25, y: 321, r: 75, g: 75, b: 75 },
+];
+
 var pageInFountain = [
   { x: 504, y: 305, r: 121, g: 207, b: 12 },
   { x: 362, y: 60, r: 190, g: 147, b: 38 },
@@ -229,6 +239,19 @@ pageInProduction = [
   { x: 625, y: 18, r: 34, g: 85, b: 119 },
   { x: 619, y: 331, r: 166, g: 104, b: 65 },
   { x: 19, y: 321, r: 166, g: 104, b: 65 },
+];
+
+pageStockIsFull = [
+  { x: 436, y: 96, r: 255, g: 255, b: 255 },
+  { x: 320, y: 83, r: 107, g: 48, b: 49 },
+  { x: 320, y: 93, r: 132, g: 16, b: 8 },
+  { x: 321, y: 108, r: 241, g: 229, b: 216 },
+];
+
+var pageToolShop = [
+  { x: 420, y: 191, r: 178, g: 16, b: 13 },
+  { x: 414, y: 75, r: 135, g: 143, b: 170 },
+  { x: 413, y: 84, r: 183, g: 190, b: 211 },
 ];
 
 pageNotifyQuit = [
@@ -501,7 +524,7 @@ function checkScreenMessage(messageScreen, pageMessageWindow) {
 }
 
 function handleToolShopShovels() {
-  pageToolShop = [
+  var pageToolShop = [
     { x: 420, y: 191, r: 178, g: 16, b: 13 },
     { x: 414, y: 75, r: 135, g: 143, b: 170 },
     { x: 413, y: 84, r: 183, g: 190, b: 211 },
@@ -571,13 +594,13 @@ function compare(a, b) {
   return 0;
 }
 
-goodsLocation = {
-  1: rect(432, 101, 22, 12),
-  2: rect(432, 209, 22, 12),
-  3: rect(432, 315, 22, 12),
-  4: rect(432, 106, 22, 12),
-  5: rect(432, 213, 22, 12),
-  6: rect(432, 319, 22, 12),
+var goodsLocation = {
+  1: rect(431, 101, 22, 12),
+  2: rect(431, 209, 22, 12),
+  3: rect(431, 315, 22, 12),
+  4: rect(431, 106, 22, 12),
+  5: rect(431, 213, 22, 12),
+  6: rect(431, 319, 22, 12),
   shovel: rect(432, 317, 22, 16),
 };
 
@@ -743,194 +766,6 @@ function handleMaterialProduction() {
   }
 }
 
-function makeGoodsToTarget(target, orderAmount) {
-  var itemsAdd = 0;
-  pageFirstItemEnabled = [{ x: 587, y: 122, r: 121, g: 207, b: 12 }];
-  pageSecondItemEnabled = [{ x: 587, y: 230, r: 121, g: 207, b: 12 }];
-  pageThirdItemEnabled = [{ x: 587, y: 332, r: 121, g: 207, b: 12 }];
-
-  // //rgb(77,71,65)
-  // pageFirstItemHasThreeDigits = [
-  //     {x: 436, y: 107, r: 77, g: 71, b: 65}
-  // ]
-  // //rgb(203,201,199)
-  // pageSecondItemHasThreeDigits = [
-  //     {x: 437, y: 212, r: 65, g: 58, b: 51}
-  // ]
-  // pageThirdItemHasThreeDigits = [
-  //     {x: 436, y: 320, r: 77, g: 71, b: 65}
-  // ]
-
-  // add < 10
-  var goodsOneStock = ocrProductStorage(goodsLocation[1]);
-  var goodsTwoStock = ocrProductStorage(goodsLocation[2]);
-  var goodsThreeStock = ocrProductStorage(goodsLocation[3]);
-  console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock, 'target: ', target);
-  if (goodsOneStock === -1 || goodsTwoStock === -1 || goodsThreeStock === -1) {
-    console.log('OCR count failed, skip this round');
-    return -1;
-  }
-
-  if (goodsOneStock < target) {
-    console.log('add 1st item from ' + goodsOneStock + ' to > ', target);
-    for (i = 0; i < orderAmount; i++) {
-      qTap(pageFirstItemEnabled);
-      sleep(config.sleepAnimate * 3);
-      if (!handleNotEnoughStock()) {
-        itemsAdd++;
-      }
-
-      // Add check if there are no worker
-    }
-  }
-  if (countProductionSlotAvailable() == 0) {
-    console.log('Early stop production 1st item filled the queue');
-    return itemsAdd;
-  }
-
-  if (!checkIsPage(pageSecondItemEnabled)) {
-    console.log('2nd item is not enabled');
-    return itemsAdd;
-  } else if (goodsTwoStock < target) {
-    console.log('add 2nd item from ' + goodsTwoStock + ' to > ', target);
-    for (i = 0; i < orderAmount; i++) {
-      qTap(pageSecondItemEnabled);
-      sleep(config.sleepAnimate);
-      if (!handleNotEnoughStock()) {
-        itemsAdd++;
-      }
-    }
-  }
-  if (countProductionSlotAvailable() == 0) {
-    console.log('Early stop production 2nd item filled the queue');
-    return itemsAdd;
-  }
-
-  if (!checkIsPage(pageThirdItemEnabled)) {
-    console.log('3rd item is not enabled');
-    return itemsAdd;
-  } else if (goodsThreeStock < target) {
-    console.log('add 3rd item from ' + goodsThreeStock + ' to > ', target);
-    for (i = 0; i < orderAmount; i++) {
-      qTap(pageThirdItemEnabled);
-      sleep(config.sleepAnimate);
-      if (!handleNotEnoughStock()) {
-        itemsAdd++;
-      }
-    }
-  }
-  if (countProductionSlotAvailable() == 0) {
-    console.log('Early stop production 3rd item filled the queue');
-    return itemsAdd;
-  }
-
-  // === tool shop only ===
-  handleToolShopShovels();
-  if (countProductionSlotAvailable() == 0) {
-    console.log('Early stop production shovel filled the queue');
-    return itemsAdd;
-  }
-  // end of tool shop ===
-
-  SwipeProductionMenuToBottom();
-
-  // pageFirstItemHasOneDigits = [
-  //     {x: 446, y: 112, r: 255, g: 255, b: 255},
-  //     {x: 437, y: 112, r: 255, g: 255, b: 255}
-  // ]
-  // pageSecondItemHasOneDigits = [
-  //     {x: 446, y: 217, r: 255, g: 255, b: 255},
-  //     {x: 437, y: 217, r: 255, g: 255, b: 255}
-  // ]
-  // pageThirdItemHasOneDigits = [
-  //     {x: 446, y: 324, r: 255, g: 255, b: 255},
-  //     {x: 437, y: 324, r: 255, g: 255, b: 255}
-  // ]
-
-  // pageSecondItemHasThreeDigits = [
-  //     {x: 436, y: 217, r: 77, g: 71, b: 65}
-  // ]
-  // pageThirdItemHasThreeDigits = [
-  //     {x: 436, y: 324, r: 77, g: 71, b: 65}
-  // ]
-
-  var goodsFourStock = ocrProductStorage(goodsLocation[4]);
-  var goodsFiveStock = ocrProductStorage(goodsLocation[5]);
-  var goodsSixStock = ocrProductStorage(goodsLocation[6]);
-  console.log('In stock: ', goodsFourStock, goodsFiveStock, goodsSixStock, ' target: ', target);
-  if (goodsFourStock === -1 || goodsFiveStock === -1 || goodsSixStock === -1) {
-    console.log('2nd OCR count failed, skip this round');
-    SwipeProductionMenuToTop();
-    return itemsAdd;
-  }
-
-  if (!checkIsPage(pageFirstItemEnabled)) {
-    console.log('4th item is not enabled');
-    SwipeProductionMenuToTop();
-    return itemsAdd;
-  } else {
-    if (goodsFourStock < target) {
-      console.log('add 4th item from ' + goodsFourStock + ' to > ', target);
-      for (i = 0; i < orderAmount; i++) {
-        qTap(pageFirstItemEnabled);
-        sleep(config.sleepAnimate);
-        if (!handleNotEnoughStock()) {
-          itemsAdd++;
-        }
-      }
-    }
-  }
-  if (countProductionSlotAvailable() == 0) {
-    console.log('Early stop production 4td item filled the queue');
-    return itemsAdd;
-  }
-
-  if (!checkIsPage(pageSecondItemEnabled)) {
-    console.log('5th item is not enabled');
-    SwipeProductionMenuToTop();
-    return itemsAdd;
-  } else {
-    if (goodsFiveStock < target) {
-      console.log('add 5th item from ' + goodsFiveStock + ' to > ', target);
-      for (i = 0; i < orderAmount; i++) {
-        qTap(pageSecondItemEnabled);
-        sleep(config.sleepAnimate);
-        if (!handleNotEnoughStock()) {
-          itemsAdd++;
-        }
-      }
-    }
-  }
-  if (countProductionSlotAvailable() == 0) {
-    console.log('Early stop production 5th item filled the queue');
-    return itemsAdd;
-  }
-
-  if (!checkIsPage(pageThirdItemEnabled)) {
-    console.log('6th item is not enabled');
-    SwipeProductionMenuToTop();
-    return itemsAdd;
-  } else {
-    if (goodsSixStock < target) {
-      console.log('add 6th item from ' + goodsSixStock + ' to > ', target);
-      for (i = 0; i < orderAmount; i++) {
-        qTap(pageThirdItemEnabled);
-        sleep(config.sleepAnimate);
-        if (!handleNotEnoughStock()) {
-          itemsAdd++;
-        }
-      }
-    }
-  }
-  if (countProductionSlotAvailable() == 0) {
-    console.log('Early stop production 6th item filled the queue');
-    return itemsAdd;
-  }
-
-  SwipeProductionMenuToTop();
-  return itemsAdd;
-}
-
 function dynamicSort(property) {
   var sortOrder = 1;
   if (property[0] === '-') {
@@ -946,7 +781,27 @@ function dynamicSort(property) {
   };
 }
 
-function makeGoodsToTargetV2(target, prework) {
+function moveToFourthItem() {
+  if (!checkIsPage(pageToolShop)) {
+    console.log('No need to go to 4th item as this is not tool shop')
+  }
+  console.log('Is tool shop, check adding shovel');
+  tapDown(430, 319, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, 280, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, 230, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, 200, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, 176, 40, 0);
+  sleep(config.sleep * 2);
+  tapUp(430, 176, 40, 0);
+  sleep(config.sleepAnimate * 2);
+  return;
+}
+
+function makeGoodsToTarget(target, prework) {
   // TODO: recognize building to reduce drop order time
   var itemsAdd = 0;
   pageFirstItemEnabled = [{ x: 587, y: 122, r: 121, g: 207, b: 12 }];
@@ -962,48 +817,61 @@ function makeGoodsToTargetV2(target, prework) {
     return -1;
   }
 
-  // === tool shop only ===
-  handleToolShopShovels();
-  var availableSlots = countProductionSlotAvailable();
-  if (availableSlots == 0) {
-    console.log('Early stop production shovel filled the queue');
-    return itemsAdd;
-  }
-  // end of tool shop ===
-
   var stocks = [];
   if (!checkIsPage(pageThirdItemEnabled)) {
     [goodsOneStock, goodsTwoStock].forEach(function (value, i) {
-      stocks.push({
-        id: i,
-        value: value,
-      });
+      if (value != -1) {
+        productionTarget = prework === true ? (target - i * 10 < 10 ? 10 : target - i * 10) : target;
+
+        stocks.push({
+          id: i,
+          value: value,
+          productionTarget: productionTarget,
+          stockTargetFullfilledPercent: value / productionTarget
+        });
+      }
     });
   } else {
+    // === tool shop only ===
+    var shovelStock = -1;
+    if (checkIsPage(pageToolShop)) {
+      moveToFourthItem();
+      pageShovelEnabled = [
+        { x: 575, y: 336, r: 121, g: 207, b: 12 },
+        { x: 539, y: 296, r: 253, g: 253, b: 253 },
+        { x: 420, y: 310, r: 81, g: 98, b: 125 },
+        { x: 409, y: 297, r: 70, g: 98, b: 146 },
+      ];
+      shovelStock = ocrProductStorage(goodsLocation['shovel']);
+      console.log('Shovel enable: ' + checkIsPage(pageShovelEnabled) + ' , stock: ' + shovelStock);
+    }
+    // end of tool shop ===
+
     SwipeProductionMenuToBottom();
     var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
     var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
     var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
     // SwipeProductionMenuToTop();
 
-    [goodsOneStock, goodsTwoStock, goodsThreeStock, goodsFourStock, goodsFiveStock, goodsSixStock].forEach(function (
+    [goodsOneStock, goodsTwoStock, goodsThreeStock, shovelStock, goodsFourStock, goodsFiveStock, goodsSixStock].forEach(function (
       value,
       i
     ) {
-      stocks.push({
-        id: i,
-        value: value,
-      });
+      if (value != -1) {
+        productionTarget = prework === true ? (target - i * 10 < 10 ? 10 : target - i * 10) : target;
+
+        stocks.push({
+          id: i,
+          value: value,
+          productionTarget: productionTarget,
+          stockTargetFullfilledPercent: value / productionTarget
+        });
+      }
     });
   }
 
-  // console.log('unsorted stocks: ', JSON.stringify(stocks));
-  if (!prework) {
-    stocks.sort(dynamicSort('value'));
-    console.log('sorted stocks: ', JSON.stringify(stocks));
-  } else {
-    console.log('prework, unsorted stocks: ', JSON.stringify(stocks));
-  }
+  stocks.sort(dynamicSort('stockTargetFullfilledPercent'));
+  console.log('target: ', target, 'sorted stocks: ', JSON.stringify(stocks));
   pageLockedGood = [
     { x: 351, y: 244, r: 121, g: 207, b: 12 },
     { x: 305, y: 244, r: 121, g: 207, b: 12 },
@@ -1013,37 +881,42 @@ function makeGoodsToTargetV2(target, prework) {
     { x: 381, y: 316, r: 237, g: 237, b: 229 },
   ];
 
+  var availableSlots = countProductionSlotAvailable();
   for (var id in stocks) {
     var stock = stocks[id];
 
-    prework === true ? productionTarget = target - id * 10 : productionTarget = target;
+    if (stock['stockTargetFullfilledPercent'] > 1) {
+      // console.log('skip as: ', stock['stockTargetFullfilledPercent'], stock['stockTargetFullfilledPercent'] > 1)
+      continue;
+    }
 
-    if (stock['value'] === -1) {
-      continue;
-    } else if (stock['value'] >= productionTarget) {
-      continue;
-    } else if (stock['id'] == 0) {
-      console.log('add 1st item from ' + goodsOneStock + ' to > ', productionTarget);
+    if (stock['id'] == 0) {
+      console.log('add 1st item from ' + stock['value'] + ' to > ', stock['productionTarget']);
       SwipeProductionMenuToTop();
       qTap(pageFirstItemEnabled, 800);
     } else if (stock['id'] == 1) {
-      console.log('add 2nd item from ' + goodsTwoStock + ' to > ', productionTarget);
+      console.log('add 2nd item from ' + stock['value'] + ' to > ', stock['productionTarget']);
       SwipeProductionMenuToTop();
       qTap(pageSecondItemEnabled, 800);
     } else if (stock['id'] == 2) {
-      console.log('add 3rd item from ' + goodsThreeStock + ' to > ', productionTarget);
+      console.log('add 3rd item from ' + stock['value'] + ' to > ', stock['productionTarget']);
       SwipeProductionMenuToTop();
       qTap(pageThirdItemEnabled, 800);
     } else if (stock['id'] == 3) {
-      console.log('add 4th item from ' + goodsFourStock + ' to > ', productionTarget);
+      console.log('add 3rd item shovel from ' + stock['value'] + ' to > ', stock['productionTarget']);
+      SwipeProductionMenuToTop();
+      moveToFourthItem();
+      qTap(pageThirdItemEnabled, 800);
+    } else if (stock['id'] == 4) {
+      console.log('add 4th item from ' + stock['value'] + ' to > ', stock['productionTarget']);
       SwipeProductionMenuToBottom();
       qTap(pageFirstItemEnabled, 800);
-    } else if (stock['id'] == 4) {
-      console.log('add 5th item from ' + goodsFiveStock + ' to > ', productionTarget);
+    } else if (stock['id'] == 5) {
+      console.log('add 5th item from ' + stock['value'] + ' to > ', stock['productionTarget']);
       SwipeProductionMenuToBottom();
       qTap(pageSecondItemEnabled, 800);
-    } else if (stock['id'] == 5) {
-      console.log('add 6th item from ' + goodsSixStock + ' to > ', productionTarget);
+    } else if (stock['id'] == 6) {
+      console.log('add 6th item from ' + stock['value'] + ' to > ', stock['productionTarget']);
       SwipeProductionMenuToBottom();
       qTap(pageThirdItemEnabled, 800);
     }
@@ -1055,6 +928,7 @@ function makeGoodsToTargetV2(target, prework) {
         break;
       } else if (checkIsPage(pageLockedGood)) {
         qTap(pageLockedGood);
+        waitUntilSeePage(pageInProduction);
         break;
       } else if (checkIsPage(pageInProduction) && availableSlots != latestCount) {
         availableSlots = latestCount;
@@ -1141,28 +1015,14 @@ function JobScheduling() {
   // TODO: count items produced
   // TODO: record not enough resources (keep list of all items)
 
-  if (config.productionFocusOnMin) {
-    // Prework = true will order decreased stock for high level products
-    makeGoodsToTargetV2(config.goodsTarget, true);
+  // Prework = true will order decreased stock for high level products
+  makeGoodsToTarget(config.goodsTarget, true);
 
-    // And rerun one without prework if has enough space
-    if (countProductionSlotAvailable() > 0) {
-      console.log('still have space after prework, keep producing');
-      SwipeProductionMenuToTop()
-      makeGoodsToTargetV2(config.goodsTarget, false);
-    }
-    return true;
-  } else {
-    var itemsAdd = makeGoodsToTarget(10, 2);
-    console.log('add: ', itemsAdd, ' items');
-    if (itemsAdd == -1) {
-      return false;
-    } else if (itemsAdd < emptySlots) {
-      itemsAdd = itemsAdd + makeGoodsToTarget(config.goodsTarget, emptySlots - itemsAdd > 3 ? 2 : 1);
-      if (itemsAdd == -1) {
-        return false;
-      }
-    }
+  // And rerun one without prework if has enough space
+  if (countProductionSlotAvailable() > 0) {
+    console.log('still have space after prework, keep producing');
+    SwipeProductionMenuToTop();
+    makeGoodsToTarget(config.goodsTarget, false);
   }
   return true;
 }
@@ -1280,15 +1140,6 @@ function handleWelcomePage() {
 
   // TODO: Need to handle login event
 
-  pageAnnouncement = [
-    { x: 610, y: 19, r: 56, g: 167, b: 231 },
-    { x: 619, y: 19, r: 255, g: 255, b: 255 },
-    { x: 628, y: 18, r: 56, g: 167, b: 231 },
-    { x: 59, y: 219, r: 54, g: 64, b: 87 },
-    { x: 71, y: 317, r: 54, g: 64, b: 87 },
-    { x: 19, y: 114, r: 63, g: 0, b: 9 },
-    { x: 25, y: 321, r: 75, g: 75, b: 75 },
-  ];
   pageProductionList = [
     { x: 315, y: 12, r: 204, g: 8, b: 40 },
     { x: 420, y: 9, r: 240, g: 172, b: 2 },
@@ -1414,7 +1265,12 @@ function findAndTapProductionHouse() {
       sleep(config.sleepAnimate * 3);
 
       if (!waitUntilSeePage(pageInProduction, 2)) {
-        qTap(house); // prevent when there are sugar cube to collect
+        if (checkIsPage(pageStockIsFull)) {
+          console.log('Found house but stock is full, send running event and keep doing other tasks');
+          sendEvent('running', '');
+        } else {
+          qTap(house); // prevent when there are sugar cube to collect
+        }
       }
 
       if (waitUntilSeePage(pageInProduction, 8)) {
@@ -1640,6 +1496,9 @@ function handleFindAndTapCandyHouse() {
         console.log('find house in random tap success, start working');
         config.lastGotoProduction = Date.now();
         return true;
+      } else if (checkIsPage(pageStockIsFull)) {
+        console.log('Found house but stock is full, send running event and keep doing other tasks');
+        sendEvent('running', '');
       }
     }
   }
@@ -1813,8 +1672,13 @@ function handleInputLoginInfo() {
 
   if (!isChooseLogin) {
     if (!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageInProduction)) {
-      console.log('handleInputLoginInfo not sure what to do, tap(1, 1)');
-      qTap(pnt(1, 1));
+      console.log('handleInputLoginInfo not sure what to do, tap(585, 22) announce page');
+      qTap(pnt(585, 22));
+
+      if (waitUntilSeePage(pageInFountain, 6)) {
+        console.log('handleLogin found myself in fountain, login success');
+        return true;
+      }
     }
   }
 
@@ -1959,9 +1823,9 @@ function handleInputLoginInfo() {
           sleep(config.sleepAnimate);
         }
 
-        qTap(pnt(1, 1));
+        qTap(pnt(585, 22));
         sleep(2000);
-        console.log('tapping (1, 1) until the game start: ', i);
+        console.log('tapping (585, 22) until the game start: ', i);
       }
       return true;
     } else {
@@ -2154,9 +2018,15 @@ function handleInFountain() {
     sleep(config.sleepAnimate);
     qTap(pageInFountain);
     sleep(config.sleepAnimate * 3);
+
+    if (checkIsPage(pageStockIsFull)) {
+      sendEvent('running', '');
+      console.log('Fountain stock is full, send running')
+    }
+
     handleTryHitBackToKingdom();
 
-    waitUntilSeePage(pageInKingdomVillage, 6, pnt(1, 1))
+    waitUntilSeePage(pageInKingdomVillage, 6, pnt(1, 1));
     console.log('Tapped fountain successfully');
   } else {
     handleTryHitBackToKingdom();
@@ -2357,19 +2227,20 @@ function handleGetDailyRewards() {
       { x: 235, y: 220, r: 242, g: 121, b: 189 },
       { x: 253, y: 166, r: 255, g: 253, b: 166 },
     ];
-    if (checkIsPage(pageNecessities)) {
-      qTap(pageNecessities);
-      sleep(config.sleepAnimate * 4);
-      qTap(pageNecessities);
-      sleep(config.sleepAnimate * 4);
+    // if (checkIsPage(pageNecessities)) {
+    // stop checking pageNecessities as that red dot keep changing
+    qTap(pageNecessities);
+    sleep(config.sleepAnimate * 4);
+    qTap(pageNecessities);
+    sleep(config.sleepAnimate * 4);
 
-      if (checkIsPage(pageIsDailyFreePackage)) {
-        qTap(pnt(265, 323));
-        sleep(config.sleepAnimate);
-        qTap(pnt(265, 323));
-        sleep(config.sleepAnimate);
-      }
+    if (checkIsPage(pageIsDailyFreePackage)) {
+      qTap(pnt(265, 323));
+      sleep(config.sleepAnimate);
+      qTap(pnt(265, 323));
+      sleep(config.sleepAnimate);
     }
+    // }
     handleGotoKingdomPage();
   }
 
@@ -2755,6 +2626,7 @@ function handlePVP(ceLimit) {
     }
   }
 
+  sendEvent('running', '');
   console.log('finish pvp, goto kingdom');
   handleGotoKingdomPage();
 }
@@ -2834,7 +2706,6 @@ function handleWishingTree() {
     ];
     if (checkIsPage(allDailyRewardCollect) && !config.alwaysFulfillWishes) {
       console.log('All wish fulfilled, skipping');
-      config.wishAlreadyFulfilled = true;
       return true;
     }
 
@@ -2849,17 +2720,30 @@ function handleWishingTree() {
       } else if (identifyPointColor(wishes[i].refreshPnt, { r: 193, g: 160, b: 111 }) > 0.95) {
         wishes[i].status = 'refresh';
       } else if (identifyPointColor(wishes[i].unfoldPnt, { r: 252, g: 219, b: 50 }) > 0.95) {
-        qTap(wishes[i].refreshPnt);
-        sleep(config.sleepAnimate * 2);
-        qTap(wishes[i].refreshPnt);
-        sleep(config.sleepAnimate);
-        console.log('refresh as it is an unfolded golden wish: ', i);
-        wishes[i].status = 'refreshed';
+        // Folded golden wish
+        if (config.wishingTreeRefreshGoldenWishes) {
+          qTap(wishes[i].refreshPnt);
+          sleep(config.sleepAnimate * 2);
+          qTap(wishes[i].refreshPnt);
+          sleep(config.sleepAnimate);
+          console.log('refresh as it is an unfolded golden wish: ', i);
+          wishes[i].status = 'refreshed';
+        } else {
+          qTap(wishes[i].unfoldPnt);
+          sleep(config.sleepAnimate);
+          wishes[i].status = 'opened';
+          sleep(config.sleepAnimate * 2);
+        }
       } else if (identifyPointColor(wishes[i].unfoldPnt, { r: 252, g: 247, b: 122 }) > 0.95) {
-        qTap(wishes[i].refreshPnt);
-        sleep(config.sleepAnimate);
-        console.log('refresh as it is a golden wish: ', i);
-        wishes[i].status = 'refreshed';
+        // Expend golden wish
+        if (config.wishingTreeRefreshGoldenWishes) {
+          qTap(wishes[i].refreshPnt);
+          sleep(config.sleepAnimate);
+          console.log('refresh as it is a golden wish: ', i);
+          wishes[i].status = 'refreshed';
+        } else {
+          wishes[i].status = 'opened';
+        }
       }
     }
 
@@ -2936,6 +2820,7 @@ function handleWishingTree() {
       if (checkIsPage(pageUncollapsedAffairs)) {
         qTap(pageUncollapsedAffairs);
       }
+      sendEvent('running', '');
       return true;
     }
     sleep(1000);
@@ -2970,13 +2855,20 @@ function handleInHotAirBallon() {
     ];
     qTap(pageChangeLocation);
     sleep(2000);
+    if (checkIsPage(pageStockIsFull)) {
+      console.log('goto ballon but stock is full, quitting');
+      sendEvent('running', '');
+      handleGotoKingdomPage();
+      return;
+    }
     if (!waitUntilSeePage(pageChooseBallonDestination, 8, pageChangeLocation)) {
       console.log('Cannot find the pageChooseBallonDestination, quitting');
       handleGotoKingdomPage();
+      return;
     }
 
     if (config.isHotAirBallonGotoEp3) {
-      console.log('ballon going to ep3')
+      console.log('ballon going to ep3');
       sleep(2000);
       tapDown(50, 268, 40, 0);
       sleep(config.sleep);
@@ -2999,7 +2891,7 @@ function handleInHotAirBallon() {
       qTap(pnt(510, 190)); // EP3
       sleep(2000);
     } else {
-      console.log('ballon going to the latest map')
+      console.log('ballon going to the latest map');
       tapDown(626, 268, 40, 0);
       sleep(config.sleep);
       moveTo(400, 268, 40, 0);
@@ -3008,17 +2900,17 @@ function handleInHotAirBallon() {
       sleep(1100);
       tapUp(-2000, 268, 40, 0);
       sleep(config.sleepAnimate * 3);
-  
+
       for (var i = 0; i < 4; i++) {
         for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
           for (var yLocation = 85; yLocation < 285; yLocation += 70) {
             qTap(pnt(xLocation, yLocation));
             sleep(2000);
-  
+
             if (waitUntilSeePage(pageChooseBallonDestination, 5)) {
               continue;
             }
-  
+
             if (checkIsPage(pageInHotAirBallon)) {
               console.log('ballon destination choosed successfully, i, x, y = ', i, xLocation, yLocation);
               i = 10;
@@ -3158,23 +3050,24 @@ function handleAutoBattleInIslands(item) {
     { x: 413, y: 68, r: 50, g: 137, b: 215 },
   ];
   pageBattleFailed = [
-    {x: 414, y: 56, r: 58, g: 91, b: 94},
-    {x: 381, y: 65, r: 46, g: 46, b: 46},
-    {x: 619, y: 21, r: 56, g: 165, b: 231}
+    { x: 414, y: 56, r: 58, g: 91, b: 94 },
+    { x: 381, y: 65, r: 46, g: 46, b: 46 },
+    { x: 619, y: 21, r: 56, g: 165, b: 231 },
   ];
   pageFoundOctopus = [
     { x: 500, y: 330, r: 8, g: 166, b: 222 }, // exit
     { x: 360, y: 243, r: 229, g: 18, b: 50 },
-  ]
+  ];
   pageAutoUseSkillEnabled = [{ x: 28, y: 291, r: 223, g: 221, b: 1 }];
   pageSpeedBoostEnabled = [{ x: 19, y: 333, r: 249, g: 245, b: 0 }];
 
   var img = getScreenshot();
-  foundResults = findImages(img, item, 0.8, 5, true);
+  foundResults = findImages(img, item, 0.88, 5, true);
   console.log('Found item icon at: ', JSON.stringify(foundResults));
   releaseImage(img);
 
   for (var i = 0; i < foundResults.length; i++) {
+    waitUntilSeePage(pageInTropicalIsland, 15);
     img = getScreenshot();
 
     foundResults = findImages(img, item, 0.8, 5, true);
@@ -3203,7 +3096,7 @@ function handleAutoBattleInIslands(item) {
             return true;
           }
 
-          for (var j = 0; j < 600; j ++) {
+          for (var j = 0; j < 600; j++) {
             if (!checkIsPage(pageAutoUseSkillEnabled)) {
               console.log('Island battle skill not enabled, enable it');
               qTap(pageAutoUseSkillEnabled);
@@ -3229,16 +3122,14 @@ function handleAutoBattleInIslands(item) {
               sleep(1500);
               break;
             } else if (checkIsPage(pageBattleFailed)) {
-              console.log('failed to clear the sword, stop clearing red swords');
+              console.log('failed to clear the sword, stop battle in islands');
               qTap(pageBattleFailed);
-              i = 999;
-              break;
+              sleep(1500);
+              return;
             }
 
-            sleep(1000);
+            sleep(2000);
           }
-
-          waitUntilSeePage(pageInTropicalIsland, 10);
         }
       }
     }
@@ -3253,9 +3144,9 @@ function handleCollectIslandResources() {
   ];
   pageInTropicalIsland = [
     { x: 253, y: 332, r: 192, g: 126, b: 68 },
-    {x: 275, y: 319, r: 207, g: 139, b: 88}
+    { x: 275, y: 319, r: 207, g: 139, b: 88 },
   ];
-  
+
   if (!checkIsPage(pageInTropicalIsland)) {
     handleGotoKingdomPage();
 
@@ -3265,8 +3156,8 @@ function handleCollectIslandResources() {
     if (waitUntilSeePage(pageCanGoSodaIsland, 9)) {
       qTap(pageCanGoSodaIsland);
 
-      if (!waitUntilSeePage(pageInTropicalIsland, 6, pageCanGoSodaIsland)) {
-        console.log("Can't goto tropical island page in 6 secs, skipping this task");
+      if (!waitUntilSeePage(pageInTropicalIsland, 12, pageCanGoSodaIsland)) {
+        console.log("Can't goto tropical island page in 12 secs, skipping this task");
         return false;
       }
     } else {
@@ -3276,12 +3167,13 @@ function handleCollectIslandResources() {
   } else {
     console.log('already in tropical islands');
   }
+  sendEvent('running', '');
 
   // Collect resource if ready
   pageResourceisReady = [
     { x: 370, y: 330, r: 123, g: 207, b: 8 },
-    { x: 278, y: 333, r: 255, g: 108, b: 118 }
-  ]
+    { x: 278, y: 333, r: 255, g: 108, b: 118 },
+  ];
   if (checkIsPage(pageResourceisReady)) {
     console.log('successfully collected tropical island resources');
     qTap(pageResourceisReady);
@@ -3323,7 +3215,7 @@ function handleCollectIslandResources() {
     keycode('BACK', 1000);
     sleep(2000);
   } else {
-    console.log('No cookies need to be free');
+    console.log('No cookies need to / can be be free');
     keycode('BACK', 1000);
     sleep(2000);
   }
@@ -3334,10 +3226,10 @@ function handleCollectIslandResources() {
   );
   var whiteSword = getImageFromBase64(
     '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAdABcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9t/i/+0J8G/gF4bg8W/GD4hab4c0y6v0soL/VrgRRNMyO+3J6ARxyyMxwqRxSSMVRGYfKn7Z/7T3hfx/8evD3wX/4XB4g0TwPaeCIvFE/iLwB43m0satd30lzb2KTahYsHt7WKK1up8FhHcvLB8w8jElX9rK/+KPiD9tbwEfg5q9vrV74a+Hev6lrPhnUENvBpdvMY4YL2O+Ri1veXVyqWcatFKGt11AqYwsok8U1j4W/A34qy6vpPgnQ7n4ceM7i6uZNd0D7FDAZ54vLWa4ntI38m82+fEGubd8lpFR5sgoPwPxh4/4i4Zy+rQw+Eq06M1FLGQUZwpyum1ONpON1onKKTvZdbfd8G5TkmNzOlHF1lzNN+zXxW1Skk7XS3drvt0Z9Efsp/tIfGL4WfHvw1+zL8SviDrPxB8O+M7G9/wCEX17WhbyatolzZW6zPFcywpGbuykiVttzIjTRz7I5ZZvtMZjK88/4JZeDfht8HfFmr+DviHHqcfxkOmXkzC7vJbnTF8Om/Hl/2O3+qit9xtRcJtine4TzJIwjQMSvuvDGvmdXgjCVMwxscZUkr+1jazi37qbTacorST7pni8VQwdHPKtPDU3CMdLNWvb7SXRPdHb/ALNM154o+Ov7VPiXTon1nxHY614Z0bStKluwEhtINDS6tQNzKEQ3WoXzscjOWHJBzxP7V3gbQND8OWH7HPhbUrfUfij4uYX9trps/PuPDlq8q/a/EkhDxvb+UFaO2JYeddLDHh0Sdkq+NPgB8XPDn7QnjPxn8IP2odZ8Caf4u0uy0nxraeGfD9kb7U5dPe7S3uY7y6Sb7K3l3JQ7I9+I0IcEDHQfCf4R+A/gtY3sHgfS5/tmrXX2rXtc1S/lvdS1e5Ocz3d3OzzXEnJwXY7QcKFGBX2qqTlgJ4SUE4ycua+qak3pbzTtrt5nyuJwGFq5vTzBzd4RhypXVpRSWr7XV7K99ro6z9mT4G6X8CNR8Q+Itc+Kuq+M/EWvzRQP4j1+0toLqLS7febSx220ccRWNpriQuqK0kk7sRjaqlWtGN1qupR2H2ny/M3fPtzjCk9OPSiuPA4HB5XhIYXCU406cFaMYpKKXZJaJHfXxFfGVnWrScpPdvc//9k='
-  )
+  );
 
-  handleAutoBattleInIslands(redSword)
-  handleAutoBattleInIslands(whiteSword)
+  handleAutoBattleInIslands(redSword);
+  handleAutoBattleInIslands(whiteSword);
 
   releaseImage(redSword);
   releaseImage(whiteSword);
@@ -3361,16 +3253,30 @@ function checkAndRestartApp() {
   }
 }
 
-function findSpecificImageInScreen(img) {
+function findSpecificImageInScreen(img, threashold) {
+  if (threashold === undefined) {
+    threashold = 0.95
+  }
+
   var img = getScreenshot();
-  var foundResults = findImages(img, greenCheckedWriteBackground, 0.92, 5, true);
+  var foundResults = findImages(img, greenCheckedWriteBackground, threashold, 5, true);
   console.log('Found green Checked icon at: ', JSON.stringify(foundResults));
   releaseImage(img);
   return foundResults;
 }
 
 function handleTryResolveGreenChecks() {
-  var foundResults = findSpecificImageInScreen(greenCheckedWriteBackground)
+  if (checkIsPage(pageAnnouncement)) {
+    qTap(pageAnnouncement);
+    waitUntilSeePage(pageInKingdomVillage, 5);
+  }
+
+  // Only try resolve green check every 5 mins
+  if ((Date.now() - config.lastTryResolveGreenChecks) / 60000 < 3) {
+    return false
+  }
+
+  var foundResults = findSpecificImageInScreen(greenCheckedWriteBackground, 0.985);
   if (foundResults.length === 0) {
     console.log('Confirmed no green check in this screen, back to kingdom');
     handleTryHitBackToKingdom();
@@ -3378,31 +3284,30 @@ function handleTryResolveGreenChecks() {
   }
 
   var cnt = 0;
-  console.log(foundResults = findSpecificImageInScreen(greenCheckedWriteBackground), foundResults.length,  cnt < 10)
-  while(foundResults.length > 0 && cnt < 10) {
+  while (foundResults.length > 0 && cnt < 10) {
     console.log('Fount green checked, tap it: ', JSON.stringify(foundResults));
     qTap(foundResults[0]);
-    sleep(4000)
+    sleep(4000);
 
     if (checkIsPage(pageInTrainStation)) {
-      console.log('green check leads to train station')
-      handleTrainStation()
-    }
-    else if (checkIsPage(pageInFountain)) {
-      console.log('green check leads to fountain')
-      handleInFountain()
-    }
-    else if (waitUntilSeePage(pageInHotAirBallon), 8, pnt(1,1)) {
-      console.log('green check leads to hot air ballon')
+      console.log('green check leads to train station');
+      handleTrainStation();
+    } else if (checkIsPage(pageInFountain)) {
+      console.log('green check leads to fountain');
+      handleInFountain();
+    } else if ((waitUntilSeePage(pageInHotAirBallon), 8, pnt(1, 1))) {
+      console.log('green check leads to hot air ballon');
       handleInHotAirBallon();
     }
-    waitUntilSeePage(pageInKingdomVillage, 6, pnt(1,1))
+    waitUntilSeePage(pageInKingdomVillage, 6, pnt(1, 1));
 
-    cnt ++;
-    foundResults = findSpecificImageInScreen(greenCheckedWriteBackground)
+    cnt++;
+    foundResults = findSpecificImageInScreen(greenCheckedWriteBackground);
   }
 
-  releaseImage(greenCheckedWriteBackground);
+  if (foundResults.length > 0) {
+    config.lastTryResolveGreenChecks = Date.now();
+  }
   return true;
 }
 
@@ -3642,13 +3547,23 @@ function start(inputConfig) {
   checkAndRestartApp();
 
   if (config.account !== 'default_xrobotmon_account@gmail.com' && config.account !== 'aaa@gmail.com') {
-    while (!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageInProduction) && config.run) {
+    while (!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageAnnouncement) && !checkIsPage(pageInProduction) && config.run) {
       if (checkIsPage(pageNotifyQuit)) {
         console.log('found pageNotifyQuit while trying to login, hit back');
         qTap(pageNotifyQuit);
       }
 
-      handleInputLoginInfo();
+      if (handleInputLoginInfo()) {
+        console.log('handleInputLoginInfo success');
+        break;
+      }
+
+      // we might get into village but seen lots of green checks
+      if (handleTryResolveGreenChecks()) {
+        console.log('successfully handled green check, we are in village, stop trying login');
+        break;
+      }
+
       console.log('Trying to login');
     }
     if (!config.run) {
@@ -3672,6 +3587,8 @@ function start(inputConfig) {
     handleGotoKingdomPage();
   }
 
+  handleTryResolveGreenChecks();
+
   for (var i = 1; i < 100000000; i++) {
     console.log('start loop', i, Date.now());
 
@@ -3681,7 +3598,11 @@ function start(inputConfig) {
     }
 
     if ((Date.now() - config.lastGotoProduction) / 60000 > 10) {
-      console.log('Check other tasks as we have produce for: ', (Date.now() - config.lastGotoProduction) / 60000, ' mins');
+      console.log(
+        'Check other tasks as we have produce for: ',
+        (Date.now() - config.lastGotoProduction) / 60000,
+        ' mins'
+      );
       if (
         config.autoCollectMailIntervalInMins != 0 &&
         (Date.now() - config.lastCollectMail) / 60000 > config.autoCollectMailIntervalInMins
@@ -3691,11 +3612,15 @@ function start(inputConfig) {
         config.lastCollectMail = Date.now();
       }
       if (config.autoCollectDailyReward && (Date.now() - config.lastCollectDailyReward) / 60000 > 240) {
-        console.log('Collect daily reward: ', (Date.now() - config.lastCollectDailyReward) / 60000, ' mins just passed');
+        console.log(
+          'Collect daily reward: ',
+          (Date.now() - config.lastCollectDailyReward) / 60000,
+          ' mins just passed'
+        );
         handleGetDailyRewards();
         config.lastCollectDailyReward = Date.now();
       }
-  
+
       if (
         config.autoSendHotAirBallonIntervalInMins != 0 &&
         (Date.now() - config.lastSendHotAirBallon) / 60000 > config.autoSendHotAirBallonIntervalInMins
@@ -3704,7 +3629,7 @@ function start(inputConfig) {
         handleGotoHotAirBallon();
         config.lastSendHotAirBallon = Date.now();
       }
-  
+
       if (
         config.autoCollectTrainIntervalInMins != 0 &&
         (Date.now() - config.lastCollectTrain) / 60000 > config.autoCollectTrainIntervalInMins
@@ -3713,26 +3638,16 @@ function start(inputConfig) {
         handleTrain();
         config.lastCollectTrain = Date.now();
       }
-  
+
       if (
         config.autoFulfillWishesIntervalInMins != 0 &&
         (Date.now() - config.lastFulfillWishes) / 60000 > config.autoFulfillWishesIntervalInMins
       ) {
-        if (config.wishAlreadyFulfilled && !config.alwaysFulfillWishes) {
-          console.log(
-            'Wish daily reward already collected, skipping: ',
-            (Date.now() - config.lastFulfillWishes) / 60000,
-            ' mins just passed'
-          );
-          config.lastFulfillWishes = Date.now();
-        } else {
-          console.log('Fulfill wishes: ', (Date.now() - config.lastFulfillWishes) / 60000, ' mins just passed');
-          handleWishingTree();
-          config.lastFulfillWishes = Date.now();
-          sendEvent('running', '');
-        }
+        console.log('Fulfill wishes: ', (Date.now() - config.lastFulfillWishes) / 60000, ' mins just passed');
+        handleWishingTree();
+        config.lastFulfillWishes = Date.now();
       }
-  
+
       if (
         config.autoCollectFountainIntervalInMins != 0 &&
         (Date.now() - config.lastCollectFountain) / 60000 > config.autoCollectFountainIntervalInMins
@@ -3741,32 +3656,37 @@ function start(inputConfig) {
         findAndTapFountain();
         config.lastCollectFountain = Date.now();
       }
-  
+
       if (
-        config.worksBeforeCollectCandy != 0 &&
-        (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy
+        config.autoPvPIntervalInMins != 0 &&
+        (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins
       ) {
-        console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
-        handleFindAndTapCandyHouse();
-        config.lastCollectCandyTime = Date.now();
-      }
-  
-      if (config.autoPvPIntervalInMins != 0 && (Date.now() - config.lastAutoPvP) / 60000 > config.autoPvPIntervalInMins) {
         console.log('AutoPvP: ', (Date.now() - config.lastAutoPvP) / 60000, ' just passed');
         handlePVP(config.autoPvPTargetScoreLimit);
         config.lastAutoPvP = Date.now();
-        sendEvent('running', '');
       }
-  
+
       if (
         config.autoCollectTropicalIslandsIntervalInMins != 0 &&
         (Date.now() - config.lastCollectTropicalIsland) / 60000 > config.autoCollectTropicalIslandsIntervalInMins
       ) {
-        console.log('Collect Tropical island: ', (Date.now() - config.lastCollectTropicalIsland) / 60000, ' just passed');
+        console.log(
+          'Collect Tropical island: ',
+          (Date.now() - config.lastCollectTropicalIsland) / 60000,
+          ' just passed'
+        );
         handleCollectIslandResources();
         config.lastCollectTropicalIsland = Date.now();
-        sendEvent('running', '');
       }
+    }
+
+    if (
+      config.worksBeforeCollectCandy != 0 &&
+      (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy
+    ) {
+      console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
+      handleFindAndTapCandyHouse();
+      config.lastCollectCandyTime = Date.now();
     }
 
     var act = JobScheduling();
@@ -3804,13 +3724,12 @@ function start(inputConfig) {
         console.log('in production, continue work');
         config.jobFailedCount = 0;
         continue;
-      } else if (handleTryResolveGreenChecks()) {
-        console.log('just handleTryResolveGreenChecks()');
+      } else if (handleRelogin()) {
+        console.log('just handleRelogin()');
         config.jobFailedCount = 0;
         continue;
-      }
-      else if (handleRelogin()) {
-        console.log('just handleRelogin()');
+      } else if (handleTryResolveGreenChecks()) {
+        console.log('just handleTryResolveGreenChecks()');
         config.jobFailedCount = 0;
         continue;
       } else if (handleWelcomePage()) {

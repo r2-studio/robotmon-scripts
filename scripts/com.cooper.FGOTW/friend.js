@@ -213,7 +213,7 @@ function getFriendLine(screenshot){
       }
       if(isLine){
         if(lineCnt > 0){
-            if(y - lineY[lineCnt-1] < 225){
+            if(y - lineY[lineCnt-1] < 10){
                 //same line
                 lineCnt--;
             }

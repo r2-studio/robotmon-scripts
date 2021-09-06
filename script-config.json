@@ -70,7 +70,7 @@
     },
     "com.r2studio.CookieKingdom.Manufacturing.beta": {
       "title": "CookieKingdom Factorio *beta*",
-      "versionCode": 3.06,
+      "versionCode": 3.08,
       "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>24x7 non-stop production</li><li>Simulators only, 360x640, 120dpi</li><li>v1.4 New feature: Shovels production</li><li>v1.5 New feature: target to build everything to 60</li><li>v1.8 Correct number reading parameters</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.Manufacturing_beta/index.zip",
@@ -157,15 +157,15 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.12,
-      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.12 修正無法判斷好友禮裝突滿的問題<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.14,
+      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.14 修正無法辨識卡片剋職的問題，修正部分關卡背景導致技能使用失敗的問題<br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 3.12,
-      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.12 台服正式升級V3，需重新設定腳本與擷取好友。提升辨識解析度，並修正各種問題<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.13,
+      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br>V3.13 修正抽箱無法自動換箱的問題，修正卡在禮裝掉落畫面的問題<br><br>V3.12 台服正式升級V3，需重新設定腳本與擷取好友。提升辨識解析度，並修正各種問題<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
