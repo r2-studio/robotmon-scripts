@@ -1,0 +1,128 @@
+<meta charset="utf-8" />
+<title>Hello Sweet Days</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/simplesettings/simplesettings.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts@master/utils/simplesettings/simplesettings.umd.min.js"></script>
+
+<body>
+  <div id="app"></div>
+</body>
+
+<script>
+  var selections = {
+    package: 'com.r2studio.sweetdays',
+    versionCode: 1,
+    languages: ['zh_TW', 'en'],
+    title: 'Hello Sweet Days',
+    settings: [
+      {
+        type: 'text',
+        titlei18n: { zh_TW: '*遊戲畫面被遮住可能無法正常運行', en: 'It might not works, if screen covered by something, ' },
+      },
+      {
+        type: 'text',
+        titlei18n: { zh_TW: '*平板或較寬螢幕尚未測試', en: 'Haven\'t test on tablet' },
+      },
+      {
+        type: 'text',
+        titlei18n: { zh_TW: '*小鎮任務尚未全面支援', en: 'Daily tasks not full supported' },
+      },
+      {
+        type: 'select',
+        titlei18n: { zh_TW: '計算螢幕方式', en: 'Calculate Screen Size' },
+        default: 'auto',
+        selections: [
+          { text: 'Auto calculate', value: 'auto' },
+          { text: 'Detect black site', value: 'detect' },
+          { text: 'Manual', value: 'manual' },
+        ],
+        key: 'calculateScreenMethod',
+        value: 'auto',
+      },
+      {
+        type: 'number',
+        titlei18n: { zh_TW: '上方黑色邊緣像素，只有Manual選擇時使用', en: 'Top Black Pixel, Only Manual Selected' },
+        default: 0,
+        min: 0,
+        max: 300,
+        step: 1,
+        key: 'manualSetOffsetY',
+        value: 0,
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'boolean',
+        titlei18n: { zh_TW: '自動散步', en: 'Walk Arround' },
+        default: true,
+        key: 'enableTaskWalkAround',
+        value: true,
+      },
+      {
+        type: 'boolean',
+        titlei18n: { zh_TW: '自動回訪', en: 'Return Visit' },
+        default: true,
+        key: 'enableTaskReturnVisit',
+        value: true,
+      },
+      {
+        type: 'boolean',
+        titlei18n: { zh_TW: '自動加入派對', en: 'Join Party' },
+        default: true,
+        key: 'enableTaskJoinParty',
+        value: true,
+      },
+      {
+        type: 'boolean',
+        titlei18n: { zh_TW: '自動舉辦派對', en: 'Hold Party' },
+        default: true,
+        key: 'enableTaskHoldParty',
+        value: true,
+      },
+      {
+        type: 'boolean',
+        titlei18n: { zh_TW: '自動完成任務', en: 'Finish Tasks' },
+        default: true,
+        key: 'enableTaskFinishDailyMission',
+        value: true,
+      },
+      {
+        type: 'boolean',
+        titlei18n: { zh_TW: '自動接新任務', en: 'Take New Tasks' },
+        default: true,
+        key: 'enableTaskNewDailyMission',
+        value: true,
+      },
+      {
+        type: 'boolean',
+        titlei18n: { zh_TW: '自動家裡澆花', en: 'Water Home Flower' },
+        default: true,
+        key: 'enableTaskHomeFlower',
+        value: true,
+      },
+    ],
+  };
+
+  var config = undefined;
+  simplesettings.render('#app', selections, function (c) {
+    config = c;
+  });
+
+  function onEvent(eventType) {
+    if (eventType == 'OnPlayClick') {
+      var jsonConfig = JSON.stringify(config);
+      var startCommand = "start('" + jsonConfig + "')";
+      console.log('startCommand: ', startCommand);
+      JavaScriptInterface.runScript(startCommand);
+    } else if (eventType == 'OnPauseClick') {
+      JavaScriptInterface.runScript('stop();');
+    } else if (eventType == 'OnSettingClick') {
+      JavaScriptInterface.runScript('stop();');
+    }
+  }
+  // onEvent('OnPlayClick');
+</script>
