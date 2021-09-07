@@ -1,0 +1,397 @@
+<html>
+  <head>
+    <!-- Google Analytics -->
+    <script>
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(
+        window,
+        document,
+        "script",
+        "https://www.google-analytics.com/analytics.js",
+        "ga"
+      );
+
+      ga("create", "UA-120995182-1");
+
+      ga("set", "checkProtocolTask", null); // Disable file protocol checking.
+      ga("set", "checkStorageTask", null); // Disable cookie storage checking.
+      ga("set", "historyImportTask", null); // Disable history checking (requires reading from cookies).
+    </script>
+    <!-- End Google Analytics -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      .command {
+        list-style-type: none;
+        padding-left: 14px;
+      }
+      .navbar-custom {
+        border-radius: 0 !important;
+        background-color: #2196f3;
+        color: #ffffff;
+      }
+      .navbar-custom > a {
+        width: 100%;
+        color: #ffffff;
+        text-align: center;
+      }
+      .navbar-custom > a:hover {
+        color: #ffffff;
+      }
+
+      .list-group-item {
+        padding-bottom: 6px !important;
+        padding-top: 6px !important;
+      }
+
+      /* The switch - the box around the slider */
+      .switch {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        margin-bottom: 0px;
+        margin-top: -4px;
+        width: 52px;
+        height: 28px;
+      }
+
+      /* Hide default HTML checkbox */
+      .switch input {
+        display: none;
+      }
+
+      /* The slider */
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 2px;
+        bottom: 4px;
+        top: 2px;
+        background-color: white;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196f3;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196f3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(24px);
+        -ms-transform: translateX(24px);
+        transform: translateX(24px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 28px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
+      .btn-plus {
+        color: #ffffff;
+        background-color: #2196f3;
+        border-color: #2196f3;
+      }
+      .btn-infinite {
+        color: #ffffff;
+        background-color: #2196f3;
+        border-color: #2196f3;
+      }
+      .btn-plus:hover,
+      .btn-plus:focus,
+      .btn-plus:active,
+      .btn-plus.active {
+        color: #ffffff !important;
+        background-color: #0d8aee;
+        border-color: #0c7cd5;
+      }
+      .btn-plus.disabled:hover,
+      .btn-plus.disabled:focus,
+      .btn-plus.disabled:active,
+      .btn-plus.disabled.active,
+      .btn-plus[disabled]:hover,
+      .btn-plus[disabled]:focus,
+      .btn-plus[disabled]:active,
+      .btn-plus[disabled].active,
+      fieldset[disabled] .btn-plus:hover,
+      fieldset[disabled] .btn-plus:focus,
+      fieldset[disabled] .btn-plus:active,
+      fieldset[disabled] .btn-plus.active {
+        color: #ffffff;
+        background-color: #2196f3;
+        border-color: #2196f3;
+      }
+      .btn-plus,
+      .btn-danger,
+      .btn-infinite {
+        width: 35px;
+        padding: 3px 0px 3px 0px !important;
+      }
+      .select2-selection__rendered {
+        overflow: visible !important;
+      }
+    </style>
+
+    <link rel="stylesheet" href="./jquery/bootstrap.min.css" />
+    <script src="./jquery/jquery.min.js"></script>
+    <script src="./jquery/bootstrap.min.js"></script>
+    <link href="./jquery/select2.min.css" rel="stylesheet" />
+    <script src="./jquery/select2.min.js"></script>
+    <script src="./jquery/bootbox.min.js"></script>
+
+    <script>
+      var version = "";
+      var server = "TW";
+      var gaLabel = "tool_";
+      var commandId = 0;
+
+      $(function () {
+        $("#addGetFriendPoint").click(function () {
+          clearScript();
+          commandId++;
+          insertNewCommand(getGetFriendPoint(commandId));
+        });
+        $("#addGetBox").click(function () {
+          clearScript();
+          commandId++;
+          insertNewCommand(getGetBox(commandId));
+          $("#getBoxReset" + commandId).select2({
+            minimumResultsForSearch: -1,
+            dropdownAutoWidth: true,
+          });
+          $("#getBoxFast" + commandId).select2({
+            minimumResultsForSearch: -1,
+            dropdownAutoWidth: true,
+          });
+        });
+        $("#setServerJP").click(function () {
+          server = "JP";
+          $("#currentServerText").text("設定為 日服");
+        });
+        $("#setServerTW").click(function () {
+          server = "TW";
+          $("#currentServerText").text("設定為 台服");
+        });
+        setTimeout(function () {
+          JavaScriptInterface.showMenu();
+          JavaScriptInterface.runScriptCallback("init();", "initHTML");
+        }, 1500);
+      });
+
+      function insertNewCommand(newCmd) {
+        $("#skill-list").prepend(newCmd);
+      }
+
+      function getCurrentScript() {
+        var newScript = "";
+        $("#skill-list")
+          .children()
+          .each(function () {
+            var itemTitle = $(this).find("label:first").text();
+            var itemId = $(this).find("label:first").attr("name");
+            switch (itemTitle) {
+              case "友抽":
+                newScript += "getFriendPoint();";
+                break;
+              case "抽箱":
+                newScript +=
+                  "getBox(" +
+                  $("#getBoxReset" + itemId).val() +
+                  "," +
+                  $("#getBoxFast" + itemId).val() +
+                  ");";
+                break;
+              default:
+                newScript += "/*no this function*/";
+                break;
+            }
+          });
+        return newScript;
+      }
+
+      function clearScript() {
+        $("#skill-list").empty();
+        commandId = 0;
+      }
+
+      function getGetFriendPoint(id) {
+        return getCommandItem(
+          id,
+          "友抽",
+          "<label>請移到友抽頁面後再執行腳本</label>"
+        );
+      }
+
+      function getGetBox(id) {
+        return getCommandItem(
+          id,
+          "抽箱",
+          "<li><label>連續抽箱請開啟自動重置&nbsp;&nbsp;</label>" +
+            "<li><label>快速模式&nbsp;&nbsp;</label>" +
+            '<select id = "getBoxFast' +
+            id +
+            '">' +
+            '<option value = "0">關閉</option>' +
+            '<option value = "1" selected>開啟</option></select></li>' +
+            "<label>開啟此功能較耗電</label><br><br>" +
+            "<li><label>自動重置&nbsp;&nbsp;</label>" +
+            '<select id = "getBoxReset' +
+            id +
+            '">' +
+            '<option value = "0" selected>否</option>' +
+            '<option value = "1">是</option></select></li>' +
+            "<label>注意 自動重置開啟時，中獎後會點擊重置按鈕，想抽乾前十箱請小心</label>"
+        );
+      }
+
+      function getCommandItem(id, name, selection) {
+        if (selection == undefined) {
+          selection = "";
+        }
+        var result =
+          '<div class="list-group-item">' +
+          '<label name="' +
+          id +
+          '">' +
+          name +
+          "</label>";
+        result +=
+          "<br>" +
+          '<div id="commandvalue' +
+          id +
+          '"><ul class="command">' +
+          selection +
+          "</ul></div>" +
+          "</div>";
+        return result;
+      }
+
+      //Callback------------------------------------------------------------------------------------------------------------------------
+      function initHTML(result) {
+        version = result;
+        gaLabel = "tool_" + version;
+        $("#serverMessage").text(
+          "版本" + version + " 啟動成功 - 其他伺服器版本請至腳本商店下載"
+        );
+
+        var gaEvent = "apptool";
+        ga("set", "page", gaEvent);
+        ga("send", "pageview");
+      }
+
+      function scriptFinish() {
+        ga("send", {
+          hitType: "event",
+          eventCategory: "Script",
+          eventAction: "Finish",
+          eventLabel: gaLabel,
+        });
+        JavaScriptInterface.showMenu();
+        JavaScriptInterface.showPlayButton();
+      }
+
+      function checkstring(longStr, shortStr) {
+        if (longStr.substring(0, shortStr.length) == shortStr) {
+          return true;
+        }
+        return false;
+      }
+      //Call by Android app-----------------------------------------------------------------------------------------------------
+      function onEvent(eventType) {
+        if (eventType == "OnPlayClick") {
+          var currentScript = getCurrentScript();
+
+          JavaScriptInterface.runScriptCallback(
+            "start('" + currentScript + "','" + server + "');",
+            "scriptFinish"
+          );
+          JavaScriptInterface.hideMenu();
+          JavaScriptInterface.setXY(100, 0);
+          ga("send", {
+            hitType: "event",
+            eventCategory: "Script",
+            eventAction: "Play",
+            eventLabel: l,
+          });
+        } else if (eventType == "OnPauseClick") {
+          ga("send", {
+            hitType: "event",
+            eventCategory: "Script",
+            eventAction: "Stop",
+            eventLabel: gaLabel,
+          });
+          JavaScriptInterface.runScript("stop();");
+        } else if (eventType == "OnReloadClick") {
+        }
+      }
+      function onLog(message) {
+        console.log(message);
+      }
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-custom" role="navigation">
+      <a class="navbar-brand">FGO</a>
+    </nav>
+    <div class="container">
+      <li id="serverMessage">
+        初始化中，如此行文字一直存在，請重開腳本，並確認Robotmon
+        service狀態與檔案完整性
+      </li>
+      <a href="https://www.facebook.com/FGOAutoScript"
+        >有任何使用上的問題，歡迎到粉絲團來發問</a
+      ><br /><br /><br />
+      <ul class="list-group">
+        <div class="pull-left" style="margin-top: -4px">
+          <button id="setServerJP" type="button">日服</button>
+          <button id="setServerTW" type="button" style="margin-left: 4px">
+            台服
+          </button>
+        </div>
+        <br /><br />
+        <div class="pull-left" style="margin-top: -4px">
+          <button id="addGetFriendPoint" type="button">友抽</button>
+          <button id="addGetBox" type="button" style="margin-left: 4px">
+            抽箱
+          </button>
+        </div>
+        <br /><br />
+        <li id="currentServerText">設定為 台服</li>
+        <br /><br />
+        <div class="list-group" id="skill-list"></div>
+      </ul>
+    </div>
+  </body>
+</html>
