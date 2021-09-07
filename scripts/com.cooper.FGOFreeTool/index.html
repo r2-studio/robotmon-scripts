@@ -303,7 +303,7 @@
         version = result;
         gaLabel = "tool_" + version;
         $("#serverMessage").text(
-          "版本" + version + " 啟動成功 - 其他伺服器版本請至腳本商店下載"
+          "開箱友抽工具 版本" + version + " 啟動成功"
         );
 
         var gaEvent = "apptool";
@@ -374,23 +374,22 @@
         >有任何使用上的問題，歡迎到粉絲團來發問</a
       ><br /><br /><br />
       <ul class="list-group">
+        <li id="currentServerText">設定為 台服</li>
+        <br />
+        <div class="list-group" id="skill-list"></div>
         <div class="pull-left" style="margin-top: -4px">
           <button id="setServerJP" type="button">日服</button>
           <button id="setServerTW" type="button" style="margin-left: 4px">
             台服
           </button>
-        </div>
-        <br /><br />
-        <div class="pull-left" style="margin-top: -4px">
-          <button id="addGetFriendPoint" type="button">友抽</button>
+          <button id="addGetFriendPoint" type="button" style="margin-left: 4px">
+            友抽
+          </button>
           <button id="addGetBox" type="button" style="margin-left: 4px">
             抽箱
           </button>
         </div>
         <br /><br />
-        <li id="currentServerText">設定為 台服</li>
-        <br /><br />
-        <div class="list-group" id="skill-list"></div>
       </ul>
     </div>
   </body>
