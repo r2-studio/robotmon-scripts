@@ -1,0 +1,223 @@
+.blockDiv {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.blockTitle {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 4px;
+  user-select: none;
+}
+
+.discriptionText {
+  font-size: 18px;
+  margin: 4px;
+  user-select: none;
+}
+
+.cmdButton {
+  height: 30px;
+  font-size: 14px;
+  border-radius: 4px;
+  margin: 4px;
+  user-select: none;
+}
+
+.cmdButton:active {
+  background-color: gray;
+}
+
+.loopBtn {
+  padding: 3px 0px 3px 0px !important;
+  width: 60px;
+  height: 40px;
+  color: #ffffff;
+  font-size: 18px;
+  border-radius: 6px;
+  margin: 4px;
+  user-select: none;
+}
+
+.loopBtn.red {
+  background-color: #d9534f;
+  border-color: #d9534f;
+}
+
+.loopBtn.blue {
+  background-color: #2196f3;
+  border-color: #2196f3;
+}
+
+.cmdLabel {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 4px;
+  user-select: none;
+}
+
+.command {
+  margin-left: 10px;
+}
+
+.commandSelectDiv {
+  margin: 4px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.commandServantSkillTitle {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.commandSelectClassDiv {
+  margin: 4px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.servantClassDiv2L {
+  display: flex;
+  flex-direction: column;
+}
+
+.servantClassDiv {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.classDiv {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  font-size: 12px;
+}
+
+.servantClassBox {
+  width: 24px;
+  height: 24px;
+  margin-left: 6px !important;
+  margin-right: 4px !important;
+}
+
+.selectFriendServantImg {
+  width: 60px;
+  height: 40px;
+  margin-left: 8px;
+}
+
+.selectFriendItemImg {
+  width: 60px;
+  height: 20px;
+  margin-left: 8px;
+}
+
+.commandTitle {
+  font-size: 20px;
+  margin-bottom: 4px;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.commandTitle div:last-child {
+  margin-left: auto;
+}
+
+.commandItemShort {
+  width: 60px;
+  margin-right: 10px;
+}
+
+.commandItem {
+  margin-right: 10px;
+  font-size: 12px;
+}
+
+.skillDiv {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+#titleBar {
+  width: 100%;
+  min-height: 40px;
+  text-align: center;
+  border-radius: 2px;
+  background-color: #2196f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#titleBarText {
+  color: white;
+  font-size: 16px;
+}
+
+#loopTimeDiv {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 2px;
+  border-color: black;
+  padding: 6px;
+}
+
+#loopTimeTitle {
+  display: flex;
+  align-items: center;
+}
+
+#loopTime {
+  font-size: 18px;
+  margin: 4px;
+  margin-left: 20px;
+  width: 60px;
+  height: 40px;
+  padding: 2px;
+  border-width: 1px;
+  border-style: solid;
+  text-align: center;
+  user-select: none;
+}
+
+#loopBtnDiv {
+  display: flex;
+  align-items: center;
+}
+
+#scriptTitle {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 4px;
+  user-select: none;
+  width: 100px;
+}
+
+#skill-list {
+  min-height: 100px;
+  margin-bottom: 200px;
+}
+
+#footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#additionalFriendItem {
+  display: none;
+}
