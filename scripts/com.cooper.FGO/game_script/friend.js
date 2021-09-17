@@ -142,14 +142,18 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes) {
         for (var j = 0; j < friendLinePosition.length; j++) {
           var lineY = friendLinePosition[j];
           // console.log("check line "+lineY);
-          var isSameServant = true;
+          var isSameServant = false;
           var isSameItem = true;
           var isFriend = true;
-          for (var k = 0; k < servantImage.length; k++) {
-            if (servantImage[k] != undefined) {
-              if (checkFriendServant(screenshot, servantImage[k], lineY)) {
-                isSameServant = true;
-                break;
+          if (servantImage.length <= 0) {
+            isSameServant = true;
+          } else {
+            for (var k = 0; k < servantImage.length; k++) {
+              if (servantImage[k] != undefined) {
+                if (checkFriendServant(screenshot, servantImage[k], lineY)) {
+                  isSameServant = true;
+                  break;
+                }
               }
             }
           }
