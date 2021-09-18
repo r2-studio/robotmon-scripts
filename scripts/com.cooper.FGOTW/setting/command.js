@@ -63,10 +63,6 @@ function getCurrentScript() {
         case "結束關卡":
           newScript += "finishQuest();";
           break;
-        case "設定技能改變寶具顏色":
-          newScript +=
-            "setSpaceUltColor(" + $("#spaceUltColor" + itemId).val() + ");";
-          break;
         case "使用技能":
           newScript +=
             "useSkill(" +
@@ -135,6 +131,10 @@ function getCurrentScript() {
           }
 
           newScript += ");";
+          break;
+        case "技能改變寶具顏色":
+          newScript +=
+            "setSpaceUltColor(" + $("#spaceUltColor" + itemId).val() + ");";
           break;
         case "好友從者多選":
           var servant = "";
@@ -542,7 +542,7 @@ function addCloth(commandId, content) {
   if (content != undefined) {
     var test = content.split(",");
     if (test.length >= 3 && test[0] == 2 && test[2] != -1) {
-      var newContext = test[1]+","+test[2];
+      var newContext = test[1] + "," + test[2];
       addSwitchServant(commandId, newContext);
       return;
     }
