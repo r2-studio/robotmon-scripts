@@ -14,7 +14,7 @@
 <script>
   var selections = {
     package: 'com.r2studio.sweetdays',
-    versionCode: 1,
+    versionCode: 2,
     languages: ['zh_TW', 'en'],
     title: 'Hello Sweet Days',
     settings: [
@@ -85,18 +85,25 @@
       },
       {
         type: 'boolean',
-        titlei18n: { zh_TW: '自動完成任務', en: 'Finish Tasks' },
+        titlei18n: { zh_TW: '自動餅乾任務', en: 'Use Cookies Tasks' },
         default: true,
-        key: 'enableTaskFinishDailyMission',
+        key: 'enableTaskCookieMission',
         value: true,
       },
-      {
-        type: 'boolean',
-        titlei18n: { zh_TW: '自動接新任務', en: 'Take New Tasks' },
-        default: true,
-        key: 'enableTaskNewDailyMission',
-        value: true,
-      },
+      // {
+      //   type: 'boolean',
+      //   titlei18n: { zh_TW: '自動完成任務', en: 'Finish Tasks' },
+      //   default: true,
+      //   key: 'enableTaskFinishDailyMission',
+      //   value: true,
+      // },
+      // {
+      //   type: 'boolean',
+      //   titlei18n: { zh_TW: '自動接新任務', en: 'Take New Tasks' },
+      //   default: true,
+      //   key: 'enableTaskNewDailyMission',
+      //   value: true,
+      // },
       {
         type: 'boolean',
         titlei18n: { zh_TW: '自動家裡澆花', en: 'Water Home Flower' },
