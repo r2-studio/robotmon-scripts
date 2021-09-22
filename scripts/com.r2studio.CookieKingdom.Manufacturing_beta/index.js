@@ -838,7 +838,6 @@ function moveToFourthItem() {
 
 function makeGoodsToTarget(target, prework) {
   // TODO: recognize building to reduce drop order time
-  var itemsAdd = 0;
   pageFirstItemEnabled = [{ x: 587, y: 122, r: 121, g: 207, b: 12 }];
   pageSecondItemEnabled = [{ x: 587, y: 230, r: 121, g: 207, b: 12 }];
   pageThirdItemEnabled = [{ x: 587, y: 332, r: 121, g: 207, b: 12 }];
@@ -856,7 +855,7 @@ function makeGoodsToTarget(target, prework) {
   if (!checkIsPage(pageThirdItemEnabled)) {
     [goodsOneStock, goodsTwoStock].forEach(function (value, i) {
       if (value != -1) {
-        productionTarget = prework === true ? (target - i * 10 < 10 ? 10 : target - i * 10) : target;
+        productionTarget = prework === true ? (target - i * 12 < 10 ? 10 : target - i * 12) : target;
 
         stocks.push({
           id: i,
@@ -891,7 +890,7 @@ function makeGoodsToTarget(target, prework) {
     [goodsOneStock, goodsTwoStock, goodsThreeStock, shovelStock, goodsFourStock, goodsFiveStock, goodsSixStock].forEach(
       function (value, i) {
         if (value != -1) {
-          productionTarget = prework === true ? (target - i * 10 < 10 ? 10 : target - i * 10) : target;
+          productionTarget = prework === true ? (target - i * 12 < 10 ? 10 : target - i * 12) : target;
 
           stocks.push({
             id: i,
