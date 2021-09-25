@@ -3,7 +3,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/simplesettings/simplesettings.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/simplesettings/simplesettings.css"
+/>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts@master/utils/simplesettings/simplesettings.umd.min.js"></script>
 
@@ -14,21 +17,24 @@
 <script>
   var selections = {
     package: 'com.r2studio.sweetdays',
-    versionCode: 2,
+    versionCode: 3,
     languages: ['zh_TW', 'en'],
     title: 'Hello Sweet Days',
     settings: [
       {
         type: 'text',
-        titlei18n: { zh_TW: '*遊戲畫面被遮住可能無法正常運行', en: 'It might not works, if screen covered by something, ' },
+        titlei18n: {
+          zh_TW: '*遊戲畫面被遮住可能無法正常運行',
+          en: 'It might not works, if screen covered by something, ',
+        },
       },
       {
         type: 'text',
-        titlei18n: { zh_TW: '*平板或較寬螢幕尚未測試', en: 'Haven\'t test on tablet' },
+        titlei18n: { zh_TW: '*平板或較寬螢幕尚未測試', en: "Haven't test on tablet" },
       },
       {
         type: 'text',
-        titlei18n: { zh_TW: '*小鎮任務尚未全面支援', en: 'Daily tasks not full supported' },
+        titlei18n: { zh_TW: 'V3: 修正一些Bug', en: "Debug some functions" },
       },
       {
         type: 'select',
@@ -57,17 +63,50 @@
       },
       {
         type: 'boolean',
+        titlei18n: { zh_TW: '自動回訪', en: 'Return Visit' },
+        default: true,
+        key: 'enableTaskReturnVisit',
+        value: true,
+      },
+      {
+        type: 'number',
+        titlei18n: { zh_TW: '自動回訪時間間隔', en: 'Return Visit Min Interval' },
+        default: 20,
+        min: 0,
+        max: 60,
+        step: 2,
+        key: 'returnVisitMinInterval',
+        value: 20,
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'boolean',
         titlei18n: { zh_TW: '自動散步', en: 'Walk Arround' },
         default: true,
         key: 'enableTaskWalkAround',
         value: true,
       },
       {
+        type: 'number',
+        titlei18n: { zh_TW: '自動散步時間間隔', en: 'Walk Arround Min Interval' },
+        default: 20,
+        min: 0,
+        max: 60,
+        step: 2,
+        key: 'walkAroundMinInterval',
+        value: 20,
+      },
+      {
         type: 'boolean',
-        titlei18n: { zh_TW: '自動回訪', en: 'Return Visit' },
-        default: true,
-        key: 'enableTaskReturnVisit',
-        value: true,
+        titlei18n: { zh_TW: '自動散步只收果實', en: 'Only take fruit when walking arround' },
+        default: false,
+        key: 'walkAroundOnlyTakeFruit',
+        value: false,
+      },
+      {
+        type: 'divider',
       },
       {
         type: 'boolean',
@@ -90,20 +129,6 @@
         key: 'enableTaskCookieMission',
         value: true,
       },
-      // {
-      //   type: 'boolean',
-      //   titlei18n: { zh_TW: '自動完成任務', en: 'Finish Tasks' },
-      //   default: true,
-      //   key: 'enableTaskFinishDailyMission',
-      //   value: true,
-      // },
-      // {
-      //   type: 'boolean',
-      //   titlei18n: { zh_TW: '自動接新任務', en: 'Take New Tasks' },
-      //   default: true,
-      //   key: 'enableTaskNewDailyMission',
-      //   value: true,
-      // },
       {
         type: 'boolean',
         titlei18n: { zh_TW: '自動家裡澆花', en: 'Water Home Flower' },
@@ -114,7 +139,19 @@
     ],
   };
 
-  var config = undefined;
+  var config = {
+    enableTaskReturnVisit: true,
+    returnVisitMinInterval: 20,
+    enableTaskWalkAround: true,
+    walkAroundMinInterval: 20,
+    walkAroundOnlyTakeFruit: true,
+    enableTaskJoinParty: true,
+    enableTaskHoldParty: true,
+    enableTaskHomeFlower: true,
+    enableTaskCookieMission: true,
+    calculateScreenMethod: 'auto', // auto, detect, manual
+    manualSetOffsetY: 0,
+  };
   simplesettings.render('#app', selections, function (c) {
     config = c;
   });
@@ -123,7 +160,8 @@
     if (eventType == 'OnPlayClick') {
       var jsonConfig = JSON.stringify(config);
       var startCommand = "start('" + jsonConfig + "')";
-      console.log('startCommand: ', startCommand);
+      JavaScriptInterface.setXY(0, 65);
+      JavaScriptInterface.hideMenu();
       JavaScriptInterface.runScript(startCommand);
     } else if (eventType == 'OnPauseClick') {
       JavaScriptInterface.runScript('stop();');
