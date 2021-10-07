@@ -165,8 +165,8 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.23,
-      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.23 修正改變寶具顏色指令失效的問題<br>V3.22 優化指令介面與除錯<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.24,
+      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.23修正萬聖節改版後無法辨識選擇好友畫面的問題<br>V3.23 修正改變寶具顏色指令失效的問題<br>V3.22 優化指令介面與除錯<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
