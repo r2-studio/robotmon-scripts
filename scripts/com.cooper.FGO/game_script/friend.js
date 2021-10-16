@@ -30,7 +30,7 @@ var friendStarXOffset = 209;
 var friendStarYOffset = 244;
 var friendStarSize = 7;
 
-var reloadPosition = 1237;
+var reloadPosition = 1400;
 var barMargin = 0;
 
 var selectFriendList = [];

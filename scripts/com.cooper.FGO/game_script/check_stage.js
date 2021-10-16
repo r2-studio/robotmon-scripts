@@ -228,7 +228,7 @@ function isSelectFriendPage() {
 
 function isSelectFriendRefreshDialog() {
   //TODO
-  return checkIconListInScreen(["friendRefresh"], false);
+  return checkIconListInScreen(["friendRefresh","friendRefresh2"], false);
 }
 
 function isSelectFriendEnd() {
