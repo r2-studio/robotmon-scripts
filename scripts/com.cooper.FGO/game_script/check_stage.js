@@ -41,7 +41,10 @@ function setMarginIcon() {
     icon["battleMain3"][0] = 1672;
     iconMargin["battleMain3"] = undefined;
 
-    icon["friendPointContinue"][1] = 975;
+    icon["friendPointContinue"][1] = 975;    
+    
+    icon["itemPage"][0] = 32;
+    iconMargin["itemPage"] = undefined;
     return;
   }
   icon["main"][0] = realScreenSize[0] / screenScale[0] - 337;
@@ -80,6 +83,9 @@ function setMarginIcon() {
     iconMargin["battleMain2"] = true;
 
     icon["friendPointContinue"][1] = 975 - 22;
+
+    icon["itemPage"][0] = 160;
+    iconMargin["itemPage"] = true;
   }
 }
 function checkIconListInScreen(iconList, allPass, threshold) {
@@ -256,8 +262,8 @@ function isUseItemDialog() {
 icon["battleMain1"] = [1752, 262, 90, 90];
 icon["battleMain2"] = [1752, 423, 90, 90];
 icon["battleMain3"] = [1672, 960, 105, 75];
-icon["battleServant1"] = [375, 90, 210, 45];
-icon["battleServant2"] = [375, 90, 210, 45];
+icon["battleServant1"] = [375, 90, 600, 45];
+icon["battleServant2"] = [375, 90, 600, 45];
 icon["battleSkill"] = [855, 255, 210, 45];
 icon["battleTarget"] = [1620, 195, 60, 60];
 icon["spaceColor"] = [690, 288, 540, 45];

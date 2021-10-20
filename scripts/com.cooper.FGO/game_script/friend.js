@@ -36,6 +36,9 @@ var barMargin = 0;
 var selectFriendList = [];
 
 function setFriendMargin() {
+  if (server == "TW") {
+    reloadPosition = 1237;
+  }
   if (resolution <= 16 / 9) {
     friendX = 76;
     friendServantPosition[0][0] = friendX;
