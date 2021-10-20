@@ -404,7 +404,7 @@ function finishQuest() {
         }
         console.log("掉落禮裝");
         sendUrgentMessage(runningScriptName, "掉落禮裝");
-        tapScale(67, 60);
+        clickIcon("itemPage");
         sleep(1500);
       }
     }
