@@ -8,14 +8,6 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.SweetDays/index.zip",
       "dependencies": []
     },
-    "com.r2studio.popcat": {
-      "title": "*POPCAT 台灣爭光*",
-      "versionCode": 1,
-      "description": "<h3>POPCAT 台灣爭光</h3><ul><li>每秒點擊100次每次五根手指頭同時點</li></ul>",
-      "packageName": "kr.pe.lala.popcat",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.popcat/index.zip",
-      "dependencies": []
-    },
     "com.andy.rox": {
       "title": "*RO 新世代*",
       "versionCode": 3,
@@ -36,7 +28,7 @@
     },
     "com.r2studio.lgtm2": {
       "title": "Disney Tsum Tsum Stadium",
-      "versionCode": 3,
+      "versionCode": 4,
       "description": "<h3>Robotmon TsumTsum Stadium</h3><ul><li>Auto Play</li><li>Receive hearts</li><li>Send hearts</li></ul>",
       "packageName": "com.linecorp.LGTM2",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.lgtm2/index.zip",
