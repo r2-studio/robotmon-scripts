@@ -133,7 +133,7 @@
     }
 
     .setting_input_value {
-      width: 40px;
+      width: 70px;
       text-align: center;
     }
 
@@ -205,13 +205,13 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <script>
-    VERSION = 1.3;
+    VERSION = 3.12;
 
     var settings = [
       [
         {
-          title: 'Welcome to Cookie Kingdom x Robotmon!! Set the Android simulator to 360x640, 120dpi, and this helper will get you to 1-2 and see if you get the cookies you like!',
-          title_zh_TW: '歡迎使用薑餅人王國首抽小幫手! 目前沒有任何需要設定，模擬器解析度360x640，120DPI，會直接開始過新手教學到1-2喔',
+          title: 'Welcome to Cookie Kingdom x Robotmon! This is your manufacturing agent. Set your Android emulator to 640x360, 120dpi, and press start in any production building, and wait for all the resources/goods stack up to whatever you want!',
+          title_zh_TW: '歡迎使用薑餅人王國代工小幫手! 建議進度至少要有1-2，模擬器解析度640x360，120DPI，按下開始，小幫手就會幫你把各種資源產到設定的量，還可以自動收送火車、船、許願樹等等唷!',
         },
       ],
       [
@@ -230,12 +230,146 @@
           ]
         },
       ],
-      
+      [
+        {
+          id: 'account',
+          title: 'account (for auto login)',
+          title_zh_TW: '帳號 (自動登入用)',
+          default: "aaa@gmail.com",
+
+        },
+        {
+          id: 'password',
+          title: 'password (for auto login)',
+          title_zh_TW: '密碼 (自動登入用)',
+          default: "",
+        },
+        {
+          id: 'materialsTarget',
+          title: 'Material production target',
+          title_zh_TW: '原料生產目標',
+          default: 300,
+          step: 50,
+          max: 2000,
+          min: 50,
+        },
+        {
+          id: 'goodsTarget',
+          title: 'Goods production target',
+          title_zh_TW: '製作品生產目標',
+          default: 50,
+          step: 5,
+          max: 200,
+          min: 20,
+        },
+        {
+          id: 'worksBeforeCollectCandy',
+          title: 'time between collect candy (in mins, set to 0 to skip this task)',
+          title_zh_TW: '每隔幾分鐘收集糖果(設為0則不會進行)',
+          default: 40,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'autoCollectFountainIntervalInMins',
+          title: 'Try to claim fountain every given minutes (set to 0 to skip this task)',
+          title_zh_TW: '每隔若干分鐘自動收集噴泉(設為0則不會進行)',
+          default: 40,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'autoCollectMailIntervalInMins',
+          title: 'Try to claim Mmails every given minutes (set to 0 to skip this task)',
+          title_zh_TW: '每隔若干分鐘自動收郵件(設為0則不會進行)',
+          default: 40,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'autoCollectTrainIntervalInMins',
+          title: 'Try to send trains every given minutes (set to 0 to skip this task)',
+          title_zh_TW: '每隔若干分鐘自動收送火車(設為0則不會進行)',
+          default: 20,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'autoSendHotAirBallonIntervalInMins',
+          title: 'Try to send air ballon every given minutes (set to 0 to skip this task)',
+          title_zh_TW: '每隔若干分鐘自動收送熱氣球(設為0則不會進行)',
+          default: 20,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'ballonKeepCurrentDestination',
+          title: 'Do not change the ballon destination (to maximum stamina jellies usage for certain events)',
+          title_zh_TW: '不改變熱氣球目的地 (以便最高效率耗體力，解任務專用)',
+          default: false,
+        },
+        {
+          id: 'autoFulfillWishesIntervalInMins',
+          title: 'Try to fulfill wishing tree every given minutes (set to 0 to skip this task)',
+          title_zh_TW: '每隔若干分鐘自動許願樹(設為0則不會進行)',
+          default: 10,
+          step: 10,
+          max: 240,
+          min: 0,
+        },
+        {
+          id: 'alwaysFulfillWishes',
+          title: 'Keep fulfilling wishes even the daily rewards had been claimed',
+          title_zh_TW: '就算已經領完了每日獎勵還是會送許願樹',
+          default: false,
+        },
+        {
+          id: 'wishingTreeSafetyStock',
+          title: 'Safety stock of the wishing tree, will only fulfill the wishes with stock more than this value',
+          title_zh_TW: '許願樹安全庫存，低於此數字則不會送出',
+          default: 40,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'autoCollectTropicalIslandsIntervalInMins',
+          title: 'Try to clear & collect resources from tropical islands (set to 0 to skip this task)',
+          title_zh_TW: '每隔若干分鐘自動收取熱帶島嶼資源(設為0則不會進行)',
+          default: 40,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'autoPvPIntervalInMins',
+          title: 'Try to auto PvP every given minutes (set to 0 to skip this task)',
+          title_zh_TW: '每隔若干分鐘自動進行PVP對戰(設為0則不會進行)',
+          default: 0,
+          step: 10,
+          max: 300,
+          min: 0,
+        },
+        {
+          id: 'autoPvPTargetScoreLimit',
+          title: 'Auto PvP target power cannot exceed this value',
+          title_zh_TW: '自動PvP時，對手戰力不能高於這個數值',
+          default: 200000,
+          step: 5000,
+          max: 900000,
+          min: 10000,
+        },
+      ],
     ];
 
     function saveLocale(locale) {
       if (localStorage !== undefined) {
-        localStorage.setItem('taptitan2Language', locale);
+        localStorage.setItem('cookieFactoriaoAutoLanguage', locale);
         location.reload();
       }
     }
@@ -245,11 +379,11 @@
       if (localStorage = undefined) {
         return;
       }
-      var version = +localStorage.getItem('tapTitan2Version');
+      var version = +localStorage.getItem('cookieFactoriaoAutoVesion');
       if (!version || VERSION != version) {
         return;
       }
-      var settingsJSON = localStorage.getItem('tapTitan2Settings');
+      var settingsJSON = localStorage.getItem('cookieFactoriaoAutoSettings');
       if (!settingsJSON) {
         return;
       }
@@ -268,7 +402,7 @@
       }
 
       // This is so we send the locale for logging.... we should do this better but good enough for now.
-      lang = localStorage.getItem('taptitan2Language');
+      lang = localStorage.getItem('cookieFactoriaoAutoLanguage');
       if (lang === 'zh-TW') {
         console.log('讀取設定');
       } else {
@@ -294,10 +428,10 @@
             }
           }
         }
-        localStorage.setItem('tapTitan2Version', VERSION);
-        localStorage.setItem('tapTitan2Settings', JSON.stringify(recordSettings));
+        localStorage.setItem('cookieFactoriaoAutoVesion', VERSION);
+        localStorage.setItem('cookieFactoriaoAutoSettings', JSON.stringify(recordSettings));
 
-        lang = localStorage.getItem('taptitan2Language');
+        lang = localStorage.getItem('cookieFactoriaoAutoLanguage');
         if (lang === 'zh-TW') {
           console.log('儲存設置');
         } else {
@@ -309,24 +443,29 @@
 
     function genStartCommand(settings) {
       var command = 'start(';
+      var configJson = {};
       for (var i in settings) {
         for (var g in settings[i]) {
           var id = i + '_' + g;
           var setting = settings[i][g];
           if (typeof setting.default === 'boolean') {
             command += $('#setting_value_' + id).is(':checked') + ', ';
+            configJson[setting.id] = $('#setting_value_' + id).is(':checked');
           } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
             command += '"' + setting.default + '", ';
+            configJson[setting.id] = setting.default;
           } else if (typeof setting.default === 'number') {
             command += $('#setting_value_' + id).val() + ', ';
+            configJson[setting.id] = $('#setting_value_' + id).val();
           } else if (typeof setting.default === 'string') {
             command += '"' + $('#setting_value_' + id).val() + '", ';
+            configJson[setting.id] = $('#setting_value_' + id).val();
           }
         }
       }
 
       // This is where we send the locale to the start function
-      lang = localStorage.getItem('taptitan2Language');
+      lang = localStorage.getItem('');
       if (lang === 'zh-TW') {
         command += 'true);';
         console.log('啟動命令: ' + command);
@@ -335,6 +474,9 @@
         console.log('Start command: ' + command);
       }
 
+      console.log('>> configJson: ', JSON.stringify(configJson))
+      configJson.isXR = false;
+      command = "start('" + JSON.stringify(configJson) + "');";
       return command;
     }
 
@@ -342,7 +484,7 @@
       if (localStorage === undefined) {
         return setting.title;
       }
-      var lang = localStorage.getItem('taptitan2Language');
+      var lang = localStorage.getItem('cookieFactoriaoAutoLanguage');
       if (!lang) {
         return setting.title;
       } else if (lang === 'zh-TW') {
@@ -478,7 +620,7 @@
 
   <script>
     $(function () {
-      $('#version').html('Tap Titans 2 Automated v' + VERSION);
+      $('#version').html('Cookie Run: Kingdom Factorio v' + VERSION);
 
       loadSettings(settings);
       genSettings($('#settings'), settings);
@@ -513,7 +655,7 @@
         exportHTML();
       });
 
-      if (localStorage !== undefined && localStorage.getItem('taptitan2Language') === 'zh-TW') {
+      if (localStorage !== undefined && localStorage.getItem('cookieFactoriaoAutoLanguage') === 'zh-TW') {
         $('#goToTop').text('回頁面頂端');
         $('#goToBottom').text('轉到底部');
       } else {

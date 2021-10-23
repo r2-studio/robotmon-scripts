@@ -52,28 +52,12 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
     },
-    "com.r2studio.CookieKingdm": {
-      "title": "CookieKingdom",
-      "versionCode": 1.3,
-      "description": "<b><font color='#2196f3'>版本 v1</font></b><ul><li>薑餅人王國</li><li>跑跑薑餅人新作，首抽專用</li><li>只支援模擬器 360x640, 120dpi, 建議用模擬器執行</li></ul>",
-      "packageName": "com.devsisters.ck",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
-      "dependencies": []
-    },
-    "com.r2studio.CookieKingdom.Manufacturing": {
-      "title": "CookieKingdom Factorio",
-      "versionCode": 2.56,
-      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>24x7 non-stop production</li><li>Simulators only, 360x640, 120dpi</li><li>v1.4 New feature: Shovels production</li><li>v1.5 New feature: target to build everything to 60</li><li>v1.8 Correct number reading parameters</li></ul>",
+    "com.r2studio.CookieKingdom": {
+      "title": "CookieKingdom: automated management",
+      "versionCode": 3.12,
+      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.Manufacturing/index.zip",
-      "dependencies": []
-    },
-    "com.r2studio.CookieKingdom.Manufacturing.beta": {
-      "title": "CookieKingdom Factorio *beta*",
-      "versionCode": 3.11,
-      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>24x7 non-stop production</li><li>Simulators only, 360x640, 120dpi</li><li>v1.4 New feature: Shovels production</li><li>v1.5 New feature: target to build everything to 60</li><li>v1.8 Correct number reading parameters</li></ul>",
-      "packageName": "com.devsisters.ck",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.Manufacturing_beta/index.zip",
       "dependencies": []
     },
     "com.r2studio.MarvelFutureFight": {
@@ -147,13 +131,6 @@
       "description": "<div>Make the relics rain! / 自動愛心農場!</div>",
       "packageName": "com.gamehivecorp.taptitans2",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TapTitans2/index.zip"
-    },
-    "com.r2studio.TemplateHelper": {
-      "title": "Copy this and build you own game helper!",
-      "versionCode": 1,
-      "description": "<div>Where you start to build your own bot!</div>",
-      "packageName": "com.gamehivecorp.taptitans2",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TemplateHelper/index.zip"
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
