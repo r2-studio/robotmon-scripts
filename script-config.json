@@ -57,7 +57,7 @@
       "versionCode": 3.12,
       "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
       "packageName": "com.devsisters.ck",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.Manufacturing/index.zip",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
       "dependencies": []
     },
     "com.r2studio.MarvelFutureFight": {
