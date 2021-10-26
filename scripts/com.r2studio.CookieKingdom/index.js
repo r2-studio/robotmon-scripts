@@ -4407,11 +4407,6 @@ function loadImages() {
 }
 
 function start(inputConfig) {
-  if (!config.isXR && getUserPlan() < 0) {
-    console.log('Please subscribe Robotmon ads-free or above');
-    return;
-  }
-
   console.log('inputConfig: ', inputConfig);
   config.run = true;
 
