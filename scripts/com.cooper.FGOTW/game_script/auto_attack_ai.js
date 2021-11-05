@@ -56,7 +56,7 @@ var allServentDieFlag = false;
 */
 function setAutoAttackMargin() {
   if (server == "TW") {
-    skillUsedPositionOffset = [-5, 82];
+    skillUsedPositionOffset = [6, 85];
     offsetDisableX = [89, 196];
     return;
   }
