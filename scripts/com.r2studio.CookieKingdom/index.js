@@ -7,6 +7,7 @@ config = {
   password: '',
   materialsTarget: 500,
   goodsTarget: 100,
+  goodProducingStep: 12,
   autoCollectMailIntervalInMins: 40,
   autoCollectFountainIntervalInMins: 40,
   autoCollectTrainIntervalInMins: 20,
@@ -27,10 +28,11 @@ config = {
   autoCollectTropicalIslandsIntervalInMins: 40,
   autoGuildBattleIntervalInMins: 0,
   autoHandleBountiesIntervalInMins: 0,
-  autoLabResearch: true,
+  autoLabResearch: false,
   autoResearchKingdom: true,
   autoResearchCookies: false,
   autoLabUseAuroraMaterial: false,
+  axeStockTo400: false,
   buildTowardsTheLeft: true,
   isTestAccount: false,
 
@@ -910,12 +912,17 @@ function makeGoodsToTarget(target, prework, stocks) {
     return;
   }
 
+  var isToolShop = false;
+  if (checkIsPage(pageToolShop)) {
+    isToolShop = true;
+  }
+
   if (stocks === undefined) {
     stocks = [];
     if (!checkIsPage(pageThirdItemEnabled)) {
       [goodsOneStock, goodsTwoStock].forEach(function (value, i) {
         if (value != -1) {
-          productionTarget = prework === true ? (target - i * 12 < 10 ? 10 : target - i * 12) : target;
+          productionTarget = prework === true ? (target - i * config.goodProducingStep < 10 ? 10 : target - i * config.goodProducingStep) : target;
 
           stocks.push({
             id: i,
@@ -928,7 +935,7 @@ function makeGoodsToTarget(target, prework, stocks) {
     } else {
       // === tool shop only ===
       var shovelStock = -1;
-      if (checkIsPage(pageToolShop)) {
+      if (isToolShop) {
         moveToFourthItem();
         pageShovelEnabled = [
           { x: 575, y: 336, r: 121, g: 207, b: 12 },
@@ -938,6 +945,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         ];
         shovelStock = ocrProductStorage(goodsLocation['shovel']);
         console.log('Shovel enable: ' + checkIsPage(pageShovelEnabled) + ' , stock: ' + shovelStock);
+        SwipeProductionMenuToBottom();
       }
       // end of tool shop ===
 
@@ -957,7 +965,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         goodsSixStock,
       ].forEach(function (value, i) {
         if (value != -1) {
-          productionTarget = prework === true ? (target - i * 12 < 10 ? 10 : target - i * 12) : target;
+          productionTarget = prework === true ? (target - i * config.goodProducingStep < 10 ? 10 : target - i * config.goodProducingStep) : target;
 
           stocks.push({
             id: i,
@@ -973,6 +981,11 @@ function makeGoodsToTarget(target, prework, stocks) {
       stocks[i].productionTarget = target;
       stocks[i].stockTargetFullfilledPercent = stocks[i].value / target;
     }
+  }
+
+  if (isToolShop && config.axeStockTo400 && stocks.length > 0 && stocks[0]['id'] === 0) {
+    stocks[0].productionTarget = 400;
+    stocks[0].stockTargetFullfilledPercent = goodsOneStock / 400;
   }
 
   stocks.sort(dynamicSort('stockTargetFullfilledPercent'));
@@ -2460,17 +2473,17 @@ function handleTrainStation() {
   }
 
   pageFirstTrainOut = [
-    {x: 430, y: 95, r: 121, g: 227, b: 0},
-    {x: 454, y: 94, r: 231, g: 142, b: 83}
-  ]
+    { x: 430, y: 95, r: 121, g: 227, b: 0 },
+    { x: 454, y: 94, r: 231, g: 142, b: 83 },
+  ];
   pageSecondTrainOut = [
-    {x: 430, y: 198, r: 129, g: 227, b: 0},
-    {x: 453, y: 199, r: 229, g: 148, b: 85}
-  ]
+    { x: 430, y: 198, r: 129, g: 227, b: 0 },
+    { x: 453, y: 199, r: 229, g: 148, b: 85 },
+  ];
   pageThirdTrainOut = [
-    {x: 430, y: 302, r: 121, g: 227, b: 0},
-    {x: 455, y: 301, r: 231, g: 138, b: 82}
-  ]
+    { x: 430, y: 302, r: 121, g: 227, b: 0 },
+    { x: 455, y: 301, r: 231, g: 138, b: 82 },
+  ];
 
   if (!checkIsPage(pageFirstTrainOut)) {
     qTap(pnt(255, 110));
@@ -2640,9 +2653,7 @@ function handleGetDailyRewards() {
     qTap(pageShop);
     sleep(config.sleepAnimate);
 
-    pageNecessities = [
-      {x: 114, y: 104, r: 255, g: 109, b: 107}
-    ];
+    pageNecessities = [{ x: 114, y: 104, r: 255, g: 109, b: 107 }];
     pageIsDailyFreePackage = [
       { x: 181, y: 186, r: 13, g: 203, b: 252 },
       { x: 190, y: 204, r: 255, g: 255, b: 255 },
@@ -2650,7 +2661,7 @@ function handleGetDailyRewards() {
       { x: 253, y: 166, r: 255, g: 253, b: 166 },
     ];
 
-    for (var i = 0; i < 5; i ++) {
+    for (var i = 0; i < 5; i++) {
       if (!checkIsPage(pageIsDailyFreePackage)) {
         // Shop menu swipe up
         tapDown(60, 300, 40, 0);
@@ -3435,10 +3446,10 @@ function handleGotoHotAirBallon() {
     { x: 110, y: 324, r: 162, g: 90, b: 227 },
   ];
   pageBallonFlying = [
-    {x: 610, y: 17, r: 57, g: 166, b: 231},
-    {x: 219, y: 30, r: 55, g: 20, b: 38},
-    {x: 253, y: 51, r: 162, g: 162, b: 162},
-    {x: 263, y: 316, r: 255, g: 255, b: 255},
+    { x: 610, y: 17, r: 57, g: 166, b: 231 },
+    { x: 219, y: 30, r: 55, g: 20, b: 38 },
+    { x: 253, y: 51, r: 162, g: 162, b: 162 },
+    { x: 263, y: 316, r: 255, g: 255, b: 255 },
   ];
 
   if (checkIsPage(pageCollapsedaffairs)) {
@@ -3676,9 +3687,9 @@ function handleCollectIslandResources() {
     { x: 61, y: 336, r: 44, g: 77, b: 110 },
   ];
   pageFreeAllCrispyCookie = [
-    {x: 341, y: 316, r: 123, g: 207, b: 8},
-    {x: 376, y: 313, r: 49, g: 60, b: 90},
-    {x: 223, y: 85, r: 255, g: 101, b: 173}
+    { x: 341, y: 316, r: 123, g: 207, b: 8 },
+    { x: 376, y: 313, r: 49, g: 60, b: 90 },
+    { x: 223, y: 85, r: 255, g: 101, b: 173 },
   ];
   pageHasNoCrispyCookie = [
     { x: 425, y: 111, r: 44, g: 46, b: 60 },
@@ -3968,12 +3979,12 @@ function handleBounties() {
     { x: 58, y: 334, r: 243, g: 90, b: 28 },
   ];
   var pageBattleFinishedWithoutNextLv = [
-    {x: 466, y: 324, r: 252, g: 252, b: 252},
-    {x: 464, y: 331, r: 8, g: 166, b: 222},
-    {x: 309, y: 25, r: 228, g: 52, b: 71},
-    {x: 320, y: 25, r: 255, g: 255, b: 132},
-    {x: 330, y: 25, r: 228, g: 52, b: 74},
-    {x: 401, y: 323, r: 26, g: 4, b: 12},
+    { x: 466, y: 324, r: 252, g: 252, b: 252 },
+    { x: 464, y: 331, r: 8, g: 166, b: 222 },
+    { x: 309, y: 25, r: 228, g: 52, b: 71 },
+    { x: 320, y: 25, r: 255, g: 255, b: 132 },
+    { x: 330, y: 25, r: 228, g: 52, b: 74 },
+    { x: 401, y: 323, r: 26, g: 4, b: 12 },
   ];
   var pageWinBountyAndFinish = [
     { x: 607, y: 332, r: 12, g: 167, b: 223 },
@@ -3982,10 +3993,10 @@ function handleBounties() {
     { x: 74, y: 332, r: 243, g: 90, b: 28 },
   ];
   var pageBountyWonNeedTap = [
-    {x: 312, y: 25, r: 231, g: 48, b: 74},
-    {x: 320, y: 23, r: 255, g: 244, b: 87},
-    {x: 295, y: 334, r: 69, g: 69, b: 69},
-    {x: 278, y: 333, r: 18, g: 3, b: 4}
+    { x: 312, y: 25, r: 231, g: 48, b: 74 },
+    { x: 320, y: 23, r: 255, g: 244, b: 87 },
+    { x: 295, y: 334, r: 69, g: 69, b: 69 },
+    { x: 278, y: 333, r: 18, g: 3, b: 4 },
   ];
   var pageNeedRefillBounties = [
     { x: 428, y: 82, r: 56, g: 167, b: 231 },
@@ -4118,7 +4129,7 @@ function handleGotoGnomeLab() {
 }
 
 function handleInGnomeLab() {
-  if (!waitUntilSeePage(pageInGnomeLab, 4)) {
+  if (!waitUntilSeePage(pageInGnomeLab, 8)) {
     console.log('skipping handleInGnomeLab as cannot find pageInGnomeLab');
     return false;
   }
@@ -4139,27 +4150,36 @@ function handleInGnomeLab() {
   if (config.autoResearchKingdom) {
     qTap(pnt(296, 340));
     sleep(config.sleepAnimate);
-    researching = handleResearchInGnomeLab(gnomeLabKingdom);
+    researching = handleResearchInGnomeLab(gnomeLabKingdom, 0.94);
   }
   if (!researching && config.autoResearchCookies) {
     qTap(pnt(416, 340));
     sleep(config.sleepAnimate);
-    handleResearchInGnomeLab(gnomeLabCookies);
+    handleResearchInGnomeLab(gnomeLabCookies, 0.9);
   }
   return handleGotoKingdomPage();
 }
 
-function handleResearchInGnomeLab(targetIconList) {
+function handleResearchInGnomeLab(targetIconList, threashold) {
   var pageCanTapResearch = [
     { x: 276, y: 318, r: 121, g: 207, b: 12 },
     { x: 220, y: 317, r: 54, g: 62, b: 95 },
     { x: 398, y: 315, r: 54, g: 62, b: 95 },
   ];
 
+  var pageNotEnoughItemForReserch = [
+    {x: 436, y: 97, r: 255, g: 255, b: 255},
+    {x: 427, y: 97, r: 56, g: 167, b: 231},
+    {x: 414, y: 100, r: 60, g: 70, b: 105},
+    {x: 310, y: 249, r: 0, g: 193, b: 255},
+    {x: 261, y: 248, r: 219, g: 207, b: 199},
+    {x: 287, y: 252, r: 121, g: 207, b: 12}
+  ]
+
   var foundResults = [];
   for (var i = 0; i < 10; i++) {
     for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
-      foundResults = findSpecificImageInScreen(targetIconList[imageIdx].img, 0.955);
+      foundResults = findSpecificImageInScreen(targetIconList[imageIdx].img, threashold);
       // console.log('>', i, JSON.stringify(foundResults), foundResults.length, foundResults.length > 0);
       if (foundResults.length > 0) {
         console.log('Tap gnome reserach check i, at: ', imageIdx, JSON.stringify(foundResults));
@@ -4173,6 +4193,7 @@ function handleResearchInGnomeLab(targetIconList) {
                 if (findSpecificImageInScreen(auroraItems[auroraIndex].img, 0.92).length > 0) {
                   console.log('lab restrict use of aurora items, skip this one');
                   qTap(pnt(570, 31));
+                  sleep(1500);
                   hasAuroraRequirement = true;
                   break;
                 }
@@ -4181,6 +4202,18 @@ function handleResearchInGnomeLab(targetIconList) {
               if (!hasAuroraRequirement) {
                 console.log('Start researching without Aurora item: ', JSON.stringify(foundResults[j]));
                 qTap(pageCanTapResearch);
+
+                // Check for not enough items for research
+                sleep(1000);
+                if (checkIsPage(pageNotEnoughItemForReserch)) {
+                  console.log('Not enough items, continue');
+                  qTap(pageNotEnoughItemForReserch);
+                  sleep(1000);
+                  qTap(pnt(570, 31));
+                  sleep(1500);
+                  break;
+                }
+
                 return true;
               }
             } else {
@@ -4189,7 +4222,7 @@ function handleResearchInGnomeLab(targetIconList) {
               return true;
             }
           } else {
-            console.log('Research material not met: ', JSON.stringify(foundResults[j]));
+            console.log('Research requirement not met (btn not enabled): ', JSON.stringify(foundResults[j]));
             keycode('BACK', 1000);
             sleep(config.sleepAnimate * 3);
           }
@@ -4373,7 +4406,7 @@ function handleTryResolveGreenChecks() {
     handleGotoKingdomPage();
 
     cnt++;
-    foundResults = findSpecificImageInScreen(greenCheckedWriteBackground);
+    foundResults = findSpecificImageInScreen(greenCheckedWriteBackground, 0.94);
   }
 
   config.lastTryResolveGreenChecks = Date.now();
