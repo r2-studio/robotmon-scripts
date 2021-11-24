@@ -662,6 +662,15 @@
         $('#goToTop').text('Go to Top');
         $('#goToBottom').text('Go to Bottom');
       }
+
+      const locale = localStorage.getItem('cookieFactoriaoAutoLanguage');
+      if (locale === "zh-TW") {
+        $("#xrimg").attr("src", "https://raw.githubusercontent.com/r2-studio/robotmon-scripts/master/scripts/com.r2studio.CookieKingdom/XRvsR_zh-TW.png");
+        $("#xrimg").show();
+      } else {
+        // TODO english table
+        $("#xrimg").hide();
+      }
     });
 
     function getCheckStatus(id) {
@@ -785,6 +794,7 @@
   </nav>
   <div class='container'>
     <div id='settings'></div>
+    <div><img id="xrimg" src=""/></div>
     <br />
     <br />
     <button id='goToTop' class='btn btn-plus'>Go to Top</button>
