@@ -666,10 +666,8 @@
       const locale = localStorage.getItem('cookieFactoriaoAutoLanguage');
       if (locale === "zh-TW") {
         $("#xrimg").attr("src", "https://raw.githubusercontent.com/r2-studio/robotmon-scripts/master/scripts/com.r2studio.CookieKingdom/XRvsR_zh-TW.png");
-        $("#xrimg").show();
       } else {
-        // TODO english table
-        $("#xrimg").hide();
+        $("#xrimg").attr("src", "https://raw.githubusercontent.com/r2-studio/robotmon-scripts/master/scripts/com.r2studio.CookieKingdom/XRvsR_en-US.png");
       }
     });
 
