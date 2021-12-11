@@ -102,7 +102,9 @@ function useSkill(player, skill, target) {
     undefined,
     useMargin
   );
-  sleep(1000);
+  sleep(500);
+  tapScale(1650,450);
+  sleep(500);
   if (!isScriptRunning) {
     return;
   }
@@ -173,6 +175,8 @@ function selectSkillTarget(player) {
       case 0:
         console.log("選擇技能目標 " + (player + 1));
         tapScale(skillTargetX[player], skillTargetY);
+        sleep(500);
+        tapScale(1650,450);
         break;
       case 1:
         console.log("從者不足三人，再次選擇");
@@ -206,7 +210,9 @@ function useClothesSkill(skill, target1, target2) {
     undefined,
     0
   );
-  sleep(1000);
+  sleep(500);  
+  tapScale(1650,450);
+  sleep(500);
   if (isBattleSkillDetailDialog()) {
     console.log("使用衣服技能-確認畫面");
     tapScale(1275, 637);
@@ -334,9 +340,26 @@ function waitUntilPlayerCanMoveOrFinish() {
       return false;
     }
     if (isBattleStageFailedDialog()) {
-      sleep(1000);
+      if (isDebug){
+        console.log("isBattleStageFailedDialog check 1");
+        var filepath = path + "/debug_stage_failed_1.png";
+        var screenshot = getScreenshotResize();
+        saveImage(screenshot,filepath)
+        releaseImage(screenshot);
+        console.log("adb pull " + filepath);
+      }
+      sleep(3000);
       if (isBattleStageFailedDialog()) {
         sendUrgentMessage(runningScriptName, "戰鬥失敗，停止腳本");
+        isScriptRunning = false;
+        if (isDebug){
+          console.log("isBattleStageFailedDialog check 2");
+          var filepath2 = path + "/debug_stage_failed_2.png";
+          var screenshot2 = getScreenshotResize();
+          saveImage(screenshot2,filepath2)
+          releaseImage(screenshot2);
+          console.log("adb pull " + filepath2);
+        }
         return false;
       }
     }

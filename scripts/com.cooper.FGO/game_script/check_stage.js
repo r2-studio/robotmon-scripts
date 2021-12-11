@@ -14,6 +14,7 @@ function setMarginIcon() {
     icon["friendPointTen"] = [1125, 790, 240, 75];
     
     icon["boxNoPoint"] = [360, 630, 195, 82];
+    icon["stageFailed"] = [750, 150, 412, 75];
     return;
   }
   if (resolution < 17 / 9) {
@@ -139,7 +140,7 @@ function checkIconListInScreen(iconList, allPass, threshold) {
   return allPass;
 }
 
-function checkIconInScreen(iconName, threshold) {
+function checkIconInScreen(iconName, threshold, screenshot) {
   if (!isScriptRunning) {
     return false;
   }
@@ -147,7 +148,9 @@ function checkIconInScreen(iconName, threshold) {
     console.log("checkIconInScreen no icon");
     return false;
   }
-  var screenshot = getScreenshotResize();
+  if(screenshot == undefined){
+    screenshot = getScreenshotResize();
+  }
   if (screenshot == null) {
     return false;
   }
@@ -349,13 +352,19 @@ function isBattleSkillEmiyaDialog() {
 //finish-----------------------------------------------
 icon["finishNext"] = [1575, 933, 180, 60];
 icon["stageRestart"] = [1140, 810, 240, 75];
-icon["stageFailed"] = [750, 150, 412, 75];
+//icon["stageFailed"] = [750, 150, 412, 75];
+icon["stageFailed"] = [560,460,180,50];
+icon["stageFailed2"] = [1150,460,250,50];
+icon["stageFailed3"] = [860,570,200,60];
 icon["addFriend"] = [1710, 135, 120, 37];
 icon["itemPage"] = [32, 35, 66, 45];
 
 function isBattleStageFailedDialog() {
   //TODO: need check
-  return checkIconInScreen("stageFailed");
+  if(server == "TW"){
+    return checkIconInScreen("stageFailed");
+  }
+  return checkIconListInScreen(["stageFailed", "stageFailed2","stageFailed3"],true);
 }
 
 function isFinishBondPage() {
@@ -365,7 +374,7 @@ function isFinishBondPage() {
       return true;
     }
   }
-  tapScale(460, 5);
+  tapScale(1650,450);
   return false;
 }
 
