@@ -5,13 +5,15 @@ function setMarginIcon() {
   if (server == "TW") {
     icon["main"] = [1710, 984, 150, 75];
     icon["friendEnd"] = [1832, 1027, 60, 45];
-    icon["battleServant1"] = [375, 70, 210, 45];
-    icon["battleServant2"] = [375, 70, 210, 45];
+    icon["battleServant1"] = [375, 70, 600, 45];
+    icon["battleServant2"] = [375, 70, 600, 45];
     icon["finishNext"] = [1575, 980, 180, 60];
 
     icon["friendPointMain"] = [625, 538, 675, 108];
     icon["friendPointFree"] = [787, 790, 337, 75];
     icon["friendPointTen"] = [1125, 790, 240, 75];
+    
+    icon["boxNoPoint"] = [360, 630, 195, 82];
     return;
   }
   if (resolution < 17 / 9) {
@@ -41,8 +43,8 @@ function setMarginIcon() {
     icon["battleMain3"][0] = 1672;
     iconMargin["battleMain3"] = undefined;
 
-    icon["friendPointContinue"][1] = 975;    
-    
+    icon["friendPointContinue"][1] = 975;
+
     icon["itemPage"][0] = 32;
     iconMargin["itemPage"] = undefined;
     return;
@@ -234,7 +236,7 @@ function isSelectFriendPage() {
 
 function isSelectFriendRefreshDialog() {
   //TODO
-  return checkIconListInScreen(["friendRefresh","friendRefresh2"], false);
+  return checkIconListInScreen(["friendRefresh", "friendRefresh2"], false);
 }
 
 function isSelectFriendEnd() {
@@ -248,6 +250,7 @@ function isSelectFriendEmpty() {
 
 //select team-----------------------------------------------
 icon["teamPage"] = [1702, 975, 172, 75];
+icon["useItemDialog"] = [1140, 940, 200, 60];
 
 function isSelectTeamPage() {
   return checkIconInScreen("teamPage");
@@ -255,6 +258,9 @@ function isSelectTeamPage() {
 
 function isUseItemDialog() {
   //TODO
+  if (server == "TW") {
+    return checkIconInScreen("useItemDialog");
+  }
   return false;
 }
 
@@ -427,8 +433,8 @@ function isPresentBoxFull() {
 }
 
 //getbox-----------------------------------------------
-icon["boxNoPoint"] = [360, 630, 195, 82];
 icon["boxFull"] = [712, 600, 487, 300];
+icon["boxNoPoint"] = [470,530,200,100];
 icon["boxReset"] = [1657, 330, 142, 30];
 
 function isGetBoxNoPoint() {
