@@ -29,7 +29,7 @@ var useMargin = undefined;
 function setInStageMargin() {
   if (server == "TW") {
     currentStagePosition = [1301, 23, 19, 29];
-    skillPositionX = [50, 191, 332, 526, 667, 808, 1005, 1146, 1287];
+    skillPositionX = [50, 182, 315, 526, 658, 791, 1002, 1135, 1267];
     skillPositionY = 817;
     return;
   }
