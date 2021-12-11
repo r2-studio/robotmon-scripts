@@ -134,8 +134,8 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.28,
-      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.28 修復新介面的自動抽箱功能<br>V3.26 修正部分關卡背景導致技能無法選擇對象的問題 修正18:9以上手機卡在禮裝掉落畫面的問題<br>V3.25 修正無法刷新好友的問題<br>V3.22 優化指令介面與除錯<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.29,
+      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.29 加入技能加速功能，修正有時會誤送關卡失敗訊息的問題<br>V3.28 修復新介面的自動抽箱功能<br>V3.26 修正部分關卡背景導致技能無法選擇對象的問題 修正18:9以上手機卡在禮裝掉落畫面的問題<br>V3.25 修正無法刷新好友的問題<br>V3.22 優化指令介面與除錯<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
