@@ -6,6 +6,7 @@ function setMarginIcon() {
     icon["friendPointMain"] = [625, 538, 675, 108];
     icon["friendPointFree"] = [787, 790, 337, 75];
     icon["friendPointTen"] = [1125, 790, 240, 75];
+    icon["boxNoPoint"] = [360, 630, 195, 82];
   } else {
     icon["friendPointMain"] = [675, 538, 675, 108];
     icon["friendPointFree"] = [787, 740, 337, 75];
@@ -172,7 +173,7 @@ function isPresentBoxFull() {
 }
 
 //getbox-----------------------------------------------
-icon["boxNoPoint"] = [360, 630, 195, 82];
+icon["boxNoPoint"] = [470,530,200,100];
 icon["boxFull"] = [712, 600, 487, 300];
 icon["boxReset"] = [1657, 330, 142, 30];
 
