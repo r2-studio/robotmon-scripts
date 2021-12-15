@@ -148,8 +148,8 @@
     },
     "com.cooper.FGOFreeTool": {
       "title": "Fate/Grand Order 開箱友抽免費工具",
-      "versionCode": 1.02,
-      "description": "<div>台服 日服開箱友抽小工具，無須訂閱即可使用</div>",
+      "versionCode": 1.03,
+      "description": "<div>台服 日服開箱友抽小工具，無須訂閱即可使用<br><br>V1.03 修復新介面的自動抽箱功能</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOFreeTool/index.zip"
     },
