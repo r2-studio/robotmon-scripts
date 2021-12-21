@@ -103,7 +103,7 @@ function useSkill(player, skill, target) {
     useMargin
   );
   sleep(500);
-  tapScale(1650,450);
+  tapScale(1650, 450);
   sleep(500);
   if (!isScriptRunning) {
     return;
@@ -176,7 +176,7 @@ function selectSkillTarget(player) {
         console.log("選擇技能目標 " + (player + 1));
         tapScale(skillTargetX[player], skillTargetY);
         sleep(500);
-        tapScale(1650,450);
+        tapScale(1650, 450);
         break;
       case 1:
         console.log("從者不足三人，再次選擇");
@@ -210,8 +210,11 @@ function useClothesSkill(skill, target1, target2) {
     undefined,
     0
   );
-  sleep(500);  
-  tapScale(1650,450);
+  sleep(500);
+  if (!(target2 == 5 && skill == 2)) {
+    //ignore change last servant
+    tapScale(1650, 450);
+  }
   sleep(500);
   if (isBattleSkillDetailDialog()) {
     console.log("使用衣服技能-確認畫面");
@@ -249,8 +252,8 @@ function useClothesSkill(skill, target1, target2) {
   }
 }
 
-function switchServant(f,b){
-  useClothesSkill(2,f,b);
+function switchServant(f, b) {
+  useClothesSkill(2, f, b);
 }
 
 function selectEnemy(enemy) {
@@ -340,11 +343,11 @@ function waitUntilPlayerCanMoveOrFinish() {
       return false;
     }
     if (isBattleStageFailedDialog()) {
-      if (isDebug){
+      if (isDebug) {
         console.log("isBattleStageFailedDialog check 1");
         var filepath = path + "/debug_stage_failed_1.png";
         var screenshot = getScreenshotResize();
-        saveImage(screenshot,filepath)
+        saveImage(screenshot, filepath);
         releaseImage(screenshot);
         console.log("adb pull " + filepath);
       }
@@ -352,11 +355,11 @@ function waitUntilPlayerCanMoveOrFinish() {
       if (isBattleStageFailedDialog()) {
         sendUrgentMessage(runningScriptName, "戰鬥失敗，停止腳本");
         isScriptRunning = false;
-        if (isDebug){
+        if (isDebug) {
           console.log("isBattleStageFailedDialog check 2");
           var filepath2 = path + "/debug_stage_failed_2.png";
           var screenshot2 = getScreenshotResize();
-          saveImage(screenshot2,filepath2)
+          saveImage(screenshot2, filepath2);
           releaseImage(screenshot2);
           console.log("adb pull " + filepath2);
         }
