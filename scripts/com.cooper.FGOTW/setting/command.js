@@ -58,7 +58,12 @@ function getCurrentScript() {
           newScript += "selectTeam(" + $("#selectTeam" + itemId).val() + ");";
           break;
         case "進入關卡":
-          newScript += "startQuest(" + $("#useItem" + itemId).val() + ");";
+          newScript +=
+            "startQuest(" +
+            $("#useItem" + itemId).val() +
+            "," +
+            $("#checkStageLoadFinish" + itemId).val() +
+            ");";
           break;
         case "結束關卡":
           newScript += "finishQuest();";
@@ -154,6 +159,9 @@ function getCurrentScript() {
 
 //load script
 function resetScript(result) {
+  if (isDebug) {
+    console.log("reset script", result);
+  }
   clearScript();
   var currentDirection = insertDirection;
   insertDirection = 1;
@@ -403,12 +411,30 @@ function addStartQuest(commandId, content) {
     width: "120px",
   });
 
+  $("#checkStageLoadFinish" + commandId).select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
+
   if (content == undefined) {
     return;
   }
-  $("#useItem" + commandId)
-    .val(content)
-    .trigger("change");
+  var scriptValue = content.split(",");
+  if (scriptValue.length > 1) {
+    $("#useItem" + commandId)
+      .val(scriptValue[0])
+      .trigger("change");
+    $("#checkStageLoadFinish" + commandId)
+      .val(scriptValue[1])
+      .trigger("change");
+  } else {
+    $("#useItem" + commandId)
+      .val(content)
+      .trigger("change");
+    $("#checkStageLoadFinish" + commandId)
+      .val(0)
+      .trigger("change");
+  }
 }
 
 function addAuto(commandId, content) {

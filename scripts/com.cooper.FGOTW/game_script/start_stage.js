@@ -50,7 +50,7 @@ function selectStage(useApple) {
     }
   }
   if (status == 0) {
-    console.log("倉庫已滿-選擇關卡失敗");    
+    console.log("倉庫已滿-選擇關卡失敗");
     sendUrgentMessage(runningScriptName, "倉庫已滿-選擇關卡失敗");
     isScriptRunning = false;
     return;
@@ -162,12 +162,16 @@ function selectTeam(team) {
   sleep(2000);
 }
 
-function startQuest(useItem) {
+function startQuest(useItem, checkStageLoadFinish) {
   if (!isScriptRunning) {
     return;
   }
   if (isReplay) {
-    console.log("連續戰鬥，進入關卡省略");
+    if (checkStageLoadFinish == 1) {
+      tryOpenSettingDialog();
+    } else {
+      console.log("連續戰鬥，進入關卡省略");
+    }
     return;
   }
   if (isBattleMainPage()) {
@@ -190,6 +194,26 @@ function startQuest(useItem) {
       return;
     }
     selectItem(useItem);
+  }
+  if (checkStageLoadFinish == 1) {
+    tryOpenSettingDialog();
+  }
+}
+
+function tryOpenSettingDialog() {
+  console.log("檢查遊戲是否能夠操作");
+  while (isScriptRunning) {
+    if (!isBattleMainPage()) {
+      sleep(3000);
+      continue;
+    }
+    clickIcon("battleMain1");
+    sleep(1000);
+    if (isSettingDialog()) {
+      clickIcon("battleMain1");
+      sleep(1000);
+      break;
+    }
   }
 }
 

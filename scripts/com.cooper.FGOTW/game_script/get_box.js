@@ -8,32 +8,41 @@ function getBox(newBox, fast) {
     waitTime = 1000;
     checkTime = 5;
   }
-  if (checkIsBoxFinish()) {
-    if (!isScriptRunning) {
-      return;
-    }
-    if (newBox) {
-      resetBox();
-    } else {
-      console.log("此箱已抽完");
-      return;
+  if(server == "TW"){
+    if (checkIsBoxFinish()) {
+      if (!isScriptRunning) {
+        return;
+      }
+      if (newBox) {
+        resetBox();
+      } else {
+        console.log("此箱已抽完");
+        return;
+      }
     }
   }
   console.log("開始抽箱");
   while (isScriptRunning) {
     sleep(1500);
     if (checkIsBoxFinish()) {
-      if (newBox) {
-        resetBox();
-      } else {
+      if(server == "JP"){
+        isScriptRunning = false;
+        console.log("點數用完");
+        sendUrgentMessage(runningScriptName, "點數用完");
         break;
+      }else{
+        if (newBox) {
+          resetBox();
+        } else {
+          break;
+        }
       }
     }
     for (var t = 0; t < checkTime; t++) {
       if (!isScriptRunning) {
         break;
       }
-      tapScale(600, 715);
+      tapScale(600, 650);
       sleep(waitTime);
     }
   }
@@ -53,7 +62,17 @@ function checkIsBoxFinish() {
     return true;
   }
   if (isGetBoxNoPoint()) {
-    r = true;
+    if(server == "TW"){
+      r = true;
+    }else{
+      tapScale(600, 650);
+      sleep(2000);      
+      tapScale(600, 650);
+      sleep(2000);
+      if(isGetBoxNoPoint()){
+        r = true;
+      }
+    }
   }
   releaseImage(screenshot);
   return r;

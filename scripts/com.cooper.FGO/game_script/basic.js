@@ -13,6 +13,10 @@ function startScript(loopTime, script, scriptName) {
     console.log(script);
   }
   initScreenSize();
+  if(script==undefined || script.length <= 0){
+    console.log("請先設定腳本指令再開始執行");
+    return true;
+  }
   isScriptRunning = true;
   runningScriptName = scriptName;
   var plan = getUserPlan();
@@ -64,7 +68,8 @@ function startScript(loopTime, script, scriptName) {
     }
   }
   isScriptRunning = false;
-  console.log("script finish");
+  console.log("腳本指令結束");
+  return false;
 }
 
 function stopScript() {
