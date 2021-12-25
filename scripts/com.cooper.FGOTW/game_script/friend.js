@@ -136,7 +136,7 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes) {
         var haveNotFriend = false;
         if (friendLinePosition.length == 0) {
           console.log("辨識好友座標失敗，使用固定座標");
-          friendLinePosition = [defaultMarginX + 295, 595];
+          friendLinePosition = [295, 595];
         }
         if (isDebug) {
           console.log("好友座標 " + friendLinePosition);
