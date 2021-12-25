@@ -82,7 +82,7 @@ function getGetBox(id) {
   return getCommandItem(
     id,
     "抽箱",
-    "<div class='commandSelectDiv'>連續抽箱請開啟自動重置</div>" +
+    "<div class='commandSelectDiv'>日服已內建自動換箱，台服連續抽箱請開啟自動重置</div>" +
       "<div class='commandSelectDiv'>" +
       "<div class='commandItem'>快速模式</div>" +
       '<select id = "getBoxFast' +
@@ -97,7 +97,7 @@ function getGetBox(id) {
       '">' +
       '<option value = "0" selected>否</option>' +
       '<option value = "1">是</option></select></div>' +
-      "<div class='commandSelectDiv'>注意:自動重置開啟時，中獎後會點擊重置按鈕，想抽乾前十箱請小心</div>"
+      "<div class='commandSelectDiv'>台服注意:自動重置開啟時，中獎後會點擊重置按鈕，想抽乾前十箱請小心</div>"
   );
 }
 
@@ -241,7 +241,15 @@ function getStartQuest(id) {
       '<option value = "2">三</option>' +
       '<option value = "3">四</option>' +
       '<option value = "4">五</option>' +
-      '<option value = "5">六</option></select></div>'
+      '<option value = "5">六</option></select></div>' +
+      "<div class='commandSelectDiv'>" +
+      "<div class='commandItem'>檢查開場演出</div>" +
+      '<select id = "checkStageLoadFinish' +
+      id +
+      '">' +
+      '<option value = "0" selected>不檢查</option>' +
+      '<option value = "1">檢查</option></select></div>'+
+      "<div class='commandSelectDiv'>如果討伐戰有開場演出，請打開檢查開場演出</div>"
   );
 }
 //in stage command

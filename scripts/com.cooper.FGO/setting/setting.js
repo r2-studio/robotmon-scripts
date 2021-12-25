@@ -8,6 +8,7 @@ var servantImgPath;
 var itemImgPath;
 var insertDirection = 0;
 var listenScriptMode = true;
+var isPlayingScript = false;
 
 $(function () {
   try {
@@ -509,10 +510,10 @@ function initHTML(result) {
   itemImgPath = storagePath + "friend_item/";
   if (server == "JP") {
     $("#titleBarText").text("FGO自動周回小幫手 日服 " + version + " 啟動成功");
-    $("#serverMessage").remove();
+    $("#serverMessage").text("");
   } else if (server == "TW") {
     $("#titleBarText").text("FGO自動周回小幫手 台服 " + version + " 啟動成功");
-    $("#serverMessage").remove();
+    $("#serverMessage").text("");
   }
 
   var gaEvent = "app" + server;
@@ -520,7 +521,7 @@ function initHTML(result) {
   ga("send", "pageview");
 }
 
-function scriptFinish() {
+function scriptFinish(showLog) {
   var l = server + "_" + version;
   ga("send", {
     hitType: "event",
@@ -530,6 +531,10 @@ function scriptFinish() {
   });
   JavaScriptInterface.showMenu();
   JavaScriptInterface.showPlayButton();
+  if (showLog) {
+    JavaScriptInterface.clickLogButton();
+  }
+  isPlayingScript = false;
 }
 
 function saveServantConfirm(time) {
@@ -746,6 +751,7 @@ function onEvent(eventType) {
       eventAction: "Play",
       eventLabel: l,
     });
+    isPlayingScript = true;
   } else if (eventType == "OnPauseClick") {
     var l = server + "_" + version;
     ga("send", {
@@ -755,7 +761,13 @@ function onEvent(eventType) {
       eventLabel: l,
     });
     JavaScriptInterface.runScript("stop();");
-  } else if (eventType == "OnReloadClick") {
+    isPlayingScript = false;
+  } else if (eventType == "OnLogClick" && isPlayingScript) {
+    // JavaScriptInterface.runScript("showLogAlertMessage();");    
+    $("#serverMessage").text(
+      "腳本執行中開啟除錯訊息，可能會擋到畫面導致腳本判斷錯誤!!"
+    );
+    console.log("腳本執行中開啟除錯訊息，可能會擋到畫面導致腳本判斷錯誤!!");
   }
 }
 

@@ -5,7 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.31";
+var version = "V3.32";
 
 function start(loopTime, script, scriptName) {
   startScript(loopTime, script, scriptName);
@@ -37,58 +37,18 @@ function initHTML(serverString) {
   }
   var firstTime = execute("ls " + itemPath);
   if (firstTime.length == 0 || firstTime.lastIndexOf("exit", 0) === 0) {
-    console.log("First time run script, init basic item");
-    execute("mkdir " + itemPath);
-    sleep(500);
-    execute("mkdir " + itemPath + "script");
-    sleep(500);
-    execute("mkdir " + itemPath + "friend_servant");
-    sleep(500);
-    execute("mkdir " + itemPath + "friend_item");
-    sleep(500);
-
-    execute(
-      "cp " +
-        packagePath +
-        "basic_item/default.js " +
-        itemPath +
-        "script/自動周回.js"
-    );
-    sleep(1000);
-
-    execute(
-      "cp " +
-        packagePath +
-        "basic_item/csaber.png " +
-        itemPath +
-        "friend_servant/C_Saber.png"
-    );
-    sleep(1500);
-    execute(
-      "cp " +
-        packagePath +
-        "basic_item/cskadi.png " +
-        itemPath +
-        "friend_servant/C_Skadi.png"
-    );
-    sleep(1500);
-
-    execute(
-      "cp " +
-        packagePath +
-        "basic_item/qp.png " +
-        itemPath +
-        "friend_item/QP.png"
-    );
-    sleep(1500);
-    execute(
-      "cp " +
-        packagePath +
-        "basic_item/kitune.png " +
-        itemPath +
-        "friend_item/絆.png"
-    );
-    sleep(1500);
+    var cmd =
+      "cp -r " + packagePath + "basic_item/FGOV3 " + getStoragePath() + "/";
+    console.log("複製基本檔案 " + cmd);
+    execute(cmd);
+    sleep(5000);
+    var copyFailed = execute("ls " + itemPath);
+    if (copyFailed.length == 0 || copyFailed.lastIndexOf("exit", 0) === 0) {
+      console.log("基本檔案複製失敗，請檢查權限並再試一次，還是無法初始化請洽Robotmon官方粉絲團");
+      return;
+    }else{
+      console.log("基本檔案複製成功");      
+    }
   }
   var scriptList = execute("ls " + itemPath + "script")
     .replace(/.js/g, "")
@@ -186,6 +146,12 @@ function isAllBlack(image) {
   }
   console.log("螢幕截圖全黑");
   return true;
+}
+
+function showLogAlertMessage() {
+  if (isScriptRunning) {
+    console.log("腳本執行中開啟除錯指令，可能會擋到畫面導致腳本判斷錯誤");
+  }
 }
 
 console.log("load index.js finish");

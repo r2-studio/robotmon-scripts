@@ -239,7 +239,11 @@ function attackAI(
     if (!isScriptRunning) {
       return;
     }
-    if (!clothSkillUsed[i] && clothSkill[i][0] >= 0 && currentStage >= clothSkill[i][0]) {
+    if (
+      !clothSkillUsed[i] &&
+      clothSkill[i][0] >= 0 &&
+      currentStage >= clothSkill[i][0]
+    ) {
       useClothesSkill(i, clothSkill[i][1]);
       clothSkillUsed[i] = true;
     }
@@ -309,6 +313,7 @@ function releaseAllImage() {
 function updateServantAlive(screenshot) {
   var result = [];
   if (!servantInited) {
+    //get alive servant
     servantInited = true;
     initServant = getCurrentServant(screenshot);
     for (var i = 0; i < 3; i++) {
@@ -322,20 +327,28 @@ function updateServantAlive(screenshot) {
       }
     }
   } else {
+    //get current servant
     var currentServant = getCurrentServant(screenshot);
     var path = getStoragePath();
-    if (isDebug) {
-      saveImage(screenshot, path + "/debug_current_screen.png");
-    }
     for (var i = 0; i < 3; i++) {
-      if (isDebug) {
-        saveImage(currentServant[i], path + "/debug_current" + i + ".png");
-      }
       if (getIdentityScore(initServant[i], currentServant[i]) > 0.8) {
         result[i] = true;
       } else {
         console.log("從者 " + (i + 1) + " 退場");
         result[i] = false;
+        if (isDebug) {
+          var filepath = path + "/debug_servant_now.png";
+          saveImage(screenshot,filepath)
+          console.log("adb pull " + filepath);
+
+          filepath = path + "/debug_servant_alive_" + i + ".png";
+          saveImage(initServant[i], filepath);
+          console.log("adb pull " + filepath);
+
+          filepath = path + "/debug_servant_now_" + i + ".png";
+          saveImage(currentServant[i], filepath);
+          console.log("adb pull " + filepath);
+        }
       }
     }
     for (var i = 0; i < 3; i++) {

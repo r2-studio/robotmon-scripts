@@ -12,6 +12,10 @@ function setMarginIcon() {
     icon["friendPointMain"] = [625, 538, 675, 108];
     icon["friendPointFree"] = [787, 790, 337, 75];
     icon["friendPointTen"] = [1125, 790, 240, 75];
+
+    icon["boxNoPoint"] = [360, 630, 195, 82];
+    icon["stageFailed"] = [900, 154, 140, 60];
+    icon["settingDialog"] = [840, 220, 240, 60];
     return;
   }
   if (resolution < 17 / 9) {
@@ -137,7 +141,7 @@ function checkIconListInScreen(iconList, allPass, threshold) {
   return allPass;
 }
 
-function checkIconInScreen(iconName, threshold) {
+function checkIconInScreen(iconName, threshold, screenshot) {
   if (!isScriptRunning) {
     return false;
   }
@@ -145,7 +149,9 @@ function checkIconInScreen(iconName, threshold) {
     console.log("checkIconInScreen no icon");
     return false;
   }
-  var screenshot = getScreenshotResize();
+  if (screenshot == undefined) {
+    screenshot = getScreenshotResize();
+  }
   if (screenshot == null) {
     return false;
   }
@@ -274,6 +280,7 @@ icon["spaceColor"] = [690, 288, 540, 45];
 icon["emiyaColor"] = [690, 240, 540, 90];
 icon["ultFailed"] = [900, 637, 123, 60];
 icon["skillFailed"] = [870, 802, 180, 60];
+icon["settingDialog"] = [750, 220, 350, 60];
 
 function isBattleMainPage() {
   if (
@@ -299,6 +306,10 @@ function isBattleMainPage() {
 		*/
   }
   return false;
+}
+
+function isSettingDialog() {
+  return checkIconInScreen("settingDialog");
 }
 
 function isBattleCardPage() {
@@ -347,13 +358,16 @@ function isBattleSkillEmiyaDialog() {
 //finish-----------------------------------------------
 icon["finishNext"] = [1575, 933, 180, 60];
 icon["stageRestart"] = [1140, 810, 240, 75];
-icon["stageFailed"] = [750, 150, 412, 75];
+icon["stageFailed"] = [750,160,300,60];
+icon["stageFailed2"] = [860, 570, 200, 60];
 icon["addFriend"] = [1710, 135, 120, 37];
 icon["itemPage"] = [32, 35, 66, 45];
 
 function isBattleStageFailedDialog() {
-  //TODO: need check
-  return checkIconInScreen("stageFailed");
+  return checkIconListInScreen(
+    ["stageFailed", "stageFailed2"],
+    true
+  );
 }
 
 function isFinishBondPage() {
@@ -363,7 +377,7 @@ function isFinishBondPage() {
       return true;
     }
   }
-  tapScale(460, 5);
+  tapScale(1650, 450);
   return false;
 }
 
@@ -431,8 +445,8 @@ function isPresentBoxFull() {
 }
 
 //getbox-----------------------------------------------
-icon["boxNoPoint"] = [360, 630, 195, 82];
 icon["boxFull"] = [712, 600, 487, 300];
+icon["boxNoPoint"] = [470, 530, 200, 100];
 icon["boxReset"] = [1657, 330, 142, 30];
 
 function isGetBoxNoPoint() {

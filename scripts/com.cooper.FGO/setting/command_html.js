@@ -241,7 +241,15 @@ function getStartQuest(id) {
       '<option value = "2">三</option>' +
       '<option value = "3">四</option>' +
       '<option value = "4">五</option>' +
-      '<option value = "5">六</option></select></div>'
+      '<option value = "5">六</option></select></div>' +
+      "<div class='commandSelectDiv'>" +
+      "<div class='commandItem'>檢查開場演出</div>" +
+      '<select id = "checkStageLoadFinish' +
+      id +
+      '">' +
+      '<option value = "0" selected>不檢查</option>' +
+      '<option value = "1">檢查</option></select></div>'+
+      "<div class='commandSelectDiv'>如果討伐戰有開場演出，請打開檢查開場演出</div>"
   );
 }
 //in stage command
