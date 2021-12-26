@@ -204,6 +204,7 @@ function tryOpenSettingDialog() {
   console.log("檢查遊戲是否能夠操作");
   while (isScriptRunning) {
     if (!isBattleMainPage()) {
+      tapScale(1650, 450);
       sleep(3000);
       continue;
     }
