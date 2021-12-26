@@ -208,6 +208,7 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes) {
               sleep(500);
               return;
             }
+            tapScale(460, 5);
           }
         }
         if (isSelectFriendEnd()) {
