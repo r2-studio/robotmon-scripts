@@ -207,6 +207,9 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes) {
             } else if (isBattleMainPage()) {
               sleep(500);
               return;
+            }else{
+              tapScale(460, 5);
+              sleep(1000);
             }
           }
         }
