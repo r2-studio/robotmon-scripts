@@ -6,9 +6,8 @@ config = {
   account: 'default_xrobotmon_account@gmail.com',
   password: '',
   materialsTarget: 1000,
-  goodsTarget: 170,
+  goodsTarget: 180,
   productSafetyStock: 10,
-  // goodProducingStep: 12,
   autoCollectMailIntervalInMins: 40,
   autoCollectFountainIntervalInMins: 40,
   autoCollectTrainIntervalInMins: 20,
@@ -16,9 +15,9 @@ config = {
   isHotAirBallonGotoEp3: false,
   ballonKeepCurrentDestination: false,
   autoCollectDailyReward: true,
-  autoFulfillWishesIntervalInMins: 11,
+  autoFulfillWishesIntervalInMins: 10,
   alwaysFulfillWishes: false,
-  wishingTreeSafetyStock: 40,
+  wishingTreeSafetyStock: 50,
   wishingTreeMaxFillingMins: 5,
   wishingTreeRefreshGoldenWishes: true,
   autoPvPIntervalInMins: 0,
@@ -193,13 +192,12 @@ pageCottomFarm = [
 ];
 
 var pageInKingdomVillage = [
-  { x: 321, y: 15, r: 255, g: 238, b: 17 },
-  { x: 428, y: 14, r: 0, g: 193, b: 255 },
-  { x: 517, y: 22, r: 235, g: 161, b: 89 },
-  { x: 551, y: 15, r: 251, g: 239, b: 215 },
-  { x: 617, y: 308, r: 71, g: 122, b: 190 },
-  { x: 27, y: 225, r: 223, g: 156, b: 77 },
-  { x: 19, y: 111, r: 190, g: 3, b: 37 },
+  {x: 250, y: 16, r: 247, g: 48, b: 90},
+  {x: 321, y: 17, r: 255, g: 211, b: 0},
+  {x: 427, y: 14, r: 0, g: 195, b: 255},
+  {x: 429, y: 332, r: 148, g: 40, b: 33},
+  {x: 27, y: 320, r: 255, g: 255, b: 255},
+  {x: 24, y: 345, r: 66, g: 101, b: 148}
 ];
 
 var pageLoginFacebook = [
@@ -209,6 +207,16 @@ var pageLoginFacebook = [
   { x: 602, y: 167, r: 255, g: 255, b: 255 },
   { x: 506, y: 24, r: 21, g: 21, b: 21 },
 ];
+
+var pageInCookieGacha = [
+  {x: 36, y: 233, r: 205, g: 204, b: 205},
+  {x: 35, y: 75, r: 206, g: 215, b: 231},
+  {x: 30, y: 12, r: 148, g: 81, b: 66},
+  {x: 268, y: 17, r: 218, g: 173, b: 234},
+  {x: 342, y: 16, r: 99, g: 117, b: 132},
+  {x: 418, y: 21, r: 239, g: 195, b: 2},
+  {x: 524, y: 20, r: 0, g: 139, b: 255}
+]
 
 var pageInputAge = [
   { x: 366, y: 278, r: 254, g: 94, b: 0 },
@@ -372,10 +380,20 @@ var pageCanTapGuild = [
   { x: 409, y: 333, r: 72, g: 47, b: 55 },
 ];
 
-var pageInGuildPage = [
-  { x: 572, y: 335, r: 158, g: 130, b: 190 },
-  { x: 609, y: 139, r: 255, g: 255, b: 255 },
-  { x: 374, y: 80, r: 12, g: 167, b: 223 },
+var pageInkingdomCanGotoGuild = [
+  {x: 319, y: 326, r: 255, g: 182, b: 0},
+  {x: 367, y: 318, r: 148, g: 81, b: 66},
+  {x: 416, y: 320, r: 132, g: 16, b: 13},
+  {x: 473, y: 323, r: 222, g: 158, b: 79}
+];
+var pageInGuildLand = [
+  {x: 445, y: 329, r: 74, g: 61, b: 154},
+  {x: 212, y: 329, r: 173, g: 150, b: 198},
+  {x: 163, y: 327, r: 107, g: 32, b: 49},
+  {x: 144, y: 326, r: 231, g: 207, b: 214},
+  {x: 107, y: 324, r: 225, g: 213, b: 198},
+  {x: 41, y: 303, r: 217, g: 146, b: 99},
+  {x: 19, y: 267, r: 206, g: 195, b: 247},
 ];
 
 var pageInGnomeLab = [
@@ -598,6 +616,8 @@ function checkIsPage(page, diff, img) {
     console.log('Reboot nox as screen size incorrect: ', whSize.height, whSize.width, ' (h/w)');
     execute('/system/bin/reboot -p');
   }
+
+  checkIsCookieGachaPage();
   var isPage = true;
   for (var i in page) {
     var cbtn = page[i];
@@ -705,7 +725,12 @@ function checkScreenMessage(messageScreen, pageMessageWindow) {
       cnt++;
     }
   }
-  console.log('actual vs expect: ', cnt, messageScreen.targetColorCount);
+  console.log(
+    'cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ',
+    cnt,
+    messageScreen.targetColorCount,
+    messageScreen.targetColorThreashold
+  );
 
   releaseImage(img);
   releaseImage(croppedImage);
@@ -1497,6 +1522,21 @@ function handleWelcomePage() {
 }
 
 function handleAnnouncement() {
+  var pagePuffShowGuild = [
+    {x: 318, y: 325, r: 255, g: 192, b: 0},
+    {x: 332, y: 257, r: 255, g: 243, b: 239},
+    {x: 369, y: 318, r: 50, g: 27, b: 22},
+    {x: 418, y: 318, r: 47, g: 7, b: 5},
+    {x: 566, y: 344, r: 17, g: 26, b: 36}
+  ];
+  if (waitUntilSeePage(pagePuffShowGuild)) {
+    console.log('found puff teach guild page, tap announcment twice to leave');
+    qTap(pageAnnouncement);
+    sleep(config.sleepAnimate);
+    qTap(pageAnnouncement);
+    sleep(config.sleepAnimate);
+  }
+
   if (waitUntilSeePage(pageAnnouncement, 4)) {
     console.log('found announcement page, leaving');
     qTap(pageAnnouncement);
@@ -1606,6 +1646,12 @@ function findAndTapProductionHouse() {
       for (var i = 0; i < 3; i++) {
         house.x += 12;
         house.y += 12;
+
+        if (checkIsPage(pageInGacha)) {
+          console.log('accidentally get into gacha when searching for houses, leaving');
+          qTap(pnt(618, 21));
+          break;
+        }
 
         qTap(house);
         sleep(config.sleepAnimate);
@@ -2284,6 +2330,7 @@ function handleInputLoginInfo() {
     }
 
     if (checkIsPage(pageEnterpassword)) {
+      console.log('input user password');
       qTap(pageEnterpassword);
       sleep(config.sleepAnimate);
       typing(config.password, 3000);
@@ -2301,6 +2348,7 @@ function handleInputLoginInfo() {
           console.log('DevPlay report wrong password');
           return handleLoginFailed();
         }
+        sleep(1000);
       }
 
       if (checkIsPage(pageEnterpassword)) {
@@ -2317,6 +2365,7 @@ function handleInputLoginInfo() {
       }
 
       sendEvent('gameStatus', 'login-succeeded');
+      console.log('Send login-succeeded');
 
       // Touch here to start:
       console.log('successfully input password, tap (1,1) for 10s');
@@ -2784,13 +2833,18 @@ function handleGetDailyRewards() {
     { x: 618, y: 28, r: 64, g: 98, b: 132 },
   ];
   var pageInFriendsList = [
-    { x: 38, y: 66, r: 135, g: 152, b: 192 },
-    { x: 23, y: 90, r: 255, g: 224, b: 2 },
-    { x: 22, y: 199, r: 52, g: 64, b: 89 },
+    {x: 23, y: 90, r: 255, g: 227, b: 0},
+    {x: 14, y: 70, r: 135, g: 152, b: 192},
+    {x: 13, y: 47, r: 52, g: 64, b: 89},
+    {x: 187, y: 351, r: 57, g: 69, b: 107},
+    {x: 234, y: 350, r: 57, g: 69, b: 107},
+    {x: 136, y: 20, r: 255, g: 255, b: 255}
   ];
   var pageCanSendFriendRewards = [
-    { x: 384, y: 349, r: 85, g: 211, b: 0 },
-    { x: 361, y: 334, r: 255, g: 255, b: 255 },
+    {x: 402, y: 345, r: 82, g: 211, b: 0},
+    {x: 340, y: 350, r: 57, g: 69, b: 107},
+    {x: 24, y: 89, r: 255, g: 227, b: 0},
+    {x: 19, y: 107, r: 135, g: 152, b: 192}
   ];
   if (checkIsPage(pageFriends)) {
     qTap(pageFriends);
@@ -2800,10 +2854,9 @@ function handleGetDailyRewards() {
         qTap(pageCanSendFriendRewards);
         console.log('successfully send daily gifts to friends');
       }
-
-      handleGotoKingdomPage();
     }
   }
+  handleGotoKingdomPage();
 
   // Rewards in shop ======
   pageShop = [
@@ -2858,9 +2911,8 @@ function handleGetDailyRewards() {
         break;
       }
     }
-
-    handleGotoKingdomPage();
   }
+  handleGotoKingdomPage();
 
   // Rewards in Gacha ======
   pageGacha = [
@@ -2883,11 +2935,13 @@ function handleGetDailyRewards() {
       { x: 443, y: 340, r: 137, g: 85, b: 99 },
       { x: 388, y: 323, r: 82, g: 24, b: 33 },
       { x: 451, y: 230, r: 156, g: 247, b: 255 },
+      {x: 45, y: 221, r: 56, g: 74, b: 107},
     ];
     pageDailyGiftClaimed = [
       { x: 510, y: 325, r: 125, g: 125, b: 125 },
       { x: 614, y: 324, r: 125, g: 125, b: 125 },
       { x: 416, y: 20, r: 255, g: 207, b: 0 },
+      {x: 45, y: 221, r: 56, g: 74, b: 107},
     ];
 
     qTap(pageDailyGift);
@@ -3801,6 +3855,14 @@ function handleAutoBattleInIslands(item) {
     {x: 179, y: 340, r: 156, g: 101, b: 74},
     {x: 194, y: 335, r: 255, g: 255, b: 255},
   ]
+  var pageKingdomDecorating = [
+    {x: 619, y: 12, r: 57, g: 169, b: 231},
+    {x: 42, y: 23, r: 99, g: 174, b: 49},
+    {x: 33, y: 25, r: 48, g: 100, b: 14},
+    {x: 33, y: 81, r: 255, g: 255, b: 255},
+    {x: 20, y: 222, r: 57, g: 69, b: 107},
+    {x: 33, y: 212, r: 255, g: 255, b: 255},
+  ]
 
   var img = getScreenshot();
   foundResults = findImages(img, item, 0.88, 5, true);
@@ -3853,17 +3915,24 @@ function handleAutoBattleInIslands(item) {
               sleep(1500);
             }
 
+            if (checkIsPage(pageKingdomDecorating)) {
+              console.log('Found in pageKingdomDecorating page, finish auto island battle');
+              qTap(pageKingdomDecorating);
+              handleGotoKingdomPage();
+              return false;
+            }
+
             if (checkIsPage(pageInGacha)) {
               console.log('Found in gacha page, finish auto island battle');
               qTap(pageInGacha);
               handleGotoKingdomPage();
-              return;
+              return false;
             }
 
             if (checkIsPage(pageInKingdomConstructionShop)) {
               console.log('Found pageInKingdomConstructionShop, exit');
               qTap(pageInKingdomConstructionShop);
-              return true;;
+              return false;;
             }
 
             if (checkIsPage(pageBattleFinished)) {
@@ -4069,15 +4138,58 @@ function handleGotoAdventure(destination, targetPage) {
 }
 
 function handleGuildCheckinAndBattle() {
-  handleGotoAdventure(Advantures.guild, pageInGuildPage);
+  // handleGotoAdventure(Advantures.guild, pageInGuildPage);
+  handleGotoKingdomPage();
+
+  if (checkIsPage(pageInkingdomCanGotoGuild)) {
+    waitUntilSeePage(pageInGuildLand, 12, pageInkingdomCanGotoGuild);
+  }
 
   return handleInGuildPage();
 }
 
 function handleInGuildPage() {
-  if (!checkIsPage(pageInGuildPage)) {
-    console.log('skipping handleInGuildPage as cannot find pageInGuildPage');
+  if (!checkIsPage(pageInGuildLand)) {
+    console.log('skipping handleInGuildPage as cannot find pageInGuildLand');
     return false;
+  }
+
+  var pageInputGuildWelcomeText = [
+    {x: 434, y: 105, r: 57, g: 166, b: 231},
+    {x: 420, y: 107, r: 57, g: 69, b: 107},
+    {x: 439, y: 209, r: 247, g: 235, b: 222},
+    {x: 438, y: 235, r: 222, g: 207, b: 198},
+    {x: 358, y: 240, r: 123, g: 207, b: 8},
+    {x: 28, y: 272, r: 86, g: 86, b: 89},
+    {x: 26, y: 321, r: 76, g: 76, b: 76},
+    {x: 160, y: 326, r: 25, g: 3, b: 9},
+  ]
+  var pageInGuildBeacon = [
+    {x: 603, y: 26, r: 255, g: 255, b: 255},
+    {x: 213, y: 261, r: 129, g: 112, b: 166},
+    {x: 192, y: 199, r: 155, g: 121, b: 254},
+    {x: 183, y: 244, r: 63, g: 62, b: 134},
+    {x: 169, y: 258, r: 84, g: 68, b: 122},
+    {x: 219, y: 182, r: 215, g: 208, b: 223},
+    {x: 528, y: 317, r: 123, g: 207, b: 8},
+    {x: 562, y: 328, r: 49, g: 60, b: 90},
+  ]
+
+  console.log('tap fire 5 times to checkin')
+  for (var i = 0; i < 5; i ++) {
+    qTap(pnt(312, 180));
+    sleep(500);
+
+    if (checkIsPage(pageInputGuildWelcomeText)) {
+      qTap(pageInputGuildWelcomeText);
+      sleep(500);
+    }
+
+    if (checkIsPage(pageInGuildBeacon)) {
+      qTap(pageInGuildBeacon);
+      sleep(config.sleepAnimate);
+      break;
+    }
   }
 
   var pageReadyToFightDragon = [
@@ -4100,9 +4212,9 @@ function handleInGuildPage() {
     { x: 413, y: 68, r: 50, g: 137, b: 215 },
   ];
 
-  qTap(pnt(480, 115));
+  qTap(pnt(152, 327));
   sleep(1000);
-  waitUntilSeePage(pageInGuildPage, 6, pnt(480, 115)); // by pass the animate
+  waitUntilSeePage(pageInGuildLand, 6, pnt(152, 327)); // by pass the animate
   sendEvent('running', '');
 
   if (waitUntilSeePage(pageReadyToFightDragon, 8, pnt(560, 325))) {
@@ -4565,20 +4677,26 @@ function checkIsFacebookPage() {
 
   console.log('In facebook page, tap back to game');
   for (var j = 0; j < 8; j++) {
-    keycode('BACK', 1000);
-    sleep(300);
+    keycode('BACK', 80);
+    return true;
+  }
+}
 
-    img = getScreenshot();
-    for (var i in pageLoginFacebook) {
-      var cbtn = pageLoginFacebook[i];
-      var color = getImageColor(img, cbtn.x, cbtn.y);
-      if (!isSameColor(cbtn, color, 35)) {
-        releaseImage(img);
-        return true;
-      }
+function checkIsCookieGachaPage() {
+  var img = getScreenshot();
+  for (var i in pageInCookieGacha) {
+    var cbtn = pageInCookieGacha[i];
+    var color = getImageColor(img, cbtn.x, cbtn.y);
+    if (!isSameColor(cbtn, color, 35)) {
+      releaseImage(img);
+      return false;
     }
+  }
 
-    releaseImage(img);
+  console.log('In cookie gacha page, tap daily gift to avoid misclick');
+  for (var j = 0; j < 4; j++) {
+    qTap(pnt(35, 230));
+    sleep(100);
     return true;
   }
 }
@@ -5601,14 +5719,14 @@ function start(inputConfig) {
         config.lastAutoPvP = Date.now();
       }
 
-      if (
-        config.autoSuperMayhemIntervalInMins != 0 &&
-        (Date.now() - config.lastAutoSuperMayhem) / 60000 > config.autoSuperMayhemIntervalInMins
-      ) {
-        console.log('Auto Super Mayhem: ', (Date.now() - config.lastAutoSuperMayhem) / 60000, ' just passed');
-        handleSuperMayhem();
-        config.lastAutoSuperMayhem = Date.now();
-      }
+      // if (
+      //   config.autoSuperMayhemIntervalInMins != 0 &&
+      //   (Date.now() - config.lastAutoSuperMayhem) / 60000 > config.autoSuperMayhemIntervalInMins
+      // ) {
+      //   console.log('Auto Super Mayhem: ', (Date.now() - config.lastAutoSuperMayhem) / 60000, ' just passed');
+      //   handleSuperMayhem();
+      //   config.lastAutoSuperMayhem = Date.now();
+      // }
 
       if (
         config.autoCollectTropicalIslandsIntervalInMins != 0 &&
@@ -5646,6 +5764,12 @@ function start(inputConfig) {
         handleGotoGnomeLab();
         config.lastLabResearch = Date.now();
       }
+
+      // if (config.handleTradeHabor && (Date.now() - config.lastLabResearch) / 60000 > 20) {
+      //   console.log('handleTradeHabor: ', (Date.now() - config.lastLabResearch) / 60000, ' just passed');
+      //   handleTradeHabor();
+      //   config.lastLabResearch = Date.now();
+      // }
 
       if (
         config.worksBeforeCollectCandy != 0 &&
@@ -5758,4 +5882,5 @@ function start(inputConfig) {
 }
 
 // sendEvent('running', '')
+// loadImages();
 // start(JSON.stringify(config));
