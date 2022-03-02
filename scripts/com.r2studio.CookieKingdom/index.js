@@ -6,9 +6,9 @@ config = {
   account: 'default_xrobotmon_account@gmail.com',
   password: '',
   materialsTarget: 1000,
-  goodsTarget: 180,
+  goodsTarget: 200,
   productSafetyStock: 10,
-  autoCollectMailIntervalInMins: 40,
+  autoCollectMailIntervalInMins: 120,
   autoCollectFountainIntervalInMins: 40,
   autoCollectTrainIntervalInMins: 20,
   autoSendHotAirBallonIntervalInMins: 40,
@@ -17,20 +17,27 @@ config = {
   autoCollectDailyReward: true,
   autoFulfillWishesIntervalInMins: 10,
   alwaysFulfillWishes: false,
-  wishingTreeSafetyStock: 50,
-  wishingTreeMaxFillingMins: 5,
+  wishingTreeSafetyStock: 40,
+  wishingTreeMaxFillingMins: 8,
   wishingTreeRefreshGoldenWishes: true,
   autoPvPIntervalInMins: 0,
-  autoPvPTargetScoreLimit: 400000,
+  autoPvPTargetScoreLimit: 600000,
+  autoPvPPurchaseAncientCookie: false,
   worksBeforeCollectCandy: 40,
   helpTapGreenCheck: true,
   autoCollectTropicalIslandsIntervalInMins: 40,
-  autoGuildBattleIntervalInMins: 0,
+  autoGuildAllianceBattle: false,
+  autoGuildClaimNewLand: false,
+  autoGuildBattleDragon: false,
   autoHandleBountiesIntervalInMins: 0,
   autoLabResearch: false,
-  autoResearchKingdom: true,
+  autoResearchKingdom: false,
   autoResearchCookies: false,
   autoLabUseAuroraMaterial: false,
+  autoHandleTradeHabor: false,
+  autoBuyCaramelStuff: false,
+  autoBuySeaFairy: false,
+  autoBuyGuildRelic: false,
   axeStockTo400: false,
   autoSuperMayhemIntervalInMins: 0,
   autoSuperMayhemTargetScoreLimit: 500000,
@@ -56,8 +63,11 @@ config = {
   lastCollectTropicalIsland: 0,
   lastAutoGuildBattle: 0,
   lastAutoHandleBounties: 0,
-  lastLabResearch: 20,
+  lastLabResearch: 0,
+  lastHandleTradeHabor: 0,
   lastTryResolveGreenChecks: 0,
+  lastFreezeCheckScreenShot: null,
+  lastFreezeCheckScreenShotTime: Date.now(),
   run: true,
   isXR: true,
   findProductionTimes: 4,
@@ -192,12 +202,12 @@ pageCottomFarm = [
 ];
 
 var pageInKingdomVillage = [
-  {x: 250, y: 16, r: 247, g: 48, b: 90},
-  {x: 321, y: 17, r: 255, g: 211, b: 0},
-  {x: 427, y: 14, r: 0, g: 195, b: 255},
-  {x: 429, y: 332, r: 148, g: 40, b: 33},
-  {x: 27, y: 320, r: 255, g: 255, b: 255},
-  {x: 24, y: 345, r: 66, g: 101, b: 148}
+  { x: 250, y: 16, r: 247, g: 48, b: 90 },
+  { x: 321, y: 17, r: 255, g: 211, b: 0 },
+  { x: 427, y: 14, r: 0, g: 195, b: 255 },
+  { x: 429, y: 332, r: 148, g: 40, b: 33 },
+  { x: 27, y: 320, r: 255, g: 255, b: 255 },
+  { x: 24, y: 345, r: 66, g: 101, b: 148 },
 ];
 
 var pageLoginFacebook = [
@@ -209,14 +219,14 @@ var pageLoginFacebook = [
 ];
 
 var pageInCookieGacha = [
-  {x: 36, y: 233, r: 205, g: 204, b: 205},
-  {x: 35, y: 75, r: 206, g: 215, b: 231},
-  {x: 30, y: 12, r: 148, g: 81, b: 66},
-  {x: 268, y: 17, r: 218, g: 173, b: 234},
-  {x: 342, y: 16, r: 99, g: 117, b: 132},
-  {x: 418, y: 21, r: 239, g: 195, b: 2},
-  {x: 524, y: 20, r: 0, g: 139, b: 255}
-]
+  { x: 36, y: 233, r: 205, g: 204, b: 205 },
+  { x: 35, y: 75, r: 206, g: 215, b: 231 },
+  { x: 30, y: 12, r: 148, g: 81, b: 66 },
+  { x: 268, y: 17, r: 218, g: 173, b: 234 },
+  { x: 342, y: 16, r: 99, g: 117, b: 132 },
+  { x: 418, y: 21, r: 239, g: 195, b: 2 },
+  { x: 524, y: 20, r: 0, g: 139, b: 255 },
+];
 
 var pageInputAge = [
   { x: 366, y: 278, r: 254, g: 94, b: 0 },
@@ -266,7 +276,7 @@ var pageInFountain = [
   { x: 505, y: 305, r: 121, g: 207, b: 12 },
   { x: 569, y: 310, r: 219, g: 207, b: 199 },
   { x: 368, y: 23, r: 60, g: 70, b: 105 },
-  { x: 297, y: 30, r: 255, g: 255, b: 255 },
+  { x: 525, y: 68, r: 142, g: 79, b: 71 },
 ];
 
 var pageBallonFlyingDock = [
@@ -315,13 +325,13 @@ var pageInTropicalIsland = [
 ];
 
 var pageInGacha = [
-  {x: 627, y: 19, r: 57, g: 166, b: 231},
-  {x: 31, y: 10, r: 148, g: 81, b: 66},
-  {x: 5, y: 6, r: 17, g: 21, b: 29},
-  {x: 50, y: 10, r: 17, g: 21, b: 29},
-  {x: 417, y: 20, r: 255, g: 207, b: 0},
-  {x: 526, y: 18, r: 0, g: 130, b: 255},
-]
+  { x: 627, y: 19, r: 57, g: 166, b: 231 },
+  { x: 31, y: 10, r: 148, g: 81, b: 66 },
+  { x: 5, y: 6, r: 17, g: 21, b: 29 },
+  { x: 50, y: 10, r: 17, g: 21, b: 29 },
+  { x: 417, y: 20, r: 255, g: 207, b: 0 },
+  { x: 526, y: 18, r: 0, g: 130, b: 255 },
+];
 
 var pageInTowerOfRecords = [
   { x: 13, y: 33, r: 229, g: 229, b: 229 },
@@ -333,6 +343,11 @@ var pageInTowerOfRecords = [
 
 var pageAutoUseSkillEnabled = [{ x: 28, y: 291, r: 223, g: 221, b: 1 }];
 var pageSpeedBoostEnabled = [{ x: 31, y: 333, r: 113, g: 107, b: 17 }];
+var pageSpeed1x = [{ x: 24, y: 332, r: 135, g: 137, b: 135 }];
+var pageSpeed1_2x = [
+  { x: 20, y: 333, r: 211, g: 209, b: 2 },
+  { x: 32, y: 334, r: 161, g: 159, b: 8 },
+];
 
 //rgb(166,104,65)
 pageInProduction = [
@@ -381,34 +396,37 @@ var pageCanTapGuild = [
 ];
 
 var pageInkingdomCanGotoGuild = [
-  {x: 319, y: 326, r: 255, g: 182, b: 0},
-  {x: 367, y: 318, r: 148, g: 81, b: 66},
-  {x: 416, y: 320, r: 132, g: 16, b: 13},
-  {x: 473, y: 323, r: 222, g: 158, b: 79}
+  { x: 319, y: 326, r: 255, g: 182, b: 0 },
+  { x: 367, y: 318, r: 148, g: 81, b: 66 },
+  { x: 416, y: 320, r: 132, g: 16, b: 13 },
+  { x: 473, y: 323, r: 222, g: 158, b: 79 },
 ];
 var pageInGuildLand = [
-  {x: 445, y: 329, r: 74, g: 61, b: 154},
-  {x: 212, y: 329, r: 173, g: 150, b: 198},
-  {x: 163, y: 327, r: 107, g: 32, b: 49},
-  {x: 144, y: 326, r: 231, g: 207, b: 214},
-  {x: 107, y: 324, r: 225, g: 213, b: 198},
-  {x: 41, y: 303, r: 217, g: 146, b: 99},
-  {x: 19, y: 267, r: 206, g: 195, b: 247},
+  { x: 445, y: 329, r: 74, g: 61, b: 154 },
+  { x: 212, y: 329, r: 173, g: 150, b: 198 },
+  { x: 163, y: 327, r: 107, g: 32, b: 49 },
+  { x: 144, y: 326, r: 231, g: 207, b: 214 },
+  { x: 107, y: 324, r: 225, g: 213, b: 198 },
+  { x: 41, y: 303, r: 217, g: 146, b: 99 },
+  { x: 19, y: 267, r: 206, g: 195, b: 247 },
 ];
 
 var pageInGnomeLab = [
-  { x: 20, y: 15, r: 255, g: 241, b: 125 },
-  { x: 15, y: 11, r: 210, g: 9, b: 37 },
-  { x: 323, y: 15, r: 164, g: 8, b: 36 },
-  { x: 331, y: 25, r: 255, g: 221, b: 238 },
-  { x: 265, y: 18, r: 255, g: 255, b: 255 },
+  { x: 610, y: 18, r: 57, g: 166, b: 231 },
+  { x: 323, y: 15, r: 173, g: 7, b: 35 },
+  { x: 325, y: 21, r: 255, g: 255, b: 255 },
+  { x: 418, y: 17, r: 255, g: 211, b: 0 },
+  { x: 523, y: 21, r: 5, g: 143, b: 255 },
+  { x: 378, y: 62, r: 52, g: 34, b: 19 },
+  { x: 387, y: 63, r: 123, g: 117, b: 99 },
 ];
 
 var pageInBounties = [
-  { x: 19, y: 16, r: 218, g: 218, b: 218 },
-  { x: 77, y: 20, r: 255, g: 255, b: 255 },
-  { x: 63, y: 40, r: 90, g: 39, b: 39 },
-  { x: 212, y: 6, r: 124, g: 82, b: 96 },
+  { x: 616, y: 341, r: 49, g: 77, b: 107 },
+  { x: 634, y: 337, r: 54, g: 32, b: 22 },
+  { x: 479, y: 19, r: 40, g: 32, b: 23 },
+  { x: 456, y: 26, r: 70, g: 50, b: 37 },
+  { x: 416, y: 5, r: 122, g: 84, b: 95 },
 ];
 
 var pageInSuperMayhem = [
@@ -427,13 +445,6 @@ var pagePvPCrystaisRefresh = [
   { x: 402, y: 134, r: 247, g: 235, b: 222 },
   { x: 351, y: 250, r: 123, g: 207, b: 8 },
   { x: 408, y: 251, r: 222, g: 207, b: 198 },
-];
-
-var battleDefeatPage = [
-  { x: 243, y: 58, r: 69, g: 90, b: 105 },
-  { x: 280, y: 54, r: 46, g: 46, b: 46 },
-  { x: 410, y: 57, r: 60, g: 92, b: 95 },
-  { x: 397, y: 48, r: 142, g: 158, b: 158 },
 ];
 
 var pageCookieKingdomIsNotResponding = [
@@ -725,12 +736,12 @@ function checkScreenMessage(messageScreen, pageMessageWindow) {
       cnt++;
     }
   }
-  console.log(
-    'cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ',
-    cnt,
-    messageScreen.targetColorCount,
-    messageScreen.targetColorThreashold
-  );
+  // console.log(
+  //   'cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ',
+  //   cnt,
+  //   messageScreen.targetColorCount,
+  //   messageScreen.targetColorThreashold
+  // );
 
   releaseImage(img);
   releaseImage(croppedImage);
@@ -946,11 +957,11 @@ function dynamicSort(property) {
   };
 }
 
-function moveToFourthItem() {
+function swipeDownOneItem() {
   if (!checkIsPage(pageToolShop)) {
-    console.log('No need to go to 4th item as this is not tool shop');
+    console.log('No need to move down one item as this is not tool shop');
   }
-  console.log('Is tool shop, check adding shovel');
+  console.log('Is tool shop, swipe down one item for shovel');
   tapDown(430, 319, 40, 0);
   sleep(config.sleep * 2);
   moveTo(430, 319, 40, 0);
@@ -964,6 +975,28 @@ function moveToFourthItem() {
   moveTo(430, 176, 40, 0);
   sleep(config.sleep * 2);
   tapUp(430, 176, 40, 0);
+  sleep(config.sleepAnimate * 2);
+  return;
+}
+
+function swipeToToolShop456() {
+  console.log('Is tool shop, swipe down to item 456');
+  SwipeProductionMenuToTop();
+  tapDown(430, 350, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, 350, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, 250, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, 150, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, 50, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, -80, 40, 0);
+  sleep(config.sleep * 2);
+  moveTo(430, -170, 40, 0);
+  sleep(config.sleep * 2);
+  tapUp(430, -170, 40, 0);
   sleep(config.sleepAnimate * 2);
   return;
 }
@@ -1067,7 +1100,7 @@ function makeGoodsToTarget(target, prework, stocks) {
       // === tool shop only ===
       var shovelStock = -1;
       if (isToolShop) {
-        moveToFourthItem();
+        swipeDownOneItem();
         pageShovelEnabled = [
           { x: 575, y: 336, r: 121, g: 207, b: 12 },
           { x: 539, y: 296, r: 253, g: 253, b: 253 },
@@ -1080,16 +1113,19 @@ function makeGoodsToTarget(target, prework, stocks) {
         // check shovel req
         prodReqList = prodReqList.concat(findProductRequirements([308]));
 
-        SwipeProductionMenuToBottom();
+        swipeToToolShop456();
+        var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
+        var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
+        var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
+
       } else {
         prodReqList.push([]);
+        SwipeProductionMenuToBottom();
+        var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
+        var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
+        var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
       }
-      // end of tool shop ===
 
-      SwipeProductionMenuToBottom();
-      var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
-      var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
-      var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
       // SwipeProductionMenuToTop();
 
       prodReqList = prodReqList.concat(findProductRequirements([96]));
@@ -1211,23 +1247,35 @@ function makeGoodsToTarget(target, prework, stocks) {
     } else if (stock['id'] == 3) {
       SwipeProductionMenuToTop();
       SwipeProductionMenuToTop();
-      moveToFourthItem();
+      swipeDownOneItem();
       qTap(pageThirdItemEnabled, 800);
     } else if (stock['id'] == 4) {
-      SwipeProductionMenuToBottom();
-      SwipeProductionMenuToBottom();
+      if (isToolShop) {
+        swipeToToolShop456();
+      } else {
+        SwipeProductionMenuToBottom();
+        SwipeProductionMenuToBottom();
+      }
       if (checkIsPage(pageFirstItemEnabled)) {
         qTap(pageFirstItemEnabled, 800);
       }
     } else if (stock['id'] == 5) {
-      SwipeProductionMenuToBottom();
-      SwipeProductionMenuToBottom();
+      if (isToolShop) {
+        swipeToToolShop456();
+      } else {
+        SwipeProductionMenuToBottom();
+        SwipeProductionMenuToBottom();
+      }
       if (checkIsPage(pageSecondItemEnabled)) {
         qTap(pageSecondItemEnabled, 800);
       }
     } else if (stock['id'] == 6) {
-      SwipeProductionMenuToBottom();
-      SwipeProductionMenuToBottom();
+      if (isToolShop) {
+        swipeToToolShop456();
+      } else {
+        SwipeProductionMenuToBottom();
+        SwipeProductionMenuToBottom();
+      }
       if (checkIsPage(pageThirdItemEnabled)) {
         qTap(pageThirdItemEnabled, 800);
       }
@@ -1523,11 +1571,11 @@ function handleWelcomePage() {
 
 function handleAnnouncement() {
   var pagePuffShowGuild = [
-    {x: 318, y: 325, r: 255, g: 192, b: 0},
-    {x: 332, y: 257, r: 255, g: 243, b: 239},
-    {x: 369, y: 318, r: 50, g: 27, b: 22},
-    {x: 418, y: 318, r: 47, g: 7, b: 5},
-    {x: 566, y: 344, r: 17, g: 26, b: 36}
+    { x: 318, y: 325, r: 255, g: 192, b: 0 },
+    { x: 332, y: 257, r: 255, g: 243, b: 239 },
+    { x: 369, y: 318, r: 50, g: 27, b: 22 },
+    { x: 418, y: 318, r: 47, g: 7, b: 5 },
+    { x: 566, y: 344, r: 17, g: 26, b: 36 },
   ];
   if (waitUntilSeePage(pagePuffShowGuild)) {
     console.log('found puff teach guild page, tap announcment twice to leave');
@@ -1663,10 +1711,10 @@ function findAndTapProductionHouse() {
           console.log('Found house but stock is full, send running event and keep doing other tasks, i: ', i);
           sendEvent('running', '');
         }
-      }
 
-      console.log('Assume found house but failed, go back to kingdom page: ', key);
-      handleGotoKingdomPage();
+        console.log('Assume found house but failed, go back to kingdom page: ', key);
+        handleGotoKingdomPage();
+      }
     }
   }
   return false;
@@ -1682,7 +1730,7 @@ var Directions = Object.freeze({
   E: pnt(-460, 0),
   W: pnt(460, 0),
 });
-function swipeDirection(direction, finishSwipeWhenInProduction) {
+function swipeDirection(direction, finishSwipeWhenInProduction, swippingPage) {
   tapableArea = {
     fromPnt: pnt(165, 90),
     endPnt: pnt(566, 285),
@@ -1701,14 +1749,14 @@ function swipeDirection(direction, finishSwipeWhenInProduction) {
     toPnt = pnt(x + direction.x, y + direction.y);
     steps = 8 - i * 2; // reducing steps per moving
     if (finishSwipeWhenInProduction) {
-      if (swipeFromToPoint(fromPnt, toPnt, steps, 0, pageInProduction)) {
+      if (swipeFromToPoint(fromPnt, toPnt, steps, 0, pageInProduction, swippingPage)) {
         console.log('swip successfully');
         return true;
       } else {
         console.log('pickup house, try again');
       }
     } else {
-      if (swipeFromToPoint(fromPnt, toPnt, steps, 0)) {
+      if (swipeFromToPoint(fromPnt, toPnt, steps, 0, undefined, swippingPage)) {
         console.log('swip successfully');
         return true;
       } else {
@@ -1720,8 +1768,11 @@ function swipeDirection(direction, finishSwipeWhenInProduction) {
   return false;
 }
 
-function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage) {
+function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage, swipingPage) {
   id === undefined ? 0 : id;
+  if (swipingPage === undefined) {
+    swipingPage = pageInKingdomVillage;
+  }
 
   tap(fromPnt.x, fromPnt.y, 100, id);
   sleep(config.sleepAnimate);
@@ -1731,7 +1782,7 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage) {
     return true;
   }
 
-  if (!checkIsPage(pageInKingdomVillage)) {
+  if (!checkIsPage(swipingPage)) {
     console.log('swipe failed, try again: ', fromPnt.x, fromPnt.y);
     keycode('BACK', 100);
     return false;
@@ -1762,7 +1813,7 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage) {
   tapUp(toPnt.x, toPnt.y, 40, 0, id);
   sleep(config.sleepAnimate);
 
-  if (!checkIsPage(pageInKingdomVillage)) {
+  if (!checkIsPage(swipingPage)) {
     console.log('swipe failed, try again: ', fromPnt.x, fromPnt.y);
     keycode('BACK', 100);
     return false;
@@ -2005,8 +2056,8 @@ function handleInputLoginInfo() {
   checkIsFacebookPage();
 
   if (checkScreenMessage(facebookRefreshTokenExpiredLogout)) {
-    console.log('Found facebook refresh token failed, tap logout ok button');
-    qTap(pnt(380, 250));
+    console.log('Found facebook refresh token failed, tap logout cancel button');
+    qTap(pnt(276, 252));
     sleep(2000);
   }
 
@@ -2227,13 +2278,13 @@ function handleInputLoginInfo() {
       inputEmail = true;
       qTap(pnt(370, 150)); // input field
       sleep(config.sleepAnimate);
-      typing(config.account, 3000);
-      sleep(5000); // sleep must equal to typing
+      typing(config.account, 1000);
+      sleep(4000); // sleep must equal to typing
       typing('\n', 500);
-      sleep(config.sleepAnimate);
+      sleep(500);
       break;
     } else {
-      console.log('cannot find input email field');
+      console.log('cannot find input email field, i: ', i);
       sleep(2000);
     }
   }
@@ -2272,6 +2323,23 @@ function handleInputLoginInfo() {
     return false;
   }
 
+  var registerWithSocialPlatformMessageScreen = {
+    x: 225,
+    y: 162,
+    width: 75,
+    height: 13,
+    targetY: 8,
+    lookingForColor: { r: 244, g: 191, b: 191 },
+    targetColorCount: 21,
+    targetColorThreashold: 3,
+  };
+  if (checkScreenMessage(registerWithSocialPlatformMessageScreen, pageEnterEmail)) {
+    console.log('DevPlay report user registered via social media account, "Please use it to sign in"');
+    config.run = false;
+    sendEvent('gameStatus', 'login-failed');
+    return false;
+  }
+
   var checkPasswordTimes = inputEmail ? 15 : 3;
   pageEnterpassword = [
     { x: 370, y: 150, r: 255, g: 255, b: 255 },
@@ -2299,7 +2367,7 @@ function handleInputLoginInfo() {
     height: 13,
     targetY: 6,
     lookingForColor: { r: 244, g: 191, b: 191 },
-    targetColorCount: 5,
+    targetColorCount: 25,
     targetColorThreashold: 2,
   };
   var passwordTooShortMessageScreen = {
@@ -2333,10 +2401,10 @@ function handleInputLoginInfo() {
       console.log('input user password');
       qTap(pageEnterpassword);
       sleep(config.sleepAnimate);
-      typing(config.password, 3000);
-      sleep(5000); // sleep must equal to typing
-      typing('\n', 200);
-      sleep(config.sleep);
+      typing(config.password, 1000);
+      sleep(1000); // sleep must equal to typing
+      typing('\n', 500);
+      sleep(500);
       qTap(pnt(370, 190)); // Login button
 
       for (var t = 0; t < 6; t++) {
@@ -2384,8 +2452,8 @@ function handleInputLoginInfo() {
         checkIsFacebookPage();
 
         if (checkScreenMessage(facebookRefreshTokenExpiredLogout)) {
-          console.log('Found facebook refresh token failed, tap logout ok button');
-          qTap(pnt(380, 250));
+          console.log('Found facebook refresh token failed, tap logout cancel button');
+          qTap(pnt(276, 252));
           sleep(2000);
         }
 
@@ -2452,22 +2520,22 @@ function handleTryHitBackToKingdom() {
     keycode('BACK', 1000);
   }
 
-  var img = getScreenshot();
-  var upperRightImage = cropImage(img, 583, 1, 54, 40);
-  var foundResults = findImages(upperRightImage, loginGearIcon, 0.92, 1, true);
-  releaseImage(img);
-  releaseImage(upperRightImage);
-  if (foundResults.length > 0) {
-    console.log('handleTryHitBackToKingdom found in login page, tap tap(585, 22) announcement point');
-    qTap(pnt(585, 22));
-    return true;
-  }
-
   checkAndRestartApp();
 
   for (var i = 0; i < 4; i++) {
     if (checkIsPage(pageInKingdomVillage)) {
       console.log('Found pageInKingdomVillage, return');
+      return true;
+    }
+
+    var img = getScreenshot();
+    var upperRightImage = cropImage(img, 583, 1, 54, 40);
+    var foundResults = findImages(upperRightImage, loginGearIcon, 0.92, 1, true);
+    releaseImage(img);
+    releaseImage(upperRightImage);
+    if (foundResults.length > 0) {
+      console.log('handleTryHitBackToKingdom found in login page, tap tap(585, 22) announcement point');
+      qTap(pnt(585, 22));
       return true;
     }
 
@@ -2488,7 +2556,9 @@ function handleTryHitBackToKingdom() {
     if (checkIsPage(pageNotifyQuit)) {
       console.log('Found quit notification, should be in kingdom');
       keycode('BACK', 1000);
-      return waitUntilSeePage(pageInKingdomVillage, 6);
+      if (waitUntilSeePage(pageInKingdomVillage, 6)) {
+        return true;
+      }
     }
     keycode('BACK', 1000);
     sleep(2500);
@@ -2825,6 +2895,54 @@ function handleTrain() {
 function handleGetDailyRewards() {
   handleGotoKingdomPage();
 
+  var pageKingdomPassAds = [
+    { x: 349, y: 286, r: 123, g: 207, b: 8 },
+    { x: 250, y: 15, r: 42, g: 8, b: 15 },
+    { x: 323, y: 18, r: 45, g: 33, b: 1 },
+    { x: 427, y: 19, r: 0, g: 23, b: 45 },
+  ];
+  var pageInKingdomPass = [
+    { x: 611, y: 20, r: 57, g: 169, b: 231 },
+    { x: 440, y: 54, r: 255, g: 186, b: 0 },
+    { x: 426, y: 57, r: 181, g: 117, b: 24 },
+    { x: 499, y: 344, r: 49, g: 32, b: 24 },
+  ];
+  var kingdomPassItemCollected = [
+    { x: 528, y: 338, r: 161, g: 161, b: 161 },
+    { x: 501, y: 344, r: 49, g: 32, b: 24 },
+    { x: 630, y: 71, r: 181, g: 117, b: 24 },
+  ];
+  // Collect Kingdom Pass Rewards
+  qTap(pnt(600, 85));
+  if (waitUntilSeePage(pageKingdomPassAds, 3)) {
+    qTap(pageKingdomPassAds);
+    sleep(1000);
+    console.log('skip kingdom pass ads');
+  }
+
+  if (checkIsPage(pageInKingdomPass)) {
+    qTap(pnt(66, 57));
+    sleep(1000);
+    qTap(pnt(581, 340));
+    waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
+
+    qTap(pnt(151, 56));
+    sleep(1000);
+    qTap(pnt(581, 340));
+    waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
+
+    qTap(pnt(254, 57));
+    sleep(1000);
+    qTap(pnt(581, 340));
+    waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
+
+    qTap(pageInKingdomPass);
+    console.log('successfully claimed all the kingdom pass rewards');
+  } else {
+    console.log('failed to find the kingdom pass page');
+  }
+
+  handleGotoKingdomPage();
   // Send friend rewards ======
   var pageFriends = [
     { x: 519, y: 24, r: 231, g: 159, b: 85 },
@@ -2833,18 +2951,17 @@ function handleGetDailyRewards() {
     { x: 618, y: 28, r: 64, g: 98, b: 132 },
   ];
   var pageInFriendsList = [
-    {x: 23, y: 90, r: 255, g: 227, b: 0},
-    {x: 14, y: 70, r: 135, g: 152, b: 192},
-    {x: 13, y: 47, r: 52, g: 64, b: 89},
-    {x: 187, y: 351, r: 57, g: 69, b: 107},
-    {x: 234, y: 350, r: 57, g: 69, b: 107},
-    {x: 136, y: 20, r: 255, g: 255, b: 255}
+    { x: 23, y: 90, r: 255, g: 227, b: 0 },
+    { x: 14, y: 70, r: 135, g: 152, b: 192 },
+    { x: 13, y: 47, r: 52, g: 64, b: 89 },
+    { x: 187, y: 351, r: 57, g: 69, b: 107 },
+    { x: 234, y: 350, r: 57, g: 69, b: 107 },
   ];
   var pageCanSendFriendRewards = [
-    {x: 402, y: 345, r: 82, g: 211, b: 0},
-    {x: 340, y: 350, r: 57, g: 69, b: 107},
-    {x: 24, y: 89, r: 255, g: 227, b: 0},
-    {x: 19, y: 107, r: 135, g: 152, b: 192}
+    { x: 402, y: 345, r: 82, g: 211, b: 0 },
+    { x: 340, y: 350, r: 57, g: 69, b: 107 },
+    { x: 24, y: 89, r: 255, g: 227, b: 0 },
+    { x: 19, y: 107, r: 135, g: 152, b: 192 },
   ];
   if (checkIsPage(pageFriends)) {
     qTap(pageFriends);
@@ -2935,13 +3052,13 @@ function handleGetDailyRewards() {
       { x: 443, y: 340, r: 137, g: 85, b: 99 },
       { x: 388, y: 323, r: 82, g: 24, b: 33 },
       { x: 451, y: 230, r: 156, g: 247, b: 255 },
-      {x: 45, y: 221, r: 56, g: 74, b: 107},
+      { x: 45, y: 221, r: 56, g: 74, b: 107 },
     ];
     pageDailyGiftClaimed = [
       { x: 510, y: 325, r: 125, g: 125, b: 125 },
       { x: 614, y: 324, r: 125, g: 125, b: 125 },
       { x: 416, y: 20, r: 255, g: 207, b: 0 },
-      {x: 45, y: 221, r: 56, g: 74, b: 107},
+      { x: 45, y: 221, r: 56, g: 74, b: 107 },
     ];
 
     qTap(pageDailyGift);
@@ -3279,24 +3396,10 @@ function handlePVP() {
     { x: 78, y: 330, r: 0, g: 150, b: 214 },
   ];
 
-  var battleFinishPage = [
-    { x: 56, y: 331, r: 247, g: 89, b: 24 },
-    { x: 584, y: 332, r: 8, g: 166, b: 222 },
-    { x: 606, y: 24, r: 57, g: 169, b: 231 },
-  ];
-
-  var pageNoArenaTicket = [
-    { x: 314, y: 111, r: 228, g: 121, b: 37 },
-    { x: 347, y: 104, r: 36, g: 46, b: 65 },
-    { x: 414, y: 120, r: 243, g: 233, b: 223 },
-    { x: 300, y: 259, r: 12, g: 167, b: 223 },
-  ];
-
   console.log('go kingdomArena success');
 
   // TODO: we can loop pvp many times in case we have lots of tickets
   var ces = getCEs();
-  var needToCheckSpeed = true;
   for (var i = 0; i < ces.length; i++) {
     var ce = ces[i];
     if (ce < config.autoPvPTargetScoreLimit) {
@@ -3307,8 +3410,8 @@ function handlePVP() {
         sleep(1500);
       }
 
-      if (!waitUntilSeePage(arenaReadyToBattlePage, 8, pnt(590, battleY[i]))) {
-        console.log('Wait 8 sec but did not find the page, skipping');
+      if (!waitUntilSeePage(arenaReadyToBattlePage, 5, pnt(590, battleY[i]))) {
+        console.log('Wait 8 sec but did not find the pvp battle page, skipping');
         continue;
       }
       if (checkIsPage(kingdomArena)) {
@@ -3317,67 +3420,40 @@ function handlePVP() {
         continue;
       }
       tap(550, 320, 100); // start battle
-      // wait for battle finish
-      for (var j = 0; j < 30 && config.run; j++) {
-        console.log('Waiting for battle', j);
-        sleep(2000);
-        tap(320, 350, 100); // center-bottom
-        sleep(2000);
-        if (checkIsPage(pageNoArenaTicket)) {
-          console.log('No arena ticket, finish auto pvp');
-          qTap(pageNoArenaTicket);
-          handleGotoKingdomPage();
-          return;
-        }
-        if (checkIsPage(pageInGacha)) {
-          console.log('Found in gacha page, finish auto pvp');
-          qTap(pageInGacha);
-          handleGotoKingdomPage();
-          return;
-        }
-        if (checkIsPage(battleFinishPage)) {
-          console.log('Battle finished, won: ', j);
-          waitUntilSeePage(kingdomArena, 25, pnt(616, 323), pagePvPCrystaisRefresh);
+      sleep(5000);
 
-          if (checkIsPage(pagePvPCrystaisRefresh)) {
-            console.log('crystaisRefreshPage');
-            tap(436, 90, 100); // X cancel
-            sleep(1500);
-          }
-          break;
-        }
-        if (checkIsPage(battleDefeatPage)) {
-          console.log('Battle finished, lost: ', j);
-          waitUntilSeePage(kingdomArena, 25, pnt(616, 323), pagePvPCrystaisRefresh);
-
-          if (checkIsPage(pagePvPCrystaisRefresh)) {
-            console.log('crystaisRefreshPage');
-            tap(436, 90, 100); // X cancel
-            sleep(1500);
-          }
-          break;
-        }
-        if (checkIsPage(pagePvPCrystaisRefresh)) {
-          console.log('crystaisRefreshPage');
-          tap(436, 90, 100); // X cancel
-          sleep(1500);
-          break;
-        }
-        if (needToCheckSpeed && !checkIsPage(pageSpeedBoostEnabled)) {
-          // console.log('bounty battle speed boost not enabled, enable it');
-          qTap(pageSpeedBoostEnabled);
-          sleep(3000);
-          qTap(pageSpeedBoostEnabled);
-          sleep(2000);
-          j += 5;
-
-          if (checkIsPage(pageSpeedBoostEnabled)) {
-            needToCheckSpeed = false;
-          }
-        }
+      if (waitForBattle('pvp', 120, false, kingdomArena)) {
+        console.log('PvP battle finished, try next one');
+        continue;
+      } else {
+        console.log('Finish PvP due to battle return false');
+        break;
       }
     } else {
       console.log('Not to battle with', i, 'ce', ce, ', limit', config.autoPvPTargetScoreLimit);
+    }
+  }
+
+  var pageHasPageMedalShop = [
+    { x: 41, y: 333, r: 245, g: 187, b: 44 },
+    { x: 122, y: 298, r: 57, g: 166, b: 231 },
+    { x: 118, y: 261, r: 57, g: 166, b: 231 },
+    { x: 54, y: 334, r: 49, g: 77, b: 107 },
+  ];
+  var pageInMedalShop = [
+    { x: 605, y: 65, r: 255, g: 255, b: 255 },
+    { x: 91, y: 68, r: 239, g: 239, b: 231 },
+    { x: 207, y: 67, r: 57, g: 69, b: 107 },
+    { x: 352, y: 18, r: 115, g: 65, b: 1 },
+  ];
+  if (config.autoPvPPurchaseAncientCookie && checkIsPage(pageHasPageMedalShop)) {
+    console.log('Auto purchase ancient cookie');
+    qTap(pageHasPageMedalShop);
+    sleep(1500);
+    if (checkIsPage(pageInMedalShop)) {
+      qTap(pnt(57, 125));
+      sleep(1000);
+      qTap(pnt(317, 252));
     }
   }
 
@@ -3817,52 +3893,14 @@ function handleAutoBattleInIslands(item) {
     { x: 101, y: 235, r: 65, g: 68, b: 53 },
     { x: 176, y: 242, r: 97, g: 75, b: 33 },
   ];
-  var pageBattleFinished = [
-    { x: 609, y: 330, r: 12, g: 167, b: 223 },
-    // { x: 310, y: 27, r: 217, g: 45, b: 67 },
-    // { x: 296, y: 67, r: 106, g: 138, b: 162 },
-    { x: 413, y: 68, r: 50, g: 137, b: 215 },
+  // Will be seen when lost in battle
+  var pageSunbedsListInMiddle = [
+    { x: 217, y: 60, r: 133, g: 231, b: 74 },
+    { x: 247, y: 52, r: 57, g: 69, b: 107 },
+    { x: 226, y: 82, r: 165, g: 60, b: 90 },
+    { x: 428, y: 19, r: 2, g: 67, b: 127 },
+    { x: 47, y: 328, r: 119, g: 40, b: 67 },
   ];
-  var pageBattleFinishedWithSunbeds = [
-    { x: 491, y: 322, r: 12, g: 167, b: 223 },
-    { x: 537, y: 324, r: 239, g: 74, b: 117 },
-    { x: 553, y: 331, r: 60, g: 180, b: 6 },
-    { x: 310, y: 26, r: 222, g: 48, b: 70 },
-    { x: 330, y: 28, r: 204, g: 37, b: 60 },
-  ];
-  var pageBattleFailed = [
-    { x: 414, y: 56, r: 58, g: 91, b: 94 },
-    { x: 381, y: 65, r: 46, g: 46, b: 46 },
-    { x: 619, y: 21, r: 56, g: 165, b: 231 },
-  ];
-  var pageDefeatWithGotoKingdom = [
-    { x: 81, y: 314, r: 247, g: 89, b: 24 },
-    { x: 85, y: 175, r: 231, g: 231, b: 231 },
-    { x: 92, y: 232, r: 222, g: 146, b: 74 },
-    { x: 243, y: 58, r: 70, g: 93, b: 107 },
-    { x: 294, y: 58, r: 41, g: 44, b: 41 },
-  ];
-  var pageFoundOctopus = [
-    { x: 500, y: 330, r: 8, g: 166, b: 222 }, // exit
-    { x: 360, y: 243, r: 229, g: 18, b: 50 },
-  ];
-  var pageInKingdomConstructionShop = [
-    {x: 624, y: 19, r: 33, g: 85, b: 123},
-    {x: 20, y: 12, r: 181, g: 8, b: 33},
-    {x: 11, y: 24, r: 99, g: 40, b: 41},
-    {x: 28, y: 27, r: 255, g: 223, b: 247},
-    {x: 330, y: 15, r: 178, g: 8, b: 33},
-    {x: 179, y: 340, r: 156, g: 101, b: 74},
-    {x: 194, y: 335, r: 255, g: 255, b: 255},
-  ]
-  var pageKingdomDecorating = [
-    {x: 619, y: 12, r: 57, g: 169, b: 231},
-    {x: 42, y: 23, r: 99, g: 174, b: 49},
-    {x: 33, y: 25, r: 48, g: 100, b: 14},
-    {x: 33, y: 81, r: 255, g: 255, b: 255},
-    {x: 20, y: 222, r: 57, g: 69, b: 107},
-    {x: 33, y: 212, r: 255, g: 255, b: 255},
-  ]
 
   var img = getScreenshot();
   foundResults = findImages(img, item, 0.88, 5, true);
@@ -3880,6 +3918,14 @@ function handleAutoBattleInIslands(item) {
     if (foundResults.length > 0) {
       // console.log('tap: ', foundResults[0].x + 10, foundResults[0].y + 10)
       qTap(pnt(foundResults[0].x + 10, foundResults[0].y + 10));
+
+      if (checkIsPage(pageSunbedsListInMiddle)) {
+        console.log('pageSunbedsListInMiddle, just lost a battle, finish');
+        qTap(pnt(441, 53));
+        sleep(config.sleepAnimate);
+        handleGotoKingdomPage();
+        return;
+      }
 
       if (waitUntilSeePage(pageReadyToClearRedSword, 8)) {
         console.log('pageReadyToClearRedSword');
@@ -3908,69 +3954,12 @@ function handleAutoBattleInIslands(item) {
             return false;
           }
 
-          for (var j = 0; j < 600; j++) {
-            if (checkIsPage(pageFoundOctopus)) {
-              console.log('Island battle found octopus, exit');
-              qTap(pageFoundOctopus);
-              sleep(1500);
-            }
-
-            if (checkIsPage(pageKingdomDecorating)) {
-              console.log('Found in pageKingdomDecorating page, finish auto island battle');
-              qTap(pageKingdomDecorating);
-              handleGotoKingdomPage();
-              return false;
-            }
-
-            if (checkIsPage(pageInGacha)) {
-              console.log('Found in gacha page, finish auto island battle');
-              qTap(pageInGacha);
-              handleGotoKingdomPage();
-              return false;
-            }
-
-            if (checkIsPage(pageInKingdomConstructionShop)) {
-              console.log('Found pageInKingdomConstructionShop, exit');
-              qTap(pageInKingdomConstructionShop);
-              return false;;
-            }
-
-            if (checkIsPage(pageBattleFinished)) {
-              console.log('Successfully cleared a red sword');
-              qTap(pageBattleFinished);
-              sleep(1500);
-              break;
-            } else if (checkIsPage(pageBattleFinishedWithSunbeds)) {
-              console.log('failed to clear the sword, stop battle in islands');
-              qTap(pageBattleFinishedWithSunbeds);
-              sleep(1500);
-              return false;
-            } else if (checkIsPage(pageBattleFailed)) {
-              console.log('failed to clear the sword, stop battle in islands');
-              qTap(pageBattleFailed);
-              sleep(1500);
-              return false;
-            } else if (checkIsPage(pageDefeatWithGotoKingdom)) {
-              console.log('failed (defeated) to clear the sword, stop battle in islands');
-              qTap(pageDefeatWithGotoKingdom);
-              sleep(1500);
-              return false;
-            }
-
-            if (!checkIsPage(pageAutoUseSkillEnabled)) {
-              console.log('Island battle skill not enabled, enable it');
-              qTap(pageAutoUseSkillEnabled);
-              sleep(1500);
-            }
-            if (!checkIsPage(pageSpeedBoostEnabled)) {
-              console.log('Island battle speed boost not enabled, enable it');
-              qTap(pageSpeedBoostEnabled);
-              sleep(3000);
-              qTap(pageSpeedBoostEnabled);
-              sleep(1500);
-            }
-
-            sleep(2000);
+          if (waitForBattle('islandRedsword', 600, true, pageInTropicalIsland)) {
+            console.log('Successfully clear sword idx: ', i);
+            continue;
+          } else {
+            console.log('Fail during clearing the sword, exiting: ', i);
+            return false;
           }
         }
       }
@@ -4057,6 +4046,27 @@ function handleCollectIslandResources() {
     sleep(2000);
   }
 
+  // Clear hammers
+  foundResults = findSpecificImageInScreen(islandHammer, 0.935);
+  if (foundResults.length > 0) {
+    console.log('Tap island hammer at: ', JSON.stringify(foundResults));
+    for (var i = 0; i < foundResults.length; i++) {
+      qTap(foundResults[i]);
+      sleep(config.sleepAnimate * 3);
+      qTap(pnt(324, 263)); // Tab build
+
+      if (!waitUntilSeePage(pageInTropicalIsland, 4)) {
+        console.log('Not enough resource to build island, skipping');
+        keycode('BACK', 1000);
+        sleep(1000);
+        keycode('BACK', 1000);
+        sleep(1000);
+      } else {
+        console.log('Build hammer successfully');
+      }
+    }
+  }
+
   // Clear battles
   var redSword = getImageFromBase64(
     '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAaABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9J/2kf+CnngbwiqeE9AXUtJF7ZS3E+sPpVxcPaWcckMU1zKbdJEsrdXuIEN1O6opmUZViCPkXSvHnwB+OXxR8Sal8adSu7vwrpUdpafDzxJo/ivUNP0uG5EP2i+uvtmm3cDSzkvDEDJugh+yhVlMs80K7P7Neh/Hzxb+0b8SPiX8G9QsrzQtM8PaNpOv2XiOOSKK81QPNcW9hY3USfuTHbzSXM5cTANdWq7F83zIpvFPhP4G/HyK60r4fxy+CPFcsst5c2FxZ+Ut1JuDSyG3R/IulZ5Q0txbsX8x08yQlfLP8ueLPF3GGAwTvhqtHCzty4unaUYO/vRlFRk6WqSUpJqWtvL+gMvjwrl+cV+H6clFwa5lGT9o7LRybfvJPdR+Ha2pFqX7Mv7RdtfzR/DP9ubXtE0EyFtM0nWPCljrNxaRt83lm9uf31woJO1pSzhNoZ3ILkr5C134R/s1fDXVJPA/7Rn7MWoan4309UTxHqun+MrY299OVDfaYQ+owMkUissiIYYyiuF2LtxRXzuCyrjmrg6c6XFsHFxi0/q9GV00rPmc7y06vV7s+iVCnbSvFLs6k016rl0Z+in/BLXwpB8Sv2BPFWm+A5Ld9c134zeJLfxPqUzB3smN1HD5mM5LLp0VqqKCOPL5AryH/AIKHfHX4b6neQ/sN/B1YLq28M6vb3HjDxlpOohW0KW1nEsVjZXED749SeaNTcOCDDE0qN+9mGz5A+M/xa+Kvwt/4J3eLrD4Y/EzxB4cg1b9oe4tdUh0HWp7NLyCXw5pfmxSiJ1EiPk7lbIbPINXfBul6ZoPhex0nQ9OgsrWK1Tyra0hWONMjJwqgAZJJ+pr+ic0z6thuG6ODhBWqQs29dGrNWt1PnOBfCfJ+KvF7Msdj6rlHC1ZNQt8TUmld32T1atrs3Y6RfhV8EdTL6l8QNDTxfrNxK8l/4i8VxR3d/eMzEgyy7VztBCKAAFRFUABRRWWZJMn5z+dFfBU63soKEEkloktEktkl0R/X8OD8ihFRjRjZf3V/kf/Z'
@@ -4082,8 +4092,9 @@ var Advantures = Object.freeze({
   bounties: pnt(170, 175),
   pvp: pnt(175, 330),
   guild: pnt(370, 175),
-  superMayhem: pnt(10, 172),
-  // towerOfSweetChaos: pnt(357, 182),
+  // superMayhem: pnt(10, 172),
+  cookieAlliance: pnt(10, 172),
+  towerOfSweetChaos: pnt(357, 182),
 });
 
 function handleGotoAdventure(destination, targetPage) {
@@ -4137,15 +4148,465 @@ function handleGotoAdventure(destination, targetPage) {
   }
 }
 
-function handleGuildCheckinAndBattle() {
-  // handleGotoAdventure(Advantures.guild, pageInGuildPage);
-  handleGotoKingdomPage();
+var pageBattleVictoryButNeedTap = [
+  { x: 230, y: 49, r: 49, g: 134, b: 214 },
+  { x: 224, y: 58, r: 231, g: 182, b: 41 },
+  { x: 254, y: 59, r: 123, g: 190, b: 255 },
+  { x: 329, y: 27, r: 214, g: 44, b: 66 },
+  { x: 371, y: 56, r: 198, g: 223, b: 222 },
+  { x: 410, y: 68, r: 49, g: 138, b: 214 },
+  { x: 26, y: 332, r: 11, g: 1, b: 1 },
+];
 
-  if (checkIsPage(pageInkingdomCanGotoGuild)) {
-    waitUntilSeePage(pageInGuildLand, 12, pageInkingdomCanGotoGuild);
+var pageBattleFinished = [
+  { x: 56, y: 331, r: 247, g: 89, b: 24 },
+  { x: 584, y: 332, r: 8, g: 166, b: 222 },
+  { x: 606, y: 24, r: 57, g: 169, b: 231 },
+];
+
+var pageBattleDefeat = [
+  { x: 243, y: 58, r: 69, g: 90, b: 105 },
+  { x: 280, y: 54, r: 46, g: 46, b: 46 },
+  { x: 410, y: 57, r: 60, g: 92, b: 95 },
+  { x: 397, y: 48, r: 142, g: 158, b: 158 },
+];
+
+var pageDefeatWithGotoKingdom = [
+  { x: 81, y: 314, r: 247, g: 89, b: 24 },
+  { x: 85, y: 175, r: 231, g: 231, b: 231 },
+  { x: 92, y: 232, r: 222, g: 146, b: 74 },
+  { x: 243, y: 58, r: 70, g: 93, b: 107 },
+  { x: 294, y: 58, r: 41, g: 44, b: 41 },
+];
+
+var pageNoArenaTicket = [
+  { x: 314, y: 111, r: 228, g: 121, b: 37 },
+  { x: 347, y: 104, r: 36, g: 46, b: 65 },
+  { x: 414, y: 120, r: 243, g: 233, b: 223 },
+  { x: 300, y: 259, r: 12, g: 167, b: 223 },
+];
+
+var pageBattleFinishedWithSunbeds = [
+  { x: 491, y: 322, r: 12, g: 167, b: 223 },
+  { x: 537, y: 324, r: 239, g: 74, b: 117 },
+  { x: 553, y: 331, r: 60, g: 180, b: 6 },
+  { x: 310, y: 26, r: 222, g: 48, b: 70 },
+  { x: 330, y: 28, r: 204, g: 37, b: 60 },
+];
+
+var pageIslandSunbedWithWetCookie = [
+  { x: 251, y: 16, r: 123, g: 24, b: 45 },
+  { x: 218, y: 60, r: 133, g: 231, b: 74 },
+  { x: 228, y: 82, r: 104, g: 52, b: 79 },
+  { x: 444, y: 102, r: 41, g: 44, b: 57 },
+];
+
+var pageFoundOctopus = [
+  { x: 500, y: 330, r: 8, g: 166, b: 222 }, // exit
+  { x: 360, y: 243, r: 229, g: 18, b: 50 },
+];
+
+var pageInKingdomConstructionShop = [
+  { x: 624, y: 19, r: 33, g: 85, b: 123 },
+  { x: 20, y: 12, r: 181, g: 8, b: 33 },
+  { x: 11, y: 24, r: 99, g: 40, b: 41 },
+  { x: 28, y: 27, r: 255, g: 223, b: 247 },
+  { x: 330, y: 15, r: 178, g: 8, b: 33 },
+  { x: 179, y: 340, r: 156, g: 101, b: 74 },
+  { x: 194, y: 335, r: 255, g: 255, b: 255 },
+];
+var pageKingdomDecorating = [
+  { x: 619, y: 12, r: 57, g: 169, b: 231 },
+  { x: 42, y: 23, r: 99, g: 174, b: 49 },
+  { x: 33, y: 25, r: 48, g: 100, b: 14 },
+  { x: 33, y: 81, r: 255, g: 255, b: 255 },
+  { x: 20, y: 222, r: 57, g: 69, b: 107 },
+  { x: 33, y: 212, r: 255, g: 255, b: 255 },
+];
+
+var pageBattleFinishedWithNextLv = [
+  { x: 589, y: 333, r: 121, g: 207, b: 12 },
+  { x: 388, y: 334, r: 12, g: 167, b: 223 },
+  { x: 490, y: 333, r: 12, g: 167, b: 223 },
+  { x: 58, y: 334, r: 243, g: 90, b: 28 },
+];
+var pageWinBountyAndFinish = [
+  { x: 607, y: 332, r: 12, g: 167, b: 223 },
+  { x: 488, y: 320, r: 25, g: 2, b: 6 },
+  { x: 417, y: 319, r: 25, g: 5, b: 6 },
+  { x: 74, y: 332, r: 243, g: 90, b: 28 },
+];
+var pageBattleFinishedWithoutNextLv = [
+  { x: 466, y: 324, r: 252, g: 252, b: 252 },
+  { x: 464, y: 331, r: 8, g: 166, b: 222 },
+  { x: 309, y: 25, r: 228, g: 52, b: 71 },
+  { x: 320, y: 25, r: 255, g: 255, b: 132 },
+  { x: 330, y: 25, r: 228, g: 52, b: 74 },
+  { x: 401, y: 323, r: 26, g: 4, b: 12 },
+];
+var pageNeedRefillBounties = [
+  { x: 428, y: 82, r: 56, g: 167, b: 231 },
+  { x: 309, y: 264, r: 0, g: 193, b: 255 },
+  { x: 348, y: 254, r: 121, g: 207, b: 12 },
+  { x: 318, y: 75, r: 121, g: 126, b: 97 },
+  { x: 417, y: 120, r: 243, g: 233, b: 223 },
+];
+var pageNeedRefillBounties2 = [
+  { x: 442, y: 82, r: 57, g: 166, b: 239 },
+  { x: 345, y: 252, r: 123, g: 207, b: 8 },
+  { x: 399, y: 122, r: 247, g: 235, b: 222 },
+  { x: 367, y: 83, r: 57, g: 69, b: 107 },
+  { x: 334, y: 76, r: 189, g: 178, b: 165 },
+  { x: 317, y: 71, r: 115, g: 117, b: 90 },
+  { x: 198, y: 62, r: 115, g: 99, b: 74 },
+];
+
+var pageAllianceReward = [
+  { x: 397, y: 243, r: 189, g: 150, b: 82 },
+  { x: 257, y: 41, r: 19, g: 29, b: 6 },
+  { x: 310, y: 22, r: 29, g: 6, b: 8 },
+  { x: 374, y: 46, r: 41, g: 45, b: 45 },
+  { x: 422, y: 76, r: 12, g: 31, b: 49 },
+  { x: 618, y: 20, r: 255, g: 255, b: 255 },
+];
+var pageAllianceResults = [
+  { x: 612, y: 333, r: 8, g: 166, b: 222 },
+  { x: 259, y: 57, r: 66, g: 136, b: 202 },
+  { x: 329, y: 26, r: 222, g: 48, b: 74 },
+  { x: 368, y: 49, r: 198, g: 223, b: 222 },
+  { x: 76, y: 336, r: 247, g: 89, b: 24 },
+  { x: 188, y: 333, r: 8, g: 166, b: 222 },
+];
+var pageAllianceRewardGet = [
+  { x: 191, y: 187, r: 49, g: 34, b: 21 },
+  { x: 401, y: 213, r: 55, g: 45, b: 27 },
+  { x: 175, y: 288, r: 53, g: 53, b: 53 },
+];
+
+var pageDragonTotalDamage = [
+  { x: 427, y: 243, r: 231, g: 215, b: 222 },
+  { x: 410, y: 247, r: 156, g: 0, b: 49 },
+  { x: 260, y: 268, r: 255, g: 255, b: 255 },
+  { x: 555, y: 311, r: 89, g: 22, b: 45 },
+];
+
+var pageReadyToFightDragon = [
+  { x: 34, y: 83, r: 231, g: 231, b: 226 },
+  { x: 35, y: 115, r: 170, g: 178, b: 220 },
+  { x: 27, y: 290, r: 123, g: 130, b: 206 },
+  { x: 25, y: 220, r: 198, g: 167, b: 247 },
+];
+var pageRedValvetDragonWon = [
+  { x: 289, y: 238, r: 239, g: 28, b: 57 },
+  { x: 358, y: 233, r: 222, g: 16, b: 41 },
+  { x: 426, y: 236, r: 231, g: 216, b: 223 },
+];
+
+var pageSwitchTeam = [
+  { x: 256, y: 34, r: 135, g: 87, b: 223 },
+  { x: 172, y: 57, r: 49, g: 32, b: 90 },
+  { x: 162, y: 70, r: 107, g: 101, b: 219 },
+  { x: 163, y: 119, r: 123, g: 117, b: 227 },
+];
+var pageKeepBattleByOrderNotCheck = [
+  { x: 144, y: 319, r: 229, g: 229, b: 227 },
+  { x: 149, y: 323, r: 237, g: 233, b: 235 },
+  { x: 142, y: 323, r: 237, g: 233, b: 235 },
+];
+
+function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, pageExitBattle, pageExitBattleAbnormal) {
+  console.log('Battling for: ', battleName);
+
+  if (needToCheckAutoUseSkill === undefined) {
+    needToCheckAutoUseSkill = false;
+  }
+
+  var lastSendEvent = 0;
+  var autoUseSkillCheckedCnt = 0;
+  var speedBoostCheckedCnt = 0;
+  for (var j = 0; j < waitTimeInSecs && config.run; j++) {
+    if (checkIsPage(pageInGacha)) {
+      console.log('Found in gacha page, finish auto battle: ', battleName);
+      qTap(pageInGacha);
+      handleGotoKingdomPage();
+      return false;
+    }
+    if (checkIsPage(pageInKingdomVillage)) {
+      console.log('battle lead to kingdom, return');
+      return false;
+    }
+    if (checkIsPage(pageKingdomDecorating)) {
+      console.log('Found in pageKingdomDecorating page, finish auto island battle');
+      qTap(pageKingdomDecorating);
+      handleGotoKingdomPage();
+      return false;
+    }
+    if (checkIsPage(pageInKingdomConstructionShop)) {
+      console.log('Found pageInKingdomConstructionShop, exit');
+      qTap(pageInKingdomConstructionShop);
+      return false;
+    }
+
+    if (checkIsPage(pageBattleVictoryButNeedTap)) {
+      console.log('pageBattleVictoryButNeedTap: ', battleName, j);
+      qTap(pnt(321, 345));
+      sleep(2000);
+      j += 2;
+    }
+
+    if (pageExitBattle !== undefined && checkIsPage(pageExitBattle)) {
+      console.log('Battle successfully finished, return');
+      qTap(pnt(306, 326));
+      return true;
+    }
+
+    // if (checkIsPage(pageExitBattleAbnormal)) {
+    //   console.log('Battle meet pageExitBattleAbnormal, return', JSON.stringify(pageExitBattleAbnormal));
+    //   return false;
+    // }
+
+    if (checkIsPage(pageBattleFinished)) {
+      console.log('Battle success: ', battleName, j, ' secs');
+      qTap(pnt(616, 323));
+      sleep(2000);
+      j += 2;
+    } else if (checkIsPage(pageBattleDefeat)) {
+      console.log('Battle finished, lost: ', battleName, j);
+      qTap(pnt(616, 323));
+      sleep(2000);
+      j += 2;
+    } else if (checkIsPage(pageDefeatWithGotoKingdom)) {
+      console.log('failed (defeated) with goto kingdom, stop battle: ', battleName, j);
+      qTap(pageDefeatWithGotoKingdom);
+      sleep(1500);
+      return false;
+    }
+
+    // PVP finish condition
+    // pvp will tap(320, 350, 100)
+    if (battleName === 'pvp') {
+      if (checkIsPage(pageNoArenaTicket)) {
+        console.log('No arena ticket, finish auto pvp');
+        qTap(pageNoArenaTicket);
+        sleep(config.sleepAnimate);
+        return false;
+      } else if (checkIsPage(pagePvPCrystaisRefresh)) {
+        console.log('crystaisRefreshPage');
+        tap(436, 90, 100); // X cancel
+        sleep(1500);
+        return false;
+      }
+    }
+
+    // Island battle finish condition
+    if (battleName === 'islandRedsword') {
+      if (checkIsPage(pageFoundOctopus)) {
+        console.log('Island battle found octopus, exit');
+        qTap(pageFoundOctopus);
+        sleep(1500);
+        return true;
+      } else if (checkIsPage(pageBattleFinishedWithSunbeds)) {
+        console.log('failed to clear the sword (pageBattleFinishedWithSunbeds), stop battle in islands');
+        qTap(pageBattleFinishedWithSunbeds);
+        sleep(1500);
+        return false;
+      } else if (checkIsPage(pageIslandSunbedWithWetCookie)) {
+        console.log('failed to clear the sword (pageIslandSunbedWithWetCookie), stop battle in islands');
+        keycode('BACK', 1000);
+        sleep(1500);
+        return false;
+      }
+    }
+
+    // Bounty finish condition
+    if (battleName === 'bounty') {
+      if (checkIsPage(pageNeedRefillBounties) || checkIsPage(pageNeedRefillBounties2)) {
+        console.log('No bounties left, return to kingdom');
+        sendEvent('running', 'finish bounties');
+        return false;
+      } else if (checkIsPage(pageBattleFinishedWithoutNextLv)) {
+        console.log('Win bounty and (can only) retry');
+        qTap(pageBattleFinishedWithoutNextLv);
+        sleep(2000);
+        j += 2;
+        return true;
+      } else if (checkIsPage(pageBattleFinishedWithNextLv)) {
+        if (config.bountyGotoNextLevel) {
+          console.log('Win bounty and goto next level');
+          qTap(pageBattleFinishedWithNextLv);
+        } else {
+          console.log('Win bounty and retry');
+          qTap(pnt(320, 350));
+        }
+        sleep(2000);
+        return true;
+      } else if (checkIsPage(pageWinBountyAndFinish)) {
+        console.log('Successfully cleared bounties');
+        qTap(pageWinBountyAndFinish);
+        sleep(2000);
+        return true;
+      }
+    }
+
+    // Guild alliance battle handle reward
+    if (battleName === 'alliance') {
+      if (checkIsPage(pageAllianceReward)) {
+        console.log('Open 2nd reward with ticket, and tap middle');
+        qTap(pageAllianceReward);
+        sleep(config.sleepAnimate * 3);
+
+        if (waitUntilSeePage(pageAllianceResults, 6, pnt(323, 337))) {
+          console.log('pageAllianceResults, exit', j);
+          qTap(pageAllianceResults);
+          sleep(config.sleepAnimate * 3);
+          return true;
+        }
+
+        if (checkIsPage(pageAllianceReward)) {
+          console.log('Not enough ticket for 2nd reward, skipping');
+          qTap(pnt(619, 21)); // close icon
+        }
+      } else if (checkIsPage(pageAllianceResults)) {
+        console.log('pageAllianceResults, exit', j);
+        qTap(pageAllianceResults);
+        sleep(config.sleepAnimate * 3);
+        return true;
+      } else if (checkIsPage(pageAllianceRewardGet)) {
+        console.log('pageAllianceRewardGet, tap middle');
+        qTap(pnt(323, 337));
+      }
+    }
+
+    if (battleName === 'guildDragon') {
+      if (checkIsPage(pageDragonTotalDamage)) {
+        qTap(pnt(320, 336));
+        sleep(1000);
+        j++;
+      }
+      if (checkIsPage(pageRedValvetDragonWon)) {
+        for (var tapToSkip = 0; tapToSkip < 5; tapToSkip++) {
+          if (checkIsPage(pageReadyToFightDragon)) {
+            break;
+          }
+          qTap(pnt(320, 336));
+          sleep(1000);
+          j++;
+        }
+      }
+    }
+
+    if (needToCheckAutoUseSkill) {
+      if (checkIsPage(pageAutoUseSkillEnabled)) {
+        autoUseSkillCheckedCnt++;
+      } else if (autoUseSkillCheckedCnt < 5 && !checkIsPage(pageAutoUseSkillEnabled)) {
+        console.log(battleName, 'battle skill not enabled, enable it');
+        qTap(pageAutoUseSkillEnabled);
+        sleep(2000);
+        j += 2;
+        autoUseSkillCheckedCnt++;
+      }
+    }
+
+    if (checkIsPage(pageSpeedBoostEnabled)) {
+      speedBoostCheckedCnt++;
+    }
+    if (speedBoostCheckedCnt < 5 && !checkIsPage(pageSpeedBoostEnabled)) {
+      if (checkIsPage(pageSpeed1x)) {
+        console.log(battleName, 'tap speed boost as its 1x');
+        qTap(pageSpeedBoostEnabled);
+        sleep(3000);
+        qTap(pageSpeedBoostEnabled);
+        sleep(2000);
+        j += 5;
+      }
+      if (checkIsPage(pageSpeed1_2x)) {
+        console.log(battleName, 'tap speed boost as its 1.2x');
+        qTap(pageSpeedBoostEnabled);
+        sleep(2000);
+        j += 2;
+      }
+    }
+
+    if (checkIsPage(pageSwitchTeam) && checkIsPage(pageKeepBattleByOrderNotCheck)) {
+      qTap(pageKeepBattleByOrderNotCheck);
+      sleep(8000);
+      console.log('alliance battle, tap keep battle with this order');
+    }
+
+    if (j - lastSendEvent > 120) {
+      sendEvent('running', '');
+      lastSendEvent = j;
+    }
+
+    sleep(1000);
+  }
+
+  console.log('Battle reach time limit but does not seems finished: ', battleName);
+  return false;
+}
+
+function handleGuildCheckinAndBattle() {
+  if (!checkIsPage(pageInGuildLand)) {
+    handleGotoKingdomPage();
+
+    if (checkIsPage(pageInkingdomCanGotoGuild)) {
+      waitUntilSeePage(pageInGuildLand, 12, pageInkingdomCanGotoGuild);
+    }
   }
 
   return handleInGuildPage();
+}
+
+function tryExpandGuildLand(icon) {
+  var pageDonateGuildTool = [
+    { x: 417, y: 35, r: 57, g: 69, b: 107 },
+    { x: 421, y: 156, r: 63, g: 204, b: 0 },
+    { x: 351, y: 253, r: 123, g: 207, b: 8 },
+    { x: 428, y: 287, r: 57, g: 69, b: 107 },
+  ];
+  var pageCanExpand = [
+    { x: 291, y: 270, r: 123, g: 207, b: 8 },
+    { x: 350, y: 271, r: 123, g: 207, b: 8 },
+  ];
+  var pageAlreadySendMax = [
+    { x: 441, y: 32, r: 57, g: 166, b: 231 },
+    { x: 424, y: 156, r: 63, g: 204, b: 0 },
+    { x: 306, y: 136, r: 255, g: 0, b: 0 },
+    { x: 329, y: 137, r: 254, g: 23, b: 22 },
+    { x: 338, y: 138, r: 247, g: 235, b: 222 },
+  ];
+
+  foundResults = findSpecificImageInScreen(icon, 0.94, true);
+  if (foundResults.length > 0) {
+    console.log('Found guild expand icons: ', JSON.stringify(foundResults));
+    qTap(pnt(foundResults[0].x + 10, foundResults[0].y + 10));
+    sleep(2000);
+
+    if (checkIsPage(pageCanExpand)) {
+      qTap(pageCanExpand);
+      sleep(config.sleepAnimate * 2);
+
+      if (checkIsPage(pageAlreadySendMax)) {
+        console.log('already send max, exit');
+        qTap(pageAlreadySendMax);
+        waitUntilSeePage(pageInGuildLand, 2);
+        return true;
+      }
+
+      if (checkIsPage(pageDonateGuildTool)) {
+        qTap(pnt(422, 158)); // Max icon
+        sleep(config.sleepAnimate);
+        qTap(pnt(347, 252)); // Send icon
+        sleep(config.sleepAnimate);
+
+        if (waitUntilSeePage(pageInGuildLand, 2)) {
+          console.log('Successfully donated guild land');
+          return true;
+        }
+      }
+    }
+  }
+  return false;
 }
 
 function handleInGuildPage() {
@@ -4155,111 +4616,202 @@ function handleInGuildPage() {
   }
 
   var pageInputGuildWelcomeText = [
-    {x: 434, y: 105, r: 57, g: 166, b: 231},
-    {x: 420, y: 107, r: 57, g: 69, b: 107},
-    {x: 439, y: 209, r: 247, g: 235, b: 222},
-    {x: 438, y: 235, r: 222, g: 207, b: 198},
-    {x: 358, y: 240, r: 123, g: 207, b: 8},
-    {x: 28, y: 272, r: 86, g: 86, b: 89},
-    {x: 26, y: 321, r: 76, g: 76, b: 76},
-    {x: 160, y: 326, r: 25, g: 3, b: 9},
-  ]
+    { x: 434, y: 105, r: 57, g: 166, b: 231 },
+    { x: 420, y: 107, r: 57, g: 69, b: 107 },
+    { x: 439, y: 209, r: 247, g: 235, b: 222 },
+    { x: 438, y: 235, r: 222, g: 207, b: 198 },
+    { x: 358, y: 240, r: 123, g: 207, b: 8 },
+    { x: 28, y: 272, r: 86, g: 86, b: 89 },
+    { x: 26, y: 321, r: 76, g: 76, b: 76 },
+    { x: 160, y: 326, r: 25, g: 3, b: 9 },
+  ];
   var pageInGuildBeacon = [
-    {x: 603, y: 26, r: 255, g: 255, b: 255},
-    {x: 213, y: 261, r: 129, g: 112, b: 166},
-    {x: 192, y: 199, r: 155, g: 121, b: 254},
-    {x: 183, y: 244, r: 63, g: 62, b: 134},
-    {x: 169, y: 258, r: 84, g: 68, b: 122},
-    {x: 219, y: 182, r: 215, g: 208, b: 223},
-    {x: 528, y: 317, r: 123, g: 207, b: 8},
-    {x: 562, y: 328, r: 49, g: 60, b: 90},
-  ]
+    { x: 270, y: 194, r: 110, g: 105, b: 224 },
+    { x: 224, y: 207, r: 99, g: 75, b: 185 },
+    { x: 225, y: 255, r: 115, g: 113, b: 185 },
+    { x: 187, y: 216, r: 190, g: 208, b: 241 },
+  ];
+  var pageInGuildBeacon2 = [
+    { x: 214, y: 190, r: 102, g: 74, b: 181 },
+    { x: 182, y: 196, r: 197, g: 218, b: 230 },
+    { x: 240, y: 230, r: 241, g: 245, b: 249 },
+    { x: 227, y: 233, r: 131, g: 130, b: 205 },
+  ];
 
-  console.log('tap fire 5 times to checkin')
-  for (var i = 0; i < 5; i ++) {
+  console.log('tap fire 6 times to checkin');
+  for (var i = 0; i < 6; i++) {
     qTap(pnt(312, 180));
-    sleep(500);
+    sleep(1000);
 
     if (checkIsPage(pageInputGuildWelcomeText)) {
       qTap(pageInputGuildWelcomeText);
       sleep(500);
     }
 
-    if (checkIsPage(pageInGuildBeacon)) {
-      qTap(pageInGuildBeacon);
-      sleep(config.sleepAnimate);
+    if (waitUntilSeePage(pageInGuildBeacon, 2)) {
+      qTap(pnt(600, 21));
+      sleep(2000);
+      break;
+    } else if (waitUntilSeePage(pageInGuildBeacon2, 2)) {
+      qTap(pnt(600, 21));
+      sleep(2000);
       break;
     }
   }
 
-  var pageReadyToFightDragon = [
-    { x: 535, y: 330, r: 121, g: 207, b: 12 },
-    { x: 428, y: 254, r: 56, g: 167, b: 231 },
-    { x: 28, y: 291, r: 113, g: 124, b: 203 },
-    { x: 32, y: 83, r: 230, g: 229, b: 224 },
-  ];
+  // Claim land ===========
+  var guildDirections = [Directions.S, Directions.E, Directions.S, Directions.E];
+  if (config.autoGuildClaimNewLand && waitUntilSeePage(pageInGuildLand, 2)) {
+    console.log('about to expand the guild land');
+    for (var i = 0; i < guildDirections.length; i++) {
+      swipeDirection(guildDirections[i], false, pageInGuildLand);
+
+      if (tryExpandGuildLand(guildExpandLandPlusSelected)) {
+        console.log('Successfully sent selected tools: ', i);
+        break;
+      } else if (tryExpandGuildLand(guildExpandLandPlus)) {
+        console.log('Successfully sent NOT selected tools: ', i);
+        break;
+      }
+    }
+    sleep(1000);
+  }
+
+  handleGotoKingdomPage();
+}
+
+function guildBattleDragon() {
   var pageBattleDragon = [
     { x: 531, y: 326, r: 121, g: 207, b: 12 },
     { x: 165, y: 334, r: 121, g: 207, b: 12 },
     { x: 74, y: 333, r: 4, g: 151, b: 211 },
   ];
-  var pageBattlingDragon = [
-    { x: 589, y: 27, r: 105, g: 2, b: 40 },
-    { x: 577, y: 16, r: 255, g: 247, b: 247 },
-  ];
-  var pageBattleFinished = [
-    { x: 609, y: 330, r: 12, g: 167, b: 223 },
-    { x: 413, y: 68, r: 50, g: 137, b: 215 },
+  var pageNoMoreDragonToFight = [
+    { x: 419, y: 19, r: 255, g: 211, b: 0 },
+    { x: 415, y: 42, r: 242, g: 175, b: 93 },
+    { x: 478, y: 325, r: 180, g: 180, b: 180 },
   ];
 
-  qTap(pnt(152, 327));
-  sleep(1000);
-  waitUntilSeePage(pageInGuildLand, 6, pnt(152, 327)); // by pass the animate
-  sendEvent('running', '');
+  // Old users does not have config.autoGuildBattleDragon key (Feb 7, 2022)
+  if (config.autoGuildBattleDragon === undefined || config.autoGuildBattleDragon) {
+    console.log('about to guildBattleDragon');
+    handleGotoKingdomPage();
+    handleGotoAdventure(Advantures.guild, pageBattleDragon);
+    if (checkIsPage(pageNoMoreDragonToFight)) {
+      console.log('No more dragon to fight, skipping');
+      return true;
+    }
 
-  if (waitUntilSeePage(pageReadyToFightDragon, 8, pnt(560, 325))) {
-    qTap(pageReadyToFightDragon);
-
-    if (waitUntilSeePage(pageBattleDragon, 8)) {
-      waitUntilSeePage(pageBattlingDragon, 8, pageBattleDragon);
-
-      for (var j = 0; j < 150; j++) {
-        if (checkIsPage(pageInGacha)) {
-          console.log('Found in gacha page, finish auto guild battle');
-          qTap(pageInGacha);
-          handleGotoKingdomPage();
-          return;
+    if (waitUntilSeePage(pageReadyToFightDragon, 6, pageReadyToFightDragon)) {
+      qTap(pageBattleDragon); // Tap ready to start
+      // qTap(pnt(386, 256));  // Tap practice
+      if (waitUntilSeePage(pageBattleDragon, 6, pageBattleDragon)) {
+        qTap(pageBattleDragon); // Tap battle
+        sleep(5000);
+        if (waitForBattle('guildDragon', 180, true, pageReadyToFightDragon)) {
+          console.log('battle dragon finished, go back to kingdom');
+        } else {
+          console.log('Finish pageCookieAlliance due to battle return false');
         }
-        if (!checkIsPage(pageAutoUseSkillEnabled)) {
-          console.log('dragon battle skill not enabled, enable it');
-          qTap(pageAutoUseSkillEnabled);
-          sleep(2000);
-          j += 2;
-        }
-        if (!checkIsPage(pageSpeedBoostEnabled)) {
-          console.log('dragon battle speed boost not enabled, enable it');
-          qTap(pageSpeedBoostEnabled);
-          sleep(3000);
-          qTap(pageSpeedBoostEnabled);
-          sleep(2000);
-          j += 5;
-        }
-
-        if (checkIsPage(pageBattleFinished)) {
-          console.log('Successfully cleared a guild dragon');
-          qTap(pageBattleFinished);
-          sleep(2000);
-          j += 2;
-          break;
-        }
-
-        qTap(pnt(582, 348)); // Tap dragon tap to continue
-        sleep(1000);
+        handleGotoKingdomPage();
       }
     }
   }
+}
 
-  handleGotoKingdomPage();
+function guildBattleAlliance() {
+  var pageCookieAlliance = [
+    { x: 342, y: 18, r: 223, g: 220, b: 242 },
+    { x: 524, y: 14, r: 0, g: 195, b: 255 },
+    { x: 179, y: 331, r: 123, g: 207, b: 8 },
+    { x: 28, y: 146, r: 198, g: 113, b: 35 },
+    { x: 616, y: 285, r: 0, g: 150, b: 217 },
+  ];
+  var pageSwitchTeam = [
+    { x: 256, y: 34, r: 135, g: 87, b: 223 },
+    { x: 172, y: 57, r: 49, g: 32, b: 90 },
+    { x: 162, y: 70, r: 107, g: 101, b: 219 },
+    { x: 163, y: 119, r: 123, g: 117, b: 227 },
+  ];
+  var pageNoAllianceTicket = [
+    { x: 301, y: 249, r: 8, g: 166, b: 222 },
+    { x: 316, y: 100, r: 255, g: 247, b: 235 },
+    { x: 309, y: 90, r: 134, g: 114, b: 235 },
+    { x: 345, y: 18, r: 66, g: 56, b: 126 },
+    { x: 363, y: 99, r: 57, g: 69, b: 107 },
+  ];
+  var pageAllianceSteupTeam = [
+    { x: 619, y: 18, r: 255, g: 255, b: 255 },
+    { x: 606, y: 90, r: 247, g: 89, b: 24 },
+    { x: 603, y: 112, r: 123, g: 207, b: 8 },
+    { x: 608, y: 139, r: 0, g: 150, b: 214 },
+    { x: 610, y: 168, r: 0, g: 150, b: 214 },
+    { x: 507, y: 129, r: 134, g: 17, b: 158 },
+  ];
+  var pageAllianceBeaconIsOff = [
+    { x: 215, y: 198, r: 94, g: 102, b: 153 },
+    { x: 202, y: 201, r: 209, g: 226, b: 248 },
+    { x: 209, y: 198, r: 99, g: 109, b: 156 },
+  ];
+  var pageBeaconOfValor = [
+    { x: 430, y: 296, r: 205, g: 151, b: 9 },
+    { x: 414, y: 292, r: 57, g: 182, b: 8 },
+    { x: 193, y: 104, r: 115, g: 142, b: 189 },
+    { x: 151, y: 131, r: 82, g: 101, b: 156 },
+  ];
+
+  if (config.autoGuildAllianceBattle) {
+    console.log('start guild alliance battle: ', config.autoGuildAllianceBattle, checkIsPage(pageInGuildLand));
+    handleGotoKingdomPage();
+    handleGotoAdventure(Advantures.cookieAlliance, pageCookieAlliance);
+    if (waitUntilSeePage(pageCookieAlliance, 3)) {
+      if (checkIsPage(pageAllianceBeaconIsOff)) {
+        qTap(pageAllianceBeaconIsOff);
+
+        if (waitUntilSeePage(pageBeaconOfValor, 2)) {
+          qTap(pnt(191, 294)); // 7D
+          sleep(config.sleepAnimate);
+          qTap(pageBeaconOfValor);
+          sleep(config.sleepAnimate * 2);
+        }
+      }
+
+      for (var j = 0; j < 5; j++) {
+        qTap(pnt(578, 320)); // Battle alliance
+        sleep(3000);
+
+        if (checkIsPage(pageNoAllianceTicket)) {
+          console.log('Not enough alliance ticket, skipping');
+          qTap(pageNoAllianceTicket);
+          sleep(1500);
+          keycode('BACK', 1000);
+          sleep(1500);
+          break;
+        }
+
+        if (checkIsPage(pageAllianceSteupTeam)) {
+          console.log('got into team setup page, skip alliance');
+          break;
+        }
+
+        if (waitUntilSeePage(pageSwitchTeam, 4)) {
+          for (var tapY = 73; tapY < 296; tapY += 50) {
+            qTap(pnt(474, tapY)); // tap the top most available team
+            sleep(1500);
+          }
+        }
+
+        if (waitForBattle('alliance', 1800, false, pageCookieAlliance)) {
+          console.log('pageCookieAlliance battle finished, try next one');
+          sleep(8000);
+          continue;
+        } else {
+          console.log('Finish pageCookieAlliance due to battle return false');
+          break;
+        }
+      }
+    }
+  }
 }
 
 function countBountyLevel() {
@@ -4279,6 +4831,7 @@ function handleBounties() {
   if (!checkIsPage(pageInBounties)) {
     console.log('failed to goto bounties, skipping');
     handleGotoKingdomPage();
+    return;
   }
 
   console.log('about to start handleBounties, send running');
@@ -4350,6 +4903,8 @@ function handleBounties() {
   bounties.sort(dynamicSort('powderStock'));
   console.log('sorted & filtered level bounties: ', JSON.stringify(bounties));
 
+  // if (bounties.)
+
   if (dayOfWeek !== 0 && bounties.length === 0) {
     console.log('No bounties can be run, skipping, day: ', dayOfWeek);
     return handleGotoKingdomPage();
@@ -4375,139 +4930,20 @@ function handleBounties() {
     }
   }
 
-  var pageBattleFinishedWithNextLv = [
-    { x: 589, y: 333, r: 121, g: 207, b: 12 },
-    { x: 388, y: 334, r: 12, g: 167, b: 223 },
-    { x: 490, y: 333, r: 12, g: 167, b: 223 },
-    { x: 58, y: 334, r: 243, g: 90, b: 28 },
-  ];
-  var pageBattleFinishedWithoutNextLv = [
-    { x: 466, y: 324, r: 252, g: 252, b: 252 },
-    { x: 464, y: 331, r: 8, g: 166, b: 222 },
-    { x: 309, y: 25, r: 228, g: 52, b: 71 },
-    { x: 320, y: 25, r: 255, g: 255, b: 132 },
-    { x: 330, y: 25, r: 228, g: 52, b: 74 },
-    { x: 401, y: 323, r: 26, g: 4, b: 12 },
-  ];
-  var pageWinBountyAndFinish = [
-    { x: 607, y: 332, r: 12, g: 167, b: 223 },
-    { x: 488, y: 320, r: 25, g: 2, b: 6 },
-    { x: 417, y: 319, r: 25, g: 5, b: 6 },
-    { x: 74, y: 332, r: 243, g: 90, b: 28 },
-  ];
-  var pageBountyWonNeedTap = [
-    { x: 312, y: 25, r: 231, g: 48, b: 74 },
-    { x: 320, y: 23, r: 255, g: 244, b: 87 },
-    { x: 295, y: 334, r: 69, g: 69, b: 69 },
-    { x: 278, y: 333, r: 18, g: 3, b: 4 },
-  ];
-  var pageNeedRefillBounties = [
-    { x: 428, y: 82, r: 56, g: 167, b: 231 },
-    { x: 309, y: 264, r: 0, g: 193, b: 255 },
-    { x: 348, y: 254, r: 121, g: 207, b: 12 },
-    { x: 318, y: 75, r: 121, g: 126, b: 97 },
-    { x: 417, y: 120, r: 243, g: 233, b: 223 },
-  ];
-  var pageNeedRefillBounties2 = [
-    { x: 442, y: 82, r: 57, g: 166, b: 239 },
-    { x: 345, y: 252, r: 123, g: 207, b: 8 },
-    { x: 399, y: 122, r: 247, g: 235, b: 222 },
-    { x: 367, y: 83, r: 57, g: 69, b: 107 },
-    { x: 334, y: 76, r: 189, g: 178, b: 165 },
-    { x: 317, y: 71, r: 115, g: 117, b: 90 },
-    { x: 198, y: 62, r: 115, g: 99, b: 74 },
-  ];
-
-  var needToCheckAuto = true;
-  var needToCheckSpeed = true;
-  for (var i = 0; i < 3; i++) {
+  for (var i = 0; i < 5; i++) {
+    qTap(pnt(530, 330));
+    sleep(1500);
     qTap(pnt(530, 330));
     sleep(1500);
     qTap(pnt(530, 330));
     sleep(1500);
 
-    for (var j = 0; j < 120; j++) {
-      if (checkIsPage(pageInKingdomVillage)) {
-        console.log('bounty battle lead to kingdom, return');
-        return;
-      }
-
-      if (checkIsPage(pageInGacha)) {
-        console.log('Found in gacha page, finish auto bounties');
-        qTap(pageInGacha);
-        handleGotoKingdomPage();
-        return;
-      }
-
-      if (checkIsPage(battleDefeatPage)) {
-        console.log('bounty battle failed, return');
-        handleGotoKingdomPage();
-        return;
-      }
-
-      if (checkIsPage(pageNeedRefillBounties) || checkIsPage(pageNeedRefillBounties2)) {
-        console.log('No bounties left, return to kingdom');
-        sendEvent('running', 'finish bounties');
-        handleGotoKingdomPage();
-        return;
-      }
-
-      if (checkIsPage(pageBattleFinishedWithoutNextLv)) {
-        console.log('Win bounty and (can only) retry');
-        qTap(pageBattleFinishedWithoutNextLv);
-        sleep(2000);
-        j += 2;
-      }
-
-      if (checkIsPage(pageBattleFinishedWithNextLv)) {
-        if (config.bountyGotoNextLevel) {
-          console.log('Win bounty and goto next level');
-          qTap(pageBattleFinishedWithNextLv);
-        } else {
-          console.log('Win bounty and retry');
-          qTap(pnt(320, 350));
-        }
-        sleep(2000);
-        break;
-      }
-
-      if (checkIsPage(pageWinBountyAndFinish)) {
-        console.log('Successfully cleared bounties');
-        qTap(pageWinBountyAndFinish);
-        sleep(2000);
-        handleGotoKingdomPage();
-        return;
-      }
-
-      if (needToCheckAuto && !checkIsPage(pageAutoUseSkillEnabled)) {
-        console.log('bounty battle skill not enabled, enable it');
-        qTap(pageAutoUseSkillEnabled);
-        sleep(3000);
-        j += 3;
-
-        if (checkIsPage(pageAutoUseSkillEnabled)) {
-          needToCheckAuto = false;
-        }
-      }
-
-      if (needToCheckSpeed && !checkIsPage(pageSpeedBoostEnabled)) {
-        // console.log('bounty battle speed boost not enabled, enable it');
-        qTap(pageSpeedBoostEnabled);
-        sleep(3000);
-        qTap(pageSpeedBoostEnabled);
-        sleep(2000);
-        j += 5;
-
-        if (checkIsPage(pageSpeedBoostEnabled)) {
-          needToCheckSpeed = false;
-        }
-      }
-
-      if (checkIsPage(pageBountyWonNeedTap)) {
-        qTap(pageBountyWonNeedTap); // Tap center
-      }
-
-      sleep(1000);
+    if (waitForBattle('bounty', 180, true, pageInOneOfTheBounty)) {
+      console.log('pageInBounties battle finished, try next one');
+      continue;
+    } else {
+      console.log('Finish pageInBounties due to battle return false');
+      break;
     }
   }
 
@@ -4663,6 +5099,215 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
   return false;
 }
 
+function handleGotoTradeHabor() {
+  console.log('try to handleGotoTradeHabor');
+  if (!checkIsPage(pageInKingdomVillage)) {
+    handleGotoKingdomPage(gnomeLabKingdom);
+  }
+
+  pageLabCollapsed = [
+    { x: 98, y: 327, r: 255, g: 228, b: 143 },
+    { x: 91, y: 327, r: 222, g: 52, b: 66 },
+    { x: 127, y: 345, r: 41, g: 65, b: 99 },
+    { x: 26, y: 322, r: 255, g: 255, b: 255 },
+    { x: 22, y: 329, r: 82, g: 26, b: 11 },
+    { x: 28, y: 273, r: 255, g: 247, b: 206 },
+  ];
+  pageHaborUncollapsed = [
+    { x: 104, y: 72, r: 255, g: 251, b: 107 },
+    { x: 114, y: 75, r: 231, g: 121, b: 156 },
+    { x: 105, y: 321, r: 79, g: 118, b: 162 },
+  ];
+  if (checkIsPage(pageLabCollapsed)) {
+    qTap(pageLabCollapsed);
+    sleep(config.sleepAnimate * 4);
+  }
+
+  if (checkIsPage(pageHaborUncollapsed)) {
+    qTap(pageHaborUncollapsed);
+    sleep(config.sleepAnimate * 2);
+
+    handleInHabor();
+  }
+  handleGotoKingdomPage();
+}
+
+function handleInHabor() {
+  var pageShipInHabor = [
+    { x: 263, y: 190, r: 195, g: 104, b: 46 },
+    { x: 604, y: 210, r: 173, g: 134, b: 63 },
+    { x: 31, y: 229, r: 247, g: 239, b: 214 },
+    { x: 68, y: 299, r: 244, g: 232, b: 224 },
+  ];
+  var pageNoShipInHabor = [
+    { x: 246, y: 72, r: 255, g: 12, b: 82 },
+    { x: 233, y: 123, r: 82, g: 77, b: 24 },
+    { x: 225, y: 100, r: 251, g: 239, b: 213 },
+    { x: 598, y: 208, r: 137, g: 100, b: 44 },
+    { x: 343, y: 19, r: 247, g: 251, b: 206 },
+  ];
+  var pageCanLoadThisItem = [
+    { x: 424, y: 201, r: 59, g: 205, b: 0 },
+    { x: 351, y: 246, r: 123, g: 207, b: 8 },
+    { x: 414, y: 242, r: 222, g: 207, b: 198 },
+    { x: 433, y: 309, r: 57, g: 69, b: 107 },
+  ];
+  var pageLoadTooMuchWarning = [
+    { x: 400, y: 252, r: 123, g: 207, b: 8 },
+    { x: 304, y: 253, r: 8, g: 166, b: 222 },
+    { x: 436, y: 288, r: 27, g: 33, b: 51 },
+    { x: 260, y: 55, r: 28, g: 34, b: 53 },
+  ];
+
+  if (config.autoHandleTradeHabor && waitUntilSeePage(pageShipInHabor, 4, pageShipInHabor, pageNoShipInHabor)) {
+    console.log('ship still there, load all items');
+    var shipInHabor = true;
+    for (var i = 0; i < 5 && shipInHabor; i++) {
+      for (var xPixel = i === 0 ? 55 : 200; xPixel < 620; xPixel += 60) {
+        qTap(pnt(xPixel, 318));
+        // console.log('tap: ', xPixel, 318)
+        sleep(config.sleepAnimate * 2);
+
+        if (checkIsPage(pageCanLoadThisItem)) {
+          console.log('Successfully load the item at x: ', xPixel);
+          qTap(pageCanLoadThisItem);
+          sleep(config.sleep);
+          qTap(pnt(342, 240));
+          sleep(config.sleepAnimate);
+        }
+        if (checkIsPage(pageLoadTooMuchWarning)) {
+          qTap(pnt(270, 252)); // Cancel ship confirm
+          sleep(config.sleepAnimate);
+          qTap(pnt(270, 200)); // tap minus icon
+          sleep(config.sleepAnimate);
+          qTap(pnt(320, 240)); // tap load
+          sleep(config.sleepAnimate);
+        }
+        if (checkIsPage(pageLoadTooMuchWarning)) {
+          //Even one item is too much
+          qTap(pnt(270, 252)); // Cancel ship confirm
+          sleep(config.sleepAnimate);
+          qTap(pnt(434, 50)); // tap close icon
+          sleep(config.sleepAnimate * 2);
+        }
+
+        if (waitUntilSeePage(pageNoShipInHabor, 3)) {
+          console.log('Send the ship successfully');
+          shipInHabor = false;
+          break;
+        }
+      }
+
+      tapDown(629, 319, 40, 0);
+      sleep(config.sleep);
+      moveTo(629, 319, 40, 0);
+      sleep(config.sleep);
+      moveTo(500, 319, 40, 0);
+      sleep(config.sleep);
+      moveTo(350, 319, 40, 0);
+      sleep(config.sleep);
+      moveTo(200, 319, 40, 0);
+      sleep(config.sleep);
+      tapUp(200, 319, 40, 0);
+      sleep(config.sleepAnimate * 2);
+    }
+  }
+
+  var pageInHabor = [
+    { x: 348, y: 18, r: 206, g: 227, b: 247 },
+    { x: 424, y: 19, r: 255, g: 211, b: 0 },
+    { x: 91, y: 234, r: 255, g: 251, b: 74 },
+    { x: 34, y: 232, r: 231, g: 231, b: 225 },
+    { x: 613, y: 213, r: 250, g: 225, b: 154 },
+  ];
+  var pageNeedDiamondRefreshMarket = [
+    { x: 426, y: 110, r: 57, g: 169, b: 231 },
+    { x: 305, y: 102, r: 255, g: 255, b: 255 },
+    { x: 363, y: 118, r: 57, g: 69, b: 107 },
+    { x: 297, y: 124, r: 33, g: 44, b: 66 },
+  ];
+  if (config.autoBuyCaramelStuff && waitUntilSeePage(pageInHabor, 4)) {
+    qTap(pnt(93, 230)); // Seaside market
+    sleep(config.sleepAnimate);
+    qTap(pnt(543, 336));
+    sleep(config.sleepAnimate);
+
+    if (waitUntilSeePage(pageNeedDiamondRefreshMarket, 3)) {
+      qTap(pageNeedDiamondRefreshMarket);
+      sleep(config.sleepAnimate);
+    }
+
+    qTap(pnt(420, 250));
+    sleep(config.sleepAnimate);
+    qTap(pnt(315, 247));
+    sleep(config.sleepAnimate * 2);
+    qTap(pnt(530, 245));
+    sleep(config.sleepAnimate);
+    qTap(pnt(315, 247));
+    sleep(config.sleepAnimate);
+    console.log('Purchased carmel stuff successfully');
+    keycode('BACK', 800);
+    sleep(config.sleepAnimate);
+  }
+
+  var pageCanGotoShellShop = [
+    { x: 33, y: 227, r: 247, g: 207, b: 231 },
+    { x: 92, y: 233, r: 255, g: 251, b: 74 },
+    { x: 346, y: 19, r: 223, g: 230, b: 231 },
+    { x: 605, y: 211, r: 173, g: 130, b: 57 },
+  ];
+  var pageInShellShop = [
+    { x: 613, y: 22, r: 16, g: 85, b: 115 },
+    { x: 345, y: 18, r: 247, g: 231, b: 214 },
+    { x: 305, y: 19, r: 222, g: 186, b: 231 },
+    { x: 268, y: 28, r: 189, g: 211, b: 206 },
+  ];
+  var pageLegendarySoldOut = [
+    { x: 57, y: 102, r: 171, g: 203, b: 240 },
+    { x: 82, y: 199, r: 239, g: 24, b: 24 },
+  ];
+  var pageConfirmBuySeaFairy = [
+    { x: 307, y: 256, r: 231, g: 240, b: 217 },
+    { x: 292, y: 241, r: 148, g: 219, b: 57 },
+    { x: 241, y: 258, r: 222, g: 207, b: 198 },
+    { x: 313, y: 77, r: 255, g: 255, b: 255 },
+    { x: 273, y: 96, r: 57, g: 69, b: 107 },
+  ];
+  var pageConfirmBuyGuildRelics = [
+    { x: 346, y: 251, r: 123, g: 207, b: 8 },
+    { x: 323, y: 72, r: 222, g: 150, b: 82 },
+    { x: 332, y: 88, r: 88, g: 47, b: 33 },
+    { x: 346, y: 18, r: 123, g: 109, b: 111 },
+  ];
+  if ((config.autoBuySeaFairy || config.autoBuyGuildRelic) && waitUntilSeePage(pageCanGotoShellShop, 2)) {
+    console.log('Try to purchase sea fairy in shell shop');
+    qTap(pageCanGotoShellShop);
+    sleep(config.sleepAnimate);
+
+    if (waitUntilSeePage(pageInShellShop, 4)) {
+      if (config.autoBuySeaFairy) {
+        if (waitUntilSeePage(pageConfirmBuySeaFairy, 4, pnt(80, 313), pageLegendarySoldOut)) {
+          qTap(pageConfirmBuySeaFairy);
+          sleep(1500);
+          console.log('Purchased legendary cookie successfully');
+        }
+      }
+
+      if (config.autoBuyGuildRelic) {
+        for (var i = 0; i < 2; i++) {
+          if (waitUntilSeePage(pageConfirmBuyGuildRelics, 4, pnt(402, 187))) {
+            qTap(pageConfirmBuyGuildRelics);
+            sleep(1500);
+            console.log('Purchased guild relic successfully: ', i);
+          }
+        }
+      }
+
+      keycode('BACK', 80);
+    }
+  }
+}
+
 // Facebook login page can only tap back to CrK, not use cmd to call Crk back to the front
 function checkIsFacebookPage() {
   var img = getScreenshot();
@@ -4744,7 +5389,7 @@ function findSpecificImageInScreen(target, threashold, isDev) {
   var img = getScreenshot();
   var foundResults = findImages(img, target, threashold, 5, true);
   if (isDev) {
-    console.log('findSpecificImageInScreen, found green Checked icon at: ', JSON.stringify(foundResults));
+    console.log('findSpecificImageInScreen, found target icon at: ', JSON.stringify(foundResults));
   }
   releaseImage(img);
   return foundResults;
@@ -4763,6 +5408,21 @@ function handleTowerOfRecords() {
       sleep(config.sleepAnimate);
 
       for (var j = 0; j < 4; j++) {
+        foundResults = findSpecificImageInScreen(diamondInTowerOfRecords, 0.935, true);
+        if (foundResults.length > 0) {
+          console.log('Tap ToR diamond at: ', JSON.stringify(foundResults));
+          for (var i = 0; i < foundResults.length; i++) {
+            qTap(foundResults[i]);
+            sleep(config.sleepAnimate);
+          }
+
+          if (checkIsPage(recordTab)) {
+            console.log('No more red points being found, return');
+            handleGotoKingdomPage();
+            return;
+          }
+        }
+
         tapDown(307, 330, 40, 0);
         sleep(config.sleep);
         moveTo(307, 330, 40, 0);
@@ -4775,15 +5435,6 @@ function handleTowerOfRecords() {
         sleep(config.sleep);
         tapUp(307, 0, 40, 0);
         sleep(config.sleepAnimate * 4);
-
-        foundResults = findSpecificImageInScreen(diamondInTowerOfRecords, 0.935, true);
-        if (foundResults.length > 0) {
-          console.log('Tap ToR diamond at: ', JSON.stringify(foundResults));
-          for (var i = 0; i < foundResults.length; i++) {
-            qTap(foundResults[i]);
-            sleep(config.sleepAnimate);
-          }
-        }
       }
     }
   }
@@ -4918,7 +5569,7 @@ function handleSuperMayhem() {
               }
               break;
             }
-            if (checkIsPage(battleDefeatPage)) {
+            if (checkIsPage(pageBattleDefeat)) {
               console.log('Battle finished, lost: ', j);
               waitUntilSeePage(pageInSuperMayhem, 25, pnt(616, 323), pagePvPCrystaisRefresh);
 
@@ -5071,12 +5722,53 @@ function handleTryResolveGreenChecks() {
   return true;
 }
 
+function checkIsFreeze() {
+  if (config.lastFreezeCheckScreenShot === null) {
+    console.log('config.lastFreezeCheckScreenShot is null , skipping checkIsFreeze');
+    config.lastFreezeCheckScreenShotFTime = Date.now();
+    return;
+  }
+
+  var img = getScreenshot();
+  var foundResults = findImages(img, config.lastFreezeCheckScreenShot, 0.999, 1, true);
+
+  if (foundResults.length === 0) {
+    releaseImage(config.lastFreezeCheckScreenShot);
+    config.lastFreezeCheckScreenShot = img;
+    config.lastFreezeCheckScreenShotFTime = Date.now();
+    console.log('No need to restart app, screen not freeze, updaate last screenshot&time');
+    return;
+  } else {
+    releaseImage(img);
+  }
+
+  if ((Date.now() - config.lastFreezeCheckScreenShotTime) / 1000 > 1200) {
+    console.log(
+      'RESTART cookie app as screen freeze for: ',
+      (Date.now() - config.lastFreezeCheckScreenShotTime) / 1000,
+      'secs'
+    );
+    rtn = execute('am force-stop com.devsisters.ck');
+    if (rtn == 'signal: aborted') {
+      // MEmu
+      execute(
+        'ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop com.devsisters.ck'
+      );
+    }
+    sleep(3000);
+    checkAndRestartApp();
+  }
+}
+
 function stop() {
   releaseImage(greenCheckedWriteBackground);
   releaseImage(greenCheckedWithGiftBox);
   releaseImage(sunbedGreenCheck);
   releaseImage(redExclamation);
+  releaseImage(islandHammer);
   releaseImage(bountiesGreenEnter);
+  releaseImage(guildExpandLandPlusSelected);
+  releaseImage(guildExpandLandPlus);
   releaseImage(diamondInTowerOfRecords);
   releaseImage(loginGearIcon);
 
@@ -5116,7 +5808,10 @@ var greenCheckedWriteBackground;
 var greenCheckedWithGiftBox;
 var sunbedGreenCheck;
 var redExclamation;
+var islandHammer;
 var bountiesGreenEnter;
+var guildExpandLandPlusSelected;
+var guildExpandLandPlus;
 var diamondInTowerOfRecords;
 var loginGearIcon;
 var auroraItems = [];
@@ -5136,15 +5831,25 @@ function loadImages() {
     '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'
   );
 
+  sunbedGreenCheck = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPABIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2X9jfxl+zT/wT5/Zusvg78WfEPhD4gfCzxMIta8Y+ItG8F3lza2WsvDamJ3jmubo6naZggtknhtbZo3tbeVoZBPNcQ8B4U+B/wK+D+v8AiLxL4r/Z6j+IPxB+I/iW+tvhz8JfEeh2twPDdjLcyXFloNvbyGW3smt7ZYjd3LkR2SQSxxmNRO13paD+xz+078APDfh/xb4BOq+I31xzqfiTw3YSWNjfeFdZmdrh3sjJeiBrYuwSSJbljHOpmhZkmdI+++F2veDf+Ccvwx1j9t/9t/VpbTXtVQabp+gaVbm/fRoJFkuINGt5I12S3k5ty8907RwNJEiB1iijZ/wmtlHiFxBmP9jY6XscLCbk61FuEqlJ/DSi7uUXupyTvZb7OXw9GvxZmOZywmLpKEIvn9qnq4vaEVraW6k72S2vdM+4/wBnvQvHvw1+AXgf4dfELxh/amv6B4P0zTdc1OO5edbu8gtY4pphLKokkDyKzb3AZs5IBJor8Qtd/wCC4f8AwU/8Xa3eeLPBH7UPgnw1ouqXUl3pHhyX4f6fdtpVrIxeK0M8mkM8xiRlj8xmZn27iSSTRX7dHDV4pJH2y5ErXP/Z'
+  );
   redExclamation = getImageFromBase64(
     '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAbABcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9yPj58YIfgj8DPGnxnTQJtXPhDwnqOtDS4JAj3ptbWSfyVY8KX8vaCehNflr4x/4KbX//AAgekfETwH8X/if/AMLmNuLrXNZ1LWgvhJJ/K3Gzi0NXe3ksGf8AdhjFHepFh/tLzAuf0u+Iy2Hjr4e694I1Aebb6zo11Yzxk/fSWJo2HTuGNfzh6fruo2nwUttcYTCMeEEuVuF/hH2YNuLLwpByD6EEHkV8PxhmOZ4KNFYSfLztpu3+Fq10/P7z9+8COCuF+Mp5m84g5fV6anG0uVfbTTs9ej7aa32P6V/gB8aNP+PHwH8E/HG00SfTIvGfhHTddi024kDyWi3drHcCJmGAzKJNpIABIorjv2fbdfh58BPBHgB0aE6H4Q03TzCylShhtY49pGOMbcY7UV9opOyufz/J+87PT5GTP46tYZGi+0FivBwa/B3x38R/gvqmjT/EXWPgH4f034mPrE2va5rNzrEy/Z/EokknNj/Yhf7GFhvf3f2WS3ea4SHLFpJDKf2YN/eI5RbhsDpXG3XwF+BN98SV+M178EfB03jBZUlXxXL4XtG1ISIoRXF0Y/N3BQFB3ZAAHQV89m2W18zhTUKrhyu+nU+y4N4vy3haripYrBrEe1puEbycOVv7Xu/Eu8Xps9Gj3Dwx8R7jVdCsb3XbM6fezWUcl5Z+aJBbylAXj3D721iRnviiuBa/vGRgZz0/rRXrrn6nyELVFdfkj//Z'
   );
-  sunbedGreenCheck = getImageFromBase64(
-    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPABIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2X9jfxl+zT/wT5/Zusvg78WfEPhD4gfCzxMIta8Y+ItG8F3lza2WsvDamJ3jmubo6naZggtknhtbZo3tbeVoZBPNcQ8B4U+B/wK+D+v8AiLxL4r/Z6j+IPxB+I/iW+tvhz8JfEeh2twPDdjLcyXFloNvbyGW3smt7ZYjd3LkR2SQSxxmNRO13paD+xz+078APDfh/xb4BOq+I31xzqfiTw3YSWNjfeFdZmdrh3sjJeiBrYuwSSJbljHOpmhZkmdI+++F2veDf+Ccvwx1j9t/9t/VpbTXtVQabp+gaVbm/fRoJFkuINGt5I12S3k5ty8907RwNJEiB1iijZ/wmtlHiFxBmP9jY6XscLCbk61FuEqlJ/DSi7uUXupyTvZb7OXw9GvxZmOZywmLpKEIvn9qnq4vaEVraW6k72S2vdM+4/wBnvQvHvw1+AXgf4dfELxh/amv6B4P0zTdc1OO5edbu8gtY4pphLKokkDyKzb3AZs5IBJor8Qtd/wCC4f8AwU/8Xa3eeLPBH7UPgnw1ouqXUl3pHhyX4f6fdtpVrIxeK0M8mkM8xiRlj8xmZn27iSSTRX7dHDV4pJH2y5ErXP/Z'
+  islandHammer = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAWABkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9H4/i7oP7OvxV8S/Dv9nPwLY+PPH2nXEen/EL4sfF7xpJYie9aCK9TS4ZrSxupW8uO6jnNnbW1tYW5uhs2ySSJW7o/wC0d/wU+8RnUPH2g/s8/BW80HQZ3tZPC1h8RdQk1HxK8aP5s1hfz2MFvbDzPLiSK5iG9klLSxJsdsX/AIKGfsA/Cf4z+BPHPx7+DngNdO+ND6CJtN17R9fuNLbWJrVQ0dteBJUt7kSRobcNco4VXAJVV48W/ZQ/bk8PSeCdM1/wv4geXw/NbxrZX4jJt5I9gaOKeEcwTeXsO372CDwpBPBBylVcKk+Xta2q+a3XVa/id6jQjh4yowTS0d09HZdnaz6aL71c+u9D/aw/Yt/at8L+IfhH8Z7bStKvtIiim8bfC/4v6bb2d7pirLG0U09rdFopoRKYWjuoWlgLmMpKWxUf/DEP7JH/AEVL4of+JN+Mv/lzXmd1oXwA/bY8XaPrnx4+EHhHxJofg1bpNGPiHR7fUba4vriOISuhmQhIkjABX5keRgWw9shrW/4YC/4Jl/8ARpnwa/8ACN03/wCN1u44rZJS+9foznnTwFTWSa+Sf3O6If2+P2qtX/Zr/Z8uPEvhvRorzXPEGpweH9A+3RCS0t7u6Dqs9wmQZIo1V3MY5kKqmUDl1/OD4O+Ifin8XPHng79jP4exaEup/wDCNpp/g74ja8pTUNF0rTY1KxXMUEZj1RIk2eTaSeXASqiXftDkor4PiTCUcyzTDUcRdxhKM42lKLUk3qnFp3tpvqm09Gz7jh2lTpZDiK8UubVX30SWlnpbXY674T/tl+KvBv7LnjL4t+GLeeO48DT3+keJNL81Uhu9Ws7aJrp7diH2xM7jy5mUSYGWj42n0L/h2V/wUf8A+j9vBv8A4auz/wDiKKK+ldSrWjDmk/hWza6vs12PDq06WGqTVOK+JrVJ6JLa6dt3sf/Z'
   );
 
   bountiesGreenEnter = getImageFromBase64(
     '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'
+  );
+
+  guildExpandLandPlusSelected = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAdABEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5F+BHw2+Lnx81jxNYfDm68OeX4V07R5bq11y4mtTIb6a/jMouI1lwsX2SMmIQlmWWRlYvGkM3e6v+xV+0ra+INM8J+D/FXhbVBqvizw/oujaxqttPbf2jNqmq2mn7JbeEyGyWE3EkrzB7gCOGIiORpZRb9X+zH+w3+2T8GPhxd/H7w74w+HNveeOLHSmTwF4sa9W6itLb7a8V3cXFuHSxLLckrA0csrB1Z1hH3vRYPip+2x+zr8TrH4l/FH4M2Glaj4N8P67rHg/SPDXhrxTqtxf+IksGtLbSNSgFnZy6fDd2+oXDR3M6NApiWRztKbvBxnHnBleVLB4HEwdWMuWrLm9xP3pJKT9y7h56tO2qd+vh7AeEcuDWswu8xUWrXny8/v8AI7r3Lcsotq6u4Lzv1v8AxD5/8FBP+hj+Fv8A4Ut//wDIFFYf27/g5E/6Ll4m/wDDOeDf/ljRWP8Arvwd/wBDGh/4Np//ACR8D/ZnC38//kx9ofs4fsoeNP2mLvSfjHof7QeiaHpnhf4k2dzqnhlPCct3qrz6VqkF4Y5roahEtobkRRuoa3lJt7mKbLCYKvrv7ZX7HfiXx98VNS/ais/2h/DfhbSNM8BW9jrGleKPDztbCOwm1G7+0tqIvYlsYyLxhI7W8wRYd+G+7Xwjrnjrwfqvwa8Hftn6l8LdMm1vw9baL41tEdYzdKlhc2+qGwjuzEXiWURPCZApCiVm2Nyp9v8A2vpfBvxZ/wCCg/jjUfEXw/02a88BaZonhjTby+t47mQMlq+rm6iZkzAW/thYSik/8egfcd+xP5xyTibgvA+FOMpYnLLqlUp06tL2kv3tW0V7TnS93WLdl/L5q/FhMxy2lw7V56HwyipR5n70u9+m34eh88/8Na6H/wBGtfFf/wAIFv8A4qivoD7NH/dX/vgUV/Ov1rK/+gP/AMqSPhfr2F/59/8AkzP/2Q=='
+  );
+  guildExpandLandPlus = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAASAA8DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDvfDXhTTf2T/gr4n+IOo+FdE8R+M9M0q71e/8AFLAyzW/k2kxbT9NnYEWdoVJTzI41mnIWWVj8kUX0T+1N+z1pXwxh0f4bfE/XG8f6L4r0FhqGn6nY7I2ubOS0eWZVkeYIrTSRPHGQ5jUOrPIdr1xXw2/bG8d/sW+BfHHxN8C/CLw1440nU4P+EhuNXm8aSaVdx2Ntp8YSxh8vTrkXEIMVxcRlpUUPfSgIuWd/rf8Aa3/ax+Jf7N+p+GNG+G3wr0fxNL4gtr+a6Or+MptIW1W2a1UbfKsLoyljcnOdm3Z/Fu4/lLK8myHi7hTG55nGbKWLfsnKs6c74R81+RJSSldtx0slvskfn+Dw2BxeWVMTWrrnXL71n+71231vsfmL+w6zeKf2IPDmn+J2Oo2839o2UsF+fOR7Zbu4iWAq+QYxGAgT7oUBcY4rkf8AgnT8Vvij8YvCfiTx18XPiTr/AIq1uLVY9Pj1nxHrE99dJaRxeZHbiWZmcRK80zqmdoaWQgZZslFfA4j/AJJ/iX/sJh/6dmeLH/kXYz/HH/0pn//Z'
   );
 
   diamondInTowerOfRecords = getImageFromBase64(
@@ -5741,12 +6446,15 @@ function start(inputConfig) {
         config.lastCollectTropicalIsland = Date.now();
       }
 
-      if (
-        config.autoGuildBattleIntervalInMins != 0 &&
-        (Date.now() - config.lastAutoGuildBattle) / 60000 > config.autoGuildBattleIntervalInMins
-      ) {
-        console.log('autoGuildBattle: ', (Date.now() - config.lastAutoGuildBattle) / 60000, ' just passed');
+      if ((Date.now() - config.lastAutoGuildBattle) / 60000 > 120) {
+        console.log('autoGuildBattle: ', (Date.now() - config.lastAutoGuildBattle) / 60000, ' mins just passed (>120)');
         handleGuildCheckinAndBattle();
+        if (config.autoGuildBattleDragon) {
+          guildBattleDragon();
+        }
+        if (config.autoGuildAllianceBattle) {
+          guildBattleAlliance();
+        }
         config.lastAutoGuildBattle = Date.now();
       }
 
@@ -5765,11 +6473,21 @@ function start(inputConfig) {
         config.lastLabResearch = Date.now();
       }
 
-      // if (config.handleTradeHabor && (Date.now() - config.lastLabResearch) / 60000 > 20) {
-      //   console.log('handleTradeHabor: ', (Date.now() - config.lastLabResearch) / 60000, ' just passed');
-      //   handleTradeHabor();
-      //   config.lastLabResearch = Date.now();
-      // }
+      if (
+        (config.autoHandleTradeHabor || config.autoBuyCaramelStuff || config.autoBuySeaFairy) &&
+        (Date.now() - config.lastHandleTradeHabor) / 60000 > 120
+      ) {
+        console.log('handleTradeHabor: ', (Date.now() - config.lastHandleTradeHabor) / 60000, ' just passed');
+        handleGotoTradeHabor();
+        config.lastHandleTradeHabor = Date.now();
+      }
+
+      if (
+        (Date.now() - config.lastTryResolveGreenChecks) / 60000 > 20
+      ) {
+        console.log('handleTryResolveGreenChecks: ', (Date.now() - config.lastTryResolveGreenChecks) / 60000, ' just passed');
+        handleTryResolveGreenChecks();
+      }
 
       if (
         config.worksBeforeCollectCandy != 0 &&
@@ -5876,6 +6594,7 @@ function start(inputConfig) {
     } else {
       config.jobFailedCount = 0;
       sendEvent('running', '');
+      checkIsFreeze();
       // console.log('Cookie action successfully at: ', new Date().toLocaleString());
     }
   }
