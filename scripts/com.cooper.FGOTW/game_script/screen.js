@@ -73,7 +73,7 @@ function getBlackEdge() {
         break;
       }
       var color = getImageColor(screenshot, i, (h / 4) * j);
-      if (color.r != 0 || color.g != 0 || color.b != 0) {
+      if (color.r > 35 || color.g > 35 || color.b > 35) {
         blackEdge[0] = i;
         break;
       }
@@ -83,7 +83,7 @@ function getBlackEdge() {
         break;
       }
       var color = getImageColor(screenshot, (w / 4) * j, i);
-      if (color.r != 0 || color.g != 0 || color.b != 0) {
+      if (color.r > 35 || color.g > 35 || color.b > 35) {
         blackEdge[1] = i;
         break;
       }
@@ -93,7 +93,7 @@ function getBlackEdge() {
         break;
       }
       var color = getImageColor(screenshot, i, (h / 4) * j);
-      if (color.r != 0 || color.g != 0 || color.b != 0) {
+      if (color.r > 35 || color.g > 35 || color.b > 35) {
         blackEdge[2] = i;
         break;
       }
@@ -103,7 +103,7 @@ function getBlackEdge() {
         break;
       }
       var color = getImageColor(screenshot, (w / 4) * j, i);
-      if (color.r != 0 || color.g != 0 || color.b != 0) {
+      if (color.r > 35 || color.g > 35 || color.b > 35) {
         blackEdge[3] = i;
         break;
       }

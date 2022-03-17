@@ -134,15 +134,15 @@
     },
     "com.cooper.FGO": {
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.34,
-      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.33 增加進入關卡指令-檢查開場演出選項 點擊畫面跳過動畫並檢查操作時機<br>V3.31 修正戰鬥服換人無法與最右邊從者交換的問題<br>V3.29 加入技能加速功能，修正有時會誤送關卡失敗訊息的問題<br>V3.22 優化指令介面與除錯<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.35,
+      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.35 修正部分手機更新Android系統後無法偵測黑邊的問題。優化選擇好友、選擇隊伍指令穩定性。<br>V3.34 增加進入關卡指令-檢查開場演出選項 點擊畫面跳過動畫並檢查操作時機<br>V3.29 加入技能加速功能，修正有時會誤送關卡失敗訊息的問題<br>V3.22 優化指令介面與除錯<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "title": "Fate/Grand Order 台服",
-      "versionCode": 3.32,
-      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.32 增加進入關卡指令 檢查開場演出選項<br>V3.27 修正情人節活動卡在使用活動道具畫面的問題 修正技能已使用的確認 修正友抽功能無法正常執行的問題<br>V3.23 修正改變寶具顏色指令失效的問題<br>V3.22 優化指令介面與除錯<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.35,
+      "description": "<div>需訂閱FGO無限暢遊方案才能使用，三天內可以試用並免費取消訂閱<br><br>V3.35 修正部分手機更新Android系統後無法偵測黑邊的問題。優化選擇好友、選擇隊伍指令穩定性。<br>V3.34 增加進入關卡指令 檢查開場演出選項<br>V3.22 優化指令介面與除錯<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },

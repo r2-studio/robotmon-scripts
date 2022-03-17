@@ -5,7 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.32";
+var version = "V3.35";
 
 function start(loopTime, script, scriptName) {
   startScript(loopTime, script, scriptName);

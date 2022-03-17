@@ -370,7 +370,13 @@ function checkFriendIsFriend(screenshot, lineY) {
 
 function reloadFriend() {
   while (isScriptRunning) {
+    if(isSelectTeamPage()){
+      console.log("誤觸進入選擇隊伍，回到上一頁");
+      tapScale(200,70);
+      sleep(2000);
+    }
     tapScale(reloadPosition + barMargin, 175, undefined, 0);
+    // console.log("cooper debug reloadFriend "+ (reloadPosition + barMargin)+" "+reloadPosition +" "+ barMargin);
     sleep(1000);
     if (isSelectFriendRefreshDialog()) {
       tapScale(1275, 850);

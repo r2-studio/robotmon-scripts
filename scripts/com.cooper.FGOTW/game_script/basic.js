@@ -290,10 +290,11 @@ function swipeScale(x, y, endX, endY, step) {
 
 function waitLoading() {
   while (isScriptRunning) {
-    sleep(1500);
-    if (!checkPixel(1800 + defaultMarginX, 1006, 255, 255, 255)) {
-      return;
-    }
+    sleep(3000);
+    // if (!checkPixel(1800 + defaultMarginX, 1006, 255, 255, 255)) {
+    //   return;
+    // }
+    return;
   }
 }
 
