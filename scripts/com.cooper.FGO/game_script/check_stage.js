@@ -103,7 +103,7 @@ function checkIconListInScreen(iconList, allPass, threshold) {
   for (var i = 0; i < iconList.length; i++) {
     var iconName = iconList[i];
     if (icon[iconName] == undefined) {
-      console.log("checkIconInScreen no icon");
+      console.log("checkIconInScreen no icon "+iconName);
       return false;
     }
     var margin = 0;
@@ -146,7 +146,7 @@ function checkIconInScreen(iconName, threshold, screenshot) {
     return false;
   }
   if (icon[iconName] == undefined) {
-    console.log("checkIconInScreen no icon");
+    console.log("checkIconInScreen no icon "+iconName);
     return false;
   }
   if (screenshot == undefined) {
@@ -229,6 +229,7 @@ function isUseAppleDialog() {
 //select friend-----------------------------------------------
 icon["friendPage"] = [1110, 150, 225, 75];
 icon["friendRefresh"] = [840, 150, 240, 90];
+icon["friendRefresh2"] = [840, 150, 240, 90];
 icon["friendEnd"] = [1852, 1027, 60, 45];
 icon["friendEnd3"] = [1852, 1027, 60, 45];
 icon["friendEmpty"] = [675, 630, 525, 60];

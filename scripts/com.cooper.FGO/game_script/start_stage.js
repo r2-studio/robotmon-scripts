@@ -184,16 +184,21 @@ function startQuest(useItem, checkStageLoadFinish) {
     console.log("不在選擇隊伍畫面");
     return;
   }
-  clickIcon("teamPage");
-  sleep(1500);
-  if (isUseItemDialog()) {
-    lastTimeUseItem = useItem;
-    if (useItem == undefined || useItem == -1) {
-      console.log("不使用道具");
-      tapScale(1230, 975);
-      return;
+  while (isSelectTeamPage()) {
+    console.log("點擊進入關卡按鈕");
+    clickIcon("teamPage");
+    sleep(1500);
+
+    if (isUseItemDialog()) {
+      lastTimeUseItem = useItem;
+      if (useItem == undefined || useItem == -1) {
+        console.log("不使用道具");
+        tapScale(1230, 975);
+        return;
+      }
+      selectItem(useItem);
+      break;
     }
-    selectItem(useItem);
   }
   if (checkStageLoadFinish == 1) {
     tryOpenSettingDialog();
