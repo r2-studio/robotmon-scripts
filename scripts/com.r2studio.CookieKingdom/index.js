@@ -152,62 +152,61 @@ factoryType = [
 ];
 
 pageWoodFarm = [
-  { x: 584, y: 118, r: 121, g: 207, b: 12 },
-  { x: 434, y: 73, r: 174, g: 98, b: 73 },
-  { x: 528, y: 82, r: 145, g: 85, b: 56 },
+  {x: 596, y: 118, r: 123, g: 207, b: 8},
+  {x: 527, y: 86, r: 140, g: 81, b: 57},
+  {x: 520, y: 91, r: 249, g: 192, b: 139},
+  {x: 427, y: 79, r: 140, g: 81, b: 57}
 ];
 
 pageBeanFarm = [
-  { x: 590, y: 121, r: 121, g: 207, b: 12 },
-  { x: 311, y: 22, r: 0, g: 255, b: 247 },
-  { x: 427, y: 83, r: 0, g: 253, b: 251 },
-  { x: 425, y: 82, r: 2, g: 252, b: 250 },
-  { x: 526, y: 89, r: 0, g: 254, b: 251 },
+  {x: 602, y: 122, r: 123, g: 207, b: 8},
+  {x: 527, y: 83, r: 0, g: 204, b: 223},
+  {x: 525, y: 88, r: 1, g: 252, b: 248},
+  {x: 414, y: 82, r: 0, g: 207, b: 220}
 ];
 
 pageSugarFarm = [
-  { x: 586, y: 119, r: 121, g: 207, b: 12 },
-  { x: 426, y: 69, r: 237, g: 245, b: 245 },
-  { x: 307, y: 13, r: 250, g: 252, b: 252 },
-  { x: 523, y: 81, r: 236, g: 245, b: 244 },
-  { x: 428, y: 95, r: 254, g: 254, b: 254 },
+  {x: 600, y: 118, r: 123, g: 207, b: 8},
+  {x: 531, y: 92, r: 135, g: 151, b: 200},
+  {x: 419, y: 71, r: 244, g: 250, b: 253},
+  {x: 411, y: 89, r: 239, g: 240, b: 249}
 ];
 
 pagePowderFarm = [
-  { x: 582, y: 119, r: 121, g: 207, b: 12 },
-  { x: 315, y: 24, r: 159, g: 117, b: 52 },
-  { x: 435, y: 91, r: 158, g: 117, b: 51 },
-  { x: 528, y: 89, r: 235, g: 207, b: 138 },
+  {x: 596, y: 120, r: 123, g: 207, b: 8},
+  {x: 523, y: 87, r: 231, g: 157, b: 74},
+  {x: 435, y: 90, r: 156, g: 117, b: 49},
+  {x: 423, y: 83, r: 239, g: 162, b: 82}
 ];
 
 pageBarryFarm = [
-  { x: 587, y: 123, r: 121, g: 207, b: 12 },
-  { x: 425, y: 86, r: 194, g: 38, b: 46 },
-  { x: 429, y: 79, r: 32, g: 116, b: 40 },
-  { x: 306, y: 19, r: 190, g: 38, b: 44 },
-  { x: 524, y: 90, r: 163, g: 31, b: 35 },
+  { x: 597, y: 118, r: 123, g: 207, b: 8 },
+  {x: 527, y: 90, r: 198, g: 36, b: 41},
+  {x: 428, y: 76, r: 28, g: 117, b: 16},
+  {x: 413, y: 82, r: 200, g: 26, b: 31}
 ];
 
 pageMilkFarm = [
-  { x: 587, y: 121, r: 121, g: 207, b: 12 },
-  { x: 303, y: 25, r: 238, g: 245, b: 241 },
-  { x: 418, y: 91, r: 246, g: 246, b: 238 },
-  { x: 526, y: 89, r: 255, g: 253, b: 235 },
+  {x: 597, y: 118, r: 123, g: 207, b: 8},
+  {x: 521, y: 79, r: 214, g: 138, b: 99},
+  {x: 526, y: 90, r: 255, g: 255, b: 239},
+  {x: 425, y: 85, r: 255, g: 255, b: 242}
 ];
 
 pageCottomFarm = [
-  { x: 582, y: 119, r: 121, g: 207, b: 12 },
+  {x: 596, y: 120, r: 123, g: 207, b: 8},
   { x: 528, y: 87, r: 254, g: 231, b: 251 },
   { x: 428, y: 92, r: 255, g: 241, b: 255 },
 ];
 
 var pageInKingdomVillage = [
-  { x: 250, y: 16, r: 247, g: 48, b: 90 },
-  { x: 321, y: 17, r: 255, g: 211, b: 0 },
-  { x: 427, y: 14, r: 0, g: 195, b: 255 },
-  { x: 429, y: 332, r: 148, g: 40, b: 33 },
-  { x: 27, y: 320, r: 255, g: 255, b: 255 },
-  { x: 24, y: 345, r: 66, g: 101, b: 148 },
+  {x: 223, y: 20, r: 173, g: 28, b: 66},
+  {x: 314, y: 21, r: 247, g: 208, b: 1},
+  {x: 426, y: 20, r: 0, g: 137, b: 255},
+  {x: 469, y: 327, r: 214, g: 121, b: 49},
+  {x: 417, y: 324, r: 115, g: 0, b: 0},
+  {x: 369, y: 320, r: 148, g: 81, b: 66},
+  {x: 36, y: 313, r: 170, g: 4, b: 38}
 ];
 
 var pageLoginFacebook = [
@@ -351,11 +350,10 @@ var pageSpeed1_2x = [
 
 //rgb(166,104,65)
 pageInProduction = [
-  { x: 609, y: 19, r: 56, g: 167, b: 231 },
-  { x: 617, y: 19, r: 255, g: 255, b: 255 },
-  { x: 625, y: 18, r: 34, g: 85, b: 119 },
-  { x: 619, y: 331, r: 166, g: 104, b: 65 },
-  { x: 19, y: 321, r: 166, g: 104, b: 65 },
+  {x: 21, y: 62, r: 165, g: 105, b: 66},
+  {x: 81, y: 68, r: 165, g: 105, b: 66},
+  {x: 415, y: 18, r: 255, g: 190, b: 8},
+  {x: 525, y: 15, r: 0, g: 196, b: 255},
 ];
 
 pageStockIsFull = [
@@ -824,7 +822,7 @@ function ocrProductStorage(rect) {
 
 function ocrMaterialStorage(x, y, w, h) {
   var img = getScreenshot();
-  x = typeof x !== 'undefined' ? x : 345;
+  x = typeof x !== 'undefined' ? x : 355;
   y = typeof y !== 'undefined' ? y : 10;
   w = typeof w !== 'undefined' ? w : 35;
   h = typeof h !== 'undefined' ? h : 18;
@@ -884,7 +882,7 @@ function SwipeProductionMenuToTop() {
 function handleMaterialProduction() {
   pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
   pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
-  pageThirdItemEnabled = [{ x: 568, y: 329, r: 121, g: 207, b: 14 }];
+  pageThirdItemEnabled = [{x: 603, y: 331, r: 123, g: 207, b: 8}];
 
   if (checkIsPage(pageWoodFarm)) {
     console.log('wood farm, add more');
@@ -1054,7 +1052,7 @@ function makeGoodsToTarget(target, prework, stocks) {
   // TODO: recognize building to reduce drop order time
   pageFirstItemEnabled = [{ x: 587, y: 122, r: 121, g: 207, b: 12 }];
   pageSecondItemEnabled = [{ x: 587, y: 230, r: 121, g: 207, b: 12 }];
-  pageThirdItemEnabled = [{ x: 587, y: 332, r: 121, g: 207, b: 12 }];
+  pageThirdItemEnabled = [{x: 603, y: 331, r: 123, g: 207, b: 8}];
 
   var goodsOneStock = ocrProductStorage(goodsLocation[1]);
   var goodsTwoStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[2]) : -1;
@@ -1117,7 +1115,6 @@ function makeGoodsToTarget(target, prework, stocks) {
         var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
         var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
         var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
-
       } else {
         prodReqList.push([]);
         SwipeProductionMenuToBottom();
@@ -4538,6 +4535,9 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       lastSendEvent = j;
     }
 
+    if (j % 30 === 0) {
+      console.log('In ', battleName, ' for ', j, '/', waitTimeInSecs, 'secs, time: ', new Date().toLocaleString());
+    }
     sleep(1000);
   }
 
@@ -4691,6 +4691,12 @@ function guildBattleDragon() {
     { x: 415, y: 42, r: 242, g: 175, b: 93 },
     { x: 478, y: 325, r: 180, g: 180, b: 180 },
   ];
+  var pageDragonAddMoreCookie = [
+    {x: 300, y: 250, r: 8, g: 166, b: 222},
+    {x: 408, y: 250, r: 123, g: 207, b: 8},
+    {x: 419, y: 18, r: 127, g: 95, b: 4},
+    {x: 518, y: 18, r: 20, g: 117, b: 127},
+  ]
 
   // Old users does not have config.autoGuildBattleDragon key (Feb 7, 2022)
   if (config.autoGuildBattleDragon === undefined || config.autoGuildBattleDragon) {
@@ -4708,6 +4714,12 @@ function guildBattleDragon() {
       if (waitUntilSeePage(pageBattleDragon, 6, pageBattleDragon)) {
         qTap(pageBattleDragon); // Tap battle
         sleep(5000);
+        if (checkIsPage(pageDragonAddMoreCookie)) {
+          console.log('Found need to add more cookie to dragon fight, skipping');
+          handleGotoKingdomPage();
+          return false;
+        }
+
         if (waitForBattle('guildDragon', 180, true, pageReadyToFightDragon)) {
           console.log('battle dragon finished, go back to kingdom');
         } else {
@@ -4759,6 +4771,13 @@ function guildBattleAlliance() {
     { x: 193, y: 104, r: 115, g: 142, b: 189 },
     { x: 151, y: 131, r: 82, g: 101, b: 156 },
   ];
+  var pageAllianceAddMoreCookie = [
+    {x: 304, y: 251, r: 8, g: 166, b: 222},
+    {x: 248, y: 102, r: 57, g: 69, b: 107},
+    {x: 341, y: 11, r: 25, g: 36, b: 54},
+    {x: 480, y: 320, r: 23, g: 34, b: 9},
+    {x: 497, y: 320, r: 35, g: 29, b: 35},
+  ]
 
   if (config.autoGuildAllianceBattle) {
     console.log('start guild alliance battle: ', config.autoGuildAllianceBattle, checkIsPage(pageInGuildLand));
@@ -4789,6 +4808,15 @@ function guildBattleAlliance() {
           break;
         }
 
+        if (checkIsPage(pageAllianceAddMoreCookie)) {
+          console.log('Not enough cookie to fight alliance, skipping');
+          qTap(pageAllianceAddMoreCookie);
+          sleep(1500);
+          keycode('BACK', 1000);
+          sleep(1500);
+          break;
+        }
+
         if (checkIsPage(pageAllianceSteupTeam)) {
           console.log('got into team setup page, skip alliance');
           break;
@@ -4810,6 +4838,8 @@ function guildBattleAlliance() {
           break;
         }
       }
+
+      handleGotoKingdomPage();
     }
   }
 }
@@ -5723,9 +5753,15 @@ function handleTryResolveGreenChecks() {
 }
 
 function checkIsFreeze() {
+  if ((Date.now() - config.lastFreezeCheckScreenShotTime) / 1000 < 5) {
+    // Builtin cool down 3 secs
+    return true;
+  }
+
   if (config.lastFreezeCheckScreenShot === null) {
     console.log('config.lastFreezeCheckScreenShot is null , skipping checkIsFreeze');
-    config.lastFreezeCheckScreenShotFTime = Date.now();
+    config.lastFreezeCheckScreenShot = getScreenshot();
+    config.lastFreezeCheckScreenShotTime = Date.now();
     return;
   }
 
@@ -5735,19 +5771,22 @@ function checkIsFreeze() {
   if (foundResults.length === 0) {
     releaseImage(config.lastFreezeCheckScreenShot);
     config.lastFreezeCheckScreenShot = img;
-    config.lastFreezeCheckScreenShotFTime = Date.now();
+    config.lastFreezeCheckScreenShotTime = Date.now();
     console.log('No need to restart app, screen not freeze, updaate last screenshot&time');
     return;
   } else {
     releaseImage(img);
   }
 
-  if ((Date.now() - config.lastFreezeCheckScreenShotTime) / 1000 > 1200) {
+  if ((Date.now() - config.lastFreezeCheckScreenShotTime) / 1000 > 180) {
     console.log(
       'RESTART cookie app as screen freeze for: ',
       (Date.now() - config.lastFreezeCheckScreenShotTime) / 1000,
-      'secs'
+      'secs (> targeting 180s)'
     );
+    config.lastFreezeCheckScreenShot = null;
+    config.lastFreezeCheckScreenShotTime = Date.now();
+
     rtn = execute('am force-stop com.devsisters.ck');
     if (rtn == 'signal: aborted') {
       // MEmu
@@ -6340,6 +6379,9 @@ function start(inputConfig) {
     config.lastAutoGuildBattle = Date.now();
     config.lastAutoHandleBounties = Date.now();
     config.lastLabResearch = Date.now();
+    config.lastHandleTradeHabor = Date.now();
+
+    config.lastGotoProduction = Date.now();
   } else {
     handleTryResolveGreenChecks();
     handleGotoKingdomPage();
@@ -6446,18 +6488,6 @@ function start(inputConfig) {
         config.lastCollectTropicalIsland = Date.now();
       }
 
-      if ((Date.now() - config.lastAutoGuildBattle) / 60000 > 120) {
-        console.log('autoGuildBattle: ', (Date.now() - config.lastAutoGuildBattle) / 60000, ' mins just passed (>120)');
-        handleGuildCheckinAndBattle();
-        if (config.autoGuildBattleDragon) {
-          guildBattleDragon();
-        }
-        if (config.autoGuildAllianceBattle) {
-          guildBattleAlliance();
-        }
-        config.lastAutoGuildBattle = Date.now();
-      }
-
       if (
         config.autoHandleBountiesIntervalInMins != 0 &&
         (Date.now() - config.lastAutoHandleBounties) / 60000 > config.autoHandleBountiesIntervalInMins
@@ -6482,11 +6512,25 @@ function start(inputConfig) {
         config.lastHandleTradeHabor = Date.now();
       }
 
-      if (
-        (Date.now() - config.lastTryResolveGreenChecks) / 60000 > 20
-      ) {
-        console.log('handleTryResolveGreenChecks: ', (Date.now() - config.lastTryResolveGreenChecks) / 60000, ' just passed');
+      if ((Date.now() - config.lastTryResolveGreenChecks) / 60000 > 20) {
+        console.log(
+          'handleTryResolveGreenChecks: ',
+          (Date.now() - config.lastTryResolveGreenChecks) / 60000,
+          ' just passed'
+        );
         handleTryResolveGreenChecks();
+      }
+
+      if ((Date.now() - config.lastAutoGuildBattle) / 60000 > 120) {
+        console.log('autoGuildBattle: ', (Date.now() - config.lastAutoGuildBattle) / 60000, ' mins just passed (>120)');
+        handleGuildCheckinAndBattle();
+        if (config.autoGuildBattleDragon) {
+          guildBattleDragon();
+        }
+        if (config.autoGuildAllianceBattle) {
+          guildBattleAlliance();
+        }
+        config.lastAutoGuildBattle = Date.now();
       }
 
       if (
@@ -6521,6 +6565,7 @@ function start(inputConfig) {
       execute('/system/bin/reboot -p');
     }
 
+    checkIsFreeze();
     if (!act) {
       config.jobFailedCount++;
       if (config.jobFailedCount < config.jobFailedBeforeGetCandy) {
@@ -6594,7 +6639,6 @@ function start(inputConfig) {
     } else {
       config.jobFailedCount = 0;
       sendEvent('running', '');
-      checkIsFreeze();
       // console.log('Cookie action successfully at: ', new Date().toLocaleString());
     }
   }
