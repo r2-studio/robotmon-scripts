@@ -200,13 +200,12 @@ pageCottomFarm = [
 ];
 
 var pageInKingdomVillage = [
-  {x: 223, y: 20, r: 173, g: 28, b: 66},
-  {x: 314, y: 21, r: 247, g: 208, b: 1},
-  {x: 426, y: 20, r: 0, g: 137, b: 255},
-  {x: 469, y: 327, r: 214, g: 121, b: 49},
-  {x: 417, y: 324, r: 115, g: 0, b: 0},
-  {x: 369, y: 320, r: 148, g: 81, b: 66},
-  {x: 36, y: 313, r: 170, g: 4, b: 38}
+  {x: 39, y: 313, r: 255, g: 101, b: 156},
+  {x: 24, y: 321, r: 255, g: 255, b: 255},
+  {x: 55, y: 327, r: 255, g: 227, b: 247},
+  {x: 377, y: 321, r: 121, g: 52, b: 52},
+  {x: 418, y: 321, r: 132, g: 16, b: 8},
+  {x: 466, y: 318, r: 231, g: 167, b: 85}
 ];
 
 var pageLoginFacebook = [
@@ -311,11 +310,11 @@ var pageTrainNotEnoughGoods = [
 ];
 
 var pageInWishingTree = [
-  { x: 385, y: 24, r: 255, g: 46, b: 121 },
-  { x: 411, y: 20, r: 255, g: 206, b: 2 },
-  { x: 516, y: 17, r: 25, g: 212, b: 255 },
-  { x: 599, y: 9, r: 101, g: 62, b: 186 },
-  { x: 503, y: 28, r: 105, g: 56, b: 81 },
+  {x: 157, y: 29, r: 107, g: 56, b: 82},
+  {x: 235, y: 35, r: 255, g: 0, b: 81},
+  {x: 348, y: 22, r: 255, g: 40, b: 123},
+  {x: 412, y: 18, r: 255, g: 190, b: 8},
+  {x: 523, y: 15, r: 0, g: 195, b: 255}
 ];
 
 var pageInTropicalIsland = [
@@ -410,13 +409,10 @@ var pageInGuildLand = [
 ];
 
 var pageInGnomeLab = [
-  { x: 610, y: 18, r: 57, g: 166, b: 231 },
-  { x: 323, y: 15, r: 173, g: 7, b: 35 },
-  { x: 325, y: 21, r: 255, g: 255, b: 255 },
-  { x: 418, y: 17, r: 255, g: 211, b: 0 },
-  { x: 523, y: 21, r: 5, g: 143, b: 255 },
-  { x: 378, y: 62, r: 52, g: 34, b: 19 },
-  { x: 387, y: 63, r: 123, g: 117, b: 99 },
+  {x: 15, y: 11, r: 211, g: 9, b: 35},
+  {x: 25, y: 21, r: 255, g: 223, b: 244},
+  {x: 328, y: 15, r: 169, g: 8, b: 36},
+  {x: 308, y: 28, r: 16, g: 12, b: 8}
 ];
 
 var pageInBounties = [
@@ -435,6 +431,14 @@ var pageInSuperMayhem = [
   { x: 38, y: 24, r: 255, g: 255, b: 255 },
   { x: 18, y: 60, r: 212, g: 215, b: 212 },
 ];
+
+var pageInHabor = [
+  {x: 627, y: 20, r: 57, g: 166, b: 231},
+  {x: 525, y: 22, r: 8, g: 146, b: 255},
+  {x: 315, y: 19, r: 220, g: 226, b: 244},
+  {x: 291, y: 16, r: 117, g: 99, b: 21},
+  {x: 29, y: 225, r: 247, g: 250, b: 206}
+]
 
 var pagePvPCrystaisRefresh = [
   { x: 243, y: 100, r: 57, g: 69, b: 107 },
@@ -1050,8 +1054,8 @@ function findProductRequirements(partUp) {
 
 function makeGoodsToTarget(target, prework, stocks) {
   // TODO: recognize building to reduce drop order time
-  pageFirstItemEnabled = [{ x: 587, y: 122, r: 121, g: 207, b: 12 }];
-  pageSecondItemEnabled = [{ x: 587, y: 230, r: 121, g: 207, b: 12 }];
+  pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
+  pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
   pageThirdItemEnabled = [{x: 603, y: 331, r: 123, g: 207, b: 8}];
 
   var goodsOneStock = ocrProductStorage(goodsLocation[1]);
@@ -4192,7 +4196,6 @@ var pageBattleFinishedWithSunbeds = [
 ];
 
 var pageIslandSunbedWithWetCookie = [
-  { x: 251, y: 16, r: 123, g: 24, b: 45 },
   { x: 218, y: 60, r: 133, g: 231, b: 74 },
   { x: 228, y: 82, r: 104, g: 52, b: 79 },
   { x: 444, y: 102, r: 41, g: 44, b: 57 },
@@ -4733,11 +4736,11 @@ function guildBattleDragon() {
 
 function guildBattleAlliance() {
   var pageCookieAlliance = [
-    { x: 342, y: 18, r: 223, g: 220, b: 242 },
-    { x: 524, y: 14, r: 0, g: 195, b: 255 },
-    { x: 179, y: 331, r: 123, g: 207, b: 8 },
-    { x: 28, y: 146, r: 198, g: 113, b: 35 },
-    { x: 616, y: 285, r: 0, g: 150, b: 217 },
+    {x: 329, y: 13, r: 68, g: 134, b: 159},
+    {x: 334, y: 24, r: 198, g: 190, b: 250},
+    {x: 409, y: 26, r: 239, g: 170, b: 0},
+    {x: 524, y: 20, r: 1, g: 139, b: 255},
+    {x: 489, y: 327, r: 45, g: 38, b: 73}
   ];
   var pageSwitchTeam = [
     { x: 256, y: 34, r: 135, g: 87, b: 223 },
@@ -4984,7 +4987,7 @@ function handleBounties() {
 function handleGotoGnomeLab() {
   console.log('try to handleGotoGnomeLab');
   if (!checkIsPage(pageInKingdomVillage)) {
-    handleGotoKingdomPage(gnomeLabKingdom);
+    handleGotoKingdomPage();
   }
 
   pageLabCollapsed = [
@@ -5224,6 +5227,7 @@ function handleInHabor() {
         if (waitUntilSeePage(pageNoShipInHabor, 3)) {
           console.log('Send the ship successfully');
           shipInHabor = false;
+          i = 10;
           break;
         }
       }
@@ -5243,13 +5247,6 @@ function handleInHabor() {
     }
   }
 
-  var pageInHabor = [
-    { x: 348, y: 18, r: 206, g: 227, b: 247 },
-    { x: 424, y: 19, r: 255, g: 211, b: 0 },
-    { x: 91, y: 234, r: 255, g: 251, b: 74 },
-    { x: 34, y: 232, r: 231, g: 231, b: 225 },
-    { x: 613, y: 213, r: 250, g: 225, b: 154 },
-  ];
   var pageNeedDiamondRefreshMarket = [
     { x: 426, y: 110, r: 57, g: 169, b: 231 },
     { x: 305, y: 102, r: 255, g: 255, b: 255 },
@@ -5287,10 +5284,10 @@ function handleInHabor() {
     { x: 605, y: 211, r: 173, g: 130, b: 57 },
   ];
   var pageInShellShop = [
-    { x: 613, y: 22, r: 16, g: 85, b: 115 },
-    { x: 345, y: 18, r: 247, g: 231, b: 214 },
-    { x: 305, y: 19, r: 222, g: 186, b: 231 },
-    { x: 268, y: 28, r: 189, g: 211, b: 206 },
+    {x: 616, y: 18, r: 254, g: 254, b: 255},
+    {x: 310, y: 19, r: 247, g: 255, b: 206},
+    {x: 61, y: 100, r: 164, g: 189, b: 224},
+    {x: 70, y: 160, r: 163, g: 112, b: 138}
   ];
   var pageLegendarySoldOut = [
     { x: 57, y: 102, r: 171, g: 203, b: 240 },
@@ -5304,12 +5301,11 @@ function handleInHabor() {
     { x: 273, y: 96, r: 57, g: 69, b: 107 },
   ];
   var pageConfirmBuyGuildRelics = [
-    { x: 346, y: 251, r: 123, g: 207, b: 8 },
-    { x: 323, y: 72, r: 222, g: 150, b: 82 },
-    { x: 332, y: 88, r: 88, g: 47, b: 33 },
-    { x: 346, y: 18, r: 123, g: 109, b: 111 },
+    {x: 349, y: 254, r: 123, g: 207, b: 8},
+    {x: 335, y: 81, r: 156, g: 93, b: 41},
+    {x: 324, y: 38, r: 83, g: 106, b: 124}
   ];
-  if ((config.autoBuySeaFairy || config.autoBuyGuildRelic) && waitUntilSeePage(pageCanGotoShellShop, 2)) {
+  if ((config.autoBuySeaFairy || config.autoBuyGuildRelic) && waitUntilSeePage(pageInHabor, 2)) {
     console.log('Try to purchase sea fairy in shell shop');
     qTap(pageCanGotoShellShop);
     sleep(config.sleepAnimate);
