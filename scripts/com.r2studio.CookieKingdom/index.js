@@ -5,8 +5,8 @@ config = {
 
   account: 'default_xrobotmon_account@gmail.com',
   password: '',
-  materialsTarget: 1000,
-  goodsTarget: 200,
+  materialsTarget: 800,
+  goodsTarget: 230,
   productSafetyStock: 10,
   autoCollectMailIntervalInMins: 120,
   autoCollectFountainIntervalInMins: 40,
@@ -152,60 +152,60 @@ factoryType = [
 ];
 
 pageWoodFarm = [
-  {x: 596, y: 118, r: 123, g: 207, b: 8},
-  {x: 527, y: 86, r: 140, g: 81, b: 57},
-  {x: 520, y: 91, r: 249, g: 192, b: 139},
-  {x: 427, y: 79, r: 140, g: 81, b: 57}
+  { x: 596, y: 118, r: 123, g: 207, b: 8 },
+  { x: 527, y: 86, r: 140, g: 81, b: 57 },
+  { x: 520, y: 91, r: 249, g: 192, b: 139 },
+  { x: 427, y: 79, r: 140, g: 81, b: 57 },
 ];
 
 pageBeanFarm = [
-  {x: 602, y: 122, r: 123, g: 207, b: 8},
-  {x: 527, y: 83, r: 0, g: 204, b: 223},
-  {x: 525, y: 88, r: 1, g: 252, b: 248},
-  {x: 414, y: 82, r: 0, g: 207, b: 220}
+  { x: 602, y: 122, r: 123, g: 207, b: 8 },
+  { x: 527, y: 83, r: 0, g: 204, b: 223 },
+  { x: 525, y: 88, r: 1, g: 252, b: 248 },
+  { x: 414, y: 82, r: 0, g: 207, b: 220 },
 ];
 
 pageSugarFarm = [
-  {x: 600, y: 118, r: 123, g: 207, b: 8},
-  {x: 531, y: 92, r: 135, g: 151, b: 200},
-  {x: 419, y: 71, r: 244, g: 250, b: 253},
-  {x: 411, y: 89, r: 239, g: 240, b: 249}
+  { x: 600, y: 118, r: 123, g: 207, b: 8 },
+  { x: 531, y: 92, r: 135, g: 151, b: 200 },
+  { x: 419, y: 71, r: 244, g: 250, b: 253 },
+  { x: 411, y: 89, r: 239, g: 240, b: 249 },
 ];
 
 pagePowderFarm = [
-  {x: 596, y: 120, r: 123, g: 207, b: 8},
-  {x: 523, y: 87, r: 231, g: 157, b: 74},
-  {x: 435, y: 90, r: 156, g: 117, b: 49},
-  {x: 423, y: 83, r: 239, g: 162, b: 82}
+  { x: 596, y: 120, r: 123, g: 207, b: 8 },
+  { x: 523, y: 87, r: 231, g: 157, b: 74 },
+  { x: 435, y: 90, r: 156, g: 117, b: 49 },
+  { x: 423, y: 83, r: 239, g: 162, b: 82 },
 ];
 
 pageBarryFarm = [
   { x: 597, y: 118, r: 123, g: 207, b: 8 },
-  {x: 527, y: 90, r: 198, g: 36, b: 41},
-  {x: 428, y: 76, r: 28, g: 117, b: 16},
-  {x: 413, y: 82, r: 200, g: 26, b: 31}
+  { x: 527, y: 90, r: 198, g: 36, b: 41 },
+  { x: 428, y: 76, r: 28, g: 117, b: 16 },
+  { x: 413, y: 82, r: 200, g: 26, b: 31 },
 ];
 
 pageMilkFarm = [
-  {x: 597, y: 118, r: 123, g: 207, b: 8},
-  {x: 521, y: 79, r: 214, g: 138, b: 99},
-  {x: 526, y: 90, r: 255, g: 255, b: 239},
-  {x: 425, y: 85, r: 255, g: 255, b: 242}
+  { x: 597, y: 118, r: 123, g: 207, b: 8 },
+  { x: 521, y: 79, r: 214, g: 138, b: 99 },
+  { x: 526, y: 90, r: 255, g: 255, b: 239 },
+  { x: 425, y: 85, r: 255, g: 255, b: 242 },
 ];
 
 pageCottomFarm = [
-  {x: 596, y: 120, r: 123, g: 207, b: 8},
+  { x: 596, y: 120, r: 123, g: 207, b: 8 },
   { x: 528, y: 87, r: 254, g: 231, b: 251 },
   { x: 428, y: 92, r: 255, g: 241, b: 255 },
 ];
 
 var pageInKingdomVillage = [
-  {x: 39, y: 313, r: 255, g: 101, b: 156},
-  {x: 24, y: 321, r: 255, g: 255, b: 255},
-  {x: 55, y: 327, r: 255, g: 227, b: 247},
-  {x: 377, y: 321, r: 121, g: 52, b: 52},
-  {x: 418, y: 321, r: 132, g: 16, b: 8},
-  {x: 466, y: 318, r: 231, g: 167, b: 85}
+  { x: 39, y: 313, r: 255, g: 101, b: 156},
+  { x: 24, y: 321, r: 255, g: 255, b: 255},
+  { x: 55, y: 327, r: 255, g: 227, b: 247},
+  { x: 377, y: 321, r: 121, g: 52, b: 52},
+  { x: 418, y: 321, r: 132, g: 16, b: 8},
+  { x: 466, y: 318, r: 231, g: 167, b: 85}
 ];
 
 var pageLoginFacebook = [
@@ -310,11 +310,11 @@ var pageTrainNotEnoughGoods = [
 ];
 
 var pageInWishingTree = [
-  {x: 157, y: 29, r: 107, g: 56, b: 82},
-  {x: 235, y: 35, r: 255, g: 0, b: 81},
-  {x: 348, y: 22, r: 255, g: 40, b: 123},
-  {x: 412, y: 18, r: 255, g: 190, b: 8},
-  {x: 523, y: 15, r: 0, g: 195, b: 255}
+  { x: 157, y: 29, r: 107, g: 56, b: 82 },
+  { x: 235, y: 35, r: 255, g: 0, b: 81 },
+  { x: 348, y: 22, r: 255, g: 40, b: 123 },
+  { x: 412, y: 18, r: 255, g: 190, b: 8 },
+  { x: 523, y: 15, r: 0, g: 195, b: 255 },
 ];
 
 var pageInTropicalIsland = [
@@ -349,10 +349,9 @@ var pageSpeed1_2x = [
 
 //rgb(166,104,65)
 pageInProduction = [
-  {x: 21, y: 62, r: 165, g: 105, b: 66},
-  {x: 81, y: 68, r: 165, g: 105, b: 66},
-  {x: 415, y: 18, r: 255, g: 190, b: 8},
-  {x: 525, y: 15, r: 0, g: 196, b: 255},
+  {x: 17, y: 44, r: 165, g: 105, b: 66},
+  {x: 84, y: 42, r: 178, g: 103, b: 66},
+  {x: 26, y: 30, r: 126, g: 73, b: 41},
 ];
 
 pageStockIsFull = [
@@ -409,10 +408,15 @@ var pageInGuildLand = [
 ];
 
 var pageInGnomeLab = [
-  {x: 15, y: 11, r: 211, g: 9, b: 35},
-  {x: 25, y: 21, r: 255, g: 223, b: 244},
-  {x: 328, y: 15, r: 169, g: 8, b: 36},
-  {x: 308, y: 28, r: 16, g: 12, b: 8}
+  { x: 15, y: 11, r: 211, g: 9, b: 35 },
+  { x: 25, y: 21, r: 255, g: 223, b: 244 },
+  { x: 328, y: 15, r: 169, g: 8, b: 36 },
+  { x: 308, y: 28, r: 16, g: 12, b: 8 },
+];
+
+var pageAlreadyResearching = [
+  { x: 47, y: 69, r: 237, g: 237, b: 229 },
+  { x: 159, y: 67, r: 117, g: 223, b: 0 },
 ];
 
 var pageInBounties = [
@@ -433,12 +437,12 @@ var pageInSuperMayhem = [
 ];
 
 var pageInHabor = [
-  {x: 627, y: 20, r: 57, g: 166, b: 231},
-  {x: 525, y: 22, r: 8, g: 146, b: 255},
-  {x: 315, y: 19, r: 220, g: 226, b: 244},
-  {x: 291, y: 16, r: 117, g: 99, b: 21},
-  {x: 29, y: 225, r: 247, g: 250, b: 206}
-]
+  { x: 627, y: 20, r: 57, g: 166, b: 231 },
+  { x: 525, y: 22, r: 8, g: 146, b: 255 },
+  { x: 315, y: 19, r: 220, g: 226, b: 244 },
+  { x: 291, y: 16, r: 117, g: 99, b: 21 },
+  { x: 29, y: 225, r: 247, g: 250, b: 206 },
+];
 
 var pagePvPCrystaisRefresh = [
   { x: 243, y: 100, r: 57, g: 69, b: 107 },
@@ -886,7 +890,7 @@ function SwipeProductionMenuToTop() {
 function handleMaterialProduction() {
   pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
   pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
-  pageThirdItemEnabled = [{x: 603, y: 331, r: 123, g: 207, b: 8}];
+  pageThirdItemEnabled = [{ x: 603, y: 331, r: 123, g: 207, b: 8 }];
 
   if (checkIsPage(pageWoodFarm)) {
     console.log('wood farm, add more');
@@ -1056,7 +1060,7 @@ function makeGoodsToTarget(target, prework, stocks) {
   // TODO: recognize building to reduce drop order time
   pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
   pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
-  pageThirdItemEnabled = [{x: 603, y: 331, r: 123, g: 207, b: 8}];
+  pageThirdItemEnabled = [{ x: 603, y: 331, r: 123, g: 207, b: 8 }];
 
   var goodsOneStock = ocrProductStorage(goodsLocation[1]);
   var goodsTwoStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[2]) : -1;
@@ -2524,7 +2528,7 @@ function handleTryHitBackToKingdom() {
   checkAndRestartApp();
 
   for (var i = 0; i < 4; i++) {
-    if (checkIsPage(pageInKingdomVillage)) {
+    if (waitUntilSeePage(pageInKingdomVillage, 2)) {
       console.log('Found pageInKingdomVillage, return');
       return true;
     }
@@ -2555,9 +2559,16 @@ function handleTryHitBackToKingdom() {
     }
 
     if (checkIsPage(pageNotifyQuit)) {
-      console.log('Found quit notification, should be in kingdom');
       keycode('BACK', 1000);
-      if (waitUntilSeePage(pageInKingdomVillage, 6)) {
+      if (waitUntilSeePage(pageInKingdomVillage, 5)) {
+        console.log('Found quit notification, should be in kingdom');
+        return true;
+      } else {
+        console.log(
+          'Found quit notification but not kingdom page, should be in login, tap announcement icon and sleep 3s'
+        );
+        qTap(pnt(585, 20));
+        sleep(3000);
         return true;
       }
     }
@@ -3442,10 +3453,10 @@ function handlePVP() {
     { x: 54, y: 334, r: 49, g: 77, b: 107 },
   ];
   var pageInMedalShop = [
-    { x: 605, y: 65, r: 255, g: 255, b: 255 },
-    { x: 91, y: 68, r: 239, g: 239, b: 231 },
-    { x: 207, y: 67, r: 57, g: 69, b: 107 },
-    { x: 352, y: 18, r: 115, g: 65, b: 1 },
+    {x: 39, y: 336, r: 113, g: 65, b: 1},
+    {x: 89, y: 67, r: 255, g: 255, b: 255},
+    {x: 357, y: 17, r: 113, g: 77, b: 16},
+    {x: 452, y: 20, r: 61, g: 8, b: 10}
   ];
   if (config.autoPvPPurchaseAncientCookie && checkIsPage(pageHasPageMedalShop)) {
     console.log('Auto purchase ancient cookie');
@@ -4321,7 +4332,6 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
     needToCheckAutoUseSkill = false;
   }
 
-  var lastSendEvent = 0;
   var autoUseSkillCheckedCnt = 0;
   var speedBoostCheckedCnt = 0;
   for (var j = 0; j < waitTimeInSecs && config.run; j++) {
@@ -4533,13 +4543,9 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       console.log('alliance battle, tap keep battle with this order');
     }
 
-    if (j - lastSendEvent > 120) {
-      sendEvent('running', '');
-      lastSendEvent = j;
-    }
-
     if (j % 30 === 0) {
       console.log('In ', battleName, ' for ', j, '/', waitTimeInSecs, 'secs, time: ', new Date().toLocaleString());
+      sendEvent('running', '');
     }
     sleep(1000);
   }
@@ -4695,11 +4701,11 @@ function guildBattleDragon() {
     { x: 478, y: 325, r: 180, g: 180, b: 180 },
   ];
   var pageDragonAddMoreCookie = [
-    {x: 300, y: 250, r: 8, g: 166, b: 222},
-    {x: 408, y: 250, r: 123, g: 207, b: 8},
-    {x: 419, y: 18, r: 127, g: 95, b: 4},
-    {x: 518, y: 18, r: 20, g: 117, b: 127},
-  ]
+    { x: 300, y: 250, r: 8, g: 166, b: 222 },
+    { x: 408, y: 250, r: 123, g: 207, b: 8 },
+    { x: 419, y: 18, r: 127, g: 95, b: 4 },
+    { x: 518, y: 18, r: 20, g: 117, b: 127 },
+  ];
 
   // Old users does not have config.autoGuildBattleDragon key (Feb 7, 2022)
   if (config.autoGuildBattleDragon === undefined || config.autoGuildBattleDragon) {
@@ -4736,11 +4742,10 @@ function guildBattleDragon() {
 
 function guildBattleAlliance() {
   var pageCookieAlliance = [
-    {x: 329, y: 13, r: 68, g: 134, b: 159},
-    {x: 334, y: 24, r: 198, g: 190, b: 250},
-    {x: 409, y: 26, r: 239, g: 170, b: 0},
-    {x: 524, y: 20, r: 1, g: 139, b: 255},
-    {x: 489, y: 327, r: 45, g: 38, b: 73}
+    {x: 333, y: 21, r: 255, g: 255, b: 255},
+    {x: 329, y: 14, r: 246, g: 225, b: 250},
+    {x: 73, y: 332, r: 0, g: 150, b: 214},
+    {x: 29, y: 141, r: 151, g: 75, b: 13},
   ];
   var pageSwitchTeam = [
     { x: 256, y: 34, r: 135, g: 87, b: 223 },
@@ -4749,11 +4754,11 @@ function guildBattleAlliance() {
     { x: 163, y: 119, r: 123, g: 117, b: 227 },
   ];
   var pageNoAllianceTicket = [
-    {x: 303, y: 247, r: 8, g: 166, b: 222},
-    {x: 326, y: 94, r: 132, g: 111, b: 235},
-    {x: 335, y: 21, r: 127, g: 126, b: 127},
-    {x: 492, y: 323, r: 66, g: 56, b: 127},
-    {x: 476, y: 324, r: 74, g: 109, b: 28}
+    { x: 303, y: 247, r: 8, g: 166, b: 222 },
+    { x: 326, y: 94, r: 132, g: 111, b: 235 },
+    { x: 335, y: 21, r: 127, g: 126, b: 127 },
+    { x: 492, y: 323, r: 66, g: 56, b: 127 },
+    { x: 476, y: 324, r: 74, g: 109, b: 28 },
   ];
   var pageAllianceSteupTeam = [
     { x: 619, y: 18, r: 255, g: 255, b: 255 },
@@ -4775,18 +4780,21 @@ function guildBattleAlliance() {
     { x: 151, y: 131, r: 82, g: 101, b: 156 },
   ];
   var pageAllianceAddMoreCookie = [
-    {x: 304, y: 251, r: 8, g: 166, b: 222},
-    {x: 248, y: 102, r: 57, g: 69, b: 107},
-    {x: 341, y: 11, r: 25, g: 36, b: 54},
-    {x: 480, y: 320, r: 23, g: 34, b: 9},
-    {x: 497, y: 320, r: 35, g: 29, b: 35},
-  ]
+    { x: 304, y: 251, r: 8, g: 166, b: 222 },
+    { x: 248, y: 102, r: 57, g: 69, b: 107 },
+    { x: 341, y: 11, r: 25, g: 36, b: 54 },
+    { x: 480, y: 320, r: 23, g: 34, b: 9 },
+    { x: 497, y: 320, r: 35, g: 29, b: 35 },
+  ];
 
   if (config.autoGuildAllianceBattle) {
     console.log('start guild alliance battle: ', config.autoGuildAllianceBattle, checkIsPage(pageInGuildLand));
-    handleGotoKingdomPage();
-    handleGotoAdventure(Advantures.cookieAlliance, pageCookieAlliance);
-    if (waitUntilSeePage(pageCookieAlliance, 3)) {
+    if (!checkIsPage(pageCookieAlliance)) {
+      handleGotoKingdomPage();
+      handleGotoAdventure(Advantures.cookieAlliance, pageCookieAlliance);
+    }
+
+    if (waitUntilSeePage(pageCookieAlliance, 6)) {
       if (checkIsPage(pageAllianceBeaconIsOff)) {
         qTap(pageAllianceBeaconIsOff);
 
@@ -4833,8 +4841,8 @@ function guildBattleAlliance() {
         }
 
         if (waitForBattle('alliance', 1800, false, pageCookieAlliance)) {
-          console.log('pageCookieAlliance battle finished, try next one');
-          sleep(8000);
+          console.log('pageCookieAlliance battle finished, wait at most 12 secs and try next one');
+          waitUntilSeePage(pageCookieAlliance, 15);
           continue;
         } else {
           console.log('Finish pageCookieAlliance due to battle return false');
@@ -5023,11 +5031,6 @@ function handleInGnomeLab() {
     return false;
   }
 
-  var pageAlreadyResearching = [
-    { x: 47, y: 69, r: 237, g: 237, b: 229 },
-    { x: 159, y: 67, r: 117, g: 223, b: 0 },
-  ];
-
   if (checkIsPage(pageAlreadyResearching)) {
     console.log('Already researching, skipping handleInGnomeLab');
     return true;
@@ -5119,6 +5122,11 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
       }
     }
 
+    if (checkIsPage(pageAlreadyResearching)) {
+      console.log('Already researching, skipping handleInGnomeLab');
+      return true;
+    }
+
     tapDown(626, 268, 40, 0);
     sleep(config.sleep);
     moveTo(300, 268, 40, 0);
@@ -5173,11 +5181,9 @@ function handleInHabor() {
     { x: 68, y: 299, r: 244, g: 232, b: 224 },
   ];
   var pageNoShipInHabor = [
-    { x: 246, y: 72, r: 255, g: 12, b: 82 },
-    { x: 233, y: 123, r: 82, g: 77, b: 24 },
-    { x: 225, y: 100, r: 251, g: 239, b: 213 },
-    { x: 598, y: 208, r: 137, g: 100, b: 44 },
-    { x: 343, y: 19, r: 247, g: 251, b: 206 },
+    {x: 246, y: 66, r: 255, g: 12, b: 82},
+    {x: 233, y: 88, r: 249, g: 242, b: 212},
+    {x: 255, y: 138, r: 126, g: 114, b: 41},
   ];
   var pageCanLoadThisItem = [
     { x: 424, y: 201, r: 59, g: 205, b: 0 },
@@ -5227,9 +5233,12 @@ function handleInHabor() {
         if (waitUntilSeePage(pageNoShipInHabor, 3)) {
           console.log('Send the ship successfully');
           shipInHabor = false;
-          i = 10;
           break;
         }
+      }
+
+      if (checkIsPage(pageNoShipInHabor)){
+        break;
       }
 
       tapDown(629, 319, 40, 0);
@@ -5284,10 +5293,10 @@ function handleInHabor() {
     { x: 605, y: 211, r: 173, g: 130, b: 57 },
   ];
   var pageInShellShop = [
-    {x: 616, y: 18, r: 254, g: 254, b: 255},
-    {x: 310, y: 19, r: 247, g: 255, b: 206},
-    {x: 61, y: 100, r: 164, g: 189, b: 224},
-    {x: 70, y: 160, r: 163, g: 112, b: 138}
+    { x: 616, y: 18, r: 254, g: 254, b: 255 },
+    { x: 310, y: 19, r: 247, g: 255, b: 206 },
+    { x: 61, y: 100, r: 164, g: 189, b: 224 },
+    { x: 70, y: 160, r: 163, g: 112, b: 138 },
   ];
   var pageLegendarySoldOut = [
     { x: 57, y: 102, r: 171, g: 203, b: 240 },
@@ -5301,9 +5310,9 @@ function handleInHabor() {
     { x: 273, y: 96, r: 57, g: 69, b: 107 },
   ];
   var pageConfirmBuyGuildRelics = [
-    {x: 349, y: 254, r: 123, g: 207, b: 8},
-    {x: 335, y: 81, r: 156, g: 93, b: 41},
-    {x: 324, y: 38, r: 83, g: 106, b: 124}
+    { x: 349, y: 254, r: 123, g: 207, b: 8 },
+    { x: 335, y: 81, r: 156, g: 93, b: 41 },
+    { x: 324, y: 38, r: 83, g: 106, b: 124 },
   ];
   if ((config.autoBuySeaFairy || config.autoBuyGuildRelic) && waitUntilSeePage(pageInHabor, 2)) {
     console.log('Try to purchase sea fairy in shell shop');
