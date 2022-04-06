@@ -5,10 +5,10 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.35";
+var version = "V3.41";
 
-function start(loopTime, script, scriptName) {
-  startScript(loopTime, script, scriptName);
+function start(loopTime, script, scriptName, be) {
+  startScript(loopTime, script, scriptName, be);
 }
 
 function stop() {
@@ -44,10 +44,12 @@ function initHTML(serverString) {
     sleep(5000);
     var copyFailed = execute("ls " + itemPath);
     if (copyFailed.length == 0 || copyFailed.lastIndexOf("exit", 0) === 0) {
-      console.log("基本檔案複製失敗，請檢查權限並再試一次，還是無法初始化請洽Robotmon官方粉絲團");
+      console.log(
+        "基本檔案複製失敗，請檢查權限並再試一次，還是無法初始化請洽Robotmon官方粉絲團"
+      );
       return;
-    }else{
-      console.log("基本檔案複製成功");      
+    } else {
+      console.log("基本檔案複製成功");
     }
   }
   var scriptList = execute("ls " + itemPath + "script")
@@ -71,6 +73,16 @@ function initHTML(serverString) {
   if (itemList.slice(-1) == ",") {
     itemList = itemList.slice(0, -1);
   }
+
+  var preference = undefined;
+  try {
+    preference = readFile(itemPath + "preference.js");
+  } catch (e) {
+    writeFile(itemPath + "preference.js", "0,0,0,0");
+  }
+  if (preference == undefined || preference.length == 0) {
+    preference = "0,0,0,0";
+  }
   return (
     scriptList +
     ";" +
@@ -80,7 +92,9 @@ function initHTML(serverString) {
     ";" +
     itemPath +
     ";" +
-    version
+    version +
+    ";" +
+    preference
   );
 }
 
