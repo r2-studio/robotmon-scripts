@@ -28,8 +28,12 @@ function selectStage(useApple) {
     }
     sleep(500);
   } else if (!isMainPage()) {
-    console.log("不在主畫面-選擇關卡失敗");
-    console.log("若FGO並未置中，請確認黑邊數值是否正確");
+    console.log("1.請先移至選擇關卡或戰鬥畫面");    
+    console.log("2.瀏海手機可能有黑邊影響偵測:");
+    console.log("請使用黑邊設定功能");
+    console.log("3.模擬器不支援火箭模式:");
+    console.log("請使用Simple Manager啟動");
+    console.log("選擇關卡失敗 可能原因如上");
     isScriptRunning = false;
     return;
   } else {

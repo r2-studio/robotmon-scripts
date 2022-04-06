@@ -207,7 +207,7 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes) {
             } else if (isBattleMainPage()) {
               sleep(500);
               return;
-            }else{
+            } else {
               tapScale(460, 5);
               sleep(1000);
             }
@@ -370,9 +370,9 @@ function checkFriendIsFriend(screenshot, lineY) {
 
 function reloadFriend() {
   while (isScriptRunning) {
-    if(isSelectTeamPage()){
+    if (isSelectTeamPage()) {
       console.log("誤觸進入選擇隊伍，回到上一頁");
-      tapScale(200,70);
+      tapScale(200, 70);
       sleep(2000);
     }
     tapScale(reloadPosition + barMargin, 175, undefined, 0);
@@ -396,8 +396,9 @@ function scrollFriendList() {
   swipeScale(600, 750, 600, 150, 300);
 }
 
-function saveFriendServantImage(cnt) {
+function saveFriendServantImage(cnt, be) {
   sleep(1000);
+  setBlackEdgeByHtmlValue(be);
   initScreenSize();
   var screenShot = getScreenshotResize();
   if (screenShot == null) {
@@ -431,8 +432,9 @@ function saveFriendServantImage(cnt) {
   return time;
 }
 
-function saveFriendItemImage(cnt) {
+function saveFriendItemImage(cnt, be) {
   sleep(1000);
+  setBlackEdgeByHtmlValue(be);
   initScreenSize();
   var screenShot = getScreenshotResize();
   if (screenShot == null) {

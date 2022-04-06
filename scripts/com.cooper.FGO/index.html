@@ -37,12 +37,12 @@
       var isDebug = false;
     </script>
 
-    <!--       ====================For debug================          -->      
+    <!--       ====================For debug================          -->
     <!-- <script>
       isDebug = true;
-    </script>  
+    </script>
     <script src="./debug/debug_html.js"></script> -->
-    <!--       ====================For debug================          -->     
+    <!--       ====================For debug================          -->
 
     <script src="./jquery/jquery.min.js"></script>
 
@@ -80,19 +80,46 @@
         </div>
       </div>
       <div class="blockDiv">
-        <div class="blockTitle">好友擷取</div>
+        <button id = "switchGetBlackEdgeBlock" class="blockTitle">黑邊設定</button>
+        <button id = "switchGetServantBlock" class="blockTitle">擷取好友從者禮裝</button>
+      </div>
+      <div id="getServantBlock" class="blockDiv" style="display:none">
         <div class="discriptionText">
           請用不同排序方式找到需要的從者禮裝，不要上下滑動
         </div>
-        <div>
+        <div class="blockDiv">
           <button id="getServantImage1" class="cmdButton">擷取從者1</button>
           <button id="getItemImage1" class="cmdButton">擷取禮裝1</button>
           <button id="getServantImage2" class="cmdButton">擷取從者2</button>
           <button id="getItemImage2" class="cmdButton">擷取禮裝2</button>
         </div>
       </div>
+      <div id="getBlackEdgeBlock" class="blockDiv" style="display:none">
+        <div class="discriptionText">
+          預設0,0,0,0使用全螢幕範圍作為遊戲範圍，如果手機畫面沒有黑邊則無需調整
+        </div>
+        <div class="discriptionText">
+          使用偵測黑邊功能請先移動到遊戲主畫面
+        </div>
+        <div class="discriptionText">
+          也可以手動輸入，數值為遊戲範圍第一個像素的位置。例如解析度1920x1080沒有黑邊則輸入0,0,1919,1079
+        </div>
+        <div class="blockDiv">
+          左<input id="blackEdgeLeft" type="number" class="blackEdgeInput">
+          上<input id="blackEdgeTop" type="number" class="blackEdgeInput">
+        </div>
+        <div class="blockDiv">
+          右<input id="blackEdgeRight" type="number" class="blackEdgeInput">
+          下<input id="blackEdgeBottom" type="number" class="blackEdgeInput">
+        </div>
+        <div class="blockDiv">
+          <button id="getBlackEdge" class="cmdButton">偵測黑邊</button>
+          <button id="clearBlackEdge" class="cmdButton">清除黑邊數值</button>
+          <button id="saveBlackEdge" class="cmdButton">儲存黑邊數值</button>
+        </div>
+      </div>
       <div class="blockDiv">
-        <div class="blockTitle">預設腳本</div>
+        <div class="blockTitle">讀取預設腳本</div>
         <div>
           <button id="addAllFlow" class="cmdButton">周回</button>
           <button id="addAllFlowSwitch" class="cmdButton">周回-換人</button>
@@ -105,10 +132,12 @@
       </div>
       <div class="blockDiv">
         <div>
-          <div id="scriptTitle">讀取腳本</div>
+          <div id="scriptTitle">讀取自訂腳本</div>
+          <div>
           <select id="scriptMode">
             <option></option>
           </select>
+        </div>
         </div>
         <div style="margin-top: 4px">
           <button id="createScript" class="cmdButton">新建</button>
@@ -119,50 +148,60 @@
         </div>
       </div>
       <div class="blockDiv">
-        <div class="blockTitle">設定指令</div>
-        <div class="discriptionText">
-          新增指令位置<button id="insertDirection" class="cmdButton" value="0">
-            前
+        <button class="blockTitle" id="switchCommandBlock">設定指令
+      </div>
+      <div id="commandBlock" style="display:none">
+        <div class="blockDiv">
+          <div class="discriptionText">
+            新增指令位置<button
+              id="insertDirection"
+              class="cmdButton"
+              value="0"
+            >
+              前
+            </button>
+            <button id="showAll" class="cmdButton">全部展開</button>
+            <button id="hideAll" class="cmdButton">全部收起</button>
+          </div>
+        </div>
+
+        <div class="blockDiv">
+          <div class="blockTitle">關卡外指令</div>
+          <button id="addSelectStage" class="cmdButton">選擇關卡</button>
+          <button id="addSelectFriend" class="cmdButton">選擇好友</button>
+          <button id="addSelectTeam" class="cmdButton">選擇隊伍</button>
+          <button id="addStartQuest" class="cmdButton">進入關卡</button>
+        </div>
+
+        <div class="blockDiv">
+          <div class="blockTitle">關卡內指令</div>
+          <div>
+            <button id="addAuto" class="cmdButton">自動戰鬥</button>
+            <button id="addSkill" class="cmdButton">使用技能</button>
+            <button id="addCloth" class="cmdButton">使用御主技能</button>
+            <button id="addSwitchServant" class="cmdButton">戰鬥服換人</button>
+          </div>
+          <div>
+            <button id="addSelectEnemy" class="cmdButton">選擇敵人</button>
+            <button id="addStartAttack" class="cmdButton">開始選卡</button>
+            <button id="addUseUlt" class="cmdButton">使用寶具</button>
+            <button id="addSelectCard" class="cmdButton">選擇卡片</button>
+            <button id="addFinish" class="cmdButton">結束關卡</button>
+          </div>
+        </div>
+        <div class="blockDiv">
+          <div class="blockTitle">其他指令</div>
+          <div class="discriptionText">此排指令請放在最上面</div>
+          <button id="addSpaceUlt" class="cmdButton">
+            設定技能改變寶具顏色
           </button>
-          <button id="showAll" class="cmdButton">全部展開</button>
-          <button id="hideAll" class="cmdButton">全部收起</button>
+          <button id="additionalFriendServant" class="cmdButton">
+            好友從者多選
+          </button>
+          <button id="additionalFriendItem" class="cmdButton">
+            好友禮裝多選
+          </button>
         </div>
-      </div>
-
-      <div class="blockDiv">
-        <div class="blockTitle">關卡外指令</div>
-        <button id="addSelectStage" class="cmdButton">選擇關卡</button>
-        <button id="addSelectFriend" class="cmdButton">選擇好友</button>
-        <button id="addSelectTeam" class="cmdButton">選擇隊伍</button>
-        <button id="addStartQuest" class="cmdButton">進入關卡</button>
-      </div>
-
-      <div class="blockDiv">
-        <div class="blockTitle">關卡內指令</div>
-        <div>
-          <button id="addAuto" class="cmdButton">自動戰鬥</button>
-          <button id="addSkill" class="cmdButton">使用技能</button>
-          <button id="addCloth" class="cmdButton">使用御主技能</button>
-          <button id="addSwitchServant" class="cmdButton">戰鬥服換人</button>
-        </div>
-        <div>
-          <button id="addSelectEnemy" class="cmdButton">選擇敵人</button>
-          <button id="addStartAttack" class="cmdButton">開始選卡</button>
-          <button id="addUseUlt" class="cmdButton">使用寶具</button>
-          <button id="addSelectCard" class="cmdButton">選擇卡片</button>
-          <button id="addFinish" class="cmdButton">結束關卡</button>
-        </div>
-      </div>
-      <div class="blockDiv">
-        <div class="blockTitle">其他指令</div>
-        <div class="discriptionText">此排指令請放在最上面</div>
-        <button id="addSpaceUlt" class="cmdButton">設定技能改變寶具顏色</button>
-        <button id="additionalFriendServant" class="cmdButton">
-          好友從者多選
-        </button>
-        <button id="additionalFriendItem" class="cmdButton">
-          好友禮裝多選
-        </button>
       </div>
       <div class="list-group" id="skill-list"></div>
       <div id="footer">

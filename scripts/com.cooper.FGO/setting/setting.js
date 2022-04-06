@@ -81,35 +81,59 @@ function initButton() {
 
   //set crop btn
   $("#getServantImage1").click(function () {
+    var blackEdge = getBlackEdgeValue();
     JavaScriptInterface.hideMenu();
     JavaScriptInterface.setXY(3000, 0);
     JavaScriptInterface.runScriptCallback(
-      "saveFriendServantImage(1);",
+      "saveFriendServantImage(1,[" + blackEdge + "]);",
       "saveServantConfirm"
     );
   });
   $("#getServantImage2").click(function () {
+    var blackEdge = getBlackEdgeValue();
     JavaScriptInterface.hideMenu();
     JavaScriptInterface.setXY(3000, 0);
     JavaScriptInterface.runScriptCallback(
-      "saveFriendServantImage(2);",
+      "saveFriendServantImage(2,[" + blackEdge + "]);",
       "saveServantConfirm"
     );
   });
   $("#getItemImage1").click(function () {
+    var blackEdge = getBlackEdgeValue();
     JavaScriptInterface.hideMenu();
     JavaScriptInterface.setXY(3000, 0);
     JavaScriptInterface.runScriptCallback(
-      "saveFriendItemImage(1);",
+      "saveFriendItemImage(1,[" + blackEdge + "]);",
       "saveItemConfirm"
     );
   });
   $("#getItemImage2").click(function () {
+    var blackEdge = getBlackEdgeValue();
     JavaScriptInterface.hideMenu();
     JavaScriptInterface.setXY(3000, 0);
     JavaScriptInterface.runScriptCallback(
-      "saveFriendItemImage(2);",
+      "saveFriendItemImage(2,[" + blackEdge + "]);",
       "saveItemConfirm"
+    );
+  });
+
+  //set black edge btn
+  $("#getBlackEdge").click(function () {
+    JavaScriptInterface.hideMenu();
+    JavaScriptInterface.setXY(500, 500);
+    JavaScriptInterface.runScriptCallback(
+      "detectBlackEdge()",
+      "detectBlackEdgeCallback"
+    );
+  });
+  $("#clearBlackEdge").click(function () {
+    setBlackEdgeValue([0, 0, 0, 0]);
+  });
+  $("#saveBlackEdge").click(function () {
+    var blackEdge = getBlackEdgeValue();
+    JavaScriptInterface.runScriptCallback(
+      "saveBlackEdge([" + blackEdge + "])",
+      "saveBlackEdgeConfirm"
     );
   });
 
@@ -434,6 +458,34 @@ function initButton() {
     commandId++;
     addAdditionalFriendServant(commandId);
   });
+
+  //switch block button
+  $("#switchGetServantBlock").click(function () {
+    var display = $("#getServantBlock").css("display");
+    if (display == "none") {
+      $("#getServantBlock").css("display", "");
+      $("#getBlackEdgeBlock").css("display", "none");
+    } else {
+      $("#getServantBlock").css("display", "none");
+    }
+  });
+  $("#switchGetBlackEdgeBlock").click(function () {
+    var display = $("#getBlackEdgeBlock").css("display");
+    if (display == "none") {
+      $("#getBlackEdgeBlock").css("display", "");
+      $("#getServantBlock").css("display", "none");
+    } else {
+      $("#getBlackEdgeBlock").css("display", "none");
+    }
+  });
+  $("#switchCommandBlock").click(function () {
+    var display = $("#commandBlock").css("display");
+    if (display == "none") {
+      $("#commandBlock").css("display", "");
+    } else {
+      $("#commandBlock").css("display", "none");
+    }
+  });
 }
 
 function startListenScriptSelect() {
@@ -455,6 +507,9 @@ function getCheckSwitchStatus(id) {
 
 //Callback------------------------------------------------------------------------------------------------------------------------
 function initHTML(result) {
+  if (isDebug) {
+    console.log("initHTML:" + result);
+  }
   if (result == undefined || result.includes("UNAVAILABLE")) {
     $("#serverMessage").text(
       "無法連接Robotmon服務，請檢查Robotmon是否啟動成功"
@@ -515,6 +570,15 @@ function initHTML(result) {
     $("#titleBarText").text("FGO自動周回小幫手 台服 " + version + " 啟動成功");
     $("#serverMessage").text("");
   }
+
+  var blackEdge = [0, 0, 0, 0];
+  if (result[5] != undefined) {
+    result[5] = result[5].split(",");
+    for (var i = 0; i < 4; i++) {
+      blackEdge[i] = parseInt(result[5][i]);
+    }
+  }
+  setBlackEdgeValue(blackEdge);
 
   var gaEvent = "app" + server;
   ga("set", "page", gaEvent);
@@ -721,13 +785,46 @@ function saveFriendItemConfirm(result) {
   }
 }
 
+function saveBlackEdgeConfirm() {
+  bootbox.alert("儲存黑邊完成");
+}
+
+function detectBlackEdgeCallback(blackEdge) {
+  blackEdge = blackEdge.split(",");
+  var blackEdgeInt = [];
+  for (var i = 0; i < 4; i++) {
+    blackEdgeInt[i] = blackEdge[i];
+  }
+  setBlackEdgeValue(blackEdgeInt);
+  JavaScriptInterface.showMenu();
+  JavaScriptInterface.clickSettingButton();
+}
+
+//util----------------------------------------------------------------
 function checkstring(longStr, shortStr) {
   if (longStr.substring(0, shortStr.length) == shortStr) {
     return true;
   }
   return false;
 }
-//Call by Android app-----------------------------------------------------------------------------------------------------
+
+function setBlackEdgeValue(blackEdge) {
+  $("#blackEdgeLeft").val(blackEdge[0]);
+  $("#blackEdgeTop").val(blackEdge[1]);
+  $("#blackEdgeRight").val(blackEdge[2]);
+  $("#blackEdgeBottom").val(blackEdge[3]);
+}
+
+function getBlackEdgeValue() {
+  var blackEdge = [];
+  blackEdge[0] = parseInt($("#blackEdgeLeft").val());
+  blackEdge[1] = parseInt($("#blackEdgeTop").val());
+  blackEdge[2] = parseInt($("#blackEdgeRight").val());
+  blackEdge[3] = parseInt($("#blackEdgeBottom").val());
+  return blackEdge;
+}
+
+//Call by Android app---------------------------------------------------
 function onEvent(eventType) {
   if (eventType == "OnPlayClick") {
     var t = $("#loopTime").val();
@@ -738,9 +835,17 @@ function onEvent(eventType) {
     var currentScript = getCurrentScript();
     var l = server + "_" + version;
     var scriptName = $("#scriptMode").select2("data")[0].text;
-
+    var blackEdge = getBlackEdgeValue();
     JavaScriptInterface.runScriptCallback(
-      "start(" + loopTime + ",'" + currentScript + "','" + scriptName + "');",
+      "start(" +
+        loopTime +
+        ",'" +
+        currentScript +
+        "','" +
+        scriptName +
+        "',[" +
+        blackEdge +
+        "]);",
       "scriptFinish"
     );
     JavaScriptInterface.hideMenu();
@@ -763,7 +868,7 @@ function onEvent(eventType) {
     JavaScriptInterface.runScript("stop();");
     isPlayingScript = false;
   } else if (eventType == "OnLogClick" && isPlayingScript) {
-    // JavaScriptInterface.runScript("showLogAlertMessage();");    
+    // JavaScriptInterface.runScript("showLogAlertMessage();");
     $("#serverMessage").text(
       "腳本執行中開啟除錯訊息，可能會擋到畫面導致腳本判斷錯誤!!"
     );

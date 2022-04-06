@@ -151,6 +151,14 @@
   max-width: 100%;
 }
 
+.blackEdgeInput{
+  width: 50px;
+  margin-left: 10px;
+  margin-right: 20px;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
 #titleBar {
   width: 100%;
   min-height: 40px;
@@ -203,7 +211,6 @@
   font-size: 20px;
   margin-bottom: 4px;
   user-select: none;
-  width: 100px;
 }
 
 #skill-list {
@@ -220,4 +227,20 @@
 
 #additionalFriendItem {
   display: none;
+}
+
+#getServantBlock{
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 2px;
+  border-color: black;
+  padding: 2px;
+}
+
+#getBlackEdgeBlock{
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 2px;
+  border-color: black;
+  padding: 2px;
 }
