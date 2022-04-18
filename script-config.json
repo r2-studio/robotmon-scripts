@@ -1,6 +1,7 @@
 {
   "scripts": {
     "com.r2studio.SweetDays": {
+      "id": "com.r2studio.SweetDays",
       "title": "*Hello Sweet Days*",
       "versionCode": 2,
       "description": "<h3>Hello Sweet Days</h3><ul><li>自動散步</li><li>自動加入派對</li><li>自動舉辦派對</li><li>自動完成任務</li><li>自動接新任務</li><li>自動家裡澆花</li></ul>",
@@ -9,6 +10,7 @@
       "dependencies": []
     },
     "com.andy.rox": {
+      "id": "com.andy.rox",
       "title": "*RO 新世代*",
       "versionCode": 3,
       "description": "<h3>RO 新世代 完全免費版 無限時間</h3><ul><li>自動主線</li><li>自動告示板任務</li><li>自動商會任務</li><li>自動公會任務</li><li>自動釣魚</li><li>自動挖礦</li><li>自動前往目的掛機</li><li>自動獲得祝福</li><li>自動重新連線</li><li>自動復活</li></ul>",
@@ -17,6 +19,7 @@
       "dependencies": []
     },
     "com.r2studio.EndlessFrontier": {
+      "id": "com.r2studio.EndlessFrontier",
       "title": "Endless Frontier / 無盡的邊疆",
       "versionCode": 19,
       "description": "<h3>無盡的邊疆自動玩</h3><ul><li>大幅提升開寶箱</li><li>修正升級全體士兵位置</li><li>修正購買勳章士兵位置</li><li>修正魔法商店位置</li></ul>",
@@ -27,6 +30,7 @@
       ]
     },
     "com.r2studio.lgtm2": {
+      "id": "com.r2studio.lgtm2",
       "title": "Disney Tsum Tsum Stadium",
       "versionCode": 4,
       "description": "<h3>Robotmon TsumTsum Stadium</h3><ul><li>Auto Play</li><li>Receive hearts</li><li>Send hearts</li></ul>",
@@ -35,6 +39,7 @@
       "dependencies": []
     },
     "com.r2studio.Tsum": {
+      "id": "com.r2studio.Tsum",
       "title": "Disney Tsum Tsum (Old v51)",
       "versionCode": 51,
       "description": "<b><font color='#2196f3'>🔖 版本 v51</font></b><ul><li>1️⃣ Delete Ad (忽略廣告)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
@@ -45,6 +50,7 @@
       ]
     },
     "com.r2studio.TsumBeta": {
+      "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
       "versionCode": 55,
       "description": "<b><font color='#2196f3'>🔖 版本 v55 Beta</font></b><ul><li>更新特殊螢幕尺寸、解決長螢幕偵測錯誤</li><li>Debug detect screen size. And update special screen size</li></ul>",
@@ -53,6 +59,7 @@
       "dependencies": []
     },
     "com.r2studio.CookieKingdom": {
+      "id": "com.r2studio.CookieKingdom",
       "title": "CookieKingdom: automated management",
       "versionCode": 3.31,
       "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
@@ -61,6 +68,7 @@
       "dependencies": []
     },
     "com.r2studio.MarvelFutureFight": {
+      "id": "com.r2studio.MarvelFutureFight",
       "title": "Marvel Future Fight / Marvel 未來之戰",
       "versionCode": 6,
       "packageName": "com.netmarble.mherosgb",
@@ -71,6 +79,7 @@
       ]
     },
     "com.r2studio.LoopYT": {
+      "id": "com.r2studio.LoopYT",
       "title": "LoopYT",
       "versionCode": 9,
       "description": "<div>自動刷 Youtube 影片</div>",
@@ -82,6 +91,7 @@
       ]
     },
     "com.r2studio.EZRobot": {
+      "id": "com.r2studio.EZRobot",
       "title": "EZRobot",
       "versionCode": 7,
       "description": "<div>Make your scripts yourself</div><div>⭐⭐⭐Import/Export scripts</div><div>Auto save the script</div>",
@@ -93,6 +103,7 @@
       ]
     },
     "com.r2studio.LineageM": {
+      "id": "com.r2studio.LineageM",
       "title": "Lineage M / 天堂M 無課救星",
       "versionCode": 27,
       "description": "<h3>天堂M 無課救星</h3><ul><li>更新按鈕位置</li><li>自動開怪，使用按鈕1，根據按鈕1條件使用</li><li>6秒沒攻擊，自動瞬移，按鈕7</li><li>更改辨識安全區域方法</li><li>⭐⭐⭐大幅提升腳本速度⭐⭐⭐</li><li>支援所有螢幕解析度</li><li>自動買水買銀箭</li><li>HP 與 MP 條件設定使用按鈕</li><li>回到地圖原點</li><li>移動到指定地圖</li><li>安全區域瞬移</li><li>被攻擊瞬移</li><li>使用回卷直到安全區域</li><li>斷線重新連線</li><li>自動攻擊</li><li>自動使用解毒劑</li><li>試煉副本輔助按紐</li></ul>",
@@ -104,6 +115,7 @@
       ]
     },
     "com.donny.StoneOnline": {
+      "id": "com.donny.StoneOnline",
       "title": "StoneOnline",
       "versionCode": 1.44,
       "description": "<div>Grow Stone online / 礦山之旅</div>",
@@ -115,6 +127,7 @@
       ]
     },
     "com.donny.dungeonbreakers": {
+      "id": "com.donny.dungeonbreakers",
       "title": "Dungeon Breaker Heroes",
       "versionCode": 0.13,
       "description": "<div>Break Drongeon Heros / 突破迷宮英雄</div>",
@@ -126,6 +139,7 @@
       ]
     },
     "com.r2studio.TapTitans2": {
+      "id": "com.r2studio.TapTitans2",
       "title": "TapTitans2 automated",
       "versionCode": 11.3,
       "description": "<div>Make the relics rain! / 自動愛心農場!</div>",
@@ -133,6 +147,7 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TapTitans2/index.zip"
     },
     "com.cooper.FGO": {
+      "id": "com.cooper.FGO",
       "title": "Fate/Grand Order 日服",
       "versionCode": 3.41,
       "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.41 重構黑邊偵測功能並改善穩定性，調整介面與除錯訊息<br>V3.34 增加進入關卡指令-檢查開場演出選項 點擊畫面跳過動畫並檢查操作時機<br>V3.29 加入技能加速功能，修正有時會誤送關卡失敗訊息的問題br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
@@ -140,6 +155,7 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
+      "id": "com.cooper.FGOTW",
       "title": "Fate/Grand Order 台服",
       "versionCode": 3.41,
       "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.41 重構黑邊偵測功能並改善穩定性，調整介面與除錯訊息<br>V3.34 增加進入關卡指令 檢查開場演出選項<br><br>建議使用夜神 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
@@ -147,6 +163,7 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     },
     "com.cooper.FGOFreeTool": {
+      "id": "com.cooper.FGOFreeTool",
       "title": "Fate/Grand Order 開箱友抽免費工具",
       "versionCode": 1.03,
       "description": "<div>台服 日服開箱友抽小工具，無須訂閱即可使用<br><br>V1.03 修復新介面的自動抽箱功能</div>",
@@ -154,6 +171,7 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOFreeTool/index.zip"
     },
     "com.donny.maplem": {
+      "id": "com.donny.maplem",
       "title": "MapleM / 楓之谷M",
       "versionCode": 0.02,
       "description": "<div>V0.02 測試版-測試 LV.1~LV.85自動任務功能 <br><br>V0.01測試解析度 960x540 圖型辨識 </div>",
@@ -165,6 +183,7 @@
       ]
     },
     "com.r2studio.MapleM": {
+      "id": "com.r2studio.MapleM",
       "title": "MapleM / 楓之谷M - 官方",
       "versionCode": 9,
       "description": "<h3>楓之谷M</h3><ul><li>1️⃣ 支援自動任務</li><li>2️⃣ 支援自動打怪(邊走邊放技能)</li><li>3️⃣ 支援自動打怪(一步一技能模式)</li><li>4️⃣ 支援自動使用HP和MP道具</li><li>5️⃣ 傳送楓幣與經驗值訊息</li></ul>",
@@ -172,6 +191,7 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MapleM/index.zip"
     },
     "com.steven.princesspunt": {
+      "id": "com.steven.princesspunt",
       "title": "princesspunt / 公主踢騎士",
       "versionCode": 1,
       "description": "<div>公主踢騎士</div>",
