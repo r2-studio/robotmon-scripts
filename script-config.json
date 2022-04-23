@@ -52,8 +52,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 55,
-      "description": "<b><font color='#2196f3'>🔖 版本 v55 Beta</font></b><ul><li>更新特殊螢幕尺寸、解決長螢幕偵測錯誤</li><li>Debug detect screen size. And update special screen size</li></ul>",
+      "versionCode": 56,
+      "description": "<b><font color='#2196f3'>🔖 版本 v56 Beta</font></b><ul><li>更新特殊螢幕尺寸、解決長螢幕偵測錯誤</li><li>Debug detect screen size. And update special screen size</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []

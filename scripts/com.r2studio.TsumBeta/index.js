@@ -793,7 +793,7 @@ function Tsum(isJP, detect, logs) {
   var size = getScreenSize();
   this.originScreenWidth = size.width;
   this.originScreenHeight = size.height;
-  this.screenHeight = size.height - getVirtualButtonHeight();
+  this.screenHeight = size.height;
   this.screenWidth = size.width;
   this.gameOffsetX = 0;
   this.gameOffsetY = 0;
@@ -859,6 +859,7 @@ Tsum.prototype.init = function(detect) {
     this.gameHeight = this.screenWidth / 9 * 16;
     this.gameOffsetX = 0;
     this.gameOffsetY = Math.floor((this.gameHeight - this.screenHeight) / 2);
+    console.log('??', this.gameHeight, this.screenHeight, this.gameWidth);
   }
 
   if (detect && this.screenHeight / this.screenWidth > 1.777777) {
