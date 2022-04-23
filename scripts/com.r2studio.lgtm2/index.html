@@ -1,0 +1,268 @@
+<html>
+  <meta charset="utf-8" />
+  <title>Tsum Tsum Stadium</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/rsettingsui/dist/rsettingsui.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1, user-scalable=no, minimal-ui" />
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/rsettingsui/dist/rsettingsui.umd.js"></script>
+
+  <body>
+    <div id="app"></div>
+  </body>
+
+  <script>
+    var settingPath = 'stadium-settings';
+    var settings = {
+      version: 5,
+      enableSendHeart: true,
+      sendToZero: false,
+      enableReceiveHeart: true,
+      receiveAllHearts: false,
+      receiveExtraCheckTimes: 2,
+      playGameCount: 10,
+    };
+
+    function initSettings() {
+      var json = localStorage.getItem(settingPath);
+      if (json !== '') {
+        var obj = JSON.parse(json);
+        settings = Object.assign(settings, obj);
+      }
+    }
+    initSettings();
+
+    // functions
+    function onSettingChanged() {
+      var json = JSON.stringify(settings);
+      localStorage.setItem(settingPath, json);
+    }
+
+    // UI App Bar
+    var uiAppBar = {
+      name: 'v-app-bar',
+      props: {
+        app: true,
+        color: '#1976d2',
+      },
+      children: [
+        {
+          name: 'v-toolbar-title',
+          props: {
+            style: { color: 'white' },
+          },
+          children: [`Tsum Tsum Stadium V${settings.version} (Beta)`],
+        },
+      ],
+    };
+
+    // UI Send Hearts Related
+    var uiEnableSendHeart = {
+      name: 'v-checkbox',
+      props: {
+        label: 'Send Hearts',
+      },
+      events: {
+        change: function (value) {
+          settings.enableSendHeart = value;
+          onSettingChanged();
+        },
+      },
+      value: settings.enableSendHeart,
+    };
+    var uiSendToZero = {
+      name: 'v-checkbox',
+      props: {
+        label: 'Send To Zero',
+      },
+      events: {
+        change: function (value) {
+          settings.sendToZero = value;
+          onSettingChanged();
+        },
+      },
+      value: settings.sendToZero,
+    };
+    var uiGroupSendHeart = {
+      name: 'v-card',
+      children: [
+        {
+          name: 'v-card-title',
+          children: ['Send Hearts'],
+        },
+        {
+          name: 'v-spacer',
+        },
+        {
+          name: 'v-card-text',
+          children: [uiEnableSendHeart, uiSendToZero],
+        },
+      ],
+    };
+
+    // UI Receive Hearts Related
+    var uiEnableReceiveHeart = {
+      name: 'v-checkbox',
+      props: {
+        label: 'Receive Hearts',
+      },
+      events: {
+        change: function (value) {
+          settings.enableReceiveHeart = value;
+          onSettingChanged();
+        },
+      },
+      value: settings.enableReceiveHeart,
+    };
+    var uiReceiveAllHeart = {
+      name: 'v-checkbox',
+      props: {
+        label: 'Receive All Hearts',
+      },
+      events: {
+        change: function (value) {
+          settings.receiveAllHearts = value;
+          onSettingChanged();
+        },
+      },
+      value: settings.receiveAllHearts,
+    };
+    var uiReceiveExtraCheckTimes = {
+      name: 'v-slider',
+      props: {
+        label: 'Check times of receive hearts',
+        max: 10,
+        min: 1,
+        ticks: true,
+        'thumb-label': 'always',
+      },
+      events: {
+        change: function (value) {
+          settings.receiveExtraCheckTimes = value;
+          onSettingChanged();
+        },
+      },
+      value: settings.receiveExtraCheckTimes,
+    };
+    var uiGroupReceiveHearts = {
+      name: 'v-card',
+      children: [
+        {
+          name: 'v-card-title',
+          children: ['Receive Hearts'],
+        },
+        {
+          name: 'v-spacer',
+        },
+        {
+          name: 'v-card-text',
+          children: [uiEnableReceiveHeart, uiReceiveAllHeart, uiReceiveExtraCheckTimes],
+        },
+      ],
+    };
+
+    // UI Play Game
+    var uiPlayGameCount = {
+      name: 'v-slider',
+      props: {
+        label: 'Count of play game per round',
+        max: 50,
+        min: 0,
+        step: 2,
+        ticks: true,
+        'thumb-label': 'always',
+      },
+      events: {
+        change: function (value) {
+          settings.playGameCount = value;
+          onSettingChanged();
+        },
+      },
+      value: settings.playGameCount,
+    };
+    var uiGroupPlayGame = {
+      name: 'v-card',
+      children: [
+        {
+          name: 'v-card-title',
+          children: ['Play Game'],
+        },
+        {
+          name: 'v-spacer',
+        },
+        {
+          name: 'v-card-text',
+          children: [uiPlayGameCount],
+        },
+      ],
+    };
+
+    var uiDescription = {
+      name: 'v-card',
+      children: [
+        {
+          name: 'v-card-title',
+          children: ['Tsum Tsum Stadium Description'],
+        },
+        {
+          name: 'v-spacer',
+        },
+        {
+          name: 'v-card-text',
+          children: ['Only supports 16:9 resolution and English version', 'Maybe not support when Ads shown'],
+        },
+      ],
+    };
+
+    var uiUpdateInfo = {
+      name: 'v-card',
+      children: [
+        {
+          name: 'v-card-title',
+          children: ['Update information'],
+        },
+        {
+          name: 'v-spacer',
+        },
+        {
+          name: 'v-card-text',
+          children: ['(v3) Fixed playing stuck'],
+        },
+        {
+          name: 'v-card-text',
+          children: ['(v2) Supports 16:9 screen resolution', '(v2) Simplify path'],
+        },
+      ],
+    };
+
+    // UI Main
+    var uiMain = {
+      name: 'v-main',
+      children: [
+        {
+          name: 'v-container',
+          children: [uiDescription, uiUpdateInfo, uiGroupSendHeart, uiGroupReceiveHearts, uiGroupPlayGame],
+        },
+      ],
+    };
+
+    var uiConfig = [uiAppBar, uiMain];
+    rsettingsui('#app', uiConfig);
+  </script>
+
+  <script>
+    function onEvent(eventType) {
+      if (eventType == 'OnPlayClick') {
+        var json = JSON.stringify(settings);
+        console.log("start('" + json + "');");
+        JavaScriptInterface.runScript("start('" + json + "');");
+      } else if (eventType == 'OnPauseClick') {
+        JavaScriptInterface.runScript('stop();');
+      }
+    }
+    function onLog(message) {
+      console.log(message);
+    }
+  </script>
+</html>

@@ -32,7 +32,7 @@
     "com.r2studio.lgtm2": {
       "id": "com.r2studio.lgtm2",
       "title": "Disney Tsum Tsum Stadium",
-      "versionCode": 4,
+      "versionCode": 5,
       "description": "<h3>Robotmon TsumTsum Stadium</h3><ul><li>Auto Play</li><li>Receive hearts</li><li>Send hearts</li></ul>",
       "packageName": "com.linecorp.LGTM2",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.lgtm2/index.zip",
