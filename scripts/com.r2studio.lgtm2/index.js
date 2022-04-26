@@ -514,13 +514,13 @@ Stadium.prototype.taskSendHearts = function () {
         }
       }
       this.screen.tap({ x: 306, y: y });
-      if (!gFriendSendHeartGiftPage.waitScreenForMatchingScreen(this.screen, 3000, 2, 600)) {
+      if (!gFriendSendHeartGiftPage.waitScreenForMatchingScreen(this.screen, 10000, 2, 600)) {
         console.log('Not match gFriendSendHeartGiftPage');
         break;
       }
       gFriendSendHeartGiftPage.goNext(this.screen);
       RF.Utils.sleep(1000);
-      if (!gFriendPage.waitScreenForMatchingScreen(this.screen, 3000, 2, 600)) {
+      if (!gFriendPage.waitScreenForMatchingScreen(this.screen, 5000, 2, 600)) {
         console.log('Not match gFriendPage');
         break;
       }
