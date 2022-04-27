@@ -6,7 +6,7 @@ config = {
   account: 'default_xrobotmon_account@gmail.com',
   password: '',
   materialsTarget: 800,
-  goodsTarget: 230,
+  goodsTarget: 240,
   productSafetyStock: 10,
   autoCollectMailIntervalInMins: 120,
   autoCollectFountainIntervalInMins: 40,
@@ -238,26 +238,22 @@ var pageInputAge = [
 
 // Bigger icons (Android 5)
 pageChooseLoginMethod = [
-  { x: 317, y: 242, r: 255, g: 255, b: 255 },
-  { x: 251, y: 128, r: 251, g: 188, b: 5 },
-  { x: 268, y: 130, r: 255, g: 255, b: 255 },
-  { x: 289, y: 130, r: 66, g: 133, b: 244 },
-  { x: 242, y: 167, r: 255, g: 255, b: 255 },
-  { x: 274, y: 165, r: 0, g: 1, b: 0 },
-  { x: 236, y: 204, r: 255, g: 255, b: 255 },
-  { x: 258, y: 204, r: 66, g: 103, b: 178 },
-  { x: 284, y: 207, r: 255, g: 255, b: 255 },
-  { x: 275, y: 234, r: 255, g: 95, b: 0 },
+  {x: 139, y: 233, r: 255, g: 95, b: 0},
+  {x: 165, y: 197, r: 0, g: 0, b: 0},
+  {x: 148, y: 153, r: 244, g: 154, b: 25},
+  {x: 347, y: 166, r: 177, g: 204, b: 58},
+  {x: 356, y: 196, r: 59, g: 89, b: 152},
+  {x: 126, y: 234, r: 255, g: 255, b: 255},
 ];
-// Smaller icons (Android 7)
+// Smaller icons (Android 7), not updated for 5 options
 pageChooseLoginMethod2 = [
   { x: 251, y: 245, r: 255, g: 95, b: 0 },
-  { x: 373, y: 243, r: 255, g: 255, b: 255 },
-  { x: 247, y: 203, r: 66, g: 103, b: 178 },
-  { x: 252, y: 205, r: 255, g: 255, b: 255 },
-  { x: 250, y: 166, r: 0, g: 1, b: 0 },
-  { x: 249, y: 123, r: 234, g: 67, b: 53 },
-  { x: 250, y: 127, r: 255, g: 255, b: 255 },
+  // { x: 373, y: 243, r: 255, g: 255, b: 255 },
+  // { x: 247, y: 203, r: 66, g: 103, b: 178 },
+  // { x: 252, y: 205, r: 255, g: 255, b: 255 },
+  // { x: 250, y: 166, r: 0, g: 1, b: 0 },
+  // { x: 249, y: 123, r: 234, g: 67, b: 53 },
+  // { x: 250, y: 127, r: 255, g: 255, b: 255 },
 ];
 
 var pageAnnouncement = [
@@ -365,18 +361,6 @@ var pageToolShop = [
   { x: 420, y: 191, r: 178, g: 16, b: 13 },
   { x: 414, y: 75, r: 135, g: 143, b: 170 },
   { x: 413, y: 84, r: 183, g: 190, b: 211 },
-];
-
-var pageNotifyQuit = [
-  { x: 299, y: 249, r: 12, g: 165, b: 219 },
-  { x: 258, y: 249, r: 19, g: 21, b: 22 },
-  { x: 215, y: 255, r: 217, g: 205, b: 195 },
-  { x: 344, y: 256, r: 121, g: 205, b: 12 },
-  { x: 354, y: 249, r: 155, g: 155, b: 155 },
-  { x: 277, y: 140, r: 88, g: 86, b: 82 },
-  { x: 285, y: 142, r: 217, g: 209, b: 199 },
-  { x: 258, y: 98, r: 60, g: 70, b: 104 },
-  { x: 358, y: 140, r: 46, g: 46, b: 46 },
 ];
 
 var pageSelectAdvanture = [
@@ -565,6 +549,18 @@ var theReloginIntoAnotherDeviceMessageScreen = {
   lookingForColor: { r: 80, g: 80, b: 80 },
   targetColorCount: 74,
   targetColorThreashold: 1,
+};
+
+var messageNotifyQuit = {
+  x: 220,
+  y: 162,
+  width: 196,
+  height: 12,
+
+  targetY: 4,
+  lookingForColor: { r: 95, g: 95, b: 95 },
+  targetColorCount: 31,
+  targetColorThreashold: 5,
 };
 
 function pnt(x, y) {
@@ -1683,6 +1679,11 @@ function findAndTapProductionHouse() {
       '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',
   };
 
+  if (checkIsPage(pageInGuildLand)) {
+    console.log('Try to find production but is in guild, back to kingdom first');
+    handleTryHitBackToKingdom();
+  }
+
   for (var key in houses) {
     var houseImage = getImageFromBase64(houses[key]);
     img = getScreenshot();
@@ -2448,7 +2449,7 @@ function handleInputLoginInfo() {
           return true;
         }
 
-        if (checkIsPage(pageNotifyQuit)) {
+        if (checkScreenMessage(messageNotifyQuit)) {
           console.log('found unexpected quit window, closing it');
           keycode('BACK', 1000);
           sleep(config.sleepAnimate);
@@ -2544,21 +2545,7 @@ function handleTryHitBackToKingdom() {
       return true;
     }
 
-    pageChooseWhereToGo = [
-      { x: 100, y: 315, r: 36, g: 74, b: 28 },
-      { x: 315, y: 315, r: 28, g: 36, b: 48 },
-      { x: 321, y: 20, r: 255, g: 193, b: 6 },
-      { x: 425, y: 16, r: 0, g: 193, b: 255 },
-      { x: 551, y: 24, r: 247, g: 231, b: 207 },
-    ];
-    if (checkIsPage(pageChooseWhereToGo)) {
-      qTap(pageChooseWhereToGo);
-      console.log('Found pageChooseWhereToGo, tap first to goto Kingdom');
-      sleep(config.sleepAnimate * 3);
-      return true;
-    }
-
-    if (checkIsPage(pageNotifyQuit)) {
+    if (checkScreenMessage(messageNotifyQuit)) {
       keycode('BACK', 1000);
       if (waitUntilSeePage(pageInKingdomVillage, 5)) {
         console.log('Found quit notification, should be in kingdom');
@@ -2989,15 +2976,15 @@ function handleGetDailyRewards() {
 
   // Rewards in shop ======
   pageShop = [
-    { x: 25, y: 84, r: 238, g: 187, b: 136 },
-    { x: 35, y: 65, r: 255, g: 0, b: 0 },
-    { x: 21, y: 71, r: 195, g: 4, b: 12 },
+    {x: 20, y: 84, r: 247, g: 190, b: 140},
+    {x: 23, y: 112, r: 181, g: 0, b: 24},
+    {x: 28, y: 119, r: 255, g: 235, b: 173},
   ];
   if (checkIsPage(pageShop)) {
     qTap(pageShop);
     sleep(config.sleepAnimate);
 
-    pageNecessities = [{ x: 114, y: 104, r: 255, g: 109, b: 107 }];
+    pageNecessities = [{ x: 114, y: 70, r: 255, g: 109, b: 107 }];
     pageIsDailyFreePackage = [
       { x: 181, y: 186, r: 13, g: 203, b: 252 },
       { x: 190, y: 204, r: 255, g: 255, b: 255 },
@@ -3019,7 +3006,7 @@ function handleGetDailyRewards() {
         tapUp(60, -1000, 40, 0);
         sleep(config.sleepAnimate * 4);
 
-        qTap(pnt(pageNecessities[0].x, pageNecessities[0].y - i * 10));
+        qTap(pnt(pageNecessities[0].x, pageNecessities[0].y + i * 20));
         sleep(config.sleepAnimate * 2);
 
         // items swipe to left most
@@ -3045,9 +3032,10 @@ function handleGetDailyRewards() {
 
   // Rewards in Gacha ======
   pageGacha = [
-    { x: 380, y: 308, r: 255, g: 108, b: 108 },
-    { x: 369, y: 317, r: 146, g: 80, b: 72 },
-    { x: 374, y: 331, r: 84, g: 76, b: 76 },
+    {x: 381, y: 329, r: 132, g: 74, b: 63},
+    {x: 373, y: 328, r: 247, g: 211, b: 148},
+    {x: 355, y: 328, r: 148, g: 81, b: 74},
+    {x: 418, y: 320, r: 132, g: 16, b: 8},
   ];
   if (checkIsPage(pageGacha)) {
     qTap(pageGacha);
@@ -3557,9 +3545,8 @@ function handleWishingTree() {
         wishes[i].status = 'opened';
       } else if (identifyPointColor(wishes[i].unfoldPnt, { r: 241, g: 205, b: 126 }) > 0.95) {
         qTap(wishes[i].unfoldPnt);
-        sleep(config.sleepAnimate);
         wishes[i].status = 'opened';
-        sleep(config.sleepAnimate * 2);
+        sleep(config.sleepAnimate);
       } else if (identifyPointColor(wishes[i].refreshPnt, { r: 193, g: 160, b: 111 }) > 0.95) {
         wishes[i].status = 'refresh';
       } else if (identifyPointColor(wishes[i].unfoldPnt, { r: 252, g: 219, b: 50 }) > 0.95) {
@@ -3573,9 +3560,8 @@ function handleWishingTree() {
           wishes[i].status = 'refreshed';
         } else {
           qTap(wishes[i].unfoldPnt);
-          sleep(config.sleepAnimate);
           wishes[i].status = 'opened';
-          sleep(config.sleepAnimate * 2);
+          sleep(config.sleepAnimate);
         }
       } else if (identifyPointColor(wishes[i].unfoldPnt, { r: 252, g: 247, b: 122 }) > 0.95) {
         // Expend golden wish
@@ -4288,6 +4274,14 @@ var pageAllianceResults = [
   { x: 76, y: 336, r: 247, g: 89, b: 24 },
   { x: 188, y: 333, r: 8, g: 166, b: 222 },
 ];
+var pageAllianceResults2 = [
+  {x: 310, y: 29, r: 209, g: 39, b: 60},
+  {x: 317, y: 37, r: 48, g: 83, b: 134},
+  {x: 401, y: 67, r: 35, g: 116, b: 192},
+  {x: 371, y: 62, r: 78, g: 134, b: 140},
+  {x: 25, y: 19, r: 241, g: 242, b: 241},
+  {x: 560, y: 333, r: 8, g: 166, b: 222},
+];
 var pageAllianceRewardGet = [
   { x: 191, y: 187, r: 49, g: 34, b: 21 },
   { x: 401, y: 213, r: 55, g: 45, b: 27 },
@@ -4313,16 +4307,27 @@ var pageRedValvetDragonWon = [
   { x: 426, y: 236, r: 231, g: 216, b: 223 },
 ];
 
-var pageSwitchTeam = [
+var pageSelectStartingTeam = [
+  {x: 260, y: 29, r: 140, g: 88, b: 230},
+  {x: 160, y: 63, r: 107, g: 101, b: 222},
+  {x: 399, y: 107, r: 255, g: 200, b: 0},
+  {x: 488, y: 306, r: 0, g: 150, b: 214},
+]
+var pageSelectNextTeam = [
   { x: 256, y: 34, r: 135, g: 87, b: 223 },
   { x: 172, y: 57, r: 49, g: 32, b: 90 },
   { x: 162, y: 70, r: 107, g: 101, b: 219 },
   { x: 163, y: 119, r: 123, g: 117, b: 227 },
 ];
+var pageKeepBattleByOrderNotCheckWhenStart = [
+  {x: 145, y: 311, r: 239, g: 235, b: 239},
+  {x: 135, y: 303, r: 30, g: 19, b: 52},
+  {x: 140, y: 274, r: 49, g: 32, b: 90},
+]
 var pageKeepBattleByOrderNotCheck = [
-  { x: 144, y: 319, r: 229, g: 229, b: 227 },
-  { x: 149, y: 323, r: 237, g: 233, b: 235 },
-  { x: 142, y: 323, r: 237, g: 233, b: 235 },
+  {x: 146, y: 323, r: 237, g: 233, b: 235},
+  {x: 153, y: 254, r: 49, g: 40, b: 98},
+  {x: 149, y: 270, r: 147, g: 129, b: 235},
 ];
 
 function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, pageExitBattle, pageExitBattleAbnormal) {
@@ -4481,6 +4486,11 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
         qTap(pageAllianceResults);
         sleep(config.sleepAnimate * 3);
         return true;
+      } else if (checkIsPage(pageAllianceResults2)) {
+        console.log('pageAllianceResults2, exit', j);
+        qTap(pnt(600, 320));
+        sleep(config.sleepAnimate * 3);
+        return true;
       } else if (checkIsPage(pageAllianceRewardGet)) {
         console.log('pageAllianceRewardGet, tap middle');
         qTap(pnt(323, 337));
@@ -4537,7 +4547,7 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       }
     }
 
-    if (checkIsPage(pageSwitchTeam) && checkIsPage(pageKeepBattleByOrderNotCheck)) {
+    if (checkIsPage(pageSelectNextTeam) && checkIsPage(pageKeepBattleByOrderNotCheck)) {
       qTap(pageKeepBattleByOrderNotCheck);
       sleep(8000);
       console.log('alliance battle, tap keep battle with this order');
@@ -4747,18 +4757,12 @@ function guildBattleAlliance() {
     {x: 73, y: 332, r: 0, g: 150, b: 214},
     {x: 29, y: 141, r: 151, g: 75, b: 13},
   ];
-  var pageSwitchTeam = [
-    { x: 256, y: 34, r: 135, g: 87, b: 223 },
-    { x: 172, y: 57, r: 49, g: 32, b: 90 },
-    { x: 162, y: 70, r: 107, g: 101, b: 219 },
-    { x: 163, y: 119, r: 123, g: 117, b: 227 },
-  ];
   var pageNoAllianceTicket = [
-    { x: 303, y: 247, r: 8, g: 166, b: 222 },
-    { x: 326, y: 94, r: 132, g: 111, b: 235 },
-    { x: 335, y: 21, r: 127, g: 126, b: 127 },
-    { x: 492, y: 323, r: 66, g: 56, b: 127 },
-    { x: 476, y: 324, r: 74, g: 109, b: 28 },
+    {x: 244, y: 252, r: 49, g: 190, b: 231},
+    {x: 327, y: 77, r: 156, g: 144, b: 217},
+    {x: 317, y: 100, r: 244, g: 235, b: 231},
+    {x: 355, y: 256, r: 0, g: 198, b: 255},
+    {x: 334, y: 22, r: 85, g: 80, b: 109},
   ];
   var pageAllianceSteupTeam = [
     { x: 619, y: 18, r: 255, g: 255, b: 255 },
@@ -4774,11 +4778,21 @@ function guildBattleAlliance() {
     { x: 209, y: 198, r: 99, g: 109, b: 156 },
   ];
   var pageBeaconOfValor = [
-    { x: 430, y: 296, r: 205, g: 151, b: 9 },
-    { x: 414, y: 292, r: 57, g: 182, b: 8 },
-    { x: 193, y: 104, r: 115, g: 142, b: 189 },
-    { x: 151, y: 131, r: 82, g: 101, b: 156 },
+    {x: 223, y: 300, r: 255, g: 187, b: 8},
+    {x: 178, y: 288, r: 49, g: 60, b: 90},
+    {x: 196, y: 177, r: 49, g: 40, b: 8},
+    {x: 182, y: 168, r: 190, g: 192, b: 208},
+    {x: 183, y: 87, r: 247, g: 198, b: 159},
+    {x: 464, y: 22, r: 57, g: 166, b: 231},
+    {x: 487, y: 246, r: 88, g: 104, b: 156},
   ];
+  var pageCannotLightBeacon =[
+    {x: 436, y: 284, r: 0, g: 134, b: 189},
+    {x: 261, y: 112, r: 114, g: 80, b: 44},
+    {x: 261, y: 226, r: 118, g: 82, b: 50},
+    {x: 250, y: 192, r: 83, g: 87, b: 104},
+    {x: 197, y: 104, r: 107, g: 142, b: 198},
+  ]
   var pageAllianceAddMoreCookie = [
     { x: 304, y: 251, r: 8, g: 166, b: 222 },
     { x: 248, y: 102, r: 57, g: 69, b: 107 },
@@ -4803,6 +4817,11 @@ function guildBattleAlliance() {
           sleep(config.sleepAnimate);
           qTap(pageBeaconOfValor);
           sleep(config.sleepAnimate * 2);
+        }
+
+        if (waitUntilSeePage(pageCannotLightBeacon, 2)) {
+          keycode('BACK', 1000);
+          sleep(config.sleepAnimate);
         }
       }
 
@@ -4833,7 +4852,13 @@ function guildBattleAlliance() {
           break;
         }
 
-        if (waitUntilSeePage(pageSwitchTeam, 4)) {
+        if (waitUntilSeePage(pageSelectStartingTeam, 4)) {
+          if (checkIsPage(pageKeepBattleByOrderNotCheckWhenStart)) {
+            qTap(pageKeepBattleByOrderNotCheckWhenStart);
+            sleep(1000);
+            console.log('alliance battle, tap keep battle with this order');
+          }
+
           for (var tapY = 73; tapY < 296; tapY += 50) {
             qTap(pnt(474, tapY)); // tap the top most available team
             sleep(1500);
@@ -6337,9 +6362,9 @@ function start(inputConfig) {
       config.run
     ) {
       // sendEvent('gameStatus', 'launching');
-      if (checkIsPage(pageNotifyQuit)) {
-        console.log('found pageNotifyQuit while trying to login, hit back');
-        qTap(pageNotifyQuit);
+      if (checkScreenMessage(messageNotifyQuit)) {
+        console.log('found messageNotifyQuit while trying to login, hit back');
+        keycode('BACK', 1000);
       }
 
       if (handleInputLoginInfo()) {
