@@ -3,7 +3,7 @@
     "app.robotmon.x.rushroyale": {
       "id": "app.robotmon.x.rushroyale",
       "title": "* Rush Royale *",
-      "versionCode": 2,
+      "versionCode": 3,
       "description": "<h3>Rush Royale</h3><ul><li>Auto Play</li></ul>",
       "packageName": "com.my.defense",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/app.robotmon.x.rushroyale/index.zip",
