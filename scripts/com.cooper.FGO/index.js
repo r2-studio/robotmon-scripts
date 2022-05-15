@@ -16,10 +16,7 @@ function stop() {
 }
 
 function initHTML(serverString) {
-  console.log("初始化中");  
-  if(user_plan_fgo === undefined){
-    var user_plan_fgo = 3;
-  }
+  console.log("初始化中");
 
   var img = getScreenshot();
   if (img == undefined) {

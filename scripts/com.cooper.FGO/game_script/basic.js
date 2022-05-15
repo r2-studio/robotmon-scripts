@@ -10,9 +10,18 @@ var isScriptRunning = false;
 
 function startScript(loopTime, script, scriptName, be) {
   console.log("開始執行指令，版本" + version);
+
+  try {
+    if (typeof user_plan_fgo === "undefined") {
+      var user_plan_fgo = 3;
+    }
+  } catch (e) {
+    var user_plan_fgo = 3;
+  }
+
   if (isDebug) {
     console.log(script);
-  }  
+  }
   setBlackEdgeByHtmlValue(be);
   initScreenSize();
   if (script == undefined || script.length <= 0) {
