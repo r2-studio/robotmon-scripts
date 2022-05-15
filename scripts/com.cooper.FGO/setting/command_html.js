@@ -103,22 +103,43 @@ function getGetBox(id) {
 
 //out stage command
 function getSelectStage(id) {
-  return getCommandItem(
-    id,
-    "選擇關卡",
-    "<div class='commandSelectDiv'>開啟畫面上方的任務</div>" +
-      "<div class='commandSelectDiv'>" +
-      "<div class='commandItem'>自動吃果</div>" +
-      '<select id = "autoApple' +
-      id +
-      '">' +
-      '<option value = "-1" selected>無</option>' +
-      '<option value = "0">銅蘋果</option>' +
-      '<option value = "1">銀蘋果</option>' +
-      '<option value = "2">金蘋果</option>' +
-      '<option value = "4">自然回體</option>' +
-      '<option value = "3">聖晶石</option></select></div>'
-  );
+  if (server == "TW") {
+    return getCommandItem(
+      id,
+      "選擇關卡",
+      "<div class='commandSelectDiv'>開啟畫面上方的任務</div>" +
+        "<div class='commandSelectDiv'>" +
+        "<div class='commandItem'>自動吃果</div>" +
+        '<select id = "autoApple' +
+        id +
+        '">' +
+        '<option value = "-1" selected>無</option>' +
+        '<option value = "0">銅蘋果</option>' +
+        '<option value = "1">銀蘋果</option>' +
+        '<option value = "2">金蘋果</option>' +
+        '<option value = "4">自然回體</option>' +
+        '<option value = "3">聖晶石</option></select></div>'
+    );
+  }else{
+    return getCommandItem(
+      id,
+      "選擇關卡",
+      "<div class='commandSelectDiv'>開啟畫面上方的任務</div>" +
+        "<div class='commandSelectDiv'>" +
+        "<div class='commandItem'>自動吃果</div>" +
+        '<select id = "autoApple' +
+        id +
+        '">' +
+        '<option value = "-1" selected>無</option>' +
+        '<option value = "0">赤銅蘋果</option>' +
+        '<option value = "5">青銅蘋果</option>' +
+        '<option value = "1">銀蘋果</option>' +
+        '<option value = "2">金蘋果</option>' +
+        '<option value = "4">自然回體</option>' +
+        '<option value = "3">聖晶石</option></select></div>'
+    );
+
+  }
 }
 function getSelectFriend(id) {
   return getCommandItem(
@@ -248,7 +269,7 @@ function getStartQuest(id) {
       id +
       '">' +
       '<option value = "0" selected>不檢查</option>' +
-      '<option value = "1">檢查</option></select></div>'+
+      '<option value = "1">檢查</option></select></div>' +
       "<div class='commandSelectDiv'>如果討伐戰有開場演出，請打開檢查開場演出</div>"
   );
 }

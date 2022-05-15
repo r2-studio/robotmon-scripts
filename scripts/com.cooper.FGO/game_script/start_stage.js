@@ -28,7 +28,7 @@ function selectStage(useApple) {
     }
     sleep(500);
   } else if (!isMainPage()) {
-    console.log("1.請先移至選擇關卡或戰鬥畫面");    
+    console.log("1.請先移至選擇關卡或戰鬥畫面");
     console.log("2.瀏海手機可能有黑邊影響偵測:");
     console.log("請使用黑邊設定功能");
     console.log("3.模擬器不支援火箭模式:");
@@ -75,10 +75,20 @@ function selectStage(useApple) {
         console.log("使用銀蘋果");
         sendNormalMessage(runningScriptName, "使用銀蘋果");
         break;
+      case 5:
+        if (server == "JP") {
+          tapScale(900, 840);
+          console.log("使用青銅蘋果");
+          sendNormalMessage(runningScriptName, "使用青銅蘋果");
+        }
+        break;
       case 0: //bronze
+        if (server == "JP") {
+          swipeScale(600, 750, 600, 150, 300);
+        }
         tapScale(900, 840);
-        console.log("使用銅蘋果");
-        sendNormalMessage(runningScriptName, "使用銅蘋果");
+        console.log("使用赤銅蘋果");
+        sendNormalMessage(runningScriptName, "使用赤銅蘋果");
         break;
       case 3:
         tapScale(900, 225);
@@ -97,7 +107,7 @@ function selectStage(useApple) {
         }
         break;
     }
-    if (useApple >= 0 && useApple < 4) {
+    if (useApple >= 0 && useApple != 4) {
       sleep(1500);
       tapScale(1275, 850);
     }
