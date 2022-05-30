@@ -25,6 +25,7 @@ config = {
   autoPvPTargetScoreLimit: 600000,
   autoPvPPurchaseAncientCookie: false,
   worksBeforeCollectCandy: 40,
+  autoUpgradeCandyHouse: false,
   helpTapGreenCheck: true,
   autoCollectTropicalIslandsIntervalInMins: 40,
   autoGuildAllianceBattle: false,
@@ -41,7 +42,8 @@ config = {
   autoBuyGuildRelic: false,
   axeStockTo400: false,
   autoSuperMayhemIntervalInMins: 0,
-  autoSuperMayhemTargetScoreLimit: 500000,
+  autoSuperMayhemTargetScoreLimit: 600000,
+  autoHandleTowerOfSweetChaos: false,
   buildTowardsTheLeft: true,
   isTestAccount: false,
 
@@ -66,6 +68,7 @@ config = {
   lastAutoHandleBounties: 0,
   lastLabResearch: 0,
   lastHandleTradeHabor: 0,
+  lastAutoHandleTowerOfSweetChaos: 0,
   lastTryResolveGreenChecks: 0,
   lastFreezeCheckScreenShot: null,
   lastFreezeCheckScreenShotTime: Date.now(),
@@ -373,8 +376,12 @@ var pageSelectAdvanture = [
 ];
 
 var pageChooseAdvanture = [
-  {x: 322, y: 337, r: 16, g: 60, b: 66},
-  {x: 509, y: 336, r: 57, g: 48, b: 99},
+  { x: 612, y: 18, r: 57, g: 166, b: 231 },
+  { x: 423, y: 19, r: 0, g: 131, b: 255 },
+  { x: 13, y: 27, r: 179, g: 108, b: 56 },
+  { x: 25, y: 17, r: 214, g: 235, b: 239 },
+  { x: 28, y: 27, r: 228, g: 199, b: 86 },
+  { x: 44, y: 22, r: 255, g: 255, b: 255 },
 ];
 
 var pageInkingdomCanGotoGuild = [
@@ -413,13 +420,34 @@ var pageInBounties = [
   { x: 416, y: 5, r: 122, g: 84, b: 95 },
 ];
 
+var kingdomArena = [
+  { x: 181, y: 267, r: 56, g: 167, b: 231 },
+  { x: 181, y: 306, r: 56, g: 167, b: 231 },
+  { x: 182, y: 335, r: 48, g: 76, b: 109 },
+  { x: 373, y: 327, r: 41, g: 35, b: 33 },
+  { x: 296, y: 70, r: 65, g: 58, b: 56 },
+];
+
 var pageInSuperMayhem = [
-  { x: 447, y: 12, r: 255, g: 29, b: 132 },
-  { x: 444, y: 21, r: 238, g: 205, b: 245 },
-  { x: 345, y: 18, r: 245, g: 218, b: 79 },
-  { x: 81, y: 21, r: 255, g: 255, b: 255 },
-  { x: 38, y: 24, r: 255, g: 255, b: 255 },
-  { x: 18, y: 60, r: 212, g: 215, b: 212 },
+  {x: 522, y: 15, r: 0, g: 195, b: 255},
+  {x: 452, y: 14, r: 255, g: 28, b: 132},
+  {x: 448, y: 24, r: 116, g: 16, b: 67},
+  {x: 355, y: 16, r: 254, g: 248, b: 221},
+  {x: 19, y: 68, r: 24, g: 44, b: 75},
+];
+
+var pageBattleDragon = [
+  { x: 531, y: 326, r: 121, g: 207, b: 12 },
+  { x: 165, y: 334, r: 121, g: 207, b: 12 },
+  { x: 74, y: 333, r: 4, g: 151, b: 211 },
+  { x: 34, y: 118, r: 122, g: 98, b: 164 },
+];
+
+var pageCookieAlliance = [
+  { x: 333, y: 21, r: 255, g: 255, b: 255 },
+  { x: 329, y: 14, r: 246, g: 225, b: 250 },
+  { x: 73, y: 332, r: 0, g: 150, b: 214 },
+  { x: 29, y: 141, r: 151, g: 75, b: 13 },
 ];
 
 var pageInHabor = [
@@ -437,6 +465,36 @@ var pagePvPCrystaisRefresh = [
   { x: 402, y: 134, r: 247, g: 235, b: 222 },
   { x: 351, y: 250, r: 123, g: 207, b: 8 },
   { x: 408, y: 251, r: 222, g: 207, b: 198 },
+];
+
+var pageInTowerOfSweetChaos = [
+  { x: 611, y: 21, r: 57, g: 166, b: 231 },
+  { x: 497, y: 17, r: 255, g: 207, b: 0 },
+  { x: 407, y: 15, r: 0, g: 195, b: 255 },
+  { x: 337, y: 9, r: 251, g: 213, b: 216 },
+  { x: 19, y: 59, r: 255, g: 255, b: 255 },
+];
+
+var pageReadyToBattleToSC = [
+  { x: 477, y: 327, r: 123, g: 210, b: 13 },
+  { x: 492, y: 322, r: 206, g: 32, b: 66 },
+  { x: 337, y: 12, r: 82, g: 0, b: 0 },
+  { x: 72, y: 339, r: 0, g: 150, b: 214 },
+];
+
+var pageToSCTreasureChest = [
+  { x: 443, y: 328, r: 198, g: 44, b: 57 },
+  { x: 388, y: 63, r: 84, g: 41, b: 114 },
+  { x: 422, y: 125, r: 118, g: 78, b: 85 },
+  { x: 407, y: 137, r: 255, g: 105, b: 156 },
+  { x: 437, y: 149, r: 33, g: 0, b: 0 },
+];
+
+var pageToSCTeamsNotMeetRequirement = [
+  { x: 343, y: 244, r: 123, g: 207, b: 8 },
+  { x: 337, y: 22, r: 77, g: 15, b: 25 },
+  { x: 287, y: 21, r: 21, g: 3, b: 5 },
+  { x: 496, y: 318, r: 33, g: 6, b: 10 },
 ];
 
 var pageCookieKingdomIsNotResponding = [
@@ -457,6 +515,13 @@ var pageCookieKingdomIsNotResponding2 = [
   { x: 155, y: 157, r: 238, g: 238, b: 238 },
   { x: 220, y: 156, r: 87, g: 87, b: 87 },
   { x: 325, y: 160, r: 100, g: 100, b: 100 },
+];
+
+var pageInCookieHead = [
+  { x: 77, y: 227, r: 57, g: 77, b: 123 },
+  { x: 144, y: 155, r: 255, g: 239, b: 181 },
+  { x: 234, y: 153, r: 222, g: 192, b: 239 },
+  { x: 509, y: 146, r: 177, g: 234, b: 103 },
 ];
 
 pagePurchaseDiamond = [
@@ -1592,12 +1657,19 @@ function handleAnnouncement() {
 }
 
 function findAndTapCandy() {
+  var canUpgradeCandyHouse = [
+    {x: 308, y: 291, r: 123, g: 207, b: 8},
+    {x: 342, y: 286, r: 140, g: 85, b: 41},
+    {x: 341, y: 291, r: 140, g: 28, b: 41},
+    {x: 264, y: 239, r: 123, g: 248, b: 236},
+  ]
+
   var candy = getImageFromBase64(
     '/9j/4AAQSkZJRgABAQEAYABgAAD/4QA6RXhpZgAATU0AKgAAAAgAA1EQAAEAAAABAQAAAFERAAQAAAABAAAAAFESAAQAAAABAAAAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAPABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9CPgpZeGfHGtt4g8dw6XrVp4svItWvFk0e1ure0VIQlpAjgzl4UU5wHdGeWZ1zvrpPid8LfDHxC+KWg2MNxq2jzeI7praa33QojBLGedJYklwyMyW8eQnmKVBbyxl5VyJrTTfDfwg0seD107/AIR9ri0tLVdQvJLR7C2WJ0ktj5VnIzLELeMo7tLI7TTbnCqgbe03wXrHhm8m8YfEBY5Nd8P3yy6Jb6drT6hb2eLSa087zZLW3ZpZI7uaNlkR41RIigVwzHxeIsy4ex+Vf7PUT5YWhT05k2rR92+lnZtptpLq9H+V5PwXxLgM3UMRacJ1FOdSSd3b44363slGKio+9JWUWrf/2Q=='
   );
   var img = getScreenshot();
 
-  var foundResults = findImages(img, candy, 0.94, 5, true);
+  var foundResults = findImages(img, candy, 0.9, 5, true);
   releaseImage(img);
   releaseImage(candy);
 
@@ -1611,8 +1683,29 @@ function findAndTapCandy() {
     }
     console.log(new Date().toLocaleString(), 'best candy > ', JSON.stringify(bestFit));
     qTap(bestFit);
-    sleep(config.sleepAnimate * 3);
+    sleep(3000);
     config.lastCollectCandyTime = Date.now();
+
+    if (config.autoUpgradeCandyHouse){
+      foundResults = findSpecificImageInScreen(candyHouseUpgradeArrow, 0.9);
+      if (foundResults.length > 0) {
+        console.log('Tap candy house green upgrade at: ', JSON.stringify(foundResults));
+        qTap(foundResults[0]);
+
+        if (waitUntilSeePage(canUpgradeCandyHouse, 3)) {
+          qTap(canUpgradeCandyHouse);
+          sleep(config.sleepAnimate * 2);
+          qTap(pnt(357, 321));
+
+          if (waitUntilSeePage(pageInKingdomVillage)) {
+            console.log('Successfully upgrade candy house at: ', JSON.stringify(foundResults[0]))
+          }
+        }
+      }
+      console.log('Finish try upgrading candy house');
+      handleTryHitBackToKingdom();
+    }
+
     return true;
   }
   return false;
@@ -2500,6 +2593,35 @@ function handleNextProductionBuilding() {
   }
 }
 
+function handleSkipHallOfHeros() {
+  var pageHallIntro = [
+    {x: 365, y: 138, r: 177, g: 196, b: 209},
+    {x: 285, y: 110, r: 90, g: 209, b: 225},
+    {x: 277, y: 150, r: 74, g: 182, b: 82},
+  ];
+  var pageSpeedUpSlot = [
+    {x: 456, y: 41, r: 255, g: 255, b: 255},
+    {x: 318, y: 35, r: 96, g: 144, b: 194},
+    {x: 312, y: 50, r: 202, g: 146, b: 89},
+    {x: 255, y: 50, r: 57, g: 69, b: 107},
+  ]
+
+  if (checkIsPage(pageHallIntro)){
+    for (var i = 0; i < 15; i ++){
+      qTap(pageHallIntro);
+      sleep(1000);
+
+      if (checkIsPage(pageSpeedUpSlot)){
+        qTap(pnt(64, 241));
+        sleep(2000);
+      }
+    }
+    qTap(pnt(64, 241));
+    sleep(2000);
+  }
+  keycode('BACK', 1000);
+}
+
 function handleTryHitBackToKingdom() {
   console.log('trying to resolve stuck by hitting back');
 
@@ -2521,6 +2643,8 @@ function handleTryHitBackToKingdom() {
     console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
     keycode('BACK', 1000);
   }
+
+  handleSkipHallOfHeros();
 
   checkAndRestartApp();
 
@@ -2597,10 +2721,8 @@ function handleAutoCollectMail() {
   }
 
   pageHasUnreadMails = [
-    { x: 556, y: 12, r: 255, g: 40, b: 41 },
-    { x: 551, y: 16, r: 255, g: 239, b: 214 },
-    { x: 516, y: 25, r: 231, g: 158, b: 82 },
-    { x: 586, y: 21, r: 222, g: 174, b: 74 },
+    {x: 555, y: 9, r: 255, g: 0, b: 0},
+    {x: 551, y: 17, r: 255, g: 239, b: 214},
   ];
 
   if (checkIsPage(pageHasUnreadMails)) {
@@ -2632,13 +2754,6 @@ function gotoCastle() {
     console.log('hit back to kingdom');
     handleGotoKingdomPage();
   }
-
-  pageInCookieHead = [
-    {x: 77, y: 227, r: 57, g: 77, b: 123},
-    {x: 144, y: 155, r: 255, g: 239, b: 181},
-    {x: 234, y: 153, r: 222, g: 192, b: 239},
-    {x: 509, y: 146, r: 177, g: 234, b: 103},
-  ];
 
   // Tap head
   qTap(pnt(31, 41));
@@ -2839,10 +2954,10 @@ function handleTrain() {
     { x: 28, y: 273, r: 255, g: 247, b: 206 },
   ];
   pageTrainUncollapsed = [
-    { x: 109, y: 231, r: 255, g: 223, b: 142 },
-    { x: 120, y: 235, r: 219, g: 46, b: 73 },
-    { x: 105, y: 321, r: 75, g: 116, b: 160 },
-    { x: 106, y: 328, r: 255, g: 255, b: 255 },
+    {x: 110, y: 251, r: 238, g: 109, b: 98},
+    {x: 103, y: 244, r: 114, g: 22, b: 29},
+    {x: 84, y: 258, r: 49, g: 85, b: 132},
+    {x: 99, y: 247, r: 228, g: 176, b: 110},
   ];
   if (checkIsPage(pageTrainNotCollapsed)) {
     qTap(pageTrainNotCollapsed);
@@ -2859,18 +2974,21 @@ function handleTrain() {
     sleep(config.sleepAnimate);
 
     pageTrainArrived = [
-      { x: 112, y: 230, r: 255, g: 223, b: 142 },
-      { x: 103, y: 233, r: 222, g: 48, b: 71 },
-      { x: 111, y: 221, r: 52, g: 88, b: 130 },
-      { x: 119, y: 211, r: 255, g: 108, b: 108 },
+      {x: 114, y: 255, r: 245, g: 215, b: 130},
+      {x: 117, y: 242, r: 206, g: 57, b: 55},
+      {x: 110, y: 245, r: 49, g: 89, b: 132},
     ];
 
-    qTap(pageTrainArrived);
-    sleep(config.sleepAnimate * 2);
+    if (checkIsPage(pageTrainArrived)){
+      qTap(pnt(105, 252));
+      sleep(config.sleepAnimate * 2);
 
-    handleTrainStation();
+      handleTrainStation();
+    }
   }
   console.log('Finish handleTrain');
+  qTap(pnt(614, 20));
+  sleep(2000);
   handleGotoKingdomPage();
 }
 
@@ -3142,6 +3260,8 @@ var b64NE =
 
 var b64_0 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAKAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzuD/gm/8AsJa/Zx2fxe+Flv8ADrQ7CG0TwP4vh8S3lu3juzksLWebUHa5neOYrPK67oFRBv2YytFfkhD/AKfNLbX376O2bZbRy/MsSnkhQfujPOBRX5rDg3PJRus2qx8le3rrNvXd62u9ElZLreIp/wDPtH//2Q==';
+var b64_0_1 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAIAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDxP4O/DL/glpfeCtMl8X2/wYbw4dJhbQNY13xyltrV9dGWb7YL6IXazRsmLcIskaDa2UzljRRRX4NXwmJniKn+11laUlpUa2k1f1drvzb2PUjKKivdX3H/2Q==';
 var b64_1 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAKAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD488I/AT9mXxV+yT4A8XeK/wBnL/hHPFUOv69ofiaSHVr5p7+ezNkfNnSeT9zIDO6mJFVVwRjOaK+Fjqmp6nM11qOoz3EsqrNLJPMzs8jjLuSTyzHknqe9FfEQyHGtyksZNKTk7Xk7c0m7azbsr2Xkjo9rH+VH/9k=';
 var b64_2 =
@@ -3164,6 +3284,8 @@ var b64_7_1 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAKAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD4h+Pevfs7fDr4FfCHWvFX7EvgOLxj4q8PXmravaeFr7V7KNNPM6w2MsyT307GWTyblyQyqQRhRRXx9agP5isMhJSqg9h1wPQcn86K+XwmQ0aNHlnVnJ3k789RbybStz7JOy8kbSqtvRfgv8j/2Q==';
 var b64_8 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAKAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDnPH//AATY/YOtvBvha6l/Z1ubPztMgaO4TUdQ0Y3Qexspmc3d7eNDqx8yaU/aLRUiXds25Aor8erRm1WWaz1Qm5hs38uziuPnWBDyVQHhRnnAor8yw/Budqkl/atR7/z9/KqjseJp3+Bf18j/2Q==';
+var b64_8_1 =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAIAAYDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDwf/gnt8PP+CZviL9lHQ9U/aR0r4btrzarqCaxP4g8W6faXAkWRPs6yNLeR3cRMW8rEsJt2ALmXeApKKK/AM2w+Knm2IaxVaK55aKpJLft/Wh6lOUVTj7q27H/2Q==';
 var b64_9 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAKAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDxD4jfBH/gjpp/wT+G3xH8YtY+G7PxTpMsuhjT5NbstTvIYY7aOeXUVvJCssv2s3IWW3VYGUELnbwV+ZCf6+Zu/mlc+w5x9Mk/maK+Ew/CGKp0+V5liHq/t9G20uuy0v1302Ol4iL+wj//2Q==';
 
@@ -3336,15 +3458,15 @@ function wish(refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status) {
 
 function getCEs() {
   var img = getScreenshot();
-  var croppedImage1 = cropImage(img, 435,  88, 42, 10);
-  var croppedImage2 = cropImage(img, 435, 148, 42, 10);
-  var croppedImage3 = cropImage(img, 435, 208, 42, 10);
-  var croppedImage4 = cropImage(img, 435, 268, 42, 10);
+  var croppedImage1 = cropImage(img, 430, 88, 46, 10);
+  var croppedImage2 = cropImage(img, 430, 148, 46, 10);
+  var croppedImage3 = cropImage(img, 430, 208, 46, 10);
+  var croppedImage4 = cropImage(img, 430, 266, 46, 10);
 
-  var value1 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage1, 6, 0.85, 0.7) || 0;
-  var value2 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage2, 6, 0.85, 0.7) || 0;
-  var value3 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage3, 6, 0.85, 0.7) || 0;
-  var value4 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage4, 6, 0.85, 0.7) || 0;
+  var value1 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage1, 7, 0.75, 0.7) || 0;
+  var value2 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage2, 7, 0.75, 0.7) || 0;
+  var value3 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage3, 7, 0.75, 0.7) || 0;
+  var value4 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage4, 7, 0.75, 0.7) || 0;
 
   releaseImage(croppedImage1);
   releaseImage(croppedImage2);
@@ -3358,13 +3480,6 @@ function handlePVP() {
   console.log('handlePVP: ', new Date());
 
   var battleY = [108, 162, 223, 275];
-  var kingdomArena = [
-    { x: 181, y: 267, r: 56, g: 167, b: 231 },
-    { x: 181, y: 306, r: 56, g: 167, b: 231 },
-    { x: 182, y: 335, r: 48, g: 76, b: 109 },
-    { x: 373, y: 327, r: 41, g: 35, b: 33 },
-    { x: 296, y: 70, r: 65, g: 58, b: 56 },
-  ];
 
   if (!handleGotoAdventure(Advantures.pvp, kingdomArena)) {
     console.log('unable to goto pvp, skipping handlePVP');
@@ -3388,15 +3503,15 @@ function handlePVP() {
     { x: 38, y: 131, r: 206, g: 20, b: 24 },
   ];
   var pageSuperEpicCookieSoldout = [
-    {x: 118, y: 127, r: 220, g: 23, b: 24},
-    {x: 170, y: 112, r: 206, g: 20, b: 24},
-    {x: 164, y: 98, r: 74, g: 76, b: 87},
+    { x: 118, y: 127, r: 220, g: 23, b: 24 },
+    { x: 170, y: 112, r: 206, g: 20, b: 24 },
+    { x: 164, y: 98, r: 74, g: 76, b: 87 },
   ];
   var pageNotEnoughMedal = [
-    {x: 292, y: 248, r: 123, g: 207, b: 8},
-    {x: 320, y: 185, r: 250, g: 210, b: 8},
-    {x: 338, y: 243, r: 123, g: 207, b: 8},
-  ]
+    { x: 292, y: 248, r: 123, g: 207, b: 8 },
+    { x: 320, y: 185, r: 250, g: 210, b: 8 },
+    { x: 338, y: 243, r: 123, g: 207, b: 8 },
+  ];
   if (config.autoPvPPurchaseAncientCookie && checkIsPage(pageHasPageMedalShop)) {
     console.log('Auto purchase ancient cookie...');
     qTap(pageHasPageMedalShop);
@@ -3413,9 +3528,8 @@ function handlePVP() {
           sleep(2000);
           qTap(pnt(439, 92));
           sleep(2000);
-            console.log('Need more medals, skipping');
-        }
-        else {
+          console.log('Need more medals, skipping');
+        } else {
           console.log('Purchased ancient cookie successfully');
         }
       } else {
@@ -3432,9 +3546,8 @@ function handlePVP() {
           sleep(2000);
           qTap(pnt(439, 92));
           sleep(2000);
-            console.log('Need more medals, skipping');
-        }
-        else {
+          console.log('Need more medals, skipping');
+        } else {
           console.log('Purchased super epic cookie successfully');
         }
       } else {
@@ -3455,15 +3568,6 @@ function handlePVP() {
 
   sendEvent('running', '');
 
-  tap(560, 330, 100); // Free Refresh
-  sleep(3000);
-
-  if (checkIsPage(pagePvPCrystaisRefresh)) {
-    console.log('crystaisRefreshPage');
-    tap(436, 90, 100); // X cancel
-    sleep(3000);
-  }
-
   var arenaReadyToBattlePage = [
     { x: 533, y: 331, r: 77, g: 170, b: 4 },
     { x: 490, y: 322, r: 194, g: 11, b: 27 },
@@ -3473,46 +3577,53 @@ function handlePVP() {
   ];
 
   console.log('go kingdomArena success');
-
-  // TODO: we can loop pvp many times in case we have lots of tickets
-  var ces = getCEs();
-  for (var i = 0; i < ces.length; i++) {
-    var ce = ces[i];
-    if (ce < config.autoPvPTargetScoreLimit) {
-      console.log('Battle with', i, 'ce', ce, 'target limit: ', config.autoPvPTargetScoreLimit);
-      if (checkIsPage(pagePvPCrystaisRefresh)) {
-        console.log('crystaisRefreshPage');
-        tap(436, 90, 100); // X cancel
-        sleep(1500);
-      }
-
-      if (!waitUntilSeePage(arenaReadyToBattlePage, 5, pnt(590, battleY[i]))) {
-        console.log('Wait 8 sec but did not find the pvp battle page, skipping');
-        continue;
-      }
-      if (checkIsPage(kingdomArena)) {
-        // already battled
-        console.log('Battle with', i, 'failed. Already Battled');
-        continue;
-      }
-      tap(550, 320, 100); // start battle
-      sleep(5000);
-
-      if (waitForBattle('pvp', 120, false, kingdomArena)) {
-        console.log('PvP battle finished, try next one');
-        continue;
+  for(var loop = 0; loop < 5; loop++) {
+    var ces = getCEs();
+    for (var i = 0; i < ces.length; i++) {
+      var ce = ces[i];
+      if (ce < config.autoPvPTargetScoreLimit && ce !== 0) {
+        console.log('Battle with', i, 'ce', ce, 'target limit: ', config.autoPvPTargetScoreLimit);
+        if (checkIsPage(pagePvPCrystaisRefresh)) {
+          console.log('crystaisRefreshPage');
+          tap(436, 90, 100); // X cancel
+          sleep(1500);
+        }
+  
+        if (!waitUntilSeePage(arenaReadyToBattlePage, 5, pnt(590, battleY[i]))) {
+          console.log('Wait 8 sec but did not find the pvp battle page, skipping');
+          continue;
+        }
+        if (checkIsPage(kingdomArena)) {
+          // already battled
+          console.log('Battle with', i, 'failed. Already Battled');
+          continue;
+        }
+        tap(550, 320, 100); // start battle
+        sleep(5000);
+  
+        if (waitForBattle('pvp', 120, false, kingdomArena)) {
+          console.log('PvP battle finished, try next one');
+          continue;
+        } else {
+          console.log('Finish PvP due to battle return false');
+          break;
+        }
       } else {
-        console.log('Finish PvP due to battle return false');
-        break;
+        console.log('Not to battle with', i, 'ce', ce, ', limit', config.autoPvPTargetScoreLimit);
       }
-    } else {
-      console.log('Not to battle with', i, 'ce', ce, ', limit', config.autoPvPTargetScoreLimit);
+    }
+
+    tap(560, 330, 100); // Free Refresh
+    if (waitUntilSeePage(pagePvPCrystaisRefresh, 1)) {
+      console.log('crystaisRefreshPage');
+      tap(436, 90, 100); // X cancel
+      break;
     }
   }
 
   sendEvent('running', '');
   console.log('finish pvp, goto kingdom');
-  handleGotoKingdomPage();
+  // handleGotoKingdomPage();
 }
 
 function handleWishingTree() {
@@ -3526,9 +3637,9 @@ function handleWishingTree() {
   ];
 
   pageNotCollapsedWisingTree = [
-    { x: 92, y: 316, r: 162, g: 90, b: 227 },
-    { x: 101, y: 325, r: 134, g: 183, b: 249 },
-    { x: 57, y: 341, r: 55, g: 89, b: 132 },
+    {x: 111, y: 294, r: 99, g: 65, b: 165},
+    {x: 108, y: 299, r: 135, g: 187, b: 255},
+    {x: 118, y: 297, r: 49, g: 85, b: 123},
   ];
   pageCollapsedAffairs = [
     { x: 96, y: 329, r: 255, g: 223, b: 142 },
@@ -3553,7 +3664,7 @@ function handleWishingTree() {
       qTap(pageNotCollapsedWisingTree);
     } else if (checkIsPage(pageCollapsedAffairs)) {
       qTap(pageCollapsedAffairs);
-      if (!waitUntilSeePage(pageUncollapsedAffairs, 6)) {
+      if (!waitUntilSeePage(pageNotCollapsedWisingTree, 6)) {
         console.log('Cannot get into wishing tree page, skipping');
         return false;
       }
@@ -3661,12 +3772,21 @@ function handleWishingTree() {
           if (wishes[idx]['requirements'][req]['request'] === 0) {
             console.log('req  is 0, ocr mistake, ignore this requirement:', idx, req);
             wishes[idx].requireFulfilled++;
-          }
-          else if (
+          } else if (
             wishes[idx]['requirements'][req]['own'] - wishes[idx]['requirements'][req]['request'] <
             config.wishingTreeSafetyStock
           ) {
-            console.log('wish ', idx, req, ' is below safety stock: ', wishes[idx]['requirements'][req]['own'], '/', wishes[idx]['requirements'][req]['request'], '<', config.wishingTreeSafetyStock);
+            console.log(
+              'wish ',
+              idx,
+              req,
+              ' is below safety stock: ',
+              wishes[idx]['requirements'][req]['own'],
+              '/',
+              wishes[idx]['requirements'][req]['request'],
+              '<',
+              config.wishingTreeSafetyStock
+            );
             wishes[idx].failedCount++;
             break;
           } else {
@@ -3678,7 +3798,10 @@ function handleWishingTree() {
           wishes[idx].failedCount++;
         }
       }
-      if (wishes[idx].golden || (wishes[idx].requireFulfilled != 0 && wishes[idx].requireFulfilled === wishes[idx].requirements.length)) {
+      if (
+        wishes[idx].golden ||
+        (wishes[idx].requireFulfilled != 0 && wishes[idx].requireFulfilled === wishes[idx].requirements.length)
+      ) {
         if (wishes[idx].golden) {
           console.log('Force fulfill golden wish: ', idx);
         }
@@ -3867,10 +3990,9 @@ function handleGotoHotAirBallon() {
   handleGotoKingdomPage();
 
   pageHotAirBallonReady = [
-    { x: 205, y: 326, r: 255, g: 109, b: 200 },
-    { x: 198, y: 324, r: 255, g: 109, b: 200 },
-    { x: 204, y: 313, r: 255, g: 109, b: 200 },
-    { x: 57, y: 344, r: 40, g: 66, b: 97 },
+    {x: 122, y: 185, r: 255, g: 166, b: 165},
+    {x: 103, y: 206, r: 255, g: 109, b: 206},
+    {x: 118, y: 209, r: 57, g: 89, b: 132},
   ];
   pageCollapsedaffairs = [
     { x: 97, y: 327, r: 255, g: 221, b: 136 },
@@ -3889,7 +4011,7 @@ function handleGotoHotAirBallon() {
     console.log('Found collapsed kingdom affairs');
     qTap(pageCollapsedaffairs);
     sleep(config.sleepAnimate * 2);
-    qTap(pnt(108, 173));
+    qTap(pnt(108, 200));
     sleep(3000);
     if (!waitUntilSeePage(pageInHotAirBallon, 10, pnt(1, 1), pageBallonFlying)) {
       console.log('Cannot find pageInHotAirBallon, should be flying');
@@ -4156,76 +4278,148 @@ function handleCollectIslandResources() {
 }
 
 var Advantures = Object.freeze({
-  tropicalIsland: { pnt: pnt(329, 68), backward: true },
-  bounties: { pnt: pnt(500, 100), backward: false },
-  pvp: { pnt: pnt(500, 250), backward: false },
-  guild: { pnt: pnt(123, 175), backward: true },
-  // superMayhem: { pnt: pnt(10, 172), backward: true },
-  cookieAlliance: { pnt: pnt(454, 275), backward: true },
-  towerOfSweetChaos: { pnt: pnt(117, 265), backward: true },
+  bounties: 'bounties',
+  pvp: 'pvp',
+  guild: 'guild',
+  towerOfSweetChaos: 'towerOfSweetChaos',
+  superMayhem: 'superMayhem',
+  tropicalIsland: 'tropicalIsland',
+  cookieAlliance: 'cookieAlliance',
 });
 
-function handleGotoAdventure(destination, targetPage) {
-  console.log('handleGotoAdventure: ', JSON.stringify(destination));
+function GenAdvanture(pnt, fromHead, backward) {
+  return{
+    pnt: pnt,
+    fromHead: fromHead,
+    backward: backward,
+  };
+}
+
+var AdvanturesWithEvents = Object.freeze({
+  pvp: GenAdvanture(pnt(330, 230), true, false),
+  towerOfSweetChaos: GenAdvanture(pnt(420, 230), true, false),
+  tropicalIsland: GenAdvanture(pnt(510, 230), true, false),
+  cookieAlliance: GenAdvanture(pnt(600, 230), true, false),
+
+  superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  bounties: GenAdvanture(pnt(625, 100), false, false),
+  guild: GenAdvanture(pnt(123, 175), false, true),
+});
+
+var AdvanturesWithoutEvents = Object.freeze({
+  pvp: GenAdvanture(pnt(330, 230), true, false),
+  towerOfSweetChaos: GenAdvanture(pnt(420, 230), true, false),
+  tropicalIsland: GenAdvanture(pnt(510, 230), true, false),
+  cookieAlliance: GenAdvanture(pnt(600, 230), true, false),
+
+  superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  bounties: GenAdvanture(pnt(500, 100), false, false),
+  guild: GenAdvanture(pnt(10, 100), false, true),
+});
+
+// The first 2 items are bounties and arena
+// var pageAdventureItemsNoEvents = [
+//   { x: 350, y: 173, r: 49, g: 36, b: 33 },
+//   { x: 351, y: 329, r: 57, g: 8, b: 16 },
+//   { x: 329, y: 112, r: 189, g: 125, b: 66 },
+//   { x: 282, y: 95, r: 214, g: 178, b: 74 },
+// ];
+
+// With super mayhem
+var pageAdventureItemsNoEvents = [
+  {x: 25, y: 16, r: 214, g: 235, b: 231},
+  {x: 13, y: 29, r: 253, g: 222, b: 89},
+  {x: 551, y: 179, r: 33, g: 16, b: 8},
+  {x: 547, y: 334, r: 49, g: 4, b: 8},
+];
+
+function handleGotoAdventure(targetAdvanture, targetPage) {
+  console.log('handleGotoAdventure: ', targetAdvanture);
   if (!checkIsPage(targetPage)) {
-    if (!checkIsPage(pageInKingdomVillage)) {
-      handleGotoKingdomPage();
-    }
-    if (!waitUntilSeePage(pageInKingdomVillage, 6)) {
-      console.log('Skipping ', destination, ' as cannot goto kingdom');
+
+    // Route from Head
+    if (AdvanturesWithoutEvents[targetAdvanture].fromHead) {
+      if (!checkIsPage(pageInCookieHead)) {
+        if (!checkIsPage(pageInKingdomVillage)) {
+          handleTryHitBackToKingdom();
+        };
+
+        qTap(pnt(31, 41));
+        if (!waitUntilSeePage(pageInCookieHead, 10)) {
+          console.log('Failed to get to cookie head in 10 secs');
+          handleGotoKingdomPage();
+          return false;
+        }
+      }
+
+      qTap(AdvanturesWithoutEvents[targetAdvanture].pnt);
+      if (waitUntilSeePage(targetPage, 8)){
+        console.log(targetAdvanture, 'page found')
+        return true;
+      }
       return false;
     }
 
-    qTap(pnt(560, 330)); // tap play
+    // Route from PLAY! btn
+    if (!checkIsPage(pageChooseAdvanture)) {
+      if (!checkIsPage(pageInKingdomVillage)) {
+        handleGotoKingdomPage();
+      }
+      if (!waitUntilSeePage(pageInKingdomVillage, 6)) {
+        console.log('Skipping ', targetAdvanture, ' as cannot goto kingdom');
+        return false;
+      }
 
-    if (!destination.backward && waitUntilSeePage(pageSelectAdvanture, 6)) {
-      console.log('tap: ', JSON.stringify(destination))
-      qTap(destination.pnt);
-      sleep(config.sleepAnimate)
-      if (waitUntilSeePage(targetPage, 8)) {
-        return true;
-      } else {
-        console.log('Cannot goto ', JSON.stringify(destination), ', skipping');
+      qTap(pnt(560, 330)); // tap play
+      if (!waitUntilSeePage(pageSelectAdvanture, 6)) {
+        console.log('failed to goto choose advanture, skipping');
         return false;
       }
     }
 
-    if (destination.backward && waitUntilSeePage(pageSelectAdvanture, 6)) {
-      tapDown(410, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(200, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(0, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(-400, 186, 40, 0);
-      sleep(config.sleep);
-      tapUp(-400, 186, 40, 0);
-      sleep(config.sleepAnimate);
-
-      tapDown(410, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(200, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(0, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(-400, 186, 40, 0);
-      sleep(config.sleep);
-      tapUp(-400, 186, 40, 0);
-      sleep(config.sleepAnimate);
-
-      if (waitUntilSeePage(pageChooseAdvanture, 2)) {
-        qTap(destination.pnt);
-        if (waitUntilSeePage(targetPage, 8)) {
-          return true;
-        } else {
-          console.log('Cannot goto ', JSON.stringify(destination), ', skipping');
-          return false;
-        }
-      }
+    var destination;
+    if (checkIsPage(pageAdventureItemsNoEvents)) {
+      console.log('No new event', JSON.stringify(AdvanturesWithoutEvents[targetAdvanture]));
+      // Advantures = AdvanturesWithoutEvents;
+      destination = AdvanturesWithoutEvents[targetAdvanture];
+    } else {
+      console.log('has new event', JSON.stringify(AdvanturesWithEvents[targetAdvanture]));
+      destination = AdvanturesWithEvents[targetAdvanture];
     }
 
+    if (destination.backward) {
+      tapDown(410, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(200, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(0, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(-400, 186, 40, 0);
+      sleep(config.sleep);
+      tapUp(-400, 186, 40, 0);
+      sleep(config.sleepAnimate);
+
+      tapDown(410, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(200, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(0, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(-400, 186, 40, 0);
+      sleep(config.sleep);
+      tapUp(-400, 186, 40, 0);
+      sleep(config.sleepAnimate);
+    }
+
+    qTap(destination.pnt);
+    if (waitUntilSeePage(targetPage, 8)) {
+      return true;
+    } else {
+      console.log('Cannot goto ', JSON.stringify(destination), ', skipping');
+      return false;
+    }
   } else {
-    // console.log('already in target page')
+    console.log('already in target page')
     return true;
   }
 }
@@ -4413,6 +4607,12 @@ var pageKeepBattleByOrderNotCheck = [
   { x: 153, y: 254, r: 49, g: 40, b: 98 },
   { x: 149, y: 270, r: 147, g: 129, b: 235 },
 ];
+var pageBattleTowerOfSweetChaosVictory = [
+  { x: 549, y: 322, r: 148, g: 219, b: 57 },
+  { x: 222, y: 60, r: 231, g: 182, b: 41 },
+  { x: 209, y: 59, r: 38, g: 121, b: 198 },
+  { x: 256, y: 59, r: 123, g: 190, b: 255 },
+];
 
 function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, pageExitBattle, pageExitBattleAbnormal) {
   console.log('Battling for: ', battleName);
@@ -4597,6 +4797,18 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
           j++;
         }
       }
+    }
+
+    if (battleName === 'TowerOfSweetChaos') {
+      if (checkIsPage(pageBattleTowerOfSweetChaosVictory)) {
+        console.log('ToSC victory, tap next (pageBattleTowerOfSweetChaosVictory)');
+
+        qTap(pageBattleTowerOfSweetChaosVictory);
+        sleep(1500);
+        return true;
+      }
+
+      // TODO: might need to handle failed cases
     }
 
     if (needToCheckAutoUseSkill) {
@@ -4784,11 +4996,6 @@ function handleInGuildPage() {
 }
 
 function guildBattleDragon() {
-  var pageBattleDragon = [
-    { x: 531, y: 326, r: 121, g: 207, b: 12 },
-    { x: 165, y: 334, r: 121, g: 207, b: 12 },
-    { x: 74, y: 333, r: 4, g: 151, b: 211 },
-  ];
   var pageNoMoreDragonToFight = [
     { x: 419, y: 19, r: 255, g: 211, b: 0 },
     { x: 415, y: 42, r: 242, g: 175, b: 93 },
@@ -4835,12 +5042,6 @@ function guildBattleDragon() {
 }
 
 function handleGuildBattleAlliance() {
-  var pageCookieAlliance = [
-    { x: 333, y: 21, r: 255, g: 255, b: 255 },
-    { x: 329, y: 14, r: 246, g: 225, b: 250 },
-    { x: 73, y: 332, r: 0, g: 150, b: 214 },
-    { x: 29, y: 141, r: 151, g: 75, b: 13 },
-  ];
   var pageNoAllianceTicket = [
     { x: 244, y: 252, r: 49, g: 190, b: 231 },
     { x: 327, y: 77, r: 156, g: 144, b: 217 },
@@ -5119,15 +5320,12 @@ function handleGotoGnomeLab() {
     { x: 98, y: 327, r: 255, g: 228, b: 143 },
     { x: 91, y: 327, r: 222, g: 52, b: 66 },
     { x: 127, y: 345, r: 41, g: 65, b: 99 },
-    { x: 26, y: 322, r: 255, g: 255, b: 255 },
-    { x: 22, y: 329, r: 82, g: 26, b: 11 },
-    { x: 28, y: 273, r: 255, g: 247, b: 206 },
   ];
   pageLabUncollapsed = [
-    {x: 102, y: 118, r: 255, g: 239, b: 255},
-    {x: 106, y: 128, r: 255, g: 240, b: 250},
-    {x: 109, y: 73, r: 189, g: 101, b: 99},
-    {x: 111, y: 229, r: 255, g: 223, b: 140},
+    {x: 104, y: 145, r: 255, g: 255, b: 255},
+    {x: 97, y: 143, r: 206, g: 12, b: 24},
+    {x: 96, y: 163, r: 255, g: 223, b: 247},
+    {x: 87, y: 158, r: 57, g: 93, b: 132},
   ];
   if (checkIsPage(pageLabCollapsed)) {
     qTap(pageLabCollapsed);
@@ -5179,13 +5377,23 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
     { x: 398, y: 315, r: 54, g: 62, b: 95 },
   ];
 
-  var pageNotEnoughItemForReserch = [
+  var pageNotEnoughAuroraItemForReserch = [
     { x: 436, y: 97, r: 255, g: 255, b: 255 },
     { x: 427, y: 97, r: 56, g: 167, b: 231 },
     { x: 414, y: 100, r: 60, g: 70, b: 105 },
     { x: 310, y: 249, r: 0, g: 193, b: 255 },
     { x: 261, y: 248, r: 219, g: 207, b: 199 },
     { x: 287, y: 252, r: 121, g: 207, b: 12 },
+  ];
+
+  // Tools, etc
+  var pageNotEnoughItemsForResearch = [
+    {x: 435, y: 95, r: 255, g: 255, b: 255},
+    {x: 303, y: 250, r: 8, g: 125, b: 255},
+    {x: 287, y: 247, r: 123, g: 207, b: 16},
+    {x: 261, y: 245, r: 222, g: 207, b: 198},
+    {x: 305, y: 100, r: 57, g: 69, b: 107},
+    {x: 22, y: 20, r: 127, g: 102, b: 122},
   ];
 
   var foundResults = [];
@@ -5212,25 +5420,50 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
               }
 
               if (!hasAuroraRequirement) {
-                console.log('Start researching without Aurora item: ', JSON.stringify(foundResults[j]));
+                console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
                 qTap(pageCanTapResearch);
 
                 // Check for not enough items for research
                 sleep(1000);
-                if (checkIsPage(pageNotEnoughItemForReserch)) {
-                  console.log('Not enough items, continue');
-                  qTap(pageNotEnoughItemForReserch);
+                if (checkIsPage(pageNotEnoughAuroraItemForReserch)) {
+                  console.log('Not enough aurora items, continue');
+                  qTap(pageNotEnoughAuroraItemForReserch);
                   sleep(1000);
                   qTap(pnt(570, 31));
                   sleep(1500);
                   break;
                 }
+                else if (checkIsPage(pageNotEnoughItemsForResearch)) {
+                  console.log('Not enough items, continue');
+                  qTap(pageNotEnoughItemsForResearch);
+                  sleep(1000);
+                  qTap(pnt(570, 31));
+                  sleep(1500);
+                  break;
+                }
+                else{
+                  console.log('Start researching');
+                }
 
                 return true;
               }
             } else {
-              console.log('Start researching: ', JSON.stringify(foundResults[j]));
+              console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
               qTap(pageCanTapResearch);
+
+              sleep(1000);
+              if (checkIsPage(pageNotEnoughItemsForResearch)) {
+                console.log('Not enough items, continue');
+                qTap(pageNotEnoughItemsForResearch);
+                sleep(1000);
+                qTap(pnt(570, 31));
+                sleep(1500);
+                break;
+              }
+              else{
+                console.log('Start researching');
+              }
+
               return true;
             }
           } else {
@@ -5275,9 +5508,13 @@ function handleGotoTradeHabor() {
     { x: 28, y: 273, r: 255, g: 247, b: 206 },
   ];
   pageHaborUncollapsed = [
-    { x: 104, y: 72, r: 255, g: 251, b: 107 },
-    { x: 114, y: 75, r: 231, g: 121, b: 156 },
-    { x: 105, y: 321, r: 79, g: 118, b: 162 },
+    {x: 113, y: 99, r: 252, g: 58, b: 163},
+    {x: 105, y: 105, r: 255, g: 251, b: 107},
+    {x: 84, y: 105, r: 57, g: 105, b: 156}
+  ];
+  pageHaborUncollapsed2 = [
+    {x: 114, y: 50, r: 255, g: 65, b: 168},
+    {x: 104, y: 55, r: 255, g: 253, b: 107},
   ];
   if (checkIsPage(pageLabCollapsed)) {
     qTap(pageLabCollapsed);
@@ -5287,7 +5524,10 @@ function handleGotoTradeHabor() {
   if (checkIsPage(pageHaborUncollapsed)) {
     qTap(pageHaborUncollapsed);
     sleep(config.sleepAnimate * 2);
-
+    handleInHabor();
+  } else if (checkIsPage(pageHaborUncollapsed2)) {
+    qTap(pageHaborUncollapsed2);
+    sleep(config.sleepAnimate * 2);
     handleInHabor();
   }
   handleGotoKingdomPage();
@@ -5295,11 +5535,11 @@ function handleGotoTradeHabor() {
 
 function handleInHabor() {
   var pageInHabor = [
-    {x: 303, y: 13, r: 255, g: 186, b: 239},
-    {x: 310, y: 16, r: 247, g: 252, b: 203},
-    {x: 409, y: 20, r: 255, g: 207, b: 0},
-    {x: 521, y: 20, r: 0, g: 136, b: 255},
-  ]
+    { x: 303, y: 13, r: 255, g: 186, b: 239 },
+    { x: 310, y: 16, r: 247, g: 252, b: 203 },
+    { x: 409, y: 20, r: 255, g: 207, b: 0 },
+    { x: 521, y: 20, r: 0, g: 136, b: 255 },
+  ];
   var pageShipInHabor = [
     { x: 266, y: 190, r: 195, g: 94, b: 46 },
     { x: 36, y: 225, r: 247, g: 185, b: 247 },
@@ -5380,8 +5620,7 @@ function handleInHabor() {
       tapUp(200, 319, 40, 0);
       sleep(config.sleepAnimate * 2);
     }
-  }
-  else {
+  } else {
     console.log('No need to send ship');
   }
 
@@ -5410,14 +5649,16 @@ function handleInHabor() {
     sleep(config.sleepAnimate);
     qTap(pnt(315, 247));
     sleep(config.sleepAnimate);
+    qTap(pnt(612, 270));
+    sleep(config.sleepAnimate);
+    qTap(pnt(315, 247));
+    sleep(config.sleepAnimate);
     console.log('Purchased carmel stuff successfully');
     keycode('BACK', 800);
     sleep(config.sleepAnimate);
-  }
-  else {
+  } else {
     console.log('No need to autoBuyCaramelStuff');
   }
-
 
   var pageCanGotoShellShop = [
     { x: 33, y: 227, r: 247, g: 207, b: 231 },
@@ -5473,8 +5714,7 @@ function handleInHabor() {
 
       keycode('BACK', 80);
     }
-  }
-  else {
+  } else {
     console.log('No need to autoBuySeaFairy');
   }
 
@@ -5549,7 +5789,7 @@ function checkAndRestartApp() {
 
       var img;
       var whSize;
-      for (var timer = 0; timer < 30; timer ++) {
+      for (var timer = 0; timer < 30; timer++) {
         img = getScreenshot();
         whSize = getImageSize(img);
         releaseImage(img);
@@ -5560,9 +5800,7 @@ function checkAndRestartApp() {
       }
 
       if (whSize.width !== 640) {
-        console.log(
-          'Reboot as failed to start the game after 50 secs'
-        );
+        console.log('Reboot as failed to start the game after 50 secs');
         execute('/system/bin/reboot -p');
       }
 
@@ -5641,26 +5879,26 @@ function getMayhemScores() {
   var scores = [0, 0, 0];
   var imagesLocation = [
     [
-      { x: 498, y: 56, w: 42, h: 12 },
-      { x: 498, y: 84, w: 42, h: 12 },
-      { x: 498, y: 110, w: 42, h: 12 },
+      { x: 495, y: 56, w: 47, h: 12 },
+      { x: 495, y: 84, w: 47, h: 12 },
+      { x: 495, y: 110, w: 47, h: 12 },
     ],
     [
-      { x: 498, y: 145, w: 42, h: 12 },
-      { x: 498, y: 172, w: 42, h: 12 },
-      { x: 498, y: 198, w: 42, h: 12 },
+      { x: 495, y: 145, w: 47, h: 12 },
+      { x: 495, y: 172, w: 47, h: 12 },
+      { x: 495, y: 198, w: 47, h: 12 },
     ],
     [
-      { x: 498, y: 232, w: 42, h: 12 },
-      { x: 498, y: 260, w: 42, h: 12 },
-      { x: 498, y: 286, w: 42, h: 12 },
+      { x: 495, y: 232, w: 47, h: 12 },
+      { x: 495, y: 260, w: 47, h: 12 },
+      { x: 495, y: 288, w: 47, h: 12 },
     ],
   ];
   for (var mayhemIdx = 0; mayhemIdx < imagesLocation.length; mayhemIdx++) {
     for (var teamIdx = 0; teamIdx < imagesLocation[mayhemIdx].length; teamIdx++) {
       var tImage = imagesLocation[mayhemIdx][teamIdx];
       var croppedImage = cropImage(img, tImage.x, tImage.y, tImage.w, tImage.h);
-      var value = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage, 6, 0.85, 0.7) || 0;
+      var value = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage, 7, 0.7, 0.7) || 0;
       releaseImage(croppedImage);
 
       if (value > scores[mayhemIdx]) {
@@ -5705,8 +5943,6 @@ function handleSuperMayhem() {
   ];
 
   console.log('start super Mayhem success');
-  var scores = getMayhemScores();
-  console.log('super mayhem scores: ', JSON.stringify(scores));
   var battleEntriesPnts = [
     [{ x: 586, y: 97, r: 123, g: 207, b: 16 }],
     [{ x: 583, y: 186, r: 123, g: 207, b: 16 }],
@@ -5715,9 +5951,12 @@ function handleSuperMayhem() {
 
   var needToCheckSpeed = true;
   for (var loopTimes = 0; loopTimes < config.battleMaxLoops; loopTimes++) {
+    var scores = getMayhemScores();
+    console.log('super mayhem scores: ', JSON.stringify(scores));
+
     var loopHasBattled = false;
     for (var scoreIdx = 0; scoreIdx < scores.length; scoreIdx++) {
-      if (scores[scoreIdx] < config.autoSuperMayhemTargetScoreLimit) {
+      if (scores[scoreIdx] < config.autoSuperMayhemTargetScoreLimit && scores[scoreIdx] != 0) {
         if (!checkIsPage(battleEntriesPnts[scoreIdx])) {
           console.log('skip', scoreIdx, 'as already battled');
           continue;
@@ -5820,25 +6059,95 @@ function handleSuperMayhem() {
   handleGotoKingdomPage();
 }
 
-function handleAutoPromoteCookies() {
+function handleTowerOfSweetChaos() {
+  if (
+    !checkIsPage(pageReadyToBattleToSC) &&
+    !handleGotoAdventure(Advantures.towerOfSweetChaos, pageInTowerOfSweetChaos)
+  ) {
+    console.log('unable to goto TowerOfSweetChaos, skipping handleTowerOfSweetChaos');
+    return false;
+  }
 
+  var downArrow = findSpecificImageInScreen(towerOfSweetChoasDownArrow);
+  if (downArrow.length > 0) {
+    qTap(downArrow[0]);
+    sleep(5000);
+  }
+
+  qTap(pnt(180, 133)); // Go to the top tray
+  sleep(config.sleepAnimate);
+
+  console.log('starting handleTowerOfSweetChaos', JSON.stringify(pageReadyToBattleToSC));
+  var idx = 0;
+  while (readyAndBattleTray() && idx < 5) {
+    console.log('just finished tray for', idx, 'times');
+    idx++;
+  }
+
+  console.log('Finish ToSC at ', idx, 'battles');
+  handleTryHitBackToKingdom();
+  return;
+}
+
+function readyAndBattleTray() {
+  if (checkIsPage(pageToSCTreasureChest)) {
+    console.log('Try to open a treasure chest');
+    qTap(pageToSCTreasureChest);
+    sleep(5000);
+    if (!waitUntilSeePage(pageInTowerOfSweetChaos, 15, pageToSCTreasureChest)) {
+      console.log('Failed to open chest and goto pageInTowerOfSweetChaos, skipping');
+      return false;
+    }
+  }
+
+  if (checkIsPage(pageInTowerOfSweetChaos)) {
+    qTap(pnt(571, 327)); // tap Ready
+    if (!waitUntilSeePage(pageReadyToBattleToSC, 3)) {
+      console.log('Failed to goto pageReadyToBattleTowerOfSweetChaos, skipping');
+      return false;
+    }
+  }
+
+  qTap(pageReadyToBattleToSC);
+  if (waitUntilSeePage(pageToSCTeamsNotMeetRequirement, 3)) {
+    console.log('ToSC team requirement not met, skipping');
+    return false;
+  }
+
+  if (waitForBattle('TowerOfSweetChaos', 180, true, pageInTowerOfSweetChaos)) {
+    console.log('TowerOfSweetChaos battle finished, try next one');
+    if (
+      waitUntilSeePage(pageReadyToBattleToSC, 20) ||
+      checkIsPage(pageInTowerOfSweetChaos) ||
+      checkIsPage(pageToSCTreasureChest)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  console.log('Finish TowerOfSweetChaos due to battle return false');
+  return false;
+}
+
+function handleAutoPromoteCookies() {
   var pageInCookieList = [
-    {x: 164, y: 341, r: 235, g: 237, b: 242},
-    {x: 148, y: 340, r: 66, g: 93, b: 140},
-    {x: 30, y: 317, r: 230, g: 142, b: 33},
-  ]
+    { x: 164, y: 341, r: 235, g: 237, b: 242 },
+    { x: 148, y: 340, r: 66, g: 93, b: 140 },
+    { x: 30, y: 317, r: 230, g: 142, b: 33 },
+  ];
   if (!checkIsPage(pageInCookieList)) {
-    if (checkIsPage(pageInKingdomVillage)){
+    if (checkIsPage(pageInKingdomVillage)) {
       handleTryHitBackToKingdom();
     }
 
     qTap(pnt(464, 327)); // icon Cookies
     sleep(config.sleepAnimate);
     qTap(pnt(195, 335)); // Cookies tab
-    sleep(config.sleepAnimate*2);
+    sleep(config.sleepAnimate * 2);
   }
 
-  for (var i = 0; i < 10; i ++) {
+  for (var i = 0; i < 10; i++) {
     var results = findSpecificImageInScreen(cookiePromoteGreenArrow, 0.7);
     // console.log('>', JSON.stringify(results))
 
@@ -5847,23 +6156,23 @@ function handleAutoPromoteCookies() {
         break;
       }
 
-      var cookie = results[idx]
+      var cookie = results[idx];
       qTap(cookie);
-      sleep(config.sleepAnimate*2);
+      sleep(config.sleepAnimate * 2);
       qTap(pnt(518, 311));
       sleep(config.sleepAnimate);
       qTap(pnt(518, 311));
       sleep(config.sleepAnimate);
 
-      for (var j =0; j < 10; j ++) {
-          if (!checkIsPage(pageInCookieList)) {
-            keycode('BACK', 1000);
-            sleep(config.sleepAnimate*2);
-          }
+      for (var j = 0; j < 10; j++) {
+        if (!checkIsPage(pageInCookieList)) {
+          keycode('BACK', 1000);
+          sleep(config.sleepAnimate * 2);
+        }
       }
     }
 
-    console.log('swiping')
+    console.log('swiping');
     tapDown(305, 315, 40, 0);
     sleep(config.sleep * 4);
     moveTo(305, 200, 40, 0);
@@ -5875,7 +6184,7 @@ function handleAutoPromoteCookies() {
     moveTo(305, 100, 40, 0);
     sleep(config.sleep * 2);
     tapUp(305, 0, 40, 0);
-    sleep(config.sleepAnimate*2);
+    sleep(config.sleepAnimate * 2);
   }
 }
 
@@ -6035,6 +6344,8 @@ function stop() {
   releaseImage(diamondInTowerOfRecords);
   releaseImage(loginGearIcon);
   releaseImage(cookiePromoteGreenArrow);
+  releaseImage(towerOfSweetChoasDownArrow);
+  releaseImage(candyHouseUpgradeArrow);
 
   for (var i = 0; i < auroraItems.length; i++) {
     releaseImage(auroraItems[i].img);
@@ -6079,6 +6390,8 @@ var guildExpandLandPlus;
 var diamondInTowerOfRecords;
 var loginGearIcon;
 var cookiePromoteGreenArrow;
+var towerOfSweetChoasDownArrow;
+var candyHouseUpgradeArrow;
 var auroraItems = [];
 var gnomeLabKingdom = [];
 var gnomeLabCookies = [];
@@ -6127,6 +6440,14 @@ function loadImages() {
 
   cookiePromoteGreenArrow = getImageFromBase64(
     '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAASAA8DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDjf2aP2edK/wCC0nibwp8Y/wBs7wTeeAPgN8O9Xu7i48NaT4lmur74j6kCkYs4NkNuba1gKSxz3vBJlltrd1lFxLa4v7dX/BLQfslfFGy/a3/4Ja+CPEd54YisG0nWvg3b6jfahqGjxyuStzp0shuJ7iFpWBliAkljZ5JBmGST7P8AZX7Lv7M3j/8AYo/aE8e/sJ6v8fp/Hvhnw54Q8O6/8NkvtLS0vdN02+vtfhe0lWORkuJIxYQb7mNIvNZg7RqzV5p/wW9/aW+Nn7Ff7KmifEf4MeJv7D1/UvHNrpokmZ1eW2a1u5ZAqo6MRuhjyQcDjPUV/IuceOfiZm3jLhsDl06SXPFQjaXJVhUhGUfatpO6jbWMYqMr6SV7/L8R8S8SZvxO6eMtKbcU2rrorPmjy8rStZxSs9d9T5S/4OzPiJ8QPh5+3d8OPE/gDx1rOh6ld/CRbW61DR9Tltp5oF1S8dYnkjYMyBmZgpOASTjJr8w/Cvxl+L/xO8ZaVofxJ+K3iXxDZRTyzRWeua7cXcSSiCQBwkrsAwDMM4zgn1oor7vw+/5lX+GP6nXX/wCR3H1X5H//2Q=='
+  );
+
+  towerOfSweetChoasDownArrow = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAeAB4DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD85vAPiXxH+0J8R/C3wb8KaRZyeKPGfibS9B0qW6xAlzf3c8dnbedMCwSMPMoZ1jB2jcVdlFfon8Qv+DXzw94jVdQ13/goubSG0LbLj/hSKrtQno7Nr+D27DnPTJFfnt/wT6tPBVj/AMFFPgfYWHjq2a90z49+CHS2iu42ivEk1+xK+UsjecpVSSy5kC7T83Ir+hDxffa14v1CS71CSTyN+be1Dny48ZwcAYLcnLdTnrgADzqOV/Vqko11eadj6vNc3r88Y4eVo21Vlvf9D8sz/wAG1/hiz1uPTPhV/wAFD7zVvEMx8rRIrr4PnT7Ge8YlIoZ7tNYmkghZ9oeaOCcojFljlI2H804NXtruxt9WvbpYTdwpKPtEoB5UHGSeTX9PPwu8NQR/FHw3c+SAya/ZsRtJBxOh9K/m0+E6fAS08HaZLe3vhe71GbS4Gvf7b1y3Z0bYuVCEtswTjGAR0PIqcThI6OCsyspzWveaqyvtbb/gH3Z/wTK/4K7+Mf2IdFf9mX9o/wAUXtj8JEub278C+KdCt3ij8OT3N1Ndy2N7DbAM0E1xPL5dx8xjkdEfEL5tf1Q8OeIvCuu+HrLxP4f1Ww1LT9Rs4rvTtQ0+7jnt7u3kUPHNFIhZZEZSGVlJDAggkGv57WuILrTZbW8tUmhlVklilUMrqQQVIPBBGeK9B/ZL/bv/AGgP+Cf1pr2veDdRbxT8LNEsIH1D4Y63qsiR2st1PIqT6bcFJTZsLht8kW0xSCaYld/lun2uc5XHCJ4ik/db1T3V+3l+K8zxsZhVF+0j1P3J8b+O/AXw98I3nj34jeLNA8OaFp4Q3+s+IdSitLW2DusaGSaYqiBnZVG4jJYDqa/Gr/grH/wUi8X/APBT24f4DeB7l7b4Q+FvEkep+H/FGrx3Zv8AxDfRQz25u0gklVYbQpcSGIPGJipVmKGR4IuF+Mv7WPx7/b/+N3g2/wD2jNTs/wDhA73VRr/g/wCGenHfp2mwbPLQXTtGj39wERsvLlVM04jWOOYxDy5r1JdTvJkgAje7laNDztBc4FY5LgKGPxFsQrxtey0vrbVrX7jLB04yqrm9T//Z'
+  );
+
+  candyHouseUpgradeArrow = getImageFromBase64(
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAdABEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD33/gnL8D/AIzfs9fD/wAbfFH4r/Eyx8Q3E0EFj4WkEUoMKD5rgP5iLuDSeQqbWZQYW+6WYD87f2xPjtbftK/tGS+J7LUJ5/Duj26TWk08bIZI42LIzA4OXmMs3zDdhFVgOlfor/wUM+N1l+zZ+zL/AMIb4c1UQ3drZi0t7hMjN3KrYk74ZU8+cg8E7favyq8G6PBEbS+8RaX50V7qCXusWbtteSFQCtruAG3IVEJwdoLkZOAfiYxnSw0VP4ra279bH3WDqSxuMqYp6q9lfsv6X4lb/hNdf/6A9r/4Ev8A/E0V67/wvz4Jf9G9eEP++4P/AIzRXJ7ap/z6f4Ho/v8A+rf5nc/8FHfjNq/xS+PEfg2eZXt9Dhaa9U5Ia5mVWKg5IIWMwquRx+8Fch8NfhL4E/4VzF8Vfi/qllFBqd99n0Oy1e8S3smDMY43mLMvmBsPLjOPLAYAkV5/bNd/EfxrJf6rd+TeeKvESC7uoUAMb3V0FZlHorSswH4cV2P/AAUH1d9D0vRvh5olulrpdlpfmw2sORGNzeSo29PkRCF443t610VYvFYmNFSaTvd+S1f3m2V4HnlDDJ201fyufSX/AAxz8Ov+g1qH/gv0/wD+R6Kp/wDC4PFX/P3J/wB9J/8AEUV0f2bhuy+7/gnzn1nH/wA34/8AAP/Z'
   );
 
   auroraItems = [
@@ -6313,6 +6634,7 @@ function loadImages() {
   ];
   numberImagesPVP = [
     { char: '0', img: getImageFromBase64(b64_0) },
+    { char: '0', img: getImageFromBase64(b64_0_1) },
     { char: '1', img: getImageFromBase64(b64_1) },
     { char: '2', img: getImageFromBase64(b64_2) },
     { char: '3', img: getImageFromBase64(b64_3) },
@@ -6324,6 +6646,7 @@ function loadImages() {
     { char: '7', img: getImageFromBase64(b64_7) },
     { char: '7', img: getImageFromBase64(b64_7_1) },
     { char: '8', img: getImageFromBase64(b64_8) },
+    { char: '8', img: getImageFromBase64(b64_8_1) },
     { char: '9', img: getImageFromBase64(b64_9) },
   ];
 
@@ -6613,6 +6936,7 @@ function start(inputConfig) {
     config.lastAutoHandleBounties = Date.now();
     config.lastLabResearch = Date.now();
     config.lastHandleTradeHabor = Date.now();
+    config.lastAutoHandleTowerOfSweetChaos = Date.now();
 
     config.lastGotoProduction = Date.now();
   } else {
@@ -6699,14 +7023,14 @@ function start(inputConfig) {
         config.lastAutoPvP = Date.now();
       }
 
-      // if (
-      //   config.autoSuperMayhemIntervalInMins != 0 &&
-      //   (Date.now() - config.lastAutoSuperMayhem) / 60000 > config.autoSuperMayhemIntervalInMins
-      // ) {
-      //   console.log('Auto Super Mayhem: ', (Date.now() - config.lastAutoSuperMayhem) / 60000, ' just passed');
-      //   handleSuperMayhem();
-      //   config.lastAutoSuperMayhem = Date.now();
-      // }
+      if (
+        config.autoSuperMayhemIntervalInMins != 0 &&
+        (Date.now() - config.lastAutoSuperMayhem) / 60000 > config.autoSuperMayhemIntervalInMins
+      ) {
+        console.log('Auto Super Mayhem: ', (Date.now() - config.lastAutoSuperMayhem) / 60000, ' just passed');
+        handleSuperMayhem();
+        config.lastAutoSuperMayhem = Date.now();
+      }
 
       if (
         config.autoCollectTropicalIslandsIntervalInMins != 0 &&
@@ -6743,6 +7067,16 @@ function start(inputConfig) {
         console.log('handleTradeHabor: ', (Date.now() - config.lastHandleTradeHabor) / 60000, ' just passed');
         handleGotoTradeHabor();
         config.lastHandleTradeHabor = Date.now();
+      }
+
+      if (config.autoHandleTowerOfSweetChaos && (Date.now() - config.lastAutoHandleTowerOfSweetChaos) / 60000 > 240) {
+        console.log(
+          'handleTowerOfSweetChaos: ',
+          (Date.now() - config.lastAutoHandleTowerOfSweetChaos) / 60000,
+          ' just passed'
+        );
+        handleTowerOfSweetChaos();
+        config.lastAutoHandleTowerOfSweetChaos = Date.now();
       }
 
       if ((Date.now() - config.lastTryResolveGreenChecks) / 60000 > 20) {
