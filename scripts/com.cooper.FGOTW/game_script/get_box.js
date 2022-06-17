@@ -17,6 +17,9 @@ function getBox(newBox, fast) {
         resetBox();
       } else {
         console.log("此箱已抽完");
+        releaseImage(boxFullImage);
+        releaseImage(boxNoPointImage);
+        isScriptRunning = false;
         return;
       }
     }
@@ -48,6 +51,7 @@ function getBox(newBox, fast) {
   }
   releaseImage(boxFullImage);
   releaseImage(boxNoPointImage);
+  isScriptRunning = false;
   console.log("結束抽箱");
 }
 

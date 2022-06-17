@@ -3,21 +3,21 @@ var iconMargin = [];
 
 function setMarginIcon() {
   if (server == "TW") {
-    icon["main"] = [1710, 984, 150, 75];
-    icon["friendEnd"] = [1832, 1027, 60, 45];
-    icon["battleServant1"] = [375, 70, 600, 45];
-    icon["battleServant2"] = [375, 70, 600, 45];
-    icon["finishNext"] = [1575, 980, 180, 60];
-
     icon["friendPointMain"] = [625, 538, 675, 108];
     icon["friendPointFree"] = [787, 790, 337, 75];
     icon["friendPointTen"] = [1125, 790, 240, 75];
-
     icon["boxNoPoint"] = [360, 630, 195, 82];
-    icon["stageFailed"] = [900, 154, 140, 60];
     icon["settingDialog"] = [840, 220, 240, 60];
-    return;
+    icon["stageFailed"] = [900, 154, 140, 60];
+  }else{
+    icon["friendPointMain"] = [675, 538, 675, 108];
+    icon["friendPointFree"] = [787, 740, 337, 75];
+    icon["friendPointTen"] = [1125, 740, 240, 75];
+    icon["boxNoPoint"] = [470, 530, 200, 100];
+    icon["settingDialog"] = [750, 220, 350, 60];
+    icon["stageFailed"] = [750, 160, 300, 60];
   }
+  
   if (resolution < 17 / 9) {
     //default
     icon["main"][0] = 1710;
@@ -103,7 +103,7 @@ function checkIconListInScreen(iconList, allPass, threshold) {
   for (var i = 0; i < iconList.length; i++) {
     var iconName = iconList[i];
     if (icon[iconName] == undefined) {
-      console.log("checkIconInScreen no icon "+iconName);
+      console.log("checkIconInScreen no icon " + iconName);
       return false;
     }
     var margin = 0;
@@ -146,7 +146,7 @@ function checkIconInScreen(iconName, threshold, screenshot) {
     return false;
   }
   if (icon[iconName] == undefined) {
-    console.log("checkIconInScreen no icon "+iconName);
+    console.log("checkIconInScreen no icon " + iconName);
     return false;
   }
   if (screenshot == undefined) {
@@ -359,16 +359,13 @@ function isBattleSkillEmiyaDialog() {
 //finish-----------------------------------------------
 icon["finishNext"] = [1575, 933, 180, 60];
 icon["stageRestart"] = [1140, 810, 240, 75];
-icon["stageFailed"] = [750,160,300,60];
+icon["stageFailed"] = [750, 160, 300, 60];
 icon["stageFailed2"] = [860, 570, 200, 60];
 icon["addFriend"] = [1710, 135, 120, 37];
 icon["itemPage"] = [32, 35, 66, 45];
 
 function isBattleStageFailedDialog() {
-  return checkIconListInScreen(
-    ["stageFailed", "stageFailed2"],
-    true
-  );
+  return checkIconListInScreen(["stageFailed", "stageFailed2"], true);
 }
 
 function isFinishBondPage() {

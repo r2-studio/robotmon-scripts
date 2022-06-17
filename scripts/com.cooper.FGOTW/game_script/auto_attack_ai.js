@@ -16,6 +16,17 @@ var servantExistHeight = 18;
 var skillUsedImage;
 var skillUsedPositionOffset = [-9, 77];
 var skillUsedSize = 24;
+var skillUsedInLoop = [
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+];
 
 //card
 var cardImage = [];
@@ -338,7 +349,7 @@ function updateServantAlive(screenshot) {
         result[i] = false;
         if (isDebug) {
           var filepath = path + "/debug_servant_now.png";
-          saveImage(screenshot,filepath)
+          saveImage(screenshot, filepath);
           console.log("adb pull " + filepath);
 
           filepath = path + "/debug_servant_alive_" + i + ".png";
