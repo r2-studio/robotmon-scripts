@@ -5,7 +5,7 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.41";
+var version = "V3.45";
 
 function start(loopTime, script, scriptName, be) {
   startScript(loopTime, script, scriptName, be);
@@ -17,6 +17,7 @@ function stop() {
 
 function initHTML(serverString) {
   console.log("初始化中");
+
   var img = getScreenshot();
   if (img == undefined) {
     console.log("無法取得螢幕截圖");
@@ -78,6 +79,7 @@ function initHTML(serverString) {
   try {
     preference = readFile(itemPath + "preference.js");
   } catch (e) {
+    console.log("no preference file, create");
     writeFile(itemPath + "preference.js", "0,0,0,0");
   }
   if (preference == undefined || preference.length == 0) {

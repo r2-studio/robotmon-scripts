@@ -1,5 +1,9 @@
 //-----------------------------------------------------in quest
-//var skillPositionX = [75,225,375,562,712,802,1050,1200,1350];
+//TW 16:9
+// var skillPositionX = [50, 182, 315, 526, 658, 791, 1002, 1135, 1267];
+// var skillPositionY = 817;
+var skillPositionDefaultX = 66;
+var skillPositionDefaultY = 824;
 var skillPositionX = [66, 198, 330, 542, 674, 806, 1018, 1150, 1282];
 var skillPositionY = 824;
 var skillSmallOffset = 132;
@@ -11,6 +15,7 @@ var clothSkillOffsetX = 130;
 var clothSkillY = 475;
 var enemyPositionX = [870, 510, 172];
 var enemyPositionY = 63;
+var currentStagePositionDefaultX = 1317;
 var currentStagePosition = [1317, 18, 37, 37];
 
 var cardPositionX = [187, 600, 937, 1350, 1762];
@@ -27,22 +32,33 @@ var colorName = ["紅", "藍", "綠"];
 var useMargin = undefined;
 //----------------------------------------------Battle main page
 function setInStageMargin() {
-  if (server == "TW") {
-    currentStagePosition = [1301, 23, 19, 29];
-    skillPositionX = [50, 182, 315, 526, 658, 791, 1002, 1135, 1267];
-    skillPositionY = 817;
-    return;
+  
+  if(server == "TW"){
+    skillPositionDefaultX = 50;
+    skillPositionDefaultY = 817;
+    currentStagePositionDefaultX = 1326;
+  }else{
+    skillPositionDefaultX = 66;
+    skillPositionDefaultY = 824;
+    currentStagePositionDefaultX = 1317;
   }
+  skillPositionY = skillPositionDefaultY;
+
   if (resolution <= 16 / 9) {
     useMargin = undefined;
-    currentStagePosition[0] = 1317;
-    skillPositionX = [66, 198, 330, 542, 674, 806, 1018, 1150, 1282];
-    skillPositionY = 824;
     enemyPositionX = [870, 510, 172];
+    if(server == "TW"){
+      currentStagePosition = [currentStagePositionDefaultX, 23, 19, 29];
+      skillPositionX = [50, 182, 315, 526, 658, 791, 1002, 1135, 1267];
+    }else{
+     currentStagePosition = [currentStagePositionDefaultX, 18, 37, 37];
+      skillPositionX = [66, 198, 330, 542, 674, 806, 1018, 1150, 1282];
+    }
     return;
   }
 
   useMargin = 0;
+    
   /*
         skill left edge  
         1920:66,198,330,542,674,806,1018,1150,1282
@@ -62,11 +78,11 @@ function setInStageMargin() {
   currentStagePosition[0] = realScreenSize[0] / screenScale[0] - 656;
 
   var enemyLeftMargin = defaultMarginX;
-  var skillLeftEdge = 66 + defaultMarginX;
+  var skillLeftEdge = skillPositionDefaultX + defaultMarginX;
   if (resolution > 18 / 9) {
     enemyLeftMargin = 75;
-    skillLeftEdge = 141;
-    skillPositionY = 824 - 32;
+    skillLeftEdge = skillPositionDefaultX + 75;
+    skillPositionY = skillPositionDefaultY - 32;
   }
 
   for (var i = 0; i < 9; i++) {

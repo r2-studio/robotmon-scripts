@@ -134,8 +134,8 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes) {
         var screenshot = getScreenshotResize();
         var friendLinePosition = getFriendLine(screenshot);
         var haveNotFriend = false;
-        if (friendLinePosition.length == 0) {
-          console.log("辨識好友座標失敗，使用固定座標");
+        if (friendLinePosition.length == 0) {   
+          console.log("辨識好友座標失敗，使用固定座標");  
           friendLinePosition = [295, 595];
         }
         if (isDebug) {
