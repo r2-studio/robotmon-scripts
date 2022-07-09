@@ -8,6 +8,7 @@ config = {
   materialsTarget: 1200,
   goodsTarget: 260,
   productSafetyStock: 10,
+  skipMagicLabProduction: true,
   autoCollectMailIntervalInMins: 120,
   autoCollectFountainIntervalInMins: 40,
   autoCollectTrainIntervalInMins: 20,
@@ -37,8 +38,12 @@ config = {
   autoResearchCookies: false,
   autoLabUseAuroraMaterial: false,
   autoHandleTradeHabor: false,
+  autoBalanceAuroraStocks: false,
   autoBuyCaramelStuff: false,
+  autoBuyRadiantShardsInHabor: false,
   autoBuySeaFairy: false,
+  autoBuyEpicSoulEssence: false,
+  autoBuyLegendSoulEssence: false,
   autoBuyGuildRelic: false,
   axeStockTo400: false,
   autoSuperMayhemIntervalInMins: 0,
@@ -333,11 +338,11 @@ var pageInGacha = [
 ];
 
 var pageInTowerOfRecords = [
-  { x: 13, y: 33, r: 229, g: 229, b: 229 },
-  { x: 92, y: 26, r: 114, g: 112, b: 113 },
-  { x: 147, y: 34, r: 255, g: 223, b: 166 },
-  { x: 164, y: 25, r: 44, g: 21, b: 16 },
-  { x: 78, y: 244, r: 57, g: 36, b: 58 },
+  { x: 618, y: 23, r: 255, g: 255, b: 255 },
+  { x: 106, y: 23, r: 39, g: 36, b: 32 },
+  { x: 92, y: 20, r: 114, g: 112, b: 110 },
+  { x: 16, y: 14, r: 179, g: 179, b: 179 },
+  { x: 4, y: 18, r: 35, g: 34, b: 33 },
 ];
 
 var pageAutoUseSkillEnabled = [{ x: 28, y: 291, r: 223, g: 221, b: 1 }];
@@ -349,10 +354,15 @@ var pageSpeed1_2x = [
 ];
 
 //rgb(166,104,65)
-pageInProduction = [
+var pageInProduction = [
   { x: 17, y: 44, r: 165, g: 105, b: 66 },
   { x: 84, y: 42, r: 178, g: 103, b: 66 },
   { x: 26, y: 30, r: 126, g: 73, b: 41 },
+];
+var pageInMagicLab = [
+  { x: 18, y: 46, r: 123, g: 89, b: 140 },
+  { x: 81, y: 47, r: 123, g: 89, b: 140 },
+  { x: 27, y: 30, r: 115, g: 85, b: 140 },
 ];
 
 pageStockIsFull = [
@@ -429,33 +439,62 @@ var kingdomArena = [
 ];
 
 var pageInSuperMayhem = [
-  {x: 522, y: 15, r: 0, g: 195, b: 255},
-  {x: 452, y: 14, r: 255, g: 28, b: 132},
-  {x: 448, y: 24, r: 116, g: 16, b: 67},
-  {x: 355, y: 16, r: 254, g: 248, b: 221},
-  {x: 19, y: 68, r: 24, g: 44, b: 75},
+  { x: 522, y: 15, r: 0, g: 195, b: 255 },
+  { x: 452, y: 14, r: 255, g: 28, b: 132 },
+  { x: 448, y: 24, r: 116, g: 16, b: 67 },
+  { x: 355, y: 16, r: 254, g: 248, b: 221 },
+  { x: 19, y: 68, r: 24, g: 44, b: 75 },
 ];
 
 var pageBattleDragon = [
-  { x: 531, y: 326, r: 121, g: 207, b: 12 },
-  { x: 165, y: 334, r: 121, g: 207, b: 12 },
-  { x: 74, y: 333, r: 4, g: 151, b: 211 },
-  { x: 34, y: 118, r: 122, g: 98, b: 164 },
+  { x: 532, y: 327, r: 123, g: 207, b: 8 },
+  { x: 32, y: 82, r: 231, g: 231, b: 226 },
+  { x: 35, y: 117, r: 115, g: 103, b: 173 },
+  { x: 25, y: 220, r: 198, g: 167, b: 247 },
+];
+var pageNoMoreDragonToFight = [
+  { x: 601, y: 326, r: 160, g: 160, b: 160 },
+  { x: 522, y: 13, r: 0, g: 195, b: 255 },
+  { x: 408, y: 15, r: 255, g: 239, b: 16 },
+  { x: 29, y: 115, r: 181, g: 182, b: 222 },
+];
+var pageReadyToFightDragon = [
+  { x: 531, y: 331, r: 123, g: 207, b: 8 },
+  { x: 105, y: 336, r: 123, g: 207, b: 16 },
+  { x: 17, y: 335, r: 49, g: 170, b: 222 },
+  { x: 20, y: 20, r: 255, g: 255, b: 255 },
+  { x: 13, y: 20, r: 70, g: 75, b: 141 },
+];
+var pageDragonAddMoreCookie = [
+  { x: 300, y: 250, r: 8, g: 166, b: 222 },
+  { x: 408, y: 250, r: 123, g: 207, b: 8 },
+  { x: 419, y: 18, r: 127, g: 95, b: 4 },
+  { x: 518, y: 18, r: 20, g: 117, b: 127 },
+];
+var pageDragonTotalDamage = [
+  { x: 427, y: 243, r: 231, g: 215, b: 222 },
+  { x: 410, y: 247, r: 156, g: 0, b: 49 },
+  { x: 260, y: 268, r: 255, g: 255, b: 255 },
+  { x: 555, y: 311, r: 89, g: 22, b: 45 },
+];
+var pageRedValvetDragonWon = [
+  { x: 289, y: 238, r: 239, g: 28, b: 57 },
+  { x: 358, y: 233, r: 222, g: 16, b: 41 },
+  { x: 426, y: 236, r: 231, g: 216, b: 223 },
 ];
 
 var pageCookieAlliance = [
   { x: 333, y: 21, r: 255, g: 255, b: 255 },
-  { x: 329, y: 14, r: 246, g: 225, b: 250 },
+  { x: 329, y: 25, r: 66, g: 69, b: 222 },
   { x: 73, y: 332, r: 0, g: 150, b: 214 },
   { x: 29, y: 141, r: 151, g: 75, b: 13 },
 ];
 
 var pageInHabor = [
-  { x: 619, y: 18, r: 255, g: 255, b: 255 },
-  { x: 313, y: 16, r: 247, g: 225, b: 218 },
-  { x: 406, y: 18, r: 255, g: 211, b: 0 },
-  { x: 92, y: 230, r: 255, g: 251, b: 74 },
-  { x: 33, y: 227, r: 247, g: 207, b: 231 },
+  { x: 303, y: 13, r: 255, g: 186, b: 239 },
+  { x: 310, y: 16, r: 247, g: 252, b: 203 },
+  { x: 409, y: 20, r: 255, g: 207, b: 0 },
+  { x: 521, y: 20, r: 0, g: 136, b: 255 },
 ];
 
 var pagePvPCrystaisRefresh = [
@@ -518,10 +557,11 @@ var pageCookieKingdomIsNotResponding2 = [
 ];
 
 var pageInCookieHead = [
-  { x: 77, y: 227, r: 57, g: 77, b: 123 },
-  { x: 144, y: 155, r: 255, g: 239, b: 181 },
-  { x: 234, y: 153, r: 222, g: 192, b: 239 },
-  { x: 509, y: 146, r: 177, g: 234, b: 103 },
+  { x: 610, y: 21, r: 57, g: 166, b: 231 },
+  { x: 413, y: 87, r: 187, g: 184, b: 228 },
+  { x: 413, y: 110, r: 24, g: 22, b: 138 },
+  { x: 301, y: 95, r: 137, g: 143, b: 144 },
+  { x: 32, y: 52, r: 142, g: 148, b: 155 },
 ];
 
 pagePurchaseDiamond = [
@@ -703,6 +743,7 @@ function checkIsPage(page, diff, img) {
     var cbtn = page[i];
     var color = getImageColor(img, cbtn.x, cbtn.y);
     if (!isSameColor(cbtn, color, diff)) {
+      // console.log('pixel violation: ', JSON.stringify(cbtn), JSON.stringify(color), diff)
       isPage = false;
       break;
     }
@@ -726,33 +767,66 @@ function mergeObject(target) {
   return target;
 }
 
+function waitUntilSeePages(pages, secsToWait, tappingPage, earlyQuitPage) {
+  if (secsToWait === undefined) {
+    secsToWait = 1;
+  }
+
+  console.log('waiting for PAGES with 1st pnt in 1st page: ', JSON.stringify(pages[0][0]), secsToWait, ' secs');
+  for (var i = 0; i < secsToWait; i++) {
+    for (var j = 0; j < pages.length; j++) {
+      if (checkIsPage(pages[j])) {
+        console.log('found page index', j, 'in', i, 'secs');
+        return true;
+      }
+    }
+
+    if (earlyQuitPage != undefined && checkIsPage(earlyQuitPage)) {
+      console.log('waitUntilSeePage but found earlyQuitPage, return false');
+      return false;
+    }
+
+    if (tappingPage !== undefined && tappingPage !== null) {
+      if ((tappingPage.x, tappingPage.y, tappingPage.r, tappingPage.g, tappingPage.b && checkIsPage(tappingPage))) {
+        qTap(tappingPage);
+      } else {
+        qTap(tappingPage);
+      }
+    }
+
+    if (i > 0) {
+      sleep(1000);
+    }
+  }
+  console.log('wait', secsToWait, 'secs but did not find the page');
+  return false;
+}
+
 function waitUntilSeePage(page, secsToWait, tappingPage, earlyQuitPage) {
-  console.log('waiting for page with 1st pnt: ', JSON.stringify(page[0]), secsToWait, ' secs');
   if (secsToWait === undefined) {
     secsToWait = 5;
   }
 
+  console.log('waiting for page with 1st pnt in 1st page: ', JSON.stringify(page[0]), secsToWait, ' secs');
   for (var i = 0; i < secsToWait; i++) {
-    if (!checkIsPage(page)) {
-      if (tappingPage !== undefined && tappingPage !== null) {
-        if ((tappingPage.x, tappingPage.y, tappingPage.r, tappingPage.g, tappingPage.b && checkIsPage(tappingPage))) {
-          qTap(tappingPage);
-        } else {
-          qTap(tappingPage);
-        }
-      }
-      if (earlyQuitPage != undefined && checkIsPage(earlyQuitPage)) {
-        console.log('waitUntilSeePage but found earlyQuitPage, return false');
-        return false;
-      }
-      sleep(1000);
-      continue;
-    } else {
+    if (checkIsPage(page)) {
       console.log('found page in ', i, ' secs');
       return true;
+    } else if (earlyQuitPage != undefined && checkIsPage(earlyQuitPage)) {
+      console.log('waitUntilSeePage but found earlyQuitPage, return false');
+      return false;
     }
+
+    if (tappingPage !== undefined && tappingPage !== null) {
+      if ((tappingPage.x, tappingPage.y, tappingPage.r, tappingPage.g, tappingPage.b && checkIsPage(tappingPage))) {
+        qTap(tappingPage);
+      } else {
+        qTap(tappingPage);
+      }
+    }
+    sleep(1000);
   }
-  console.log('wait ', secsToWait, ' secs but did not find the page');
+  // console.log('wait ', secsToWait, ' secs but did not find the page');
   return false;
 }
 
@@ -1351,9 +1425,9 @@ function makeGoodsToTarget(target, prework, stocks) {
         break;
       } else if (checkIsPage(pageLockedGood)) {
         qTap(pageLockedGood);
-        waitUntilSeePage(pageInProduction);
+        waitUntilSeePages([pageInProduction, pageInMagicLab], 5);
         break;
-      } else if (checkIsPage(pageInProduction) && availableSlots != latestCount) {
+      } else if (waitUntilSeePages([pageInProduction, pageInMagicLab]) && availableSlots != latestCount) {
         availableSlots = latestCount;
         break;
       }
@@ -1371,7 +1445,37 @@ function makeGoodsToTarget(target, prework, stocks) {
   return stocks;
 }
 
+function countMagicLabSlotAvailable() {
+  var emptySlots = 0;
+  var pageFirstSlotOpen = [{ x: 55, y: 69, r: 82, g: 56, b: 107 }];
+  var pageSecondSlotOpen = [{ x: 53, y: 120, r: 82, g: 56, b: 107 }];
+  var pageThirdSlotOpen = [{ x: 49, y: 168, r: 82, g: 56, b: 107 }];
+  var pageFourthSlotOpen = [{ x: 52, y: 223, r: 82, g: 56, b: 107 }];
+  var pageFifthSlotOpen = [{ x: 50, y: 264, r: 77, g: 55, b: 110 }];
+  var pageSixSlotOpen = [{ x: 48, y: 314, r: 82, g: 60, b: 115 }];
+  var pages = [
+    pageFirstSlotOpen,
+    pageSecondSlotOpen,
+    pageThirdSlotOpen,
+    pageFourthSlotOpen,
+    pageFifthSlotOpen,
+    pageSixSlotOpen,
+  ];
+  for (var idx in pages) {
+    if (checkIsPage(pages[idx])) {
+      emptySlots++;
+    }
+  }
+
+  console.log('countMagicLabSlotAvailable: ', emptySlots);
+  return emptySlots;
+}
+
 function countProductionSlotAvailable() {
+  if (checkIsPage(pageInMagicLab)) {
+    return countMagicLabSlotAvailable();
+  }
+
   var emptySlots = 0;
   var pageFirstSlotOpen = [
     { x: 50, y: 69, r: 146, g: 88, b: 52 },
@@ -1396,20 +1500,11 @@ function countProductionSlotAvailable() {
     { x: 50, y: 268, r: 146, g: 88, b: 52 },
   ];
 
-  if (checkIsPage(pageFirstSlotOpen)) {
-    emptySlots++;
-  }
-  if (checkIsPage(pageSecondSlotOpen)) {
-    emptySlots++;
-  }
-  if (checkIsPage(pageThirdSlotOpen)) {
-    emptySlots++;
-  }
-  if (checkIsPage(pageFourthSlotOpen)) {
-    emptySlots++;
-  }
-  if (checkIsPage(pageFifthSlotOpen)) {
-    emptySlots++;
+  var pages = [pageFirstSlotOpen, pageSecondSlotOpen, pageThirdSlotOpen, pageFourthSlotOpen, pageFifthSlotOpen];
+  for (var idx in pages) {
+    if (checkIsPage(pages[idx])) {
+      emptySlots++;
+    }
   }
 
   console.log('countProductionSlotAvailable: ', emptySlots);
@@ -1417,14 +1512,19 @@ function countProductionSlotAvailable() {
 }
 
 function JobScheduling() {
-  if (!checkIsPage(pageInProduction)) {
+  if (!waitUntilSeePages([pageInProduction, pageInMagicLab])) {
     return false;
   }
 
-  pageProducing = [
-    { x: 81, y: 67, r: 166, g: 104, b: 65 },
-    { x: 62, y: 90, r: 113, g: 221, b: 0 },
-    { x: 20, y: 68, r: 166, g: 104, b: 65 },
+  if (checkIsPage(pageInMagicLab) && config.skipMagicLabProduction) {
+    console.log('Skip magic lab as requested by config');
+    return false;
+  }
+
+  var pageProducing = [
+    { x: 76, y: 86, r: 134, g: 231, b: 0 },
+    { x: 61, y: 89, r: 123, g: 228, b: 0 },
+    { x: 38, y: 32, r: 203, g: 235, b: 236 },
   ];
   if (!checkIsPage(pageProducing)) {
     qTap(pnt(51, 66));
@@ -1433,7 +1533,7 @@ function JobScheduling() {
   var emptySlots = countProductionSlotAvailable();
   if (emptySlots === 0) {
     console.log('No available production slot, skip this production');
-    return true;
+    return false;
   }
   // console.log('emptySlots: ', emptySlots);
 
@@ -1442,7 +1542,7 @@ function JobScheduling() {
     console.log('This is not a material production');
   } else if (materialCount >= config.materialsTarget) {
     console.log('Skip as stock enough: ', materialCount);
-    return true;
+    return false;
   } else {
     console.log('Material stock: ', materialCount, ', target: ', config.materialsTarget);
     if (
@@ -1455,20 +1555,27 @@ function JobScheduling() {
     }
 
     handleMaterialProduction();
-    return true;
+
+    if (countProductionSlotAvailable() !== emptySlots) {
+      return true;
+    }
+    return false;
   }
 
   // Prework = true will order decreased stock for high level products
-  if (countProductionSlotAvailable() > 0) {
-    var stocks = makeGoodsToTarget(config.goodsTarget, true);
-  }
+  var stocks = makeGoodsToTarget(config.goodsTarget, true);
+
   // And rerun one without prework if has enough space
   if (countProductionSlotAvailable() > 0) {
     console.log('still have space after prework, keep producing');
     SwipeProductionMenuToTop();
     makeGoodsToTarget(config.goodsTarget, false, stocks);
   }
-  return true;
+
+  if (countProductionSlotAvailable() !== emptySlots) {
+    return true;
+  }
+  return false;
 }
 
 function handleNotEnoughStock() {
@@ -1505,7 +1612,7 @@ function handleNotEnoughStock() {
     qTap(pageNotEnoughStock);
     sleep(config.sleepAnimate);
 
-    return waitUntilSeePage(pageInProduction, 6);
+    return waitUntilSeePages([pageInProduction, pageInMagicLab], 6);
   }
 
   pageTwoItemNotEnoughStock = [
@@ -1518,7 +1625,7 @@ function handleNotEnoughStock() {
     console.log('quiting not enougth stock 2');
     qTap(pageTwoItemNotEnoughStock);
     sleep(config.sleep);
-    return waitUntilSeePage(pageInProduction, 6);
+    return waitUntilSeePages([pageInProduction, pageInMagicLab], 6);
   }
 
   return false;
@@ -1658,11 +1765,11 @@ function handleAnnouncement() {
 
 function findAndTapCandy() {
   var canUpgradeCandyHouse = [
-    {x: 308, y: 291, r: 123, g: 207, b: 8},
-    {x: 342, y: 286, r: 140, g: 85, b: 41},
-    {x: 341, y: 291, r: 140, g: 28, b: 41},
-    {x: 264, y: 239, r: 123, g: 248, b: 236},
-  ]
+    { x: 308, y: 291, r: 123, g: 207, b: 8 },
+    { x: 342, y: 286, r: 140, g: 85, b: 41 },
+    { x: 341, y: 291, r: 140, g: 28, b: 41 },
+    { x: 264, y: 239, r: 123, g: 248, b: 236 },
+  ];
 
   var candy = getImageFromBase64(
     '/9j/4AAQSkZJRgABAQEAYABgAAD/4QA6RXhpZgAATU0AKgAAAAgAA1EQAAEAAAABAQAAAFERAAQAAAABAAAAAFESAAQAAAABAAAAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAPABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9CPgpZeGfHGtt4g8dw6XrVp4svItWvFk0e1ure0VIQlpAjgzl4UU5wHdGeWZ1zvrpPid8LfDHxC+KWg2MNxq2jzeI7praa33QojBLGedJYklwyMyW8eQnmKVBbyxl5VyJrTTfDfwg0seD107/AIR9ri0tLVdQvJLR7C2WJ0ktj5VnIzLELeMo7tLI7TTbnCqgbe03wXrHhm8m8YfEBY5Nd8P3yy6Jb6drT6hb2eLSa087zZLW3ZpZI7uaNlkR41RIigVwzHxeIsy4ex+Vf7PUT5YWhT05k2rR92+lnZtptpLq9H+V5PwXxLgM3UMRacJ1FOdSSd3b44363slGKio+9JWUWrf/2Q=='
@@ -1686,7 +1793,7 @@ function findAndTapCandy() {
     sleep(3000);
     config.lastCollectCandyTime = Date.now();
 
-    if (config.autoUpgradeCandyHouse){
+    if (config.autoUpgradeCandyHouse) {
       foundResults = findSpecificImageInScreen(candyHouseUpgradeArrow, 0.9);
       if (foundResults.length > 0) {
         console.log('Tap candy house green upgrade at: ', JSON.stringify(foundResults));
@@ -1698,7 +1805,7 @@ function findAndTapCandy() {
           qTap(pnt(357, 321));
 
           if (waitUntilSeePage(pageInKingdomVillage)) {
-            console.log('Successfully upgrade candy house at: ', JSON.stringify(foundResults[0]))
+            console.log('Successfully upgrade candy house at: ', JSON.stringify(foundResults[0]));
           }
         }
       }
@@ -1799,7 +1906,7 @@ function findAndTapProductionHouse() {
         qTap(house);
         sleep(config.sleepAnimate);
 
-        if (waitUntilSeePage(pageInProduction, 3)) {
+        if (waitUntilSeePages([pageInProduction, pageInMagicLab], 3)) {
           console.log('Found production house successfully: ', key, i);
           return true;
         } else if (checkIsPage(pageStockIsFull)) {
@@ -1831,7 +1938,7 @@ function swipeDirection(direction, finishSwipeWhenInProduction, swippingPage) {
     endPnt: pnt(566, 285),
   };
 
-  if (finishSwipeWhenInProduction && checkIsPage(pageInProduction)) {
+  if (finishSwipeWhenInProduction && waitUntilSeePages([pageInProduction, pageInMagicLab], 5)) {
     console.log('Already in production, skip swipping');
     return true;
   }
@@ -1929,7 +2036,7 @@ function handleGotoKingdomPage() {
     return true;
   }
 
-  if (checkIsPage(pageInProduction)) {
+  if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
     console.log('In production, hit back to kingdom page');
     keycode('BACK', 1000);
     waitUntilSeePage(pageInKingdomVillage, 8);
@@ -1984,7 +2091,7 @@ function findHouseInNotSureWhere(tryCount) {
     handleRelogin();
     tapRandom(75, 95, 553, 285);
     sleep(config.sleepAnimate * 2);
-    if (checkIsPage(pageInProduction)) {
+    if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
       console.log('found production in try: ', i);
       return true;
     }
@@ -2037,16 +2144,17 @@ function handleFindAndTapCandyHouse() {
     }
   }
 
-  var collectCandySuccess = findAndTapCandy();
-  if (
-    config.worksBeforeCollectCandy != 0 &&
-    (Date.now() - config.lastCollectCandyTime) / 60000 < config.worksBeforeCollectCandy
-  ) {
-    collectCandySuccess = true;
+  var collectCandySuccess;
+  if (config.worksBeforeCollectCandy != 0) {
+    collectCandySuccess = findAndTapCandy();
+
+    if (collectCandySuccess) {
+      config.lastCollectCandyTime = Date.now();
+    }
   }
 
   config.searchHouseCount++;
-  if (config.searchHouseCount < 6) {
+  if (config.searchHouseCount < 8) {
     console.log('send running when searchHouseCount:', config.searchHouseCount);
     sendEvent('running', '');
   }
@@ -2085,7 +2193,7 @@ function handleFindAndTapCandyHouse() {
         }
       }
 
-      if (checkIsPage(pageInProduction) && i > 2) {
+      if (waitUntilSeePages([pageInProduction, pageInMagicLab]) && i > 2) {
         console.log('found production when swipping, start working, times swipped: ', i);
         config.searchHouseCount % 2 === 0 ? (config.searchHouseCount = 0) : (config.searchHouseCount = 1);
         config.lastGotoProduction = Date.now();
@@ -2143,7 +2251,7 @@ function handleInputLoginInfo() {
   } else if (checkIsPage(pageInKingdomVillage)) {
     console.log('Found pageInKingdomVillage, handleInputLoginInfo success');
     return true;
-  } else if (checkIsPage(pageInProduction)) {
+  } else if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
     console.log('Found in production, no need to relogin');
     return true;
   }
@@ -2341,7 +2449,7 @@ function handleInputLoginInfo() {
   }
 
   if (!isChooseLogin) {
-    if (!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageInProduction)) {
+    if (!waitUntilSeePages([pageInKingdomVillage, pageInProduction, pageInMagicLab])) {
       console.log('handleInputLoginInfo not sure what to do, tap(585, 22) announce page');
       qTap(pnt(585, 22));
 
@@ -2583,7 +2691,7 @@ function handleInputLoginInfo() {
 }
 
 function handleNextProductionBuilding() {
-  if (checkIsPage(pageInProduction)) {
+  if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
     if (config.buildTowardsTheLeft) {
       qTap(pnt(110, 174)); // next
     } else {
@@ -2595,23 +2703,23 @@ function handleNextProductionBuilding() {
 
 function handleSkipHallOfHeros() {
   var pageHallIntro = [
-    {x: 365, y: 138, r: 177, g: 196, b: 209},
-    {x: 285, y: 110, r: 90, g: 209, b: 225},
-    {x: 277, y: 150, r: 74, g: 182, b: 82},
+    { x: 365, y: 138, r: 177, g: 196, b: 209 },
+    { x: 285, y: 110, r: 90, g: 209, b: 225 },
+    { x: 277, y: 150, r: 74, g: 182, b: 82 },
   ];
   var pageSpeedUpSlot = [
-    {x: 456, y: 41, r: 255, g: 255, b: 255},
-    {x: 318, y: 35, r: 96, g: 144, b: 194},
-    {x: 312, y: 50, r: 202, g: 146, b: 89},
-    {x: 255, y: 50, r: 57, g: 69, b: 107},
-  ]
+    { x: 456, y: 41, r: 255, g: 255, b: 255 },
+    { x: 318, y: 35, r: 96, g: 144, b: 194 },
+    { x: 312, y: 50, r: 202, g: 146, b: 89 },
+    { x: 255, y: 50, r: 57, g: 69, b: 107 },
+  ];
 
-  if (checkIsPage(pageHallIntro)){
-    for (var i = 0; i < 15; i ++){
+  if (checkIsPage(pageHallIntro)) {
+    for (var i = 0; i < 15; i++) {
       qTap(pageHallIntro);
       sleep(1000);
 
-      if (checkIsPage(pageSpeedUpSlot)){
+      if (checkIsPage(pageSpeedUpSlot)) {
         qTap(pnt(64, 241));
         sleep(2000);
       }
@@ -2646,8 +2754,6 @@ function handleTryHitBackToKingdom() {
 
   handleSkipHallOfHeros();
 
-  checkAndRestartApp();
-
   for (var i = 0; i < 4; i++) {
     if (waitUntilSeePage(pageInKingdomVillage, 2)) {
       console.log('Found pageInKingdomVillage, return');
@@ -2655,6 +2761,12 @@ function handleTryHitBackToKingdom() {
     }
 
     var img = getScreenshot();
+    whSize = getImageSize(img);
+    if (whSize.width !== 640) {
+      console.log('Incorrect screen width, checkAndRestartApp()');
+      checkAndRestartApp();
+    }
+
     var upperRightImage = cropImage(img, 583, 1, 54, 40);
     var foundResults = findImages(upperRightImage, loginGearIcon, 0.92, 1, true);
     releaseImage(img);
@@ -2721,8 +2833,8 @@ function handleAutoCollectMail() {
   }
 
   pageHasUnreadMails = [
-    {x: 555, y: 9, r: 255, g: 0, b: 0},
-    {x: 551, y: 17, r: 255, g: 239, b: 214},
+    { x: 555, y: 9, r: 255, g: 0, b: 0 },
+    { x: 551, y: 17, r: 255, g: 239, b: 214 },
   ];
 
   if (checkIsPage(pageHasUnreadMails)) {
@@ -2763,8 +2875,21 @@ function gotoCastle() {
     return false;
   }
 
-  // Tap Go Now
-  qTap(pageInCookieHead);
+  // Swipe to the 1st of the list in head and tap Go Now
+  tapDown(0, 186, 40, 0);
+  sleep(config.sleep);
+  moveTo(0, 186, 40, 0);
+  sleep(config.sleep);
+  moveTo(200, 186, 40, 0);
+  sleep(config.sleep);
+  moveTo(400, 186, 40, 0);
+  sleep(config.sleep);
+  moveTo(560, 186, 40, 0);
+  sleep(config.sleep);
+  tapUp(560, 186, 40, 0);
+  sleep(config.sleepAnimate * 2);
+
+  qTap(pnt(60, 226));
   sleep(config.sleepAnimate * 3);
 
   handleTryHitBackToKingdom();
@@ -2784,7 +2909,7 @@ function handleInFountain() {
 
     handleGotoKingdomPage();
 
-    waitUntilSeePage(pageInKingdomVillage, 6, pnt(1, 1));
+    waitUntilSeePage(pageInKingdomVillage, 8, pnt(1, 1));
     console.log('Tapped fountain successfully');
   } else {
     handleGotoKingdomPage();
@@ -2847,6 +2972,7 @@ function handleTrainStation() {
   ];
   if (checkIsPage(pageAllTrainsAreOut)) {
     console.log('all trains are out, skipping this check');
+    sendEvent('running', '');
     return true;
   }
 
@@ -2929,6 +3055,7 @@ function handleTrainStation() {
   qTap(pageInTrainStation);
   sleep(config.sleepAnimate);
   console.log('Tried to sent ', foundResults.length, 'trains');
+  sendEvent('running', '');
   return true;
 }
 
@@ -2954,10 +3081,10 @@ function handleTrain() {
     { x: 28, y: 273, r: 255, g: 247, b: 206 },
   ];
   pageTrainUncollapsed = [
-    {x: 110, y: 251, r: 238, g: 109, b: 98},
-    {x: 103, y: 244, r: 114, g: 22, b: 29},
-    {x: 84, y: 258, r: 49, g: 85, b: 132},
-    {x: 99, y: 247, r: 228, g: 176, b: 110},
+    { x: 110, y: 251, r: 238, g: 109, b: 98 },
+    { x: 103, y: 244, r: 114, g: 22, b: 29 },
+    { x: 84, y: 258, r: 49, g: 85, b: 132 },
+    { x: 99, y: 247, r: 228, g: 176, b: 110 },
   ];
   if (checkIsPage(pageTrainNotCollapsed)) {
     qTap(pageTrainNotCollapsed);
@@ -2974,12 +3101,12 @@ function handleTrain() {
     sleep(config.sleepAnimate);
 
     pageTrainArrived = [
-      {x: 114, y: 255, r: 245, g: 215, b: 130},
-      {x: 117, y: 242, r: 206, g: 57, b: 55},
-      {x: 110, y: 245, r: 49, g: 89, b: 132},
+      { x: 114, y: 255, r: 245, g: 215, b: 130 },
+      { x: 117, y: 242, r: 206, g: 57, b: 55 },
+      { x: 110, y: 245, r: 49, g: 89, b: 132 },
     ];
 
-    if (checkIsPage(pageTrainArrived)){
+    if (checkIsPage(pageTrainArrived)) {
       qTap(pnt(105, 252));
       sleep(config.sleepAnimate * 2);
 
@@ -3002,10 +3129,9 @@ function handleGetDailyRewards() {
     { x: 427, y: 19, r: 0, g: 23, b: 45 },
   ];
   var pageInKingdomPass = [
-    { x: 611, y: 20, r: 57, g: 169, b: 231 },
-    { x: 440, y: 54, r: 255, g: 186, b: 0 },
-    { x: 426, y: 57, r: 181, g: 117, b: 24 },
-    { x: 499, y: 344, r: 49, g: 32, b: 24 },
+    { x: 528, y: 340, r: 123, g: 207, b: 16 },
+    { x: 471, y: 68, r: 247, g: 158, b: 0 },
+    { x: 491, y: 73, r: 181, g: 117, b: 24 },
   ];
   var kingdomPassItemCollected = [
     { x: 528, y: 338, r: 161, g: 161, b: 161 },
@@ -3461,7 +3587,7 @@ function getCEs() {
   var croppedImage1 = cropImage(img, 430, 88, 46, 10);
   var croppedImage2 = cropImage(img, 430, 148, 46, 10);
   var croppedImage3 = cropImage(img, 430, 208, 46, 10);
-  var croppedImage4 = cropImage(img, 430, 266, 46, 10);
+  var croppedImage4 = cropImage(img, 430, 266, 46, 12);
 
   var value1 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage1, 7, 0.75, 0.7) || 0;
   var value2 = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage2, 7, 0.75, 0.7) || 0;
@@ -3577,7 +3703,7 @@ function handlePVP() {
   ];
 
   console.log('go kingdomArena success');
-  for(var loop = 0; loop < 5; loop++) {
+  for (var loop = 0; loop < 5; loop++) {
     var ces = getCEs();
     for (var i = 0; i < ces.length; i++) {
       var ce = ces[i];
@@ -3588,7 +3714,7 @@ function handlePVP() {
           tap(436, 90, 100); // X cancel
           sleep(1500);
         }
-  
+
         if (!waitUntilSeePage(arenaReadyToBattlePage, 5, pnt(590, battleY[i]))) {
           console.log('Wait 8 sec but did not find the pvp battle page, skipping');
           continue;
@@ -3600,7 +3726,7 @@ function handlePVP() {
         }
         tap(550, 320, 100); // start battle
         sleep(5000);
-  
+
         if (waitForBattle('pvp', 120, false, kingdomArena)) {
           console.log('PvP battle finished, try next one');
           continue;
@@ -3614,6 +3740,7 @@ function handlePVP() {
     }
 
     tap(560, 330, 100); // Free Refresh
+    sleep(5000);
     if (waitUntilSeePage(pagePvPCrystaisRefresh, 1)) {
       console.log('crystaisRefreshPage');
       tap(436, 90, 100); // X cancel
@@ -3637,9 +3764,9 @@ function handleWishingTree() {
   ];
 
   pageNotCollapsedWisingTree = [
-    {x: 111, y: 294, r: 99, g: 65, b: 165},
-    {x: 108, y: 299, r: 135, g: 187, b: 255},
-    {x: 118, y: 297, r: 49, g: 85, b: 123},
+    { x: 111, y: 294, r: 99, g: 65, b: 165 },
+    { x: 108, y: 299, r: 135, g: 187, b: 255 },
+    { x: 118, y: 297, r: 49, g: 85, b: 123 },
   ];
   pageCollapsedAffairs = [
     { x: 96, y: 329, r: 255, g: 223, b: 142 },
@@ -3990,9 +4117,9 @@ function handleGotoHotAirBallon() {
   handleGotoKingdomPage();
 
   pageHotAirBallonReady = [
-    {x: 122, y: 185, r: 255, g: 166, b: 165},
-    {x: 103, y: 206, r: 255, g: 109, b: 206},
-    {x: 118, y: 209, r: 57, g: 89, b: 132},
+    { x: 122, y: 185, r: 255, g: 166, b: 165 },
+    { x: 103, y: 206, r: 255, g: 109, b: 206 },
+    { x: 118, y: 209, r: 57, g: 89, b: 132 },
   ];
   pageCollapsedaffairs = [
     { x: 97, y: 327, r: 255, g: 221, b: 136 },
@@ -4288,61 +4415,85 @@ var Advantures = Object.freeze({
 });
 
 function GenAdvanture(pnt, fromHead, backward) {
-  return{
+  return {
     pnt: pnt,
     fromHead: fromHead,
     backward: backward,
   };
 }
 
-var AdvanturesWithEvents = Object.freeze({
-  pvp: GenAdvanture(pnt(330, 230), true, false),
-  towerOfSweetChaos: GenAdvanture(pnt(420, 230), true, false),
-  tropicalIsland: GenAdvanture(pnt(510, 230), true, false),
-  cookieAlliance: GenAdvanture(pnt(600, 230), true, false),
+var AdvanturesBountiesAt2nd = Object.freeze({
+  pvp: GenAdvanture(pnt(123, 230), true, false),
+  towerOfSweetChaos: GenAdvanture(pnt(214, 230), true, false),
+  tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
+  cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
+
+  superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  bounties: GenAdvanture(pnt(300, 100), false, false),
+  guild: GenAdvanture(pnt(10, 100), false, true),
+});
+
+var AdvanturesBountiesAt3rd = Object.freeze({
+  pvp: GenAdvanture(pnt(123, 230), true, false),
+  towerOfSweetChaos: GenAdvanture(pnt(214, 230), true, false),
+  tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
+  cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
+
+  superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  bounties: GenAdvanture(pnt(500, 100), false, false),
+  guild: GenAdvanture(pnt(110, 100), false, true),
+});
+
+var AdvanturesBountiesAt4th = Object.freeze({
+  pvp: GenAdvanture(pnt(123, 230), true, false),
+  towerOfSweetChaos: GenAdvanture(pnt(214, 230), true, false),
+  tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
+  cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
 
   superMayhem: GenAdvanture(pnt(300, 150), false, false),
   bounties: GenAdvanture(pnt(625, 100), false, false),
   guild: GenAdvanture(pnt(123, 175), false, true),
 });
 
-var AdvanturesWithoutEvents = Object.freeze({
-  pvp: GenAdvanture(pnt(330, 230), true, false),
-  towerOfSweetChaos: GenAdvanture(pnt(420, 230), true, false),
-  tropicalIsland: GenAdvanture(pnt(510, 230), true, false),
-  cookieAlliance: GenAdvanture(pnt(600, 230), true, false),
-
-  superMayhem: GenAdvanture(pnt(300, 150), false, false),
-  bounties: GenAdvanture(pnt(500, 100), false, false),
-  guild: GenAdvanture(pnt(10, 100), false, true),
-});
-
-// The first 2 items are bounties and arena
-// var pageAdventureItemsNoEvents = [
-//   { x: 350, y: 173, r: 49, g: 36, b: 33 },
-//   { x: 351, y: 329, r: 57, g: 8, b: 16 },
-//   { x: 329, y: 112, r: 189, g: 125, b: 66 },
-//   { x: 282, y: 95, r: 214, g: 178, b: 74 },
-// ];
-
 // With super mayhem
 var pageAdventureItemsNoEvents = [
-  {x: 25, y: 16, r: 214, g: 235, b: 231},
-  {x: 13, y: 29, r: 253, g: 222, b: 89},
-  {x: 551, y: 179, r: 33, g: 16, b: 8},
-  {x: 547, y: 334, r: 49, g: 4, b: 8},
+  { x: 25, y: 16, r: 214, g: 235, b: 231 },
+  { x: 13, y: 29, r: 253, g: 222, b: 89 },
+  { x: 551, y: 179, r: 33, g: 16, b: 8 },
+  { x: 547, y: 334, r: 49, g: 4, b: 8 },
+];
+
+// No events at all (including super mayhem and cookie odysses)
+var pageBountiesAt2ndSlot = [
+  { x: 242, y: 68, r: 255, g: 255, b: 255 },
+  { x: 347, y: 102, r: 198, g: 65, b: 0 },
+  { x: 328, y: 112, r: 206, g: 150, b: 66 },
+  { x: 294, y: 130, r: 222, g: 147, b: 96 },
+  { x: 231, y: 138, r: 253, g: 234, b: 74 },
+];
+
+// Perhaps with Cooklie Odysses not finished
+var pageBountiesAt3rdSlot = [
+  { x: 454, y: 63, r: 255, g: 255, b: 255 },
+  { x: 551, y: 99, r: 148, g: 40, b: 5 },
+  { x: 530, y: 104, r: 198, g: 142, b: 57 },
+  { x: 429, y: 132, r: 228, g: 167, b: 27 },
+];
+
+// Perhaps with Cooklie Odysses and super mayhem not finished
+var pageBountiesAt4rdSlot = [
+  // TODO
 ];
 
 function handleGotoAdventure(targetAdvanture, targetPage) {
   console.log('handleGotoAdventure: ', targetAdvanture);
   if (!checkIsPage(targetPage)) {
-
     // Route from Head
-    if (AdvanturesWithoutEvents[targetAdvanture].fromHead) {
+    if (AdvanturesBountiesAt3rd[targetAdvanture].fromHead) {
       if (!checkIsPage(pageInCookieHead)) {
         if (!checkIsPage(pageInKingdomVillage)) {
           handleTryHitBackToKingdom();
-        };
+        }
 
         qTap(pnt(31, 41));
         if (!waitUntilSeePage(pageInCookieHead, 10)) {
@@ -4352,9 +4503,23 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
         }
       }
 
-      qTap(AdvanturesWithoutEvents[targetAdvanture].pnt);
-      if (waitUntilSeePage(targetPage, 8)){
-        console.log(targetAdvanture, 'page found')
+      // swipe to the end of the list in head
+      tapDown(560, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(560, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(400, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(200, 186, 40, 0);
+      sleep(config.sleep);
+      moveTo(0, 186, 40, 0);
+      sleep(config.sleep);
+      tapUp(0, 186, 40, 0);
+      sleep(config.sleepAnimate * 2);
+
+      qTap(AdvanturesBountiesAt3rd[targetAdvanture].pnt);
+      if (waitUntilSeePage(targetPage, 8)) {
+        console.log(targetAdvanture, 'page found');
         return true;
       }
       return false;
@@ -4378,13 +4543,15 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
     }
 
     var destination;
-    if (checkIsPage(pageAdventureItemsNoEvents)) {
-      console.log('No new event', JSON.stringify(AdvanturesWithoutEvents[targetAdvanture]));
-      // Advantures = AdvanturesWithoutEvents;
-      destination = AdvanturesWithoutEvents[targetAdvanture];
-    } else {
-      console.log('has new event', JSON.stringify(AdvanturesWithEvents[targetAdvanture]));
-      destination = AdvanturesWithEvents[targetAdvanture];
+    if (checkIsPage(pageBountiesAt2ndSlot)) {
+      console.log('pageBountiesAt2ndSlot', JSON.stringify(AdvanturesBountiesAt2nd[targetAdvanture]));
+      destination = AdvanturesBountiesAt2nd[targetAdvanture];
+    } else if (checkIsPage(pageBountiesAt3rdSlot)) {
+      console.log('pageBountiesAt3rdSlot', JSON.stringify(AdvanturesBountiesAt3rd[targetAdvanture]));
+      destination = AdvanturesBountiesAt3rd[targetAdvanture];
+    } else if (checkIsPage(pageBountiesAt4rdSlot)) {
+      console.log('pageBountiesAt4rdSlot', JSON.stringify(AdvanturesBountiesAt4th[targetAdvanture]));
+      destination = AdvanturesBountiesAt4th[targetAdvanture];
     }
 
     if (destination.backward) {
@@ -4419,7 +4586,7 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
       return false;
     }
   } else {
-    console.log('already in target page')
+    console.log('already in target page');
     return true;
   }
 }
@@ -4566,25 +4733,6 @@ var pageAllianceRewardGet = [
   { x: 175, y: 288, r: 53, g: 53, b: 53 },
 ];
 
-var pageDragonTotalDamage = [
-  { x: 427, y: 243, r: 231, g: 215, b: 222 },
-  { x: 410, y: 247, r: 156, g: 0, b: 49 },
-  { x: 260, y: 268, r: 255, g: 255, b: 255 },
-  { x: 555, y: 311, r: 89, g: 22, b: 45 },
-];
-
-var pageReadyToFightDragon = [
-  { x: 34, y: 83, r: 231, g: 231, b: 226 },
-  { x: 35, y: 115, r: 170, g: 178, b: 220 },
-  { x: 27, y: 290, r: 123, g: 130, b: 206 },
-  { x: 25, y: 220, r: 198, g: 167, b: 247 },
-];
-var pageRedValvetDragonWon = [
-  { x: 289, y: 238, r: 239, g: 28, b: 57 },
-  { x: 358, y: 233, r: 222, g: 16, b: 41 },
-  { x: 426, y: 236, r: 231, g: 216, b: 223 },
-];
-
 var pageSelectStartingTeam = [
   { x: 260, y: 29, r: 140, g: 88, b: 230 },
   { x: 160, y: 63, r: 107, g: 101, b: 222 },
@@ -4623,6 +4771,7 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
 
   var autoUseSkillCheckedCnt = 0;
   var speedBoostCheckedCnt = 0;
+  var loggingCnt = 0;
   for (var j = 0; j < waitTimeInSecs && config.run; j++) {
     if (checkIsPage(pageInGacha)) {
       console.log('Found in gacha page, finish auto battle: ', battleName);
@@ -4849,9 +4998,10 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       console.log('alliance battle, tap keep battle with this order');
     }
 
-    if (j % 30 === 0) {
+    if (j - loggingCnt > 30) {
       console.log('In ', battleName, ' for ', j, '/', waitTimeInSecs, 'secs, time: ', new Date().toLocaleString());
       sendEvent('running', '');
+      loggingCnt = j;
     }
     sleep(1000);
   }
@@ -4996,29 +5146,19 @@ function handleInGuildPage() {
 }
 
 function guildBattleDragon() {
-  var pageNoMoreDragonToFight = [
-    { x: 419, y: 19, r: 255, g: 211, b: 0 },
-    { x: 415, y: 42, r: 242, g: 175, b: 93 },
-    { x: 478, y: 325, r: 180, g: 180, b: 180 },
-  ];
-  var pageDragonAddMoreCookie = [
-    { x: 300, y: 250, r: 8, g: 166, b: 222 },
-    { x: 408, y: 250, r: 123, g: 207, b: 8 },
-    { x: 419, y: 18, r: 127, g: 95, b: 4 },
-    { x: 518, y: 18, r: 20, g: 117, b: 127 },
-  ];
-
   // Old users does not have config.autoGuildBattleDragon key (Feb 7, 2022)
   if (config.autoGuildBattleDragon === undefined || config.autoGuildBattleDragon) {
     console.log('about to guildBattleDragon');
-    handleGotoKingdomPage();
     handleGotoAdventure(Advantures.guild, pageBattleDragon);
+
+    waitUntilSeePage(pageBattleDragon, 6, pnt(300, 312)); // tapping middle low to pass enemy defeated animate
     if (checkIsPage(pageNoMoreDragonToFight)) {
       console.log('No more dragon to fight, skipping');
       return true;
     }
 
-    if (waitUntilSeePage(pageReadyToFightDragon, 6, pageReadyToFightDragon)) {
+    qTap(pageReadyToFightDragon);
+    if (waitUntilSeePage(pageReadyToFightDragon, 6)) {
       qTap(pageBattleDragon); // Tap ready to start
       // qTap(pnt(386, 256));  // Tap practice
       if (waitUntilSeePage(pageBattleDragon, 6, pageBattleDragon)) {
@@ -5089,7 +5229,6 @@ function handleGuildBattleAlliance() {
   if (config.autoGuildAllianceBattle) {
     console.log('start guild alliance battle: ', config.autoGuildAllianceBattle, checkIsPage(pageInGuildLand));
     if (!checkIsPage(pageCookieAlliance)) {
-      handleGotoKingdomPage();
       handleGotoAdventure(Advantures.cookieAlliance, pageCookieAlliance);
     }
 
@@ -5175,11 +5314,11 @@ function handleGuildBattleAlliance() {
 
 function countBountyLevel() {
   var bountyLevelX = 20;
-  var bountyLevelYRange = [60, 84, 119, 158, 190, 243, 260, 296, 333];
+  var bountyLevelYRange = [60, 84, 119, 158, 190, 230, 260, 296, 333];
 
   for (var j = 0; j < bountyLevelYRange.length; j++) {
     if (checkIsPage([{ x: bountyLevelX, y: bountyLevelYRange[j], r: 205, g: 66, b: 36 }])) {
-      return j + 1; // there is no level 0
+      return j + 4; // first one in list is Lv.4
     }
   }
   return -1;
@@ -5206,11 +5345,8 @@ function handleBounties() {
   var foundResults = findSpecificImageInScreen(bountiesGreenEnter, 0.97);
   foundResults.sort(dynamicSort('x'));
 
-  var dayOfWeek = new Date().getDay();
-  var bountyCount = 2;
-  if (foundResults.length === 1) {
-    bountyCount = 1;
-  } else if (foundResults.length > 2) {
+  var bountyCount = foundResults.length;
+  if (foundResults.length > 2) {
     bountyCount = 4;
   }
 
@@ -5233,7 +5369,7 @@ function handleBounties() {
 
       if (waitUntilSeePage(pageInOneOfTheBounty, 4)) {
         for (var bountyIdx = 0; bountyIdx < bountyCount; bountyIdx++) {
-          var powder = ocrMaterialStorage(350, 13, 40, 18);
+          var powder = ocrMaterialStorage(454, 10, 50, 18);
 
           if (powder !== -1) {
             bounties.push({
@@ -5255,24 +5391,23 @@ function handleBounties() {
   }
 
   bounties.sort(dynamicSort('level'));
-  // console.log('sorted level bounties: ', JSON.stringify(bounties));
+  // console.log('sorted level bounties: ', JSON.stringify(bounties, ['index', 'level', 'powderStock']));
+
   bounties = bounties.filter(function (bounty) {
     return bounty.level === bounties[0].level;
   });
   bounties.sort(dynamicSort('powderStock'));
-  console.log('sorted & filtered level bounties: ', JSON.stringify(bounties));
+  console.log('sorted & filtered level bounties: ', JSON.stringify(bounties, ['index', 'level', 'powderStock']));
 
-  // if (bounties.)
-
-  if (dayOfWeek !== 0 && bounties.length === 0) {
-    console.log('No bounties can be run, skipping, day: ', dayOfWeek);
+  if (bounties.length === 0) {
+    console.log('No bounties can be run, skipping, bounties: ', JSON.stringify(bounties));
     return handleGotoKingdomPage();
   }
 
   var targetBounty = bounties[0];
   for (var i = 0; i < bountyCount; i++) {
     var gotBountyLevel = countBountyLevel();
-    var gotMaterialStock = ocrMaterialStorage(350, 13, 40, 18);
+    var gotMaterialStock = ocrMaterialStorage(454, 10, 50, 18);
     if (gotBountyLevel === targetBounty.level && gotMaterialStock === targetBounty.powderStock) {
       console.log('found it, level, stock: ', gotBountyLevel, gotMaterialStock);
       break;
@@ -5322,10 +5457,10 @@ function handleGotoGnomeLab() {
     { x: 127, y: 345, r: 41, g: 65, b: 99 },
   ];
   pageLabUncollapsed = [
-    {x: 104, y: 145, r: 255, g: 255, b: 255},
-    {x: 97, y: 143, r: 206, g: 12, b: 24},
-    {x: 96, y: 163, r: 255, g: 223, b: 247},
-    {x: 87, y: 158, r: 57, g: 93, b: 132},
+    { x: 104, y: 145, r: 255, g: 255, b: 255 },
+    { x: 97, y: 143, r: 206, g: 12, b: 24 },
+    { x: 96, y: 163, r: 255, g: 223, b: 247 },
+    { x: 87, y: 158, r: 57, g: 93, b: 132 },
   ];
   if (checkIsPage(pageLabCollapsed)) {
     qTap(pageLabCollapsed);
@@ -5388,12 +5523,12 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
 
   // Tools, etc
   var pageNotEnoughItemsForResearch = [
-    {x: 435, y: 95, r: 255, g: 255, b: 255},
-    {x: 303, y: 250, r: 8, g: 125, b: 255},
-    {x: 287, y: 247, r: 123, g: 207, b: 16},
-    {x: 261, y: 245, r: 222, g: 207, b: 198},
-    {x: 305, y: 100, r: 57, g: 69, b: 107},
-    {x: 22, y: 20, r: 127, g: 102, b: 122},
+    { x: 435, y: 95, r: 255, g: 255, b: 255 },
+    { x: 303, y: 250, r: 8, g: 125, b: 255 },
+    { x: 287, y: 247, r: 123, g: 207, b: 16 },
+    { x: 261, y: 245, r: 222, g: 207, b: 198 },
+    { x: 305, y: 100, r: 57, g: 69, b: 107 },
+    { x: 22, y: 20, r: 127, g: 102, b: 122 },
   ];
 
   var foundResults = [];
@@ -5432,16 +5567,14 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
                   qTap(pnt(570, 31));
                   sleep(1500);
                   break;
-                }
-                else if (checkIsPage(pageNotEnoughItemsForResearch)) {
+                } else if (checkIsPage(pageNotEnoughItemsForResearch)) {
                   console.log('Not enough items, continue');
                   qTap(pageNotEnoughItemsForResearch);
                   sleep(1000);
                   qTap(pnt(570, 31));
                   sleep(1500);
                   break;
-                }
-                else{
+                } else {
                   console.log('Start researching');
                 }
 
@@ -5459,8 +5592,7 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
                 qTap(pnt(570, 31));
                 sleep(1500);
                 break;
-              }
-              else{
+              } else {
                 console.log('Start researching');
               }
 
@@ -5494,56 +5626,77 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
 }
 
 function handleGotoTradeHabor() {
-  console.log('try to handleGotoTradeHabor');
-  if (!checkIsPage(pageInKingdomVillage)) {
-    handleGotoKingdomPage(gnomeLabKingdom);
+  if (!checkIsPage(pageInHabor)) {
+    console.log('try to handleGotoTradeHabor');
+    if (!checkIsPage(pageInKingdomVillage)) {
+      handleGotoKingdomPage(gnomeLabKingdom);
+    }
+
+    pageLabCollapsed = [
+      { x: 98, y: 327, r: 255, g: 228, b: 143 },
+      { x: 91, y: 327, r: 222, g: 52, b: 66 },
+      { x: 127, y: 345, r: 41, g: 65, b: 99 },
+      { x: 26, y: 322, r: 255, g: 255, b: 255 },
+      { x: 22, y: 329, r: 82, g: 26, b: 11 },
+      { x: 28, y: 273, r: 255, g: 247, b: 206 },
+    ];
+    pageHaborUncollapsed = [
+      { x: 113, y: 99, r: 252, g: 58, b: 163 },
+      { x: 105, y: 105, r: 255, g: 251, b: 107 },
+      { x: 84, y: 105, r: 57, g: 105, b: 156 },
+    ];
+    pageHaborUncollapsed2 = [
+      { x: 114, y: 50, r: 255, g: 65, b: 168 },
+      { x: 104, y: 55, r: 255, g: 253, b: 107 },
+    ];
+    if (checkIsPage(pageLabCollapsed)) {
+      qTap(pageLabCollapsed);
+      sleep(config.sleepAnimate * 4);
+    }
+
+    if (checkIsPage(pageHaborUncollapsed)) {
+      qTap(pageHaborUncollapsed);
+      sleep(config.sleepAnimate * 2);
+    } else if (checkIsPage(pageHaborUncollapsed2)) {
+      qTap(pageHaborUncollapsed2);
+      sleep(config.sleepAnimate * 2);
+    }
   }
 
-  pageLabCollapsed = [
-    { x: 98, y: 327, r: 255, g: 228, b: 143 },
-    { x: 91, y: 327, r: 222, g: 52, b: 66 },
-    { x: 127, y: 345, r: 41, g: 65, b: 99 },
-    { x: 26, y: 322, r: 255, g: 255, b: 255 },
-    { x: 22, y: 329, r: 82, g: 26, b: 11 },
-    { x: 28, y: 273, r: 255, g: 247, b: 206 },
-  ];
-  pageHaborUncollapsed = [
-    {x: 113, y: 99, r: 252, g: 58, b: 163},
-    {x: 105, y: 105, r: 255, g: 251, b: 107},
-    {x: 84, y: 105, r: 57, g: 105, b: 156}
-  ];
-  pageHaborUncollapsed2 = [
-    {x: 114, y: 50, r: 255, g: 65, b: 168},
-    {x: 104, y: 55, r: 255, g: 253, b: 107},
-  ];
-  if (checkIsPage(pageLabCollapsed)) {
-    qTap(pageLabCollapsed);
-    sleep(config.sleepAnimate * 4);
-  }
-
-  if (checkIsPage(pageHaborUncollapsed)) {
-    qTap(pageHaborUncollapsed);
-    sleep(config.sleepAnimate * 2);
-    handleInHabor();
-  } else if (checkIsPage(pageHaborUncollapsed2)) {
-    qTap(pageHaborUncollapsed2);
-    sleep(config.sleepAnimate * 2);
-    handleInHabor();
-  }
+  handleInHabor();
   handleGotoKingdomPage();
 }
 
+var seasideStockRect = {
+  0: new rect(78, 286, 60, 17),
+  1: new rect(188, 286, 60, 17),
+  2: new rect(298, 286, 60, 17),
+  3: new rect(400, 286, 60, 17),
+  4: new rect(510, 286, 60, 17),
+};
+function ocrSeasideMarketStockAfterPurchase(rect) {
+  var img = getScreenshot();
+  var croppedImage = cropImage(img, rect.x, rect.y, rect.width, rect.height);
+  releaseImage(img);
+
+  var txt = recognizeWishingTreeRequirements(numberAuroraStockInTradeBird, croppedImage, 10, 0.8, 0.5);
+  releaseImage(croppedImage);
+
+  if (txt.length === 0) {
+    return -1;
+  } else if (txt.indexOf('/') === -1) {
+    return -1;
+  } else {
+    var stock = txt.split('/');
+    return stock[0] - stock[1];
+  }
+}
+
 function handleInHabor() {
-  var pageInHabor = [
-    { x: 303, y: 13, r: 255, g: 186, b: 239 },
-    { x: 310, y: 16, r: 247, g: 252, b: 203 },
-    { x: 409, y: 20, r: 255, g: 207, b: 0 },
-    { x: 521, y: 20, r: 0, g: 136, b: 255 },
-  ];
   var pageShipInHabor = [
-    { x: 266, y: 190, r: 195, g: 94, b: 46 },
-    { x: 36, y: 225, r: 247, g: 185, b: 247 },
-    { x: 94, y: 232, r: 255, g: 251, b: 74 },
+    { x: 418, y: 212, r: 55, g: 34, b: 22 },
+    { x: 609, y: 211, r: 176, g: 133, b: 66 },
+    { x: 585, y: 229, r: 123, g: 78, b: 44 },
   ];
   var pageNoShipInHabor = [
     { x: 246, y: 66, r: 255, g: 12, b: 82 },
@@ -5621,7 +5774,7 @@ function handleInHabor() {
       sleep(config.sleepAnimate * 2);
     }
   } else {
-    console.log('No need to send ship');
+    console.log('No need to send ship, config.autoHandleTradeHabor: ', config.autoHandleTradeHabor);
   }
 
   var pageNeedDiamondRefreshMarket = [
@@ -5630,7 +5783,16 @@ function handleInHabor() {
     { x: 363, y: 118, r: 57, g: 69, b: 107 },
     { x: 297, y: 124, r: 33, g: 44, b: 66 },
   ];
-  if (config.autoBuyCaramelStuff && waitUntilSeePage(pageInHabor, 4)) {
+  var pageMarketItemDetail = [
+    { x: 350, y: 246, r: 123, g: 207, b: 8 },
+    { x: 411, y: 16, r: 127, g: 93, b: 8 },
+    { x: 521, y: 21, r: 0, g: 71, b: 126 },
+    { x: 397, y: 103, r: 57, g: 69, b: 107 },
+  ];
+  if (
+    (config.autoBalanceAuroraStocks || config.autoBuyCaramelStuff || config.autoBuyRadiantShardsInHabor) &&
+    waitUntilSeePage(pageInHabor, 4)
+  ) {
     qTap(pnt(93, 230)); // Seaside market
     sleep(config.sleepAnimate);
     qTap(pnt(543, 336));
@@ -5641,19 +5803,54 @@ function handleInHabor() {
       sleep(config.sleepAnimate);
     }
 
-    qTap(pnt(420, 250));
-    sleep(config.sleepAnimate);
-    qTap(pnt(315, 247));
-    sleep(config.sleepAnimate * 2);
-    qTap(pnt(530, 245));
-    sleep(config.sleepAnimate);
-    qTap(pnt(315, 247));
-    sleep(config.sleepAnimate);
-    qTap(pnt(612, 270));
-    sleep(config.sleepAnimate);
-    qTap(pnt(315, 247));
-    sleep(config.sleepAnimate);
-    console.log('Purchased carmel stuff successfully');
+    if (config.autoBalanceAuroraStocks) {
+      for (var auroraIdx = 0; auroraIdx < 3; auroraIdx++) {
+        var newStock = ocrSeasideMarketStockAfterPurchase(seasideStockRect[auroraIdx]);
+        if (newStock > 50) {
+          qTap(seasideStockRect[auroraIdx]);
+          if (waitUntilSeePage(pageMarketItemDetail, 3)) {
+            var productNowHave = ocrProductStorage(rect(330, 154, 28, 14));
+            if (newStock > productNowHave) {
+              console.log('Purchased seaside market: ', auroraIdx, newStock, productNowHave);
+              qTap(pageMarketItemDetail);
+            } else {
+              console.log('NOT purchased seaside market: ', auroraIdx, newStock, productNowHave);
+              keycode('BACK', 80);
+            }
+            sleep(2000);
+          }
+        }
+      }
+    }
+
+    if (config.autoBuyCaramelStuff) {
+      var newStock = ocrSeasideMarketStockAfterPurchase(seasideStockRect[3]);
+      if (newStock > 100) {
+        qTap(pnt(420, 250));
+        sleep(config.sleepAnimate);
+        qTap(pnt(315, 247));
+        sleep(config.sleepAnimate * 2);
+        console.log('Purchased carmel spyglass');
+      }
+
+      var newStock = ocrSeasideMarketStockAfterPurchase(seasideStockRect[4]);
+      if (newStock > 100) {
+        qTap(pnt(530, 245));
+        sleep(config.sleepAnimate);
+        qTap(pnt(315, 247));
+        sleep(config.sleepAnimate);
+        console.log('Purchased carmel map fragment');
+      }
+      console.log('Purchased carmel stuff successfully');
+    }
+
+    if (config.autoBuyRadiantShardsInHabor) {
+      qTap(pnt(612, 270));
+      sleep(config.sleepAnimate);
+      qTap(pnt(315, 247));
+      sleep(config.sleepAnimate);
+      console.log('Purchased radiant shards successfully');
+    }
     keycode('BACK', 800);
     sleep(config.sleepAnimate);
   } else {
@@ -5688,7 +5885,24 @@ function handleInHabor() {
     { x: 335, y: 81, r: 156, g: 93, b: 41 },
     { x: 324, y: 38, r: 83, g: 106, b: 124 },
   ];
-  if ((config.autoBuySeaFairy || config.autoBuyGuildRelic) && waitUntilSeePage(pageInHabor, 4)) {
+  var pageConfirmBuyLegendSoulEssence = [
+    { x: 302, y: 254, r: 255, g: 186, b: 239 },
+    { x: 312, y: 69, r: 170, g: 109, b: 38 },
+    { x: 326, y: 91, r: 198, g: 251, b: 239 },
+    { x: 267, y: 100, r: 57, g: 69, b: 107 },
+  ];
+  var pageConfirmBuyEpicSoulEssence = [
+    { x: 312, y: 253, r: 247, g: 190, b: 239 },
+    { x: 315, y: 84, r: 195, g: 142, b: 60 },
+    { x: 282, y: 91, r: 57, g: 69, b: 107 },
+  ];
+  if (
+    (config.autoBuySeaFairy ||
+      config.autoBuyGuildRelic ||
+      config.autoBuyEpicSoulEssence ||
+      config.autoBuyLegendSoulEssence) &&
+    waitUntilSeePage(pageInHabor, 4)
+  ) {
     console.log('Try to purchase sea fairy in shell shop');
     qTap(pageCanGotoShellShop);
     sleep(config.sleepAnimate);
@@ -5704,10 +5918,29 @@ function handleInHabor() {
 
       if (config.autoBuyGuildRelic) {
         for (var i = 0; i < 2; i++) {
-          if (waitUntilSeePage(pageConfirmBuyGuildRelics, 4, pnt(402, 187))) {
+          if (waitUntilSeePage(pageConfirmBuyGuildRelics, 2, pnt(390, 316))) {
             qTap(pageConfirmBuyGuildRelics);
             sleep(1500);
             console.log('Purchased guild relic successfully: ', i);
+          }
+        }
+      }
+
+      if (config.autoBuyLegendSoulEssence) {
+        for (var i = 0; i < 2; i++) {
+          if (waitUntilSeePage(pageConfirmBuyLegendSoulEssence, 2, pnt(270, 192))) {
+            qTap(pageConfirmBuyEpicSoulEssence);
+            sleep(1500);
+            console.log('Purchased legend soul essence successfully: ', i);
+          }
+        }
+      }
+      if (config.autoBuyEpicSoulEssence) {
+        for (var i = 0; i < 3; i++) {
+          if (waitUntilSeePage(pageConfirmBuyEpicSoulEssence, 2, pnt(270, 318))) {
+            qTap(pageConfirmBuyEpicSoulEssence);
+            sleep(1500);
+            console.log('Purchased epic soul essence successfully: ', i);
           }
         }
       }
@@ -6042,7 +6275,7 @@ function handleSuperMayhem() {
     console.log('Finish battle loop: ', loopTimes, 'and try tap refresh');
 
     tap(560, 330, 100); // Free Refresh
-    sleep(3000);
+    sleep(5000);
 
     if (checkIsPage(pagePvPCrystaisRefresh)) {
       console.log('crystaisRefreshPage');
@@ -6109,7 +6342,7 @@ function readyAndBattleTray() {
   }
 
   qTap(pageReadyToBattleToSC);
-  if (waitUntilSeePage(pageToSCTeamsNotMeetRequirement, 3)) {
+  if (waitUntilSeePage(pageToSCTeamsNotMeetRequirement, 5)) {
     console.log('ToSC team requirement not met, skipping');
     return false;
   }
@@ -6365,6 +6598,10 @@ function stop() {
 
   for (var i = 0; i < numberImages.length; i++) {
     releaseImage(numberImages[i].img);
+  }
+
+  for (var i = 0; i < numberAuroraStockInTradeBird.length; i++) {
+    releaseImage(numberAuroraStockInTradeBird[i].img);
   }
 
   for (var i = 0; i < bNumbers.length; i++) {
@@ -6689,6 +6926,75 @@ function loadImages() {
     { char: ' ', img: getImageFromBase64(b64NE) },
   ];
 
+  numberAuroraStockInTradeBird = [
+    {
+      char: '0',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAsDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDb8G29r8UvAPhL49ftDft3XnwW0f4seLLnRPgt4e0LwlFqDagkMrQi9vpZM7I3kQgD5VAIBOSM+BftGf8ABR79o79i344eJf2WvjN8G9M13xL4L1JrDUdb0ySaKC/GA8c6oFOzfE8bFcnBJHavbPgL+zv4c/4KVfsgfAPwv4a+KVv4Svv2avFd3pnj2y13T5pZJ9KN4L2OaB7dXRpigiyN3B3V8xf8FCfFvxx/bO/bV+I/7SP7PPgvTrvwb4g8SSx6HdandpBPKlqq2bu0bkMuZLdyAQDjFfkmZcAeF2GyehHH4alClGyhO/K53jfWcWnK9m9W77niVcsyaFCKqwiorZ7X079T/9k='
+      ),
+    },
+    {
+      char: '1',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwCX4UDx5+0x+xR4+/ba8Pft26DpfiTwZ4NuvEsfwe8LaDFctpsELuiQ6nNORIJHZOiADBBFYn/Dc1x/0DLT/v4P8az/ANkHw4nwd+AH7T3grxlLBaatrH7KdlLJHChdWu55ZpJU3ICMK8pUE9QBXyF/wwz8Uf8AovA/KT/4ivwjMPC7hXi7KMHicqw9OjBKWy+JNpRba1k9G7yu9T5urk+Cx1CnOjBRWvz7ep//2Q=='
+      ),
+    },
+    {
+      char: '2',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwC5+yJpXhn9sPU/Cvw4b/gp14k8O/Gzxfosl9YeB4fhWqaJYXSR+Y9hLNKuZGUEB/mDYyQK4v8A4ST/AIKhf88fht/36l/+Lr6T/YU+B/xC+KfwK8Qf8FAvAvxL8Pv8aPE9jf6J8MbTxDa3Q0vwNprStG8qCOJzLduEVmk6EgAHatfld/whH7UH/Rabv/wpJv8A5Fr8vwfAXCmPynD1cwyejGq46xppWje2jl7nM7dbPW+ttX49PLMFVoQdWhFO2y6fPS5//9k='
+      ),
+    },
+    {
+      char: '3',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwB/7I03g79sbxt4f+Dmo/8ABSLxv4T+N/iW3llXwHafCQNo2jXKKzmznuJFO/AXly4J7dquf8Kj/wCCnH/RdPg1/wCAz/8AxyvTP+CUtp+0v4RudU/a48Q+PPhnpPwI8ZXusav4w0aTRLy58S28bI8bJDdxQqUJKBgFZgoyAelfAP8Awu7/AIJjf9BT4g/+DC8/+Kr87wPh/wAGY/K8PUxeV0Yz5I3ShFWbSbV18Vn1bZ5dPLMvqUYOdGKdl0P/2Q=='
+      ),
+    },
+    {
+      char: '4',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAwDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0D4ueMPiLqPirwz+zz8AbGG/+JHxA1EWXh6G4TfFYQLg3GoXA7QwpliTgFtozzXyn/wAFcv2mf2oP+CTv7WEX7LGkfGS3+IEUvhKw1xtf1bQYreTfcmVWiVYm2lAYiVPXD89K9v8ADv7X/wCzD+yH8YvjLcftWXPjPSvFPjmys9E8GeMvClvFcS6PoXlgyxwAtmGR5SxZsZI6ZFcX/wAF2rn/AIJAePP2vPDGt/H34m/FGPWU+EegQ2o8PaSrQtZKs3ks5kAPmFT83bNfgnhn4acHT4KoVsXSp4irWSqSk0ny3V1BPdcq0a6yvfpb5nKMowDy+MpxU3LVvt5fL8z/2Q=='
+      ),
+    },
+    {
+      char: '5',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwCCw1T4aaN+yD8NP20P2t/+CinxJ8Ar8VnvJNG8O+CvhjHqtvaCF+YyyI7jCsvzPjcc4ryP/hp0/wDR4XxX/wDDJD/Cvqb/AIJX6J+12fhzoT/FH4jfC68/Zg8Favr2n674N8R+EZNQ1YWlvLPG6owhZMtIoZSCcIMHmvmL/hfX/BCH/o3y8/8ABPL/AIV8DS4H4TxWCo1MPgMPGLin71GMnZpW1Tj873PMjl2BnTi40o2t1imf/9k='
+      ),
+    },
+    {
+      char: '6',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwCn4v8Ai18W/Fv7Lfi39u+x+J1v8P8A4d6HdDSfh/Yz+Hjf3fjXWEcCcEZHkWqkPGJBz8pckDFRf8N2eGf+h38H/wDg8i/+Kr6b/wCCePjr4i/Er9hj9nDwn8HvHvg7Q/C3wjkvNC/aA8O+KfC8l6+om2UxSi3YROr7nVjkHnIJz0rL/wCGnv8Ag3B/6N4sv/CHm/8AjdfimYeCXB+Z5fhaeESpqnHWSipOpez5pSur7Nr10sj56rw9gK1KChpZb2vfzZ//2Q=='
+      ),
+    },
+    {
+      char: '7',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDC/Zl8Y6b+0J4js/A37TP7aHxP+GXj/WfiHd+E9H8PeC/hM17otzcwTm1xFfSRsjs08U4ILZXZyOK9n8b/ALJ+teB/Gmr+C5f+Comos2j6pcWTNP4Y07zCYpGjy3P3vl5964L9jq1svgd+0JonxD/aJ1iKX/hTHwv8RfEq/gggeZL/AMTajdTSMUCg4WGSeUoxwMGvki6/YT+KHx6uZPjn4t+OWt2Gq+NJDrup2NveEx29xeH7RJGpBwVV5GA9hX4bQxHhhgeH6GPzDAYeFKrOpGlalGTlThJxjJtpu8opSd+585CWT08LGpVpxSk3y+7e6Tsn92p//9k='
+      ),
+    },
+    {
+      char: '8',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDZ+FvhrxJ8avg98Lf2i/jp+2F4m+GsXx08RyaX8LPCngLwNHqsdqFkeNJdRncEgs0bEj5VAIr6E/4cz/8ABTz/AKPw8Ef+EMv/AMcri/8Aglr4m+PUf7DXwe8JfspfErwnpkvgn4marJ8c7Dxto9xdtARdyF105kUpGgjK4EZ4LH3r63/4bU/4Jy/9Fd8Xf9+tS/8AiK+Fwvh7wHPA0oxy6i4qKs+SLbTS1crXl6tts82GV5a6cV7KNrdl+fU//9k='
+      ),
+    },
+    {
+      char: '9',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDofg94I1X4zeEPhB45/aF/b21P4V+JP2hBLL8HfBfhXwXFf23kKpaJ76eQE7nAyRlQM4HIr0H/AIdd/wDBbP8A6K78Of8Awnn/APjlcx+wR+0037F3hjxH4d/asXwn4o+H/wCzl4UttW8DzXvhZrnXrG6v4z5dhaTKGRIlfMYkYoQpGc4Jrmf+H5v/AAVd/wCiKaX/AODu0/8AjlflFHIPCSeT4TEVMNh40qkE6bnGMXJWXV2cnqrt3evmeLHDZG6EJuEUmtLpI//Z'
+      ),
+    },
+    {
+      char: '/',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAPAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwBLz4i+Pvjh8M/it+0Z4B+MkvgnwV8Ivh7pmpG5i0SK9/trxBfxrPDppEhGFEUtsG2ndmY/3a+S/wDh5j/wUF/6JpF/4Q93X1T4L8NeG/D37FH7NP7FPhy+W4uviJqk/wAVvipMEdRJFbMPslluYDzFSRo48DI2RLXnn/D1S+/6JGv/AIHCv5d4hyXIOGJYbJsBk1LGVaVKMqs5tRac27Xe8m+WT12Vj43FYfDYNww9LDxqNJNt6b/nsz//2Q=='
+      ),
+    },
+  ];
+
   numberImagesProdutRequirements = [
     { char: '0', img: getImageFromBase64(b64N0_0) },
     { char: '0', img: getImageFromBase64(b64N0_1) },
@@ -6882,9 +7188,7 @@ function start(inputConfig) {
 
   if (config.account !== 'default_xrobotmon_account@gmail.com' && config.account !== 'aaa@gmail.com') {
     while (
-      !checkIsPage(pageInKingdomVillage) &&
-      !checkIsPage(pageAnnouncement) &&
-      !checkIsPage(pageInProduction) &&
+      !waitUntilSeePages([pageInKingdomVillage, pageAnnouncement, pageInProduction, pageInMagicLab]) &&
       config.run
     ) {
       // sendEvent('gameStatus', 'launching');
@@ -6920,7 +7224,7 @@ function start(inputConfig) {
     }
   }
 
-  if (checkIsPage(pageInProduction)) {
+  if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
     console.log('Already in production, reset all side tasks');
     config.lastCollectMail = Date.now();
     config.lastCollectDailyReward = Date.now();
@@ -6952,11 +7256,11 @@ function start(inputConfig) {
       break;
     }
 
-    if ((Date.now() - config.lastGotoProduction) / 60000 > 10) {
+    if ((Date.now() - config.lastGotoProduction) / 60000 > 7) {
       console.log(
         'Check other tasks as we have produce for: ',
         (Date.now() - config.lastGotoProduction) / 60000,
-        ' mins'
+        ' mins (>7)'
       );
 
       if (
@@ -7061,7 +7365,13 @@ function start(inputConfig) {
       }
 
       if (
-        (config.autoHandleTradeHabor || config.autoBuyCaramelStuff || config.autoBuySeaFairy) &&
+        (config.autoHandleTradeHabor ||
+          config.autoBalanceAuroraStocks ||
+          config.autoBuyLegendSoulEssence ||
+          config.autoBuyEpicSoulEssence ||
+          config.autoBuyCaramelStuff ||
+          config.autoBuyRadiantShardsInHabor ||
+          config.autoBuySeaFairy) &&
         (Date.now() - config.lastHandleTradeHabor) / 60000 > 120
       ) {
         console.log('handleTradeHabor: ', (Date.now() - config.lastHandleTradeHabor) / 60000, ' just passed');
@@ -7142,7 +7452,7 @@ function start(inputConfig) {
       }
       console.log('max job fails reached, check for handling: ', config.jobFailedCount);
 
-      if (checkIsPage(pageInProduction)) {
+      if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
         console.log('in production, continue work');
         config.jobFailedCount = 0;
         continue;
