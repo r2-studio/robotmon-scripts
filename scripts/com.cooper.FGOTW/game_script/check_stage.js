@@ -212,7 +212,7 @@ function isStageRestart() {
 }
 
 function isStageRestartEvent() {
-  return false;
+  return checkIconInScreen("stageRestartEvent");
 }
 
 function isItemOrServantFullDialog() {
@@ -255,17 +255,17 @@ function isSelectFriendEmpty() {
 
 //select team-----------------------------------------------
 icon["teamPage"] = [1702, 975, 172, 75];
-icon["useItemDialog"] = [1140, 940, 200, 60];
+icon["useItemDialog"] = [1140, 960, 200, 60];
 
 function isSelectTeamPage() {
   return checkIconInScreen("teamPage");
 }
 
 function isUseItemDialog() {
-  //TODO
   if (server == "TW") {
     return checkIconInScreen("useItemDialog");
   }
+  //TODO
   return false;
 }
 
@@ -359,6 +359,7 @@ function isBattleSkillEmiyaDialog() {
 //finish-----------------------------------------------
 icon["finishNext"] = [1575, 933, 180, 60];
 icon["stageRestart"] = [1140, 810, 240, 75];
+icon["stageRestartEvent"] = [1260, 810, 240, 75];
 icon["stageFailed"] = [750, 160, 300, 60];
 icon["stageFailed2"] = [860, 570, 200, 60];
 icon["addFriend"] = [1710, 135, 120, 37];
