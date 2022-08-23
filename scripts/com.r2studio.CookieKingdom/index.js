@@ -8,7 +8,7 @@ config = {
   materialsTarget: 1200,
   goodsTarget: 260,
   productSafetyStock: 10,
-  skipMagicLabProduction: false,
+  skipMagicLabProduction: true,
   autoCollectMailIntervalInMins: 120,
   autoCollectFountainIntervalInMins: 40,
   autoCollectTrainIntervalInMins: 20,
@@ -22,8 +22,9 @@ config = {
   wishingTreeMaxFillingMins: 8,
   wishingTreeRefreshGoldenWishes: true,
   wishingTreeForceFulfillGoldWishes: false,
+  autoHandleEventWishingTreeAmounts: 0,
   autoPvPIntervalInMins: 0,
-  autoPvPTargetScoreLimit: 600000,
+  autoPvPTargetScoreLimit: 1000000,
   autoPvPPurchaseAncientCookie: false,
   worksBeforeCollectCandy: 40,
   autoUpgradeCandyHouse: false,
@@ -34,9 +35,9 @@ config = {
   autoGuildBattleDragon: false,
   autoHandleBountiesIntervalInMins: 0,
   autoLabResearch: false,
-  autoResearchKingdom: false,
-  autoResearchCookies: false,
-  autoLabUseAuroraMaterial: false,
+  autoResearchKingdom: true,
+  autoResearchCookies: true,
+  autoLabUseAuroraMaterial: true,
   autoHandleTradeHabor: false,
   autoBalanceAuroraStocks: false,
   autoBuyCaramelStuff: false,
@@ -49,11 +50,13 @@ config = {
   autoSuperMayhemIntervalInMins: 0,
   autoSuperMayhemTargetScoreLimit: 600000,
   autoHandleTowerOfSweetChaos: false,
+  autoHandleCollectCookieOdysseyMission: false,
   buildTowardsTheLeft: true,
   isTestAccount: false,
 
   jobFailedBeforeGetCandy: 3,
   productionBuildingChecked: 0,
+  currentProductionBuilding: undefined,
   jobFailedCount: 0,
   lastNetworkIssueOccurTime: 0,
   networkIssueCount: 0,
@@ -66,6 +69,7 @@ config = {
   lastSendHotAirBallon: 0,
   lastCollectDailyReward: 0,
   lastFulfillWishes: 0,
+  lastAutoHandleEventWishingTree: 0,
   lastAutoPvP: 0,
   lastAutoSuperMayhem: 0,
   battleMaxLoops: 3,
@@ -75,6 +79,7 @@ config = {
   lastLabResearch: 0,
   lastHandleTradeHabor: 0,
   lastAutoHandleTowerOfSweetChaos: 0,
+  lastAutoHandleCollectCookieOdysseyMission: 0,
   lastTryResolveGreenChecks: 0,
   lastFreezeCheckScreenShot: null,
   lastFreezeCheckScreenShotTime: Date.now(),
@@ -379,6 +384,27 @@ var pageToolShop = [
   { x: 413, y: 84, r: 183, g: 190, b: 211 },
 ];
 
+var pageIsJammery = [
+  {x: 490, y: 83, r: 0, g: 178, b: 206},
+  {x: 440, y: 89, r: 19, g: 114, b: 129},
+  {x: 430, y: 88, r: 247, g: 243, b: 222},
+];
+
+var pageIsCarpentryShop = [
+  {x: 494, y: 83, r: 140, g: 86, b: 57},
+  {x: 517, y: 87, r: 165, g: 105, b: 66},
+  {x: 433, y: 73, r: 88, g: 46, b: 30},
+  {x: 420, y: 81, r: 214, g: 146, b: 115},
+  {x: 424, y: 64, r: 84, g: 3, b: 3},
+]
+
+var pageIsJampieDiner = [
+  {x: 535, y: 84, r: 210, g: 36, b: 57},
+  {x: 493, y: 83, r: 0, g: 224, b: 231},
+  {x: 414, y: 81, r: 217, g: 48, b: 77},
+  {x: 432, y: 73, r: 220, g: 149, b: 99},
+]
+
 var pageSelectAdvanture = [
   { x: 41, y: 334, r: 28, g: 36, b: 48 },
   { x: 35, y: 291, r: 241, g: 51, b: 92 },
@@ -448,10 +474,10 @@ var pageInSuperMayhem = [
 ];
 
 var pageBattleDragon = [
-  { x: 532, y: 327, r: 123, g: 207, b: 8 },
-  { x: 32, y: 82, r: 231, g: 231, b: 226 },
-  { x: 35, y: 117, r: 115, g: 103, b: 173 },
-  { x: 25, y: 220, r: 198, g: 167, b: 247 },
+  { x: 317, y: 18, r: 0, g: 36, b: 132 },
+  { x: 224, y: 19, r: 165, g: 245, b: 246 },
+  { x: 409, y: 20, r: 255, g: 204, b: 0 },
+  { x: 524, y: 20, r: 0, g: 139, b: 255 },
 ];
 var pageNoMoreDragonToFight = [
   { x: 601, y: 326, r: 160, g: 160, b: 160 },
@@ -460,17 +486,21 @@ var pageNoMoreDragonToFight = [
   { x: 29, y: 115, r: 181, g: 182, b: 222 },
 ];
 var pageReadyToFightDragon = [
-  { x: 531, y: 331, r: 123, g: 207, b: 8 },
-  { x: 105, y: 336, r: 123, g: 207, b: 16 },
-  { x: 17, y: 335, r: 49, g: 170, b: 222 },
-  { x: 20, y: 20, r: 255, g: 255, b: 255 },
-  { x: 13, y: 20, r: 70, g: 75, b: 141 },
+  { x: 493, y: 325, r: 134, g: 233, b: 253 },
+  { x: 316, y: 19, r: 68, g: 83, b: 231 },
+  { x: 108, y: 335, r: 123, g: 207, b: 8 },
+  { x: 73, y: 333, r: 0, g: 150, b: 214 },
 ];
 var pageDragonAddMoreCookie = [
   { x: 300, y: 250, r: 8, g: 166, b: 222 },
   { x: 408, y: 250, r: 123, g: 207, b: 8 },
   { x: 419, y: 18, r: 127, g: 95, b: 4 },
   { x: 518, y: 18, r: 20, g: 117, b: 127 },
+];
+var pageDragonRemainHealth = [
+  { x: 368, y: 233, r: 132, g: 65, b: 255 },
+  { x: 153, y: 334, r: 1, g: 31, b: 41 },
+  { x: 79, y: 334, r: 42, g: 15, b: 4 },
 ];
 var pageDragonTotalDamage = [
   { x: 427, y: 243, r: 231, g: 215, b: 222 },
@@ -1058,6 +1088,14 @@ function SwipeProductionMenuToTop() {
   sleep(config.sleepAnimate * 2);
 }
 
+function setProductionBuilding(building) {
+  if (config.currentProductionBuilding !== building) {
+    console.log('Send running as currently in {0} (last record was {1})'.format(building, config.currentProductionBuilding));
+    config.currentProductionBuilding = building;
+    sendEvent('running', '');
+  }
+}
+
 function handleMaterialProduction() {
   pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
   pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
@@ -1067,6 +1105,8 @@ function handleMaterialProduction() {
     console.log('wood farm, add more');
     qTap(pageBeanFarm, 800);
     sleep(config.sleepAnimate);
+
+    setProductionBuilding('wood');
     return true;
   } else if (checkIsPage(pageBeanFarm)) {
     console.log('bean farm, add more');
@@ -1077,6 +1117,8 @@ function handleMaterialProduction() {
     console.log('sugar farm, add more');
     qTap(pageSugarFarm, 800);
     sleep(config.sleepAnimate);
+
+    setProductionBuilding('sugar');
     return true;
   } else if (checkIsPage(pagePowderFarm)) {
     console.log('Powder farm, add more');
@@ -1108,6 +1150,8 @@ function handleMaterialProduction() {
     sleep(config.sleepAnimate);
     qTap(pageMilkFarm);
     sleep(config.sleepAnimate);
+
+    setProductionBuilding('milk');
     return true;
   } else if (checkIsPage(pageCottomFarm)) {
     console.log('Cottom farm, add more');
@@ -1115,6 +1159,8 @@ function handleMaterialProduction() {
     sleep(config.sleepAnimate);
     qTap(pageCottomFarm);
     sleep(config.sleepAnimate);
+
+    setProductionBuilding('cottom');
     return true;
   }
 }
@@ -1135,10 +1181,7 @@ function dynamicSort(property) {
 }
 
 function swipeDownOneItem() {
-  if (!checkIsPage(pageToolShop)) {
-    console.log('No need to move down one item as this is not tool shop');
-  }
-  console.log('Is tool shop, swipe down one item for shovel');
+  console.log('swipe down one item for 4th item as currently in:', config.currentProductionBuilding);
   tapDown(430, 319, 40, 0);
   sleep(config.sleep * 2);
   moveTo(430, 319, 40, 0);
@@ -1150,14 +1193,14 @@ function swipeDownOneItem() {
   moveTo(430, 200, 40, 0);
   sleep(config.sleep * 2);
   moveTo(430, 176, 40, 0);
-  sleep(config.sleep * 2);
+  sleep(config.sleepAnimate);
   tapUp(430, 176, 40, 0);
   sleep(config.sleepAnimate * 2);
   return;
 }
 
 function swipeToToolShop456() {
-  console.log('Is tool shop, swipe down to item 456');
+  console.log('swipe down to item 456 as currently in:', config.currentProductionBuilding);
   SwipeProductionMenuToTop();
   tapDown(430, 350, 40, 0);
   sleep(config.sleep * 2);
@@ -1172,7 +1215,7 @@ function swipeToToolShop456() {
   moveTo(430, -80, 40, 0);
   sleep(config.sleep * 2);
   moveTo(430, -170, 40, 0);
-  sleep(config.sleep * 2);
+  sleep(config.sleepAnimate);
   tapUp(430, -170, 40, 0);
   sleep(config.sleepAnimate * 2);
   return;
@@ -1192,11 +1235,11 @@ function findProductRequirements(partUp) {
   for (var i = 0; i < partUp.length; i++) {
     var line1 = '';
     var line2 = '';
-    var cImg1 = cropImage(img, 474, partUp[i], 40, 8);
+    var cImg1 = cropImage(img, 474, partUp[i], 40, 12);
     line1 = recognizeWishingTreeRequirements(numberImagesProdutRequirements, cImg1, 12, 0.7, 0.5);
     releaseImage(cImg1);
 
-    var cImg2 = cropImage(img, 520, partUp[i], 40, 8);
+    var cImg2 = cropImage(img, 520, partUp[i], 40, 12);
     line2 = recognizeWishingTreeRequirements(numberImagesProdutRequirements, cImg2, 12, 0.7, 0.5);
     releaseImage(cImg2);
 
@@ -1218,6 +1261,11 @@ function findProductRequirements(partUp) {
       part.push([line2.substr(0, line2.length - 1), line2.substr(line2.length - 1, 1)]);
     } else {
       part.push(line2.split('/'));
+    }
+    for (var productIdx in part) {
+      for (var reqIdx in part[productIdx]) {
+        part[productIdx][reqIdx] = Number(part[productIdx][reqIdx]);
+      }
     }
     parts.push(part);
   }
@@ -1242,24 +1290,39 @@ function makeGoodsToTarget(target, prework, stocks) {
     return;
   }
 
-  var prodReqList = findProductRequirements();
-  var isToolShop = false;
   if (checkIsPage(pageToolShop)) {
-    isToolShop = true;
+    setProductionBuilding('toolShop');
+  }
+  else if (checkIsPage(pageIsJammery)) {
+    setProductionBuilding('jammery');
+  }
+  // else if (checkIsPage(pageIsCarpentryShop)) {
+  //   setProductionBuilding('carpentryShop');
+  // }
+  else if (checkIsPage(pageIsJampieDiner)) {
+    setProductionBuilding('jampieDiner');
+  }
+  else {
+    setProductionBuilding('otherGoodShop');
   }
 
+  var prodReqList = findProductRequirements();
   var availableSlots = countProductionSlotAvailable();
   if (stocks === undefined) {
     stocks = [];
     if (!checkIsPage(pageThirdItemEnabled)) {
       [goodsOneStock, goodsTwoStock].forEach(function (value, i) {
         var canProduce = value !== -1 ? true : false;
-        // console.log('>', i, JqSON.stringify(prodReqList[i]));
+        // console.log('>', i, JSON.stringify(prodReqList[i]));
         if (prodReqList[i] !== undefined) {
           prodReqList[i].forEach(function (part) {
             // [0] is stock, [1] is requirement
             // console.log('>>', i, JSON.stringify(part));
-            if (part[0] <= config.productSafetyStock && value > config.productSafetyStock) {
+            if (part[0] < part[1]) {
+              console.log('Cant even build one, skip this');
+              canProduce = false;
+            }
+            if (part[0] - part[1] * availableSlots <= config.productSafetyStock && value > config.productSafetyStock) {
               canProduce = false;
             }
           });
@@ -1275,35 +1338,25 @@ function makeGoodsToTarget(target, prework, stocks) {
         });
       });
     } else {
-      // === tool shop only ===
-      var shovelStock = -1;
-      if (isToolShop) {
+      var middleItemStock = -1;
+      if (config.currentProductionBuilding !== 'otherGoodShop') {
+        // === shop with 7 items only ===
+        console.log('Special handle building:', config.currentProductionBuilding);
         swipeDownOneItem();
-        pageShovelEnabled = [
-          { x: 575, y: 336, r: 121, g: 207, b: 12 },
-          { x: 539, y: 296, r: 253, g: 253, b: 253 },
-          { x: 420, y: 310, r: 81, g: 98, b: 125 },
-          { x: 409, y: 297, r: 70, g: 98, b: 146 },
-        ];
-        shovelStock = ocrProductStorage(goodsLocation['shovel']);
-        console.log('Shovel enable: ' + checkIsPage(pageShovelEnabled) + ' , stock: ' + shovelStock);
+        middleItemStock = ocrProductStorage(goodsLocation['shovel']);
+        console.log('4th item stock: ' + middleItemStock);
 
         // check shovel req
         prodReqList = prodReqList.concat(findProductRequirements([308]));
 
         swipeToToolShop456();
-        var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
-        var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
-        var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
       } else {
         prodReqList.push([]);
         SwipeProductionMenuToBottom();
-        var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
-        var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
-        var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
       }
-
-      // SwipeProductionMenuToTop();
+      var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
+      var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
+      var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
 
       prodReqList = prodReqList.concat(findProductRequirements([96]));
       if (goodsFiveStock !== -1) {
@@ -1317,7 +1370,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         goodsOneStock,
         goodsTwoStock,
         goodsThreeStock,
-        shovelStock,
+        middleItemStock,
         goodsFourStock,
         goodsFiveStock,
         goodsSixStock,
@@ -1328,7 +1381,11 @@ function makeGoodsToTarget(target, prework, stocks) {
         if (prodReqList[i] !== undefined) {
           prodReqList[i].forEach(function (part) {
             // console.log('>>', JSON.stringify(part))
-            // Assume we can make 5 items
+            // Assume we can make 5 items, part[0] is stock, part[1] is requirement
+            if (part[0] < part[1]) {
+              console.log('Cant even build one, skip this');
+              canProduce = false;
+            }
             if (part[0] - part[1] * availableSlots <= config.productSafetyStock && value > config.productSafetyStock) {
               canProduce = false;
             }
@@ -1359,7 +1416,7 @@ function makeGoodsToTarget(target, prework, stocks) {
     stocks[i].stockTargetFullfilledPercent = stocks[i].value / productionTarget;
   }
 
-  if (isToolShop && config.axeStockTo400 && stocks.length > 0 && stocks[0]['id'] === 0) {
+  if (config.currentProductionBuilding === 'toolShop' && config.axeStockTo400 && stocks.length > 0 && stocks[0]['id'] === 0) {
     stocks[0].productionTarget = 400;
     stocks[0].stockTargetFullfilledPercent = goodsOneStock / 400;
   }
@@ -1373,7 +1430,7 @@ function makeGoodsToTarget(target, prework, stocks) {
     { x: 417, y: 297, r: 235, g: 219, b: 207 },
     { x: 381, y: 316, r: 237, g: 237, b: 229 },
   ];
-  // console.log('> ', JSON.stringify(stocks));
+  console.log('> ', JSON.stringify(stocks));
 
   for (var id in stocks) {
     var stock = stocks[id];
@@ -1425,7 +1482,7 @@ function makeGoodsToTarget(target, prework, stocks) {
       swipeDownOneItem();
       qTap(pageThirdItemEnabled, 800);
     } else if (stock['id'] == 4) {
-      if (isToolShop) {
+      if (config.currentProductionBuilding !== 'otherGoodShop') {
         swipeToToolShop456();
       } else {
         SwipeProductionMenuToBottom();
@@ -1435,7 +1492,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         qTap(pageFirstItemEnabled, 800);
       }
     } else if (stock['id'] == 5) {
-      if (isToolShop) {
+      if (config.currentProductionBuilding !== 'otherGoodShop') {
         swipeToToolShop456();
       } else {
         SwipeProductionMenuToBottom();
@@ -1445,7 +1502,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         qTap(pageSecondItemEnabled, 800);
       }
     } else if (stock['id'] == 6) {
-      if (isToolShop) {
+      if (config.currentProductionBuilding !== 'otherGoodShop') {
         swipeToToolShop456();
       } else {
         SwipeProductionMenuToBottom();
@@ -1520,10 +1577,12 @@ function countProductionSlotAvailable() {
     { x: 50, y: 69, r: 146, g: 88, b: 52 },
     { x: 49, y: 68, r: 146, g: 88, b: 52 },
     { x: 70, y: 90, r: 166, g: 104, b: 65 },
+    {x: 42, y: 86, r: 173, g: 105, b: 66},
   ];
   var pageSecondSlotOpen = [
     { x: 50, y: 120, r: 146, g: 88, b: 52 },
     { x: 49, y: 111, r: 146, g: 88, b: 52 },
+    {x: 46, y: 137, r: 173, g: 105, b: 66},
   ];
   var pageThirdSlotOpen = [
     { x: 50, y: 170, r: 146, g: 88, b: 52 },
@@ -1533,10 +1592,12 @@ function countProductionSlotAvailable() {
   var pageFourthSlotOpen = [
     { x: 50, y: 219, r: 146, g: 88, b: 52 },
     { x: 50, y: 218, r: 146, g: 88, b: 52 },
+    {x: 42, y: 236, r: 173, g: 105, b: 66}
   ];
   var pageFifthSlotOpen = [
     { x: 50, y: 269, r: 146, g: 88, b: 52 },
     { x: 50, y: 268, r: 146, g: 88, b: 52 },
+    {x: 46, y: 286, r: 157, g: 95, b: 55},
   ];
 
   var pages = [pageFirstSlotOpen, pageSecondSlotOpen, pageThirdSlotOpen, pageFourthSlotOpen, pageFifthSlotOpen];
@@ -1565,9 +1626,32 @@ function JobScheduling() {
     { x: 61, y: 89, r: 123, g: 228, b: 0 },
     { x: 38, y: 32, r: 203, g: 235, b: 236 },
   ];
+  var pageCancelProduction = [
+    { x: 443, y: 97, r: 57, g: 166, b: 231 },
+    { x: 436, y: 97, r: 255, g: 255, b: 255 },
+    { x: 390, y: 105, r: 57, g: 69, b: 107 },
+    { x: 408, y: 241, r: 8, g: 166, b: 222 },
+    { x: 296, y: 243, r: 8, g: 166, b: 222 },
+  ];
+  var pageCancelMultipleProduction = [
+    { x: 442, y: 94, r: 34, g: 85, b: 115 },
+    { x: 404, y: 244, r: 8, g: 166, b: 222 },
+    { x: 303, y: 246, r: 8, g: 166, b: 222 },
+    { x: 430, y: 238, r: 222, g: 207, b: 198 },
+  ];
   if (!checkIsPage(pageProducing)) {
     qTap(pnt(51, 66));
     sleep(config.sleepAnimate * 3);
+  }
+  if (checkIsPage(pageCancelProduction)) {
+    qTap(pageCancelProduction);
+    sleep(config.sleepAnimate * 2);
+    console.log('Found ask to cancel dialog in production, close it');
+  }
+  if (checkIsPage(pageCancelMultipleProduction)) {
+    qTap(pageCancelMultipleProduction);
+    sleep(config.sleepAnimate * 2);
+    console.log('Found ask to pageCancelMultipleProduction dialog in production, close it');
   }
   var emptySlots = countProductionSlotAvailable();
   if (emptySlots === 0) {
@@ -1671,10 +1755,13 @@ function handleNotEnoughStock() {
 
   // Disney materials cannot be bought via crystals
   var pageNotEnoughDisneyMaterial = [
-    {x: 299, y: 244, r: 123, g: 207, b: 8},
-    {x: 349, y: 243, r: 123, g: 207, b: 8},
-    {x: 413, y: 18, r: 127, g: 105, b: 0},
-    {x: 532, y: 21, r: 4, g: 73, b: 127},
+    { x: 299, y: 244, r: 123, g: 207, b: 8 },
+    { x: 349, y: 243, r: 123, g: 207, b: 8 },
+    { x: 413, y: 18, r: 127, g: 105, b: 0 },
+    { x: 532, y: 21, r: 4, g: 73, b: 127 },
+    { x: 313, y: 249, r: 104, g: 175, b: 7 },
+    { x: 429, y: 96, r: 57, g: 69, b: 107 },
+    { x: 227, y: 27, r: 126, g: 126, b: 126 },
   ];
   if (checkIsPage(pageNotEnoughDisneyMaterial)) {
     console.log('quiting not enougth stock (pageNotEnoughDisneyMaterial)');
@@ -1819,17 +1906,8 @@ function handleAnnouncement() {
 }
 
 function findAndTapCandy() {
-  var pageCanUpgradeCandyMansion = [
-    { x: 358, y: 321, r: 123, g: 207, b: 8 },
-    { x: 201, y: 197, r: 118, g: 243, b: 213 },
-    { x: 200, y: 170, r: 255, g: 255, b: 255 },
-  ];
-  var pageCanUpgradeCandyHouse = [
-    { x: 354, y: 315, r: 123, g: 207, b: 8 },
-    { x: 200, y: 161, r: 150, g: 153, b: 150 },
-    { x: 199, y: 188, r: 186, g: 253, b: 248 },
-  ];
-
+  var pageCanUpgradeCandyMansion = [{ x: 303, y: 289, r: 123, g: 207, b: 8 }];
+  var pageCanUpgradeCandyHouse = [{ x: 243, y: 287, r: 151, g: 218, b: 55 }];
   var candy = getImageFromBase64(
     '/9j/4AAQSkZJRgABAQEAYABgAAD/4QA6RXhpZgAATU0AKgAAAAgAA1EQAAEAAAABAQAAAFERAAQAAAABAAAAAFESAAQAAAABAAAAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAPABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9CPgpZeGfHGtt4g8dw6XrVp4svItWvFk0e1ure0VIQlpAjgzl4UU5wHdGeWZ1zvrpPid8LfDHxC+KWg2MNxq2jzeI7praa33QojBLGedJYklwyMyW8eQnmKVBbyxl5VyJrTTfDfwg0seD107/AIR9ri0tLVdQvJLR7C2WJ0ktj5VnIzLELeMo7tLI7TTbnCqgbe03wXrHhm8m8YfEBY5Nd8P3yy6Jb6drT6hb2eLSa087zZLW3ZpZI7uaNlkR41RIigVwzHxeIsy4ex+Vf7PUT5YWhT05k2rR92+lnZtptpLq9H+V5PwXxLgM3UMRacJ1FOdSSd3b44363slGKio+9JWUWrf/2Q=='
   );
@@ -2209,7 +2287,7 @@ function handleFindAndTapCandyHouse() {
   }
 
   var timeStartFindHouses = Date.now();
-  console.log('handleFindAndTapCandyHouse failed, ', (Date.now() - timeStartFindHouses) / 1000, 'secs');
+  console.log('handleFindAndTapCandyHouse after:', (Date.now() - timeStartFindHouses) / 1000, 'secs');
 
   if (!checkIsPage(pageInKingdomVillage)) {
     handleTryResolveGreenChecks();
@@ -2238,7 +2316,11 @@ function handleFindAndTapCandyHouse() {
   }
 
   if (collectCandySuccess && findAndTapProductionHouse()) {
-    console.log('already found house using image match, start working');
+    console.log(
+      'already found house using image match, start working after looking for production for',
+      (Date.now() - timeStartFindHouses) / 1000,
+      'secs (this round)'
+    );
     config.lastGotoProduction = Date.now();
     return true;
   }
@@ -2271,20 +2353,25 @@ function handleFindAndTapCandyHouse() {
         }
       }
 
-      // TODO if page in habor, start over from head as it's a bloack hole
-
       if (waitUntilSeePages([pageInProduction, pageInMagicLab]) && i > 2) {
-        console.log('found production when swipping, start working, times swipped: ', i);
+        console.log(
+          'found production when swipping, start working, times swipped: ',
+          i,
+          'looking for production for',
+          (Date.now() - timeStartFindHouses) / 1000,
+          'secs (this round)'
+        );
         config.searchHouseCount % 2 === 0 ? (config.searchHouseCount = 0) : (config.searchHouseCount = 1);
         config.lastGotoProduction = Date.now();
         config.buildTowardsTheLeft = !config.buildTowardsTheLeft;
         sendEvent('running', '');
         return true;
-      } else if (checkIsPage(pageInHabor)) {
-        console.log('handleFindAndTapCandyHouse skip to go to head and start over');
-        return false;
       } else if (collectCandySuccess && findAndTapProductionHouse()) {
-        console.log('already found house using image match, start working');
+        console.log(
+          'already found house using image match, start working after looking for production for',
+          (Date.now() - timeStartFindHouses) / 1000,
+          'secs (this round)'
+        );
         config.searchHouseCount % 2 === 0 ? (config.searchHouseCount = 0) : (config.searchHouseCount = 1);
         config.lastGotoProduction = Date.now();
         config.buildTowardsTheLeft = !config.buildTowardsTheLeft;
@@ -2296,7 +2383,11 @@ function handleFindAndTapCandyHouse() {
         config.isXR &&
         findHouseInNotSureWhere(config.findProductionTimes)
       ) {
-        console.log('find house in random tap success, start working');
+        console.log(
+          'find house in random tap success, start working after looking for production for',
+          (Date.now() - timeStartFindHouses) / 1000,
+          'secs (this round)'
+        );
         config.searchHouseCount % 2 === 0 ? (config.searchHouseCount = 0) : (config.searchHouseCount = 1);
         config.lastGotoProduction = Date.now();
         config.buildTowardsTheLeft = !config.buildTowardsTheLeft;
@@ -2306,6 +2397,10 @@ function handleFindAndTapCandyHouse() {
         console.log('Found house but stock is full, send running event and keep doing other tasks');
         sendEvent('running', '');
       }
+    } else if (checkIsPage(pageInHabor)) {
+      console.log('handleFindAndTapCandyHouse end up in habor, break this search and start over from castle');
+      gotoCastle();
+      return false;
     }
   }
   return false;
@@ -2633,7 +2728,7 @@ function handleInputLoginInfo() {
   }
 
   var checkPasswordTimes = inputEmail ? 15 : 3;
-  pageEnterpassword = [
+  var pageEnterpassword = [
     { x: 370, y: 150, r: 255, g: 255, b: 255 },
     { x: 390, y: 189, r: 200, g: 200, b: 200 },
     { x: 314, y: 190, r: 200, g: 200, b: 200 },
@@ -2642,6 +2737,11 @@ function handleInputLoginInfo() {
     { x: 387, y: 53, r: 60, g: 60, b: 60 },
     { x: 298, y: 53, r: 60, g: 60, b: 60 },
     { x: 322, y: 52, r: 60, g: 60, b: 60 },
+  ];
+  var pageEnterPasswordLongId = [
+    { x: 370, y: 161, r: 255, g: 255, b: 255 },
+    { x: 391, y: 196, r: 200, g: 200, b: 200 },
+    { x: 378, y: 56, r: 60, g: 60, b: 60 },
   ];
 
   // Check if wrong password set. Any red string in this area means wrong password
@@ -2689,75 +2789,81 @@ function handleInputLoginInfo() {
       return false;
     }
 
-    if (checkIsPage(pageEnterpassword)) {
-      console.log('input user password');
-      qTap(pageEnterpassword);
-      sleep(config.sleepAnimate);
-      typing(config.password, 1000);
-      sleep(1000); // sleep must equal to typing
-      typing('\n', 500);
-      sleep(500);
-      qTap(pnt(370, 190)); // Login button
-
-      for (var t = 0; t < 6; t++) {
-        if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
-          console.log('DevPlay report password too short');
-          return handleLoginFailed();
-        }
-        if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
-          console.log('DevPlay report wrong password');
-          return handleLoginFailed();
-        }
-        sleep(1000);
-      }
-
-      if (checkIsPage(pageEnterpassword)) {
-        console.log(
-          'still in password page, either password too short, wrong password, or it is a new id that devPlay ask to input password twice'
-        );
-        return handleLoginFailed();
-      }
-      if (checkIsPage(pageChooseLoginMethod) || checkIsPage(pageChooseLoginMethod2)) {
-        console.log(
-          'still in LOGIN page, either password too short, wrong password, or it is a new id that devPlay ask to input password twice'
-        );
-        return handleLoginFailed();
-      }
-
-      sendEvent('gameStatus', 'login-succeeded');
-      console.log('Send login-succeeded');
-
-      // Touch here to start:
-      console.log('successfully input password, tap announcement icon for 10s');
-      for (var i = 0; i < 10; i++) {
-        if (checkIsPage(pageAnnouncement) || checkIsPage(pageInKingdomVillage)) {
-          console.log('found announcement page, return from handleInputLoginInfo');
-          return true;
-        }
-
-        if (checkScreenMessage(messageNotifyQuit)) {
-          console.log('found unexpected quit window, closing it');
-          keycode('BACK', 1000);
-          sleep(config.sleepAnimate);
-        }
-
-        checkIsFacebookPage();
-
-        if (checkScreenMessage(facebookRefreshTokenExpiredLogout)) {
-          console.log('Found facebook refresh token failed, tap logout cancel button');
-          qTap(pnt(276, 252));
-          sleep(2000);
-        }
-
-        qTap(pnt(575, 22));
-        sleep(2000);
-        console.log('tapping (575, 22) until the game start: ', i);
-      }
-      return true;
-    } else {
+    if (!checkIsPage(pageEnterpassword) && !checkIsPage(pageEnterPasswordLongId)) {
       console.log('waiting for input password field');
       sleep(2000);
+      continue;
     }
+
+    if (checkIsPage(pageEnterpassword)) {
+      console.log('input user pageEnterpassword');
+      qTap(pageEnterpassword);
+    } else if (checkIsPage(pageEnterPasswordLongId)) {
+      console.log('input user pageEnterPasswordLongId');
+      qTap(pageEnterPasswordLongId);
+    }
+    sleep(config.sleepAnimate);
+    typing(config.password, 1000);
+    sleep(1000); // sleep must equal to typing
+    typing('\n', 500);
+    sleep(500);
+    qTap(pnt(370, 190)); // Login button
+
+    for (var t = 0; t < 6; t++) {
+      if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
+        console.log('DevPlay report password too short');
+        return handleLoginFailed();
+      }
+      if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
+        console.log('DevPlay report wrong password');
+        return handleLoginFailed();
+      }
+      sleep(1000);
+    }
+
+    if (checkIsPage(pageEnterpassword)) {
+      console.log(
+        'still in password page, either password too short, wrong password, or it is a new id that devPlay ask to input password twice'
+      );
+      return handleLoginFailed();
+    }
+    if (checkIsPage(pageChooseLoginMethod) || checkIsPage(pageChooseLoginMethod2)) {
+      console.log(
+        'still in LOGIN page, either password too short, wrong password, or it is a new id that devPlay ask to input password twice'
+      );
+      return handleLoginFailed();
+    }
+
+    sendEvent('gameStatus', 'login-succeeded');
+    console.log('Send login-succeeded');
+
+    // Touch here to start:
+    console.log('successfully input password, tap announcement icon for 10s');
+    for (var i = 0; i < 10; i++) {
+      if (checkIsPage(pageAnnouncement) || checkIsPage(pageInKingdomVillage)) {
+        console.log('found announcement page, return from handleInputLoginInfo');
+        return true;
+      }
+
+      if (checkScreenMessage(messageNotifyQuit)) {
+        console.log('found unexpected quit window, closing it');
+        keycode('BACK', 1000);
+        sleep(config.sleepAnimate);
+      }
+
+      checkIsFacebookPage();
+
+      if (checkScreenMessage(facebookRefreshTokenExpiredLogout)) {
+        console.log('Found facebook refresh token failed, tap logout cancel button');
+        qTap(pnt(276, 252));
+        sleep(2000);
+      }
+
+      qTap(pnt(575, 22));
+      sleep(2000);
+      console.log('tapping (575, 22) until the game start: ', i);
+    }
+    return true;
   }
 
   pageServerSelection = [
@@ -2787,7 +2893,7 @@ function handleNextProductionBuilding() {
       qTap(pnt(349, 174)); // to right
     }
     config.productionBuildingChecked++;
-    console.log('productionBuildingChecked: ', config.productionBuildingChecked)
+    console.log('productionBuildingChecked: ', config.productionBuildingChecked);
     sleep(config.sleepAnimate * 2);
   }
 }
@@ -2939,6 +3045,7 @@ function handleAutoCollectMail() {
   console.log('About to collect mails');
   if (!checkIsPage(pageInKingdomVillage)) {
     handleGotoKingdomPage();
+    return;
   }
 
   pageHasUnreadMails = [
@@ -2946,25 +3053,32 @@ function handleAutoCollectMail() {
     { x: 551, y: 17, r: 255, g: 239, b: 214 },
   ];
 
-  if (checkIsPage(pageHasUnreadMails)) {
-    qTap(pageHasUnreadMails);
-    sleep(config.sleepAnimate * 2);
-
-    pageGreenClaimAllButton = [
-      { x: 506, y: 323, r: 121, g: 207, b: 12 },
-      { x: 590, y: 318, r: 121, g: 207, b: 12 },
-      { x: 572, y: 24, r: 60, g: 70, b: 105 },
-      { x: 419, y: 318, r: 54, g: 62, b: 95 },
-    ];
-
-    if (checkIsPage(pageGreenClaimAllButton)) {
-      console.log('found unread mail and claim all');
-      qTap(pageGreenClaimAllButton);
-      sleep(config.sleep);
-    }
-
-    handleGotoKingdomPage();
+  if (!checkIsPage(pageHasUnreadMails)) {
+    console.log('No need to collect any mails, skipping');
+    return;
   }
+
+  qTap(pageHasUnreadMails);
+  sleep(config.sleepAnimate * 2);
+
+  pageGreenClaimAllButton = [
+    { x: 506, y: 323, r: 121, g: 207, b: 12 },
+    { x: 590, y: 318, r: 121, g: 207, b: 12 },
+    { x: 572, y: 24, r: 60, g: 70, b: 105 },
+    { x: 419, y: 318, r: 54, g: 62, b: 95 },
+  ];
+
+  if (!checkIsPage(pageGreenClaimAllButton)) {
+    console.log('Cannot find pageGreenClaimAllButton, skipping');
+    return;
+  }
+
+  console.log('found unread mail and claim all');
+  sendEvent('running', '');
+  qTap(pageGreenClaimAllButton);
+  sleep(config.sleep);
+
+  handleGotoKingdomPage();
 
   console.log('completed: handleAutoCollectMail');
 }
@@ -2981,6 +3095,10 @@ function gotoCastle() {
     { x: 527, y: 15, r: 0, g: 195, b: 255 },
     { x: 535, y: 54, r: 90, g: 52, b: 49 },
   ];
+  var pageFistItemIsCastle = [
+    { x: 78, y: 225, r: 57, g: 77, b: 123 },
+    { x: 65, y: 157, r: 239, g: 191, b: 116 },
+  ];
 
   if (checkScreenMessage(messageNotifyQuit)) {
     // todo: debug log
@@ -2995,18 +3113,24 @@ function gotoCastle() {
   }
 
   // Swipe to the 1st of the list in head and tap Go Now
-  tapDown(0, 186, 40, 0);
-  sleep(config.sleep);
-  moveTo(0, 186, 40, 0);
-  sleep(config.sleep);
-  moveTo(200, 186, 40, 0);
-  sleep(config.sleep);
-  moveTo(400, 186, 40, 0);
-  sleep(config.sleep);
-  moveTo(560, 186, 40, 0);
-  sleep(config.sleep);
-  tapUp(560, 186, 40, 0);
-  sleep(config.sleepAnimate * 2);
+  for (var i = 0; i < 5; i++) {
+    if (checkIsPage(pageFistItemIsCastle)) {
+      break;
+    }
+    tapDown(0, 186, 40, 0);
+    sleep(config.sleep);
+    moveTo(0, 186, 40, 0);
+    sleep(config.sleep);
+    moveTo(200, 186, 40, 0);
+    sleep(config.sleep);
+    moveTo(400, 186, 40, 0);
+    sleep(config.sleep);
+    moveTo(560, 186, 40, 0);
+    sleep(config.sleep);
+    tapUp(560, 186, 40, 0);
+    sleep(config.sleepAnimate * 2);
+    console.log('Cant find castle in cookie head, retry:', i);
+  }
 
   // Back to village and find castle missions page
   if (!waitUntilSeePage(pageInCastleMission, 12, pnt(60, 226), null, 3)) {
@@ -3022,14 +3146,16 @@ function gotoCastle() {
 
 function handleInFountain() {
   if (waitUntilSeePage(pageInFountain, 8)) {
+    console.log('handleInFountain and in fountain, send running');
+    sendEvent('running', '');
+
     qTap(pageInFountain);
     sleep(config.sleepAnimate * 2);
     qTap(pageInFountain);
     sleep(3000);
 
     if (checkIsPage(pageStockIsFull)) {
-      sendEvent('running', '');
-      console.log('Fountain stock is full, send running');
+      console.log('Fountain stock is full, tap to close dialog');
     }
 
     handleGotoKingdomPage();
@@ -3088,6 +3214,9 @@ function handleTrainStation() {
     return false;
   }
 
+  console.log('About to handleTrainStation, send running');
+  sendEvent('running', '');
+
   pageAllTrainsAreOut = [
     { x: 431, y: 96, r: 114, g: 223, b: 0 },
     { x: 431, y: 199, r: 114, g: 224, b: 0 },
@@ -3098,7 +3227,6 @@ function handleTrainStation() {
   ];
   if (checkIsPage(pageAllTrainsAreOut)) {
     console.log('all trains are out, skipping this check');
-    sendEvent('running', '');
     return true;
   }
 
@@ -3181,7 +3309,6 @@ function handleTrainStation() {
   qTap(pageInTrainStation);
   sleep(config.sleepAnimate);
   console.log('Tried to sent ', foundResults.length, 'trains');
-  sendEvent('running', '');
   return true;
 }
 
@@ -3273,6 +3400,9 @@ function handleGetDailyRewards() {
   }
 
   if (checkIsPage(pageInKingdomPass)) {
+    console.log('about to collect kingdom pass, send running');
+    sendEvent('running', '');
+
     qTap(pnt(66, 57));
     sleep(1000);
     qTap(pnt(581, 340));
@@ -3319,6 +3449,9 @@ function handleGetDailyRewards() {
     qTap(pageFriends);
     sleep(2000);
     if (waitUntilSeePage(pageInFriendsList, 6, pnt(23, 85))) {
+      console.log('about to send daily freind gifts, send running');
+      sendEvent('running', '');
+
       if (checkIsPage(pageCanSendFriendRewards)) {
         qTap(pageCanSendFriendRewards);
         console.log('successfully send daily gifts to friends');
@@ -3334,6 +3467,9 @@ function handleGetDailyRewards() {
     { x: 28, y: 119, r: 255, g: 235, b: 173 },
   ];
   if (checkIsPage(pageShop)) {
+    console.log('about to get daily free reward from shop, send running');
+    sendEvent('running', '');
+
     qTap(pageShop);
     sleep(config.sleepAnimate);
 
@@ -3396,6 +3532,9 @@ function handleGetDailyRewards() {
     { x: 31, y: 68, r: 255, g: 255, b: 255 },
   ];
   if (checkIsPage(pageGacha)) {
+    console.log('about to get daily free gacha gifts, send running');
+    sendEvent('running', '');
+
     qTap(pageGacha);
     sleep(config.sleepAnimate * 4);
     qTap(pnt(30, 70)); // Tap the first icon
@@ -3753,6 +3892,9 @@ function handlePVP() {
     return false;
   }
 
+  console.log('about to start handlePVP, send running');
+  sendEvent('running', '');
+
   var pageHasPageMedalShop = [
     { x: 41, y: 333, r: 245, g: 187, b: 44 },
     { x: 122, y: 298, r: 57, g: 166, b: 231 },
@@ -3832,8 +3974,6 @@ function handlePVP() {
       }
     }
   }
-
-  sendEvent('running', '');
 
   var arenaReadyToBattlePage = [
     { x: 533, y: 331, r: 77, g: 170, b: 4 },
@@ -3991,7 +4131,8 @@ function handleInWishingTree() {
     return false;
   }
 
-  console.log('handleInWishingTree: ', new Date());
+  console.log('handleInWishingTree: ', new Date(), 'send running');
+  sendEvent('running', '');
 
   var wishes = [
     wish(pnt(183, 79), pnt(183, 180), pnt(183, 283), undefined, 'unknown'),
@@ -3999,8 +4140,6 @@ function handleInWishingTree() {
     wish(pnt(400, 79), pnt(400, 180), pnt(400, 283), undefined, 'unknown'),
     wish(pnt(520, 79), pnt(520, 180), pnt(520, 283), undefined, 'unknown'),
   ];
-
-  sendEvent('running', '');
 
   var pageNotEnoughForTree = [
     { x: 428, y: 98, r: 56, g: 166, b: 231 },
@@ -4175,6 +4314,98 @@ function handleInWishingTree() {
   }
 }
 
+function handleEventWishingTree() {
+  if (!config.autoHandleEventWishingTreeAmounts === 0) {
+    return false;
+  }
+
+  var lastMonth = 9;
+  var lastDate = 14;
+  if (new Date().getMonth() > lastMonth && new Date().getDate() > lastDate) {
+    console.log('skipping handleEventWishingTree as the event is over:', new Date().toLocaleString());
+  }
+
+  var pageCanGotoEvent = [
+    { x: 19, y: 111, r: 222, g: 86, b: 104 },
+    { x: 28, y: 115, r: 254, g: 229, b: 180 },
+  ];
+  var pageInEvent = [
+    { x: 114, y: 16, r: 102, g: 102, b: 107 },
+    { x: 105, y: 18, r: 247, g: 226, b: 173 },
+    { x: 76, y: 20, r: 19, g: 19, b: 26 },
+  ];
+  var pageDisneyCookieWishlist = [
+    { x: 190, y: 24, r: 41, g: 24, b: 8 },
+    { x: 182, y: 49, r: 247, g: 235, b: 222 },
+    { x: 145, y: 105, r: 34, g: 26, b: 108 },
+    { x: 133, y: 94, r: 74, g: 40, b: 8 },
+  ];
+
+  console.log('handleEventWishingTree at:', new Date().toLocaleString());
+  if (!checkIsPage(pageInKingdomVillage) && !checkIsPage(pageInEvent)) {
+    handleTryHitBackToKingdom();
+  }
+
+  if (checkIsPage(pageCanGotoEvent)) {
+    qTap(pageCanGotoEvent);
+    waitUntilSeePage(pageInEvent, 5);
+  }
+
+  if (!checkIsPage(pageInEvent)) {
+    console.log('Failed to goto pageInEvent, skip handleEventWishingTree');
+    return false;
+  }
+
+  for (var i = 0; i < 3; i++) {
+    tapDown(59, 80, 40, 0);
+    sleep(config.sleep);
+    moveTo(59, 80, 40, 0);
+    sleep(config.sleep);
+    moveTo(59, 270, 40, 0);
+    sleep(config.sleep);
+    moveTo(59, 400, 40, 0);
+    sleep(config.sleep);
+    moveTo(59, 600, 40, 0);
+    sleep(config.sleep);
+    tapUp(59, 600, 40, 0);
+    sleep(config.sleepAnimate * 2);
+  }
+
+  if (!waitUntilSeePage(pageDisneyCookieWishlist, 5, pnt(62, 265))) {
+    console.log('Failed to goto pageDisneyCookieWishlist, skip handleEventWishingTree');
+    return false;
+  }
+
+  // Fulfill wishes 50 times
+  for (var i = 0; i < config.autoHandleEventWishingTreeAmounts; i++) {
+    qTap(pnt(230, 142));
+    sleep(config.sleepAnimate);
+    qTap(pnt(390, 142));
+    sleep(config.sleepAnimate);
+    qTap(pnt(540, 142));
+    sleep(config.sleepAnimate * 2);
+
+    qTap(pnt(230, 280));
+    sleep(config.sleepAnimate);
+    qTap(pnt(390, 280));
+    sleep(config.sleepAnimate);
+    qTap(pnt(540, 280));
+    sleep(config.sleepAnimate * 2);
+    sendEvent('running', '');
+    console.log('Fulfill wish and send running, #', i);
+  }
+
+  // Reset all the left over wishes
+  qTap(pnt(174, 277));
+  sleep(config.sleepAnimate);
+  qTap(pnt(336, 277));
+  sleep(config.sleepAnimate);
+  qTap(pnt(495, 277));
+  sleep(config.sleepAnimate);
+
+  console.log('Successfully handleEventWishingTree');
+}
+
 function handleInHotAirBallon() {
   if (config.autoSendHotAirBallonIntervalInMins == 0) {
     console.log('handleInHotAirBallon skipped as autoSendHotAirBallonIntervalInMins is set to 0');
@@ -4185,6 +4416,9 @@ function handleInHotAirBallon() {
     console.log('Wait but not find pageInHotAirBallon station, skipping');
     return false;
   }
+
+  console.log('About to handleInHotAirBallon, send running');
+  sendEvent('running', '');
 
   pageChooseBallonDestination = [
     { x: 285, y: 15, r: 208, g: 161, b: 89 },
@@ -4210,7 +4444,6 @@ function handleInHotAirBallon() {
     sleep(2000);
     if (checkIsPage(pageStockIsFull)) {
       console.log('goto ballon but stock is full, quitting');
-      sendEvent('running', '');
       handleGotoKingdomPage();
       return;
     }
@@ -4488,8 +4721,10 @@ function handleCollectIslandResources() {
   if (!checkIsPage(pageInTropicalIsland)) {
     console.log('failed to goto pageInTropicalIsland, skipping');
     handleGotoKingdomPage();
+    return;
   }
 
+  console.log('about to start handleCollectIslandResources, send running');
   sendEvent('running', '');
 
   foundResults = findSpecificImageInScreen(greenCheckedWriteBackground, 0.95);
@@ -4631,7 +4866,7 @@ var AdvanturesBountiesAt2nd = Object.freeze({
   tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
   cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
 
-  superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  // superMayhem: GenAdvanture(pnt(300, 150), false, false),
   bounties: GenAdvanture(pnt(300, 100), false, false),
   guild: GenAdvanture(pnt(10, 100), false, true),
 });
@@ -4642,9 +4877,9 @@ var AdvanturesBountiesAt3rd = Object.freeze({
   tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
   cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
 
-  superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  // superMayhem: GenAdvanture(pnt(300, 150), false, false),
   bounties: GenAdvanture(pnt(500, 100), false, false),
-  guild: GenAdvanture(pnt(110, 100), false, true),
+  guild: GenAdvanture(pnt(300, 100), false, false),
 });
 
 var AdvanturesBountiesAt4th = Object.freeze({
@@ -4653,20 +4888,20 @@ var AdvanturesBountiesAt4th = Object.freeze({
   tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
   cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
 
-  superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  // superMayhem: GenAdvanture(pnt(300, 150), false, false),
   bounties: GenAdvanture(pnt(625, 100), false, false),
-  guild: GenAdvanture(pnt(123, 175), false, true),
+  guild: GenAdvanture(pnt(500, 175), false, false),
 });
 
 // With super mayhem
-var pageAdventureItemsNoEvents = [
-  { x: 25, y: 16, r: 214, g: 235, b: 231 },
-  { x: 13, y: 29, r: 253, g: 222, b: 89 },
-  { x: 551, y: 179, r: 33, g: 16, b: 8 },
-  { x: 547, y: 334, r: 49, g: 4, b: 8 },
-];
+// var pageAdventureItemsNoEvents = [
+//   { x: 25, y: 16, r: 214, g: 235, b: 231 },
+//   { x: 13, y: 29, r: 253, g: 222, b: 89 },
+//   { x: 551, y: 179, r: 33, g: 16, b: 8 },
+//   { x: 547, y: 334, r: 49, g: 4, b: 8 },
+// ];
 
-// No events at all (including super mayhem and cookie odysses)
+// Case not exist for now
 var pageBountiesAt2ndSlot = [
   { x: 242, y: 68, r: 255, g: 255, b: 255 },
   { x: 347, y: 102, r: 198, g: 65, b: 0 },
@@ -4675,12 +4910,11 @@ var pageBountiesAt2ndSlot = [
   { x: 231, y: 138, r: 253, g: 234, b: 74 },
 ];
 
-// Perhaps with Cooklie Odysses not finished
+// Most general case, 1. world exploration 2. guild battle 3 Bounties & pvp
 var pageBountiesAt3rdSlot = [
-  { x: 454, y: 63, r: 255, g: 255, b: 255 },
-  { x: 551, y: 99, r: 148, g: 40, b: 5 },
-  { x: 530, y: 104, r: 198, g: 142, b: 57 },
-  { x: 429, y: 132, r: 228, g: 167, b: 27 },
+  { x: 595, y: 86, r: 148, g: 73, b: 33 },
+  { x: 588, y: 152, r: 173, g: 122, b: 66 },
+  { x: 585, y: 177, r: 24, g: 12, b: 8 },
 ];
 
 // Perhaps with Cooklie Odysses and super mayhem not finished
@@ -4713,18 +4947,20 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
       }
 
       // swipe to the end of the list in head
-      tapDown(560, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(560, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(400, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(200, 186, 40, 0);
-      sleep(config.sleep);
-      moveTo(0, 186, 40, 0);
-      sleep(config.sleep);
-      tapUp(0, 186, 40, 0);
-      sleep(config.sleepAnimate * 2);
+      for (var i = 0; i < 3; i++) {
+        tapDown(560, 186, 40, 0);
+        sleep(config.sleep);
+        moveTo(560, 186, 40, 0);
+        sleep(config.sleep);
+        moveTo(400, 186, 40, 0);
+        sleep(config.sleep);
+        moveTo(200, 186, 40, 0);
+        sleep(config.sleep);
+        moveTo(0, 186, 40, 0);
+        sleep(config.sleep);
+        tapUp(0, 186, 40, 0);
+        sleep(config.sleepAnimate * 2);
+      }
 
       qTap(AdvanturesBountiesAt3rd[targetAdvanture].pnt);
       if (waitUntilSeePage(targetPage, 8)) {
@@ -5131,6 +5367,11 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
     }
 
     if (battleName === 'guildDragon') {
+      if (checkIsPage(pageDragonRemainHealth)) {
+        qTap(pnt(320, 336));
+        sleep(1000);
+        j++;
+      }
       if (checkIsPage(pageDragonTotalDamage)) {
         qTap(pnt(320, 336));
         sleep(1000);
@@ -5174,12 +5415,6 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
 
     if (checkIsPage(pageSpeedBoostEnabled)) {
       speedBoostCheckedCnt++;
-      if (j - loggingCnt > 30) {
-        console.log('In ', battleName, ' for ', j, '/', waitTimeInSecs, 'secs, time: ', new Date().toLocaleString());
-        sendEvent('running', '');
-        checkAndRestartApp();
-        loggingCnt = j;
-      }
     }
     if (speedBoostCheckedCnt < 5 && !checkIsPage(pageSpeedBoostEnabled)) {
       if (checkIsPage(pageSpeed1x)) {
@@ -5202,6 +5437,13 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       qTap(pageKeepBattleByOrderNotCheck);
       sleep(8000);
       console.log('alliance battle, tap keep battle with this order');
+    }
+
+    if (j - loggingCnt > 30) {
+      console.log('In ', battleName, ' for ', j, '/', waitTimeInSecs, 'secs, time: ', new Date().toLocaleString());
+      sendEvent('running', '');
+      checkAndRestartApp();
+      loggingCnt = j;
     }
 
     sleep(1000);
@@ -5346,11 +5588,34 @@ function handleInGuildPage() {
   handleGotoKingdomPage();
 }
 
+var guildBossesEntryPoints = {
+  left: { x: 113, y: 202, r: 123, g: 207, b: 8 },
+  middle: { x: 312, y: 205, r: 123, g: 207, b: 8 },
+  right: { x: 505, y: 204, r: 123, g: 207, b: 8 },
+};
+var pageInGuildBattleGuide = [
+  { x: 225, y: 20, r: 13, g: 15, b: 42 },
+  { x: 318, y: 18, r: 33, g: 75, b: 86 },
+  { x: 405, y: 19, r: 86, g: 70, b: 0 },
+];
 function handleGuildBattleDragon() {
   // Old users does not have config.autoGuildBattleDragon key (Feb 7, 2022)
   if (config.autoGuildBattleDragon === undefined || config.autoGuildBattleDragon) {
     console.log('about to guildBattleDragon');
     handleGotoAdventure(Advantures.guild, pageBattleDragon);
+
+    console.log('about to start handleGuildBattleDragon, send running');
+    sendEvent('running', '');
+
+    // To avoid trapped by cream puff cookie guide
+    for (var i = 0; i < 12; i++) {
+      if (checkIsPage(pageInGuildBattleGuide)) {
+        qTap(pnt(166, 19));
+        sleep(1000);
+      } else {
+        break;
+      }
+    }
 
     waitUntilSeePage(pageBattleDragon, 6, pnt(300, 312)); // tapping middle low to pass enemy defeated animate
     if (checkIsPage(pageNoMoreDragonToFight)) {
@@ -5358,24 +5623,40 @@ function handleGuildBattleDragon() {
       return true;
     }
 
-    qTap(pageReadyToFightDragon);
-    if (waitUntilSeePage(pageReadyToFightDragon, 6)) {
-      qTap(pageBattleDragon); // Tap BATTLE! to start
-      // qTap(pnt(386, 256));  // Tap practice
-      sleep(5000);
-      if (checkIsPage(pageDragonAddMoreCookie)) {
-        console.log('Found need to add more cookie to dragon fight, skipping');
-        handleGotoKingdomPage();
-        return false;
+    for (var bossIdx in guildBossesEntryPoints) {
+      console.log('Try to fight:', bossIdx);
+
+      var bossEntryPoint = guildBossesEntryPoints[bossIdx];
+      qTap(bossEntryPoint);
+      if (waitUntilSeePage(pageReadyToFightDragon, 6)) {
+        qTap(pageReadyToFightDragon); // Tap BATTLE! to start
+        // qTap(pnt(386, 256));  // Tap practice
+        sleep(6000);
+        if (checkIsPage(pageDragonAddMoreCookie)) {
+          console.log('Found need to add more cookie to dragon fight, skipping');
+          handleGotoKingdomPage();
+          return false;
+        }
+
+        if (checkIsPage(pageReadyToFightDragon)) {
+          console.log('Still in dragon battle page, we run out of tickets, skipping');
+          handleGotoKingdomPage();
+          return false;
+        }
+
+        if (waitForBattle('guildDragon', 180, true, pageBattleDragon)) {
+          console.log('battle dragon finished, go back to kingdom');
+        } else {
+          console.log('Finish pageCookieAlliance due to battle return false');
+        }
       }
 
-      if (waitForBattle('guildDragon', 180, true, pageBattleDragon)) {
-        console.log('battle dragon finished, go back to kingdom');
-      } else {
-        console.log('Finish pageCookieAlliance due to battle return false');
+      if (!checkIsPage(pageBattleDragon)) {
+        handleGotoAdventure(Advantures.guild, pageBattleDragon);
       }
-      handleGotoKingdomPage();
     }
+
+    handleGotoKingdomPage();
   }
 }
 
@@ -5423,90 +5704,110 @@ function handleGuildBattleAlliance() {
     { x: 480, y: 320, r: 23, g: 34, b: 9 },
     { x: 497, y: 320, r: 35, g: 29, b: 35 },
   ];
+  var pageLightBeaconReminder = [
+    { x: 301, y: 250, r: 8, g: 166, b: 222 },
+    { x: 403, y: 248, r: 123, g: 207, b: 8 },
+    { x: 333, y: 19, r: 49, g: 38, b: 75 },
+    { x: 187, y: 166, r: 104, g: 111, b: 122 },
+  ];
 
-  if (config.autoGuildAllianceBattle) {
-    console.log('start guild alliance battle: ', config.autoGuildAllianceBattle, checkIsPage(pageInGuildLand));
-    if (!checkIsPage(pageCookieAlliance)) {
-      handleGotoAdventure(Advantures.cookieAlliance, pageCookieAlliance);
-    }
+  if (!config.autoGuildAllianceBattle) {
+    return;
+  }
 
-    if (waitUntilSeePage(pageCookieAlliance, 6)) {
-      if (checkIsPage(pageAllianceBeaconIsOff)) {
-        qTap(pageAllianceBeaconIsOff);
+  console.log('start guild alliance battle: ', config.autoGuildAllianceBattle, checkIsPage(pageInGuildLand));
+  handleGotoAdventure(Advantures.cookieAlliance, pageCookieAlliance);
+  if (!checkIsPage(pageCookieAlliance)) {
+    console.log('failed to goto pageCookieAlliance, skipping');
+    handleGotoKingdomPage();
+    return;
+  }
 
-        if (waitUntilSeePage(pageBeaconOfValor, 4)) {
-          qTap(pnt(191, 294)); // 7D
-          sleep(config.sleepAnimate);
-          qTap(pageBeaconOfValor);
-          sleep(config.sleepAnimate * 2);
-        }
+  console.log('about to start handleGuildBattleAlliance, send running');
+  sendEvent('running', '');
 
-        if (waitUntilSeePage(pageCannotLightBeacon, 4)) {
-          keycode('BACK', 1000);
-          sleep(config.sleepAnimate);
-        }
+  if (waitUntilSeePage(pageCookieAlliance, 6)) {
+    for (var j = 0; j < 5; j++) {
+      qTap(pnt(578, 320)); // Battle alliance
+      sleep(3000);
 
-        for (var i = 0; i < 5; i++) {
-          if (waitUntilSeePage(pageCookieAlliance, 3)) {
-            break;
+      if (checkIsPage(pageNoAllianceTicket)) {
+        console.log('Not enough alliance ticket, skipping');
+        qTap(pageNoAllianceTicket);
+        sleep(1500);
+        keycode('BACK', 1000);
+        sleep(1500);
+        break;
+      }
+
+      if (checkIsPage(pageAllianceAddMoreCookie)) {
+        console.log('Not enough cookie to fight alliance, skipping');
+        qTap(pageAllianceAddMoreCookie);
+        sleep(1500);
+        keycode('BACK', 1000);
+        sleep(1500);
+        break;
+      }
+
+      if (checkIsPage(pageAllianceSteupTeam)) {
+        console.log('got into team setup page, skip alliance');
+        break;
+      }
+
+      if (checkIsPage(pageLightBeaconReminder)) {
+        console.log('Need to light the beacon, found pageLightBeaconReminder');
+        qTap(pageLightBeaconReminder);
+        sleep(config.sleepAnimate);
+
+        if (checkIsPage(pageAllianceBeaconIsOff)) {
+          qTap(pageAllianceBeaconIsOff);
+
+          if (waitUntilSeePage(pageBeaconOfValor, 4)) {
+            qTap(pnt(191, 294)); // 7D
+            sleep(config.sleepAnimate);
+            qTap(pageBeaconOfValor);
+            sleep(config.sleepAnimate * 2);
           }
-          keycode('BACK', 1000);
-          console.log('tap back to pageCookieAlliance: ', i);
+
+          if (waitUntilSeePage(pageCannotLightBeacon, 4)) {
+            keycode('BACK', 1000);
+            sleep(config.sleepAnimate);
+          }
+
+          for (var i = 0; i < 5; i++) {
+            if (waitUntilSeePage(pageCookieAlliance, 3)) {
+              break;
+            }
+            keycode('BACK', 1000);
+            console.log('tap back to pageCookieAlliance: ', i);
+          }
         }
       }
 
-      for (var j = 0; j < 5; j++) {
-        qTap(pnt(578, 320)); // Battle alliance
-        sleep(3000);
-
-        if (checkIsPage(pageNoAllianceTicket)) {
-          console.log('Not enough alliance ticket, skipping');
-          qTap(pageNoAllianceTicket);
-          sleep(1500);
-          keycode('BACK', 1000);
-          sleep(1500);
-          break;
+      if (waitUntilSeePage(pageSelectStartingTeam, 4)) {
+        if (checkIsPage(pageKeepBattleByOrderNotCheckWhenStart)) {
+          qTap(pageKeepBattleByOrderNotCheckWhenStart);
+          sleep(1000);
+          console.log('alliance battle, tap keep battle with this order');
         }
 
-        if (checkIsPage(pageAllianceAddMoreCookie)) {
-          console.log('Not enough cookie to fight alliance, skipping');
-          qTap(pageAllianceAddMoreCookie);
+        for (var tapY = 73; tapY < 296; tapY += 50) {
+          qTap(pnt(474, tapY)); // tap the top most available team
           sleep(1500);
-          keycode('BACK', 1000);
-          sleep(1500);
-          break;
-        }
-
-        if (checkIsPage(pageAllianceSteupTeam)) {
-          console.log('got into team setup page, skip alliance');
-          break;
-        }
-
-        if (waitUntilSeePage(pageSelectStartingTeam, 4)) {
-          if (checkIsPage(pageKeepBattleByOrderNotCheckWhenStart)) {
-            qTap(pageKeepBattleByOrderNotCheckWhenStart);
-            sleep(1000);
-            console.log('alliance battle, tap keep battle with this order');
-          }
-
-          for (var tapY = 73; tapY < 296; tapY += 50) {
-            qTap(pnt(474, tapY)); // tap the top most available team
-            sleep(1500);
-          }
-        }
-
-        if (waitForBattle('alliance', 1800, false, pageCookieAlliance)) {
-          console.log('pageCookieAlliance battle finished, wait at most 12 secs and try next one');
-          waitUntilSeePage(pageCookieAlliance, 15);
-          continue;
-        } else {
-          console.log('Finish pageCookieAlliance due to battle return false');
-          break;
         }
       }
 
-      handleGotoKingdomPage();
+      if (waitForBattle('alliance', 1800, false, pageCookieAlliance)) {
+        console.log('pageCookieAlliance battle finished, wait at most 15 secs and try next one');
+        waitUntilSeePage(pageCookieAlliance, 15);
+        continue;
+      } else {
+        console.log('Finish pageCookieAlliance due to battle return false');
+        break;
+      }
     }
+
+    handleGotoKingdomPage();
   }
 }
 
@@ -5648,6 +5949,7 @@ function handleGotoGnomeLab() {
   console.log('try to handleGotoGnomeLab');
   if (!checkIsPage(pageInKingdomVillage)) {
     handleGotoKingdomPage();
+    return;
   }
 
   pageLabCollapsed = [
@@ -5683,12 +5985,13 @@ function handleInGnomeLab() {
     return false;
   }
 
+  console.log('handleInGnomeLab in gnome lab, send running');
+  sendEvent('running', '');
+
   if (checkIsPage(pageAlreadyResearching)) {
     console.log('Already researching, skipping handleInGnomeLab');
     return true;
   }
-
-  sendEvent('running', '');
 
   var researching = false;
   if (config.autoResearchKingdom) {
@@ -5920,8 +6223,9 @@ function handleInHabor() {
   ];
 
   if (config.autoHandleTradeHabor && waitUntilSeePage(pageShipInHabor, 4, pageShipInHabor, pageNoShipInHabor)) {
-    console.log('ship still there, load all items');
+    console.log('ship still there, load all items and send running');
     sendEvent('running', '');
+
     var shipInHabor = true;
     for (var i = 0; i < 5 && shipInHabor; i++) {
       for (var xPixel = i === 0 ? 55 : 200; xPixel < 620; xPixel += 60) {
@@ -6011,6 +6315,9 @@ function handleInHabor() {
       qTap(pageNeedDiamondRefreshMarket);
       sleep(config.sleepAnimate);
     }
+
+    console.log('In seaside marketing, send running');
+    sendEvent('running', '');
 
     if (config.autoBalanceAuroraStocks) {
       for (var auroraIdx = 0; auroraIdx < 3; auroraIdx++) {
@@ -6112,7 +6419,9 @@ function handleInHabor() {
       config.autoBuyLegendSoulEssence) &&
     waitUntilSeePage(pageInHabor, 4)
   ) {
-    console.log('Try to purchase sea fairy in shell shop');
+    console.log('Try to purchase sea fairy in shell shop and send running');
+    sendEvent('running', '');
+
     qTap(pageCanGotoShellShop);
     sleep(config.sleepAnimate);
 
@@ -6502,13 +6811,19 @@ function handleSuperMayhem() {
 }
 
 function handleTowerOfSweetChaos() {
-  if (
-    !checkIsPage(pageReadyToBattleToSC) &&
-    !handleGotoAdventure(Advantures.towerOfSweetChaos, pageInTowerOfSweetChaos)
-  ) {
-    console.log('unable to goto TowerOfSweetChaos, skipping handleTowerOfSweetChaos');
-    return false;
+  console.log('start handleTowerOfSweetChaos: ', config.autoHandleTowerOfSweetChaos, checkIsPage(pageCookieAlliance));
+
+  if (!checkIsPage(pageReadyToBattleToSC)) {
+    handleGotoAdventure(Advantures.towerOfSweetChaos, pageInTowerOfSweetChaos);
+    if (!checkIsPage(pageInTowerOfSweetChaos)) {
+      console.log('unable to goto TowerOfSweetChaos, skipping handleTowerOfSweetChaos');
+      handleGotoKingdomPage();
+      return;
+    }
   }
+
+  console.log('about to start handleTowerOfSweetChaos, send running');
+  sendEvent('running', '');
 
   var downArrow = findSpecificImageInScreen(towerOfSweetChoasDownArrow);
   if (downArrow.length > 0) {
@@ -6529,6 +6844,68 @@ function handleTowerOfSweetChaos() {
   console.log('Finish ToSC at ', idx, 'battles');
   handleTryHitBackToKingdom();
   return;
+}
+
+var pageCookieOdysseyMissionIcon = [
+  { x: 622, y: 122, r: 239, g: 34, b: 28 },
+  { x: 616, y: 139, r: 206, g: 162, b: 33 },
+  { x: 606, y: 134, r: 255, g: 255, b: 255 },
+];
+var pageInCookieOdysseyMissionList = [
+  { x: 143, y: 37, r: 57, g: 69, b: 107 },
+  { x: 143, y: 68, r: 239, g: 203, b: 66 },
+];
+function handleCollectCookieOdyssey() {
+  console.log('about to handleCollectCookieOdyssey');
+
+  if (!checkIsPage(pageInCookieOdysseyMissionList)) {
+    if (!checkIsPage(pageInKingdomVillage)) {
+      handleTryHitBackToKingdom();
+    }
+
+    if (checkIsPage(pageCookieOdysseyMissionIcon)) {
+      qTap(pageCookieOdysseyMissionIcon);
+
+      if (!waitUntilSeePage(pageInCookieOdysseyMissionList, 3)) {
+        console.log('Cannot go to odyssey mission page, skipping');
+        return false;
+      }
+    }
+  }
+
+  console.log('In pageInCookieOdysseyMissionList, send running');
+  sendEvent('running', '');
+
+  for (var scrollTimes = 0; scrollTimes < 4; scrollTimes++) {
+    var img = getScreenshot();
+
+    for (var y = 280; y >= 115; y -= 20) {
+      var color = getImageColor(img, 536, y);
+
+      if (isSameColor({ r: 101, g: 211, b: 0 }, color, 35)) {
+        qTap(pnt(533, y));
+        sleep(config.sleepAnimate);
+        console.log('Collected odyssey mission at y:', y);
+      }
+    }
+
+    releaseImage(img);
+
+    tapDown(340, 280, 40, 0);
+    sleep(config.sleep);
+    moveTo(340, 280, 40, 0);
+    sleep(config.sleep);
+    moveTo(340, 180, 40, 0);
+    sleep(config.sleep);
+    moveTo(340, 180, 40, 0);
+    sleep(config.sleep);
+    moveTo(340, 50, 40, 0);
+    sleep(config.sleep);
+    tapUp(340, 50, 40, 0);
+    sleep(config.sleepAnimate * 2);
+  }
+
+  handleTryHitBackToKingdom();
 }
 
 function readyAndBattleTray() {
@@ -7374,9 +7751,13 @@ function loadImages() {
 }
 
 function testRunAtLocal() {
+  config.autoPvPIntervalInMins = 30;
   config.autoUpgradeCandyHouse = true;
   config.autoGuildBattleDragon = true;
   config.autoHandleTowerOfSweetChaos = true;
+  config.skipMagicLabProduction = false;
+  config.autoHandleEventWishingTreeAmounts = 0;
+  config.autoHandleCollectCookieOdysseyMission = true;
 
   loadImages();
   start(JSON.stringify(config));
@@ -7449,6 +7830,7 @@ function start(inputConfig) {
     config.lastSendHotAirBallon = Date.now();
     config.lastCollectTrain = Date.now();
     config.lastFulfillWishes = Date.now();
+    config.lastAutoHandleEventWishingTree = Date.now();
     config.lastCollectFountain = Date.now();
     config.lastCollectCandyTime = Date.now();
     config.lastAutoPvP = Date.now();
@@ -7459,6 +7841,7 @@ function start(inputConfig) {
     config.lastLabResearch = Date.now();
     config.lastHandleTradeHabor = Date.now();
     config.lastAutoHandleTowerOfSweetChaos = Date.now();
+    config.lastAutoHandleCollectCookieOdysseyMission = Date.now();
 
     config.lastGotoProduction = Date.now();
   } else {
@@ -7526,6 +7909,19 @@ function start(inputConfig) {
         console.log('Fulfill wishes: ', (Date.now() - config.lastFulfillWishes) / 60000, ' mins just passed');
         handleWishingTree();
         config.lastFulfillWishes = Date.now();
+      }
+
+      if (
+        config.autoHandleEventWishingTreeAmounts > 0 &&
+        (Date.now() - config.lastAutoHandleEventWishingTree) / 60000 > 20
+      ) {
+        console.log(
+          'Fulfill event wishes: ',
+          (Date.now() - config.lastAutoHandleEventWishingTree) / 60000,
+          ' mins just passed'
+        );
+        handleEventWishingTree();
+        config.lastAutoHandleEventWishingTree = Date.now();
       }
 
       if (
@@ -7607,6 +8003,19 @@ function start(inputConfig) {
         config.lastAutoHandleTowerOfSweetChaos = Date.now();
       }
 
+      if (
+        config.autoHandleCollectCookieOdysseyMission &&
+        (Date.now() - config.lastAutoHandleCollectCookieOdysseyMission) / 60000 > 360
+      ) {
+        console.log(
+          'handleCollectCookieOdyssey: ',
+          (Date.now() - config.lastAutoHandleCollectCookieOdysseyMission) / 60000,
+          ' just passed'
+        );
+        handleCollectCookieOdyssey();
+        config.lastAutoHandleCollectCookieOdysseyMission = Date.now();
+      }
+
       if ((Date.now() - config.lastTryResolveGreenChecks) / 60000 > 20) {
         console.log(
           'handleTryResolveGreenChecks: ',
@@ -7616,7 +8025,7 @@ function start(inputConfig) {
         handleTryResolveGreenChecks();
       }
 
-      if ((Date.now() - config.lastAutoGuildBattle) / 60000 > 120) {
+      if ((Date.now() - config.lastAutoGuildBattle) / 60000 > 180) {
         console.log('autoGuildBattle: ', (Date.now() - config.lastAutoGuildBattle) / 60000, ' mins just passed (>120)');
         handleGuildCheckinAndBattle();
         if (config.autoGuildBattleDragon) {
@@ -7743,4 +8152,3 @@ function start(inputConfig) {
 // testRunAtLocal();
 // loadImages()
 // handleWishingTree()
-// handleGuildBattleAlliance()
