@@ -1733,18 +1733,26 @@ Tsum.prototype.taskSendHearts = function() {
         break;
       }
     }
-    var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, Button.outSendHeartEnd2), 40);
-    var isEnd2 = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
-    var isEnd3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, Button.outSendHeartEnd3), 40);
-    var isEnd = (!isNotEnd && isEnd2 && isEnd3);
+    var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, Button.outSendHeartEnd2), 40); //x: 75, y: 420
+    var isEnd1 = isSameColor({r: 162, g: 84, b: 53}, this.getColor(img, {x: 75*3, y: 420*3}), 40); // {x: 75, y: 420, r: 162, g: 84, b: 53}}
+    var isEnd2 = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40); // x: 109, y: 422
+    var isEnd3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, Button.outSendHeartEnd3), 40); // x: 105, y: 408
+
+    var isNotEndJP = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, {x: 75*3, y: 352*3}), 40); //x: 75, y: 352
+    var isEndJP1 = isSameColor({r: 162, g: 84, b: 53}, this.getColor(img, {x: 75*3, y: 352*3}), 40); // {x: 75, y: 352, r: 162, g: 84, b: 53}}
+    var isEndJP3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, {x: 105*3, y: 340*3}), 40); // x: 105, y: 340
+
+    var isEnd = !this.isJP && (!isNotEnd && isEnd1 && isEnd2 && isEnd3);
+    // both jp or global using this now
+    var isEndJP = !isNotEndJP && isEndJP1 && isEnd2 && isEndJP3;
     releaseImage(img);
-    log(this.logs.sendingHearts, heartsPos.length, this.logs.sendingZeroScore);
+    log('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd1, 'isEnd', isEnd,'isNotEndJP', isNotEndJP, 'isEndJP1', isEndJP1, 'isEndJP3', isEndJP3, 'isEndJP', isEndJP, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
 
     if (isOk && heartsPos.length == 0) {
       this.tap(Button.outReceiveOk);
     }
 
-    if ((heartsPos.length == 0 && isEnd) || (!this.sentToZero && isZero && heartsPos.length != 0)) {
+    if ((heartsPos.length == 0 && (isEnd || isEndJP)) || (!this.sentToZero && isZero && heartsPos.length != 0)) {
       if(retry < 3){
         this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
