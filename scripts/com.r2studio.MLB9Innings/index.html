@@ -23,21 +23,22 @@
 <script>
   var selections = {
     package: "com.r2studio.MLB9Innings",
-    versionCode: 1,
+    versionCode: 2,
     languages: ["zh_TW", "en"],
     title: "MLB9 Innings",
     settings: [
       {
         type: "text",
         titlei18n: {
-          zh_TW: "*請先將螢幕解析度設定為 640x360, 120 dpi",
-          en: "Only support 640x360 resolution, 120 dpi",
+          zh_TW:
+            "*請使用無廣告版本，將螢幕解析度設定為 640x360，120 dpi，將遊戲語言設定為英文，並勿移動robotmom的頭像避免影響機器人判斷",
+          en: "Only support 640x360 resolution, 120 dpi, AD-free version, please set language to English and do not move the app icon to avoid affecting identification",
         },
       },
       {
         type: "text",
         titlei18n: {
-          zh_TW: "✅ 一鍵幫你自動連續玩大聯盟賽季⚾️",
+          zh_TW: "✅ 一鍵自動連續玩大聯盟賽季⚾️",
           en: "✅ play league seasons through one click⚾️",
         },
       },
@@ -51,7 +52,7 @@
       {
         type: "text",
         titlei18n: {
-          zh_TW: "✅ 體力智慧判斷遊玩更高效⤴️",
+          zh_TW: "✅ 體力智慧判斷遊玩效率ＵＰ⤴️",
           en: "✅ better energy controlling and play efficiency⤴️",
         },
       },
@@ -63,10 +64,25 @@
           en: "the program will turn on quick play mode to increase the times of playing when energy is sufficient otherwise turn off that to wait for energy recovery",
         },
       },
+      {
+        type: "select",
+        titlei18n: { zh_TW: "聯賽模式選擇", en: "League mode selection" },
+        default: "full",
+        selections: [
+          { text: "full league", value: "full" },
+          { text: "1/2 league", value: "half" },
+          { text: "1/4 league", value: "quarter" },
+          { text: "post season", value: "postSeason" },
+        ],
+        key: "leagueSeasonMode",
+        value: "full",
+      },
     ],
   };
 
-  var config = {};
+  var config = {
+    leagueSeasonMode: "full", // half, quarter, postSeason
+  };
   simplesettings.render("#app", selections, function (c) {
     config = c;
   });
@@ -74,8 +90,9 @@
   function onEvent(eventType) {
     if (eventType == "OnPlayClick") {
       var jsonConfig = JSON.stringify(config);
+      jsonConfig.isXr = false;
       var startCommand = "start('" + jsonConfig + "')";
-      JavaScriptInterface.setXY(0, 65);
+      JavaScriptInterface.setXY(345, 159); // avoid logo sheld screen
       JavaScriptInterface.hideMenu();
       JavaScriptInterface.runScript(startCommand);
     } else if (eventType == "OnPauseClick") {
