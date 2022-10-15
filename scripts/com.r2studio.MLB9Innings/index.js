@@ -1,5 +1,6 @@
 /* prettier-ignore */ !function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.RF=t():e.RF=t()}(this,(function(){return function(){"use strict";var e={607:function(e,t,r){var o=this&&this.__createBinding||(Object.create?function(e,t,r,o){void 0===o&&(o=r),Object.defineProperty(e,o,{enumerable:!0,get:function(){return t[r]}})}:function(e,t,r,o){void 0===o&&(o=r),e[o]=t[r]}),n=this&&this.__exportStar||function(e,t){for(var r in e)"default"===r||Object.prototype.hasOwnProperty.call(t,r)||o(t,e,r)};Object.defineProperty(t,"__esModule",{value:!0}),t.version=void 0,n(r(850),t),n(r(985),t),n(r(837),t),n(r(459),t),n(r(231),t),n(r(200),t),n(r(656),t),n(r(708),t),n(r(974),t),t.version=1},850:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.GroupPage=void 0;var r=function(){function e(e,t){this.name=e,this.pages=t}return e.prototype.isMatchImage=function(e,t){void 0===t&&(t=.9);for(var r=[],o=0,n=this.pages;o<n.length;o++){var i=n[o];i.isMatchImage(e,t)&&r.push(i.name)}return r},e.prototype.isMatchScreen=function(e,t){void 0===t&&(t=.9);var r=e.getCvtDevScreenshot(),o=this.isMatchImage(r,t);return releaseImage(r),o},e.prototype.waitScreenForMatchingOne=function(t,r,o,n,i){void 0===o&&(o=1),void 0===n&&(n=600),void 0===i&&(i=.9),e.debug&&console.log("GroupPage.waitScreenForMatchingOne "+this.name+": "+this.pages.map((function(e){return e.name})).join(","));for(var s=Date.now(),a="",c=0;Date.now()-s<r;){for(var f=t.getCvtDevScreenshot(),m=0,h=this.pages;m<h.length;m++){var g=h[m];if(g.isMatchImage(f,i)){a!==g.name&&(a=g.name,c=0),c++;break}}if(releaseImage(f),""!==a&&c>=o)break;sleep(n)}return e.debug&&console.log("GroupPage.waitScreenForMatchingOne "+this.name+": matched: "+a+", usedTime "+(Date.now()-s)),a},e.debug=!1,e}();t.GroupPage=r},985:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.Page=void 0;var o=r(656),n=function(){function e(e,t,r,o){void 0===r&&(r=void 0),void 0===o&&(o=void 0),this.name=e,this.points=t,this.next=r,this.back=o}return e.prototype.goNext=function(t){void 0!==this.next?t.tap(this.next):e.debug&&console.log("Warning Page: "+this.name+" has no next xy")},e.prototype.goBack=function(t){void 0!==this.back?t.tap(this.back):e.debug&&console.log("Warning Page: "+this.name+" has no back xy")},e.prototype.isMatchImage=function(e,t){void 0===t&&(t=.9);for(var r=!0,n=0,i=this.points;n<i.length;n++){var s=i[n],a=getImageColor(e,s.x,s.y);if(o.Colors.identityColor(s,a)<t){r=!1;break}}return r},e.prototype.isMatchScreen=function(e,t){void 0===t&&(t=.9);var r=e.getCvtDevScreenshot(),o=this.isMatchImage(r,t);return releaseImage(r),o},e.prototype.waitScreenForMatchingScreen=function(t,r,o,n,i){void 0===o&&(o=1),void 0===n&&(n=600),void 0===i&&(i=.9),e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name);for(var s=Date.now(),a=0;Date.now()-s<r&&(this.isMatchScreen(t,i)&&a++,!(a>=o));)sleep(n);return a>=o?(e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name+" success, usedTime "+(Date.now()-s)),!0):(e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name+" timeout"),!1)},e.debug=!1,e}();t.Page=n},837:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.XYRGB=void 0;t.XYRGB=function(){this.x=0,this.y=0,this.r=0,this.g=0,this.b=0}},459:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.Screen=void 0;var o=r(656),n=function(){function e(e){this.config=e;var t=getScreenSize();this.config.deviceHeight=t.height,this.config.deviceWidth=t.width,this.config.screenWidth=t.width,this.config.screenHeight=t.height,this.config.screenOffsetX=0,this.config.screenOffsetY=0}return e.prototype.calculateDeviceOffset=function(e){var t=e(this);this.config.screenWidth=t.screenWidth,this.config.screenHeight=t.screenHeight,this.config.screenOffsetX=t.screenOffsetX,this.config.screenOffsetY=t.screenOffsetY},e.prototype.getScreenX=function(e){return Math.floor(this.config.screenOffsetX+e*this.config.screenWidth/this.config.devWidth)||0},e.prototype.getScreenY=function(e){return Math.floor(this.config.screenOffsetY+e*this.config.screenHeight/this.config.devHeight)||0},e.prototype.getScreenXY=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e)return{x:this.getScreenX(e.x),y:this.getScreenY(e.y)};if("number"==typeof e&&"number"==typeof t)return{x:this.getScreenX(e),y:this.getScreenY(t)};throw new Error("getScreenXY wrong params "+e+", "+t)},e.prototype.tap=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tap(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tap(r,o,this.config.actionDuring)}},e.prototype.tapDown=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tapDown(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tapDown(r,o,this.config.actionDuring)}},e.prototype.moveTo=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);moveTo(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),moveTo(r,o,this.config.actionDuring)}},e.prototype.tapUp=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tapUp(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tapUp(r,o,this.config.actionDuring)}},e.prototype.getScreenColor=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getCvtDevScreenshot(),o=getImageColor(r,e.x,e.y);return releaseImage(r),o}if("number"==typeof e&&"number"==typeof t)return r=this.getCvtDevScreenshot(),o=getImageColor(r,e,t),releaseImage(r),o;throw new Error("tapDown wrong params "+e+", "+t)},e.prototype.findImage=function(e){var t=this.getCvtDevScreenshot(),r=findImage(t,e);return releaseImage(t),r},e.prototype.tapImage=function(e){var t=this.findImage(e);this.tap(t)},e.prototype.isSameColor=function(e,t){void 0===t&&(t=.9);var r=this.getScreenColor(e);return o.Colors.identityColor(r,e)>t},e.prototype.getDeviceScreenshot=function(){return getScreenshot()},e.prototype.getScreenScreenshot=function(){return getScreenshotModify(this.config.screenOffsetX,this.config.screenOffsetY,this.config.screenWidth,this.config.screenHeight,this.config.screenWidth,this.config.screenHeight,100)},e.prototype.getCvtDevScreenshot=function(){return getScreenshotModify(this.config.screenOffsetX,this.config.screenOffsetY,this.config.screenWidth,this.config.screenHeight,this.config.devWidth,this.config.devHeight,100)},e.prototype.setActionDuring=function(e){this.config.actionDuring=e},e.debug=!1,e}();t.Screen=n},231:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.ScreenConfig=void 0;t.ScreenConfig=function(){this.devWidth=640,this.devHeight=360,this.deviceWidth=0,this.deviceHeight=0,this.screenWidth=0,this.screenHeight=0,this.screenOffsetX=0,this.screenOffsetY=0,this.actionDuring=180}},200:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.TaskManager=t.Task=void 0;var o=r(974),n=function(){this.name="",this.runTimes=1,this.maxRunningDuring=0,this.minIntervalDuring=0,this.lastRunDoneTime=0,this.run=function(){}};t.Task=n;var i=function(){function e(){this.isRunning=!1,this.runIdx=0,this.tasks=[]}return e.prototype.addTask=function(e,t,r,o,i){void 0===r&&(r=1),void 0===o&&(o=0),void 0===i&&(i=0);var s=new n;s.name=e,s.run=t,s.runTimes=r,s.maxRunningDuring=o,s.minIntervalDuring=i,this.tasks.push(s)},e.prototype.start=function(){if(0===this.tasks.length)throw new Error("TaskManager: No tasks to run");for(console.log("TaskManager start"),this.isRunning=!0;this.isRunning;){var e=Date.now(),t=this.tasks[this.runIdx%this.tasks.length];if(this.runIdx++,!(e-t.lastRunDoneTime<t.minIntervalDuring)){console.log("RunTask "+this.runIdx+" "+t.name+", times "+t.runTimes+", maxDuring "+t.maxRunningDuring);for(var r=0;this.isRunning&&(console.log("TaskRunning "+t.name+", times "+r+"/"+t.runTimes),t.run(),t.lastRunDoneTime=Date.now(),r++,!(0!==t.runTimes&&r>=t.runTimes))&&!(Date.now()-e>t.maxRunningDuring);)sleep(100)}}},e.prototype.stop=function(){this.isRunning=!1,o.Utils.sleep(1e3),console.log("TaskManager stop")},e}();t.TaskManager=i},656:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.Colors=void 0;var r=function(){function e(){}return e.getRangeColor=function(e,t,r,o,n){void 0===n&&(n=5);var i=!1;void 0===e&&(i=!0,e=getScreenshot());for(var s=getImageSize(e),a=Math.max(0,t-o),c=Math.max(0,r-o),f=Math.min(s.width,t+o),m=Math.min(s.height,r+o),h=Math.max(1,(f-a)/n),g=Math.max(1,(m-c)/n),u=0,p={r:0,g:0,b:0},y=a;y<f;y+=h)for(var v=c;v<m;v+=g){var l=getImageColor(e,Math.floor(y),Math.floor(v));p.r+=l.r,p.g+=l.g,p.b+=l.b,u++}return i&&releaseImage(e),{r:Math.floor(p.r/u),g:Math.floor(p.g/u),b:Math.floor(p.b/u)}},e.color2hex=function(e){return((1<<24)+(e.r<<16)+(e.g<<8)+e.b).toString(16).slice(1)},e.hex2Color=function(e){return{r:parseInt(e[0]+e[1],16),g:parseInt(e[2]+e[3],16),b:parseInt(e[4]+e[5],16)}},e.identityColor=function(e,t){var r=(e.r+t.r)/2,o=e.r-t.r,n=e.g-t.g,i=e.b-t.b;return 1-Math.sqrt(((512+r)*o*o>>8)+4*n*n+((767-r)*i*i>>8))/768},e}();t.Colors=r},708:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.OCR=void 0;var r=function(){function e(e){this.words=e}return e.prototype.recognize=function(e,t,r,o){void 0===o&&(o=.8);for(var n=0,i=[],s=0;s<this.words.length;s++){var a=this.words[s],c=getImageSize(a.img);n=Math.max(n,c.width);var f=findImages(e,a.img,r,t,!0);for(var m in f){var h=f[m];i.push({char:a.char,x:h.x,y:h.y,score:h.score,w:c.width})}}i.sort((function(e,t){return e.x-t.x}));for(var g="",u=0,p=0,y=0;y<i.length;y++){var v=i[y];v.x>u?(p=v.score,g+=v.char,u=Math.floor(v.x+v.w*o)):v.x<=u&&v.score>p&&" "!==v.char&&(p=v.score,g=g.substr(0,g.length-1)+v.char,u=Math.floor(v.x+v.w*o))}return g},e}();t.OCR=r},974:function(e,t){var r=this&&this.__spreadArray||function(e,t){for(var r=0,o=t.length,n=e.length;r<o;r++,n++)e[n]=t[r];return e};Object.defineProperty(t,"__esModule",{value:!0}),t.Utils=t.log=void 0,t.log=function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];for(var r=(new Date).toLocaleString("en-US",{timeZone:"Asia/Taipei"}),o="["+r+"] ",n=0,i=e;n<i.length;n++){var s=i[n];o+="object"==typeof s?JSON.stringify(s)+" ":s+" "}console.log(o.substr(0,o.length-1))};var o=function(){function e(){}return e.sortStringNumberMap=function(e){var t=[];for(var r in e)t.push({key:r,count:e[r]});return t.sort((function(e,t){return t.count-e.count})),t},e.sleep=function(e){for(;e>200;)e-=200,sleep(200);e>0&&sleep(e)},e.getTaiwanTime=function(){return Date.now()+288e5},e.log=function(){for(var t=[],o=0;o<arguments.length;o++)t[o]=arguments[o];for(var n=0;n<t.length;n++){var i=t[n];"object"==typeof i&&(t[n]=JSON.stringify(i))}var s=new Date(e.getTaiwanTime()),a="["+(s.getMonth()+1)+"-"+s.getDate()+"T"+s.getHours()+":"+s.getMinutes()+":"+s.getSeconds()+"]";console.log.apply(console,r([a],t))},e.notifyEvent=function(t,r){null!=sendEvent&&(e.log("sendEvent",t,r),sendEvent(""+t,""+r))},e.startApp=function(e){execute("BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am start -n "+e),execute("ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am start -n "+e)},e.stopApp=function(e){execute("BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am force-stop "+e),execute("ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop "+e)},e.getCurrentApp=function(){for(var e="",t="",r=0,o=execute("dumpsys activity top").split("\n");r<o.length;r++){var n=o[r],i=n.indexOf("ACTIVITY");if(-1!==i){e="",t="";for(var s=!0,a=i+9;a<n.length;a++){var c=n[a];if(" "===c)break;"/"===c?s=!1:s?e+=c:t+=c}}}return[e,t]},e}();t.Utils=o}},t={};return function r(o){var n=t[o];if(void 0!==n)return n.exports;var i=t[o]={exports:{}};return e[o].call(i.exports,i,i.exports,r),i.exports}(607)}()}));
 
+var gScriptVersion = 3;
 var gSleepShort = 1000;
 var gSleepMedium = 2000;
 var gSleepLong = 3000;
@@ -89,45 +90,27 @@ var gMainPageBtns = {
 var gSettingsPage = new RF.Page(
   "gSettingsPage",
   [
-    { x: 9, y: 13, r: 0, g: 89, b: 156 },
-    { x: 7, y: 30, r: 8, g: 56, b: 99 },
-    { x: 314, y: 9, r: 239, g: 235, b: 239 },
-    { x: 313, y: 14, r: 138, g: 144, b: 155 },
-    { x: 370, y: 11, r: 57, g: 97, b: 132 },
+    { x: 22, y: 92, r: 231, g: 235, b: 239 },
+    { x: 20, y: 178, r: 206, g: 211, b: 222 },
+    { x: 19, y: 290, r: 206, g: 211, b: 222 },
+    { x: 457, y: 292, r: 206, g: 211, b: 222 },
+    { x: 457, y: 90, r: 231, g: 235, b: 239 },
+    { x: 480, y: 86, r: 33, g: 44, b: 49 },
+    { x: 485, y: 287, r: 41, g: 44, b: 49 },
+    { x: 498, y: 108, r: 56, g: 85, b: 117 },
+    { x: 501, y: 169, r: 16, g: 118, b: 255 },
+    { x: 499, y: 158, r: 32, g: 46, b: 54 },
+    { x: 504, y: 217, r: 160, g: 159, b: 164 },
+    { x: 499, y: 274, r: 74, g: 121, b: 181 },
+    { x: 25, y: 313, r: 214, g: 218, b: 214 },
+    { x: 41, y: 321, r: 110, g: 120, b: 110 },
+    { x: 30, y: 330, r: 214, g: 219, b: 214 },
+    { x: 295, y: 9, r: 214, g: 211, b: 214 },
+    { x: 314, y: 8, r: 247, g: 243, b: 247 },
     { x: 388, y: 7, r: 232, g: 233, b: 232 },
-    { x: 391, y: 11, r: 79, g: 80, b: 79 },
-    { x: 469, y: 11, r: 205, g: 222, b: 230 },
-    { x: 475, y: 13, r: 89, g: 99, b: 105 },
-    { x: 495, y: 7, r: 216, g: 204, b: 104 },
-    { x: 496, y: 13, r: 245, g: 166, b: 8 },
-    { x: 570, y: 11, r: 206, g: 223, b: 231 },
-    { x: 572, y: 14, r: 81, g: 89, b: 98 },
-    { x: 582, y: 18, r: 214, g: 211, b: 214 },
-    { x: 596, y: 12, r: 74, g: 93, b: 123 },
-    { x: 604, y: 14, r: 74, g: 93, b: 123 },
-    { x: 627, y: 12, r: 214, g: 211, b: 214 },
-    { x: 627, y: 31, r: 0, g: 56, b: 90 },
-    { x: 563, y: 60, r: 40, g: 73, b: 115 },
-    { x: 570, y: 62, r: 235, g: 238, b: 241 },
-    { x: 592, y: 63, r: 141, g: 156, b: 184 },
-    { x: 502, y: 104, r: 107, g: 172, b: 237 },
-    { x: 539, y: 108, r: 41, g: 44, b: 49 },
-    { x: 501, y: 159, r: 33, g: 46, b: 56 },
-    { x: 533, y: 164, r: 184, g: 209, b: 248 },
-    { x: 502, y: 217, r: 156, g: 158, b: 165 },
-    { x: 547, y: 222, r: 106, g: 118, b: 141 },
-    { x: 497, y: 272, r: 67, g: 107, b: 157 },
-    { x: 558, y: 273, r: 162, g: 182, b: 214 },
-    { x: 17, y: 84, r: 231, g: 235, b: 239 },
-    { x: 458, y: 293, r: 206, g: 211, b: 222 },
-    { x: 25, y: 314, r: 214, g: 219, b: 214 },
-    { x: 43, y: 324, r: 214, g: 219, b: 214 },
-    { x: 32, y: 329, r: 211, g: 216, b: 210 },
-    { x: 163, y: 324, r: 50, g: 60, b: 42 },
-    { x: 269, y: 332, r: 41, g: 52, b: 33 },
-    { x: 445, y: 331, r: 57, g: 70, b: 49 },
-    { x: 594, y: 330, r: 48, g: 56, b: 40 },
-    { x: 459, y: 85, r: 231, g: 235, b: 239 },
+    { x: 474, y: 16, r: 74, g: 81, b: 90 },
+    { x: 492, y: 12, r: 59, g: 50, b: 43 },
+    { x: 623, y: 12, r: 214, g: 211, b: 214 },
   ],
   { x: 41, y: 320 },
   { x: 41, y: 320 }
@@ -449,12 +432,12 @@ var gLeagueOnPlayPageAutoOff = new RF.Page(
     { x: 562, y: 20, r: 213, g: 214, b: 213 },
     { x: 565, y: 22, r: 205, g: 203, b: 205 },
   ],
-  { x: 511, y: 20 }, // switch to auto mode
+  { x: 511, y: 20 }, // switch to auto mode //TODO: make it turn on power save
   { x: 511, y: 20 }
 );
 
-var gLeagueOnPlayPage = new RF.Page(
-  "gLeagueOnPlayPage",
+var gLeagueOnPlayPagePowerSaveOff = new RF.Page(
+  "gLeagueOnPlayPagePowerSaveOff",
   [
     { x: 484, y: 14, r: 255, g: 255, b: 255 },
     { x: 488, y: 22, r: 222, g: 218, b: 222 },
@@ -462,6 +445,20 @@ var gLeagueOnPlayPage = new RF.Page(
     { x: 493, y: 29, r: 174, g: 179, b: 182 },
     { x: 16, y: 8, r: 255, g: 255, b: 255 },
     { x: 206, y: 11, r: 21, g: 20, b: 21 },
+  ],
+  { x: 0, y: 0 },
+  { x: 0, y: 0 }
+);
+
+var gLeagueOnPlayPagePowerSaveOn = new RF.Page(
+  "gLeagueOnPlayPagePowerSaveOn",
+  [
+    { x: 36, y: 26, r: 0, g: 0, b: 0 },
+    { x: 36, y: 326, r: 0, g: 0, b: 0 },
+    { x: 613, y: 330, r: 0, g: 0, b: 0 },
+    { x: 602, y: 27, r: 0, g: 0, b: 0 },
+    { x: 174, y: 162, r: 0, g: 0, b: 0 },
+    { x: 476, y: 158, r: 0, g: 0, b: 0 },
   ],
   { x: 0, y: 0 },
   { x: 0, y: 0 } // switch to manual mode
@@ -886,7 +883,8 @@ var gLeagueModePanelPagesGroup = new RF.GroupPage(
 );
 
 var gLeagueOnPlayPages = [
-  gLeagueOnPlayPage,
+  gLeagueOnPlayPagePowerSaveOn,
+  gLeagueOnPlayPagePowerSaveOff,
   gLeagueOnPlayPageAutoOff,
   gLeagueOnQuickPlayPage,
 ];
@@ -949,6 +947,7 @@ MLB9I.prototype.init = function () {
 
 MLB9I.prototype.start = function () {
   console.log("MLB9I start");
+  console.log("script version", gScriptVersion);
   this.running = true;
   if (this.config.isXr === true) {
     var isOk = this.handleSetPowerSave();
@@ -1466,7 +1465,7 @@ MLB9I.prototype.taskPlayLeagueMode = function () {
 };
 
 var mlb9i;
-function start() {
+function start(jsonConfig) {
   var config = defaultConfig;
   if (typeof jsonConfig === "string") {
     config = JSON.parse(jsonConfig);
@@ -1485,5 +1484,5 @@ function stop() {
   mlb9i = undefined;
 }
 
-start();
-stop();
+// start();
+// stop();

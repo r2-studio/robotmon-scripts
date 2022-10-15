@@ -23,7 +23,7 @@
 <script>
   var selections = {
     package: "com.r2studio.MLB9Innings",
-    versionCode: 2,
+    versionCode: 3,
     languages: ["zh_TW", "en"],
     title: "MLB9 Innings",
     settings: [
@@ -82,6 +82,7 @@
 
   var config = {
     leagueSeasonMode: "full", // half, quarter, postSeason
+    isXr: false,
   };
   simplesettings.render("#app", selections, function (c) {
     config = c;
@@ -90,7 +91,6 @@
   function onEvent(eventType) {
     if (eventType == "OnPlayClick") {
       var jsonConfig = JSON.stringify(config);
-      jsonConfig.isXr = false;
       var startCommand = "start('" + jsonConfig + "')";
       JavaScriptInterface.setXY(345, 159); // avoid logo sheld screen
       JavaScriptInterface.hideMenu();
