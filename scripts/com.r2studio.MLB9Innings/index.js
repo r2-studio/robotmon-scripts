@@ -7,8 +7,10 @@ var gSleepWaitPageShort = 12 * 1000;
 var gSleepWaitPageMedium = 24 * 1000;
 var gSleepWaitPageLong = 36 * 1000;
 
-var gSleepQuickPlay = 700 * 1000;
-var gSleepPlayAnimation = 300 * 1000;
+var defaultConfig = {
+  isXr: true, // hidden setting
+  leagueSeasonMode: "full", // half, quarter, postSeason
+};
 
 var gDownloadDataPage = new RF.Page(
   "gDownloadDataPage",
@@ -81,6 +83,58 @@ var gMainPageBtns = {
   battleMode: { x: 350, y: 145 },
   specialMode: { x: 438, y: 145 },
   clubMode: { x: 556, y: 145 },
+  settings: { x: 243, y: 323 },
+};
+
+var gSettingsPage = new RF.Page(
+  "gSettingsPage",
+  [
+    { x: 9, y: 13, r: 0, g: 89, b: 156 },
+    { x: 7, y: 30, r: 8, g: 56, b: 99 },
+    { x: 314, y: 9, r: 239, g: 235, b: 239 },
+    { x: 313, y: 14, r: 138, g: 144, b: 155 },
+    { x: 370, y: 11, r: 57, g: 97, b: 132 },
+    { x: 388, y: 7, r: 232, g: 233, b: 232 },
+    { x: 391, y: 11, r: 79, g: 80, b: 79 },
+    { x: 469, y: 11, r: 205, g: 222, b: 230 },
+    { x: 475, y: 13, r: 89, g: 99, b: 105 },
+    { x: 495, y: 7, r: 216, g: 204, b: 104 },
+    { x: 496, y: 13, r: 245, g: 166, b: 8 },
+    { x: 570, y: 11, r: 206, g: 223, b: 231 },
+    { x: 572, y: 14, r: 81, g: 89, b: 98 },
+    { x: 582, y: 18, r: 214, g: 211, b: 214 },
+    { x: 596, y: 12, r: 74, g: 93, b: 123 },
+    { x: 604, y: 14, r: 74, g: 93, b: 123 },
+    { x: 627, y: 12, r: 214, g: 211, b: 214 },
+    { x: 627, y: 31, r: 0, g: 56, b: 90 },
+    { x: 563, y: 60, r: 40, g: 73, b: 115 },
+    { x: 570, y: 62, r: 235, g: 238, b: 241 },
+    { x: 592, y: 63, r: 141, g: 156, b: 184 },
+    { x: 502, y: 104, r: 107, g: 172, b: 237 },
+    { x: 539, y: 108, r: 41, g: 44, b: 49 },
+    { x: 501, y: 159, r: 33, g: 46, b: 56 },
+    { x: 533, y: 164, r: 184, g: 209, b: 248 },
+    { x: 502, y: 217, r: 156, g: 158, b: 165 },
+    { x: 547, y: 222, r: 106, g: 118, b: 141 },
+    { x: 497, y: 272, r: 67, g: 107, b: 157 },
+    { x: 558, y: 273, r: 162, g: 182, b: 214 },
+    { x: 17, y: 84, r: 231, g: 235, b: 239 },
+    { x: 458, y: 293, r: 206, g: 211, b: 222 },
+    { x: 25, y: 314, r: 214, g: 219, b: 214 },
+    { x: 43, y: 324, r: 214, g: 219, b: 214 },
+    { x: 32, y: 329, r: 211, g: 216, b: 210 },
+    { x: 163, y: 324, r: 50, g: 60, b: 42 },
+    { x: 269, y: 332, r: 41, g: 52, b: 33 },
+    { x: 445, y: 331, r: 57, g: 70, b: 49 },
+    { x: 594, y: 330, r: 48, g: 56, b: 40 },
+    { x: 459, y: 85, r: 231, g: 235, b: 239 },
+  ],
+  { x: 41, y: 320 },
+  { x: 41, y: 320 }
+);
+var gSettingsPageBtns = {
+  graphicTab: { x: 152, y: 62 },
+  graphicTabPowerSaveOn: { x: 222, y: 222 },
 };
 
 var gBackBtnPage = new RF.Page(
@@ -176,6 +230,12 @@ var gSelectLeagueGameAmountPage = new RF.Page(
   { x: 39, y: 314 },
   { x: 39, y: 314 }
 );
+var gSelectLeagueGameAmountPageBtns = {
+  full: { x: 25, y: 285 },
+  half: { x: 245, y: 285 },
+  quarter: { x: 400, y: 112 },
+  post: { x: 600, y: 112 },
+};
 
 var gSelectYearPage = new RF.Page(
   "gSelectYearPage",
@@ -230,6 +290,56 @@ var gLeagueModePanelPageNextSchedule = new RF.Page(
     { x: 371, y: 13, r: 57, g: 97, b: 132 },
     { x: 391, y: 8, r: 123, g: 123, b: 123 },
     { x: 495, y: 10, r: 255, g: 198, b: 49 },
+  ],
+  { x: 616, y: 336 },
+  { x: 41, y: 320 }
+);
+
+var gLeagueModePanelPageNextSchedule2 = new RF.Page(
+  "gLeagueModePanelPageNextSchedule",
+  [
+    { x: 199, y: 215, r: 0, g: 0, b: 0 },
+    { x: 5, y: 14, r: 0, g: 89, b: 156 },
+    { x: 7, y: 32, r: 8, g: 56, b: 99 },
+    { x: 299, y: 9, r: 214, g: 215, b: 214 },
+    { x: 312, y: 7, r: 255, g: 251, b: 255 },
+    { x: 371, y: 12, r: 57, g: 97, b: 132 },
+    { x: 387, y: 8, r: 221, g: 221, b: 221 },
+    { x: 390, y: 10, r: 143, g: 141, b: 143 },
+    { x: 393, y: 11, r: 67, g: 70, b: 67 },
+    { x: 470, y: 12, r: 177, g: 191, b: 202 },
+    { x: 476, y: 12, r: 177, g: 191, b: 202 },
+    { x: 493, y: 9, r: 255, g: 246, b: 192 },
+    { x: 496, y: 13, r: 245, g: 166, b: 8 },
+    { x: 568, y: 13, r: 117, g: 124, b: 134 },
+    { x: 573, y: 15, r: 74, g: 81, b: 90 },
+    { x: 580, y: 18, r: 214, g: 211, b: 214 },
+    { x: 597, y: 13, r: 74, g: 93, b: 123 },
+    { x: 603, y: 15, r: 74, g: 93, b: 123 },
+    { x: 622, y: 14, r: 214, g: 215, b: 214 },
+    { x: 621, y: 29, r: 0, g: 56, b: 90 },
+    { x: 600, y: 30, r: 246, g: 242, b: 246 },
+    { x: 600, y: 30, r: 246, g: 242, b: 246 },
+    { x: 27, y: 315, r: 214, g: 219, b: 214 },
+    { x: 45, y: 319, r: 215, g: 219, b: 214 },
+    { x: 37, y: 330, r: 214, g: 219, b: 214 },
+    { x: 71, y: 316, r: 24, g: 77, b: 141 },
+    { x: 80, y: 320, r: 144, g: 162, b: 185 },
+    { x: 108, y: 320, r: 194, g: 214, b: 233 },
+    { x: 174, y: 315, r: 24, g: 77, b: 148 },
+    { x: 173, y: 320, r: 168, g: 181, b: 198 },
+    { x: 206, y: 321, r: 214, g: 231, b: 244 },
+    { x: 245, y: 320, r: 24, g: 73, b: 140 },
+    { x: 251, y: 321, r: 181, g: 195, b: 214 },
+    { x: 286, y: 323, r: 94, g: 133, b: 172 },
+    { x: 315, y: 328, r: 24, g: 65, b: 116 },
+    { x: 337, y: 324, r: 177, g: 193, b: 207 },
+    { x: 376, y: 320, r: 185, g: 207, b: 227 },
+    { x: 402, y: 330, r: 21, g: 62, b: 112 },
+    { x: 611, y: 327, r: 194, g: 173, b: 87 },
+    { x: 599, y: 326, r: 255, g: 255, b: 254 },
+    { x: 561, y: 326, r: 255, g: 255, b: 255 },
+    { x: 506, y: 324, r: 240, g: 230, b: 196 },
   ],
   { x: 616, y: 336 },
   { x: 41, y: 320 }
@@ -413,8 +523,8 @@ var gGameResultOtherPage = new RF.Page(
     { x: 617, y: 314, r: 16, g: 24, b: 17 },
     { x: 108, y: 322, r: 8, g: 20, b: 16 },
   ],
-  { x: 315, y: 323 },
-  { x: 315, y: 323 }
+  { x: 0, y: 0 },
+  { x: 0, y: 0 }
 );
 
 var gGameResultWorldChampionPage = new RF.Page(
@@ -434,36 +544,6 @@ var gGameResultWorldChampionPage = new RF.Page(
   ],
   { x: 0, y: 0 },
   { x: 0, y: 0 }
-);
-
-var gPlayerGrowthCompeletePage = new RF.Page(
-  "gPlayerGrowthCompeletePage ",
-  [
-    { x: 163, y: 79, r: 181, g: 186, b: 189 },
-    { x: 223, y: 60, r: 41, g: 49, b: 49 },
-    { x: 347, y: 57, r: 49, g: 56, b: 58 },
-    { x: 308, y: 70, r: 181, g: 186, b: 189 },
-    { x: 303, y: 62, r: 82, g: 89, b: 91 },
-    { x: 517, y: 50, r: 188, g: 189, b: 189 },
-    { x: 521, y: 63, r: 181, g: 183, b: 189 },
-    { x: 527, y: 46, r: 60, g: 63, b: 67 },
-    { x: 131, y: 165, r: 206, g: 211, b: 222 },
-    { x: 146, y: 144, r: 57, g: 81, b: 99 },
-    { x: 489, y: 138, r: 214, g: 32, b: 247 },
-    { x: 488, y: 157, r: 187, g: 190, b: 203 },
-    { x: 172, y: 246, r: 181, g: 186, b: 189 },
-    { x: 265, y: 297, r: 8, g: 118, b: 255 },
-    { x: 287, y: 306, r: 219, g: 231, b: 255 },
-    { x: 298, y: 302, r: 232, g: 240, b: 251 },
-    { x: 310, y: 305, r: 255, g: 255, b: 255 },
-    { x: 324, y: 298, r: 251, g: 253, b: 255 },
-    { x: 407, y: 294, r: 8, g: 122, b: 255 },
-    { x: 416, y: 315, r: 0, g: 85, b: 239 },
-    { x: 464, y: 309, r: 222, g: 219, b: 222 },
-    { x: 108, y: 300, r: 222, g: 219, b: 222 },
-  ],
-  { x: 325, y: 304 },
-  { x: 325, y: 304 }
 );
 
 var gGameRewardPage = new RF.Page(
@@ -514,8 +594,86 @@ var gGameLineUpPage = new RF.Page(
   { x: 40, y: 324 }
 );
 
-var gPowerSaveMode = new RF.Page(
-  "gPowerSaveMode",
+var gPlayerGrowthCompeletePage = new RF.Page(
+  "gPlayerGrowthCompeletePage ",
+  [
+    { x: 163, y: 79, r: 181, g: 186, b: 189 },
+    { x: 223, y: 60, r: 41, g: 49, b: 49 },
+    { x: 347, y: 57, r: 49, g: 56, b: 58 },
+    { x: 308, y: 70, r: 181, g: 186, b: 189 },
+    { x: 303, y: 62, r: 82, g: 89, b: 91 },
+    { x: 517, y: 50, r: 188, g: 189, b: 189 },
+    { x: 521, y: 63, r: 181, g: 183, b: 189 },
+    { x: 527, y: 46, r: 60, g: 63, b: 67 },
+    { x: 131, y: 165, r: 206, g: 211, b: 222 },
+    { x: 146, y: 144, r: 57, g: 81, b: 99 },
+    { x: 489, y: 138, r: 214, g: 32, b: 247 },
+    { x: 488, y: 157, r: 187, g: 190, b: 203 },
+    { x: 172, y: 246, r: 181, g: 186, b: 189 },
+    { x: 265, y: 297, r: 8, g: 118, b: 255 },
+    { x: 287, y: 306, r: 219, g: 231, b: 255 },
+    { x: 298, y: 302, r: 232, g: 240, b: 251 },
+    { x: 310, y: 305, r: 255, g: 255, b: 255 },
+    { x: 324, y: 298, r: 251, g: 253, b: 255 },
+    { x: 407, y: 294, r: 8, g: 122, b: 255 },
+    { x: 416, y: 315, r: 0, g: 85, b: 239 },
+    { x: 464, y: 309, r: 222, g: 219, b: 222 },
+    { x: 108, y: 300, r: 222, g: 219, b: 222 },
+  ],
+  { x: 325, y: 304 },
+  { x: 325, y: 304 }
+);
+
+var gLeagueRewardAchievementGradePage = new RF.Page(
+  "gLeagueRewardAchievementGradePage",
+  [
+    { x: 17, y: 32, r: 181, g: 186, b: 189 },
+    { x: 179, y: 45, r: 45, g: 50, b: 54 },
+    { x: 287, y: 53, r: 73, g: 78, b: 81 },
+    { x: 334, y: 48, r: 72, g: 79, b: 80 },
+    { x: 394, y: 51, r: 16, g: 24, b: 24 },
+    { x: 439, y: 50, r: 118, g: 122, b: 126 },
+    { x: 442, y: 50, r: 79, g: 85, b: 92 },
+    { x: 587, y: 46, r: 181, g: 186, b: 189 },
+    { x: 595, y: 37, r: 179, g: 180, b: 186 },
+    { x: 601, y: 44, r: 189, g: 186, b: 189 },
+    { x: 597, y: 52, r: 149, g: 154, b: 156 },
+    { x: 608, y: 37, r: 188, g: 185, b: 188 },
+    { x: 609, y: 51, r: 181, g: 183, b: 182 },
+    { x: 615, y: 68, r: 181, g: 186, b: 189 },
+    { x: 614, y: 84, r: 16, g: 65, b: 107 },
+    { x: 609, y: 197, r: 16, g: 65, b: 107 },
+    { x: 607, y: 217, r: 24, g: 28, b: 33 },
+    { x: 614, y: 323, r: 33, g: 40, b: 49 },
+    { x: 610, y: 348, r: 8, g: 8, b: 0 },
+    { x: 17, y: 83, r: 0, g: 48, b: 90 },
+    { x: 18, y: 199, r: 0, g: 48, b: 90 },
+    { x: 20, y: 325, r: 33, g: 40, b: 49 },
+  ],
+  { x: 600, y: 45 },
+  { x: 600, y: 45 }
+);
+
+var gPicherOfTheMonthPage = new RF.Page(
+  "gPicherOfTheMonthPage",
+  [
+    { x: 22, y: 35, r: 181, g: 186, b: 198 },
+    { x: 600, y: 41, r: 104, g: 104, b: 105 },
+    { x: 604, y: 45, r: 64, g: 70, b: 71 },
+    { x: 615, y: 87, r: 156, g: 162, b: 173 },
+    { x: 598, y: 302, r: 8, g: 121, b: 255 },
+    { x: 540, y: 309, r: 196, g: 219, b: 255 },
+    { x: 617, y: 327, r: 222, g: 219, b: 222 },
+    { x: 32, y: 311, r: 184, g: 177, b: 184 },
+    { x: 38, y: 312, r: 214, g: 215, b: 214 },
+    { x: 57, y: 309, r: 212, g: 209, b: 212 },
+  ],
+  { x: 545, y: 310 },
+  { x: 545, y: 310 }
+);
+
+var gPowerSavingPage = new RF.Page(
+  "gPowerSavingPage",
   [
     { x: 298, y: 136, r: 156, g: 160, b: 165 },
     { x: 137, y: 155, r: 0, g: 0, b: 0 },
@@ -720,6 +878,7 @@ var gUnexpectedErrorPage = new RF.Page(
 var gLeagueModePanelPages = [
   gLeagueModePanelPageContinue,
   gLeagueModePanelPageNextSchedule,
+  gLeagueModePanelPageNextSchedule2,
 ];
 var gLeagueModePanelPagesGroup = new RF.GroupPage(
   "gLeagueModePanelPages",
@@ -738,6 +897,7 @@ var gLeagueOnPlayPagesGroup = new RF.GroupPage(
 
 var gAllPages = [
   gMainPage,
+  gSettingsPage,
   gNewSeasonPage,
   gEndSeasonPage,
   gSelectSeasonModePage,
@@ -748,9 +908,11 @@ var gAllPages = [
   gGameResultAquiredPage,
   gGameResultOtherPage,
   gGameResultWorldChampionPage,
-  gPlayerGrowthCompeletePage,
   gGameRewardPage,
   gGameLineUpPage,
+  gPlayerGrowthCompeletePage,
+  gLeagueRewardAchievementGradePage,
+  gPicherOfTheMonthPage,
   gReviewAppPage,
   gNextPage,
   gNextPage2,
@@ -762,7 +924,7 @@ var gAllPages = [
   gRechargePromotionPage,
   gTeamSupportPackagePromotionPage,
   gEventPage,
-  gPowerSaveMode,
+  gPowerSavingPage,
   gUnexpectedErrorPage,
 ]
   .concat(gLeagueModePanelPages)
@@ -788,6 +950,12 @@ MLB9I.prototype.init = function () {
 MLB9I.prototype.start = function () {
   console.log("MLB9I start");
   this.running = true;
+  if (this.config.isXr === true) {
+    var isOk = this.handleSetPowerSave();
+    if (!isOk) {
+      return;
+    }
+  }
   this.taskManager.addTask(
     "playLeagueMode",
     this.taskPlayLeagueMode.bind(this)
@@ -861,8 +1029,8 @@ MLB9I.prototype.goToPage = function (
       RF.Utils.sleep(gSleepWaitPageLong);
       return false;
     }
-    if (pageName === "gPowerSaveMode") {
-      this.handlePowerSaveMode();
+    if (pageName === "gPowerSavingPage") {
+      this.handlePowerSavingPage();
       return false;
     }
     if (pageName === "gDownloadDataPage") {
@@ -870,6 +1038,8 @@ MLB9I.prototype.goToPage = function (
       return false;
     }
     if (pageName === "gLeagueOnPlayPage") {
+      this.screen.tap({ x: 0, y: 0 });
+      console.log("tap");
       RF.Utils.sleep(gSleepWaitPageLong);
       return false;
     }
@@ -915,8 +1085,43 @@ MLB9I.prototype.goMainPage = function () {
   return this.goToPage(gMainPage, 60, gSleepShort, true);
 };
 
-MLB9I.prototype.handlePowerSaveMode = function () {
-  console.log("handlePowerSaveMode");
+MLB9I.prototype.handleSetPowerSave = function () {
+  if (!this.goMainPage()) {
+    console.log("cannot go to main page");
+    return false;
+  }
+  RF.Utils.sleep(gSleepShort);
+
+  this.screen.tap(gMainPageBtns.settings);
+  console.log("click setting button");
+  RF.Utils.sleep(gSleepMedium);
+
+  if (!gSettingsPage.isMatchScreen(this.screen)) {
+    console.log("cannot go to setting page");
+    return false;
+  }
+
+  this.screen.tap(gSettingsPageBtns.graphicTab);
+  console.log("click graphic tab");
+  RF.Utils.sleep(gSleepShort);
+
+  // ensure is switched on
+  var screenshot = getScreenshot();
+  var rgb = getImageColor(
+    screenshot,
+    gSettingsPageBtns.graphicTabPowerSaveOn.x,
+    gSettingsPageBtns.graphicTabPowerSaveOn.y
+  );
+  if (rgb.r !== 8 || rgb.g !== 118 || rgb.b !== 255) {
+    this.screen.tap(gSettingsPageBtns.graphicTabPowerSaveOn);
+    console.log("click power save mode on");
+    RF.Utils.sleep(gSleepShort);
+  }
+  return true;
+};
+
+MLB9I.prototype.handlePowerSavingPage = function () {
+  console.log("handlePowerSavingPage");
   this.screen.tapDown({ x: 100, y: 180 });
   RF.Utils.sleep(gSleepMedium);
   this.screen.moveTo({ x: 500, y: 180 });
@@ -925,20 +1130,31 @@ MLB9I.prototype.handlePowerSaveMode = function () {
   RF.Utils.sleep(gSleepMedium);
 };
 
-MLB9I.prototype.handleLeagueModeNextSchedule = function () {
-  gLeagueModePanelPageNextSchedule.goNext(this.screen);
-  RF.Utils.sleep(gSleepLong);
+MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
+  console.log("##handle LeagueModeNextSchedulePage");
 
   function goNewGame(tryTime) {
-    // sometime gGameResultOtherPage will show before entering game
-    if (gGameResultOtherPage.isMatchScreen(this.screen)) {
-      this.screen.tap({ x: 0, y: 0 });
-      RF.Utils.sleep(gSleepShort);
+    var screenshot = getScreenshot();
+
+    if (gLeagueModePanelPageNextSchedule.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      gLeagueModePanelPageNextSchedule.goNext(this.screen);
+      RF.Utils.sleep(gSleepLong);
       return false;
     }
-    if (gLeagueNewGamePage.isMatchScreen(this.screen)) {
+    // sometime gGameResultOtherPage will show before entering game
+    if (gGameResultOtherPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      this.screen.tap({ x: 0, y: 0 });
+      RF.Utils.sleep(gSleepMedium);
+      return false;
+    }
+    if (gLeagueNewGamePage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      RF.Utils.sleep(gSleepShort);
       return true;
     }
+    releaseImage(screenshot);
     RF.Utils.sleep(gSleepShort);
     return false;
   }
@@ -951,10 +1167,11 @@ MLB9I.prototype.handleLeagueModeNextSchedule = function () {
   console.log("check energy");
 
   // handle the energy to choose game
+  var screenshot = getScreenshot();
   var hasEnergy = false;
   for (var y = 274; y < 286 && !hasEnergy; y++) {
     for (var x = 567; x < 572; x++) {
-      var rgb = this.screen.getScreenColor({ x: x, y: y });
+      var rgb = getImageColor(screenshot, x, y);
       if (rgb.r === 24 && rgb.g === 36 && rgb.b === 49) {
         continue;
       }
@@ -963,6 +1180,7 @@ MLB9I.prototype.handleLeagueModeNextSchedule = function () {
     }
   }
   if (!hasEnergy) {
+    releaseImage(screenshot);
     console.log("no energy");
     return !hasEnergy;
   }
@@ -970,7 +1188,7 @@ MLB9I.prototype.handleLeagueModeNextSchedule = function () {
   var has10Energy = false;
   for (var y = 274; y < 286 && !has10Energy; y++) {
     for (var x = 556; x < 564; x++) {
-      var rgb = this.screen.getScreenColor({ x: x, y: y });
+      var rgb = getImageColor(screenshot, x, y);
       if (rgb.r === 24 && rgb.g === 36 && rgb.b === 49) {
         continue;
       }
@@ -982,20 +1200,18 @@ MLB9I.prototype.handleLeagueModeNextSchedule = function () {
 
   // use quick play when has 10+ energy,
   // and slow play when has 10- energy
-  if (
-    has10Energy &&
-    gLeagueNewGamePageQuickPlayOff.isMatchScreen(this.screen)
-  ) {
+  if (has10Energy && gLeagueNewGamePageQuickPlayOff.isMatchImage(screenshot)) {
     gLeagueNewGamePageQuickPlayOff.goNext(this.screen); // select quick play
     console.log("turn on quick play");
   } else if (
     !has10Energy &&
-    gLeagueNewGamePageQuickPlayOn.isMatchScreen(this.screen)
+    gLeagueNewGamePageQuickPlayOn.isMatchImage(screenshot)
   ) {
     gLeagueNewGamePageQuickPlayOn.goNext(this.screen); // cancel quick play
     console.log("turn off quick play");
   }
 
+  releaseImage(screenshot);
   RF.Utils.sleep(gSleepShort);
   gLeagueNewGamePage.goNext(this.screen); // play ball
   console.log("play");
@@ -1048,8 +1264,9 @@ MLB9I.prototype.handleEnterLeagueGame = function () {
       6000,
       2
     );
+    console.log(pageName);
     if (pageName === "gLeagueModePanelPageNextSchedule") {
-      hasError = !this.handleLeagueModeNextSchedule();
+      hasError = !this.handleLeagueModeNextSchedulePage();
       return true;
     }
     if (pageName === "gLeagueModePanelPageContinue") {
@@ -1060,32 +1277,50 @@ MLB9I.prototype.handleEnterLeagueGame = function () {
       return true;
     }
 
-    if (gMainPage.isMatchScreen(this.screen)) {
+    var screenshot = getScreenshot();
+    if (gMainPage.isMatchImage(screenshot)) {
+      console.log("main page");
+      releaseImage(screenshot);
       RF.Utils.sleep(gSleepShort);
       return false;
     }
-    if (gUnexpectedErrorPage.isMatchScreen(this.screen)) {
+    if (gUnexpectedErrorPage.isMatchImage(screenshot)) {
+      console.log("unexpected page");
+      releaseImage(screenshot);
       gUnexpectedErrorPage.goNext(this.screen);
       RF.Utils.sleep(gSleepWaitPageLong);
       return false;
     }
-    if (gNextPage.isMatchScreen(this.screen)) {
+    if (gNextPage.isMatchImage(screenshot)) {
+      console.log("next page");
+      releaseImage(screenshot);
       gNextPage.goNext(this.screen);
       RF.Utils.sleep(gSleepShort);
       return false;
     }
-    if (gNextPage2.isMatchScreen(this.screen)) {
+    if (gNextPage2.isMatchImage(screenshot)) {
+      console.log("next2 page");
+      releaseImage(screenshot);
       gNextPage2.goNext(this.screen);
       RF.Utils.sleep(gSleepShort);
       return false;
     }
-    if (gNewSeasonPage.isMatchScreen(this.screen)) {
+    if (gLeagueRewardAchievementGradePage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      console.log("league reward achievement");
+      gLeagueRewardAchievementGradePage.goNext(this.screen);
+      RF.Utils.sleep(gSleepMedium);
+      return false;
+    }
+    if (gNewSeasonPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
       console.log("new season");
       gNewSeasonPage.goNext(this.screen);
       RF.Utils.sleep(gSleepMedium);
       return false;
     }
-    if (gEndSeasonPage.isMatchScreen(this.screen)) {
+    if (gEndSeasonPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
       console.log("end season");
       this.screen.tap({ x: 182, y: 178 }); // tap new season of left
       RF.Utils.sleep(gSleepMedium);
@@ -1093,7 +1328,8 @@ MLB9I.prototype.handleEnterLeagueGame = function () {
       RF.Utils.sleep(gSleepMedium);
       return false;
     }
-    if (gSelectSeasonModePage.isMatchScreen(this.screen)) {
+    if (gSelectSeasonModePage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
       console.log("handle select season page");
       gSelectSeasonModePage.goNext(this.screen);
       RF.Utils.sleep(gSleepMedium);
@@ -1103,22 +1339,53 @@ MLB9I.prototype.handleEnterLeagueGame = function () {
       RF.Utils.sleep(gSleepMedium);
       return false;
     }
-    if (gSelectYearPage.isMatchScreen(this.screen)) {
+    if (gSelectYearPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
       console.log("handle select year page");
       gSelectYearPage.goNext(this.screen);
       this.screen.tap({ x: 285, y: 303 });
       RF.Utils.sleep(gSleepMedium);
       return false;
     }
-    if (gSelectLeagueGameAmountPage.isMatchScreen(this.screen)) {
+    if (gSelectLeagueGameAmountPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
       console.log("handle select game amount page");
-      this.screen.tap({ x: 529, y: 143 }); // select play post season
+
+      // use config user setted to select which they want to play
+      // TODO: handle the half, quarter, full has 2 next page
+      switch (this.config.leagueSeasonMode) {
+        case "full":
+          console.log("select full league");
+          this.screen.tap(gSelectLeagueGameAmountPageBtns["full"]);
+          RF.Utils.sleep(gSleepShort);
+          this.screen.tap({ x: 564, y: 328 }); // go next
+          break;
+        case "half":
+          console.log("select 1/2 league");
+          this.screen.tap(gSelectLeagueGameAmountPageBtns["half"]);
+          RF.Utils.sleep(gSleepShort);
+          this.screen.tap({ x: 564, y: 328 }); // go next
+          break;
+        case "quarter":
+          console.log("select 1/4 league");
+          this.screen.tap(gSelectLeagueGameAmountPageBtns["quarter"]);
+          RF.Utils.sleep(gSleepShort);
+          this.screen.tap({ x: 564, y: 328 }); // go next
+          break;
+        case "postSeason":
+          console.log("select postSeason");
+          this.screen.tap(gSelectLeagueGameAmountPageBtns["postSeason"]);
+          break;
+      }
       RF.Utils.sleep(gSleepMedium);
       this.screen.tap({ x: 564, y: 328 }); // go next
       RF.Utils.sleep(gSleepLong);
       return false;
     }
+
+    releaseImage(screenshot);
     RF.Utils.sleep(gSleepMedium);
+    console.log("not match????");
     return false;
   }
 
@@ -1151,7 +1418,7 @@ MLB9I.prototype.handlePlayGame = function () {
     if (this.goToPage(gGameResultOtherPage, 15)) {
       console.log("reach GameResultOther");
       gGameResultOtherPage.goNext(this.screen);
-      RF.Utils.sleep(gSleepShort);
+      RF.Utils.sleep(gSleepMedium);
       return true;
     }
 
@@ -1200,7 +1467,14 @@ MLB9I.prototype.taskPlayLeagueMode = function () {
 
 var mlb9i;
 function start() {
-  mlb9i = new MLB9I();
+  var config = defaultConfig;
+  if (typeof jsonConfig === "string") {
+    config = JSON.parse(jsonConfig);
+  } else if (typeof jsonConfig === "object") {
+    config = jsonConfig;
+  }
+
+  mlb9i = new MLB9I(config);
   mlb9i.start();
 }
 function stop() {
