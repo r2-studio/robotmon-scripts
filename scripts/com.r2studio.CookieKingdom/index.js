@@ -9,7 +9,7 @@ var config = {
   goodsTarget: 300,
   productSafetyStock: 10,
   skipMagicLabProduction: true,
-  magicLabProductIndex: 1,
+  magicLabProductIndex: 13,
   autoCollectMailIntervalInMins: 120,
   autoCollectFountainIntervalInMins: 40,
   autoCollectTrainIntervalInMins: 20,
@@ -36,7 +36,7 @@ var config = {
   autoGuildClaimNewLand: false,
   autoGuildBattleDragon: false,
   autoHandleBountiesIntervalInMins: 180,
-  autoBountiesCheckBluePower: false,
+  autoBountiesCheckBluePower: true,
   autoLabResearch: false,
   autoResearchKingdom: true,
   autoResearchCookies: true,
@@ -91,7 +91,6 @@ var config = {
   findProductionTimes: 4,
   wishRefreshThreashold: 5,
   searchHouseCount: 0,
-  bountyGotoNextLevel: true,
   keepProduceUntilWoodEnough: true,
   loginRetryMaxTimes: 2,
   loginRetryCount: 0,
@@ -213,11 +212,12 @@ var pageInKingdomVillage = [
 ];
 
 var pageInLoginPageWithGearAndVideo = [
-  {x: 623, y: 14, r: 231, g: 231, b: 231},
-  {x: 616, y: 18, r: 134, g: 139, b: 134},
-  {x: 591, y: 16, r: 231, g: 231, b: 232},
-  {x: 596, y: 16, r: 231, g: 231, b: 232},
-  {x: 587, y: 17, r: 231, g: 231, b: 232},
+  {x: 621, y: 13, r: 233, g: 233, b: 235},
+  {x: 622, y: 16, r: 3, g: 4, b: 9},
+  {x: 597, y: 16, r: 233, g: 235, b: 239},
+  {x: 593, y: 16, r: 4, g: 6, b: 11},
+  {x: 590, y: 17, r: 233, g: 235, b: 239},
+  {x: 594, y: 23, r: 14, g: 14, b: 25},
 ]
 
 var pageLoginFacebook = [
@@ -260,12 +260,6 @@ var pageChooseLoginMethod = [
 // Smaller icons (Android 7), not updated for 5 options
 var pageChooseLoginMethod2 = [
   { x: 251, y: 245, r: 255, g: 95, b: 0 },
-  // { x: 373, y: 243, r: 255, g: 255, b: 255 },
-  // { x: 247, y: 203, r: 66, g: 103, b: 178 },
-  // { x: 252, y: 205, r: 255, g: 255, b: 255 },
-  // { x: 250, y: 166, r: 0, g: 1, b: 0 },
-  // { x: 249, y: 123, r: 234, g: 67, b: 53 },
-  // { x: 250, y: 127, r: 255, g: 255, b: 255 },
 ];
 
 var pageAnnouncement = [
@@ -278,6 +272,13 @@ var pageAnnouncement = [
   { x: 25, y: 321, r: 75, g: 75, b: 75 },
 ];
 
+var pageInMailBox = [
+  {x: 609, y: 11, r: 57, g: 166, b: 231},
+  {x: 609, y: 19, r: 255, g: 255, b: 255},
+  {x: 53, y: 130, r: 255, g: 239, b: 214},
+  {x: 37, y: 33, r: 57, g: 69, b: 107},
+]
+
 var pageInFountain = [
   { x: 505, y: 305, r: 121, g: 207, b: 12 },
   { x: 569, y: 310, r: 219, g: 207, b: 199 },
@@ -286,7 +287,7 @@ var pageInFountain = [
 ];
 
 var pageNotCollapsedWisingTree = [
-  {x: 99, y: 291, r: 168, g: 89, b: 234},
+  {x: 107, y: 300, r: 132, g: 186, b: 250},
   {x: 108, y: 299, r: 130, g: 184, b: 209},
   {x: 120, y: 334, r: 49, g: 85, b: 123},
 ];
@@ -357,7 +358,7 @@ var pageCheckWishingTreeStock = [
 ]
 
 var pageInTropicalIsland = [
-  {x: 38, y: 297, r: 137, g: 235, b: 74},
+  {x: 38, y: 333, r: 255, g: 97, b: 173},
   {x: 49, y: 323, r: 239, g: 77, b: 140},
   {x: 62, y: 341, r: 44, g: 81, b: 118},
 ];
@@ -833,12 +834,9 @@ function checkIsPage(page, diff, img) {
     img = getScreenshot();
     release = true;
   }
+
   var whSize = getImageSize(img);
-  if (whSize.width === 360) {
-    console.log('image width === 360, restart CookieKingdom wait at most 50s');
-    checkAndRestartApp();
-    img = getScreenshot();
-  } else if (whSize.height !== 360 || whSize.width !== 640) {
+  if (whSize.height !== 360 || whSize.width !== 640) {
     console.log('Reboot nox as screen size incorrect: ', whSize.height, whSize.width, ' (h/w)');
     execute('/system/bin/reboot -p');
   }
@@ -1103,7 +1101,6 @@ function ocrMaterialStorage(x, y, w, h) {
   // console.log('=> ', JSON.stringify(results));
 
   releaseImage(croppedImage);
-
   return ocrResultToInt(results);
 }
 
@@ -1440,8 +1437,6 @@ function makeGoodsToTarget(target, prework, stocks) {
         stocks.push({
           id: i,
           value: value,
-          // productionTarget: productionTarget,
-          // stockTargetFullfilledPercent: value / productionTarget,
           requirements: prodReqList[i],
           canProduce: canProduce,
         });
@@ -1475,7 +1470,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         prodReqList = prodReqList.concat(findProductRequirements([310]));
       }
 
-      var productionTarget = [
+      var productionItems = [
         goodsOneStock,
         goodsTwoStock,
         goodsThreeStock,
@@ -1484,7 +1479,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         goodsFiveStock,
         goodsSixStock,
       ];
-      productionTarget.forEach(function (value, i) {
+      productionItems.forEach(function (value, i) {
         var canProduce = value !== -1 ? true : false;
         // console.log('>', i, JSON.stringify(prodReqList[i]));
         if (prodReqList[i] !== undefined) {
@@ -1504,8 +1499,6 @@ function makeGoodsToTarget(target, prework, stocks) {
         stocks.push({
           id: i,
           value: value,
-          // productionTarget: productionTarget,
-          // stockTargetFullfilledPercent: value / productionTarget,
           requirements: prodReqList[i],
           canProduce: canProduce,
         });
@@ -1741,7 +1734,7 @@ function JobScheduling() {
       return true;
     }
     else if (config.magicLabProductIndex !== 0) {
-      console.log('Its magic lab, build selected {}th item'.format(config.magicLabProductIndex));
+      console.log('Its magic lab, build selected {0}th item'.format(config.magicLabProductIndex));
       return makeMagicLabGoodsToTarget();
     } else {
       console.log('Magic lab produce the same way as other product buildings')
@@ -1803,9 +1796,25 @@ function JobScheduling() {
     if (
       checkIsPage(pageWoodFarm) &&
       config.keepProduceUntilWoodEnough &&
-      materialCount < Math.min(100, config.materialsTarget)
+      materialCount < Math.min(300, config.materialsTarget)
     ) {
-      console.log('keep producing until wood is enough: ', Math.min(100, config.materialsTarget));
+      console.log('keep producing until wood is enough: ', materialCount, Math.min(300, config.materialsTarget));
+      config.lastGotoProduction = Date.now();
+    }
+    else if (
+      checkIsPage(pageBeanFarm) &&
+      config.keepProduceUntilWoodEnough &&
+      materialCount < Math.min(200, config.materialsTarget)
+    ) {
+      console.log('keep producing until bean is enough: ', materialCount, Math.min(200, config.materialsTarget));
+      config.lastGotoProduction = Date.now();
+    }
+    else if (
+      checkIsPage(pageSugarFarm) &&
+      config.keepProduceUntilWoodEnough &&
+      materialCount < Math.min(200, config.materialsTarget)
+    ) {
+      console.log('keep producing until sugar is enough: ', materialCount, Math.min(200, config.materialsTarget));
       config.lastGotoProduction = Date.now();
     }
 
@@ -1910,6 +1919,30 @@ function handleNotEnoughStock() {
   return false;
 }
 
+// This window can change language
+var pageNewDataPackAvailable = [
+  {x: 358, y: 265, r: 123, g: 205, b: 8},
+  {x: 373, y: 219, r: 8, g: 165, b: 219},
+  {x: 210, y: 190, r: 255, g: 255, b: 255},
+  {x: 258, y: 83, r: 57, g: 69, b: 106},
+  {x: 246, y: 125, r: 153, g: 147, b: 139},
+];
+var pageNewDataPackDownloadFailed = [
+  {x: 350, y: 245, r: 123, g: 205, b: 8},
+  {x: 342, y: 107, r: 57, g: 69, b: 106},
+  {x: 264, y: 245, r: 221, g: 205, b: 195},
+]
+
+// If already choose language in pageNewDataPackAvailable
+var pageNewDataPackAvaiableNoLanguage = [
+  {x: 366, y: 252, r: 123, g: 205, b: 8},
+  {x: 398, y: 254, r: 221, g: 205, b: 195},
+  {x: 263, y: 254, r: 147, g: 217, b: 57},
+  {x: 246, y: 254, r: 221, g: 205, b: 195},
+  {x: 341, y: 96, r: 255, g: 255, b: 255},
+  {x: 284, y: 99, r: 253, g: 253, b: 251,}
+]
+
 function handleUnexpectedMessageBox() {
   if (checkIsPage(pagePurchaseDiamond)) {
     console.log('Accidentally goto purchase diamond page, hit back twice');
@@ -1956,6 +1989,25 @@ function handleUnexpectedMessageBox() {
     return false;
   }
 
+  if (checkIsPage(pageCookieKingdomIsNotResponding)) {
+    console.log('Found pageCookieKingdomIsNotResponding, press it');
+    qTap(pageCookieKingdomIsNotResponding);
+    sleep(2000);
+    return false;
+  }
+  if (checkIsPage(pageCookieKingdomIsNotResponding2)) {
+    console.log('Found pageCookieKingdomIsNotResponding2, press it');
+    qTap(pageCookieKingdomIsNotResponding2);
+    sleep(2000);
+    return false;
+  }
+  if (checkIsPage(pageCookieKingdomHasStopped)) {
+    console.log('Found pageCookieKingdomHasStopped, press it');
+    qTap(pageCookieKingdomHasStopped);
+    sleep(2000);
+    return false;
+  }
+
   if (checkScreenMessage(theReloginIntoAnotherDeviceMessageScreen)) {
     config.lastNetworkIssueOccurTime = Date.now();
     config.networkIssueCount++;
@@ -1967,6 +2019,71 @@ function handleUnexpectedMessageBox() {
       console.log('Detect relogin, wait: ', i, '/', config.sleepWhenDoubleLoginInMinutes, 'mins to restart...');
     }
     return true;
+  }
+
+  if (checkIsPage(pageNewDataPackAvailable) || checkIsPage(pageNewDataPackAvaiableNoLanguage)) {
+    console.log('New data pack available found, tap and wait for download');
+    qTap(pageNewDataPackAvailable);
+    sleep(10000);
+    for (i = 0; i < 18; i++) {
+      if (checkIsPage(pageNewDataPackDownloadFailed)) {
+        console.log('Failed to doenload resources, tap to continue');
+        qTap(pageNewDataPackDownloadFailed);
+        break;
+      }
+      // wait for yellow bar (download progress bar) disapper
+      if (!checkIsPage([{ x: 16, y: 349, r: 255, g: 210, b: 76 }])) {
+        console.log('download finished');
+        break;
+      }
+      console.log('wait for download: ', i);
+      sleep(3000);
+    }
+  }
+
+  handleBTSIntro();
+}
+
+function handleBTSIntro() {
+  var pageACookieIntroBTSRoom = [
+    {x: 167, y: 322, r: 205, g: 142, b: 247},
+    {x: 218, y: 21, r: 65, g: 14, b: 24},
+    {x: 315, y: 20, r: 67, g: 54, b: 0},
+    {x: 423, y: 18, r: 0, g: 34, b: 67},
+  ];
+
+  if (!checkIsPage(pageAnnouncement) && checkIsPage(pageACookieIntroBTSRoom)) {
+    console.log('Found pageACookieIntroBTSRoom, tap into');
+    qTap(pageACookieIntroBTSRoom);
+    sleep(2000);
+    qTap(pageACookieIntroBTSRoom);
+    sleep(2000);
+  }
+
+  var pageInBTSTrailer = [
+    {x: 524, y: 333, r: 107, g: 52, b: 231},
+    {x: 33, y: 326, r: 255, g: 255, b: 255},
+    {x: 24, y: 18, r: 209, g: 142, b: 242},
+    {x: 24, y: 14, r: 206, g: 130, b: 244},
+  ];
+  // var pageInBTSTrailerLeaving = [
+  //   {x: 619, y: 12, r: 49, g: 162, b: 231},
+  //   {x: 524, y: 19, r: 86, g: 86, b: 86},
+  //   {x: 28, y: 16, r: 86, g: 70, b: 45},
+  // ]
+  if (checkIsPage(pageInBTSTrailer)) {
+    console.log('found pageInBTSTrailer, leaving');
+
+    for (var i = 0; i < 20; i ++) {
+      if (checkIsPage(pageInBTSTrailer)) {
+        console.log('trying to leave the BTS trailer: ', i)
+        qTap(pnt(620, 20));
+        sleep(2000);
+      } else {
+        console.log('Finally left the BTS trailer')
+        break;
+      }
+    }
   }
 }
 
@@ -1998,7 +2115,7 @@ function handleWelcomePage() {
     qTap(pnt(324, 329));
     sleep(config.sleepAnimate);
 
-    while (true) {
+    for (var i = 0; i < 5; i ++) {
       if (checkIsPage(pageAnnouncement)) {
         qTap(pageAnnouncement);
         sleep(config.sleepAnimate);
@@ -2064,7 +2181,7 @@ function findAndTapCandy() {
     handleTryHitBackToKingdom();
 
     var remainingCandy = findSpecificImageInScreen(candy, 0.91);
-    console.log('candies left > ', JSON.stringify(remainingCandy));
+    console.log('candies left > ', i, JSON.stringify(remainingCandy));
     if (remainingCandy.length === 0) {
       config.lastCollectCandyTime = Date.now();
       console.log('Candy collected successfully');
@@ -2313,18 +2430,18 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage, swipingPag
   var step_y = (toPnt.y - fromPnt.y) / steps;
 
   tapDown(fromPnt.x, fromPnt.y, 40, 0, id);
-  sleep(100);
+  sleep(10);
   moveTo(fromPnt.x, fromPnt.y, 40, 0, id);
-  sleep(100);
+  sleep(10);
 
   for (var i = 0; i < steps; i++) {
     moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0, id);
     // console.log('in pnt: ', fromPnt.x + step_x * i, fromPnt.y + step_y * i)
-    sleep(80);
+    sleep(50);
   }
 
   moveTo(toPnt.x, toPnt.y, 40, 0, id);
-  sleep(900);
+  sleep(500);
   tapUp(toPnt.x, toPnt.y, 40, 0, id);
   sleep(config.sleepAnimate);
 
@@ -3012,7 +3129,7 @@ function handleInputLoginInfo() {
 
     // Touch here to start:
     console.log('successfully input password, tap announcement icon for 10s');
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 100; i++) {
       if (checkIsPage(pageAnnouncement) || checkIsPage(pageInKingdomVillage)) {
         console.log('found announcement page, return from handleInputLoginInfo');
         return true;
@@ -3033,8 +3150,8 @@ function handleInputLoginInfo() {
       }
 
       qTap(pnt(575, 22));
-      sleep(2000);
-      console.log('tapping (575, 22) until the game start: ', i);
+      sleep(3000);
+      console.log('tapping (575, 22) until the game start: ', i, '/100');
     }
     return true;
   }
@@ -3260,22 +3377,9 @@ function handleTryHitBackToKingdom() {
       return true;
     }
 
-    var img = getScreenshot();
-    var whSize = getImageSize(img);
-    if (whSize.width !== 640) {
-      console.log('Incorrect screen width, checkAndRestartApp()');
-      checkAndRestartApp();
-    }
+    checkAndRestartApp();
 
-    var upperRightImage = cropImage(img, 583, 1, 54, 40);
-    var foundResults = findImages(upperRightImage, loginGearIcon, 0.92, 1, true);
-    releaseImage(img);
-    releaseImage(upperRightImage);
-    if (foundResults.length > 0) {
-      console.log('handleTryHitBackToKingdom found in login page, tap tap(575, 22) announcement point');
-      qTap(pnt(575, 22));
-      return true;
-    }
+    handleCheckIfAtLoginScreen();
   }
   return false;
 }
@@ -3292,8 +3396,8 @@ function getCurrentApp() {
       app = '';
       activity = '';
       var isApp = true;
-      for (var i = p + 9; i < line.length; i++) {
-        var c = line[i];
+      for (var j = p + 9; j < line.length; j++) {
+        var c = line[j];
         if (c === ' ') {
         } else if (c === '/') {
           isApp = false;
@@ -3303,6 +3407,7 @@ function getCurrentApp() {
           activity += c;
         }
       }
+      break;
     }
   }
   // console.log('Current app: ', app, activity);
@@ -3313,7 +3418,6 @@ function handleAutoCollectMail() {
   console.log('About to collect mails');
   if (!checkIsPage(pageInKingdomVillage)) {
     handleGotoKingdomPage();
-    return;
   }
 
   var pageHasUnreadMails = [
@@ -3804,11 +3908,6 @@ function handleGetDailyRewards() {
     { x: 355, y: 328, r: 148, g: 81, b: 74 },
     { x: 418, y: 320, r: 132, g: 16, b: 8 },
   ];
-  var pageInGachaWithDisneyEvent = [
-    { x: 31, y: 10, r: 148, g: 81, b: 66 },
-    { x: 32, y: 55, r: 56, g: 74, b: 107 },
-    { x: 31, y: 68, r: 255, g: 255, b: 255 },
-  ];
   if (checkIsPage(pageGacha)) {
     console.log('about to get daily free gacha gifts, send running');
     sendEvent('running', '');
@@ -3817,20 +3916,6 @@ function handleGetDailyRewards() {
     sleep(config.sleepAnimate * 4);
     qTap(pnt(30, 70)); // Tap the first icon
     sleep(config.sleepAnimate * 2);
-
-    var pageDailyGift;
-    if (checkIsPage(pageInGachaWithDisneyEvent)) {
-      pageDailyGift = [
-        { x: 36, y: 285, r: 205, g: 204, b: 205 },
-        { x: 31, y: 266, r: 88, g: 86, b: 88 },
-      ];
-    } else {
-      pageDailyGift = [
-        { x: 48, y: 207, r: 255, g: 0, b: 0 },
-        { x: 48, y: 230, r: 88, g: 86, b: 88 },
-        { x: 36, y: 230, r: 205, g: 204, b: 205 },
-      ];
-    }
 
     var pageDailyGiftNotClaimed = [
       { x: 604, y: 330, r: 123, g: 207, b: 8 },
@@ -3852,23 +3937,26 @@ function handleGetDailyRewards() {
       {x: 177, y: 241, r: 175, g: 139, b: 58},
     ]
 
-    qTap(pageDailyGift);
-    if (checkIsPage(pageDailyGiftClaimed)) {
-      console.log('Daily gacha gift already claimed');
-      handleGotoKingdomPage();
-      return true;
-    }
-    if (waitUntilSeePage(pageDailyGiftNotClaimed, 5)) {
-      qTap(pageDailyGiftNotClaimed);
-
-      if (waitUntilSeePage(pageDailyGiftClaimed, 5, pageDailyGiftNotClaimed)) {
-        console.log('Daily gacha gift claimed successfully: ');
+    var dailyGiftYs = [280, 225, 330];
+    for (var i in dailyGiftYs) {
+      qTap(pnt(30, dailyGiftYs[i]));
+      if (waitUntilSeePage(pageDailyGiftClaimed, 2)) {
+        console.log('Daily gacha gift already claimed');
         handleGotoKingdomPage();
         return true;
       }
-    }
-    else if (checkIsPage(pageDailyWatchAddGift)) {
-      // Not doing it for now as seems like will stuck in ads
+      if (checkIsPage(pageDailyGiftNotClaimed)) {
+        qTap(pageDailyGiftNotClaimed);
+
+        if (waitUntilSeePage(pageDailyGiftClaimed, 5, pageDailyGiftNotClaimed)) {
+          console.log('Daily gacha gift claimed successfully: ');
+          handleGotoKingdomPage();
+          return true;
+        }
+      }
+      else if (checkIsPage(pageDailyWatchAddGift)) {
+        // Not doing it for now as seems like will stuck in ads
+      }
     }
 
     console.log('daily gacha gift NOT claimed');
@@ -4040,21 +4128,6 @@ var b64NS_2 =
 var b64NS_3 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD8pfjX8df2a/jD8GPhJ8BPHHxw8ZyQfDvwZHcX/iXR/h3FqNxqeuX6RC5tZHvNVtX8jTrCy0XSoGwwZdOk8sLAsGSiinddiHBt6Sa+7/I//9k=';
 
-function identityColor(e1, e2) {
-  var mean = (e1.r + e2.r) / 2;
-  var r = e1.r - e2.r;
-  var g = e1.g - e2.g;
-  var b = e1.b - e2.b;
-  return 1 - Math.sqrt((((512 + mean) * r * r) >> 8) + 4 * g * g + (((767 - mean) * b * b) >> 8)) / 768;
-}
-
-function identifyPointColor(pnt, color) {
-  var img = getScreenshot();
-  var imgColor = getImageColor(img, pnt.x, pnt.y);
-  releaseImage(img);
-  return identityColor(imgColor, color);
-}
-
 function recognizeWishingTreeRequirements(words, devImg, maxLength, thres, overlapRatio) {
   var maxWordWidth = 0;
   var allResults = [];
@@ -4076,7 +4149,7 @@ function recognizeWishingTreeRequirements(words, devImg, maxLength, thres, overl
   var rBound = 0;
   var maxScore = 0;
   for (var i = 0; i < allResults.length; i++) {
-    var word = allResults[i];
+    word = allResults[i];
 
     // console.log('word', word.char, rBound, 'x', word.x, word.score);
     if (word.x > rBound) {
@@ -4093,53 +4166,9 @@ function recognizeWishingTreeRequirements(words, devImg, maxLength, thres, overl
   return str;
 }
 
-function findWishingTreeWords() {
-  var partUp = [126, 240, 354, 470];
-  var img = getScreenshot();
-  var parts = [];
-  for (var i = 0; i < partUp.length; i++) {
-    if (identifyPointColor(pnt(partUp[i], 180), { r: 255, g: 249, b: 203 }) > 0.92) {
-      // qTap(foldedWishTipPnt);
-      // sleep(config.sleepAnimate);
-      continue;
-    }
-
-    var line1 = '';
-    var line2 = '';
-    var cImg1 = cropImage(img, partUp[i], 202, 110, 18);
-    line1 = recognizeWishingTreeRequirements(numberImagesWishingTree, cImg1, 12, 0.8, 0.9);
-    releaseImage(cImg1);
-
-    var cImg2 = cropImage(img, partUp[i], 240, 110, 14);
-    line2 = recognizeWishingTreeRequirements(numberImagesWishingTree, cImg2, 12, 0.84, 0.9);
-    releaseImage(cImg2);
-
-    // console.log(line1);
-    // console.log(line2);
-
-    line1 = line1.trim();
-    line2 = line2.trim();
-    var line = (line1 + ' ' + line2).replace('  ', ' ').replace('  ', ' ').replace('  ', ' ').trim();
-    var lines = line.split(' ');
-    var needed = [];
-    for (var j = 0; j < lines.length; j++) {
-      var str = lines[j];
-      var vs = str.split('/');
-      if (vs.length === 2) {
-        needed.push({ own: +vs[0] || 0, request: +vs[1] || 0, success: true });
-      } else {
-        needed.push({ own: 0, request: 0, success: false });
-      }
-    }
-    parts.push(needed);
-  }
-  releaseImage(img);
-  // console.log(JSON.stringify(parts));
-  return parts;
-}
-
-function genWish(refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status, requirementIconPnts) {
+function genWish(id, refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status, requirementIconPnts) {
   return {
+    id: id,
     refreshPnt: refreshPnt,
     unfoldPnt: unfoldPnt,
     fulfillPnt: fulfillPnt,
@@ -4350,7 +4379,7 @@ function handleWishingTree() {
     }
   }
 
-  return handleInWishingTree2();
+  return handleInWishingTree();
 }
 
 function getStatusOfGivenWish(wish, records) {
@@ -4407,7 +4436,7 @@ function checkToSendSpecificWish(wish, records) {
     var reqPnt = wish.requirementIconPnts[pntIdx];
 
     if (isSameColorAtPnt(reqPnt, { r: 255, g: 251, b: 206}) || isSameColorAtPnt(reqPnt, { r: 255, g: 255, b: 142})) {
-      console.log('This point has no item, skipping:', pntIdx);
+      // console.log('This point has no item, skipping:', pntIdx);
       continue;
     }
 
@@ -4443,7 +4472,6 @@ function checkToSendSpecificWish(wish, records) {
     // console.log('|>', pntIdx, JSON.stringify(stockAndReq))
     if (stockAndReq.length === 0 || (stockAndReq[0] - stockAndReq[1] < config.wishingTreeSafetyStock)) {
       console.log('Skip this one as the stock {0} is lower than config {1}, need {2}'.format(stockAndReq[0], config.wishingTreeSafetyStock, stockAndReq[1]));
-      // aa++
       qTap(wish.refreshPnt);
       sleep(config.sleep);
       wish.status = 'refresh';
@@ -4456,12 +4484,24 @@ function checkToSendSpecificWish(wish, records) {
   console.log('Stock is enough, fulfill this wish', JSON.stringify(wish));
   qTap(wish.fulfillPnt);
   sleep(config.sleep);
-  records['fulfilled'] ++;
 
+  if (checkIsPage(pageNotEnoughForTree)) {
+    qTap(pageNotEnoughForTree);
+    sleep(config.sleepAnimate * 2);
+    console.log('wish ', wish.id, ' tapped but not enough stock (wrong ocr?), refresh it');
+
+    qTap(wish.refreshPnt);
+    sleep(config.sleepAnimate);
+    wish.status = 'refresh';
+    return {wish: wish, records: records};
+  }
+
+  console.log('wish ', wish.id, ' is fulfilled');
+  records['fulfilled'] ++;
   return {wish: wish, records: records};
 }
 
-function handleInWishingTree2() {
+function handleInWishingTree() {
   if (!checkIsPage(pageInWishingTree)) {
     console.log('handleInWishingTree cannot find the wishing tree, skipping');
     return false;
@@ -4472,28 +4512,28 @@ function handleInWishingTree2() {
 
   // wish(refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status, requirementIconPnts)
   var wishes = [
-    genWish(pnt(183, 79), pnt(183, 180), pnt(183, 283), undefined, 'unknown',
+    genWish(0, pnt(183, 79), pnt(183, 180), pnt(183, 283), undefined, 'unknown',
     {
       0: pnt(162, 198),
       1: pnt(198, 198),
       2: pnt(162, 235),
       3: pnt(198, 235),
     }),
-    genWish(pnt(295, 79), pnt(295, 180), pnt(295, 283), undefined, 'unknown',
+    genWish(1, pnt(295, 79), pnt(295, 180), pnt(295, 283), undefined, 'unknown',
     {
       0: pnt(275, 198),
       1: pnt(312, 198),
       2: pnt(275, 235),
       3: pnt(312, 235),
     }),
-    genWish(pnt(400, 79), pnt(400, 180), pnt(400, 283), undefined, 'unknown',
+    genWish(2, pnt(400, 79), pnt(400, 180), pnt(400, 283), undefined, 'unknown',
     {
       0: pnt(390, 198),
       1: pnt(425, 198),
       2: pnt(390, 235),
       3: pnt(425, 235),
     }),
-    genWish(pnt(520, 79), pnt(520, 180), pnt(520, 283), undefined, 'unknown',
+    genWish(3, pnt(520, 79), pnt(520, 180), pnt(520, 283), undefined, 'unknown',
     {
       0: pnt(508, 198),
       1: pnt(545, 198),
@@ -4511,21 +4551,15 @@ function handleInWishingTree2() {
     'goldenAndSkip': 0
   }
 
-  while (true) {
-    if ((Date.now() - wishingTreeStartTime) / 60000 > config.wishingTreeMaxFillingMins) {
-      console.log('Run wishing tree longer than ', config.wishingTreeMaxFillingMins, ' mins, ending this task');
-      return true;
-    }
-
+  while ((Date.now() - wishingTreeStartTime) / 60000 < config.wishingTreeMaxFillingMins) {
     var pageAllDailyRewardCollect = [
       { x: 59, y: 242, r: 247, g: 247, b: 247 },
       { x: 60, y: 256, r: 138, g: 138, b: 138 },
     ];
     if (checkIsPage(pageAllDailyRewardCollect) && !config.alwaysFulfillWishes) {
       console.log('All wish fulfilled, skipping and send running');
-      handleGotoKingdomPage();
       sendEvent('running', '');
-      return true;
+      break;
     }
 
     var refreshing = 0;
@@ -4546,8 +4580,6 @@ function handleInWishingTree2() {
         wish = result['wish'];
         records = result['records'];
         console.log('handled wish', i, JSON.stringify(wish));
-        // console.log('>>>', JSON.stringify(records))
-        // return;
       }
 
       sleep(config.sleep)
@@ -4567,190 +4599,15 @@ function handleInWishingTree2() {
       break;
     }
   }
-  // return handleTryHitBackToKingdom();
+  console.log('Run wishing tree for ', (Date.now() - wishingTreeStartTime) / 60000, ' mins, ending this task');
+
+  handleTryHitBackToKingdom();
+  if (checkIsPage(pageUncollapsedAffairs)) {
+    qTap(pageUncollapsedAffairs);
+  }
+
+  return true;
 }
-
-// function handleInWishingTree() {
-//   if (!checkIsPage(pageInWishingTree)) {
-//     console.log('handleInWishingTree cannot find the wishing tree, skipping');
-//     return false;
-//   }
-
-//   console.log('handleInWishingTree: ', new Date(), 'send running');
-//   sendEvent('running', '');
-
-//   var wishes = [
-//     genWish(pnt(183, 79), pnt(183, 180), pnt(183, 283), undefined, 'unknown'),
-//     genWish(pnt(295, 79), pnt(295, 180), pnt(295, 283), undefined, 'unknown'),
-//     genWish(pnt(400, 79), pnt(400, 180), pnt(400, 283), undefined, 'unknown'),
-//     genWish(pnt(520, 79), pnt(520, 180), pnt(520, 283), undefined, 'unknown'),
-//   ];
-
-//   var wishingTreeStartTime = Date.now();
-//   while (true) {
-//     if ((Date.now() - wishingTreeStartTime) / 60000 > config.wishingTreeMaxFillingMins) {
-//       console.log('Run wishing tree longer than ', config.wishingTreeMaxFillingMins, ' mins, ending this task');
-//       return true;
-//     }
-
-//     var pageAllDailyRewardCollect = [
-//       { x: 59, y: 242, r: 247, g: 247, b: 247 },
-//       { x: 60, y: 256, r: 138, g: 138, b: 138 },
-//     ];
-//     if (checkIsPage(pageAllDailyRewardCollect) && !config.alwaysFulfillWishes) {
-//       console.log('All wish fulfilled, skipping and send running');
-//       handleGotoKingdomPage();
-//       sendEvent('running', '');
-//       return true;
-//     }
-
-//     for (var i in wishes) {
-//       wishes[i].golden = false;
-//       if (identifyPointColor(wishes[i].unfoldPnt, { r: 255, g: 249, b: 203 }) > 0.95) {
-//         wishes[i].status = 'opened';
-//       } else if (identifyPointColor(wishes[i].unfoldPnt, { r: 241, g: 205, b: 126 }) > 0.95) {
-//         qTap(wishes[i].unfoldPnt);
-//         wishes[i].status = 'opened';
-//         sleep(config.sleepAnimate);
-//       } else if (identifyPointColor(wishes[i].refreshPnt, { r: 193, g: 160, b: 111 }) > 0.95) {
-//         wishes[i].status = 'refresh';
-//       } else if (identifyPointColor(wishes[i].unfoldPnt, { r: 252, g: 219, b: 50 }) > 0.95) {
-//         // Folded golden wish
-//         if (config.wishingTreeForceFulfillGoldWishes) {
-//           wishes[i].golden = true;
-//         }
-//         if (config.wishingTreeRefreshGoldenWishes) {
-//           qTap(wishes[i].refreshPnt);
-//           sleep(config.sleepAnimate * 2);
-//           qTap(wishes[i].refreshPnt);
-//           sleep(config.sleepAnimate);
-//           console.log('refresh as it is an unfolded golden wish: ', i);
-//           wishes[i].status = 'refreshed';
-//         } else {
-//           qTap(wishes[i].unfoldPnt);
-//           wishes[i].status = 'opened';
-//           sleep(config.sleepAnimate);
-//         }
-//       } else if (identifyPointColor(wishes[i].unfoldPnt, { r: 252, g: 247, b: 122 }) > 0.95) {
-//         // Expend golden wish
-//         if (config.wishingTreeForceFulfillGoldWishes) {
-//           wishes[i].golden = true;
-//         }
-//         if (config.wishingTreeRefreshGoldenWishes) {
-//           qTap(wishes[i].refreshPnt);
-//           sleep(config.sleepAnimate);
-//           console.log('refresh as it is a golden wish: ', i);
-//           wishes[i].status = 'refreshed';
-//         } else {
-//           wishes[i].status = 'opened';
-//         }
-//       }
-//     }
-
-//     var treeRequirement = findWishingTreeWords();
-//     for (var idx in treeRequirement) {
-//       // Max fail count reached, tap refresh
-//       if (wishes[idx].failedCount >= config.wishRefreshThreashold) {
-//         wishes[idx].failedCount = 0;
-//         wishes[idx].status = 'unknown';
-//         qTap(wishes[idx].refreshPnt);
-//         sleep(config.sleep);
-//         console.log('wish ', idx, ' reached max fail, need refresh');
-//         break;
-//       }
-
-//       if (wishes[idx].status != 'opened') {
-//         console.log('continue as this wish is not opened:', idx);
-//         continue;
-//       }
-
-//       wishes[idx].requirements = treeRequirement[idx];
-//       wishes[idx].requireFulfilled = 0;
-//       for (var req in wishes[idx].requirements) {
-//         if (wishes[idx]['requirements'][req]['success']) {
-//           // Need to keep some safety stock
-//           if (wishes[idx]['requirements'][req]['request'] === 0) {
-//             console.log('req  is 0, ocr mistake, ignore this requirement:', idx, req);
-//             wishes[idx].requireFulfilled++;
-//           } else if (
-//             wishes[idx]['requirements'][req]['own'] - wishes[idx]['requirements'][req]['request'] <
-//             config.wishingTreeSafetyStock
-//           ) {
-//             console.log(
-//               'wish ',
-//               idx,
-//               req,
-//               ' is below safety stock: ',
-//               wishes[idx]['requirements'][req]['own'],
-//               '/',
-//               wishes[idx]['requirements'][req]['request'],
-//               '<',
-//               config.wishingTreeSafetyStock
-//             );
-//             wishes[idx].failedCount++;
-//             break;
-//           } else {
-//             // console.log('wish ', idx, ' req ', req, ' can be fulfilled');
-//             wishes[idx].requireFulfilled++;
-//           }
-//         } else {
-//           console.log(' + failed ocr', idx, req);
-//           wishes[idx].failedCount++;
-//         }
-//       }
-//       if (
-//         wishes[idx].golden ||
-//         (wishes[idx].requireFulfilled != 0 && wishes[idx].requireFulfilled === wishes[idx].requirements.length)
-//       ) {
-//         if (wishes[idx].golden) {
-//           console.log('Force fulfill golden wish: ', idx);
-//         }
-
-//         qTap(wishes[idx].fulfillPnt);
-//         sleep(config.sleepAnimate * 2);
-//         if (checkIsPage(pageNotEnoughForTree)) {
-//           qTap(pageNotEnoughForTree);
-//           sleep(config.sleepAnimate * 2);
-//           qTap(wishes[idx].refreshPnt);
-//           wishes[idx].failedCount = 0;
-//           wishes[idx].status = 'refresh';
-//           console.log('wish ', idx, ' does not have enough stock, refreshed');
-//         } else {
-//           wishes[idx].failedCount = 0;
-//           console.log('wish ', idx, ' is fulfilled');
-//         }
-//       }
-//     }
-
-//     pageCollectTreeReward = [{ x: 85, y: 289, r: 44, g: 203, b: 8 }];
-//     if (checkIsPage(pageCollectTreeReward)) {
-//       console.log('Daily reward collected');
-//       qTap(pnt(60, 255));
-//       sleep(1500);
-//       waitUntilSeePage(pageInWishingTree, 8, pageCollectTreeReward);
-//     }
-
-//     var failedWishes = 0;
-//     for (var idx in wishes) {
-//       if (wishes[idx].status != 'opened') {
-//         failedWishes++;
-//       }
-//     }
-//     if (failedWishes >= 4) {
-//       console.log('All wishes are refreshing, done here');
-//       qTap(pnt(617, 16)); // close wishing tree
-//       sleep(1000);
-//       handleGotoKingdomPage();
-
-//       if (checkIsPage(pageUncollapsedAffairs)) {
-//         qTap(pageUncollapsedAffairs);
-//       }
-//       sendEvent('running', '');
-//       return true;
-//     }
-//     sleep(1000);
-//   }
-// }
 
 function handleEventWishingTree() {
   if (!config.autoHandleEventWishingTreeAmounts === 0) {
@@ -4895,9 +4752,9 @@ function handleInHotAirBallon() {
       console.log('ballon going to ep4');
 
       var pageBallonMapEp4 = [
-        { x: 611, y: 226, r: 255, g: 255, b: 255 },
-        { x: 597, y: 276, r: 154, g: 173, b: 255 },
-        { x: 614, y: 296, r: 240, g: 213, b: 194 },
+        {x: 611, y: 204, r: 236, g: 228, b: 255},
+        {x: 9, y: 37, r: 56, g: 33, b: 19},
+        {x: 40, y: 120, r: 129, g: 229, b: 81},
       ];
       for (var i = 0; i < 5; i++) {
         tapDown(50, 268, 40, 0);
@@ -4910,11 +4767,12 @@ function handleInHotAirBallon() {
         sleep(config.sleepAnimate * 3);
 
         if (checkIsPage(pageBallonMapEp4)) {
-          qTap(pageBallonMapEp4);
-          sleep(config.sleepAnimate);
           console.log('Found ep4 at try: ', i);
+          break;
         }
       }
+      qTap(pageBallonMapEp4);
+      sleep(config.sleepAnimate);
     } else {
       console.log('ballon going to the latest map');
       tapDown(626, 268, 40, 0);
@@ -5397,7 +5255,7 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
       }
 
       qTap(AdvanturesBountiesAt3rd[targetAdvanture].pnt);
-      if (waitUntilSeePage(targetPage, 8)) {
+      if (waitUntilSeePage(targetPage, 15)) {
         console.log(targetAdvanture, 'page found');
         return true;
       }
@@ -5749,12 +5607,13 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
         j += 2;
         return true;
       } else if (checkIsPage(pageBattleFinishedWithNextLv)) {
-        if (config.bountyGotoNextLevel) {
+        if (config.autoBountiesCheckBluePower) {
+          console.log('Win bounty but stay in this level for blue powder');
+          qTap(pnt(387, 322))
+        }
+        else {
           console.log('Win bounty and goto next level');
           qTap(pageBattleFinishedWithNextLv);
-        } else {
-          console.log('Win bounty and retry');
-          qTap(pnt(320, 350));
         }
         sleep(2000);
         return true;
@@ -5873,10 +5732,14 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       console.log('alliance battle, tap keep battle with this order');
     }
 
-    if (j - loggingCnt > 30) {
+    if (j - loggingCnt > 20) {
+      if (!checkAndRestartApp()) {
+        console.log('Game crashed during battle, leaving waitForBattle loop');
+        return false;
+      }
+
       console.log('In ', battleName, ' for ', j, '/', waitTimeInSecs, 'secs, time: ', new Date().toLocaleString());
       sendEvent('running', '');
-      checkAndRestartApp();
       loggingCnt = j;
     }
 
@@ -6973,7 +6836,7 @@ function handleInHabor() {
         }
       }
 
-      if (!config.autoBuyLegendSoulEssence) {
+      if (config.autoBuyLegendSoulEssence) {
         console.log('checking autoBuyLegendSoulEssence')
         for (i = 0; i < 2; i++) {
           qTap(pnt(270, 192));
@@ -6984,7 +6847,7 @@ function handleInHabor() {
           }
         }
       }
-      if (!config.autoBuyEpicSoulEssence) {
+      if (config.autoBuyEpicSoulEssence) {
         console.log('checking autoBuyEpicSoulEssence')
         for (i = 0; i < 3; i++) {
           qTap(pnt(270, 318));
@@ -7003,6 +6866,19 @@ function handleInHabor() {
   }
 
   sendEvent('running', '');
+}
+
+function handleCheckIfAtLoginScreen() {
+  var img = getScreenshot();
+  var upperRightImage = cropImage(img, 580, 1, 55, 40);
+  var foundResults = findImages(upperRightImage, loginGearIcon, 0.92, 1, true);
+  releaseImage(img);
+  releaseImage(upperRightImage);
+  if (foundResults.length > 0) {
+    console.log('handleTryHitBackToKingdom found in login page, tap tap(575, 22) announcement point');
+    qTap(pnt(575, 22));
+    return true;
+  }
 }
 
 // Facebook login page can only tap back to CrK, not use cmd to call Crk back to the front
@@ -7093,9 +6969,10 @@ function checkAndRestartApp() {
       execute('/system/bin/reboot -p');
     }
 
-    if (waitUntilSeePage(pageAnnouncement, 50, pnt(542, 13), pageInputAge)) {
-      return true;
+    if (waitUntilSeePage(pageAnnouncement, 50, pnt(575, 22), pageInMailBox)) {
+      console.log('Successfully see announcement page after restart the game');
     }
+    return false;
   }
 }
 
@@ -7802,7 +7679,7 @@ function loadImages() {
   );
 
   loginGearIcon = getImageFromBase64(
-    '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'
+    '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'
   );
 
   cookiePromoteGreenArrow = getImageFromBase64(
@@ -8332,6 +8209,7 @@ function start(inputConfig) {
     config.autoPvPPurchaseAncientCookie = false;
     config.autoGuildAllianceBattle = false;
     config.autoHandleBountiesIntervalInMins = 0;
+    config.autoBountiesCheckBluePower = false;
     config.autoHandleTradeHabor = false;
     config.autoBuySeaFairy = false;
     config.autoBuyEpicSoulEssence = false;
@@ -8345,6 +8223,8 @@ function start(inputConfig) {
   loadImages();
 
   checkAndRestartApp();
+
+  handleCheckIfAtLoginScreen()
 
   if (config.account !== 'default_xrobotmon_account@gmail.com' && config.account !== 'aaa@gmail.com') {
     while (
@@ -8418,9 +8298,9 @@ function start(inputConfig) {
       break;
     }
 
-    if ((Date.now() - config.lastGotoProduction) / 60000 > 9 && config.productionBuildingChecked > 50) {
+    if ((Date.now() - config.lastGotoProduction) / 60000 > 12 && config.productionBuildingChecked > 50) {
       console.log(
-        'Check other tasks as we have produce for {0} (>9) mins, productionBuildingChecked: {1}'.format(
+        'Check other tasks as we have produce for {0} (>12) mins, productionBuildingChecked: {1}'.format(
           (Date.now() - config.lastGotoProduction) / 60000,
           config.productionBuildingChecked
         )
@@ -8461,6 +8341,7 @@ function start(inputConfig) {
       ) {
         console.log('Collect train: ', (Date.now() - config.lastCollectTrain) / 60000, ' mins just passed');
         handleTrain();
+        checkAndRestartApp();
         config.lastCollectTrain = Date.now();
       }
 
@@ -8493,6 +8374,7 @@ function start(inputConfig) {
       ) {
         console.log('Collect fountain: ', (Date.now() - config.lastCollectFountain) / 60000, ' just passed');
         handleFindAndTapFountain();
+        checkAndRestartApp();
       }
 
       if (
@@ -8613,6 +8495,7 @@ function start(inputConfig) {
       ) {
         console.log('Collect candy: ', (Date.now() - config.lastCollectCandyTime) / 60000, ' just passed');
         handleFindAndTapCandyHouse();
+        checkAndRestartApp();
         config.lastCollectCandyTime = Date.now();
       }
     }
@@ -8649,12 +8532,16 @@ function start(inputConfig) {
       }
       console.log('max job fails reached, check for handling: ', config.jobFailedCount);
 
-      if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
+      if (checkIsPage(pageInProduction) || checkIsPage(pageInMagicLab)) {
         console.log('in production, continue work');
         config.jobFailedCount = 0;
         continue;
       } else if (handleUnexpectedMessageBox()) {
         console.log('just handleUnexpectedMessageBox()');
+        config.jobFailedCount = 0;
+        continue;
+      } else if (handleCheckIfAtLoginScreen()) {
+        console.log('just handleCheckIfAtLoginScreen()');
         config.jobFailedCount = 0;
         continue;
       } else if (handleTryResolveGreenChecks()) {
