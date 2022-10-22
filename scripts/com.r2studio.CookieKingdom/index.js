@@ -3483,7 +3483,7 @@ function gotoCastle() {
     console.log('seems like im in notify quit page');
   }
   // Tap head
-  if (!waitUntilSeePage(pageInCookieHead, 12, pnt(20, 20), null, 4)) {
+  if (!waitUntilSeePage(pageInCookieHead, 12, pnt(20, 30), null, 4)) {
     console.log('Failed to get to cookie head in', 12, 'secs, skipping');
 
     handleGotoKingdomPage();
@@ -5230,7 +5230,7 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
           console.log('seems like im in notify quit page');
         }
         // Tap head
-        if (!waitUntilSeePage(pageInCookieHead, 12, pnt(20, 20), null, 3)) {
+        if (!waitUntilSeePage(pageInCookieHead, 12, pnt(20, 30), null, 3)) {
           console.log('Failed to get to cookie head in', 12, 'secs, skipping');
 
           handleGotoKingdomPage();
