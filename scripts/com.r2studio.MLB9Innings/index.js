@@ -50,29 +50,25 @@ var gDownloadDataPage = new RF.Page(
 var gMainPage = new RF.Page(
   "gMainPage",
   [
-    { x: 4, y: 9, r: 0, g: 89, b: 156 },
-    { x: 5, y: 32, r: 8, g: 56, b: 99 },
-    { x: 298, y: 8, r: 214, g: 211, b: 214 },
-    { x: 314, y: 7, r: 255, g: 251, b: 255 },
-    { x: 325, y: 7, r: 57, g: 97, b: 132 },
-    { x: 379, y: 3, r: 214, g: 215, b: 214 },
-    { x: 389, y: 7, r: 249, g: 249, b: 249 },
-    { x: 391, y: 11, r: 79, g: 80, b: 79 },
-    { x: 485, y: 3, r: 214, g: 216, b: 216 },
-    { x: 493, y: 9, r: 255, g: 246, b: 192 },
-    { x: 495, y: 11, r: 253, g: 203, b: 18 },
-    { x: 626, y: 33, r: 0, g: 56, b: 90 },
-    { x: 28, y: 324, r: 82, g: 92, b: 82 },
-    { x: 38, y: 337, r: 108, g: 121, b: 101 },
-    { x: 83, y: 323, r: 61, g: 67, b: 45 },
-    { x: 103, y: 337, r: 198, g: 200, b: 196 },
-    { x: 186, y: 322, r: 255, g: 255, b: 255 },
-    { x: 198, y: 338, r: 119, g: 123, b: 113 },
-    { x: 525, y: 317, r: 161, g: 61, b: 65 },
-    { x: 541, y: 337, r: 230, g: 216, b: 220 },
-    { x: 581, y: 316, r: 8, g: 126, b: 140 },
-    { x: 601, y: 337, r: 26, g: 83, b: 88 },
-    { x: 627, y: 340, r: 49, g: 60, b: 41 },
+    { x: 289, y: 11, r: 214, g: 215, b: 214 },
+    { x: 315, y: 11, r: 222, g: 223, b: 222 },
+    { x: 380, y: 7, r: 207, g: 210, b: 210 },
+    { x: 390, y: 12, r: 130, g: 128, b: 130 },
+    { x: 481, y: 7, r: 74, g: 85, b: 90 },
+    { x: 493, y: 11, r: 252, g: 209, b: 38 },
+    { x: 622, y: 9, r: 214, g: 211, b: 214 },
+    { x: 41, y: 324, r: 110, g: 112, b: 102 },
+    { x: 58, y: 341, r: 41, g: 52, b: 33 },
+    { x: 86, y: 323, r: 255, g: 255, b: 255 },
+    { x: 103, y: 340, r: 208, g: 211, b: 208 },
+    { x: 187, y: 325, r: 255, g: 255, b: 255 },
+    { x: 211, y: 341, r: 57, g: 65, b: 49 },
+    { x: 241, y: 323, r: 123, g: 132, b: 122 },
+    { x: 326, y: 331, r: 57, g: 71, b: 49 },
+    { x: 520, y: 323, r: 131, g: 46, b: 44 },
+    { x: 530, y: 350, r: 57, g: 65, b: 49 },
+    { x: 587, y: 325, r: 255, g: 255, b: 255 },
+    { x: 627, y: 341, r: 49, g: 65, b: 41 },
   ],
   { x: 0, y: 0 },
   { x: 0, y: 0 }
@@ -1325,6 +1321,15 @@ MLB9I.prototype.handleSelectYearPage = function () {
   return;
 };
 
+MLB9I.prototype.handleEndSeasonPage = function () {
+  // TODO: use config to select
+  console.log("end season");
+  this.screen.tap({ x: 182, y: 178 }); // tap new season of left
+  RF.Utils.sleep(gSleepMedium);
+  gEndSeasonPage.goNext(this.screen);
+  RF.Utils.sleep(gSleepMedium);
+};
+
 MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
   console.log("##handle LeagueModeNextSchedulePage");
 
@@ -1343,7 +1348,7 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
       releaseImage(screenshot);
       gLeagueModePanelPageNextSchedule.goNext(this.screen);
       RF.Utils.sleep(gSleepWaitPageShort);
-      return false;
+      return true;
     }
 
     // sometime gGameResultOtherPage will show before entering game
@@ -1502,11 +1507,7 @@ MLB9I.prototype.handleEnterLeagueGame = function () {
     }
     if (gEndSeasonPage.isMatchImage(screenshot)) {
       releaseImage(screenshot);
-      console.log("end season");
-      this.screen.tap({ x: 182, y: 178 }); // tap new season of left
-      RF.Utils.sleep(gSleepMedium);
-      gEndSeasonPage.goNext(this.screen);
-      RF.Utils.sleep(gSleepMedium);
+      this.handleEndSeasonPage();
       return false;
     }
     if (gSelectSeasonModePage.isMatchImage(screenshot)) {
