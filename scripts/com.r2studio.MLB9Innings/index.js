@@ -12,6 +12,7 @@ var gSleepWaitPageLong = 36 * 1000;
 
 var defaultConfig = {
   isXr: true, // hidden setting
+  isDev: true, // hidden, only for debug
   leagueSeasonMode: "full", // half, quarter, postSeason
   leagueYear: gLeagueYearLatest, // number
 };
@@ -841,38 +842,23 @@ var gEventPage = new RF.Page(
 var gReviewAppPage = new RF.Page(
   "gReviewAppPage",
   [
-    { x: 128, y: 102, r: 181, g: 186, b: 189 },
-    { x: 294, y: 60, r: 16, g: 24, b: 24 },
-    { x: 297, y: 56, r: 181, g: 186, b: 189 },
-    { x: 312, y: 64, r: 181, g: 186, b: 189 },
-    { x: 318, y: 54, r: 16, g: 24, b: 24 },
-    { x: 323, y: 54, r: 16, g: 24, b: 24 },
-    { x: 330, y: 60, r: 36, g: 44, b: 45 },
-    { x: 337, y: 63, r: 16, g: 24, b: 24 },
-    { x: 343, y: 56, r: 57, g: 64, b: 65 },
-    { x: 342, y: 64, r: 16, g: 24, b: 24 },
-    { x: 348, y: 63, r: 181, g: 186, b: 189 },
-    { x: 513, y: 45, r: 135, g: 139, b: 141 },
-    { x: 527, y: 59, r: 143, g: 142, b: 144 },
-    { x: 528, y: 45, r: 60, g: 62, b: 67 },
-    { x: 513, y: 59, r: 176, g: 175, b: 178 },
-    { x: 501, y: 126, r: 181, g: 186, b: 189 },
-    { x: 184, y: 159, r: 143, g: 150, b: 156 },
-    { x: 209, y: 160, r: 85, g: 95, b: 104 },
-    { x: 215, y: 160, r: 137, g: 145, b: 150 },
-    { x: 265, y: 160, r: 57, g: 68, b: 78 },
-    { x: 350, y: 178, r: 89, g: 98, b: 106 },
-    { x: 242, y: 285, r: 222, g: 219, b: 222 },
-    { x: 177, y: 303, r: 175, g: 197, b: 233 },
-    { x: 212, y: 310, r: 49, g: 81, b: 116 },
-    { x: 271, y: 303, r: 49, g: 85, b: 123 },
-    { x: 306, y: 300, r: 181, g: 203, b: 239 },
-    { x: 396, y: 293, r: 8, g: 125, b: 255 },
-    { x: 431, y: 301, r: 99, g: 164, b: 255 },
-    { x: 449, y: 304, r: 195, g: 216, b: 255 },
-    { x: 480, y: 296, r: 8, g: 121, b: 255 },
+    { x: 106, y: 42, r: 181, g: 186, b: 189 },
+    { x: 316, y: 58, r: 84, g: 90, b: 93 },
+    { x: 510, y: 43, r: 168, g: 176, b: 176 },
+    { x: 525, y: 57, r: 143, g: 144, b: 144 },
+    { x: 305, y: 61, r: 16, g: 24, b: 24 },
+    { x: 338, y: 61, r: 16, g: 24, b: 24 },
+    { x: 114, y: 301, r: 222, g: 219, b: 222 },
+    { x: 153, y: 297, r: 49, g: 85, b: 123 },
+    { x: 178, y: 299, r: 168, g: 190, b: 224 },
+    { x: 241, y: 298, r: 222, g: 219, b: 222 },
+    { x: 285, y: 305, r: 49, g: 85, b: 123 },
+    { x: 308, y: 302, r: 79, g: 108, b: 145 },
+    { x: 365, y: 302, r: 222, g: 219, b: 222 },
+    { x: 421, y: 299, r: 8, g: 114, b: 255 },
+    { x: 438, y: 299, r: 47, g: 138, b: 254 },
+    { x: 489, y: 301, r: 8, g: 113, b: 255 },
     { x: 528, y: 305, r: 222, g: 219, b: 222 },
-    { x: 110, y: 298, r: 222, g: 219, b: 222 },
   ],
   { x: 161, y: 292 },
   { x: 161, y: 292 }
@@ -1013,6 +999,16 @@ function MLB9I(config) {
   this.taskManager = new RF.TaskManager();
   this.running = false;
 }
+MLB9I.prototype.debug = function (errMsg) {
+  if (this.config.isDev) {
+    var screenshot = getScreenshot();
+    saveImage(
+      screenshot,
+      "mlb-error" + errMsg + "-" + new Date().toISOString() + ".jpg"
+    );
+    releaseImage(screenshot);
+  }
+};
 
 MLB9I.prototype.init = function () {
   console.log("MLB9I init");
@@ -1203,7 +1199,13 @@ MLB9I.prototype.handleSetPowerSave = function () {
   console.log("click setting button");
   RF.Utils.sleep(gSleepMedium);
 
-  if (!gSettingsPage.isMatchScreen(this.screen)) {
+  if (
+    !gSettingsPage.waitScreenForMatchingScreen(
+      this.screen,
+      gSleepWaitPageLong,
+      2
+    )
+  ) {
     console.log("cannot go to setting page");
     return false;
   }
@@ -1337,17 +1339,22 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
     console.log("#### go new game panel", tryTime);
 
     var screenshot = getScreenshot();
-    if (gLeagueNewGamePage.isMatchImage(screenshot)) {
+    if (gLeagueModePanelPageNextSchedule.isMatchImage(screenshot)) {
+      console.log("is enter next schedule page");
+      gLeagueModePanelPageNextSchedule.goNext(this.screen);
+      RF.Utils.sleep(gSleepShort);
+    }
+
+    if (
+      gLeagueNewGamePage.waitScreenForMatchingScreen(
+        this.screen,
+        gSleepWaitPageLong,
+        2
+      )
+    ) {
       console.log("is enter new game page");
       releaseImage(screenshot);
       RF.Utils.sleep(gSleepShort);
-      return true;
-    }
-    if (gLeagueModePanelPageNextSchedule.isMatchImage(screenshot)) {
-      console.log("is enter next schedule page");
-      releaseImage(screenshot);
-      gLeagueModePanelPageNextSchedule.goNext(this.screen);
-      RF.Utils.sleep(gSleepWaitPageShort);
       return true;
     }
 
@@ -1364,9 +1371,10 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
     return false;
   }
 
-  var isEnterNewGamePanel = this.tryDo(goNewGamePanel.bind(this), 150);
+  var isEnterNewGamePanel = this.tryDo(goNewGamePanel.bind(this), 15);
   if (!isEnterNewGamePanel) {
     console.log("cannot enter new game page");
+    this.debug("isEnterNewGamePanel");
     return isEnterNewGamePanel;
   }
   console.log("check energy");
@@ -1440,7 +1448,7 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
 
     var pageName = gLeagueOnPlayPagesGroup.waitScreenForMatchingOne(
       this.screen,
-      2000,
+      gSleepWaitPageLong,
       2
     );
     if (pageName !== "") {
@@ -1457,6 +1465,7 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
   var isEnterGame = this.tryDo(enterGame.bind(this), 150);
   if (!isEnterGame) {
     console.log("cannot enter game");
+    this.debug("isEnterGame");
   }
   return true;
 };
@@ -1614,7 +1623,7 @@ MLB9I.prototype.handlePlayGame = function () {
     // check whether is on play
     var pageName = gLeagueOnPlayPagesGroup.waitScreenForMatchingOne(
       this.screen,
-      gSleepMedium,
+      gSleepWaitPageLong,
       1
     );
     if (pageName !== "") {
@@ -1689,7 +1698,7 @@ MLB9I.prototype.handlePlayGame = function () {
     return false;
   }
 
-  var isEndGame = this.tryDo(endPlaying.bind(this), 3500);
+  var isEndGame = this.tryDo(endPlaying.bind(this), 100);
   if (!isEndGame) {
     console.log("is not end game");
   }
@@ -1700,6 +1709,7 @@ MLB9I.prototype.taskPlayLeagueMode = function () {
   // go to leagueMode and start play all
   if (!this.goMainPage()) {
     console.log("cannot go to main page");
+    this.debug("isEnterMainPage");
     return;
   }
   RF.Utils.sleep(gSleepShort);
