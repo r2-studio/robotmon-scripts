@@ -111,6 +111,7 @@
   margin-right: 4px !important;
 }
 
+#deleteCropImg,
 .selectFriendServantImg {
   width: 60px;
   height: 40px;
@@ -206,13 +207,6 @@
   align-items: center;
 }
 
-#scriptTitle {
-  font-weight: bold;
-  font-size: 20px;
-  margin-bottom: 4px;
-  user-select: none;
-}
-
 #skill-list {
   min-height: 100px;
   margin-bottom: 200px;
@@ -229,15 +223,9 @@
   display: none;
 }
 
-#getServantBlock{
-  border-width: 1px;
-  border-style: solid;
-  border-radius: 2px;
-  border-color: black;
-  padding: 2px;
-}
-
-#getBlackEdgeBlock{
+#getServantBlock,
+#getBlackEdgeBlock,
+#preferenceBlock{
   border-width: 1px;
   border-style: solid;
   border-radius: 2px;

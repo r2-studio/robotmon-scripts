@@ -252,7 +252,14 @@ function selectItem(item) {
     sendUrgentMessage(runningScriptName, "道具不足");
     return;
   }
-  tapScale(1240, 832);
+  if(isReplay){
+    sleep(3000);
+    if(!isUseAppleDialog() && !isSelectFriendPage()){
+      tapScale(1240, 832);
+    }
+  }else{
+    tapScale(1240, 832);
+  }
   sleep(3000);
 }
 

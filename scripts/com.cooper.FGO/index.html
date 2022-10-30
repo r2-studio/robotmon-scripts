@@ -41,7 +41,7 @@
     <!-- <script>
       isDebug = true;
     </script>
-    <script src="./debug/debug_html.js"></script> -->
+    <script src="./debug/debug_html.js"></script>  -->
     <!--       ====================For debug================          -->
 
     <script src="./jquery/jquery.min.js"></script>
@@ -80,42 +80,92 @@
         </div>
       </div>
       <div class="blockDiv">
-        <button id = "switchGetBlackEdgeBlock" class="blockTitle">黑邊設定</button>
+        <button id = "switchPreferenceBlock" class="blockTitle">偏好與黑邊設定</button>
         <button id = "switchGetServantBlock" class="blockTitle">擷取好友從者禮裝</button>
       </div>
-      <div id="getServantBlock" class="blockDiv" style="display:none">
-        <div class="discriptionText">
-          請用不同排序方式找到需要的從者禮裝，不要上下滑動
+      <div id="preferenceBlock" class="blockDiv" style="display:none">
+        <div class="blockDiv">
+          <div class="blockTitle">
+            黑邊設定
+          </div>
+          <div class="discriptionText">
+            如果手機截圖沒有黑邊則無需調整，部分手機只有一側有黑邊，請注意螢幕旋轉方向。
+          </div>
+          <div class="discriptionText">
+            使用偵測黑邊功能請先移動到遊戲主畫面，部分手機偵測不準確請手動輸入數值，詳情請見說明文件。
+          </div>
+          <div class="blockDiv">
+            左<input id="blackEdgeLeft" type="number" class="blackEdgeInput">
+            上<input id="blackEdgeTop" type="number" class="blackEdgeInput">
+          </div>
+          <div class="blockDiv">
+            右<input id="blackEdgeRight" type="number" class="blackEdgeInput">
+            下<input id="blackEdgeBottom" type="number" class="blackEdgeInput">
+          </div>
+          <div class="blockDiv">
+            <button id="getBlackEdge" class="cmdButton">偵測黑邊</button>
+            <button id="clearBlackEdge" class="cmdButton">清除黑邊數值</button>
+          </div>
         </div>
         <div class="blockDiv">
-          <button id="getServantImage1" class="cmdButton">擷取從者1</button>
-          <button id="getItemImage1" class="cmdButton">擷取禮裝1</button>
-          <button id="getServantImage2" class="cmdButton">擷取從者2</button>
-          <button id="getItemImage2" class="cmdButton">擷取禮裝2</button>
+          <div class="blockTitle">
+            其他設定
+          </div>
+          <div class="commandSelectDiv">
+            <div class='commandItem'>選擇好友精確度</div>
+            <select id="friendStrictSelect" class="commandItem">
+              <option value="0">嚴格</option>
+              <option value="1">寬鬆</option>
+            </select>
+          </div>
+          <div class="blockDiv">若有誤選或是沒有選到指定從者禮裝，請調整此選項</div>
+          <div class="commandSelectDiv">
+            <div class='commandItem'>從者順序</div>
+            <select id="servantDirectionSelect" class="commandItem">
+              <option value="0">從左到右</option>
+              <option value="1">從右到左</option>
+            </select>
+          </div>
+          <div class="commandSelectDiv">
+            <div class='commandItem'>技能順序</div>
+            <select id="skillDirectionSelect" class="commandItem">
+              <option value="0">從左到右</option>
+              <option value="1">從右到左</option>
+            </select>
+          </div>
+          <div class="blockDiv">
+            <button id="savePreferenceButton" class="cmdButton">儲存偏好與黑邊設定</button>
+          </div>
         </div>
       </div>
-      <div id="getBlackEdgeBlock" class="blockDiv" style="display:none">
-        <div class="discriptionText">
-          預設0,0,0,0使用全螢幕範圍作為遊戲範圍，如果手機畫面沒有黑邊則無需調整
-        </div>
-        <div class="discriptionText">
-          使用偵測黑邊功能請先移動到遊戲主畫面
-        </div>
-        <div class="discriptionText">
-          也可以手動輸入，數值為遊戲範圍第一個像素的位置。例如解析度1920x1080沒有黑邊則輸入0,0,1919,1079
+      <div id="getServantBlock" class="blockDiv" style="display:none">
+        <div class="blockDiv">
+          <div class="blockTitle">
+            擷取圖片
+          </div>
+          <div class="blockDiv">
+            <button id="getServantImage1" class="cmdButton">擷取從者1</button>
+            <button id="getItemImage1" class="cmdButton">擷取禮裝1</button>
+            <button id="getServantImage2" class="cmdButton">擷取從者2</button>
+            <button id="getItemImage2" class="cmdButton">擷取禮裝2</button>
+          </div>
+          <div class="blockDiv">
+            請用不同排序方式找到需要的從者禮裝，不要上下滑動
+          </div>
         </div>
         <div class="blockDiv">
-          左<input id="blackEdgeLeft" type="number" class="blackEdgeInput">
-          上<input id="blackEdgeTop" type="number" class="blackEdgeInput">
-        </div>
-        <div class="blockDiv">
-          右<input id="blackEdgeRight" type="number" class="blackEdgeInput">
-          下<input id="blackEdgeBottom" type="number" class="blackEdgeInput">
-        </div>
-        <div class="blockDiv">
-          <button id="getBlackEdge" class="cmdButton">偵測黑邊</button>
-          <button id="clearBlackEdge" class="cmdButton">清除黑邊數值</button>
-          <button id="saveBlackEdge" class="cmdButton">儲存黑邊數值</button>
+          <div class="blockTitle">
+            刪除圖片
+          </div>
+          <div class='commandSelectDiv'>
+            <select id="deleteCropImageSelect">
+              <option></option>
+            </select>
+            <img id="deleteCropImg">
+          </div>
+          <div class="blockDiv">
+            <button id="deleteCropImgButton" class="cmdButton">刪除截圖</button>
+          </div>
         </div>
       </div>
       <div class="blockDiv">
@@ -132,7 +182,7 @@
       </div>
       <div class="blockDiv">
         <div>
-          <div id="scriptTitle">讀取自訂腳本</div>
+          <div class="blockTitle">讀取自訂腳本</div>
           <div>
           <select id="scriptMode">
             <option></option>
