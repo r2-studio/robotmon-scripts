@@ -1,6 +1,5 @@
 var defaultScreenSize = [1920, 1080];
 //over 21:9 or less then 16:9 will have blue edge
-var blackEdge; //l 52,t 0,r 2176,b 1035
 var screenScale = [];
 var blueEdge = [];
 var realScreenSize = [];
@@ -74,9 +73,6 @@ function clearBlackEdge() {
   }
 }
 
-function saveBlackEdge(be) {
-  return writeFile(itemPath + "preference.js", be.toString());
-}
 
 function detectBlackEdge() {
   sleep(2000);

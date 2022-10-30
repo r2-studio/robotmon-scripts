@@ -16,6 +16,17 @@ var servantExistHeight = 18;
 var skillUsedImage;
 var skillUsedPositionOffset = [-9, 77];
 var skillUsedSize = 24;
+var skillUsedInLoop = [
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+];
 
 //card
 var cardImage = [];
@@ -235,7 +246,11 @@ function attackAI(
   var skillUsed = updateSkillUsed(screenshot);
   var servantExist = updateServantExist(screenshot);
   releaseImage(screenshot);
-  for (var i = 0; i < 3; i++) {
+  for (var s = 0; s < 3; s++) {
+    var i = s;
+    if(skillDirection){
+      i = 2-s;
+    }
     if (!isScriptRunning) {
       return;
     }
@@ -248,10 +263,18 @@ function attackAI(
       clothSkillUsed[i] = true;
     }
   }
-  for (var i = 0; i < 3; i++) {
-    for (var j = 2; j >= 0; j--) {
+  for (var s1 = 0; s1 < 3; s1++) {
+    for (var s2 = 0; s2 < 3; s2++) {
       if (!isScriptRunning) {
         return;
+      }
+      var i = s1;
+      if(servantDirection){
+        i = 2-s1;
+      }
+      var j = s2;
+      if(skillDirection){
+        j = 2-s2;
       }
       if (!servantAlive[i]) {
         switch (die) {
@@ -338,7 +361,7 @@ function updateServantAlive(screenshot) {
         result[i] = false;
         if (isDebug) {
           var filepath = path + "/debug_servant_now.png";
-          saveImage(screenshot,filepath)
+          saveImage(screenshot, filepath);
           console.log("adb pull " + filepath);
 
           filepath = path + "/debug_servant_alive_" + i + ".png";

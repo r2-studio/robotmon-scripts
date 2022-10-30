@@ -167,26 +167,18 @@
     "com.cooper.FGO": {
       "id": "com.cooper.FGO",
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.42,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.42 支援青銅蘋果<br>V3.41 重構黑邊偵測功能並改善穩定性，調整介面與除錯訊息<br><br>推薦使用夜神 Android 5  1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.51,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.51 新增偏好設定，修正Robotmon 5.4版本產生的問題<br><br>推薦使用夜神 Android 5 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "id": "com.cooper.FGOTW",
       "title": "Fate/Grand Order 台服",
-      "versionCode": 3.46,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.46 支援新活動援護請求<br>V3.45 支援新改版介面<br>V3.41 重構黑邊偵測功能並改善穩定性，調整介面與除錯訊息<br><br>推薦使用夜神 Android 5 1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.51,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.51 新增偏好設定，修正Robotmon 5.4版本產生的問題<br>V3.45 支援新改版介面<br><br>推薦使用夜神 Android 5 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
-    },
-    "com.cooper.FGOFreeTool": {
-      "id": "com.cooper.FGOFreeTool",
-      "title": "Fate/Grand Order 開箱友抽免費工具",
-      "versionCode": 1.03,
-      "description": "<div>台服 日服開箱友抽小工具，無須訂閱即可使用<br><br>V1.03 修復新介面的自動抽箱功能</div>",
-      "packageName": "com.xiaomeng.fategrandorder",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOFreeTool/index.zip"
     },
     "com.donny.maplem": {
       "id": "com.donny.maplem",

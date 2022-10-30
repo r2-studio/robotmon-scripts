@@ -35,6 +35,8 @@ var barMargin = 0;
 
 var selectFriendList = [];
 
+var friendThreshole = 0.9
+
 function setFriendMargin() {
   if (server == "TW") {
     reloadPosition = 1237;
@@ -63,10 +65,15 @@ function setFriendMargin() {
   positionX[0] = 600 + offset;
   positionX[1] = 1200 + offset;
 }
-
+//selectFriend(0,"csaber",null,0,0,0);
 function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes) {
   if (!isScriptRunning) {
     return;
+  }
+  if(selectFriendLoose){
+    friendThreshole = 0.9;
+  }else{
+    friendThreshole = 0.97;
   }
   if (isBattleMainPage()) {
     console.log("已進入戰鬥，選擇好友省略");
@@ -305,7 +312,7 @@ function checkFriendServant(screenshot, servantImage, lineY) {
     lineY + friendServantYOffset,
     friendServantSize[0],
     friendServantSize[1],
-    0.9
+    friendThreshole
   );
 }
 
@@ -321,7 +328,7 @@ function checkFriendItem(screenshot, itemImage, lineY, star) {
       lineY + friendItemYOffset,
       friendItemSize[0],
       friendItemSize[1],
-      0.9
+      friendThreshole
     )
   ) {
     return false;
@@ -503,6 +510,18 @@ function confirmSaveFriendItemImage(imageName, time) {
         ".png"
     );
   }
+  return imageName;
+}
+
+function deleteFriendServantImage(imageName){
+  var path = itemPath + "friend_servant/" + imageName + ".png";
+  execute("rm " + path);
+  return imageName;
+}
+
+function deleteFriendItemImage(imageName){
+  var path = itemPath + "friend_item/" + imageName + ".png";
+  execute("rm " + path);
   return imageName;
 }
 

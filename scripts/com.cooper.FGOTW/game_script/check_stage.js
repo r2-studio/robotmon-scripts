@@ -246,7 +246,7 @@ function isSelectFriendRefreshDialog() {
 
 function isSelectFriendEnd() {
   //TODO: need check
-  return checkIconListInScreen(["friendEnd", "friendEnd3"], false);
+  return checkIconListInScreen(["friendEnd", "friendEnd3"], false, 0.9);
 }
 
 function isSelectFriendEmpty() {
