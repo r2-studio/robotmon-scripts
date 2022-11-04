@@ -54,11 +54,20 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
     },
+    "com.r2studio.CookieKingdom.Basic": {
+      "id": "com.r2studio.CookieKingdom.Basic",
+      "title": "CookieKingdom: automated management (Basic)",
+      "versionCode": 3.57,
+      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
+      "packageName": "com.devsisters.ck",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.basic/index.zip",
+      "dependencies": []
+    },
     "com.r2studio.CookieKingdom": {
       "id": "com.r2studio.CookieKingdom",
       "title": "CookieKingdom: automated management",
       "versionCode": 3.57,
-      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
+      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FULL Function Cookie run Kingdom production automation script</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
       "dependencies": []

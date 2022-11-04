@@ -488,7 +488,7 @@
       }
 
       console.log('>> configJson: ', JSON.stringify(configJson))
-      configJson.isXR = true;
+      configJson.isXR = false;
       command = "start('" + JSON.stringify(configJson) + "');";
       return command;
     }
