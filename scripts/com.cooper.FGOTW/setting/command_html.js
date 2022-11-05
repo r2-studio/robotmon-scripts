@@ -510,13 +510,16 @@ function getSelectEnemy(id) {
     id,
     "選擇敵人",
     "<div class='commandSelectDiv'>" +
-      "<div class='commandItem'>敵人</div>" +
+      "<div class='commandItem'>敵人(右上為1)</div>" +
       '<select id = "selectEnemy' +
       id +
       '">' +
       '<option value = "0">敵人1</option>' +
       '<option value = "1">敵人2</option>' +
-      '<option value = "2">敵人3</option></select></div>'
+      '<option value = "2">敵人3</option>' +
+      '<option value = "3">敵人4</option>' +
+      '<option value = "4">敵人5</option>' +
+      '<option value = "5">敵人6</option></select></div>'
   );
 }
 function getStartAttackItem(id) {
@@ -577,7 +580,7 @@ function getAdditionalFriendServent(id) {
   return getCommandItem(
     id,
     "好友從者多選",
-    "<div class='commandSelectDiv'>請將此指令放在選擇好友指令之前，會從所有指令的從者中做選擇</div>" +
+    "<div class='commandSelectDiv'>請將此指令放在選擇好友指令之前，會從全部的指定從者中做選擇</div>" +
       "<div class='commandSelectDiv'>" +
       "<div class='commandItem'>指定從者</div>" +
       '<select id = "additionalFriendServant' +

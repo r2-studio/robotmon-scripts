@@ -5,10 +5,10 @@ var itemPath;
 var server;
 var loadApiCnt;
 
-var version = "V3.42";
+var version = "V3.51";
 
-function start(loopTime, script, scriptName, be) {
-  startScript(loopTime, script, scriptName, be);
+function start(loopTime, script, scriptName, be, pref) {
+  startScript(loopTime, script, scriptName, be, pref);
 }
 
 function stop() {
@@ -75,16 +75,7 @@ function initHTML(serverString) {
     itemList = itemList.slice(0, -1);
   }
 
-  var preference = undefined;
-  try {
-    preference = readFile(itemPath + "preference.js");
-  } catch (e) {
-    console.log("no preference file, create");
-    writeFile(itemPath + "preference.js", "0,0,0,0");
-  }
-  if (preference == undefined || preference.length == 0) {
-    preference = "0,0,0,0";
-  }
+  loadPreference();
   return (
     scriptList +
     ";" +
@@ -96,7 +87,7 @@ function initHTML(serverString) {
     ";" +
     version +
     ";" +
-    preference
+    getPreferenceString()
   );
 }
 
@@ -126,6 +117,7 @@ function loadApi() {
     "get_box",
     "check_stage",
     "friend",
+    "preference"
   ];
   for (var i = 0; i < apiList.length; i++) {
     var s = readFile(packagePath + "game_script/" + apiList[i] + ".js");

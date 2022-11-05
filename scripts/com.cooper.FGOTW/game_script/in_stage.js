@@ -13,8 +13,9 @@ var skillTargetX = [487, 937, 1387];
 var skillTargetY = 637;
 var clothSkillOffsetX = 130;
 var clothSkillY = 475;
-var enemyPositionX = [870, 510, 172];
-var enemyPositionY = 63;
+var enemyPositionXDefault = [820, 520, 220, 670, 370, 70];
+var enemyPositionX = [820, 520, 220, 670, 370, 70];
+var enemyPositionY = [64, 200];
 var currentStagePositionDefaultX = 1317;
 var currentStagePosition = [1317, 18, 37, 37];
 
@@ -32,12 +33,11 @@ var colorName = ["紅", "藍", "綠"];
 var useMargin = undefined;
 //----------------------------------------------Battle main page
 function setInStageMargin() {
-  
-  if(server == "TW"){
+  if (server == "TW") {
     skillPositionDefaultX = 50;
     skillPositionDefaultY = 817;
     currentStagePositionDefaultX = 1326;
-  }else{
+  } else {
     skillPositionDefaultX = 66;
     skillPositionDefaultY = 824;
     currentStagePositionDefaultX = 1317;
@@ -46,19 +46,19 @@ function setInStageMargin() {
 
   if (resolution <= 16 / 9) {
     useMargin = undefined;
-    enemyPositionX = [870, 510, 172];
-    if(server == "TW"){
+    enemyPositionX = enemyPositionXDefault;
+    if (server == "TW") {
       currentStagePosition = [currentStagePositionDefaultX, 23, 19, 29];
       skillPositionX = [50, 182, 315, 526, 658, 791, 1002, 1135, 1267];
-    }else{
-     currentStagePosition = [currentStagePositionDefaultX, 18, 37, 37];
+    } else {
+      currentStagePosition = [currentStagePositionDefaultX, 18, 37, 37];
       skillPositionX = [66, 198, 330, 542, 674, 806, 1018, 1150, 1282];
     }
     return;
   }
 
   useMargin = 0;
-    
+
   /*
         skill left edge  
         1920:66,198,330,542,674,806,1018,1150,1282
@@ -77,23 +77,20 @@ function setInStageMargin() {
    */
   currentStagePosition[0] = realScreenSize[0] / screenScale[0] - 656;
 
-  var enemyLeftMargin = defaultMarginX;
+  var enemyLeftMargin = 0;
   var skillLeftEdge = skillPositionDefaultX + defaultMarginX;
   if (resolution > 18 / 9) {
-    enemyLeftMargin = 75;
+    enemyLeftMargin = defaultMarginX - 120;
     skillLeftEdge = skillPositionDefaultX + 75;
     skillPositionY = skillPositionDefaultY - 32;
   }
 
   for (var i = 0; i < 9; i++) {
-    skillPositionX[i] =
-      skillLeftEdge +
-      skillSmallOffset * (i % 3) +
-      skillLargeOffset * Math.floor(i / 3);
+    skillPositionX[i] = skillLeftEdge + skillSmallOffset * (i % 3) + skillLargeOffset * Math.floor(i / 3);
   }
-  enemyPositionX[0] = 870 + enemyLeftMargin;
-  enemyPositionX[1] = 510 + enemyLeftMargin;
-  enemyPositionX[2] = 172 + enemyLeftMargin;
+  for (var i = 0; i < 6; i++) {
+    enemyPositionX[i] = enemyPositionXDefault[i] - enemyLeftMargin;
+  }
 }
 
 function useSkill(player, skill, target) {
@@ -103,21 +100,9 @@ function useSkill(player, skill, target) {
   if (!waitUntilPlayerCanMove()) {
     return;
   }
-  console.log(
-    "使用技能 從者 " +
-      (player + 1) +
-      ", 技能 " +
-      (skill + 1) +
-      ", 目標 " +
-      (target + 1)
-  );
+  console.log("使用技能 從者 " + (player + 1) + ", 技能 " + (skill + 1) + ", 目標 " + (target + 1));
   skillUsedInLoop[player * 3 + skill] = true;
-  tapScale(
-    skillPositionX[player * 3 + skill],
-    skillPositionY,
-    undefined,
-    useMargin
-  );
+  tapScale(skillPositionX[player * 3 + skill], skillPositionY, undefined, useMargin);
   sleep(500);
   tapScale(1650, 450);
   sleep(500);
@@ -220,12 +205,7 @@ function useClothesSkill(skill, target1, target2) {
   console.log("使用衣服技能 " + (skill + 1));
   clickIcon("battleMain2");
   sleep(1000);
-  tapScale(
-    icon["battleMain2"][0] - clothSkillOffsetX * (3 - skill),
-    clothSkillY,
-    undefined,
-    0
-  );
+  tapScale(icon["battleMain2"][0] - clothSkillOffsetX * (3 - skill), clothSkillY, undefined, 0);
   sleep(500);
   if (!(target2 == 5 && skill == 2)) {
     //ignore change last servant
@@ -251,12 +231,7 @@ function useClothesSkill(skill, target1, target2) {
     }
     console.log("使用衣服技能-選擇目標");
     selectSkillTarget(target1);
-  } else if (
-    target1 != undefined &&
-    target2 != undefined &&
-    target2 >= 0 &&
-    skill == 2
-  ) {
+  } else if (target1 != undefined && target2 != undefined && target2 >= 0 && skill == 2) {
     console.log("使用衣服技能-選擇換人目標");
     changePlayer(target1, target2);
   }
@@ -280,7 +255,7 @@ function selectEnemy(enemy) {
     return;
   }
   console.log("選擇敵人 " + (enemy + 1));
-  tapScale(enemyPositionX[enemy], enemyPositionY);
+  tapScale(enemyPositionX[enemy], enemyPositionY[Math.floor(enemy / 3)]);
 }
 
 function changePlayer(target1, target2) {
