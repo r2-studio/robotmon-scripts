@@ -1695,11 +1695,6 @@ MLB9I.prototype.handlePlayGame = function () {
           break;
 
         case "gLeagueOnPlayPausePage":
-          gLeagueContinuePlayingPage.goNext(this.screen);
-          RF.Utils.sleep(gSleepWaitPageLong);
-          break;
-
-        case "gLeagueContinuePlayingPage":
           gLeagueOnPlayPausePage.goNext(this.screen);
           RF.Utils.sleep(gSleepShort);
           break;
