@@ -1689,6 +1689,11 @@ MLB9I.prototype.handlePlayGame = function () {
 
       // handle play operation settings
       switch (pageName) {
+        case "gLeagueContinuePlayingPage":
+          gLeagueContinuePlayingPage.goNext(this.screen);
+          RF.Utils.sleep(gSleepWaitPageLong);
+          break;
+
         case "gLeagueOnPlayPausePage":
           gLeagueContinuePlayingPage.goNext(this.screen);
           RF.Utils.sleep(gSleepWaitPageLong);
@@ -1697,9 +1702,6 @@ MLB9I.prototype.handlePlayGame = function () {
         case "gLeagueContinuePlayingPage":
           gLeagueOnPlayPausePage.goNext(this.screen);
           RF.Utils.sleep(gSleepShort);
-          this.screen.tap({ x: 0, y: 0 });
-          console.log("tap");
-
           break;
 
         case "gLeagueOnPlayPagePowerSaveOn":
