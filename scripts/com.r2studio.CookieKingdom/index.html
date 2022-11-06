@@ -239,7 +239,7 @@
           id: 'account',
           title: 'account (for auto login)',
           title_zh_TW: '帳號 (自動登入用)',
-          default: "aaa@gmail.com",
+          default: "sample@gmail.com",
 
         },
         {
@@ -265,6 +265,21 @@
           step: 10,
           max: 300,
           min: 20,
+        },
+        {
+          id: 'skipMagicLabProduction',
+          title: "Skip magic lab, don't drop any order in the magic lab",
+          title_zh_TW: '生產時忽略魔法研究室（直接跳過，不生產任何東西）',
+          default: false,
+        },
+        {
+          id: 'magicLabProductIndex',
+          title: 'Specify which item to produce in the magic lab (will be ignored if choose to skip magic lab production)',
+          title_zh_TW: '指定魔法研究室要生產第幾個項目(如勾選略過魔法研究室選項，則本設定不會生效)',
+          default: 0,
+          step: 1,
+          max: 40,
+          min: 0,
         },
         {
           id: 'autoCollectDailyReward',
@@ -342,6 +357,12 @@
           default: false,
         },
         {
+          id: 'wishingTreeRefreshGoldenWishes',
+          title: 'Auto refresh golden wishes',
+          title_zh_TW: '是否自動重置金色的願望',
+          default: false,
+        },
+        {
           id: 'wishingTreeSafetyStock',
           title: 'Safety stock of the wishing tree, will only fulfill the wishes with stock more than this value',
           title_zh_TW: '許願樹安全庫存，低於此數字則不會送出',
@@ -377,6 +398,144 @@
           max: 2000000,
           min: 10000,
         },
+        {
+          id: 'autoPvPPurchaseAncientCookie',
+          title: 'Auto purchase PVP medal shop upper left ancient & super epic cookie soul stone when in PVP arena',
+          title_zh_TW: '進入競技場時，自動購買PVP商城左上角的上古 & 超傳奇餅乾',
+          default: true,
+        },
+        {
+          id: 'autoGuildAllianceBattle',
+          title: 'Auto alliance battle during checkin guild (every 2 hours)',
+          title_zh_TW: '每兩小時自動打卡公會時，順便打守護之戰',
+          default: true,
+        },
+        {
+          id: 'autoGuildClaimNewLand',
+          title: 'Auto deliver tools to expand lands during guild checkin',
+          title_zh_TW: '每兩小時自動打卡公會時，順便繳交開荒工具',
+          default: true,
+        },
+        {
+          id: 'autoGuildBattleDragon',
+          title: 'Auto battle guild dragon during guild checkin',
+          title_zh_TW: '每兩小每兩小時自動打卡公會時，順便打公會龍時自動打卡公會時，順便繳交開荒工具',
+          default: false,
+        },
+
+
+        {
+          id: 'autoLabResearch',
+          title: 'Check gnome lab every 20 mins for possible research targets',
+          title_zh_TW: '每20分鐘檢查地精研究室',
+          default: true,
+        },
+        {
+          id: 'autoResearchKingdom',
+          title: 'Auto research Kingdom related items (tap question mark for detail)',
+          title_zh_TW: '自動研究時，會研發強化王國生產力相關內容（細項請見說明）',
+          default: true,
+        },
+        {
+          id: 'autoResearchCookies',
+          title: 'Auto research Cookie related items (tap question mark for detail)',
+          title_zh_TW: '自動研究時，會研發強化餅乾戰鬥力相關內容（細項請見說明）',
+          default: true,
+        },
+        {
+          id: 'autoLabUseAuroraMaterial',
+          title: 'Auto research can use Aurora resources',
+          title_zh_TW: '自動研究時，允許研發要消耗極光材料的項目',
+          default: true,
+        },
+
+        {
+          id: 'autoHandleTradeHabor',
+          title: 'Auto send trade habor ship',
+          title_zh_TW: '自動上貨並送出貿易船',
+          default: true,
+        },
+        {
+          id: 'autoBalanceAuroraStocks',
+          title: 'Auto exchange and balance Aurora items if stock is greater than 50',
+          title_zh_TW: '進入貿易所時，當極光材料超過50個時，自動用多的材料換少的',
+          default: true,
+        },
+        {
+          id: 'autoBuyCaramelStuff',
+          title: 'Auto purchase carmel items in seaside shop',
+          title_zh_TW: '進入貿易所時，自動跟大鳥買海邊商店的焦糖地圖＆望遠鏡',
+          default: true,
+        },
+        {
+          id: 'autoBuyRadiantShardsInHabor',
+          title: 'Auto purchase radiant shards in seaside shop',
+          title_zh_TW: '進入貿易所時，自動跟大鳥買海邊商店的燦爛的光之碎片',
+          default: true,
+        },
+        {
+          id: 'autoShopInSeasideMarket',
+          title: 'Purchase white/blue/pruple skill powder, purity/swiftness/arcane/power crystals, milk and cotton in seaside market.',
+          title_zh_TW: '進入貿易所時，自動購買不夠的白藍紫色技能粉末、各種砂糖結晶、牛奶及棉花。',
+          default: true,
+        },
+        {
+          id: 'autoBuySeaFairy',
+          title: 'Auto purchase legendary cookie soulstones',
+          title_zh_TW: '進入五色貝殼商店時，自動買傳奇餅乾碎片',
+          default: true,
+        },
+        {
+          id: 'autoBuyGuildRelic',
+          title: 'Auto purchase guild relics',
+          title_zh_TW: '進入五色貝殼商店時，自動買公會文物',
+          default: true,
+        },
+        {
+          id: 'autoBuyEpicSoulEssence',
+          title: 'Auto research can use Aurora resources',
+          title_zh_TW: '自動研究時，允許研發要消耗極光材料的項目',
+          default: false,
+        },
+        {
+          id: 'autoBuyLegendSoulEssence',
+          title: 'Auto purchase Lenged Soul Essence',
+          title_zh_TW: '進入五色貝殼商店時，自動買傳奇靈魂碎片',
+          default: false,
+        },
+
+
+        {
+          id: 'autoHandleTowerOfSweetChaos',
+          title: 'Clear Tower of Sweet Chaos',
+          title_zh_TW: '自動爬蛋糕塔',
+          default: true,
+        },
+        {
+          id: 'autoUpgradeCandyHouse',
+          title: 'Auto levelup cookie house',
+          title_zh_TW: '自動升餅乾屋',
+          default: true,
+        },
+        {
+          id: 'autoHandleBountiesIntervalInMins',
+          title: 'Auto check & clear bounties interval (set to 0 to skip this task)',
+          title_zh_TW: '每隔幾分鐘檢查懸賞 (設為0則不會進行此工作)',
+          default: 180,
+        },
+        {
+          id: 'autoBountiesCheckBluePower',
+          title: 'In bounty, check if rare (blue) skill powder has enough stock',
+          title_zh_TW: '過懸賞時，檢查藍色粉末是否充足',
+          default: true,
+        },
+        {
+          id: 'autoHandleCollectCookieOdysseyMission',
+          title: 'Auto collect cookie odyssey quills from daily finished missions',
+          title_zh_TW: '自動收餅乾奧德賽任務羽毛',
+          default: 180,
+        },
+
       ],
     ];
 
@@ -678,9 +837,9 @@
 
       const locale = localStorage.getItem('cookieFactoriaoAutoLanguage');
       if (locale === "zh-TW") {
-        $("#xrimg").attr("src", "https://github.com/r2-studio/robotmon-scripts/blob/master/scripts/com.r2studio.CookieKingdom/XRvsR_zh-TW.jpeg?raw=true");
+        $("#xrimg").attr("src", "https://github.com/r2-studio/robotmon-scripts/blob/master/scripts/com.r2studio.CookieKingdom/XRvsR_zh-TW.png?raw=true");
       } else {
-        $("#xrimg").attr("src", "https://github.com/r2-studio/robotmon-scripts/blob/08086336715c927a9af51a479ec0741a36b7dd15/scripts/com.r2studio.CookieKingdom/XRvsR_en-US.jpeg?raw=true");
+        $("#xrimg").attr("src", "https://github.com/r2-studio/robotmon-scripts/blob/master/scripts/com.r2studio.CookieKingdom/XRvsR_en-US.png?raw=true");
       }
     });
 
