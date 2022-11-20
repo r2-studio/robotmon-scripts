@@ -1,7 +1,7 @@
 /* prettier-ignore */ !function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.RF=t():e.RF=t()}(this,(function(){return function(){"use strict";var e={607:function(e,t,r){var o=this&&this.__createBinding||(Object.create?function(e,t,r,o){void 0===o&&(o=r),Object.defineProperty(e,o,{enumerable:!0,get:function(){return t[r]}})}:function(e,t,r,o){void 0===o&&(o=r),e[o]=t[r]}),n=this&&this.__exportStar||function(e,t){for(var r in e)"default"===r||Object.prototype.hasOwnProperty.call(t,r)||o(t,e,r)};Object.defineProperty(t,"__esModule",{value:!0}),t.version=void 0,n(r(850),t),n(r(985),t),n(r(837),t),n(r(459),t),n(r(231),t),n(r(200),t),n(r(656),t),n(r(708),t),n(r(974),t),t.version=1},850:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.GroupPage=void 0;var r=function(){function e(e,t){this.name=e,this.pages=t}return e.prototype.isMatchImage=function(e,t){void 0===t&&(t=.9);for(var r=[],o=0,n=this.pages;o<n.length;o++){var i=n[o];i.isMatchImage(e,t)&&r.push(i.name)}return r},e.prototype.isMatchScreen=function(e,t){void 0===t&&(t=.9);var r=e.getCvtDevScreenshot(),o=this.isMatchImage(r,t);return releaseImage(r),o},e.prototype.waitScreenForMatchingOne=function(t,r,o,n,i){void 0===o&&(o=1),void 0===n&&(n=600),void 0===i&&(i=.9),e.debug&&console.log("GroupPage.waitScreenForMatchingOne "+this.name+": "+this.pages.map((function(e){return e.name})).join(","));for(var s=Date.now(),a="",c=0;Date.now()-s<r;){for(var f=t.getCvtDevScreenshot(),m=0,h=this.pages;m<h.length;m++){var g=h[m];if(g.isMatchImage(f,i)){a!==g.name&&(a=g.name,c=0),c++;break}}if(releaseImage(f),""!==a&&c>=o)break;sleep(n)}return e.debug&&console.log("GroupPage.waitScreenForMatchingOne "+this.name+": matched: "+a+", usedTime "+(Date.now()-s)),a},e.debug=!1,e}();t.GroupPage=r},985:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.Page=void 0;var o=r(656),n=function(){function e(e,t,r,o){void 0===r&&(r=void 0),void 0===o&&(o=void 0),this.name=e,this.points=t,this.next=r,this.back=o}return e.prototype.goNext=function(t){void 0!==this.next?t.tap(this.next):e.debug&&console.log("Warning Page: "+this.name+" has no next xy")},e.prototype.goBack=function(t){void 0!==this.back?t.tap(this.back):e.debug&&console.log("Warning Page: "+this.name+" has no back xy")},e.prototype.isMatchImage=function(e,t){void 0===t&&(t=.9);for(var r=!0,n=0,i=this.points;n<i.length;n++){var s=i[n],a=getImageColor(e,s.x,s.y);if(o.Colors.identityColor(s,a)<t){r=!1;break}}return r},e.prototype.isMatchScreen=function(e,t){void 0===t&&(t=.9);var r=e.getCvtDevScreenshot(),o=this.isMatchImage(r,t);return releaseImage(r),o},e.prototype.waitScreenForMatchingScreen=function(t,r,o,n,i){void 0===o&&(o=1),void 0===n&&(n=600),void 0===i&&(i=.9),e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name);for(var s=Date.now(),a=0;Date.now()-s<r&&(this.isMatchScreen(t,i)&&a++,!(a>=o));)sleep(n);return a>=o?(e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name+" success, usedTime "+(Date.now()-s)),!0):(e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name+" timeout"),!1)},e.debug=!1,e}();t.Page=n},837:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.XYRGB=void 0;t.XYRGB=function(){this.x=0,this.y=0,this.r=0,this.g=0,this.b=0}},459:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.Screen=void 0;var o=r(656),n=function(){function e(e){this.config=e;var t=getScreenSize();this.config.deviceHeight=t.height,this.config.deviceWidth=t.width,this.config.screenWidth=t.width,this.config.screenHeight=t.height,this.config.screenOffsetX=0,this.config.screenOffsetY=0}return e.prototype.calculateDeviceOffset=function(e){var t=e(this);this.config.screenWidth=t.screenWidth,this.config.screenHeight=t.screenHeight,this.config.screenOffsetX=t.screenOffsetX,this.config.screenOffsetY=t.screenOffsetY},e.prototype.getScreenX=function(e){return Math.floor(this.config.screenOffsetX+e*this.config.screenWidth/this.config.devWidth)||0},e.prototype.getScreenY=function(e){return Math.floor(this.config.screenOffsetY+e*this.config.screenHeight/this.config.devHeight)||0},e.prototype.getScreenXY=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e)return{x:this.getScreenX(e.x),y:this.getScreenY(e.y)};if("number"==typeof e&&"number"==typeof t)return{x:this.getScreenX(e),y:this.getScreenY(t)};throw new Error("getScreenXY wrong params "+e+", "+t)},e.prototype.tap=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tap(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tap(r,o,this.config.actionDuring)}},e.prototype.tapDown=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tapDown(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tapDown(r,o,this.config.actionDuring)}},e.prototype.moveTo=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);moveTo(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),moveTo(r,o,this.config.actionDuring)}},e.prototype.tapUp=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tapUp(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tapUp(r,o,this.config.actionDuring)}},e.prototype.getScreenColor=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getCvtDevScreenshot(),o=getImageColor(r,e.x,e.y);return releaseImage(r),o}if("number"==typeof e&&"number"==typeof t)return r=this.getCvtDevScreenshot(),o=getImageColor(r,e,t),releaseImage(r),o;throw new Error("tapDown wrong params "+e+", "+t)},e.prototype.findImage=function(e){var t=this.getCvtDevScreenshot(),r=findImage(t,e);return releaseImage(t),r},e.prototype.tapImage=function(e){var t=this.findImage(e);this.tap(t)},e.prototype.isSameColor=function(e,t){void 0===t&&(t=.9);var r=this.getScreenColor(e);return o.Colors.identityColor(r,e)>t},e.prototype.getDeviceScreenshot=function(){return getScreenshot()},e.prototype.getScreenScreenshot=function(){return getScreenshotModify(this.config.screenOffsetX,this.config.screenOffsetY,this.config.screenWidth,this.config.screenHeight,this.config.screenWidth,this.config.screenHeight,100)},e.prototype.getCvtDevScreenshot=function(){return getScreenshotModify(this.config.screenOffsetX,this.config.screenOffsetY,this.config.screenWidth,this.config.screenHeight,this.config.devWidth,this.config.devHeight,100)},e.prototype.setActionDuring=function(e){this.config.actionDuring=e},e.debug=!1,e}();t.Screen=n},231:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.ScreenConfig=void 0;t.ScreenConfig=function(){this.devWidth=640,this.devHeight=360,this.deviceWidth=0,this.deviceHeight=0,this.screenWidth=0,this.screenHeight=0,this.screenOffsetX=0,this.screenOffsetY=0,this.actionDuring=180}},200:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.TaskManager=t.Task=void 0;var o=r(974),n=function(){this.name="",this.runTimes=1,this.maxRunningDuring=0,this.minIntervalDuring=0,this.lastRunDoneTime=0,this.run=function(){}};t.Task=n;var i=function(){function e(){this.isRunning=!1,this.runIdx=0,this.tasks=[]}return e.prototype.addTask=function(e,t,r,o,i){void 0===r&&(r=1),void 0===o&&(o=0),void 0===i&&(i=0);var s=new n;s.name=e,s.run=t,s.runTimes=r,s.maxRunningDuring=o,s.minIntervalDuring=i,this.tasks.push(s)},e.prototype.start=function(){if(0===this.tasks.length)throw new Error("TaskManager: No tasks to run");for(console.log("TaskManager start"),this.isRunning=!0;this.isRunning;){var e=Date.now(),t=this.tasks[this.runIdx%this.tasks.length];if(this.runIdx++,!(e-t.lastRunDoneTime<t.minIntervalDuring)){console.log("RunTask "+this.runIdx+" "+t.name+", times "+t.runTimes+", maxDuring "+t.maxRunningDuring);for(var r=0;this.isRunning&&(console.log("TaskRunning "+t.name+", times "+r+"/"+t.runTimes),t.run(),t.lastRunDoneTime=Date.now(),r++,!(0!==t.runTimes&&r>=t.runTimes))&&!(Date.now()-e>t.maxRunningDuring);)sleep(100)}}},e.prototype.stop=function(){this.isRunning=!1,o.Utils.sleep(1e3),console.log("TaskManager stop")},e}();t.TaskManager=i},656:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.Colors=void 0;var r=function(){function e(){}return e.getRangeColor=function(e,t,r,o,n){void 0===n&&(n=5);var i=!1;void 0===e&&(i=!0,e=getScreenshot());for(var s=getImageSize(e),a=Math.max(0,t-o),c=Math.max(0,r-o),f=Math.min(s.width,t+o),m=Math.min(s.height,r+o),h=Math.max(1,(f-a)/n),g=Math.max(1,(m-c)/n),u=0,p={r:0,g:0,b:0},y=a;y<f;y+=h)for(var v=c;v<m;v+=g){var l=getImageColor(e,Math.floor(y),Math.floor(v));p.r+=l.r,p.g+=l.g,p.b+=l.b,u++}return i&&releaseImage(e),{r:Math.floor(p.r/u),g:Math.floor(p.g/u),b:Math.floor(p.b/u)}},e.color2hex=function(e){return((1<<24)+(e.r<<16)+(e.g<<8)+e.b).toString(16).slice(1)},e.hex2Color=function(e){return{r:parseInt(e[0]+e[1],16),g:parseInt(e[2]+e[3],16),b:parseInt(e[4]+e[5],16)}},e.identityColor=function(e,t){var r=(e.r+t.r)/2,o=e.r-t.r,n=e.g-t.g,i=e.b-t.b;return 1-Math.sqrt(((512+r)*o*o>>8)+4*n*n+((767-r)*i*i>>8))/768},e}();t.Colors=r},708:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.OCR=void 0;var r=function(){function e(e){this.words=e}return e.prototype.recognize=function(e,t,r,o){void 0===o&&(o=.8);for(var n=0,i=[],s=0;s<this.words.length;s++){var a=this.words[s],c=getImageSize(a.img);n=Math.max(n,c.width);var f=findImages(e,a.img,r,t,!0);for(var m in f){var h=f[m];i.push({char:a.char,x:h.x,y:h.y,score:h.score,w:c.width})}}i.sort((function(e,t){return e.x-t.x}));for(var g="",u=0,p=0,y=0;y<i.length;y++){var v=i[y];v.x>u?(p=v.score,g+=v.char,u=Math.floor(v.x+v.w*o)):v.x<=u&&v.score>p&&" "!==v.char&&(p=v.score,g=g.substr(0,g.length-1)+v.char,u=Math.floor(v.x+v.w*o))}return g},e}();t.OCR=r},974:function(e,t){var r=this&&this.__spreadArray||function(e,t){for(var r=0,o=t.length,n=e.length;r<o;r++,n++)e[n]=t[r];return e};Object.defineProperty(t,"__esModule",{value:!0}),t.Utils=t.log=void 0,t.log=function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];for(var r=(new Date).toLocaleString("en-US",{timeZone:"Asia/Taipei"}),o="["+r+"] ",n=0,i=e;n<i.length;n++){var s=i[n];o+="object"==typeof s?JSON.stringify(s)+" ":s+" "}console.log(o.substr(0,o.length-1))};var o=function(){function e(){}return e.sortStringNumberMap=function(e){var t=[];for(var r in e)t.push({key:r,count:e[r]});return t.sort((function(e,t){return t.count-e.count})),t},e.sleep=function(e){for(;e>200;)e-=200,sleep(200);e>0&&sleep(e)},e.getTaiwanTime=function(){return Date.now()+288e5},e.log=function(){for(var t=[],o=0;o<arguments.length;o++)t[o]=arguments[o];for(var n=0;n<t.length;n++){var i=t[n];"object"==typeof i&&(t[n]=JSON.stringify(i))}var s=new Date(e.getTaiwanTime()),a="["+(s.getMonth()+1)+"-"+s.getDate()+"T"+s.getHours()+":"+s.getMinutes()+":"+s.getSeconds()+"]";console.log.apply(console,r([a],t))},e.notifyEvent=function(t,r){null!=sendEvent&&(e.log("sendEvent",t,r),sendEvent(""+t,""+r))},e.startApp=function(e){execute("BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am start -n "+e),execute("ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am start -n "+e)},e.stopApp=function(e){execute("BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am force-stop "+e),execute("ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop "+e)},e.getCurrentApp=function(){for(var e="",t="",r=0,o=execute("dumpsys activity top").split("\n");r<o.length;r++){var n=o[r],i=n.indexOf("ACTIVITY");if(-1!==i){e="",t="";for(var s=!0,a=i+9;a<n.length;a++){var c=n[a];if(" "===c)break;"/"===c?s=!1:s?e+=c:t+=c}}}return[e,t]},e}();t.Utils=o}},t={};return function r(o){var n=t[o];if(void 0!==n)return n.exports;var i=t[o]={exports:{}};return e[o].call(i.exports,i,i.exports,r),i.exports}(607)}()}));
 
-var gScriptVersion = 8;
-var gLeagueYearLatest = 2022;
+var gScriptVersion = 9;
+var gLeagueYearMin = 2022;
 
 var gSleepShort = 2000;
 var gSleepMedium = 3000;
@@ -14,8 +14,58 @@ var defaultConfig = {
   isXr: true, // hidden setting
   isDev: true, // hidden, only for debug
   leagueSeasonMode: "full", // half, quarter, postSeason
-  leagueYear: gLeagueYearLatest, // number
+  leagueYear: gLeagueYearMin, //gLeagueYearMin, // number
 };
+
+var gLandingPage = new RF.Page(
+  "gLandingPage",
+  [
+    { x: 24, y: 20, r: 99, g: 101, b: 115 },
+    { x: 68, y: 78, r: 24, g: 28, b: 40 },
+    { x: 120, y: 136, r: 120, g: 128, b: 155 },
+    { x: 136, y: 137, r: 255, g: 255, b: 255 },
+    { x: 150, y: 136, r: 255, g: 255, b: 255 },
+    { x: 175, y: 135, r: 255, g: 255, b: 255 },
+    { x: 184, y: 135, r: 113, g: 111, b: 131 },
+    { x: 204, y: 133, r: 177, g: 177, b: 188 },
+    { x: 15, y: 332, r: 0, g: 28, b: 66 },
+    { x: 24, y: 335, r: 255, g: 255, b: 255 },
+    { x: 29, y: 329, r: 226, g: 227, b: 234 },
+    { x: 66, y: 329, r: 198, g: 190, b: 181 },
+    { x: 258, y: 330, r: 33, g: 46, b: 74 },
+    { x: 612, y: 339, r: 41, g: 56, b: 90 },
+    { x: 548, y: 42, r: 186, g: 144, b: 143 },
+    { x: 587, y: 53, r: 70, g: 95, b: 133 },
+    { x: 621, y: 108, r: 107, g: 87, b: 90 },
+    { x: 40, y: 171, r: 177, g: 186, b: 194 },
+    { x: 105, y: 169, r: 24, g: 48, b: 82 },
+    { x: 143, y: 178, r: 255, g: 255, b: 255 },
+    { x: 195, y: 171, r: 83, g: 92, b: 116 },
+  ],
+  { x: 0, y: 0 },
+  { x: 0, y: 0 }
+);
+
+// TODO: handle login
+var gLogInPage = new RF.Page(
+  "gLogInPage",
+  [
+    { x: 226, y: 76, r: 48, g: 48, b: 48 },
+    { x: 322, y: 78, r: 48, g: 48, b: 48 },
+    { x: 535, y: 42, r: 48, g: 48, b: 48 },
+    { x: 624, y: 40, r: 255, g: 255, b: 255 },
+    { x: 66, y: 333, r: 238, g: 238, b: 238 },
+    { x: 44, y: 235, r: 238, g: 238, b: 238 },
+    { x: 136, y: 236, r: 238, g: 238, b: 238 },
+    { x: 258, y: 232, r: 143, g: 186, b: 227 },
+    { x: 548, y: 169, r: 43, g: 132, b: 216 },
+    { x: 583, y: 195, r: 43, g: 132, b: 216 },
+    { x: 43, y: 142, r: 255, g: 255, b: 255 },
+    { x: 43, y: 195, r: 255, g: 255, b: 255 },
+  ],
+  { x: 554, y: 177 }, // login
+  { x: 0, y: 0 }
+);
 
 var gDownloadDataPage = new RF.Page(
   "gDownloadDataPage",
@@ -237,8 +287,8 @@ var gSelectYearPage = new RF.Page(
 );
 
 var gSelectYearPageBtns = {
-  prevYear: { x: 0, y: 0 },
-  nextYear: { x: 0, y: 0 },
+  prevYear: { x: 178, y: 156 },
+  nextYear: { x: 455, y: 156 },
   submit: { x: 285, y: 303 },
 };
 
@@ -408,16 +458,6 @@ var gLeagueNewGamePageQuickPlayOff = new RF.Page(
 );
 
 // normal game play start
-var gLeagueNewGamePageSelectPlayRole = new RF.Page(
-  "gLeagueNewGamePageSelectPlayRole",
-  [
-    { x: 174, y: 110, r: 27, g: 32, b: 35 },
-    { x: 478, y: 108, r: 33, g: 32, b: 33 },
-    { x: 107, y: 285, r: 253, g: 252, b: 253 },
-  ],
-  { x: 0, y: 0 },
-  { x: 0, y: 0 }
-);
 var gLeagueNewGamePageSelectPlayRoleBtns = {
   playOffenseOnly: { x: 128, y: 279 },
   playAll: { x: 317, y: 282 },
@@ -459,11 +499,22 @@ var gLeagueOnPlayPageAutoOff = new RF.Page(
 var gLeagueOnPlayPageAutoOff = new RF.Page(
   "gLeagueOnPlayPageAutoOff",
   [
-    { x: 14, y: 10, r: 255, g: 255, b: 255 },
-    { x: 25, y: 47, r: 255, g: 255, b: 255 },
     { x: 147, y: 11, r: 0, g: 12, b: 24 },
     { x: 562, y: 20, r: 213, g: 214, b: 213 },
     { x: 565, y: 22, r: 205, g: 203, b: 205 },
+  ],
+  { x: 511, y: 20 }, // switch to auto mode
+  { x: 511, y: 20 }
+);
+
+var gLeagueOnPlayPageAutoOff1 = new RF.Page(
+  "gLeagueOnPlayPageAutoOff1",
+  // has swing button
+  [
+    { x: 521, y: 263, r: 24, g: 29, b: 16 },
+    { x: 520, y: 255, r: 213, g: 213, b: 212 },
+    { x: 533, y: 255, r: 223, g: 221, b: 222 },
+    { x: 514, y: 244, r: 16, g: 28, b: 16 },
   ],
   { x: 511, y: 20 }, // switch to auto mode
   { x: 511, y: 20 }
@@ -477,8 +528,6 @@ var gLeagueOnPlayPagePowerSaveOff = new RF.Page(
     { x: 488, y: 22, r: 222, g: 218, b: 222 },
     { x: 484, y: 29, r: 187, g: 192, b: 195 },
     { x: 493, y: 29, r: 174, g: 179, b: 182 },
-    { x: 16, y: 8, r: 255, g: 255, b: 255 },
-    { x: 206, y: 11, r: 21, g: 20, b: 21 },
   ],
   { x: 485, y: 21 }, // turn on power save
   { x: 485, y: 21 }
@@ -512,6 +561,23 @@ var gLeagueOnQuickPlayPage = new RF.Page(
   ],
   { x: 0, y: 0 },
   { x: 0, y: 0 }
+);
+
+// sometimes the quick play will be paused
+var gLeagueOnQuickPlayPausePage = new RF.Page(
+  "gLeagueOnQuickPlayPausePage",
+  [
+    { x: 456, y: 11, r: 49, g: 73, b: 123 },
+    { x: 472, y: 22, r: 201, g: 207, b: 218 },
+    { x: 532, y: 22, r: 81, g: 100, b: 128 },
+    { x: 453, y: 347, r: 24, g: 36, b: 57 },
+    { x: 306, y: 276, r: 8, g: 118, b: 255 },
+    { x: 421, y: 283, r: 2, g: 105, b: 247 },
+    { x: 325, y: 337, r: 0, g: 97, b: 247 },
+    { x: 430, y: 336, r: 0, g: 97, b: 247 },
+  ],
+  { x: 376, y: 329 }, // play ball
+  { x: 376, y: 329 }
 );
 
 // when playing, press back
@@ -975,6 +1041,25 @@ var gUnexpectedErrorPage = new RF.Page(
   { x: 314, y: 299 }
 );
 
+var gQuitGamePage = new RF.Page(
+  "gQuitGamePage",
+  [
+    { x: 279, y: 54, r: 170, g: 173, b: 178 },
+    { x: 324, y: 60, r: 20, g: 27, b: 28 },
+    { x: 514, y: 50, r: 181, g: 182, b: 182 },
+    { x: 466, y: 295, r: 8, g: 121, b: 255 },
+    { x: 414, y: 298, r: 94, g: 157, b: 233 },
+    { x: 496, y: 312, r: 0, g: 90, b: 247 },
+    { x: 523, y: 309, r: 222, g: 219, b: 222 },
+    { x: 111, y: 297, r: 222, g: 219, b: 222 },
+    { x: 307, y: 60, r: 133, g: 137, b: 141 },
+    { x: 315, y: 61, r: 181, g: 186, b: 189 },
+    { x: 324, y: 61, r: 52, g: 56, b: 61 },
+  ],
+  { x: 300, y: 303 }, // not to quit
+  { x: 300, y: 303 }
+);
+
 var gLeagueModePanelPages = [
   gLeagueModePanelPageContinue,
   gLeagueModePanelPageNextSchedule,
@@ -989,7 +1074,9 @@ var gLeagueOnPlayPages = [
   gLeagueOnPlayPagePowerSaveOn,
   gLeagueOnPlayPagePowerSaveOff,
   gLeagueOnPlayPageAutoOff,
+  gLeagueOnPlayPageAutoOff1,
   gLeagueOnQuickPlayPage,
+  gLeagueOnQuickPlayPausePage,
   gLeagueOnPlayPausePage,
   gLeagueContinuePlayingPage,
 ];
@@ -999,6 +1086,8 @@ var gLeagueOnPlayPagesGroup = new RF.GroupPage(
 );
 
 var gAllPages = [
+  gLandingPage,
+  gLogInPage,
   gMainPage,
   gSettingsPage,
   gNewSeasonPage,
@@ -1032,6 +1121,7 @@ var gAllPages = [
   gEventPage,
   gPowerSavingPage,
   gUnexpectedErrorPage,
+  gQuitGamePage,
 ]
   .concat(gLeagueModePanelPages)
   .concat(gLeagueOnPlayPages);
@@ -1067,34 +1157,6 @@ MLB9I.prototype.start = function () {
   console.log("MLB9I start");
   console.log("script version", gScriptVersion);
   this.running = true;
-
-  // var screenshot = getScreenshot();
-  // for (var p in ppos) {
-  //   p = ppos[p];
-  //   console.log(p.x, p.y);
-  //   var rgb = getImageColor(screenshot, p.x, p.y);
-  //   console.log([
-  //     [p.r, rgb.r, p.r === rgb.r],
-  //     [p.g, rgb.g, p.g === rgb.g],
-  //     [p.b, rgb.b, p.b === rgb.b],
-  //   ]);
-  // }
-  // console.log("playing save");
-  // for (var p in lpos) {
-  //   p = lpos[p];
-  //   console.log(p.x, p.y);
-  //   var rgb = getImageColor(screenshot, p.x, p.y);
-  //   console.log([
-  //     [p.r, rgb.r, p.r === rgb.r],
-  //     [p.g, rgb.g, p.g === rgb.g],
-  //     [p.b, rgb.b, p.b === rgb.b],
-  //   ]);
-  // }
-  // releaseImage(screenshot);
-
-  // console.log(gPowerSavingPage.isMatchScreen(this.screen));
-  // console.log(gLeagueOnPlayPagePowerSaveOn.isMatchScreen(this.screen, 1));
-
   if (this.config.isXr === true) {
     var isOk = this.handleSetPowerSave();
     if (!isOk) {
@@ -1169,6 +1231,11 @@ MLB9I.prototype.goToPage = function (
       hasError = true;
       return true;
     }
+    // TODO: handle login
+    if (pageName === "gLogInPage") {
+      hasError = true;
+      return true;
+    }
     if (pageName === "gUnexpectedErrorPage") {
       gUnexpectedErrorPage.goNext(this.screen);
       RF.Utils.sleep(gSleepWaitPageLong);
@@ -1180,6 +1247,10 @@ MLB9I.prototype.goToPage = function (
     }
     if (pageName === "gMvpPage") {
       this.handleMvpPage();
+      return false;
+    }
+    if (pageName === "gSelectRewardPlayerPage") {
+      this.handleSelectRewardPlayer();
       return false;
     }
     if (pageName === "gDownloadDataPage") {
@@ -1312,14 +1383,6 @@ MLB9I.prototype.handleMvpPage = function () {
   RF.Utils.sleep(gSleepMedium);
   this.screen.tap({ x: 322, y: 309 }); // click next
   RF.Utils.sleep(gSleepShort);
-
-  if (gSelectRewardPlayerPage.isMatchScreen(this.screen)) {
-    this.handleSelectRewardPlayer();
-    return true;
-  }
-
-  console.log("cannot enter gSelectRewardPlayerPage");
-  return false;
 };
 
 // TODO: handle choose the most rare card
@@ -1328,7 +1391,11 @@ MLB9I.prototype.handleSelectRewardPlayer = function () {
 
   var screenshot = getScreenshot();
   var bestCardPos = gSelectRewardPlayerPageButtons.leftCard;
-  for (pos in Object.values(gSelectRewardPlayerPageButtons)) {
+
+  var positions = Object.keys(gSelectRewardPlayerPageButtons);
+
+  for (var i in positions) {
+    var pos = gSelectRewardPlayerPageButtons[positions[i]];
     var rgb = getImageColor(screenshot, pos.x, pos.y);
     console.log(rgb.r, rgb.g, rgb.b);
     // TODO: check the color priority
@@ -1347,29 +1414,36 @@ MLB9I.prototype.handleSelectRewardPlayer = function () {
 
 MLB9I.prototype.handleSelectYearPage = function () {
   console.log("handle select year page");
-  // TODO: use config to select year
   gSelectYearPage.goNext(this.screen);
 
-  // go to the latest year
-  var isNotLatestYear = true;
-  while (isNotLatestYear) {
-    this.screen.tap(gSelectYearPageBtns.nextYear);
+  // go to the min year
+  var activeButton = {
+    x: gSelectYearPageBtns.prevYear.x,
+    y: gSelectYearPageBtns.prevYear.y,
+    r: 49,
+    g: 85,
+    b: 123,
+  };
+
+  var isNotMinYear = this.screen.isSameColor(activeButton);
+  while (isNotMinYear) {
+    this.screen.tap(gSelectYearPageBtns.prevYear);
     RF.Utils.sleep(gSleepShort);
-    isNotLatestYear = false;
+    isNotMinYear = this.screen.isSameColor(activeButton);
   }
 
   // check the diff, return to prev year
   for (
-    var yearDiff = gLeagueYearLatest - this.config.leagueYear;
+    var yearDiff = this.config.leagueYear - gLeagueYearMin;
     yearDiff > 0;
     yearDiff--
   ) {
-    this.screen.tap(gSelectYearPageBtns.prevYear);
+    this.screen.tap(gSelectYearPageBtns.nextYear);
     RF.Utils.sleep(gSleepShort);
   }
 
-  // this.screen.tap({ x: 285, y: 303 });
   this.screen.tap(gSelectYearPageBtns.submit);
+  RF.Utils.sleep(gSleepShort);
   return;
 };
 
@@ -1387,6 +1461,8 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
 
   function goNewGamePanel(tryTime) {
     console.log("#### go new game panel", tryTime);
+    this.screen.tap({ x: 0, y: 0 });
+    console.log("tap");
 
     var screenshot = getScreenshot();
     if (gLeagueModePanelPageNextSchedule.isMatchImage(screenshot)) {
@@ -1398,7 +1474,7 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
     if (
       gLeagueNewGamePage.waitScreenForMatchingScreen(
         this.screen,
-        gSleepWaitPageLong,
+        gSleepMedium,
         2
       )
     ) {
@@ -1412,6 +1488,7 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
     if (gGameResultOtherPage.isMatchImage(screenshot)) {
       releaseImage(screenshot);
       this.screen.tap({ x: 0, y: 0 });
+      console.log("tap");
       RF.Utils.sleep(gSleepMedium);
       return false;
     }
@@ -1421,7 +1498,7 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
     return false;
   }
 
-  var isEnterNewGamePanel = this.tryDo(goNewGamePanel.bind(this), 15);
+  var isEnterNewGamePanel = this.tryDo(goNewGamePanel.bind(this), 25);
   if (!isEnterNewGamePanel) {
     console.log("cannot enter new game page");
     this.debug("isEnterNewGamePanel");
@@ -1480,15 +1557,19 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
   console.log("play");
 
   function enterGame(tryTime) {
-    if (
-      gLeagueNewGamePageSelectPlayRole.waitScreenForMatchingScreen(
-        this.screen,
-        gSleepWaitPageLong,
-        2,
-        600,
-        0.7
-      )
-    ) {
+    // check if select play role
+    var screenshot = getScreenshot();
+    var count = 0;
+    for (var x = 65; x < 565; x += 4) {
+      var rgb = getImageColor(screenshot, x, 282);
+      if (rgb.r > 250 && rgb.g > 250 && rgb.b > 250) {
+        count++;
+        console.log(count);
+      }
+    }
+    releaseImage(screenshot);
+
+    if (count === 4 || count === 5) {
       // TODO: might add to config
       console.log("handle select player role");
       this.screen.tap(gLeagueNewGamePageSelectPlayRoleBtns.playAll);
@@ -1513,6 +1594,9 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
   }
 
   var isEnterGame = this.tryDo(enterGame.bind(this), 150);
+  while (!isEnterGame && this.running) {
+    isEnterGame = this.tryDo(enterGame.bind(this), 150);
+  }
   if (!isEnterGame) {
     console.log("cannot enter game");
     this.debug("isEnterGame");
@@ -1678,17 +1762,71 @@ MLB9I.prototype.handlePlayGame = function () {
   function endPlaying(tryTime) {
     console.log("#########check end play");
 
+    var screenshot = getScreenshot();
+
+    // check whether game is ended
+    if (gMvpPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      this.handleMvpPage();
+      RF.Utils.sleep(gSleepMedium);
+      return false;
+    }
+
+    if (gSelectRewardPlayerPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      this.handleSelectRewardPlayer();
+      RF.Utils.sleep(gSleepMedium);
+      return false;
+    }
+
+    // come back to main page
+    if (gMainPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      console.log("reach main page");
+      return true;
+    }
+
+    // come back to main page
+    if (gGameResultOtherPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      console.log("reach GameResultOther");
+      gGameResultOtherPage.goNext(this.screen);
+      RF.Utils.sleep(gSleepShort);
+      return true;
+    }
+
+    if (gUnexpectedErrorPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      console.log("unexpectedError happened during game");
+      gUnexpectedErrorPage.goNext(this.screen);
+      RF.Utils.sleep(gSleepWaitPageLong);
+      return false;
+    }
+
+    releaseImage(screenshot);
+
     // check whether is on play
     var pageName = gLeagueOnPlayPagesGroup.waitScreenForMatchingOne(
       this.screen,
       gSleepMedium,
       1
     );
-    if (pageName !== "") {
+    while (pageName !== "" && this.running) {
       console.log("still playing");
 
       // handle play operation settings
       switch (pageName) {
+        case "gLeagueOnQuickPlayPage":
+          this.screen.tap({ x: 0, y: 0 });
+          console.log("tap");
+          RF.Utils.sleep(gSleepLong);
+          break;
+
+        case "gLeagueOnQuickPlayPausePage":
+          gLeagueOnQuickPlayPausePage.goNext(this.screen);
+          RF.Utils.sleep(gSleepWaitPageLong);
+          break;
+
         case "gLeagueContinuePlayingPage":
           gLeagueContinuePlayingPage.goNext(this.screen);
           RF.Utils.sleep(gSleepWaitPageLong);
@@ -1704,7 +1842,7 @@ MLB9I.prototype.handlePlayGame = function () {
           if (gPowerSavingPage.isMatchScreen(this.screen, 1)) {
             console.log("end playing with power save on");
             this.handlePowerSavingPage();
-            break;
+            return false;
           }
 
           // still playing
@@ -1715,6 +1853,11 @@ MLB9I.prototype.handlePlayGame = function () {
           }
           RF.Utils.sleep(gSleepWaitPageLong);
           break;
+
+        case "gLeagueOnPlayPageAutoOff1":
+          gLeagueOnPlayPageAutoOff1.goNext(this.screen);
+          RF.Utils.sleep(gSleepShort);
+        // not break here to click twice and handle power save play
 
         case "gLeagueOnPlayPageAutoOff":
           gLeagueOnPlayPageAutoOff.goNext(this.screen);
@@ -1734,40 +1877,37 @@ MLB9I.prototype.handlePlayGame = function () {
           console.log("tap");
           break;
       }
-      return false;
+      pageName = gLeagueOnPlayPagesGroup.waitScreenForMatchingOne(
+        this.screen,
+        gSleepLong,
+        1
+      );
     }
 
     this.screen.tap({ x: 0, y: 0 });
     console.log("tap");
 
-    // check whether game is ended
-    if (gMvpPage.isMatchScreen(this.screen)) {
-      this.handleMvpPage();
-      RF.Utils.sleep(gSleepMedium);
-      return false;
-    }
-
-    // come back to main page
-    if (gMainPage.isMatchScreen(this.screen)) {
-      console.log("reach main page");
-      return true;
-    }
-
-    if (this.goToPage(gGameResultOtherPage, 5)) {
-      console.log("reach GameResultOther");
-      gGameResultOtherPage.goNext(this.screen);
+    // handle animation page
+    var pages = this.findPages();
+    pageName = pages[0];
+    var page = this.getPageByName(pageName);
+    for (var i = 0; i < 10 && page === null && this.running; i++) {
+      this.screen.tap({ x: 0, y: 0 });
+      console.log("tap");
       RF.Utils.sleep(gSleepShort);
-      return true;
+      pages = this.findPages();
+      pageName = pages[0];
+      page = this.getPageByName(pageName);
     }
 
+    if (page !== null) {
+      page.goNext(this.screen);
+    }
     RF.Utils.sleep(gSleepShort);
     return false;
   }
 
-  var isEndGame = this.tryDo(endPlaying.bind(this), 350);
-  if (!isEndGame) {
-    console.log("is not end game");
-  }
+  var isEndGame = this.tryDo(endPlaying.bind(this), 150);
   return isEndGame;
 };
 
@@ -1786,14 +1926,18 @@ MLB9I.prototype.taskPlayLeagueMode = function () {
   var isEnterGame = this.handleEnterLeagueGame();
   if (!isEnterGame) {
     console.log("is not enter leagueMode game");
-    this.stop();
+    // try again
+    RF.Utils.sleep(gSleepLong);
+    this.taskPlayLeagueMode();
     return;
   }
   console.log("handlePlayGame");
   var isPlayOk = this.handlePlayGame();
   console.log("isplayok:", isPlayOk);
   if (!isPlayOk) {
-    this.stop();
+    // try again
+    RF.Utils.sleep(gSleepLong);
+    this.taskPlayLeagueMode();
   }
 };
 
@@ -1816,7 +1960,3 @@ function stop() {
   mlb9i.stop();
   mlb9i = undefined;
 }
-
-// ! remember to comment
-// start();
-// stop();
