@@ -1060,6 +1060,22 @@ var gQuitGamePage = new RF.Page(
   { x: 300, y: 303 }
 );
 
+var gPlayGameSelectModePage = new RF.Page(
+  "gPlayGameSelectModePage",
+  [
+    {x: 75, y: 282, r: 252, g: 252, b: 252},
+    {x: 112, y: 282, r: 253, g: 252, b: 253},
+    {x: 294, y: 281, r: 253, g: 253, b: 252},
+    {x: 331, y: 283, r: 251, g: 249, b: 251},
+    {x: 474, y: 282, r: 255, g: 255, b: 255},
+    {x: 548, y: 281, r: 255, g: 255, b: 255},
+    {x: 66, y: 110, r: 30, g: 30, b: 30},
+    {x: 571, y: 110, r: 30, g: 30, b: 30},
+  ],
+  { x: 322, y: 279 },
+  { x: 322, y: 279 }
+);
+
 var gLeagueModePanelPages = [
   gLeagueModePanelPageContinue,
   gLeagueModePanelPageNextSchedule,
@@ -1122,6 +1138,7 @@ var gAllPages = [
   gPowerSavingPage,
   gUnexpectedErrorPage,
   gQuitGamePage,
+  gPlayGameSelectModePage,
 ]
   .concat(gLeagueModePanelPages)
   .concat(gLeagueOnPlayPages);
