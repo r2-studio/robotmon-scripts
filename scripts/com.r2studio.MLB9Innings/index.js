@@ -201,17 +201,21 @@ var gNewSeasonPage = new RF.Page(
 var gEndSeasonPage = new RF.Page(
   "gSeasonEndPage",
   [
-    { x: 164, y: 13, r: 0, g: 93, b: 181 },
-    { x: 131, y: 39, r: 32, g: 104, b: 165 },
-    { x: 170, y: 35, r: 255, g: 255, b: 255 },
-    { x: 249, y: 38, r: 18, g: 94, b: 157 },
-    { x: 326, y: 41, r: 26, g: 99, b: 158 },
-    { x: 489, y: 38, r: 48, g: 113, b: 166 },
-    { x: 601, y: 18, r: 0, g: 93, b: 173 },
-    { x: 622, y: 70, r: 2, g: 57, b: 105 },
-    { x: 621, y: 112, r: 0, g: 31, b: 49 },
-    { x: 56, y: 343, r: 8, g: 12, b: 8 },
-    { x: 315, y: 148, r: 0, g: 16, b: 16 },
+    { x: 62, y: 99, r: 184, g: 213, b: 242 },
+    { x: 20, y: 24, r: 0, g: 89, b: 165 },
+    { x: 124, y: 33, r: 38, g: 113, b: 175 },
+    { x: 258, y: 37, r: 228, g: 236, b: 243 },
+    { x: 342, y: 32, r: 1, g: 85, b: 156 },
+    { x: 390, y: 35, r: 255, g: 255, b: 255 },
+    { x: 498, y: 36, r: 81, g: 137, b: 184 },
+    { x: 570, y: 18, r: 0, g: 93, b: 173 },
+    { x: 568, y: 36, r: 80, g: 136, b: 180 },
+    { x: 622, y: 70, r: 8, g: 59, b: 105 },
+    { x: 618, y: 300, r: 15, g: 16, b: 8 },
+    { x: 16, y: 352, r: 16, g: 16, b: 8 },
+    { x: 557, y: 328, r: 255, g: 255, b: 255 },
+    { x: 597, y: 332, r: 8, g: 105, b: 247 },
+    { x: 569, y: 321, r: 255, g: 255, b: 255 },
   ],
   { x: 567, y: 335 },
   { x: 567, y: 335 }
@@ -464,6 +468,24 @@ var gLeagueNewGamePageSelectPlayRoleBtns = {
   playDeffenseOnly: { x: 506, y: 281 },
 };
 
+var gLeagueNewGamePageSelectPlayRole = new RF.Page(
+  "gLeagueNewGamePageSelectPlayRole",
+  [
+    { x: 97, y: 282, r: 255, g: 255, b: 255 },
+    { x: 145, y: 282, r: 255, g: 255, b: 255 },
+    { x: 499, y: 282, r: 255, g: 255, b: 255 },
+    { x: 539, y: 282, r: 255, g: 255, b: 255 },
+    { x: 543, y: 282, r: 255, g: 255, b: 255 },
+    { x: 563, y: 282, r: 255, g: 255, b: 255 },
+
+    { x: 90, y: 110, r: 194, g: 82, b: 24 },
+    { x: 552, y: 112, r: 57, g: 120, b: 197 },
+  ],
+  // TODO: make which role can be selected if need
+  gLeagueNewGamePageSelectPlayRoleBtns.playAll,
+  gLeagueNewGamePageSelectPlayRoleBtns.playAll
+);
+
 // sometimes happened when restarting a continued game
 var gLeagueContinuePlayingPage = new RF.Page(
   "gLeagueContinuePlayingPage",
@@ -536,7 +558,17 @@ var gLeagueOnPlayPagePowerSaveOff = new RF.Page(
 var gLeagueOnPlayPagePowerSaveOn = new RF.Page(
   "gLeagueOnPlayPagePowerSaveOn",
   [
-    { x: 298, y: 136, r: 156, g: 160, b: 165 },
+    { x: 304, y: 136, r: 156, g: 160, b: 165 },
+    { x: 305, y: 136, r: 156, g: 160, b: 165 },
+    { x: 306, y: 136, r: 156, g: 160, b: 165 },
+    { x: 307, y: 136, r: 156, g: 160, b: 165 },
+    { x: 308, y: 136, r: 156, g: 160, b: 165 },
+
+    { x: 301, y: 133, r: 165, g: 162, b: 165 },
+    { x: 302, y: 133, r: 165, g: 162, b: 165 },
+    { x: 303, y: 133, r: 165, g: 162, b: 165 },
+    { x: 304, y: 133, r: 165, g: 162, b: 165 },
+    { x: 305, y: 133, r: 165, g: 162, b: 165 },
     { x: 36, y: 26, r: 0, g: 0, b: 0 },
     { x: 36, y: 326, r: 0, g: 0, b: 0 },
     { x: 613, y: 330, r: 0, g: 0, b: 0 },
@@ -544,7 +576,14 @@ var gLeagueOnPlayPagePowerSaveOn = new RF.Page(
     { x: 602, y: 27, r: 0, g: 0, b: 0 },
     { x: 174, y: 162, r: 0, g: 0, b: 0 },
     { x: 476, y: 158, r: 0, g: 0, b: 0 },
-    { x: 484, y: 299, r: 16, g: 20, b: 16 },
+    // score bg
+    { x: 497, y: 300, r: 16, g: 20, b: 16 },
+    { x: 498, y: 300, r: 16, g: 20, b: 16 },
+    { x: 499, y: 300, r: 16, g: 20, b: 16 },
+    { x: 500, y: 300, r: 16, g: 20, b: 16 },
+    { x: 501, y: 300, r: 16, g: 20, b: 16 },
+    { x: 502, y: 300, r: 16, g: 20, b: 16 },
+    { x: 503, y: 300, r: 16, g: 20, b: 16 },
   ],
   { x: 0, y: 0 },
   { x: 0, y: 0 }
@@ -834,18 +873,48 @@ var gSelectRewardPlayerPageButtons = {
 var gPowerSavingPage = new RF.Page(
   "gPowerSavingPage",
   [
-    { x: 298, y: 136, r: 156, g: 160, b: 165 },
+    { x: 304, y: 136, r: 156, g: 160, b: 165 },
+    { x: 305, y: 136, r: 156, g: 160, b: 165 },
+    { x: 306, y: 136, r: 156, g: 160, b: 165 },
+    { x: 307, y: 136, r: 156, g: 160, b: 165 },
+    { x: 308, y: 136, r: 156, g: 160, b: 165 },
+
+    { x: 301, y: 133, r: 165, g: 162, b: 165 },
+    { x: 302, y: 133, r: 165, g: 162, b: 165 },
+    { x: 303, y: 133, r: 165, g: 162, b: 165 },
+    { x: 304, y: 133, r: 165, g: 162, b: 165 },
+    { x: 305, y: 133, r: 165, g: 162, b: 165 },
     { x: 137, y: 155, r: 0, g: 0, b: 0 },
     { x: 521, y: 160, r: 0, g: 0, b: 0 },
     { x: 298, y: 50, r: 0, g: 0, b: 0 },
     { x: 618, y: 10, r: 0, g: 0, b: 0 },
     // to diff from power saving during playing
-    { x: 493, y: 291, r: 0, g: 0, b: 0 },
-    { x: 506, y: 282, r: 0, g: 0, b: 0 },
-    { x: 506, y: 304, r: 0, g: 0, b: 0 },
-    { x: 503, y: 280, r: 0, g: 0, b: 0 },
-    { x: 502, y: 291, r: 0, g: 0, b: 0 },
-    { x: 561, y: 280, r: 0, g: 0, b: 0 },
+    { x: 497, y: 300, r: 0, g: 0, b: 0 },
+    { x: 498, y: 300, r: 0, g: 0, b: 0 },
+    { x: 499, y: 300, r: 0, g: 0, b: 0 },
+    { x: 500, y: 300, r: 0, g: 0, b: 0 },
+    { x: 501, y: 300, r: 0, g: 0, b: 0 },
+    { x: 502, y: 300, r: 0, g: 0, b: 0 },
+    { x: 503, y: 300, r: 0, g: 0, b: 0 },
+    { x: 555, y: 282, r: 0, g: 0, b: 0 },
+    { x: 555, y: 292, r: 0, g: 0, b: 0 },
+    { x: 545, y: 291, r: 0, g: 0, b: 0 },
+
+    // score
+    { x: 520, y: 280, r: 0, g: 0, b: 0 },
+    { x: 525, y: 280, r: 0, g: 0, b: 0 },
+    { x: 530, y: 280, r: 0, g: 0, b: 0 },
+    { x: 535, y: 280, r: 0, g: 0, b: 0 },
+    { x: 540, y: 280, r: 0, g: 0, b: 0 },
+    { x: 545, y: 280, r: 0, g: 0, b: 0 },
+    { x: 550, y: 280, r: 0, g: 0, b: 0 },
+    { x: 520, y: 295, r: 0, g: 0, b: 0 },
+    { x: 525, y: 295, r: 0, g: 0, b: 0 },
+    { x: 530, y: 295, r: 0, g: 0, b: 0 },
+    { x: 535, y: 295, r: 0, g: 0, b: 0 },
+    { x: 540, y: 295, r: 0, g: 0, b: 0 },
+    { x: 545, y: 295, r: 0, g: 0, b: 0 },
+    { x: 550, y: 295, r: 0, g: 0, b: 0 },
   ],
   { x: 0, y: 0 },
   { x: 0, y: 0 }
@@ -1070,6 +1139,16 @@ var gLeagueModePanelPagesGroup = new RF.GroupPage(
   gLeagueModePanelPages
 );
 
+var gLeagueOnPlayPageNames = [
+  "gLeagueOnPlayPagePowerSaveOn",
+  "gLeagueOnPlayPagePowerSaveOff",
+  "gLeagueOnPlayPageAutoOff",
+  "gLeagueOnPlayPageAutoOff1",
+  "gLeagueOnQuickPlayPage",
+  "gLeagueOnQuickPlayPausePage",
+  "gLeagueOnPlayPausePage",
+  "gLeagueContinuePlayingPage",
+];
 var gLeagueOnPlayPages = [
   gLeagueOnPlayPagePowerSaveOn,
   gLeagueOnPlayPagePowerSaveOff,
@@ -1096,6 +1175,7 @@ var gAllPages = [
   gSelectYearPage,
   gSelectLeagueGameAmountPage,
   gLeagueNewGamePage,
+  gLeagueNewGamePageSelectPlayRole,
   gGameResultPage,
   gGameResultAquiredPage,
   gGameResultOtherPage,
@@ -1267,6 +1347,11 @@ MLB9I.prototype.goToPage = function (
       RF.Utils.sleep(gSleepWaitPageLong);
       return false;
     }
+    if (pageName === "gEndSeasonPage") {
+      this.handleEndSeasonPage();
+      return false;
+    }
+
     // ! handle swipe pages
     var page = this.getPageByName(pageName);
     if (page !== null) {
@@ -1474,7 +1559,7 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
     if (
       gLeagueNewGamePage.waitScreenForMatchingScreen(
         this.screen,
-        gSleepMedium,
+        gSleepShort,
         2
       )
     ) {
@@ -1494,11 +1579,14 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
     }
 
     releaseImage(screenshot);
-    RF.Utils.sleep(gSleepWaitPageShort);
+    RF.Utils.sleep(gSleepShort);
     return false;
   }
 
   var isEnterNewGamePanel = this.tryDo(goNewGamePanel.bind(this), 25);
+  while (!isEnterNewGamePanel && this.running) {
+    isEnterNewGamePanel = this.tryDo(goNewGamePanel.bind(this), 25);
+  }
   if (!isEnterNewGamePanel) {
     console.log("cannot enter new game page");
     this.debug("isEnterNewGamePanel");
@@ -1558,28 +1646,15 @@ MLB9I.prototype.handleLeagueModeNextSchedulePage = function () {
 
   function enterGame(tryTime) {
     // check if select play role
-    var screenshot = getScreenshot();
-    var count = 0;
-    for (var x = 65; x < 565; x += 4) {
-      var rgb = getImageColor(screenshot, x, 282);
-      if (rgb.r > 250 && rgb.g > 250 && rgb.b > 250) {
-        count++;
-        console.log(count);
-      }
-    }
-    releaseImage(screenshot);
-
-    if (count === 4 || count === 5) {
-      // TODO: might add to config
-      console.log("handle select player role");
-      this.screen.tap(gLeagueNewGamePageSelectPlayRoleBtns.playAll);
-      RF.Utils.sleep(gSleepMedium);
+    if (gLeagueNewGamePageSelectPlayRole.isMatchScreen(this.screen)) {
+      console.log("handle select play role");
+      gLeagueNewGamePageSelectPlayRole.goNext(this.screen);
+      RF.Utils.sleep(gSleepShort);
       return true;
     }
-
     var pageName = gLeagueOnPlayPagesGroup.waitScreenForMatchingOne(
       this.screen,
-      gSleepWaitPageLong,
+      gSleepWaitPageShort,
       2
     );
     if (pageName !== "") {
@@ -1608,25 +1683,8 @@ MLB9I.prototype.handleEnterLeagueGame = function () {
   var hasError = false;
   function enterGame(tryTime) {
     console.log("####### try start game");
-    // check if enter the panel
-    var pageName = gLeagueModePanelPagesGroup.waitScreenForMatchingOne(
-      this.screen,
-      gSleepWaitPageShort,
-      2
-    );
-    console.log(pageName);
-    if (pageName === "gLeagueModePanelPageNextSchedule") {
-      hasError = !this.handleLeagueModeNextSchedulePage();
-      return true;
-    }
-    if (pageName === "gLeagueModePanelPageContinue") {
-      gLeagueModePanelPageContinue.goNext(this.screen);
-      RF.Utils.sleep(gSleepMedium);
-      gLeagueNewGamePage.goNext(this.screen); // play ball
-      RF.Utils.sleep(gSleepMedium);
-      return true;
-    }
 
+    // check and handle following pages
     var screenshot = getScreenshot();
     if (gMainPage.isMatchImage(screenshot)) {
       console.log("main page");
@@ -1740,6 +1798,25 @@ MLB9I.prototype.handleEnterLeagueGame = function () {
 
     releaseImage(screenshot);
 
+    // check if enter the panel
+    var pageName = gLeagueModePanelPagesGroup.waitScreenForMatchingOne(
+      this.screen,
+      gSleepWaitPageShort,
+      2
+    );
+    console.log(pageName);
+    if (pageName === "gLeagueModePanelPageNextSchedule") {
+      hasError = !this.handleLeagueModeNextSchedulePage();
+      return true;
+    }
+    if (pageName === "gLeagueModePanelPageContinue") {
+      gLeagueModePanelPageContinue.goNext(this.screen);
+      RF.Utils.sleep(gSleepMedium);
+      gLeagueNewGamePage.goNext(this.screen); // play ball
+      RF.Utils.sleep(gSleepMedium);
+      return true;
+    }
+
     this.screen.tap({ x: 0, y: 0 });
     console.log("tap");
 
@@ -1779,6 +1856,13 @@ MLB9I.prototype.handlePlayGame = function () {
       return false;
     }
 
+    // game over when power save on
+    if (gPowerSavingPage.isMatchImage(screenshot)) {
+      console.log("end playing with power save on");
+      this.handlePowerSavingPage();
+      return false;
+    }
+
     // come back to main page
     if (gMainPage.isMatchImage(screenshot)) {
       releaseImage(screenshot);
@@ -1792,6 +1876,19 @@ MLB9I.prototype.handlePlayGame = function () {
       console.log("reach GameResultOther");
       gGameResultOtherPage.goNext(this.screen);
       RF.Utils.sleep(gSleepShort);
+      return true;
+    }
+
+    if (gLeagueNewGamePageSelectPlayRole.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      gLeagueNewGamePageSelectPlayRole.goNext(this.screen);
+      RF.Utils.sleep(gSleepShort);
+      return false;
+    }
+
+    if (gEndSeasonPage.isMatchImage(screenshot)) {
+      releaseImage(screenshot);
+      this.handleEndSeasonPage();
       return true;
     }
 
@@ -1838,14 +1935,6 @@ MLB9I.prototype.handlePlayGame = function () {
           break;
 
         case "gLeagueOnPlayPagePowerSaveOn":
-          // game over when power save on
-          if (gPowerSavingPage.isMatchScreen(this.screen, 1)) {
-            console.log("end playing with power save on");
-            this.handlePowerSavingPage();
-            return false;
-          }
-
-          // still playing
           if (this.config.isXr) {
             console.log("still play with power save on");
           } else {
@@ -1897,9 +1986,11 @@ MLB9I.prototype.handlePlayGame = function () {
       RF.Utils.sleep(gSleepShort);
       pages = this.findPages();
       pageName = pages[0];
+      if (gLeagueOnPlayPageNames.indexOf(pageName) !== -1) {
+        return false;
+      }
       page = this.getPageByName(pageName);
     }
-
     if (page !== null) {
       page.goNext(this.screen);
     }
