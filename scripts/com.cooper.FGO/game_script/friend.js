@@ -23,7 +23,7 @@ if(server =="TW"){
 
 var friendServantYOffset = 49;
 var friendServantSize = [232, 144];
-var friendItemYOffset = 196;
+var friendItemYOffset = 197;
 var friendItemSize = [232, 45];
 
 var friendStarXOffset = 209;
