@@ -594,8 +594,11 @@ var gLeagueOnPlayPagePowerSaveOffStopped = new RF.Page(
 
 // don't do any thing, just avoid to enter unknown
 var gLeagueOnPlayPagePowerSaveOffMid = new RF.Page(
-  "gLeagueOnPlayPagePowerSaveOffMid",
+  "gLeagueOnPlayPagePowerSaveOff",
   [
+    // battery
+    { x: 486, y: 13, r: 255, g: 255, b: 255 },
+
     // dialog on
     { x: 604, y: 47, r: 170, g: 171, b: 170 },
     { x: 607, y: 49, r: 246, g: 246, b: 246 },
@@ -605,8 +608,11 @@ var gLeagueOnPlayPagePowerSaveOffMid = new RF.Page(
   { x: 0, y: 0 }
 );
 var gLeagueOnPlayPagePowerSaveOffMid1 = new RF.Page(
-  "gLeagueOnPlayPagePowerSaveOffMid",
+  "gLeagueOnPlayPagePowerSaveOff",
   [
+    // battery
+    { x: 486, y: 13, r: 255, g: 255, b: 255 },
+
     // dialog off
     { x: 605, y: 50, r: 95, g: 99, b: 97 },
     { x: 602, y: 51, r: 109, g: 114, b: 116 },
@@ -697,10 +703,6 @@ var gLeagueOnPlayPausePage = new RF.Page(
     { x: 554, y: 291, r: 0, g: 28, b: 57 },
     { x: 563, y: 294, r: 255, g: 255, b: 255 },
     { x: 565, y: 290, r: 30, g: 54, b: 88 },
-    // p
-    { x: 88, y: 333, r: 253, g: 253, b: 253 },
-    { x: 91, y: 336, r: 246, g: 246, b: 246 },
-    { x: 91, y: 339, r: 74, g: 73, b: 74 },
   ],
   { x: 89, y: 148 }, // continue game
   { x: 527, y: 165 } // leave
@@ -1516,7 +1518,8 @@ MLB9I.prototype.runTask = function (taskName, maxTaskRunCount) {
         this.reopenApp();
         RF.Utils.sleep(gSleepLong);
       } else {
-        console.log("force stop script bc is not in app");
+        console.log("force stop");
+        console.log("bc not in app");
         this.running = false;
       }
     }
@@ -1534,11 +1537,11 @@ MLB9I.prototype.runTask = function (taskName, maxTaskRunCount) {
 
     var handler =
       "handle" + (currentPage[0] === "g" ? currentPage.substr(1) : currentPage);
-    console.log("handler", handler);
+    console.log(handler);
     if (typeof this[handler] === "function") {
       this[handler].bind(this)();
     } else {
-      console.log("Error! Can not handle " + currentPage, handler);
+      console.log("Error_" + currentPage, handler);
     }
     RF.Utils.sleep(gSleepShort);
   }
@@ -2007,9 +2010,6 @@ MLB9I.prototype.handleLeagueOnPlayPagePowerSaveOff = function () {
   }
   this.screen.tap({ x: 0, y: 0 });
   console.log("tap");
-};
-MLB9I.prototype.handleLeagueOnPlayPagePowerSaveOffMid = function () {
-  gLeagueOnPlayPagePowerSaveOffMid.goNext(this.screen);
 };
 MLB9I.prototype.handleLeagueOnPlayPageAutoOff = function () {
   if (this.task !== TASK.playLeagueGame) {
