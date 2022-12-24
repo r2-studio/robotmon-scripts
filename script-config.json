@@ -3,7 +3,7 @@
     "com.r2studio.MLB9Innings": {
       "id": "com.r2studio.MLB9Innings",
       "title": "*MLB9 Innings*",
-      "versionCode": 12,
+      "versionCode": 13,
       "description": "<h3>MLB9 Innings</h3><ul><li>play league seasons through one click</li><li>decrease disruptions caused by power save view</li><li>better energy controlling and play efficiency</li></ul>",
       "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9Innings/index.zip",
@@ -56,18 +56,18 @@
     },
     "com.r2studio.CookieKingdom.Basic": {
       "id": "com.r2studio.CookieKingdom.Basic",
-      "title": "Cookie Kingdom: basic management",
-      "versionCode": 3.57,
-      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li><li>Automate the production, wising tree and PvP</li></ul>",
+      "title": "CookieKingdom: basic management",
+      "versionCode": 3.73,
+      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.basic/index.zip",
       "dependencies": []
     },
     "com.r2studio.CookieKingdom": {
       "id": "com.r2studio.CookieKingdom",
-      "title": "Cookie Kingdom: advanced management",
-      "versionCode": 3.57,
-      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FULL function Cookie run Kingdom production automation script</li><li>Automate the production, wising tree and PvP</li><li>Automated guild, gnome lab, trade ports, tower of sweet chaos and more</li></ul>",
+      "title": "CookieKingdom: advanced management",
+      "versionCode": 3.73,
+      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FULL Function Cookie run Kingdom production automation script</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
       "dependencies": []
@@ -125,16 +125,16 @@
     "com.cooper.FGO": {
       "id": "com.cooper.FGO",
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.51,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.51 新增偏好設定，修正Robotmon 5.4版本產生的問題<br><br>推薦使用夜神 Android 5 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.52,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.52 修正部分機型無法辨識禮裝的問題<br>V3.51 新增偏好設定，修正Robotmon 5.4版本產生的問題<br><br>推薦使用夜神 Android 5 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "id": "com.cooper.FGOTW",
       "title": "Fate/Grand Order 台服",
-      "versionCode": 3.51,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.51 新增偏好設定，修正Robotmon 5.4版本產生的問題<br>V3.45 支援新改版介面<br><br>推薦使用夜神 Android 5 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.52,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.52 修正部分機型無法辨識禮裝的問題<br>V3.51 新增偏好設定，修正Robotmon 5.4版本產生的問題<br><br>推薦使用夜神 Android 5 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     }

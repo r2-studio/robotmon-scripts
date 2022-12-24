@@ -1,3 +1,10 @@
+/* prettier-ignore */ !function (e, t) { "object" == typeof exports && "object" == typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? exports.RF = t() : e.RF = t() }(this, (function () { return function () { "use strict"; var e = { 607: function (e, t, r) { var o = this && this.__createBinding || (Object.create ? function (e, t, r, o) { void 0 === o && (o = r), Object.defineProperty(e, o, { enumerable: !0, get: function () { return t[r] } }) } : function (e, t, r, o) { void 0 === o && (o = r), e[o] = t[r] }), n = this && this.__exportStar || function (e, t) { for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || o(t, e, r) }; Object.defineProperty(t, "__esModule", { value: !0 }), t.version = void 0, n(r(850), t), n(r(985), t), n(r(837), t), n(r(459), t), n(r(231), t), n(r(200), t), n(r(656), t), n(r(708), t), n(r(974), t), t.version = 1 }, 850: function (e, t) { Object.defineProperty(t, "__esModule", { value: !0 }), t.GroupPage = void 0; var r = function () { function e(e, t) { this.name = e, this.pages = t } return e.prototype.isMatchImage = function (e, t) { void 0 === t && (t = .9); for (var r = [], o = 0, n = this.pages; o < n.length; o++) { var i = n[o]; i.isMatchImage(e, t) && r.push(i.name) } return r }, e.prototype.isMatchScreen = function (e, t) { void 0 === t && (t = .9); var r = e.getCvtDevScreenshot(), o = this.isMatchImage(r, t); return releaseImage(r), o }, e.prototype.waitScreenForMatchingOne = function (t, r, o, n, i) { void 0 === o && (o = 1), void 0 === n && (n = 600), void 0 === i && (i = .9), e.debug && console.log("GroupPage.waitScreenForMatchingOne " + this.name + ": " + this.pages.map((function (e) { return e.name })).join(",")); for (var s = Date.now(), a = "", c = 0; Date.now() - s < r;) { for (var f = t.getCvtDevScreenshot(), m = 0, h = this.pages; m < h.length; m++) { var g = h[m]; if (g.isMatchImage(f, i)) { a !== g.name && (a = g.name, c = 0), c++; break } } if (releaseImage(f), "" !== a && c >= o) break; sleep(n) } return e.debug && console.log("GroupPage.waitScreenForMatchingOne " + this.name + ": matched: " + a + ", usedTime " + (Date.now() - s)), a }, e.debug = !1, e }(); t.GroupPage = r }, 985: function (e, t, r) { Object.defineProperty(t, "__esModule", { value: !0 }), t.Page = void 0; var o = r(656), n = function () { function e(e, t, r, o) { void 0 === r && (r = void 0), void 0 === o && (o = void 0), this.name = e, this.points = t, this.next = r, this.back = o } return e.prototype.goNext = function (t) { void 0 !== this.next ? t.tap(this.next) : e.debug && console.log("Warning Page: " + this.name + " has no next xy") }, e.prototype.goBack = function (t) { void 0 !== this.back ? t.tap(this.back) : e.debug && console.log("Warning Page: " + this.name + " has no back xy") }, e.prototype.isMatchImage = function (e, t) { void 0 === t && (t = .9); for (var r = !0, n = 0, i = this.points; n < i.length; n++) { var s = i[n], a = getImageColor(e, s.x, s.y); if (o.Colors.identityColor(s, a) < t) { r = !1; break } } return r }, e.prototype.isMatchScreen = function (e, t) { void 0 === t && (t = .9); var r = e.getCvtDevScreenshot(), o = this.isMatchImage(r, t); return releaseImage(r), o }, e.prototype.waitScreenForMatchingScreen = function (t, r, o, n, i) { void 0 === o && (o = 1), void 0 === n && (n = 600), void 0 === i && (i = .9), e.debug && console.log("Page.waitScreenForMatchingScreen " + this.name); for (var s = Date.now(), a = 0; Date.now() - s < r && (this.isMatchScreen(t, i) && a++, !(a >= o));)sleep(n); return a >= o ? (e.debug && console.log("Page.waitScreenForMatchingScreen " + this.name + " success, usedTime " + (Date.now() - s)), !0) : (e.debug && console.log("Page.waitScreenForMatchingScreen " + this.name + " timeout"), !1) }, e.debug = !1, e }(); t.Page = n }, 837: function (e, t) { Object.defineProperty(t, "__esModule", { value: !0 }), t.XYRGB = void 0; t.XYRGB = function () { this.x = 0, this.y = 0, this.r = 0, this.g = 0, this.b = 0 } }, 459: function (e, t, r) { Object.defineProperty(t, "__esModule", { value: !0 }), t.Screen = void 0; var o = r(656), n = function () { function e(e) { this.config = e; var t = getScreenSize(); this.config.deviceHeight = t.height, this.config.deviceWidth = t.width, this.config.screenWidth = t.width, this.config.screenHeight = t.height, this.config.screenOffsetX = 0, this.config.screenOffsetY = 0 } return e.prototype.calculateDeviceOffset = function (e) { var t = e(this); this.config.screenWidth = t.screenWidth, this.config.screenHeight = t.screenHeight, this.config.screenOffsetX = t.screenOffsetX, this.config.screenOffsetY = t.screenOffsetY }, e.prototype.getScreenX = function (e) { return Math.floor(this.config.screenOffsetX + e * this.config.screenWidth / this.config.devWidth) || 0 }, e.prototype.getScreenY = function (e) { return Math.floor(this.config.screenOffsetY + e * this.config.screenHeight / this.config.devHeight) || 0 }, e.prototype.getScreenXY = function (e, t) { if (void 0 === t && (t = void 0), "object" == typeof e) return { x: this.getScreenX(e.x), y: this.getScreenY(e.y) }; if ("number" == typeof e && "number" == typeof t) return { x: this.getScreenX(e), y: this.getScreenY(t) }; throw new Error("getScreenXY wrong params " + e + ", " + t) }, e.prototype.tap = function (e, t) { if (void 0 === t && (t = void 0), "object" == typeof e) { var r = this.getScreenX(e.x), o = this.getScreenY(e.y); tap(r, o, this.config.actionDuring) } else { if ("number" != typeof e || "number" != typeof t) throw new Error("tapDown wrong params " + e + ", " + t); r = this.getScreenX(e), o = this.getScreenY(t), tap(r, o, this.config.actionDuring) } }, e.prototype.tapDown = function (e, t) { if (void 0 === t && (t = void 0), "object" == typeof e) { var r = this.getScreenX(e.x), o = this.getScreenY(e.y); tapDown(r, o, this.config.actionDuring) } else { if ("number" != typeof e || "number" != typeof t) throw new Error("tapDown wrong params " + e + ", " + t); r = this.getScreenX(e), o = this.getScreenY(t), tapDown(r, o, this.config.actionDuring) } }, e.prototype.moveTo = function (e, t) { if (void 0 === t && (t = void 0), "object" == typeof e) { var r = this.getScreenX(e.x), o = this.getScreenY(e.y); moveTo(r, o, this.config.actionDuring) } else { if ("number" != typeof e || "number" != typeof t) throw new Error("tapDown wrong params " + e + ", " + t); r = this.getScreenX(e), o = this.getScreenY(t), moveTo(r, o, this.config.actionDuring) } }, e.prototype.tapUp = function (e, t) { if (void 0 === t && (t = void 0), "object" == typeof e) { var r = this.getScreenX(e.x), o = this.getScreenY(e.y); tapUp(r, o, this.config.actionDuring) } else { if ("number" != typeof e || "number" != typeof t) throw new Error("tapDown wrong params " + e + ", " + t); r = this.getScreenX(e), o = this.getScreenY(t), tapUp(r, o, this.config.actionDuring) } }, e.prototype.getScreenColor = function (e, t) { if (void 0 === t && (t = void 0), "object" == typeof e) { var r = this.getCvtDevScreenshot(), o = getImageColor(r, e.x, e.y); return releaseImage(r), o } if ("number" == typeof e && "number" == typeof t) return r = this.getCvtDevScreenshot(), o = getImageColor(r, e, t), releaseImage(r), o; throw new Error("tapDown wrong params " + e + ", " + t) }, e.prototype.findImage = function (e) { var t = this.getCvtDevScreenshot(), r = findImage(t, e); return releaseImage(t), r }, e.prototype.tapImage = function (e) { var t = this.findImage(e); this.tap(t) }, e.prototype.isSameColor = function (e, t) { void 0 === t && (t = .9); var r = this.getScreenColor(e); return o.Colors.identityColor(r, e) > t }, e.prototype.getDeviceScreenshot = function () { return getScreenshot() }, e.prototype.getScreenScreenshot = function () { return getScreenshotModify(this.config.screenOffsetX, this.config.screenOffsetY, this.config.screenWidth, this.config.screenHeight, this.config.screenWidth, this.config.screenHeight, 100) }, e.prototype.getCvtDevScreenshot = function () { return getScreenshotModify(this.config.screenOffsetX, this.config.screenOffsetY, this.config.screenWidth, this.config.screenHeight, this.config.devWidth, this.config.devHeight, 100) }, e.prototype.setActionDuring = function (e) { this.config.actionDuring = e }, e.debug = !1, e }(); t.Screen = n }, 231: function (e, t) { Object.defineProperty(t, "__esModule", { value: !0 }), t.ScreenConfig = void 0; t.ScreenConfig = function () { this.devWidth = 640, this.devHeight = 360, this.deviceWidth = 0, this.deviceHeight = 0, this.screenWidth = 0, this.screenHeight = 0, this.screenOffsetX = 0, this.screenOffsetY = 0, this.actionDuring = 180 } }, 200: function (e, t, r) { Object.defineProperty(t, "__esModule", { value: !0 }), t.TaskManager = t.Task = void 0; var o = r(974), n = function () { this.name = "", this.runTimes = 1, this.maxRunningDuring = 0, this.minIntervalDuring = 0, this.lastRunDoneTime = 0, this.run = function () { } }; t.Task = n; var i = function () { function e() { this.isRunning = !1, this.runIdx = 0, this.tasks = [] } return e.prototype.addTask = function (e, t, r, o, i) { void 0 === r && (r = 1), void 0 === o && (o = 0), void 0 === i && (i = 0); var s = new n; s.name = e, s.run = t, s.runTimes = r, s.maxRunningDuring = o, s.minIntervalDuring = i, this.tasks.push(s) }, e.prototype.start = function () { if (0 === this.tasks.length) throw new Error("TaskManager: No tasks to run"); for (console.log("TaskManager start"), this.isRunning = !0; this.isRunning;) { var e = Date.now(), t = this.tasks[this.runIdx % this.tasks.length]; if (this.runIdx++, !(e - t.lastRunDoneTime < t.minIntervalDuring)) { console.log("RunTask " + this.runIdx + " " + t.name + ", times " + t.runTimes + ", maxDuring " + t.maxRunningDuring); for (var r = 0; this.isRunning && (console.log("TaskRunning " + t.name + ", times " + r + "/" + t.runTimes), t.run(), t.lastRunDoneTime = Date.now(), r++, !(0 !== t.runTimes && r >= t.runTimes)) && !(Date.now() - e > t.maxRunningDuring);)sleep(100) } } }, e.prototype.stop = function () { this.isRunning = !1, o.Utils.sleep(1e3), console.log("TaskManager stop") }, e }(); t.TaskManager = i }, 656: function (e, t) { Object.defineProperty(t, "__esModule", { value: !0 }), t.Colors = void 0; var r = function () { function e() { } return e.getRangeColor = function (e, t, r, o, n) { void 0 === n && (n = 5); var i = !1; void 0 === e && (i = !0, e = getScreenshot()); for (var s = getImageSize(e), a = Math.max(0, t - o), c = Math.max(0, r - o), f = Math.min(s.width, t + o), m = Math.min(s.height, r + o), h = Math.max(1, (f - a) / n), g = Math.max(1, (m - c) / n), u = 0, p = { r: 0, g: 0, b: 0 }, y = a; y < f; y += h)for (var v = c; v < m; v += g) { var l = getImageColor(e, Math.floor(y), Math.floor(v)); p.r += l.r, p.g += l.g, p.b += l.b, u++ } return i && releaseImage(e), { r: Math.floor(p.r / u), g: Math.floor(p.g / u), b: Math.floor(p.b / u) } }, e.color2hex = function (e) { return ((1 << 24) + (e.r << 16) + (e.g << 8) + e.b).toString(16).slice(1) }, e.hex2Color = function (e) { return { r: parseInt(e[0] + e[1], 16), g: parseInt(e[2] + e[3], 16), b: parseInt(e[4] + e[5], 16) } }, e.identityColor = function (e, t) { var r = (e.r + t.r) / 2, o = e.r - t.r, n = e.g - t.g, i = e.b - t.b; return 1 - Math.sqrt(((512 + r) * o * o >> 8) + 4 * n * n + ((767 - r) * i * i >> 8)) / 768 }, e }(); t.Colors = r }, 708: function (e, t) { Object.defineProperty(t, "__esModule", { value: !0 }), t.OCR = void 0; var r = function () { function e(e) { this.words = e } return e.prototype.recognize = function (e, t, r, o) { void 0 === o && (o = .8); for (var n = 0, i = [], s = 0; s < this.words.length; s++) { var a = this.words[s], c = getImageSize(a.img); n = Math.max(n, c.width); var f = findImages(e, a.img, r, t, !0); for (var m in f) { var h = f[m]; i.push({ char: a.char, x: h.x, y: h.y, score: h.score, w: c.width }) } } i.sort((function (e, t) { return e.x - t.x })); for (var g = "", u = 0, p = 0, y = 0; y < i.length; y++) { var v = i[y]; v.x > u ? (p = v.score, g += v.char, u = Math.floor(v.x + v.w * o)) : v.x <= u && v.score > p && " " !== v.char && (p = v.score, g = g.substr(0, g.length - 1) + v.char, u = Math.floor(v.x + v.w * o)) } return g }, e }(); t.OCR = r }, 974: function (e, t) { var r = this && this.__spreadArray || function (e, t) { for (var r = 0, o = t.length, n = e.length; r < o; r++, n++)e[n] = t[r]; return e }; Object.defineProperty(t, "__esModule", { value: !0 }), t.Utils = t.log = void 0, t.log = function () { for (var e = [], t = 0; t < arguments.length; t++)e[t] = arguments[t]; for (var r = (new Date).toLocaleString("en-US", { timeZone: "Asia/Taipei" }), o = "[" + r + "] ", n = 0, i = e; n < i.length; n++) { var s = i[n]; o += "object" == typeof s ? JSON.stringify(s) + " " : s + " " } console.log(o.substr(0, o.length - 1)) }; var o = function () { function e() { } return e.sortStringNumberMap = function (e) { var t = []; for (var r in e) t.push({ key: r, count: e[r] }); return t.sort((function (e, t) { return t.count - e.count })), t }, e.sleep = function (e) { for (; e > 200;)e -= 200, sleep(200); e > 0 && sleep(e) }, e.getTaiwanTime = function () { return Date.now() + 288e5 }, e.log = function () { for (var t = [], o = 0; o < arguments.length; o++)t[o] = arguments[o]; for (var n = 0; n < t.length; n++) { var i = t[n]; "object" == typeof i && (t[n] = JSON.stringify(i)) } var s = new Date(e.getTaiwanTime()), a = "[" + (s.getMonth() + 1) + "-" + s.getDate() + "T" + s.getHours() + ":" + s.getMinutes() + ":" + s.getSeconds() + "]"; console.log.apply(console, r([a], t)) }, e.notifyEvent = function (t, r) { null != sendEvent && (e.log("sendEvent", t, r), sendEvent("" + t, "" + r)) }, e.startApp = function (e) { execute("BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am start -n " + e), execute("ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am start -n " + e) }, e.stopApp = function (e) { execute("BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am force-stop " + e), execute("ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop " + e) }, e.getCurrentApp = function () { for (var e = "", t = "", r = 0, o = execute("dumpsys activity top").split("\n"); r < o.length; r++) { var n = o[r], i = n.indexOf("ACTIVITY"); if (-1 !== i) { e = "", t = ""; for (var s = !0, a = i + 9; a < n.length; a++) { var c = n[a]; if (" " === c) break; "/" === c ? s = !1 : s ? e += c : t += c } } } return [e, t] }, e }(); t.Utils = o } }, t = {}; return function r(o) { var n = t[o]; if (void 0 !== n) return n.exports; var i = t[o] = { exports: {} }; return e[o].call(i.exports, i, i.exports, r), i.exports }(607) }() }));
+// var rfaaaa = new RF.Page(
+//   'rfaaaa',
+//   aaaa,
+//   aaaa[0]
+// );
+
 var config = {
   sleep: 240,
   sleepAnimate: 800,
@@ -5,8 +12,8 @@ var config = {
 
   account: 'default_xrobotmon_account@gmail.com',
   password: '',
-  materialsTarget: 1500,
-  goodsTarget: 300,
+  materialsTarget: 2000,
+  goodsTarget: 320,
   productSafetyStock: 10,
   skipMagicLabProduction: true,
   magicLabProductIndex: 13,
@@ -36,7 +43,7 @@ var config = {
   autoGuildClaimNewLand: false,
   autoGuildBattleDragon: false,
   autoHandleBountiesIntervalInMins: 180,
-  autoBountiesCheckBluePower: true,
+  autoBountiesCheckBluePowder: true,
   autoLabResearch: false,
   autoResearchKingdom: true,
   autoResearchCookies: true,
@@ -52,8 +59,8 @@ var config = {
   autoBuyGuildRelic: true,
   axeStockTo400: false,
   autoSuperMayhemIntervalInMins: 0,
-  autoSuperMayhemTargetScoreLimit: 600000,
-  autoHandleTowerOfSweetChaos: false,
+  autoSuperMayhemTargetScoreLimit: 1000000,
+  autoHandleTowerOfSweetChaos: true,
   autoHandleCollectCookieOdysseyMission: true,
   buildTowardsTheLeft: true,
   isTestAccount: false,
@@ -156,53 +163,78 @@ var config = {
   stock_bearJellyCrown: 40,
 };
 
-var pageWoodFarm = [
-  { x: 596, y: 118, r: 123, g: 207, b: 8 },
-  { x: 527, y: 86, r: 140, g: 81, b: 57 },
-  { x: 520, y: 91, r: 249, g: 192, b: 139 },
-  { x: 427, y: 79, r: 140, g: 81, b: 57 },
-];
+var rfpageWoodFarm = new RF.Page(
+  'rfpageWoodFarm',
+  [
+    { x: 596, y: 118, r: 123, g: 207, b: 8 },
+    { x: 527, y: 86, r: 140, g: 81, b: 57 },
+    { x: 520, y: 91, r: 249, g: 192, b: 139 },
+    { x: 427, y: 79, r: 140, g: 81, b: 57 },
+  ],
+  { x: 596, y: 118 }
+);
 
-var pageBeanFarm = [
-  { x: 602, y: 122, r: 123, g: 207, b: 8 },
-  { x: 527, y: 83, r: 0, g: 204, b: 223 },
-  { x: 525, y: 88, r: 1, g: 252, b: 248 },
-  { x: 414, y: 82, r: 0, g: 207, b: 220 },
-];
+var rfpageBeanFarm = new RF.Page(
+  'rfpageBeanFarm',
+  [
+    { x: 602, y: 122, r: 123, g: 207, b: 8 },
+    { x: 527, y: 83, r: 0, g: 204, b: 223 },
+    { x: 525, y: 88, r: 1, g: 252, b: 248 },
+    { x: 414, y: 82, r: 0, g: 207, b: 220 },
+  ],
+  { x: 602, y: 122 }
+);
+var rfpageSugarFarm = new RF.Page(
+  'rfpageSugarFarm',
+  [
+    { x: 600, y: 118, r: 123, g: 207, b: 8 },
+    { x: 531, y: 92, r: 135, g: 151, b: 200 },
+    { x: 419, y: 71, r: 244, g: 250, b: 253 },
+    { x: 411, y: 89, r: 239, g: 240, b: 249 },
+  ],
+  { x: 600, y: 118 }
+);
+var rfpagePowderFarm = new RF.Page(
+  'rfpagePowderFarm',
+  [
+    { x: 596, y: 120, r: 123, g: 207, b: 8 },
+    { x: 523, y: 87, r: 231, g: 157, b: 74 },
+    { x: 435, y: 90, r: 156, g: 117, b: 49 },
+    { x: 423, y: 83, r: 239, g: 162, b: 82 },
+  ],
+  { x: 596, y: 120 }
+);
+var rfpageBarryFarm = new RF.Page(
+  'rfpageBarryFarm',
+  [
+    { x: 597, y: 118, r: 123, g: 207, b: 8 },
+    { x: 527, y: 90, r: 198, g: 36, b: 41 },
+    { x: 428, y: 76, r: 28, g: 117, b: 16 },
+    { x: 413, y: 82, r: 200, g: 26, b: 31 },
+  ],
+  { x: 597, y: 118 }
+);
 
-var pageSugarFarm = [
-  { x: 600, y: 118, r: 123, g: 207, b: 8 },
-  { x: 531, y: 92, r: 135, g: 151, b: 200 },
-  { x: 419, y: 71, r: 244, g: 250, b: 253 },
-  { x: 411, y: 89, r: 239, g: 240, b: 249 },
-];
+var rfpageMilkFarm = new RF.Page(
+  'rfpageMilkFarm',
+  [
+    { x: 597, y: 118, r: 123, g: 207, b: 8 },
+    { x: 521, y: 79, r: 214, g: 138, b: 99 },
+    { x: 526, y: 90, r: 255, g: 255, b: 239 },
+    { x: 425, y: 85, r: 255, g: 255, b: 242 },
+  ],
+  { x: 597, y: 118 }
+);
 
-var pagePowderFarm = [
-  { x: 596, y: 120, r: 123, g: 207, b: 8 },
-  { x: 523, y: 87, r: 231, g: 157, b: 74 },
-  { x: 435, y: 90, r: 156, g: 117, b: 49 },
-  { x: 423, y: 83, r: 239, g: 162, b: 82 },
-];
-
-var pageBarryFarm = [
-  { x: 597, y: 118, r: 123, g: 207, b: 8 },
-  { x: 527, y: 90, r: 198, g: 36, b: 41 },
-  { x: 428, y: 76, r: 28, g: 117, b: 16 },
-  { x: 413, y: 82, r: 200, g: 26, b: 31 },
-];
-
-var pageMilkFarm = [
-  { x: 597, y: 118, r: 123, g: 207, b: 8 },
-  { x: 521, y: 79, r: 214, g: 138, b: 99 },
-  { x: 526, y: 90, r: 255, g: 255, b: 239 },
-  { x: 425, y: 85, r: 255, g: 255, b: 242 },
-];
-
-var pageCottomFarm = [
-  { x: 596, y: 120, r: 123, g: 207, b: 8 },
-  { x: 528, y: 87, r: 254, g: 231, b: 251 },
-  { x: 428, y: 92, r: 255, g: 241, b: 255 },
-];
+var rfpageCottomFarm = new RF.Page(
+  'rfpageCottomFarm',
+  [
+    { x: 596, y: 120, r: 123, g: 207, b: 8 },
+    { x: 528, y: 87, r: 254, g: 231, b: 251 },
+    { x: 428, y: 92, r: 255, g: 241, b: 255 },
+  ],
+  { x: 596, y: 120 }
+);
 
 var pageInKingdomVillage = [
   { x: 39, y: 313, r: 255, g: 101, b: 156 },
@@ -212,6 +244,11 @@ var pageInKingdomVillage = [
   { x: 418, y: 321, r: 132, g: 16, b: 8 },
   { x: 466, y: 318, r: 231, g: 167, b: 85 },
 ];
+var rfpageInKingdomVillage = new RF.Page(
+  'rfpageInKingdomVillage',
+  pageInKingdomVillage,
+  pageInKingdomVillage[0]
+);
 
 var pageInLoginPageWithGearAndVideo = [
   {x: 621, y: 13, r: 233, g: 233, b: 235},
@@ -289,9 +326,9 @@ var pageInFountain = [
 ];
 
 var pageNotCollapsedWisingTree = [
-  {x: 107, y: 300, r: 132, g: 186, b: 250},
-  {x: 108, y: 299, r: 130, g: 184, b: 209},
-  {x: 120, y: 334, r: 49, g: 85, b: 123},
+  {x: 92, y: 332, r: 52, g: 86, b: 125},
+  {x: 112, y: 292, r: 138, g: 108, b: 199},
+  {x: 56, y: 324, r: 252, g: 201, b: 235},
 ];
 var pageCollapsedAffairs = [
   { x: 96, y: 329, r: 255, g: 223, b: 142 },
@@ -366,13 +403,18 @@ var pageInTropicalIsland = [
 ];
 
 var pageInGacha = [
-  { x: 627, y: 19, r: 57, g: 166, b: 231 },
-  { x: 31, y: 10, r: 148, g: 81, b: 66 },
-  { x: 5, y: 6, r: 17, g: 21, b: 29 },
-  { x: 50, y: 10, r: 17, g: 21, b: 29 },
-  { x: 417, y: 20, r: 255, g: 207, b: 0 },
-  { x: 526, y: 18, r: 0, g: 130, b: 255 },
+  {x: 619, y: 18, r: 255, g: 255, b: 255},
+  {x: 626, y: 18, r: 62, g: 164, b: 232},
+  {x: 521, y: 14, r: 0, g: 192, b: 255},
+  {x: 407, y: 19, r: 255, g: 209, b: 0},
+  {x: 21, y: 14, r: 117, g: 54, b: 40},
+  {x: 37, y: 24, r: 74, g: 58, b: 58},
 ];
+var rfpageInGacha = new RF.Page(
+  'rfpageInGacha',
+  pageInGacha,
+  pageInGacha[0]
+);
 
 var pageInTowerOfRecords = [
   { x: 618, y: 23, r: 255, g: 255, b: 255 },
@@ -389,6 +431,26 @@ var pageSpeed1_2x = [
   { x: 20, y: 333, r: 211, g: 209, b: 2 },
   { x: 32, y: 334, r: 161, g: 159, b: 8 },
 ];
+var rfpageAutoUseSkillEnabled = new RF.Page(
+  'rfpageAutoUseSkillEnabled',
+  pageAutoUseSkillEnabled,
+  pageAutoUseSkillEnabled[0]
+);
+var rfpageSpeedBoostEnabled = new RF.Page(
+  'rfpageSpeedBoostEnabled',
+  pageSpeedBoostEnabled,
+  pageSpeedBoostEnabled[0]
+);
+var rfpageSpeed1x = new RF.Page(
+  'rfpageSpeed1x',
+  pageSpeed1x,
+  pageSpeed1x[0]
+);
+var rfpageSpeed1_2x = new RF.Page(
+  'rfpageSpeed1_2x',
+  pageSpeed1_2x,
+  pageSpeed1_2x[0]
+);
 
 //rgb(166,104,65)
 var pageInProduction = [
@@ -550,13 +612,12 @@ var kingdomArena = [
   { x: 296, y: 70, r: 65, g: 58, b: 56 },
 ];
 
-// var pageInSuperMayhem = [
-//   { x: 522, y: 15, r: 0, g: 195, b: 255 },
-//   { x: 452, y: 14, r: 255, g: 28, b: 132 },
-//   { x: 448, y: 24, r: 116, g: 16, b: 67 },
-//   { x: 355, y: 16, r: 254, g: 248, b: 221 },
-//   { x: 19, y: 68, r: 24, g: 44, b: 75 },
-// ];
+var pageInSuperMayhem = [
+  {x: 450, y: 13, r: 181, g: 132, b: 178},
+  {x: 449, y: 21, r: 239, g: 235, b: 247},
+  {x: 37, y: 134, r: 145, g: 69, b: 8},
+  {x: 137, y: 333, r: 214, g: 134, b: 8},
+];
 
 var pageBattleDragon = [
   { x: 317, y: 18, r: 0, g: 36, b: 132 },
@@ -598,6 +659,32 @@ var pageRedValvetDragonWon = [
   { x: 358, y: 233, r: 222, g: 16, b: 41 },
   { x: 426, y: 236, r: 231, g: 216, b: 223 },
 ];
+var rfpageDragonRemainHealth = new RF.Page(
+  'rfpageDragonRemainHealth',
+  pageDragonRemainHealth,
+  pageDragonRemainHealth[0]
+);
+var rfpageDragonTotalDamage = new RF.Page(
+  'rfpageDragonTotalDamage',
+  pageDragonTotalDamage,
+  pageDragonTotalDamage[0]
+);
+var rfpageRedValvetDragonWon = new RF.Page(
+  'rfpageRedValvetDragonWon',
+  pageRedValvetDragonWon,
+  pageRedValvetDragonWon[0]
+);
+var rfpageDragonHasExtraTime = new RF.Page(
+  'rfpageDragonHasExtraTime',
+  [
+    {x: 405, y: 281, r: 121, g: 207, b: 12},
+    {x: 304, y: 280, r: 12, g: 167, b: 223},
+    {x: 608, y: 333, r: 60, g: 103, b: 6},
+    {x: 516, y: 330, r: 6, g: 83, b: 111},
+    {x: 128, y: 333, r: 6, g: 83, b: 111},
+  ],
+  { x: 405, y: 281 }
+);
 
 var pageCookieAlliance = [
   { x: 333, y: 21, r: 255, g: 255, b: 255 },
@@ -607,10 +694,10 @@ var pageCookieAlliance = [
 ];
 
 var pageInHabor = [
-  { x: 303, y: 13, r: 255, g: 186, b: 239 },
-  { x: 310, y: 16, r: 247, g: 252, b: 203 },
-  { x: 409, y: 20, r: 255, g: 207, b: 0 },
-  { x: 521, y: 20, r: 0, g: 136, b: 255 },
+  { x: 323, y: 28, r: 247, g: 181, b: 243 },
+  { x: 408, y: 20, r: 255, g: 207, b: 0 },
+  { x: 522, y: 18, r: 4, g: 135, b: 255 },
+  { x: 619, y: 263, r: 57, g: 166, b: 231 },
 ];
 
 var pagePvPCrystaisRefresh = [
@@ -621,6 +708,11 @@ var pagePvPCrystaisRefresh = [
   { x: 351, y: 250, r: 123, g: 207, b: 8 },
   { x: 408, y: 251, r: 222, g: 207, b: 198 },
 ];
+var rfpagePvPCrystaisRefresh = new RF.Page(
+  'rfpagePvPCrystaisRefresh',
+  pagePvPCrystaisRefresh,
+  { x: 436, y: 90 }
+);
 
 var pageInTowerOfSweetChaos = [
   { x: 611, y: 21, r: 57, g: 166, b: 231 },
@@ -632,7 +724,7 @@ var pageInTowerOfSweetChaos = [
 
 var pageReadyToBattleToSC = [
   { x: 477, y: 327, r: 123, g: 210, b: 13 },
-  { x: 492, y: 322, r: 206, g: 32, b: 66 },
+  { x: 491, y: 329, r: 168, g: 3, b: 44 },
   { x: 337, y: 12, r: 82, g: 0, b: 0 },
   { x: 72, y: 339, r: 0, g: 150, b: 214 },
 ];
@@ -853,15 +945,6 @@ function isSameColorAtPnt(point, c2, diff) {
     return false;
   }
   return true;
-}
-
-function checkIsPages(targetPages) {
-  for (var pageIdx in targetPages) {
-    if (checkIsPage(targetPages[pageIdx])) {
-      return true;
-    }
-  }
-  return false;
 }
 
 function checkIsPage(page, diff, img) {
@@ -1180,41 +1263,56 @@ function setProductionBuilding(building) {
   }
 }
 
-function handleMaterialProduction() {
-  pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
-  pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
-  pageThirdItemEnabled = [{ x: 603, y: 331, r: 123, g: 207, b: 8 }];
+var pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
+var pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
+var pageThirdItemEnabled = [{ x: 603, y: 331, r: 123, g: 207, b: 8 }];
 
-  if (checkIsPage(pageWoodFarm)) {
+var groupPageMaterialProdMenu = new RF.GroupPage('groupPageMaterialProdMenu', [
+  rfpageWoodFarm,
+  rfpageBeanFarm,
+  rfpageSugarFarm,
+  rfpagePowderFarm,
+  rfpageBarryFarm,
+  rfpageMilkFarm,
+  rfpageCottomFarm,
+])
+
+function handleMaterialProduction() {
+  var matchedPages = groupPageMaterialProdMenu.isMatchScreen(this.screen);
+  console.log('groupPageMaterialProdMenu matchedPages:', matchedPages)
+
+  if (matchedPages.indexOf('rfpageWoodFarm') !== -1) {
     console.log('wood farm, add more');
-    qTap(pageBeanFarm, 800);
+    qTap(pageFirstItemEnabled, 800);
     sleep(config.sleepAnimate);
 
     setProductionBuilding('wood');
     return true;
-  } else if (checkIsPage(pageBeanFarm)) {
+  } else if (matchedPages.indexOf('rfpageBeanFarm') !== -1) {
     console.log('bean farm, add more');
-    qTap(pageBeanFarm, 800);
+    qTap(pageFirstItemEnabled, 800);
     sleep(config.sleepAnimate);
     return true;
-  } else if (checkIsPage(pageSugarFarm)) {
+  } else if (matchedPages.indexOf('rfpageSugarFarm') !== -1) {
     console.log('sugar farm, add more');
-    qTap(pageSugarFarm, 800);
+    qTap(pageFirstItemEnabled, 800);
     sleep(config.sleepAnimate);
 
     setProductionBuilding('sugar');
     return true;
-  } else if (checkIsPage(pagePowderFarm)) {
+  } else if (matchedPages.indexOf('rfpagePowderFarm') !== -1) {
     console.log('Powder farm, add more');
     if (checkIsPage(pageSecondItemEnabled)) {
       qTap(pageSecondItemEnabled, 800);
       sleep(config.sleepAnimate);
     } else {
-      qTap(pagePowderFarm, 800);
+      qTap(pageFirstItemEnabled, 800);
+      sleep(config.sleepAnimate);
+      qTap(pageFirstItemEnabled);
       sleep(config.sleepAnimate);
     }
     return true;
-  } else if (checkIsPage(pageBarryFarm)) {
+  } else if (matchedPages.indexOf('rfpageBarryFarm') !== -1) {
     console.log('Barry farm, add more');
     if (checkIsPage(pageSecondItemEnabled)) {
       qTap(pageSecondItemEnabled, 800);
@@ -1222,26 +1320,26 @@ function handleMaterialProduction() {
       qTap(pageSecondItemEnabled);
       sleep(config.sleepAnimate);
     } else {
-      qTap(pageBarryFarm, 800);
+      qTap(pageFirstItemEnabled, 800);
       sleep(config.sleepAnimate);
-      qTap(pageBarryFarm);
+      qTap(pageFirstItemEnabled);
       sleep(config.sleepAnimate);
     }
     return true;
-  } else if (checkIsPage(pageMilkFarm)) {
+  } else if (matchedPages.indexOf('rfpageMilkFarm') !== -1) {
     console.log('Milk farm, add more');
-    qTap(pageMilkFarm, 800);
+    qTap(pageFirstItemEnabled, 800);
     sleep(config.sleepAnimate);
-    qTap(pageMilkFarm);
+    qTap(pageFirstItemEnabled);
     sleep(config.sleepAnimate);
 
     setProductionBuilding('milk');
     return true;
-  } else if (checkIsPage(pageCottomFarm)) {
+  } else if (matchedPages.indexOf('rfpageCottomFarm') !== -1) {
     console.log('Cottom farm, add more');
-    qTap(pageCottomFarm, 800);
+    qTap(pageFirstItemEnabled, 800);
     sleep(config.sleepAnimate);
-    qTap(pageCottomFarm);
+    qTap(pageFirstItemEnabled);
     sleep(config.sleepAnimate);
 
     setProductionBuilding('cottom');
@@ -1320,7 +1418,7 @@ function swipeToToolShop456() {
   moveTo(430, -170, 40, 0);
   sleep(config.sleepAnimate * 2);
   tapUp(430, -170, 40, 0);
-  sleep(config.sleepAnimate * 2);
+  sleep(3000);
   return;
 }
 
@@ -1378,9 +1476,6 @@ function findProductRequirements(partUp) {
   return parts;
 }
 
-var pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
-var pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
-var pageThirdItemEnabled = [{ x: 603, y: 331, r: 123, g: 207, b: 8 }];
 function makeMagicLabGoodsToTarget() {
   var productIdx = config.magicLabProductIndex;
 
@@ -1486,7 +1581,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         console.log('Special handle building:', config.currentProductionBuilding);
         swipeDownOneItem();
         middleItemStock = ocrProductStorage(goodsLocation['shovel']);
-        console.log('4th item stock: ' + middleItemStock);
+        console.log('id:3th item stock: ' + middleItemStock);
 
         // check shovel req
         prodReqList = prodReqList.concat(findProductRequirements([308]));
@@ -1684,7 +1779,6 @@ function makeGoodsToTarget(target, prework, stocks) {
       console.log('No slots, stop at: ', stock['id']);
       return stocks;
     }
-
     // Add check if there are no worker
   }
 
@@ -1692,29 +1786,19 @@ function makeGoodsToTarget(target, prework, stocks) {
 }
 
 function countMagicLabSlotAvailable() {
-  var emptySlots = 0;
-  var pageFirstSlotOpen = [{ x: 55, y: 69, r: 82, g: 56, b: 107 }];
-  var pageSecondSlotOpen = [{ x: 53, y: 120, r: 82, g: 56, b: 107 }];
-  var pageThirdSlotOpen = [{ x: 49, y: 168, r: 82, g: 56, b: 107 }];
-  var pageFourthSlotOpen = [{ x: 52, y: 223, r: 82, g: 56, b: 107 }];
-  var pageFifthSlotOpen = [{ x: 50, y: 264, r: 77, g: 55, b: 110 }];
-  var pageSixSlotOpen = [{ x: 48, y: 314, r: 82, g: 60, b: 115 }];
-  var pages = [
-    pageFirstSlotOpen,
-    pageSecondSlotOpen,
-    pageThirdSlotOpen,
-    pageFourthSlotOpen,
-    pageFifthSlotOpen,
-    pageSixSlotOpen,
-  ];
-  for (var idx in pages) {
-    if (checkIsPage(pages[idx])) {
-      emptySlots++;
-    }
-  }
+  var groupPageMagicLabSlot = new RF.GroupPage('groupPageMagicLabSlot', [
+    new RF.Page('firstSlot', [{ x: 55, y: 69, r: 82, g: 56, b: 107 }]),
+    new RF.Page('secondSlot', [{ x: 53, y: 120, r: 82, g: 56, b: 107 }]),
+    new RF.Page('thirdSlot', [{ x: 49, y: 168, r: 82, g: 56, b: 107 }]),
+    new RF.Page('fourthSlot', [{ x: 52, y: 223, r: 82, g: 56, b: 107 }]),
+    new RF.Page('fifthSlot', [{ x: 50, y: 264, r: 77, g: 55, b: 110 }]),
+    new RF.Page('sixSlot', [{ x: 48, y: 314, r: 82, g: 60, b: 115 }]),
+  ])
+  var matchedPages = groupPageMagicLabSlot.isMatchScreen(this.screen);
 
-  console.log('countMagicLabSlotAvailable: ', emptySlots);
-  return emptySlots;
+  console.log('countMagicLabSlotAvailable: ', matchedPages.length);
+  // TODO: test me
+  return matchedPages.length;
 }
 
 function countProductionSlotAvailable() {
@@ -1722,43 +1806,39 @@ function countProductionSlotAvailable() {
     return countMagicLabSlotAvailable();
   }
 
-  var emptySlots = 0;
-  var pageFirstSlotOpen = [
-    { x: 50, y: 69, r: 146, g: 88, b: 52 },
-    { x: 49, y: 68, r: 146, g: 88, b: 52 },
-    { x: 70, y: 90, r: 166, g: 104, b: 65 },
-    { x: 42, y: 86, r: 173, g: 105, b: 66 },
-  ];
-  var pageSecondSlotOpen = [
-    { x: 50, y: 120, r: 146, g: 88, b: 52 },
-    { x: 49, y: 111, r: 146, g: 88, b: 52 },
-    { x: 46, y: 137, r: 173, g: 105, b: 66 },
-  ];
-  var pageThirdSlotOpen = [
-    { x: 50, y: 170, r: 146, g: 88, b: 52 },
-    { x: 49, y: 169, r: 146, g: 88, b: 52 },
-    { x: 46, y: 179, r: 142, g: 78, b: 44 },
-  ];
-  var pageFourthSlotOpen = [
-    { x: 50, y: 219, r: 146, g: 88, b: 52 },
-    { x: 50, y: 218, r: 146, g: 88, b: 52 },
-    { x: 42, y: 236, r: 173, g: 105, b: 66 },
-  ];
-  var pageFifthSlotOpen = [
-    { x: 50, y: 269, r: 146, g: 88, b: 52 },
-    { x: 50, y: 268, r: 146, g: 88, b: 52 },
-    { x: 46, y: 286, r: 157, g: 95, b: 55 },
-  ];
+  var groupPageMagicLabSlot = new RF.GroupPage('groupPageMagicLabSlot', [
+    new RF.Page('firstSlot', [
+      { x: 50, y: 69, r: 146, g: 88, b: 52 },
+      { x: 49, y: 68, r: 146, g: 88, b: 52 },
+      { x: 70, y: 90, r: 166, g: 104, b: 65 },
+      { x: 42, y: 86, r: 173, g: 105, b: 66 },
+    ]),
+    new RF.Page('secondSlot', [
+      { x: 50, y: 120, r: 146, g: 88, b: 52 },
+      { x: 49, y: 111, r: 146, g: 88, b: 52 },
+      { x: 46, y: 137, r: 173, g: 105, b: 66 },
+    ]),
+    new RF.Page('thirdSlot', [
+      { x: 50, y: 170, r: 146, g: 88, b: 52 },
+      { x: 49, y: 169, r: 146, g: 88, b: 52 },
+      { x: 46, y: 179, r: 142, g: 78, b: 44 },
+    ]),
+    new RF.Page('fourthSlot', [
+      { x: 50, y: 219, r: 146, g: 88, b: 52 },
+      { x: 50, y: 218, r: 146, g: 88, b: 52 },
+      { x: 42, y: 236, r: 173, g: 105, b: 66 },
+    ]),
+    new RF.Page('fifthSlot', [
+      { x: 50, y: 269, r: 146, g: 88, b: 52 },
+      { x: 50, y: 268, r: 146, g: 88, b: 52 },
+      { x: 46, y: 286, r: 157, g: 95, b: 55 },
+    ]),
+  ])
+  var matchedPages = groupPageMagicLabSlot.isMatchScreen(this.screen);
 
-  var pages = [pageFirstSlotOpen, pageSecondSlotOpen, pageThirdSlotOpen, pageFourthSlotOpen, pageFifthSlotOpen];
-  for (var idx in pages) {
-    if (checkIsPage(pages[idx])) {
-      emptySlots++;
-    }
-  }
-
-  console.log('countProductionSlotAvailable: ', emptySlots);
-  return emptySlots;
+  console.log('countMagicLabSlotAvailable: ', matchedPages.length);
+  // TODO: test me
+  return matchedPages.length;
 }
 
 function JobScheduling() {
@@ -1832,7 +1912,7 @@ function JobScheduling() {
   } else {
     console.log('Material stock: ', materialCount, ', target: ', config.materialsTarget);
     if (
-      checkIsPage(pageWoodFarm) &&
+      rfpageWoodFarm.isMatchScreen(this.screen) &&
       config.keepProduceUntilWoodEnough &&
       materialCount < Math.min(200, config.materialsTarget)
     ) {
@@ -1840,7 +1920,7 @@ function JobScheduling() {
       config.lastGotoProduction = Date.now();
     }
     else if (
-      checkIsPage(pageBeanFarm) &&
+      rfpageBeanFarm.isMatchScreen(this.screen) &&
       config.keepProduceUntilWoodEnough &&
       materialCount < Math.min(100, config.materialsTarget)
     ) {
@@ -1848,7 +1928,7 @@ function JobScheduling() {
       config.lastGotoProduction = Date.now();
     }
     else if (
-      checkIsPage(pageSugarFarm) &&
+      rfpageSugarFarm.isMatchScreen(this.screen) &&
       config.keepProduceUntilWoodEnough &&
       materialCount < Math.min(100, config.materialsTarget)
     ) {
@@ -2206,7 +2286,7 @@ function findAndTapCandy() {
     {x: 199, y: 199, r: 118, g: 234, b: 231},
   ]
 
-  var foundResults = findSpecificImageInScreen(candy, 0.91);
+  var foundResults = findSpecificImageInScreen(candy, 0.95);
   // console.log('candies > ', JSON.stringify(foundResults));
   if (foundResults.length === 0) {
     console.log('findAndTapCandy did not see any candy > 0.91, skipping')
@@ -3430,6 +3510,50 @@ function handleSkipHallOfHeros() {
   }
 }
 
+function handleSkipTreasureIntro() {
+  var pageTreasureIntro = new RF.Page(
+    'pageTreasureIntro',
+    [
+      {x: 607, y: 266, r: 117, g: 106, b: 215},
+      {x: 606, y: 266, r: 117, g: 106, b: 215},
+      {x: 445, y: 230, r: 255, g: 243, b: 239},
+      {x: 622, y: 198, r: 253, g: 196, b: 113},
+      {x: 339, y: 19, r: 47, g: 38, b: 66},
+      {x: 329, y: 15, r: 67, g: 65, b: 67},
+    ],
+    {x: 607, y: 266 }
+  );
+  var pageTreasureIntro2 = new RF.Page(
+    'pageTreasureIntro2',
+    [
+      {x: 603, y: 266, r: 115, g: 105, b: 214},
+      {x: 493, y: 208, r: 255, g: 243, b: 239},
+      {x: 337, y: 19, r: 52, g: 35, b: 83},
+      {x: 523, y: 21, r: 1, g: 48, b: 86},
+    ],
+    {x: 603, y: 266 }
+  );
+
+  var groupPageTreasureIntro = new RF.GroupPage('groupPageTreasureIntro', [pageTreasureIntro, pageTreasureIntro2]);
+  var matchedPages = groupPageTreasureIntro.isMatchScreen(this.screen);
+  if (matchedPages.length === 0) {
+    return true;
+  }
+
+  console.log('handleSkipTreasureIntro matchedPages: ', matchedPages)
+  if (matchedPages.indexOf('pageTreasureIntro') !== -1 || matchedPages.indexOf('pageTreasureIntro2') !== -1) {
+    pageTreasureIntro.goNext(this.screen);
+    sleep(2000);
+    pageTreasureIntro.goNext(this.screen);
+    sleep(2000);
+    pageTreasureIntro.goNext(this.screen);
+    sleep(1000);
+    pageTreasureIntro.goNext(this.screen);
+    sleep(1000);
+    return handleTryHitBackToKingdom();
+  }
+}
+
 function handleTryHitBackToKingdom() {
   if (checkIsPage(pageInLoginPageWithGearAndVideo)) {
     console.log('In login page (found gear and video icon), skipping handleTryHitBackToSpecificPage');
@@ -3479,6 +3603,7 @@ function handleTryHitBackToSpecificPages(targetPages) {
   handleSkipProductionDashboardIntro();
   handleSkipProductionDashboardIsDone()
   handleSkipKingdomStory()
+  handleSkipTreasureIntro()
 
   var pageNotifyQuitWindow = [
     { x: 374, y: 98, r: 57, g: 69, b: 107 },
@@ -3486,6 +3611,14 @@ function handleTryHitBackToSpecificPages(targetPages) {
     { x: 404, y: 250, r: 123, g: 207, b: 8 },
     { x: 425, y: 250, r: 222, g: 207, b: 198 },
   ];
+  var pageBattlePaused = [
+    {x: 307, y: 200, r: 253, g: 253, b: 251},
+    {x: 621, y: 26, r: 56, g: 165, b: 227},
+    {x: 613, y: 23, r: 35, g: 85, b: 114},
+    {x: 278, y: 160, r: 12, g: 165, b: 219},
+    {x: 288, y: 157, r: 241, g: 241, b: 239},
+    {x: 293, y: 201, r: 241, g: 90, b: 28},
+  ]
 
   for (var i = 0; i < 4; i++) {
     keycode('BACK', 2000);
@@ -3501,6 +3634,11 @@ function handleTryHitBackToSpecificPages(targetPages) {
         keycode('BACK', 1000);
         return false;
       }
+    }
+    if (checkIsPage(pageBattlePaused)) {
+      console.log('Need to go back to kingdom but found in battle, tap exit and sleep 2s');
+      qTap(pageBattlePaused);
+      sleep(2000);
     }
 
     checkAndRestartApp();
@@ -4452,7 +4590,10 @@ function handlePVP() {
           continue;
         }
         tap(550, 320, 100); // start battle
-        sleep(5000);
+        if (waitUntilSeePage(pageNoArenaTicket, 5)) {
+          console.log('Not enough arena ticket, skipping pvp');
+          return handleGotoKingdomPage();
+        }
 
         if (waitForBattle('pvp', 120, false, kingdomArena)) {
           console.log('PvP battle finished, try next one');
@@ -5104,7 +5245,7 @@ function handleAutoBattleInIslands(item) {
           qTap(pageBattleToClearSodaIsland);
           sleep(1500);
           qTap(pageBattleToClearSodaIsland);
-          sleep(8000);
+          sleep(6000);
 
           if (checkIsPage(pageBattleHasWetCookieCannotStart)) {
             console.log('Has wet cookie cannot start the battle, skip this task');
@@ -5120,6 +5261,16 @@ function handleAutoBattleInIslands(item) {
             sleep(config.sleepAnimate);
             handleGotoKingdomPage();
             return false;
+          }
+
+          if (rfpageCanEquipTopping.isMatchScreen(this.screen)) {
+            console.log('Found rfpageCanEquipTopping, tap OK and wait for 5 secs');
+            rfpageCanEquipTopping.goNext(this.screen);
+            sleep(5000);
+          } else if (rfpageCanEquipTopping2.isMatchScreen(this.screen)) {
+            console.log('Found rfpageCanEquipTopping2, tap OK and wait for 5 secs');
+            rfpageCanEquipTopping2.goNext(this.screen);
+            sleep(5000);
           }
 
           if (waitForBattle('islandRedsword', 600, true, pageInTropicalIsland)) {
@@ -5291,7 +5442,7 @@ var AdvanturesBountiesAt2nd = Object.freeze({
   tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
   cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
 
-  // superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  superMayhem: GenAdvanture(pnt(500, 150), false, false),
   bounties: GenAdvanture(pnt(300, 100), false, false),
   guild: GenAdvanture(pnt(10, 100), false, true),
 });
@@ -5302,7 +5453,7 @@ var AdvanturesBountiesAt3rd = Object.freeze({
   tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
   cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
 
-  // superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  superMayhem: GenAdvanture(pnt(500, 150), false, false),
   bounties: GenAdvanture(pnt(500, 100), false, false),
   guild: GenAdvanture(pnt(630, 100), false, false),
 });
@@ -5313,9 +5464,9 @@ var AdvanturesBountiesAt4th = Object.freeze({
   tropicalIsland: GenAdvanture(pnt(300, 230), true, false),
   cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
 
-  // superMayhem: GenAdvanture(pnt(300, 150), false, false),
+  superMayhem: GenAdvanture(pnt(500, 150), false, false),
   bounties: GenAdvanture(pnt(625, 100), false, false),
-  guild: GenAdvanture(pnt(500, 175), false, false),
+  guild: GenAdvanture(pnt(120, 100), false, true),
 });
 
 // With super mayhem
@@ -5622,71 +5773,274 @@ var pageBattleTowerOfSweetChaosVictory = [
   { x: 209, y: 59, r: 38, g: 121, b: 198 },
   { x: 256, y: 59, r: 123, g: 190, b: 255 },
 ];
+var pageCanEquipTopping = [
+  {x: 400, y: 266, r: 121, g: 207, b: 12},
+  {x: 267, y: 160, r: 233, g: 182, b: 131},
+  {x: 294, y: 264, r: 12, g: 167, b: 223},
+  {x: 389, y: 162, r: 199, g: 181, b: 170},
+];
+var pageCanEquipTopping2 = [
+  {x: 397, y: 267, r: 123, g: 207, b: 8},
+  {x: 277, y: 163, r: 255, g: 255, b: 186},
+  {x: 265, y: 165, r: 198, g: 182, b: 173},
+  {x: 265, y: 165, r: 198, g: 182, b: 173},
+  {x: 252, y: 77, r: 57, g: 69, b: 107},
+];
 
-function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, pageExitBattle, pageExitBattleAbnormal) {
+var rfpageBattleVictoryButNeedTap = new RF.Page(
+  'rfpageBattleVictoryButNeedTap',
+  pageBattleVictoryButNeedTap,
+  { x: 230, y: 49 }
+);
+
+var rfpageBattleFinished = new RF.Page(
+  'rfpageBattleFinished',
+  pageBattleFinished,
+  { x: 56, y: 331 }
+);
+var rfpageBattleDefeat = new RF.Page(
+  'rfpageBattleDefeat',
+  pageBattleDefeat,
+  { x: 243, y: 58 }
+);
+var rfpageDefeatWithGotoKingdom = new RF.Page(
+  'rfpageDefeatWithGotoKingdom',
+  pageDefeatWithGotoKingdom,
+  { x: 81, y: 314 }
+);
+var rfpageNoArenaTicket = new RF.Page(
+  'rfpageNoArenaTicket',
+  pageNoArenaTicket,
+  { x: 280, y: 250 }
+);
+var rfpageBattleFinishedWithSunbeds = new RF.Page(
+  'rfpageBattleFinishedWithSunbeds',
+  pageBattleFinishedWithSunbeds,
+  { x: 491, y: 322 }
+);
+var rfpageIslandSunbedWithWetCookie = new RF.Page(
+  'rfpageIslandSunbedWithWetCookie',
+  pageIslandSunbedWithWetCookie,
+  { x: 218, y: 60 }
+);
+
+var rfpageFoundOctopus = new RF.Page(
+  'rfpageFoundOctopus',
+  pageFoundOctopus,
+  { x: 500, y: 330 }
+);
+var rfpageInKingdomConstructionShop = new RF.Page(
+  'rfpageInKingdomConstructionShop',
+  pageInKingdomConstructionShop,
+  { x: 624, y: 19 }
+);
+var rfpageKingdomDecorating = new RF.Page(
+  'rfpageKingdomDecorating',
+  pageKingdomDecorating,
+  { x: 619, y: 12 }
+);
+var rfpageBattleFinishedWithNextLv = new RF.Page(
+  'rfpageBattleFinishedWithNextLv',
+  pageBattleFinishedWithNextLv,
+  { x: 589, y: 333 }
+);
+var rfpageWinBountyAndFinish = new RF.Page(
+  'rfpageWinBountyAndFinish',
+  pageWinBountyAndFinish,
+  pageWinBountyAndFinish[0]
+);
+var rfpageBattleFinishedWithoutNextLv = new RF.Page(
+  'rfpageBattleFinishedWithoutNextLv',
+  pageBattleFinishedWithoutNextLv,
+  { x: 466, y: 324 }
+);
+var rfpageNeedRefillBounties = new RF.Page(
+  'rfpageNeedRefillBounties',
+  pageNeedRefillBounties,
+  { x: 428, y: 82 }
+);
+var rfpageNeedRefillBounties2 = new RF.Page(
+  'rfpageNeedRefillBounties2',
+  pageNeedRefillBounties2,
+  { x: 442, y: 82 }
+);
+
+var rfpageAllianceReward = new RF.Page(
+  'rfpageAllianceReward',
+  pageAllianceReward,
+  { x: 397, y: 243 }
+);
+var rfpageAllianceResults = new RF.Page(
+  'rfpageAllianceResults',
+  pageAllianceResults,
+  { x: 612, y: 333 }
+);
+var rfpageAllianceResults2 = new RF.Page(
+  'rfpageAllianceResults2',
+  pageAllianceResults2,
+  { x: 310, y: 29 }
+);
+var rfpageAllianceRewardGet = new RF.Page(
+  'rfpageAllianceRewardGet',
+  pageAllianceRewardGet,
+  { x: 191, y: 187 }
+);
+
+var rfpageSelectStartingTeam = new RF.Page(
+  'rfpageSelectStartingTeam',
+  pageSelectStartingTeam,
+  { x: 260, y: 29 }
+);
+var rfpageSelectNextTeam = new RF.Page(
+  'rfpageSelectNextTeam',
+  pageSelectNextTeam,
+  pageSelectNextTeam[0]
+);
+var rfpageKeepBattleByOrderNotCheckWhenStart = new RF.Page(
+  'rfpageKeepBattleByOrderNotCheckWhenStart',
+  pageKeepBattleByOrderNotCheckWhenStart,
+  pageKeepBattleByOrderNotCheckWhenStart[0]
+);
+var rfpageKeepBattleByOrderNotCheck = new RF.Page(
+  'rfpageKeepBattleByOrderNotCheck',
+  pageKeepBattleByOrderNotCheck,
+  pageKeepBattleByOrderNotCheck[0]
+);
+var rfpageBattleTowerOfSweetChaosVictory = new RF.Page(
+  'rfpageBattleTowerOfSweetChaosVictory',
+  pageBattleTowerOfSweetChaosVictory,
+  pageBattleTowerOfSweetChaosVictory[0]
+);
+var rfpageCanEquipTopping = new RF.Page(
+  'rfpageCanEquipTopping',
+  pageCanEquipTopping,
+  pageCanEquipTopping[0]
+);
+var rfpageCanEquipTopping2 = new RF.Page(
+  'rfpageCanEquipTopping2',
+  pageCanEquipTopping2,
+  pageCanEquipTopping2[0]
+);
+
+var groupPageBattle = new RF.GroupPage('groupPageBattle', [
+  rfpageBattleVictoryButNeedTap,
+  rfpageBattleFinished,
+  rfpageBattleDefeat,
+  rfpageDefeatWithGotoKingdom,
+  rfpageNoArenaTicket,
+  rfpagePvPCrystaisRefresh,
+  rfpageBattleFinishedWithSunbeds,
+  rfpageIslandSunbedWithWetCookie,
+  rfpageFoundOctopus,
+  rfpageInKingdomConstructionShop,
+  rfpageKingdomDecorating,
+  rfpageBattleFinishedWithNextLv,
+  rfpageWinBountyAndFinish,
+  rfpageBattleFinishedWithoutNextLv,
+  rfpageNeedRefillBounties,
+  rfpageNeedRefillBounties2,
+  rfpageDragonRemainHealth,
+  rfpageDragonTotalDamage,
+  rfpageRedValvetDragonWon,
+  rfpageDragonHasExtraTime,
+  rfpageAllianceReward,
+  rfpageAllianceResults,
+  rfpageAllianceResults2,
+  rfpageAllianceRewardGet,
+  rfpageSelectStartingTeam,
+  rfpageSelectNextTeam,
+  rfpageKeepBattleByOrderNotCheckWhenStart,
+  rfpageKeepBattleByOrderNotCheck,
+  rfpageBattleTowerOfSweetChaosVictory,
+  rfpageCanEquipTopping,
+  rfpageCanEquipTopping2,
+  rfpageInGacha,
+  rfpageInKingdomVillage,
+  rfpageAutoUseSkillEnabled,
+  rfpageSpeedBoostEnabled,
+  rfpageSpeed1x,
+  rfpageSpeed1_2x,
+]);
+
+function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, pageExitBattle) {
   console.log('Battling for: ', battleName);
 
   if (needToCheckAutoUseSkill === undefined) {
     needToCheckAutoUseSkill = false;
   }
 
+  if (pageExitBattle !== undefined) {
+    groupPageBattle.pages.push(new RF.Page(
+      'rfpageExitBattle',
+      pageExitBattle,
+      pageExitBattle[0]
+    ))
+  }
+
   var autoUseSkillCheckedCnt = 0;
   var speedBoostCheckedCnt = 0;
   var loggingCnt = 0;
   for (var j = 0; j < waitTimeInSecs && config.run; j++) {
-    if (checkIsPage(pageInGacha)) {
+    var matchedPages = groupPageBattle.isMatchScreen(this.screen);
+    console.log('matchedPages at', j,':', matchedPages)
+
+    if (matchedPages.indexOf('rfpageInGacha') !== -1) {
       console.log('Found in gacha page, finish auto battle: ', battleName);
-      qTap(pageInGacha);
+      rfpageInGacha.goNext(this.screen);
       handleGotoKingdomPage();
       return false;
     }
-    if (checkIsPage(pageInKingdomVillage)) {
-      console.log('battle lead to kingdom, return');
+    if (matchedPages.indexOf('rfpageInKingdomVillage') !== -1) {
+      console.log('battle lead to kingdom, return false');
       return false;
     }
-    if (checkIsPage(pageKingdomDecorating)) {
-      console.log('Found in pageKingdomDecorating page, finish auto island battle');
-      qTap(pageKingdomDecorating);
+    if (matchedPages.indexOf('rfpageKingdomDecorating') !== -1) {
+      console.log('Found in rfpageKingdomDecorating page, finish waitForBattle');
+      rfpageKingdomDecorating.goNext(this.screen);
       handleGotoKingdomPage();
       return false;
     }
-    if (checkIsPage(pageInKingdomConstructionShop)) {
-      console.log('Found pageInKingdomConstructionShop, exit');
-      qTap(pageInKingdomConstructionShop);
+    if (matchedPages.indexOf('rfpageInKingdomConstructionShop') !== -1) {
+      console.log('Found rfpageInKingdomConstructionShop, exit');
+      rfpageInKingdomConstructionShop.goNext(this.screen);
       return false;
+    }
+    if (matchedPages.indexOf('rfpageCanEquipTopping') !== -1) {
+      console.log('Found rfpageCanEquipTopping, tap OK and wait for 5 secs');
+      rfpageCanEquipTopping.goNext(this.screen);
+      sleep(5000);
+    } else if (matchedPages.indexOf('rfpageCanEquipTopping2') !== -1) {
+      console.log('Found rfpageCanEquipTopping2, tap OK and wait for 5 secs');
+      rfpageCanEquipTopping2.goNext(this.screen);
+      sleep(5000);
     }
 
-    if (checkIsPage(pageBattleVictoryButNeedTap)) {
-      console.log('pageBattleVictoryButNeedTap: ', battleName, j);
+    if (matchedPages.indexOf('rfpageBattleVictoryButNeedTap') !== -1) {
+      console.log('rfpageBattleVictoryButNeedTap: ', battleName, j);
       qTap(pnt(321, 345));
       sleep(2000);
       j += 2;
     }
 
-    if (pageExitBattle !== undefined && checkIsPage(pageExitBattle)) {
+    if (matchedPages.indexOf('rfpageExitBattle') !== -1) {
       console.log('Battle successfully finished, return');
-      qTap(pnt(306, 326));
+      // qTap(pnt(306, 326));
       return true;
     }
 
-    // if (checkIsPage(pageExitBattleAbnormal)) {
-    //   console.log('Battle meet pageExitBattleAbnormal, return', JSON.stringify(pageExitBattleAbnormal));
-    //   return false;
-    // }
-
-    if (checkIsPage(pageBattleFinished)) {
-      console.log('Battle success: ', battleName, j, ' secs');
+    if (matchedPages.indexOf('rfpageBattleFinished') !== -1) {
+      console.log('Battle success: ', battleName, j, 'secs');
       qTap(pnt(616, 323));
       sleep(2000);
       j += 2;
-    } else if (checkIsPage(pageBattleDefeat)) {
-      console.log('Battle finished, lost: ', battleName, j);
+    } else if (matchedPages.indexOf('rfpageBattleDefeat') !== -1) {
+      console.log('Battle finished, lost: ', battleName, j, 'secs');
       qTap(pnt(616, 323));
       sleep(2000);
       j += 2;
-    } else if (checkIsPage(pageDefeatWithGotoKingdom)) {
+    } else if (matchedPages.indexOf('rfpageDefeatWithGotoKingdom') !== -1) {
       console.log('failed (defeated) with goto kingdom, stop battle: ', battleName, j);
-      qTap(pageDefeatWithGotoKingdom);
+      rfpageDefeatWithGotoKingdom.goNext(this.screen);
       sleep(1500);
       return false;
     }
@@ -5694,14 +6048,14 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
     // PVP finish condition
     // pvp will tap(320, 350, 100)
     if (battleName === 'pvp') {
-      if (checkIsPage(pageNoArenaTicket)) {
+      if (matchedPages.indexOf('rfpageNoArenaTicket') !== -1) {
         console.log('No arena ticket, finish auto pvp');
-        qTap(pageNoArenaTicket);
+        rfpageNoArenaTicket.goNext(this.screen);
         sleep(config.sleepAnimate);
         return false;
-      } else if (checkIsPage(pagePvPCrystaisRefresh)) {
-        console.log('crystaisRefreshPage');
-        tap(436, 90, 100); // X cancel
+      } else if (matchedPages.indexOf('rfpagePvPCrystaisRefresh') !== -1) {
+        console.log('rfpagePvPCrystaisRefresh');
+        rfpagePvPCrystaisRefresh.goNext(this.screen); // X cancel
         sleep(1500);
         return false;
       }
@@ -5709,17 +6063,17 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
 
     // Island battle finish condition
     if (battleName === 'islandRedsword') {
-      if (checkIsPage(pageFoundOctopus)) {
+      if (matchedPages.indexOf('rfpageFoundOctopus') !== -1) {
         console.log('Island battle found octopus, exit');
-        qTap(pageFoundOctopus);
+        rfpageFoundOctopus.goNext(this.screen);
         sleep(1500);
         return true;
-      } else if (checkIsPage(pageBattleFinishedWithSunbeds)) {
-        console.log('failed to clear the sword (pageBattleFinishedWithSunbeds), stop battle in islands');
-        qTap(pageBattleFinishedWithSunbeds);
+      } else if (matchedPages.indexOf('rfpageBattleFinishedWithSunbeds') !== -1) {
+        console.log('failed to clear the sword (rfpageBattleFinishedWithSunbeds), stop battle in islands');
+        rfpageBattleFinishedWithSunbeds.goNext(this.screen);
         sleep(1500);
         return false;
-      } else if (checkIsPage(pageIslandSunbedWithWetCookie)) {
+      } else if (matchedPages.indexOf('rfpageIslandSunbedWithWetCookie') !== -1) {
         console.log('failed to clear the sword (pageIslandSunbedWithWetCookie), stop battle in islands');
         keycode('BACK', 1000);
         sleep(1500);
@@ -5729,30 +6083,29 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
 
     // Bounty finish condition
     if (battleName === 'bounty') {
-      if (checkIsPage(pageNeedRefillBounties) || checkIsPage(pageNeedRefillBounties2)) {
+      if (matchedPages.indexOf('rfpageNeedRefillBounties') !== -1 || matchedPages.indexOf('rfpageNeedRefillBounties2') !== -1) {
         console.log('No bounties left, return to kingdom');
         sendEvent('running', 'finish bounties');
         return false;
-      } else if (checkIsPage(pageBattleFinishedWithoutNextLv)) {
-        console.log('Win bounty and (can only) retry');
-        qTap(pageBattleFinishedWithoutNextLv);
+      } else if (matchedPages.indexOf('rfpageBattleFinishedWithoutNextLv') !== -1) {
+        console.log('Win bounty with pageBattleFinishedWithoutNextLv and (can only) tap retry');
+        rfpageBattleFinishedWithoutNextLv.goNext(this.screen);
         sleep(2000);
-        j += 2;
         return true;
-      } else if (checkIsPage(pageBattleFinishedWithNextLv)) {
-        if (config.autoBountiesCheckBluePower) {
+      } else if (matchedPages.indexOf('rfpageBattleFinishedWithNextLv') !== -1) {
+        if (config.autoBountiesCheckBluePowder) {
           console.log('Win bounty but stay in this level for blue powder');
           qTap(pnt(387, 322))
         }
         else {
           console.log('Win bounty and goto next level');
-          qTap(pageBattleFinishedWithNextLv);
+          rfpageBattleFinishedWithNextLv.goNext(this.screen);
         }
         sleep(2000);
         return true;
-      } else if (checkIsPage(pageWinBountyAndFinish)) {
+      } else if (matchedPages.indexOf('rfpageWinBountyAndFinish') !== -1) {
         console.log('Successfully cleared bounties');
-        qTap(pageWinBountyAndFinish);
+        rfpageWinBountyAndFinish.goNext(this.screen);
         sleep(2000);
         return true;
       }
@@ -5760,9 +6113,9 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
 
     // Guild alliance battle handle reward
     if (battleName === 'alliance') {
-      if (checkIsPage(pageAllianceReward)) {
+      if (matchedPages.indexOf('rfpageAllianceReward') !== -1) {
         console.log('Open 2nd reward with ticket, and tap middle');
-        qTap(pageAllianceReward);
+        rfpageAllianceReward.goNext(this.screen);
         sleep(config.sleepAnimate * 3);
 
         if (waitUntilSeePage(pageAllianceResults, 6, pnt(323, 337))) {
@@ -5776,50 +6129,51 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
           console.log('Not enough ticket for 2nd reward, skipping');
           qTap(pnt(619, 21)); // close icon
         }
-      } else if (checkIsPage(pageAllianceResults)) {
-        console.log('pageAllianceResults, exit', j);
+      } else if (matchedPages.indexOf('rfpageAllianceResults') !== -1) {
+        console.log('rfpageAllianceResults, exit', j);
         qTap(pageAllianceResults);
         sleep(config.sleepAnimate * 3);
         return true;
-      } else if (checkIsPage(pageAllianceResults2)) {
+      } else if (matchedPages.indexOf('rfpageAllianceResults2') !== -1) {
         console.log('pageAllianceResults2, exit', j);
         qTap(pnt(600, 320));
         sleep(config.sleepAnimate * 3);
         return true;
-      } else if (checkIsPage(pageAllianceRewardGet)) {
-        console.log('pageAllianceRewardGet, tap middle');
+      } else if (matchedPages.indexOf('rfpageAllianceRewardGet') !== -1) {
+        console.log('rfpageAllianceRewardGet, tap middle');
         qTap(pnt(323, 337));
       }
     }
 
     if (battleName === 'guildDragon') {
-      if (checkIsPage(pageDragonRemainHealth)) {
+      if (matchedPages.indexOf('rfpageDragonRemainHealth') !== -1) {
         qTap(pnt(320, 336));
         sleep(1000);
         j++;
       }
-      if (checkIsPage(pageDragonTotalDamage)) {
+      if (matchedPages.indexOf('rfpageDragonTotalDamage') !== -1) {
         qTap(pnt(320, 336));
         sleep(1000);
         j++;
       }
-      if (checkIsPage(pageRedValvetDragonWon)) {
-        for (var tapToSkip = 0; tapToSkip < 5; tapToSkip++) {
-          if (checkIsPage(pageReadyToFightDragon)) {
-            break;
-          }
-          qTap(pnt(320, 336));
-          sleep(1000);
-          j++;
+      if (matchedPages.indexOf('rfpageDragonHasExtraTime') !== -1) {
+        console.log('rfpageDragonHasExtraTime found, build battle has extra time, tap continue fighting');
+        rfpageDragonHasExtraTime.goNext(this.screen);
+        sleep(5000);
+        j += 5;
+      }
+      if (matchedPages.indexOf('rfpageRedValvetDragonWon') !== -1) {
+        if (waitUntilSeePage(pageReadyToFightDragon, 5, pnt(320, 336))) {
+          console.log('Successfully back to pageReadyToFightDragon, finish waitForBattle');
+          return true;
         }
       }
     }
 
     if (battleName === 'TowerOfSweetChaos') {
-      if (checkIsPage(pageBattleTowerOfSweetChaosVictory)) {
+      if (matchedPages.indexOf('rfpageBattleTowerOfSweetChaosVictory') !== -1) {
         console.log('ToSC victory, tap next (pageBattleTowerOfSweetChaosVictory)');
-
-        qTap(pageBattleTowerOfSweetChaosVictory);
+        rfpageBattleTowerOfSweetChaosVictory.goNext(this.screen);
         sleep(1500);
         return true;
       }
@@ -5828,18 +6182,18 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
     }
 
     if (needToCheckAutoUseSkill) {
-      if (checkIsPage(pageAutoUseSkillEnabled)) {
+      if (matchedPages.indexOf('rfpageAutoUseSkillEnabled') !== -1) {
         autoUseSkillCheckedCnt++;
-      } else if (autoUseSkillCheckedCnt < 5 && !checkIsPage(pageAutoUseSkillEnabled)) {
+      } else if (autoUseSkillCheckedCnt < 5 && matchedPages.indexOf('rfpageAutoUseSkillEnabled') === -1) {
         console.log(battleName, 'battle skill not enabled, enable it');
-        qTap(pageAutoUseSkillEnabled);
-        sleep(2000);
-        j += 2;
-        autoUseSkillCheckedCnt++;
+        rfpageAutoUseSkillEnabled.goNext(this.screen);
+        sleep(3000);
+        j += 3;
+        // autoUseSkillCheckedCnt++;
       }
     }
 
-    if (checkIsPage(pageSpeedBoostEnabled)) {
+    if (matchedPages.indexOf('rfpageSpeedBoostEnabled') !== -1) {
       speedBoostCheckedCnt++;
     }
     if (speedBoostCheckedCnt < 5 && !checkIsPage(pageSpeedBoostEnabled)) {
@@ -6274,6 +6628,16 @@ function handleGuildBattleAlliance() {
         }
       }
 
+      if (rfpageCanEquipTopping.isMatchScreen(this.screen)) {
+        console.log('Found rfpageCanEquipTopping, tap OK and wait for 5 secs');
+        rfpageCanEquipTopping.goNext(this.screen);
+        sleep(5000);
+      } else if (rfpageCanEquipTopping2.isMatchScreen(this.screen)) {
+        console.log('Found rfpageCanEquipTopping2, tap OK and wait for 5 secs');
+        rfpageCanEquipTopping2.goNext(this.screen);
+        sleep(5000);
+      }
+
       if (waitForBattle('alliance', 1800, false, pageCookieAlliance)) {
         console.log('pageCookieAlliance battle finished, wait at most 15 secs and try next one');
         waitUntilSeePage(pageCookieAlliance, 15);
@@ -6369,7 +6733,7 @@ function handleBounties() {
     var powder = bountyCount === 1 ? 0 : ocrMaterialStorage(454, 10, 50, 18);
     var bountyLevel = bountyCount === 1 ? 12 : countBountyLevel();
 
-    if (bountyCount !== 1 && config.autoBountiesCheckBluePower) {
+    if (bountyCount !== 1 && config.autoBountiesCheckBluePowder) {
       var rtn = bountyCheckIfGetBluePowder();
       powder = rtn[0];
       bountyLevel = rtn[1];
@@ -6845,6 +7209,7 @@ function handleInHabor() {
       sleep(config.sleepAnimate * 2);
     }
 
+    console.log('should be in seaside market');
     if (checkIsPage(pageFreeRefreshSeasideMarket)) {
       qTap(pnt(543, 336)); // market free refresh, no need to pull to the head of the list as refresh will reset the list
       sleep(config.sleepAnimate);
@@ -6966,7 +7331,7 @@ function handleInHabor() {
       handleGotoTradeHabor();
     }
   } else {
-    console.log('No need to autoBuyCaramelStuff');
+    console.log('No need to shop in seaside market');
   }
 
   var pageCanGotoShellShop = [
@@ -6977,7 +7342,7 @@ function handleInHabor() {
   ];
   var pageInShellShop = [
     { x: 609, y: 22, r: 57, g: 166, b: 231 },
-    { x: 310, y: 17, r: 247, g: 254, b: 199 },
+    { x: 323, y: 28, r: 247, g: 181, b: 243 },
     { x: 272, y: 28, r: 200, g: 212, b: 214 },
     { x: 254, y: 12, r: 231, g: 199, b: 156 },
   ];
@@ -7256,190 +7621,149 @@ function handleTowerOfRecords() {
   handleGotoKingdomPage();
 }
 
-// function getMayhemScores() {
-//   var img = getScreenshot();
-//   var scores = [0, 0, 0];
-//   var imagesLocation = [
-//     [
-//       { x: 495, y: 56, w: 47, h: 12 },
-//       { x: 495, y: 84, w: 47, h: 12 },
-//       { x: 495, y: 110, w: 47, h: 12 },
-//     ],
-//     [
-//       { x: 495, y: 145, w: 47, h: 12 },
-//       { x: 495, y: 172, w: 47, h: 12 },
-//       { x: 495, y: 198, w: 47, h: 12 },
-//     ],
-//     [
-//       { x: 495, y: 232, w: 47, h: 12 },
-//       { x: 495, y: 260, w: 47, h: 12 },
-//       { x: 495, y: 288, w: 47, h: 12 },
-//     ],
-//   ];
-//   for (var mayhemIdx = 0; mayhemIdx < imagesLocation.length; mayhemIdx++) {
-//     for (var teamIdx = 0; teamIdx < imagesLocation[mayhemIdx].length; teamIdx++) {
-//       var tImage = imagesLocation[mayhemIdx][teamIdx];
-//       var croppedImage = cropImage(img, tImage.x, tImage.y, tImage.w, tImage.h);
-//       var value = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage, 7, 0.7, 0.7) || 0;
-//       releaseImage(croppedImage);
+function getMayhemScores() {
+  var img = getScreenshot();
+  var scores = [0, 0, 0];
+  var imagesLocation = [
+    [
+      { x: 495, y: 56, w: 47, h: 12 },
+      { x: 495, y: 84, w: 47, h: 12 },
+      { x: 495, y: 110, w: 47, h: 12 },
+    ],
+    [
+      { x: 495, y: 145, w: 47, h: 12 },
+      { x: 495, y: 172, w: 47, h: 12 },
+      { x: 495, y: 198, w: 47, h: 12 },
+    ],
+    [
+      { x: 495, y: 232, w: 47, h: 12 },
+      { x: 495, y: 260, w: 47, h: 12 },
+      { x: 495, y: 288, w: 47, h: 12 },
+    ],
+  ];
+  for (var mayhemIdx = 0; mayhemIdx < imagesLocation.length; mayhemIdx++) {
+    for (var teamIdx = 0; teamIdx < imagesLocation[mayhemIdx].length; teamIdx++) {
+      var tImage = imagesLocation[mayhemIdx][teamIdx];
+      var croppedImage = cropImage(img, tImage.x, tImage.y, tImage.w, tImage.h);
+      var value = +recognizeWishingTreeRequirements(numberImagesPVP, croppedImage, 7, 0.7, 0.7) || 0;
+      releaseImage(croppedImage);
 
-//       if (value > scores[mayhemIdx]) {
-//         scores[mayhemIdx] = value;
-//       }
-//     }
-//   }
+      if (value > scores[mayhemIdx]) {
+        scores[mayhemIdx] = value;
+      }
+    }
+  }
 
-//   releaseImage(img);
-//   console.log('>> ', JSON.stringify(scores));
-//   return scores;
-// }
+  releaseImage(img);
+  console.log('>> ', JSON.stringify(scores));
+  return scores;
+}
 
-// function handleSuperMayhem() {
-//   if (!handleGotoAdventure(Advantures.superMayhem, pageInSuperMayhem)) {
-//     console.log('skipping handleSuperMayhem as cannot find the path');
-//     return false;
-//   }
+function handleSuperMayhem() {
+  if (!handleGotoAdventure(Advantures.superMayhem, pageInSuperMayhem)) {
+    console.log('skipping handleSuperMayhem as cannot find the path');
+    return false;
+  }
 
-//   console.log('starting handleSuperMayhem');
-//   sendEvent('running', '');
+  console.log('starting handleSuperMayhem');
+  sendEvent('running', '');
 
-//   var pageBattlePrepare = [
-//     { x: 548, y: 329, r: 123, g: 207, b: 8 },
-//     { x: 505, y: 325, r: 255, g: 251, b: 255 },
-//     { x: 270, y: 334, r: 123, g: 207, b: 8 },
-//     { x: 304, y: 218, r: 255, g: 223, b: 24 },
-//   ];
+  var pageBattlePrepare = [
+    { x: 548, y: 329, r: 123, g: 207, b: 8 },
+    { x: 505, y: 325, r: 255, g: 251, b: 255 },
+    { x: 270, y: 334, r: 123, g: 207, b: 8 },
+    { x: 304, y: 218, r: 255, g: 223, b: 24 },
+  ];
 
-//   var battleFinishPage = [
-//     { x: 56, y: 331, r: 247, g: 89, b: 24 },
-//     { x: 584, y: 332, r: 8, g: 166, b: 222 },
-//     { x: 606, y: 24, r: 57, g: 169, b: 231 },
-//   ];
+  var battleFinishPage = [
+    { x: 56, y: 331, r: 247, g: 89, b: 24 },
+    { x: 584, y: 332, r: 8, g: 166, b: 222 },
+    { x: 606, y: 24, r: 57, g: 169, b: 231 },
+  ];
 
-//   var pageNoMayhemTicket = [
-//     { x: 301, y: 250, r: 8, g: 166, b: 222 },
-//     { x: 355, y: 254, r: 0, g: 195, b: 255 },
-//     { x: 317, y: 92, r: 231, g: 204, b: 220 },
-//     { x: 307, y: 80, r: 148, g: 0, b: 68 },
-//     { x: 261, y: 97, r: 57, g: 69, b: 107 },
-//   ];
+  var pageNoMayhemTicket = [
+    { x: 301, y: 250, r: 8, g: 166, b: 222 },
+    { x: 355, y: 254, r: 0, g: 195, b: 255 },
+    { x: 317, y: 92, r: 231, g: 204, b: 220 },
+    { x: 307, y: 80, r: 148, g: 0, b: 68 },
+    { x: 261, y: 97, r: 57, g: 69, b: 107 },
+  ];
 
-//   console.log('start super Mayhem success');
-//   var battleEntriesPnts = [
-//     [{ x: 586, y: 97, r: 123, g: 207, b: 16 }],
-//     [{ x: 583, y: 186, r: 123, g: 207, b: 16 }],
-//     [{ x: 581, y: 275, r: 123, g: 207, b: 16 }],
-//   ];
+  console.log('start super Mayhem success');
+  var battleEntriesPnts = [
+    [{ x: 586, y: 97, r: 123, g: 207, b: 16 }],
+    [{ x: 583, y: 186, r: 123, g: 207, b: 16 }],
+    [{ x: 581, y: 275, r: 123, g: 207, b: 16 }],
+  ];
 
-//   var needToCheckSpeed = true;
-//   for (var loopTimes = 0; loopTimes < config.battleMaxLoops; loopTimes++) {
-//     var scores = getMayhemScores();
-//     console.log('super mayhem scores: ', JSON.stringify(scores));
+  for (var loopTimes = 0; loopTimes < config.battleMaxLoops; loopTimes++) {
+    var scores = getMayhemScores();
+    console.log('super mayhem scores: ', JSON.stringify(scores));
 
-//     var loopHasBattled = false;
-//     for (var scoreIdx = 0; scoreIdx < scores.length; scoreIdx++) {
-//       if (scores[scoreIdx] < config.autoSuperMayhemTargetScoreLimit && scores[scoreIdx] != 0) {
-//         if (!checkIsPage(battleEntriesPnts[scoreIdx])) {
-//           console.log('skip', scoreIdx, 'as already battled');
-//           continue;
-//         }
-//         if (checkIsPage(pagePvPCrystaisRefresh)) {
-//           console.log('crystaisRefreshPage');
-//           tap(436, 90, 100); // X cancel
-//           break;
-//         }
+    var loopHasBattled = false;
+    for (var scoreIdx = 0; scoreIdx < scores.length; scoreIdx++) {
+      if (scores[scoreIdx] < config.autoSuperMayhemTargetScoreLimit && scores[scoreIdx] != 0) {
+        if (!checkIsPage(battleEntriesPnts[scoreIdx])) {
+          console.log('skip', scoreIdx, 'as already battled');
+          continue;
+        }
+        if (checkIsPage(pagePvPCrystaisRefresh)) {
+          console.log('crystaisRefreshPage');
+          tap(436, 90, 100); // X cancel
+          break;
+        }
 
-//         console.log('Battle with', scoreIdx, 'power', scores[scoreIdx]);
-//         if (waitUntilSeePage(pageBattlePrepare, 10, battleEntriesPnts[scoreIdx])) {
-//           tap(550, 320, 100); // start battle
-//           loopHasBattled = true;
+        console.log('Battle with', scoreIdx, 'power', scores[scoreIdx]);
+        if (waitUntilSeePage(pageBattlePrepare, 10, battleEntriesPnts[scoreIdx])) {
+          tap(550, 320, 100); // start battle
+          loopHasBattled = true;
 
-//           // wait for battle finish
-//           for (var j = 0; j < 60 && config.run; j++) {
-//             if (j % 3 == 0) {
-//               console.log('Waiting for battle', j);
-//             }
-//             sleep(3000);
-//             tap(320, 350, 100); // center-bottom
-//             sleep(2000);
-//             if (checkIsPage(pageNoMayhemTicket)) {
-//               console.log('No mayhem ticket, finish auto pvp');
-//               qTap(pageNoMayhemTicket);
-//               handleGotoKingdomPage();
-//               return;
-//             }
-//             if (checkIsPage(pageInGacha)) {
-//               console.log('Found in gacha page, finish auto super mayhem');
-//               qTap(pageInGacha);
-//               handleGotoKingdomPage();
-//               return;
-//             }
-//             if (checkIsPage(battleFinishPage)) {
-//               console.log('Battle finished, won: ', j);
-//               waitUntilSeePage(pageInSuperMayhem, 25, pnt(616, 323), pagePvPCrystaisRefresh);
+          if (waitUntilSeePage(pageNoMayhemTicket, 5)) {
+            console.log('No mayhem ticket, finish auto super mayhem');
+            qTap(pageNoMayhemTicket);
+            handleGotoKingdomPage();
+            return;
+          }
 
-//               if (checkIsPage(pagePvPCrystaisRefresh)) {
-//                 console.log('crystaisRefreshPage');
-//                 tap(436, 90, 100); // X cancel
-//                 sleep(1500);
-//               }
-//               break;
-//             }
-//             if (checkIsPage(pageBattleDefeat)) {
-//               console.log('Battle finished, lost: ', j);
-//               waitUntilSeePage(pageInSuperMayhem, 25, pnt(616, 323), pagePvPCrystaisRefresh);
+          if (rfpageCanEquipTopping.isMatchScreen(this.screen)) {
+            console.log('Found rfpageCanEquipTopping, tap OK and wait for 5 secs');
+            rfpageCanEquipTopping.goNext(this.screen);
+            sleep(5000);
+          } else if (rfpageCanEquipTopping2.isMatchScreen(this.screen)) {
+            console.log('Found rfpageCanEquipTopping2, tap OK and wait for 5 secs');
+            rfpageCanEquipTopping2.goNext(this.screen);
+            sleep(5000);
+          }
 
-//               if (checkIsPage(pagePvPCrystaisRefresh)) {
-//                 console.log('crystaisRefreshPage');
-//                 tap(436, 90, 100); // X cancel
-//                 sleep(1500);
-//               }
-//               break;
-//             }
-//             if (checkIsPage(pagePvPCrystaisRefresh)) {
-//               console.log('crystaisRefreshPage');
-//               tap(436, 90, 100); // X cancel
-//               sleep(3000);
-//               j += 3;
-//               break;
-//             }
-//             if (needToCheckSpeed && !checkIsPage(pageSpeedBoostEnabled)) {
-//               qTap(pageSpeedBoostEnabled);
-//               sleep(3000);
-//               qTap(pageSpeedBoostEnabled);
-//               sleep(2000);
-//               j += 5;
+          if (waitForBattle('superMayhem', 120, false, kingdomArena)) {
+            console.log('PvP battle finished, try next one');
+            continue;
+          }
+        }
+      } else {
+        console.log('SKIP battle with stronger opponent', scoreIdx, 'power', scores[scoreIdx]);
+      }
+    }
+    sendEvent('running', '');
+    console.log('Finish battle loop: ', loopTimes, 'and try tap refresh');
 
-//               if (checkIsPage(pageSpeedBoostEnabled)) {
-//                 needToCheckSpeed = false;
-//               }
-//             }
-//           }
-//         }
-//       } else {
-//         console.log('SKIP battle with stronger opponent', scoreIdx, 'power', scores[scoreIdx]);
-//       }
-//     }
-//     sendEvent('running', '');
-//     console.log('Finish battle loop: ', loopTimes, 'and try tap refresh');
+    tap(560, 330, 100); // Free Refresh
+    sleep(5000);
 
-//     tap(560, 330, 100); // Free Refresh
-//     sleep(5000);
+    if (checkIsPage(pagePvPCrystaisRefresh)) {
+      console.log('crystaisRefreshPage');
+      tap(436, 90, 100); // X cancel
 
-//     if (checkIsPage(pagePvPCrystaisRefresh)) {
-//       console.log('crystaisRefreshPage');
-//       tap(436, 90, 100); // X cancel
+      if (!loopHasBattled) {
+        console.log('No one can battle with, return');
+        break;
+      }
+    }
+  }
 
-//       if (!loopHasBattled) {
-//         console.log('No one can battle with, return');
-//         break;
-//       }
-//     }
-//   }
-
-//   console.log('finish Super Mayhem, goto kingdom');
-//   handleGotoKingdomPage();
-// }
+  console.log('finish Super Mayhem, goto kingdom');
+  handleGotoKingdomPage();
+}
 
 function handleTowerOfSweetChaos() {
   console.log('start handleTowerOfSweetChaos: ', config.autoHandleTowerOfSweetChaos, checkIsPage(pageCookieAlliance));
@@ -7562,6 +7886,16 @@ function readyAndBattleTray() {
   if (waitUntilSeePage(pageToSCTeamsNotMeetRequirement, 5)) {
     console.log('ToSC team requirement not met, skipping');
     return false;
+  }
+
+  if (rfpageCanEquipTopping.isMatchScreen(this.screen)) {
+    console.log('Found rfpageCanEquipTopping, tap OK and wait for 5 secs');
+    rfpageCanEquipTopping.goNext(this.screen);
+    sleep(5000);
+  } else if (rfpageCanEquipTopping2.isMatchScreen(this.screen)) {
+    console.log('Found rfpageCanEquipTopping2, tap OK and wait for 5 secs');
+    rfpageCanEquipTopping2.goNext(this.screen);
+    sleep(5000);
   }
 
   if (waitForBattle('TowerOfSweetChaos', 180, true, pageInTowerOfSweetChaos)) {
@@ -7869,7 +8203,7 @@ var wNumbers = [];
 var seasideMarketItems = [];
 function loadImages() {
   candy = getImageFromBase64(
-    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAXABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6F+Cnh6/+LGratZad4v0Gz1i2Ju9dn1vSrq6aSaZiVtRFbmNVlfEjlmlUIFUbcSq6++ftZfstfEzxD4Bj8UWFnFcw2EcWPDmmeHLk3flyBI5JBteQyEOd2wRqFjJO9ivzWvhLZa3daV4pt/C80i2+leOtY0u61A3qSNbLa6hcwrBO0SjazI8DESDeQ8ZYuz729C1b4365d+Cbrx74z+I2j2j6XK0V1HO6Wyx2wR3kuJHbaixhVOT0APOOM+ZPw4yuGU0FTpKVay5pX95udm7W0Vto3u0klreTf5JU8VOJ8FxNiK+Nc6cL3oQil7PlpuSbblKMpuUbSskubmaVnGLXwt4m/wCCc+r/ABH1NfFttrNt++sraGWJr+NWgkhgjhkhdWXcjxvG0bIeVZGBwRRX2H+zZ4c074x/CiP4lt4o3x6tr+tSW08sK3S3EC6rdpFPFKHUNBJGqSRYBAieMBnA3sV+D5os4y3M6+EUXanOUOn2ZNd/I/ofKszpZnldDGVOVSqwjNq0tHKKk1qr9TyiH9tGbxn4r0zxd8XY9P8ACmpadYXWjLr6aXLq+mX2m3k0Ej289uksF1FN5lra7JUaVQ3mFlCsMfQ1v+xj4ItfsEniD4xeLvEMOm63aarbWetWumRxme2lM8G97Gytp2VLgQzAeby1vGpJjMkchRX2mH4lz7D5asDRxDjSV0kklpJ3etubdtrXS+ljm4l4SyB5hCvOipSvza62cbWaT9F9xe1b4DeF/EGpz6z4h13Xby8uJWaW4TW5rZTz8qiOEqihVwowMkLklmJYlFFeQqFK2xPtqvc//9k='
+    '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAIAAsDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9TPAfi86p4R1Pwj4p8FjW765tJbzVLjVr9JFvLAR7XidZGzINgIK8kqDxxXyh8ev29Pi58DPitqfwp+HP/BQTwV4D0TSEtk07wj4p8N6vql9pqPbxSbJLltIuzICXLoPPk2o6J8u3YpRX3+T8P5dmGd1VUTXu30t3S6po/laOaZllmFp0KdaXLFzimm4StFreVPklK923zN3dm9Vc/9k='
   );
 
   greenCheckedWhiteBackground = getImageFromBase64(
@@ -8525,7 +8859,7 @@ function loadImages() {
 function testRunAtLocal() {
   config.autoPvPIntervalInMins = 30;
   config.autoUpgradeCandyHouse = true;
-  config.autoBountiesCheckBluePower = true;
+  config.autoBountiesCheckBluePowder = true;
   config.autoGuildBattleDragon = true;
   config.autoHandleTowerOfSweetChaos = true;
   config.skipMagicLabProduction = false;
@@ -8536,9 +8870,20 @@ function testRunAtLocal() {
   start(JSON.stringify(config));
 }
 
+function initRobotmonFramework() {
+  this.screenConfig = new RF.ScreenConfig();
+  this.screenConfig.devWidth = 640;
+  this.screenConfig.devHeight = 360;
+  this.screenConfig.actionDuring = 100;
+  this.screen = new RF.Screen(this.screenConfig);
+
+  // this.taskManager = new RF.TaskManager();
+}
+
 function start(inputConfig) {
   console.log('inputConfig: ', inputConfig);
   config.run = true;
+  initRobotmonFramework();
 
   var rtn = execute('ls /data/data/com.devsisters.ck/shared_prefs');
   if (rtn === 'exit status 1') {
@@ -8559,7 +8904,7 @@ function start(inputConfig) {
     config.autoPvPPurchaseAncientCookie = false;
     config.autoGuildAllianceBattle = false;
     config.autoHandleBountiesIntervalInMins = 0;
-    config.autoBountiesCheckBluePower = false;
+    config.autoBountiesCheckBluePowder = false;
     config.autoHandleTradeHabor = false;
     config.autoBuySeaFairy = false;
     config.autoBuyEpicSoulEssence = false;
@@ -8737,14 +9082,14 @@ function start(inputConfig) {
         config.lastAutoPvP = Date.now();
       }
 
-      // if (
-      //   config.autoSuperMayhemIntervalInMins != 0 &&
-      //   (Date.now() - config.lastAutoSuperMayhem) / 60000 > config.autoSuperMayhemIntervalInMins
-      // ) {
-      //   console.log('Auto Super Mayhem: ', (Date.now() - config.lastAutoSuperMayhem) / 60000, ' just passed');
-      //   handleSuperMayhem();
-      //   config.lastAutoSuperMayhem = Date.now();
-      // }
+      if (
+        config.autoSuperMayhemIntervalInMins != 0 &&
+        (Date.now() - config.lastAutoSuperMayhem) / 60000 > config.autoSuperMayhemIntervalInMins
+      ) {
+        console.log('Auto Super Mayhem: ', (Date.now() - config.lastAutoSuperMayhem) / 60000, ' just passed');
+        handleSuperMayhem();
+        config.lastAutoSuperMayhem = Date.now();
+      }
 
       if (
         config.autoCollectTropicalIslandsIntervalInMins != 0 &&
@@ -8951,6 +9296,6 @@ function start(inputConfig) {
   }
 }
 
-// sendEvent('running', '')
 // testRunAtLocal();
 // loadImages()
+// initRobotmonFramework()
