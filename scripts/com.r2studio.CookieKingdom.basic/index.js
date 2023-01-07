@@ -773,10 +773,10 @@ var pageCookieKingdomHasStopped = [
 
 var pageInCookieHead = [
   { x: 610, y: 21, r: 57, g: 166, b: 231 },
-  { x: 413, y: 87, r: 187, g: 184, b: 228 },
-  { x: 413, y: 110, r: 24, g: 22, b: 138 },
   { x: 301, y: 95, r: 137, g: 143, b: 144 },
   { x: 32, y: 52, r: 142, g: 148, b: 155 },
+  {x: 12, y: 20, r: 141, g: 150, b: 167},
+  {x: 12, y: 27, r: 21, g: 32, b: 47}
 ];
 
 var pagePurchaseDiamond = [
@@ -1266,6 +1266,9 @@ function setProductionBuilding(building) {
 var pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
 var pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
 var pageThirdItemEnabled = [{ x: 603, y: 331, r: 123, g: 207, b: 8 }];
+var pageFourthItemEnabled = [{x: 599, y: 128, r: 121, g: 207, b: 12}];
+var pageFifthItemEnabled = [{x: 596, y: 232, r: 121, g: 207, b: 12}];
+var pageSixItemEnabled = [{x: 597, y: 339, r: 121, g: 207, b: 12}];
 
 var groupPageMaterialProdMenu = new RF.GroupPage('groupPageMaterialProdMenu', [
   rfpageWoodFarm,
@@ -1591,9 +1594,9 @@ function makeGoodsToTarget(target, prework, stocks) {
         prodReqList.push([]);
         SwipeProductionMenuToBottom();
       }
-      var goodsFourStock = checkIsPage(pageFirstItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
-      var goodsFiveStock = checkIsPage(pageSecondItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
-      var goodsSixStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
+      var goodsFourStock = checkIsPage(pageFourthItemEnabled) ? ocrProductStorage(goodsLocation[4]) : -1;
+      var goodsFiveStock = checkIsPage(pageFifthItemEnabled) ? ocrProductStorage(goodsLocation[5]) : -1;
+      var goodsSixStock = checkIsPage(pageSixItemEnabled) ? ocrProductStorage(goodsLocation[6]) : -1;
 
       prodReqList = prodReqList.concat(findProductRequirements([96]));
       if (goodsFiveStock !== -1) {
@@ -1730,8 +1733,8 @@ function makeGoodsToTarget(target, prework, stocks) {
         SwipeProductionMenuToBottom();
         SwipeProductionMenuToBottom();
       }
-      if (checkIsPage(pageFirstItemEnabled)) {
-        qTap(pageFirstItemEnabled, 800);
+      if (checkIsPage(pageFourthItemEnabled)) {
+        qTap(pageFourthItemEnabled, 800);
       }
     } else if (stock['id'] == 5) {
       if (config.currentProductionBuilding !== 'otherGoodShop') {
@@ -1743,8 +1746,8 @@ function makeGoodsToTarget(target, prework, stocks) {
         SwipeProductionMenuToTop();
         swipeToToolShop456();
       }
-      if (checkIsPage(pageSecondItemEnabled)) {
-        qTap(pageSecondItemEnabled, 800);
+      if (checkIsPage(pageFifthItemEnabled)) {
+        qTap(pageFifthItemEnabled, 800);
       }
     } else if (stock['id'] == 6) {
       if (config.currentProductionBuilding !== 'otherGoodShop') {
@@ -1753,8 +1756,8 @@ function makeGoodsToTarget(target, prework, stocks) {
         SwipeProductionMenuToBottom();
         SwipeProductionMenuToBottom();
       }
-      if (checkIsPage(pageThirdItemEnabled)) {
-        qTap(pageThirdItemEnabled, 800);
+      if (checkIsPage(pageSixItemEnabled)) {
+        qTap(pageSixItemEnabled, 800);
       }
     }
 
@@ -7876,7 +7879,7 @@ function readyAndBattleTray() {
 
   if (checkIsPage(pageInTowerOfSweetChaos)) {
     qTap(pnt(571, 327)); // tap Ready
-    if (!waitUntilSeePage(pageReadyToBattleToSC, 3)) {
+    if (!waitUntilSeePage(pageReadyToBattleToSC, 6)) {
       console.log('Failed to goto pageReadyToBattleTowerOfSweetChaos, skipping');
       return false;
     }
