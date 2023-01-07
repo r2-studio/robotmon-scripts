@@ -3,7 +3,7 @@
     "com.r2studio.MLB9Innings": {
       "id": "com.r2studio.MLB9Innings",
       "title": "*MLB9 Innings*",
-      "versionCode": 13.3,
+      "versionCode": 13.4,
       "description": "<h3>MLB9 Innings</h3><ul><li>play league seasons through one click</li><li>decrease disruptions caused by power save view</li><li>better energy controlling and play efficiency</li></ul>",
       "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9Innings/index.zip",
