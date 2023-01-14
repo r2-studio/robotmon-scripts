@@ -35,7 +35,7 @@
         type: "text",
         titlei18n: {
           zh_TW: "七龍珠激戰傳說 主線躺過",
-          en: "Dragon Ball Legends story mode helper",
+          en: "Dragon Ball Legends story mode reroll master",
         },
       },
       {
@@ -49,8 +49,8 @@
       {
         type: "text",
         titlei18n: {
-          zh_TW: "*本次更新：修正了一些頁面的問題與改善選擇遊玩模式的機制",
-          en: "*updated: fix bugs and improve play mode selection mechanism",
+          zh_TW: "請在故事模式章節選擇頁面按下開始，",
+          en: "Press start at in chapter selection page of story mode, and the bot will auto progress the story",
         },
       },
       // {
@@ -92,7 +92,7 @@
     if (eventType == "OnPlayClick") {
       var jsonConfig = JSON.stringify(config);
       var startCommand = "start('" + jsonConfig + "')";
-      JavaScriptInterface.setXY(345, 159); // avoid logo sheld screen
+      JavaScriptInterface.setXY(55, 0); // avoid logo sheld screen
       JavaScriptInterface.hideMenu();
       JavaScriptInterface.runScript(startCommand);
     } else if (eventType == "OnPauseClick") {
