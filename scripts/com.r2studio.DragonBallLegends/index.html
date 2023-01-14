@@ -1,0 +1,105 @@
+<meta charset="utf-8" />
+<title>Dragon Ball Legends</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/simplesettings/simplesettings.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts@master/utils/simplesettings/simplesettings.umd.min.js"></script>
+<style>
+  .mt-3 {
+    text-align: left;
+  }
+</style>
+<body>
+  <div id="app"></div>
+</body>
+
+<script>
+  var selections = {
+    package: "com.r2studio.DragonBallLedend",
+    versionCode: 0.1,
+    languages: ["zh_TW", "en"],
+    title: "Dragon Ball Legends",
+    settings: [
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW: "七龍珠激戰傳說 主線躺過",
+          en: "Dragon Ball Legends story mode reroll master",
+        },
+      },
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW:
+            "*請使用無廣告版本，將螢幕解析度設定為 640x360，120 dpi，將遊戲語言設定為英文，並勿移動robotmom的頭像避免影響機器人判斷",
+          en: "Only support 640x360 resolution, 120 dpi, AD-free version, please set language to English and do not move the app icon to avoid affecting identification",
+        },
+      },
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW: "請在故事模式章節選擇頁面按下開始，",
+          en: "Press start at in chapter selection page of story mode, and the bot will auto progress the story",
+        },
+      },
+      // {
+      //   type: "select",
+      //   titlei18n: { zh_TW: "聯賽模式選擇", en: "League mode selection" },
+      //   default: "full",
+      //   selections: [
+      //     { text: "full league", value: "full" },
+      //     { text: "1/2 league", value: "half" },
+      //     { text: "1/4 league", value: "quarter" },
+      //     { text: "post season", value: "postSeason" },
+      //   ],
+      //   key: "leagueSeasonMode",
+      //   value: "full",
+      // },
+      // {
+      //   type: "number",
+      //   titlei18n: { zh_TW: "聯賽年份選擇", en: "League year selection" },
+      //   default: 2022,
+      //   min: 2022,
+      //   max: 2032,
+      //   step: 1,
+      //   key: "leagueYear",
+      //   value: 2022,
+      // },
+    ],
+  };
+
+  var config = {
+    leagueSeasonMode: "full", // half, quarter, postSeason
+    isXr: false,
+    isDev: false,
+  };
+  simplesettings.render("#app", selections, function (c) {
+    config = c;
+  });
+
+  function onEvent(eventType) {
+    if (eventType == "OnPlayClick") {
+      var jsonConfig = JSON.stringify(config);
+      var startCommand = "start('" + jsonConfig + "')";
+      JavaScriptInterface.setXY(55, 45); // avoid logo sheld screen
+      JavaScriptInterface.hideMenu();
+      JavaScriptInterface.runScript(startCommand);
+    } else if (eventType == "OnPauseClick") {
+      JavaScriptInterface.runScript("stop();");
+    } else if (eventType == "OnSettingClick") {
+      JavaScriptInterface.runScript("stop();");
+    }
+  }
+  // onEvent('OnPlayClick');
+</script>

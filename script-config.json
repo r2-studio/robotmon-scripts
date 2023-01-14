@@ -72,6 +72,15 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
       "dependencies": []
     },
+    "com.r2studio.DragonBallLegends": {
+      "id": "com.r2studio.DragonBallLegends",
+      "title": "Dragon Ball Legends: story mode reroll master",
+      "versionCode": 0.1,
+      "description": "<b><font color='#2196f3'>Dragon Ball Legends: story mode helper</font></b><ul><li>Help you progress stories automatically</li></ul>",
+      "packageName": "com.bandainamcoent.dblegends_ww",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.DragonBallLegends/index.zip",
+      "dependencies": []
+    },
     "com.r2studio.EZRobot": {
       "id": "com.r2studio.EZRobot",
       "title": "EZRobot",
