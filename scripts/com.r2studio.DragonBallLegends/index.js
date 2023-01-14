@@ -422,6 +422,8 @@ DragonBall.prototype.handlePageChooseBattleTeamMember = function () {
   RF.Utils.sleep(1000);
   this.screen.tap({x: 98, y: 443});
   RF.Utils.sleep(1000);
+  this.screen.tap({x: 180, y: 443});
+  RF.Utils.sleep(1000);
 
   gPageChooseBattleTeamMember.goNext(this.screen)
 };
@@ -444,6 +446,7 @@ DragonBall.prototype.handlePageTeamReady = function () {
 
 DragonBall.prototype.handlePageInBattle = function () {
   this.unknownCount = 0;
+  RF.Utils.sleep(3000);
 };
 
 DragonBall.prototype.handlePageLogOfStory = function () {
