@@ -92,7 +92,7 @@
     if (eventType == "OnPlayClick") {
       var jsonConfig = JSON.stringify(config);
       var startCommand = "start('" + jsonConfig + "')";
-      JavaScriptInterface.setXY(55, 0); // avoid logo sheld screen
+      JavaScriptInterface.setXY(55, 45); // avoid logo sheld screen
       JavaScriptInterface.hideMenu();
       JavaScriptInterface.runScript(startCommand);
     } else if (eventType == "OnPauseClick") {
