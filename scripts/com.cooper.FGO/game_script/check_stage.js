@@ -276,6 +276,7 @@ icon["battleMain3"] = [1672, 960, 105, 75];
 icon["battleServant1"] = [375, 90, 600, 45];
 icon["battleServant2"] = [375, 90, 600, 45];
 icon["battleSkill"] = [855, 255, 210, 45];
+icon["kkl"] = [800, 600, 300, 80];
 icon["battleTarget"] = [1620, 195, 60, 60];
 icon["spaceColor"] = [690, 288, 540, 45];
 icon["emiyaColor"] = [690, 240, 540, 90];
@@ -336,6 +337,10 @@ function isBattleUltFailedDialog() {
 
 function isBattleSkillDetailDialog() {
   return checkIconInScreen("battleSkill");
+}
+
+function isBattleKklDialog() {
+  return checkIconInScreen("kkl");
 }
 
 function isBattleSkillTargetDialog() {

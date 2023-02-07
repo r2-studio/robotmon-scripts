@@ -502,6 +502,22 @@ function initButton() {
     minimumResultsForSearch: -1,
     width: "120px",
   });
+  $("#ultColorSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
+  $("#kukulkanUseStar0Select").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
+  $("#kukulkanUseStar1Select").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
+  $("#kukulkanUseStar2Select").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
 
   $("#deleteCropImageSelect").select2({
     minimumResultsForSearch: -1,
@@ -659,22 +675,42 @@ function initHTML(result) {
       blackEdge[i] = parseInt(result[5][i]);
     }
     var friendStrict= parseInt(result[5][4]);
-    if(friendStrict == undefined || friendStrict == null){
+    if(friendStrict == undefined || friendStrict == null || isNaN(friendStrict)){
       friendStrict = 0;
     }
     $("#friendStrictSelect").val(friendStrict).trigger("change");
 
     var servantDirection= parseInt(result[5][5]);
-    if(servantDirection == undefined || servantDirection == null){
+    if(servantDirection == undefined || servantDirection == null || isNaN(servantDirection)){
       servantDirection = 0;
     }
     $("#servantDirectionSelect").val(servantDirection).trigger("change");
 
     var skillDirection= parseInt(result[5][6]);
-    if(skillDirection == undefined || skillDirection == null){
+    if(skillDirection == undefined || skillDirection == null || isNaN(skillDirection)){
       skillDirection = 0;
     }
     $("#skillDirectionSelect").val(skillDirection).trigger("change");
+    var ultColor= parseInt(result[5][7]);
+    if(ultColor == undefined || ultColor == null || isNaN(ultColor)){
+      ultColor = 1;
+    }
+    $("#ultColorSelect").val(ultColor).trigger("change");
+    var kukulkanUseStar= parseInt(result[5][8]);
+    if(kukulkanUseStar == undefined || kukulkanUseStar == null || isNaN(kukulkanUseStar)){
+      kukulkanUseStar = 7;
+    }
+    var kkl = [0,0,0];
+    var t = 1;
+    for(var i = 0;i<3;i++){
+      if ((kukulkanUseStar & t) != 0) {
+        kkl[i] = 1;
+      }
+      t *= 2;
+    }
+    $("#kukulkanUseStar0Select").val(kkl[0]).trigger("change");
+    $("#kukulkanUseStar1Select").val(kkl[1]).trigger("change");
+    $("#kukulkanUseStar2Select").val(kkl[2]).trigger("change");
   }
   setBlackEdgeValue(blackEdge);
 
@@ -1036,6 +1072,12 @@ function getOtherPreferenceValue() {
   preference[0] = parseInt($("#friendStrictSelect").val());
   preference[1] = parseInt($("#servantDirectionSelect").val());
   preference[2] = parseInt($("#skillDirectionSelect").val());
+  preference[3] = parseInt($("#ultColorSelect").val());
+  var kkl =
+    parseInt($("#kukulkanUseStar0Select").val()) +
+    parseInt($("#kukulkanUseStar1Select").val()) * 2 +
+    parseInt($("#kukulkanUseStar2Select").val()) * 4;
+  preference[4] = kkl;
   return preference;
 }
 
@@ -1044,6 +1086,12 @@ function getPreferenceValue(){
   preference[4] = parseInt($("#friendStrictSelect").val());
   preference[5] = parseInt($("#servantDirectionSelect").val());
   preference[6] = parseInt($("#skillDirectionSelect").val());
+  preference[7] = parseInt($("#ultColorSelect").val());
+  var kkl =
+    parseInt($("#kukulkanUseStar0Select").val()) +
+    parseInt($("#kukulkanUseStar1Select").val()) * 2 +
+    parseInt($("#kukulkanUseStar2Select").val()) * 4;
+  preference[8] = kkl;
   return preference;
 
 }

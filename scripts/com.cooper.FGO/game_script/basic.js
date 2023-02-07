@@ -49,7 +49,7 @@ function startScript(loopTime, script, scriptName, be, pref) {
     }
     skillUsedInLoop = [false, false, false, false, false, false, false, false, false];
     selectFriendList = [];
-    spaceUltColor = -1;
+    resetSpaceUltColor(pref);
     isReplay = false;
     runScript(script);
     if (plan != "user_plan_fgo" && plan != 3) {
