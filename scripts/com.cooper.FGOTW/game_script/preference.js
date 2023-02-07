@@ -4,7 +4,7 @@ var servantDirection = 0; //0 l->r 1 r->l
 var skillDirection = 0; //0 l->r 1 r->l
 var spaceUltColor = 1;
 var kukulkanUseStar = 7;
-var DEFAULT_VALUE = [0, 0, 0, 0, 0, 0, 0, 1, 7];
+var PREFERENCE_DEFAULT_VALUE = "0,0,0,0,0,0,0,1,7"
 
 function loadPreference() {
   var fileName = "preferencejp.js";
@@ -19,14 +19,15 @@ function loadPreference() {
     console.log("偏好設定檔案不存在");
     valueMissing = true;
   }
-  if (preference == undefined || preference.length == 0) {
-    preference = DEFAULT_VALUE;
+  if (preference == undefined || preference == null || preference.length == 0) {
+    preference = PREFERENCE_DEFAULT_VALUE;
     valueMissing = true;
   }
   var split = preference.split(",");
-  for (var i = 0; i < DEFAULT_VALUE.length; i++) {
-    if (split[i] == undefined || split[i] == null) {
-      split[i] = DEFAULT_VALUE[i];
+  var defaultSplit = PREFERENCE_DEFAULT_VALUE.split(",");
+  for (var i = 0; i < defaultSplit.length; i++) {
+    if (split[i] == undefined || split[i] == null || isNaN(split[i])) {
+      split[i] = defaultSplit[i];
       valueMissing = true;
     }
   }
@@ -40,7 +41,7 @@ function loadPreference() {
   kukulkanUseStar = split[8];
   if (valueMissing) {
     console.log("偏好設定缺損，重新建立");
-    writeFile(itemPath + fileName, DEFAULT_VALUE);
+    writeFile(itemPath + fileName, getPreferenceString());
   }
   return getPreferenceString();
 }

@@ -960,7 +960,7 @@ function saveFriendItemConfirm(result) {
 }
 
 function savePreferenceConfirm() {
-  bootbox.alert("偏好設定儲存完成");
+  bootbox.alert("設定儲存完成");
 }
 
 function deleteFriendServantConfirm(image){
