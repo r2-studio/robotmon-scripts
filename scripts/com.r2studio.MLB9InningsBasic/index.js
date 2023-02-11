@@ -14,7 +14,6 @@ var gDayInMs = gHourInMs * 24;
 var gDuringMaxAdRetry = 2 * gMinuteInMs;
 
 var defaultConfig = {
-  isXr: true, // hidden setting
   isDev: false, // hidden, only for debug
   leagueSeasonMode: "full", // half, quarter, postSeason
   leagueYear: gLeagueYearMin, //gLeagueYearMin, // number

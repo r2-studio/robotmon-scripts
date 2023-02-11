@@ -1,0 +1,9 @@
+{
+    "projectName": "ScriptTest",
+    "adbPath": "adb",
+    "syncScreenImageQuality": 90,
+    "syncScreenImageSizeRatio": 0.75,
+    "screenshotQuality": 90,
+    "screenshotSizeRatio": 1,
+    "emulatorPort": 62001
+}
