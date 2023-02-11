@@ -3740,8 +3740,9 @@ function gotoCastle() {
     { x: 205, y: 193, r: 127, g: 150, b: 194 },
   ];
   var pageFistItemIsCastle = [
-    { x: 78, y: 225, r: 57, g: 77, b: 123 },
-    { x: 65, y: 157, r: 239, g: 191, b: 116 },
+    {x: 275, y: 228, r: 57, g: 77, b: 123},
+    {x: 255, y: 151, r: 245, g: 160, b: 161},
+    {x: 252, y: 159, r: 239, g: 190, b: 115},
   ];
 
   if (checkScreenMessage(messageNotifyQuit)) {
@@ -3780,7 +3781,7 @@ function gotoCastle() {
 
   // Back to village and find castle missions page
   if (
-    !waitUntilSeePages([pageInCastleMission, pageInCastleUpgrading, pageInKingdomVillage], 12, pnt(60, 226), null, 3)
+    !waitUntilSeePages([pageInCastleMission, pageInCastleUpgrading, pageInKingdomVillage], 12, pageFistItemIsCastle, null, 3)
   ) {
     console.log('Failed to leave to cookie head in', 12, 'secs, skipping');
 
@@ -4781,30 +4782,30 @@ function handleInWishingTree() {
   console.log('handleInWishingTree: ', new Date());
   sendEvent('running', '');
 
-  // wish(refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status, requirementIconPnts)
+  // wish(id, refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status, requirementIconPnts)
   var wishes = [
-    genWish(0, pnt(183, 79), pnt(183, 180), pnt(183, 283), undefined, 'unknown',
+    genWish(0, pnt(183, 79), pnt(183, 190), pnt(183, 283), undefined, 'unknown',
     {
       0: pnt(162, 198),
       1: pnt(198, 198),
       2: pnt(162, 235),
       3: pnt(198, 235),
     }),
-    genWish(1, pnt(295, 79), pnt(295, 180), pnt(295, 283), undefined, 'unknown',
+    genWish(1, pnt(295, 79), pnt(295, 190), pnt(295, 283), undefined, 'unknown',
     {
       0: pnt(275, 198),
       1: pnt(312, 198),
       2: pnt(275, 235),
       3: pnt(312, 235),
     }),
-    genWish(2, pnt(400, 79), pnt(400, 180), pnt(400, 283), undefined, 'unknown',
+    genWish(2, pnt(400, 79), pnt(400, 190), pnt(400, 283), undefined, 'unknown',
     {
       0: pnt(390, 198),
       1: pnt(425, 198),
       2: pnt(390, 235),
       3: pnt(425, 235),
     }),
-    genWish(3, pnt(520, 79), pnt(520, 180), pnt(520, 283), undefined, 'unknown',
+    genWish(3, pnt(520, 79), pnt(520, 190), pnt(520, 283), undefined, 'unknown',
     {
       0: pnt(508, 198),
       1: pnt(545, 198),
@@ -5789,6 +5790,15 @@ var pageCanEquipTopping2 = [
   {x: 265, y: 165, r: 198, g: 182, b: 173},
   {x: 252, y: 77, r: 57, g: 69, b: 107},
 ];
+// Mainly in guild alliance
+var pageCanEquipTopping3 = [
+  {x: 407, y: 275, r: 123, g: 207, b: 8},
+  {x: 299, y: 275, r: 8, g: 166, b: 222},
+  {x: 276, y: 154, r: 255, g: 251, b: 164},
+  {x: 276, y: 159, r: 232, g: 165, b: 96},
+  {x: 288, y: 156, r: 226, g: 226, b: 226},
+  {x: 262, y: 155, r: 198, g: 182, b: 173},
+];
 
 var rfpageBattleVictoryButNeedTap = new RF.Page(
   'rfpageBattleVictoryButNeedTap',
@@ -5924,6 +5934,11 @@ var rfpageCanEquipTopping2 = new RF.Page(
   pageCanEquipTopping2,
   pageCanEquipTopping2[0]
 );
+var rfpageCanEquipTopping3 = new RF.Page(
+  'rfpageCanEquipTopping3',
+  pageCanEquipTopping3,
+  pageCanEquipTopping3[0]
+);
 
 var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageBattleVictoryButNeedTap,
@@ -5957,6 +5972,7 @@ var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageBattleTowerOfSweetChaosVictory,
   rfpageCanEquipTopping,
   rfpageCanEquipTopping2,
+  rfpageCanEquipTopping3,
   rfpageInGacha,
   rfpageInKingdomVillage,
   rfpageAutoUseSkillEnabled,
@@ -6015,6 +6031,11 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
     } else if (matchedPages.indexOf('rfpageCanEquipTopping2') !== -1) {
       console.log('Found rfpageCanEquipTopping2, tap OK and wait for 5 secs');
       rfpageCanEquipTopping2.goNext(this.screen);
+      sleep(5000);
+    }
+    else if (matchedPages.indexOf('rfpageCanEquipTopping3') !== -1) {
+      console.log('Found rfpageCanEquipTopping3, tap OK and wait for 5 secs');
+      rfpageCanEquipTopping3.goNext(this.screen);
       sleep(5000);
     }
 
@@ -6537,6 +6558,33 @@ function handleGuildBattleAlliance() {
   sendEvent('running', '');
 
   if (waitUntilSeePage(pageCookieAlliance, 6)) {
+
+    // check beacon
+    if (checkIsPage(pageAllianceBeaconIsOff)) {
+      qTap(pageAllianceBeaconIsOff);
+
+      if (waitUntilSeePage(pageBeaconOfValor, 4)) {
+        qTap(pnt(191, 294)); // 7D
+        sleep(config.sleepAnimate);
+        qTap(pageBeaconOfValor);
+        sleep(config.sleepAnimate * 2);
+      }
+
+      if (waitUntilSeePage(pageCannotLightBeacon, 4)) {
+        keycode('BACK', 1000);
+        sleep(config.sleepAnimate);
+      }
+
+      for (var i = 0; i < 5; i++) {
+        if (waitUntilSeePage(pageCookieAlliance, 3)) {
+          break;
+        }
+        keycode('BACK', 1000);
+        console.log('tap back to pageCookieAlliance: ', i);
+      }
+    }
+
+
     if (config.autoAllianceUseTimeJumpers) {
       console.log('Use time jumpers during guild alliance');
       qTap(pnt(477, 322));
@@ -6593,29 +6641,6 @@ function handleGuildBattleAlliance() {
         qTap(pageLightBeaconReminder);
         sleep(config.sleepAnimate);
 
-        if (checkIsPage(pageAllianceBeaconIsOff)) {
-          qTap(pageAllianceBeaconIsOff);
-
-          if (waitUntilSeePage(pageBeaconOfValor, 4)) {
-            qTap(pnt(191, 294)); // 7D
-            sleep(config.sleepAnimate);
-            qTap(pageBeaconOfValor);
-            sleep(config.sleepAnimate * 2);
-          }
-
-          if (waitUntilSeePage(pageCannotLightBeacon, 4)) {
-            keycode('BACK', 1000);
-            sleep(config.sleepAnimate);
-          }
-
-          for (var i = 0; i < 5; i++) {
-            if (waitUntilSeePage(pageCookieAlliance, 3)) {
-              break;
-            }
-            keycode('BACK', 1000);
-            console.log('tap back to pageCookieAlliance: ', i);
-          }
-        }
       }
 
       if (waitUntilSeePage(pageSelectStartingTeam, 4)) {
