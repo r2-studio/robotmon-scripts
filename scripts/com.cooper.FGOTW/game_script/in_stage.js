@@ -132,16 +132,21 @@ function useSkill(player, skill, target) {
     return;
   }
   if (isBattleKklDialog()) {
-    var kkl = getKKLArray()[skill];
-    if (kkl != 0) {
-      tapScale(1420, 640);
-      sleep(1000);
-      if (isBattleKklDialog()) {
-        console.log("星星數量不足");
+    sleep(1000);
+    if (isBattleKklDialog()) {
+      var kkl = getKKLArray()[skill];
+      if (kkl != 0) {
+        console.log("庫庫魯坎技能使用星星");
+        tapScale(1420, 640);
+        sleep(1000);
+        if (isBattleKklDialog()) {
+          console.log("星星數量不足");
+          clickIcon("kkl");
+        }
+      } else {
+        console.log("庫庫魯坎技能不使用星星");
         clickIcon("kkl");
       }
-    } else {
-      clickIcon("kkl");
     }
   }
   if (isBattleSkillSpaceDialog()) {
