@@ -27,32 +27,10 @@
 <script>
   var selections = {
     package: "com.r2studio.MLB9InningsBasic",
-    versionCode: 13.8,
+    versionCode: 13.9,
     languages: ["zh_TW", "en"],
-    title: "MLB9 Innings",
+    title: "MLB9 Innings (basic)",
     settings: [
-      {
-        type: "text",
-        titlei18n: {
-          zh_TW: "適用於 MLB9Innings 23 8.0.0",
-          en: "for MLB9Innings 23 8.0.0",
-        },
-      },
-      {
-        type: "text",
-        titlei18n: {
-          zh_TW:
-            "*請使用無廣告版本，將螢幕解析度設定為 640x360，120 dpi，將遊戲語言設定為英文，並勿移動robotmom的頭像避免影響機器人判斷",
-          en: "Only support 640x360 resolution, 120 dpi, AD-free version, please set language to English and do not move the app icon to avoid affecting identification",
-        },
-      },
-      {
-        type: "text",
-        titlei18n: {
-          zh_TW: "*本次更新：修正部分頁面的問題",
-          en: "*updated: fix page identification",
-        },
-      },
       {
         type: "text",
         titlei18n: {
@@ -73,6 +51,28 @@
         titlei18n: {
           zh_TW: "✅ 自動處理螢幕節能⚡️: 進入節能螢幕時自動判斷，減少遊玩中斷",
           en: "✅ handle power saving automatically⚡️: decrease disruptions caused by power saving view",
+        },
+      },
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW: "適用於 MLB9Innings 23 8.0.0",
+          en: "for MLB9Innings 23 8.0.0",
+        },
+      },
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW:
+            "*請使用無廣告版本，將螢幕解析度設定為 640x360，120 dpi，將遊戲語言設定為英文，並勿移動robotmom的頭像避免影響機器人判斷",
+          en: "Only support 640x360 resolution, 120 dpi, AD-free version, please set language to English and do not move the app icon to avoid affecting identification",
+        },
+      },
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW: "*本次更新：修正部分頁面的問題",
+          en: "*updated: fix page identification",
         },
       },
       {
@@ -105,23 +105,11 @@
         key: "leagueYear",
         value: 2022,
       },
-      {
-        type: "select",
-        titlei18n: { zh_TW: "erlwk", en: "erlwk" },
-        default: false,
-        selections: [
-          { text: "true", value: true },
-          { text: "false", value: false },
-        ],
-        key: "isDev",
-        value: false,
-      },
     ],
   };
 
   var config = {
     leagueSeasonMode: "full", // half, quarter, postSeason
-    isDev: false,
   };
   simplesettings.render("#app", selections, function (c) {
     config = c;
