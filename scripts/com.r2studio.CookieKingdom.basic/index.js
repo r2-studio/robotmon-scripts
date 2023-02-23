@@ -10,6 +10,8 @@ var config = {
   sleepAnimate: 800,
   sleepWhenDoubleLoginInMinutes: 30,
 
+  // Sample TEST long ID
+  // account: 'moonminv35moonminv35moonminv35moonminv35moonminv35moonminv35moonminv35@gmail.com',
   account: 'default_xrobotmon_account@gmail.com',
   password: '',
   materialsTarget: 2000,
@@ -244,20 +246,16 @@ var pageInKingdomVillage = [
   { x: 418, y: 321, r: 132, g: 16, b: 8 },
   { x: 466, y: 318, r: 231, g: 167, b: 85 },
 ];
-var rfpageInKingdomVillage = new RF.Page(
-  'rfpageInKingdomVillage',
-  pageInKingdomVillage,
-  pageInKingdomVillage[0]
-);
+var rfpageInKingdomVillage = new RF.Page('rfpageInKingdomVillage', pageInKingdomVillage, pageInKingdomVillage[0]);
 
 var pageInLoginPageWithGearAndVideo = [
-  {x: 621, y: 13, r: 233, g: 233, b: 235},
-  {x: 622, y: 16, r: 3, g: 4, b: 9},
-  {x: 597, y: 16, r: 233, g: 235, b: 239},
-  {x: 593, y: 16, r: 4, g: 6, b: 11},
-  {x: 590, y: 17, r: 233, g: 235, b: 239},
-  {x: 594, y: 23, r: 14, g: 14, b: 25},
-]
+  { x: 621, y: 13, r: 233, g: 233, b: 235 },
+  { x: 622, y: 16, r: 3, g: 4, b: 9 },
+  { x: 597, y: 16, r: 233, g: 235, b: 239 },
+  { x: 593, y: 16, r: 4, g: 6, b: 11 },
+  { x: 590, y: 17, r: 233, g: 235, b: 239 },
+  { x: 594, y: 23, r: 14, g: 14, b: 25 },
+];
 
 var pageLoginFacebook = [
   { x: 186, y: 72, r: 59, g: 89, b: 152 },
@@ -297,10 +295,38 @@ var pageChooseLoginMethod = [
   { x: 126, y: 234, r: 255, g: 255, b: 255 },
 ];
 // Smaller icons (Android 7), not updated for 5 options
-var pageChooseLoginMethod2 = [
-  { x: 251, y: 245, r: 255, g: 95, b: 0 },
+var pageChooseLoginMethod2 = [{ x: 251, y: 245, r: 255, g: 95, b: 0 }];
+// TOS page will change when login page change
+// Nox: cookie v1.15
+var pageTermsOfServices2 = [
+  { x: 447, y: 230, r: 255, g: 255, b: 255 },
+  { x: 43, y: 257, r: 96, g: 24, b: 22 },
+  { x: 181, y: 257, r: 95, g: 24, b: 22 },
+  { x: 31, y: 289, r: 92, g: 67, b: 18 },
+  { x: 203, y: 285, r: 90, g: 65, b: 16 },
+  { x: 161, y: 329, r: 37, g: 8, b: 13 },
+  { x: 246, y: 230, r: 255, g: 255, b: 255 },
+  { x: 179, y: 132, r: 255, g: 255, b: 255 },
 ];
-
+// Memu: cookie v1.16
+var pageTermsOfServicesMemu = [
+  { x: 479, y: 238, r: 66, g: 66, b: 66 },
+  { x: 482, y: 238, r: 107, g: 158, b: 153 },
+  { x: 484, y: 222, r: 66, g: 66, b: 66 },
+  { x: 486, y: 110, r: 66, g: 66, b: 66 },
+  { x: 148, y: 123, r: 66, g: 66, b: 66 },
+  { x: 171, y: 117, r: 255, g: 255, b: 255 },
+  { x: 172, y: 205, r: 66, g: 66, b: 66 },
+  { x: 229, y: 206, r: 254, g: 254, b: 254 },
+];
+var pageTermsOfServicesHitBack = [
+  { x: 305, y: 218, r: 255, g: 255, b: 255 },
+  { x: 320, y: 218, r: 255, g: 255, b: 255 },
+  { x: 334, y: 217, r: 254, g: 94, b: 0 },
+  { x: 350, y: 163, r: 255, g: 255, b: 255 },
+  { x: 356, y: 163, r: 255, g: 255, b: 255 },
+  { x: 148, y: 123, r: 26, g: 26, b: 26 },
+];
 var pageAnnouncement = [
   { x: 610, y: 19, r: 56, g: 167, b: 231 },
   { x: 619, y: 19, r: 255, g: 255, b: 255 },
@@ -310,13 +336,14 @@ var pageAnnouncement = [
   { x: 19, y: 114, r: 63, g: 0, b: 9 },
   { x: 25, y: 321, r: 75, g: 75, b: 75 },
 ];
+var rfpageAnnouncement = new RF.Page('rfpageAnnouncement', pageAnnouncement, pageAnnouncement[0]);
 
 var pageInMailBox = [
-  {x: 609, y: 11, r: 57, g: 166, b: 231},
-  {x: 609, y: 19, r: 255, g: 255, b: 255},
-  {x: 53, y: 130, r: 255, g: 239, b: 214},
-  {x: 37, y: 33, r: 57, g: 69, b: 107},
-]
+  { x: 609, y: 11, r: 57, g: 166, b: 231 },
+  { x: 609, y: 19, r: 255, g: 255, b: 255 },
+  { x: 53, y: 130, r: 255, g: 239, b: 214 },
+  { x: 37, y: 33, r: 57, g: 69, b: 107 },
+];
 
 var pageInFountain = [
   { x: 505, y: 305, r: 121, g: 207, b: 12 },
@@ -324,11 +351,12 @@ var pageInFountain = [
   { x: 368, y: 23, r: 60, g: 70, b: 105 },
   { x: 525, y: 68, r: 142, g: 79, b: 71 },
 ];
+var rfpageInFountain = new RF.Page('rfpageInFountain', pageInFountain, pageInFountain[0]);
 
 var pageNotCollapsedWisingTree = [
-  {x: 92, y: 332, r: 52, g: 86, b: 125},
-  {x: 112, y: 292, r: 138, g: 108, b: 199},
-  {x: 56, y: 324, r: 252, g: 201, b: 235},
+  { x: 92, y: 332, r: 52, g: 86, b: 125 },
+  { x: 112, y: 292, r: 138, g: 108, b: 199 },
+  { x: 56, y: 324, r: 252, g: 201, b: 235 },
 ];
 var pageCollapsedAffairs = [
   { x: 96, y: 329, r: 255, g: 223, b: 142 },
@@ -391,30 +419,43 @@ var pageNotEnoughForTree = [
 ];
 
 var pageCheckWishingTreeStock = [
-  {x: 477, y: 37, r: 255, g: 255, b: 255},
-  {x: 171, y: 50, r: 57, g: 69, b: 107},
-  {x: 118, y: 28, r: 53, g: 28, b: 41},
-]
+  { x: 355, y: 302, r: 121, g: 207, b: 12 },
+  { x: 244, y: 46, r: 60, g: 70, b: 105 },
+  { x: 257, y: 21, r: 127, g: 12, b: 46 },
+  { x: 410, y: 18, r: 127, g: 94, b: 4 },
+  { x: 6, y: 25, r: 50, g: 31, b: 93 },
+];
 
 var pageInTropicalIsland = [
-  {x: 38, y: 333, r: 255, g: 97, b: 173},
-  {x: 49, y: 323, r: 239, g: 77, b: 140},
-  {x: 62, y: 341, r: 44, g: 81, b: 118},
+  { x: 38, y: 333, r: 255, g: 97, b: 173 },
+  { x: 49, y: 323, r: 239, g: 77, b: 140 },
+  { x: 62, y: 341, r: 44, g: 81, b: 118 },
+];
+
+var pageNotifyQuitWindow = [
+  { x: 374, y: 98, r: 57, g: 69, b: 107 },
+  { x: 301, y: 250, r: 8, g: 166, b: 222 },
+  { x: 404, y: 250, r: 123, g: 207, b: 8 },
+  { x: 425, y: 250, r: 222, g: 207, b: 198 },
+];
+var pageBattlePaused = [
+  { x: 307, y: 200, r: 253, g: 253, b: 251 },
+  { x: 621, y: 26, r: 56, g: 165, b: 227 },
+  { x: 613, y: 23, r: 35, g: 85, b: 114 },
+  { x: 278, y: 160, r: 12, g: 165, b: 219 },
+  { x: 288, y: 157, r: 241, g: 241, b: 239 },
+  { x: 293, y: 201, r: 241, g: 90, b: 28 },
 ];
 
 var pageInGacha = [
-  {x: 619, y: 18, r: 255, g: 255, b: 255},
-  {x: 626, y: 18, r: 62, g: 164, b: 232},
-  {x: 521, y: 14, r: 0, g: 192, b: 255},
-  {x: 407, y: 19, r: 255, g: 209, b: 0},
-  {x: 21, y: 14, r: 117, g: 54, b: 40},
-  {x: 37, y: 24, r: 74, g: 58, b: 58},
+  { x: 619, y: 18, r: 255, g: 255, b: 255 },
+  { x: 626, y: 18, r: 62, g: 164, b: 232 },
+  { x: 521, y: 14, r: 0, g: 192, b: 255 },
+  { x: 407, y: 19, r: 255, g: 209, b: 0 },
+  { x: 21, y: 14, r: 117, g: 54, b: 40 },
+  { x: 37, y: 24, r: 74, g: 58, b: 58 },
 ];
-var rfpageInGacha = new RF.Page(
-  'rfpageInGacha',
-  pageInGacha,
-  pageInGacha[0]
-);
+var rfpageInGacha = new RF.Page('rfpageInGacha', pageInGacha, pageInGacha[0]);
 
 var pageInTowerOfRecords = [
   { x: 618, y: 23, r: 255, g: 255, b: 255 },
@@ -436,21 +477,9 @@ var rfpageAutoUseSkillEnabled = new RF.Page(
   pageAutoUseSkillEnabled,
   pageAutoUseSkillEnabled[0]
 );
-var rfpageSpeedBoostEnabled = new RF.Page(
-  'rfpageSpeedBoostEnabled',
-  pageSpeedBoostEnabled,
-  pageSpeedBoostEnabled[0]
-);
-var rfpageSpeed1x = new RF.Page(
-  'rfpageSpeed1x',
-  pageSpeed1x,
-  pageSpeed1x[0]
-);
-var rfpageSpeed1_2x = new RF.Page(
-  'rfpageSpeed1_2x',
-  pageSpeed1_2x,
-  pageSpeed1_2x[0]
-);
+var rfpageSpeedBoostEnabled = new RF.Page('rfpageSpeedBoostEnabled', pageSpeedBoostEnabled, pageSpeedBoostEnabled[0]);
+var rfpageSpeed1x = new RF.Page('rfpageSpeed1x', pageSpeed1x, pageSpeed1x[0]);
+var rfpageSpeed1_2x = new RF.Page('rfpageSpeed1_2x', pageSpeed1_2x, pageSpeed1_2x[0]);
 
 //rgb(166,104,65)
 var pageInProduction = [
@@ -458,28 +487,30 @@ var pageInProduction = [
   { x: 84, y: 42, r: 178, g: 103, b: 66 },
   { x: 26, y: 30, r: 126, g: 73, b: 41 },
 ];
+var rfpageInProduction = new RF.Page('rfpageInProduction', pageInProduction);
 var pageInMagicLab = [
   { x: 18, y: 46, r: 123, g: 89, b: 140 },
   { x: 81, y: 47, r: 123, g: 89, b: 140 },
   { x: 27, y: 30, r: 115, g: 85, b: 140 },
 ];
+var rfpageInMagicLab = new RF.Page('rfpageInMagicLab', pageInMagicLab);
 
 var pageHasDashboard = [
-  {x: 38, y: 221, r: 77, g: 89, b: 123},
-  {x: 33, y: 221, r: 107, g: 44, b: 41},
-  {x: 25, y: 226, r: 222, g: 159, b: 74},
-  {x: 424, y: 20, r: 0, g: 138, b: 255},
+  { x: 38, y: 221, r: 77, g: 89, b: 123 },
+  { x: 33, y: 221, r: 107, g: 44, b: 41 },
+  { x: 25, y: 226, r: 222, g: 159, b: 74 },
+  { x: 424, y: 20, r: 0, g: 138, b: 255 },
 ];
 var pageInCookieActivityDashboard = [
-  {x: 247, y: 331, r: 56, g: 74, b: 107},
-  {x: 28, y: 18, r: 229, g: 158, b: 76},
-  {x: 558, y: 339, r: 239, g: 190, b: 41},
-]
+  { x: 247, y: 331, r: 56, g: 74, b: 107 },
+  { x: 28, y: 18, r: 229, g: 158, b: 76 },
+  { x: 558, y: 339, r: 239, g: 190, b: 41 },
+];
 var pageInProductionDashboard = [
-  {x: 408, y: 330, r: 56, g: 74, b: 107},
-  {x: 540, y: 341, r: 123, g: 207, b: 8},
-  {x: 27, y: 16, r: 206, g: 32, b: 49},
-]
+  { x: 408, y: 330, r: 56, g: 74, b: 107 },
+  { x: 540, y: 341, r: 123, g: 207, b: 8 },
+  { x: 27, y: 16, r: 206, g: 32, b: 49 },
+];
 
 var pageStockIsFull = [
   { x: 436, y: 96, r: 255, g: 255, b: 255 },
@@ -516,20 +547,20 @@ var pageIsJampieDiner = [
 ];
 
 var pageIsBakery = [
-  {x: 496, y: 82, r: 184, g: 174, b: 155},
-  {x: 539, y: 86, r: 176, g: 83, b: 11},
-  {x: 439, y: 75, r: 173, g: 82, b: 24},
-  {x: 423, y: 70, r: 198, g: 116, b: 63},
-  {x: 424, y: 99, r: 255, g: 219, b: 123},
-]
+  { x: 496, y: 82, r: 184, g: 174, b: 155 },
+  { x: 539, y: 86, r: 176, g: 83, b: 11 },
+  { x: 439, y: 75, r: 173, g: 82, b: 24 },
+  { x: 423, y: 70, r: 198, g: 116, b: 63 },
+  { x: 424, y: 99, r: 255, g: 219, b: 123 },
+];
 
 var pageIsFlowerShop = [
-  {x: 418, y: 80, r: 255, g: 89, b: 165},
-  {x: 413, y: 95, r: 8, g: 150, b: 8},
-  {x: 431, y: 86, r: 214, g: 0, b: 82},
-  {x: 490, y: 86, r: 197, g: 39, b: 41},
-  {x: 538, y: 82, r: 165, g: 85, b: 41},
-]
+  { x: 418, y: 80, r: 255, g: 89, b: 165 },
+  { x: 413, y: 95, r: 8, g: 150, b: 8 },
+  { x: 431, y: 86, r: 214, g: 0, b: 82 },
+  { x: 490, y: 86, r: 197, g: 39, b: 41 },
+  { x: 538, y: 82, r: 165, g: 85, b: 41 },
+];
 
 var pageSelectAdvanture = [
   { x: 41, y: 334, r: 28, g: 36, b: 48 },
@@ -555,18 +586,18 @@ var pageInOneOfTheBounty = [
 ];
 
 var pageNeedRefillBounty = [
-  {x: 427, y: 82, r: 57, g: 166, b: 231},
-  {x: 317, y: 76, r: 132, g: 130, b: 99},
-  {x: 323, y: 81, r: 115, g: 70, b: 58},
-  {x: 343, y: 92, r: 57, g: 69, b: 107},
-  {x: 309, y: 264, r: 0, g: 195, b: 255},
-]
+  { x: 427, y: 82, r: 57, g: 166, b: 231 },
+  { x: 317, y: 76, r: 132, g: 130, b: 99 },
+  { x: 323, y: 81, r: 115, g: 70, b: 58 },
+  { x: 343, y: 92, r: 57, g: 69, b: 107 },
+  { x: 309, y: 264, r: 0, g: 195, b: 255 },
+];
 
 var pageCannotRefillBountyAnymore = [
-  {x: 345, y: 244, r: 123, g: 207, b: 8},
-  {x: 192, y: 29, r: 57, g: 59, b: 46},
-  {x: 190, y: 41, r: 49, g: 30, b: 24},
-]
+  { x: 345, y: 244, r: 123, g: 207, b: 8 },
+  { x: 192, y: 29, r: 57, g: 59, b: 46 },
+  { x: 190, y: 41, r: 49, g: 30, b: 24 },
+];
 
 var pageInkingdomCanGotoGuild = [
   { x: 319, y: 330, r: 255, g: 174, b: 0 },
@@ -613,10 +644,10 @@ var kingdomArena = [
 ];
 
 var pageInSuperMayhem = [
-  {x: 450, y: 13, r: 181, g: 132, b: 178},
-  {x: 449, y: 21, r: 239, g: 235, b: 247},
-  {x: 37, y: 134, r: 145, g: 69, b: 8},
-  {x: 137, y: 333, r: 214, g: 134, b: 8},
+  { x: 450, y: 13, r: 181, g: 132, b: 178 },
+  { x: 449, y: 21, r: 239, g: 235, b: 247 },
+  { x: 37, y: 134, r: 145, g: 69, b: 8 },
+  { x: 137, y: 333, r: 214, g: 134, b: 8 },
 ];
 
 var pageBattleDragon = [
@@ -664,11 +695,7 @@ var rfpageDragonRemainHealth = new RF.Page(
   pageDragonRemainHealth,
   pageDragonRemainHealth[0]
 );
-var rfpageDragonTotalDamage = new RF.Page(
-  'rfpageDragonTotalDamage',
-  pageDragonTotalDamage,
-  pageDragonTotalDamage[0]
-);
+var rfpageDragonTotalDamage = new RF.Page('rfpageDragonTotalDamage', pageDragonTotalDamage, pageDragonTotalDamage[0]);
 var rfpageRedValvetDragonWon = new RF.Page(
   'rfpageRedValvetDragonWon',
   pageRedValvetDragonWon,
@@ -677,11 +704,11 @@ var rfpageRedValvetDragonWon = new RF.Page(
 var rfpageDragonHasExtraTime = new RF.Page(
   'rfpageDragonHasExtraTime',
   [
-    {x: 405, y: 281, r: 121, g: 207, b: 12},
-    {x: 304, y: 280, r: 12, g: 167, b: 223},
-    {x: 608, y: 333, r: 60, g: 103, b: 6},
-    {x: 516, y: 330, r: 6, g: 83, b: 111},
-    {x: 128, y: 333, r: 6, g: 83, b: 111},
+    { x: 405, y: 281, r: 121, g: 207, b: 12 },
+    { x: 304, y: 280, r: 12, g: 167, b: 223 },
+    { x: 608, y: 333, r: 60, g: 103, b: 6 },
+    { x: 516, y: 330, r: 6, g: 83, b: 111 },
+    { x: 128, y: 333, r: 6, g: 83, b: 111 },
   ],
   { x: 405, y: 281 }
 );
@@ -708,11 +735,7 @@ var pagePvPCrystaisRefresh = [
   { x: 351, y: 250, r: 123, g: 207, b: 8 },
   { x: 408, y: 251, r: 222, g: 207, b: 198 },
 ];
-var rfpagePvPCrystaisRefresh = new RF.Page(
-  'rfpagePvPCrystaisRefresh',
-  pagePvPCrystaisRefresh,
-  { x: 436, y: 90 }
-);
+var rfpagePvPCrystaisRefresh = new RF.Page('rfpagePvPCrystaisRefresh', pagePvPCrystaisRefresh, { x: 436, y: 90 });
 
 var pageInTowerOfSweetChaos = [
   { x: 611, y: 21, r: 57, g: 166, b: 231 },
@@ -765,18 +788,18 @@ var pageCookieKingdomIsNotResponding2 = [
 ];
 
 var pageCookieKingdomHasStopped = [
-  {x: 484, y: 205, r: 0, g: 150, b: 136},
-  {x: 478, y: 205, r: 238, g: 238, b: 238},
-  {x: 440, y: 172, r: 238, g: 238, b: 238},
-  {x: 402, y: 169, r: 57, g: 57, b: 57},
-]
+  { x: 484, y: 205, r: 0, g: 150, b: 136 },
+  { x: 478, y: 205, r: 238, g: 238, b: 238 },
+  { x: 440, y: 172, r: 238, g: 238, b: 238 },
+  { x: 402, y: 169, r: 57, g: 57, b: 57 },
+];
 
 var pageInCookieHead = [
   { x: 610, y: 21, r: 57, g: 166, b: 231 },
   { x: 301, y: 95, r: 137, g: 143, b: 144 },
   { x: 32, y: 52, r: 142, g: 148, b: 155 },
-  {x: 12, y: 20, r: 141, g: 150, b: 167},
-  {x: 12, y: 27, r: 21, g: 32, b: 47}
+  { x: 12, y: 20, r: 141, g: 150, b: 167 },
+  { x: 12, y: 27, r: 21, g: 32, b: 47 },
 ];
 
 var pagePurchaseDiamond = [
@@ -881,8 +904,8 @@ var messageNotifyQuit = {
 
   targetY: 4,
   lookingForColor: { r: 95, g: 95, b: 95 },
-  targetColorCount: 31,
-  targetColorThreashold: 5,
+  targetColorCount: 42,
+  targetColorThreashold: 8,
 };
 
 function pnt(x, y) {
@@ -1000,10 +1023,18 @@ if (!String.prototype.format) {
 }
 
 function waitUntilSeePages(pages, secsToWait, tappingPage, earlyQuitPage, checkingIntervalInSecs) {
-  return waitUntilSeePagesCheckDelay(undefined, pages, secsToWait, tappingPage, earlyQuitPage, checkingIntervalInSecs)
+  return waitUntilSeePagesCheckDelay(undefined, pages, secsToWait, tappingPage, earlyQuitPage, checkingIntervalInSecs);
 }
 
-function waitUntilSeePagesCheckDelay(pageStart, pages, secsToWait, tappingPage, earlyQuitPage, checkingIntervalInSecs, pntEntry) {
+function waitUntilSeePagesCheckDelay(
+  pageStart,
+  pages,
+  secsToWait,
+  tappingPage,
+  earlyQuitPage,
+  checkingIntervalInSecs,
+  pntEntry
+) {
   if (secsToWait === undefined) {
     secsToWait = 5;
   }
@@ -1034,15 +1065,20 @@ function waitUntilSeePagesCheckDelay(pageStart, pages, secsToWait, tappingPage, 
     if (earlyQuitPage != undefined && checkIsPage(earlyQuitPage)) {
       console.log('waitUntilSeePage but found earlyQuitPage, return false');
       return false;
-    }
-    else if (i > 3 && pageStart !== undefined && checkIsPage(pageStart)) {
+    } else if (i > 3 && pageStart !== undefined && checkIsPage(pageStart)) {
       qTap(pntEntry);
       console.log('Tap the pntEntry again as we are still in pageStart for', i, 'secs');
     }
 
     if (tappingPage !== undefined && tappingPage !== null && i >= lastTapTime + checkingIntervalInSecs) {
-      console.log('still waiting so tap again, i: {0}, lastTapTime: {1}, x, y = ({2}, {3})'.format(
-        i, lastTapTime, tappingPage.x, tappingPage.y))
+      console.log(
+        'still waiting so tap again, i: {0}, lastTapTime: {1}, x, y = ({2}, {3})'.format(
+          i,
+          lastTapTime,
+          tappingPage.x,
+          tappingPage.y
+        )
+      );
       if ((tappingPage.x, tappingPage.y, tappingPage.r, tappingPage.g, tappingPage.b && checkIsPage(tappingPage))) {
         qTap(tappingPage);
       } else {
@@ -1059,7 +1095,7 @@ function waitUntilSeePagesCheckDelay(pageStart, pages, secsToWait, tappingPage, 
 }
 
 function waitUntilSeePage(page, secsToWait, tappingPage, earlyQuitPage, checkingIntervalInSecs) {
-  return waitUntilSeePagesCheckDelay(undefined, [page], secsToWait, tappingPage, earlyQuitPage, checkingIntervalInSecs)
+  return waitUntilSeePagesCheckDelay(undefined, [page], secsToWait, tappingPage, earlyQuitPage, checkingIntervalInSecs);
 }
 
 function isMessageWindowWithDiamond() {
@@ -1266,9 +1302,9 @@ function setProductionBuilding(building) {
 var pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
 var pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
 var pageThirdItemEnabled = [{ x: 603, y: 331, r: 123, g: 207, b: 8 }];
-var pageFourthItemEnabled = [{x: 599, y: 128, r: 121, g: 207, b: 12}];
-var pageFifthItemEnabled = [{x: 596, y: 232, r: 121, g: 207, b: 12}];
-var pageSixItemEnabled = [{x: 597, y: 339, r: 121, g: 207, b: 12}];
+var pageFourthItemEnabled = [{ x: 599, y: 128, r: 121, g: 207, b: 12 }];
+var pageFifthItemEnabled = [{ x: 596, y: 232, r: 121, g: 207, b: 12 }];
+var pageSixItemEnabled = [{ x: 597, y: 339, r: 121, g: 207, b: 12 }];
 
 var groupPageMaterialProdMenu = new RF.GroupPage('groupPageMaterialProdMenu', [
   rfpageWoodFarm,
@@ -1278,11 +1314,11 @@ var groupPageMaterialProdMenu = new RF.GroupPage('groupPageMaterialProdMenu', [
   rfpageBarryFarm,
   rfpageMilkFarm,
   rfpageCottomFarm,
-])
+]);
 
 function handleMaterialProduction() {
   var matchedPages = groupPageMaterialProdMenu.isMatchScreen(this.screen);
-  console.log('groupPageMaterialProdMenu matchedPages:', matchedPages)
+  console.log('groupPageMaterialProdMenu matchedPages:', matchedPages);
 
   if (matchedPages.indexOf('rfpageWoodFarm') !== -1) {
     console.log('wood farm, add more');
@@ -1483,19 +1519,19 @@ function makeMagicLabGoodsToTarget() {
   var productIdx = config.magicLabProductIndex;
 
   SwipeProductionMenuToTop();
-  while(productIdx > 3) {
+  while (productIdx > 3) {
     console.log('Move down 3 items, now:', productIdx);
-    swipeDown3Items()
+    swipeDown3Items();
     sleep(1000);
-    qTap(pnt(455, 37))
+    qTap(pnt(455, 37));
     productIdx -= 3;
   }
 
   var productMapping = {
-    1 : pageFirstItemEnabled,
-    2 : pageSecondItemEnabled,
-    3 : pageThirdItemEnabled,
-  }
+    1: pageFirstItemEnabled,
+    2: pageSecondItemEnabled,
+    3: pageThirdItemEnabled,
+  };
 
   if (!checkIsPage(productMapping[productIdx])) {
     console.log('The selected product is not active, skipping');
@@ -1506,7 +1542,7 @@ function makeMagicLabGoodsToTarget() {
   qTap(productMapping[productIdx]);
   sleep(config.sleepAnimate);
 
-  console.log('Produce item: {0}, current stock: {1}'.format(config.magicLabProductIndex, stock))
+  console.log('Produce item: {0}, current stock: {1}'.format(config.magicLabProductIndex, stock));
   return true;
 }
 
@@ -1543,8 +1579,7 @@ function makeGoodsToTarget(target, prework, stocks) {
     setProductionBuilding('flowerShop');
   } else if (checkIsPage(pageInMagicLab)) {
     setProductionBuilding('magicLab');
-  }
-   else {
+  } else {
     setProductionBuilding('otherGoodShop');
   }
 
@@ -1741,7 +1776,7 @@ function makeGoodsToTarget(target, prework, stocks) {
         SwipeProductionMenuToTop();
         SwipeProductionMenuToTop();
         swipeToToolShop456();
-    } else {
+      } else {
         SwipeProductionMenuToTop();
         SwipeProductionMenuToTop();
         swipeToToolShop456();
@@ -1796,7 +1831,7 @@ function countMagicLabSlotAvailable() {
     new RF.Page('fourthSlot', [{ x: 52, y: 223, r: 82, g: 56, b: 107 }]),
     new RF.Page('fifthSlot', [{ x: 50, y: 264, r: 77, g: 55, b: 110 }]),
     new RF.Page('sixSlot', [{ x: 48, y: 314, r: 82, g: 60, b: 115 }]),
-  ])
+  ]);
   var matchedPages = groupPageMagicLabSlot.isMatchScreen(this.screen);
 
   console.log('countMagicLabSlotAvailable: ', matchedPages.length);
@@ -1836,7 +1871,7 @@ function countProductionSlotAvailable() {
       { x: 50, y: 268, r: 146, g: 88, b: 52 },
       { x: 46, y: 286, r: 157, g: 95, b: 55 },
     ]),
-  ])
+  ]);
   var matchedPages = groupPageMagicLabSlot.isMatchScreen(this.screen);
 
   console.log('countMagicLabSlotAvailable: ', matchedPages.length);
@@ -1853,12 +1888,11 @@ function JobScheduling() {
     if (config.skipMagicLabProduction) {
       console.log('Skip magic lab as requested by config');
       return true;
-    }
-    else if (config.magicLabProductIndex !== 0) {
+    } else if (config.magicLabProductIndex !== 0) {
       console.log('Its magic lab, build selected {0}th item'.format(config.magicLabProductIndex));
       return makeMagicLabGoodsToTarget();
     } else {
-      console.log('Magic lab produce the same way as other product buildings')
+      console.log('Magic lab produce the same way as other product buildings');
     }
   }
 
@@ -1921,16 +1955,14 @@ function JobScheduling() {
     ) {
       console.log('keep producing until wood is enough: ', materialCount, Math.min(300, config.materialsTarget));
       config.lastGotoProduction = Date.now();
-    }
-    else if (
+    } else if (
       rfpageBeanFarm.isMatchScreen(this.screen) &&
       config.keepProduceUntilWoodEnough &&
       materialCount < Math.min(100, config.materialsTarget)
     ) {
       console.log('keep producing until bean is enough: ', materialCount, Math.min(200, config.materialsTarget));
       config.lastGotoProduction = Date.now();
-    }
-    else if (
+    } else if (
       rfpageSugarFarm.isMatchScreen(this.screen) &&
       config.keepProduceUntilWoodEnough &&
       materialCount < Math.min(100, config.materialsTarget)
@@ -2042,27 +2074,27 @@ function handleNotEnoughStock() {
 
 // This window can change language
 var pageNewDataPackAvailable = [
-  {x: 358, y: 265, r: 123, g: 205, b: 8},
-  {x: 373, y: 219, r: 8, g: 165, b: 219},
-  {x: 210, y: 190, r: 255, g: 255, b: 255},
-  {x: 258, y: 83, r: 57, g: 69, b: 106},
-  {x: 246, y: 125, r: 153, g: 147, b: 139},
+  { x: 358, y: 265, r: 123, g: 205, b: 8 },
+  { x: 373, y: 219, r: 8, g: 165, b: 219 },
+  { x: 210, y: 190, r: 255, g: 255, b: 255 },
+  { x: 258, y: 83, r: 57, g: 69, b: 106 },
+  { x: 246, y: 125, r: 153, g: 147, b: 139 },
 ];
 var pageNewDataPackDownloadFailed = [
-  {x: 350, y: 245, r: 123, g: 205, b: 8},
-  {x: 342, y: 107, r: 57, g: 69, b: 106},
-  {x: 264, y: 245, r: 221, g: 205, b: 195},
-]
+  { x: 350, y: 245, r: 123, g: 205, b: 8 },
+  { x: 342, y: 107, r: 57, g: 69, b: 106 },
+  { x: 264, y: 245, r: 221, g: 205, b: 195 },
+];
 
 // If already choose language in pageNewDataPackAvailable
 var pageNewDataPackAvaiableNoLanguage = [
-  {x: 366, y: 252, r: 123, g: 205, b: 8},
-  {x: 398, y: 254, r: 221, g: 205, b: 195},
-  {x: 263, y: 254, r: 147, g: 217, b: 57},
-  {x: 246, y: 254, r: 221, g: 205, b: 195},
-  {x: 341, y: 96, r: 255, g: 255, b: 255},
-  {x: 284, y: 99, r: 253, g: 253, b: 251,}
-]
+  { x: 366, y: 252, r: 123, g: 205, b: 8 },
+  { x: 398, y: 254, r: 221, g: 205, b: 195 },
+  { x: 263, y: 254, r: 147, g: 217, b: 57 },
+  { x: 246, y: 254, r: 221, g: 205, b: 195 },
+  { x: 341, y: 96, r: 255, g: 255, b: 255 },
+  { x: 284, y: 99, r: 253, g: 253, b: 251 },
+];
 
 function handleUnexpectedMessageBox() {
   if (checkIsPage(pagePurchaseDiamond)) {
@@ -2167,10 +2199,10 @@ function handleUnexpectedMessageBox() {
 
 function handleBTSIntro() {
   var pageACookieIntroBTSRoom = [
-    {x: 167, y: 322, r: 205, g: 142, b: 247},
-    {x: 218, y: 21, r: 65, g: 14, b: 24},
-    {x: 315, y: 20, r: 67, g: 54, b: 0},
-    {x: 423, y: 18, r: 0, g: 34, b: 67},
+    { x: 167, y: 322, r: 205, g: 142, b: 247 },
+    { x: 218, y: 21, r: 65, g: 14, b: 24 },
+    { x: 315, y: 20, r: 67, g: 54, b: 0 },
+    { x: 423, y: 18, r: 0, g: 34, b: 67 },
   ];
 
   if (!checkIsPage(pageAnnouncement) && checkIsPage(pageACookieIntroBTSRoom)) {
@@ -2182,10 +2214,10 @@ function handleBTSIntro() {
   }
 
   var pageInBTSTrailer = [
-    {x: 524, y: 333, r: 107, g: 52, b: 231},
-    {x: 33, y: 326, r: 255, g: 255, b: 255},
-    {x: 24, y: 18, r: 209, g: 142, b: 242},
-    {x: 24, y: 14, r: 206, g: 130, b: 244},
+    { x: 524, y: 333, r: 107, g: 52, b: 231 },
+    { x: 33, y: 326, r: 255, g: 255, b: 255 },
+    { x: 24, y: 18, r: 209, g: 142, b: 242 },
+    { x: 24, y: 14, r: 206, g: 130, b: 244 },
   ];
   // var pageInBTSTrailerLeaving = [
   //   {x: 619, y: 12, r: 49, g: 162, b: 231},
@@ -2195,13 +2227,13 @@ function handleBTSIntro() {
   if (checkIsPage(pageInBTSTrailer)) {
     console.log('found pageInBTSTrailer, leaving');
 
-    for (var i = 0; i < 20; i ++) {
+    for (var i = 0; i < 20; i++) {
       if (checkIsPage(pageInBTSTrailer)) {
-        console.log('trying to leave the BTS trailer: ', i)
+        console.log('trying to leave the BTS trailer: ', i);
         qTap(pnt(620, 20));
         sleep(2000);
       } else {
-        console.log('Finally left the BTS trailer')
+        console.log('Finally left the BTS trailer');
         break;
       }
     }
@@ -2236,7 +2268,7 @@ function handleWelcomePage() {
     qTap(pnt(324, 329));
     sleep(config.sleepAnimate);
 
-    for (var i = 0; i < 5; i ++) {
+    for (var i = 0; i < 5; i++) {
       if (checkIsPage(pageAnnouncement)) {
         qTap(pageAnnouncement);
         sleep(config.sleepAnimate);
@@ -2284,34 +2316,41 @@ function findAndTapCandy() {
   var pageCanUpgradeCandyMansion = [{ x: 303, y: 289, r: 123, g: 207, b: 8 }];
   var pageCanUpgradeCandyHouse = [{ x: 243, y: 287, r: 151, g: 218, b: 55 }];
   var pageCookieHouseUpgradeRequirement = [
-    {x: 351, y: 320, r: 123, g: 207, b: 8},
-    {x: 282, y: 322, r: 148, g: 219, b: 57},
-    {x: 199, y: 199, r: 118, g: 234, b: 231},
-  ]
+    { x: 351, y: 320, r: 123, g: 207, b: 8 },
+    { x: 282, y: 322, r: 148, g: 219, b: 57 },
+    { x: 199, y: 199, r: 118, g: 234, b: 231 },
+  ];
 
   var foundResults = findSpecificImageInScreen(candy, 0.95);
   // console.log('candies > ', JSON.stringify(foundResults));
   if (foundResults.length === 0) {
-    console.log('findAndTapCandy did not see any candy > 0.91, skipping')
+    console.log('findAndTapCandy did not see any candy > 0.91, skipping');
   } else {
     for (var i in foundResults) {
       if (foundResults[i] === undefined) {
-        console.log('No more candies to collect, i: ', i)
+        console.log('No more candies to collect, i: ', i);
         break;
       }
-      if (foundResults[i].x < 50 || foundResults[i].x > 575 || foundResults[i].y < 37 || foundResults[i].y > 300 ) {
-        console.log('Skipped as this point exceed feasible area: ({0}, {1}) (50<x<575, 37<y<300)'.format(foundResults[i].x, foundResults[i].y));
+      if (foundResults[i].x < 50 || foundResults[i].x > 575 || foundResults[i].y < 37 || foundResults[i].y > 300) {
+        console.log(
+          'Skipped as this point exceed feasible area: ({0}, {1}) (50<x<575, 37<y<300)'.format(
+            foundResults[i].x,
+            foundResults[i].y
+          )
+        );
         continue;
       }
 
-      console.log('{0}, tapping candy {1} > {2}'.format(new Date().toLocaleString(), i, JSON.stringify(foundResults[i])))
+      console.log(
+        '{0}, tapping candy {1} > {2}'.format(new Date().toLocaleString(), i, JSON.stringify(foundResults[i]))
+      );
       qTap(pnt(foundResults[i].x + 5, foundResults[i].y + 5));
       sleep(3000);
       handleTryHitBackToKingdom();
 
       foundResults = findSpecificImageInScreen(candy, 0.91);
       console.log('candies left > ', i, JSON.stringify(foundResults));
-      if (foundResults.length === 0 || foundResults[i + 1] === undefined ) {
+      if (foundResults.length === 0 || foundResults[i + 1] === undefined) {
         config.lastCollectCandyTime = Date.now();
         console.log('Candy collected successfully:', i);
         break;
@@ -2320,23 +2359,23 @@ function findAndTapCandy() {
   }
 
   if (config.autoUpgradeCandyHouse) {
-    for (i = 0; i < 10; i ++) {
-      console.log('image match round:', i)
+    for (i = 0; i < 10; i++) {
+      console.log('image match round:', i);
       foundResults = findSpecificImageInScreen(candyHouseUpgradeArrow, 0.86);
       if (foundResults.length > 0) {
-        console.log('Found it via candyHouseUpgradeArrow:', JSON.stringify(foundResults))
+        console.log('Found it via candyHouseUpgradeArrow:', JSON.stringify(foundResults));
         break;
       }
       foundResults = findSpecificImageInScreen(candyHouseUpgradeArrow2, 0.86);
       if (foundResults.length > 0) {
-        console.log('Found it via candyHouseUpgradeArrow2:', JSON.stringify(foundResults))
+        console.log('Found it via candyHouseUpgradeArrow2:', JSON.stringify(foundResults));
         break;
       }
       sleep(300);
     }
 
     console.log('Trying to upgrade candy house, possible houses: ', foundResults.length);
-    for (i = 0; i < foundResults.length; i ++) {
+    for (i = 0; i < foundResults.length; i++) {
       if (foundResults[i] === undefined) {
         console.log('skip as not getting enough image match result');
         break;
@@ -2366,7 +2405,7 @@ function findAndTapCandy() {
 
       foundResults = findSpecificImageInScreen(candyHouseUpgradeArrow, 0.86);
       console.log('upgradable candy house left > ', i, JSON.stringify(foundResults));
-      if (foundResults.length === 0 || foundResults[i + 1] === undefined ) {
+      if (foundResults.length === 0 || foundResults[i + 1] === undefined) {
         config.lastCollectCandyTime = Date.now();
         console.log('No more upgradeable candy house to check:', i);
         break;
@@ -2449,10 +2488,8 @@ function findAndTapProductionHouse() {
       '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',
     diner:
       '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',
-    inn:
-      '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAeABkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6G/4Jp/Czwd41+Dmm/D3TIwPh/wCGZIY1FxZr9pa5eYLs3bcGe4nm5cnktIcjkV9m+IfiZoHwv0FNE8K22m6TpcC3cKNBGkmJYWMcki7pEVsSAqxmMbO6kJ5u4E/McX7Ovxr/AGUv+CZ3xXvtI8bz+F9Y8L+Hm8W6BqxhSW4DaTPJrHkyxAqNkoi+zsDtO12ymODw3w3/AOCo3xm+Jf7Lvgrx9r1p4DvNY1nxVqFncalf6JPcS4toNPkjmaGJI1t5ybp0LKGTakbBhuZV/GspyupHASxDly1Ztu8oty+LTs9Vrbvq9rP9Vz/FzzDMvY05KVKnZJRfu35bt9U3e6v2Vup9dfG74B2f7TEugxX2tQRQWUEN8l9JZFbuSynTMYcYUCYNHMjKNoCylhtJ2iD/AId9fs+f3NU/K1/+MV+afwX/AOCjHxfvP+CpDard+MNW1jW9d1LTPCzWt9axDTvsNxfW6taGMOWjYMzGGRXUrISzo/mzh/2Z8v3r0sRkmXVcRKtVpJyla9/JLZX0PJedZ1l2Hp4elXcYJaJebd7u13r/AMA89/bF+FFt+0J+y14++CkvifUtEXxH4YurT+1NLJ82ElCwBUOnmxsVCyQllWWNnjYgOTX4z/Db4NfFf4O6fdeHL34IXtxqEEsPk3vh/U0ks71lRRuijkG+ME5UrIYwCM5VcE/sx+0L+0H4a/Z88CX3jrxHoF5fxWdhdXb29lsDPHbx+Y4yxAyV6DoT1I61+Ov7WH/BUj9oT45TzWnwJ07QvhpoFzZqUvbDTln1KdJQ6kkDy0gYjYQwMjoyna43V0UKjxdX6rGLlPda8qXq/PTZNm+T8uBw0sTXVqbdr7t90l39Wkenfs3ab+zF/wAE7PFWrftffth6ppw+IWsM954R+HlkFmk0YSGQmd+Xaa7cfIG3PDAfMVZhv+Ts/wDiJZ+Dv/Qiat/4KU/+TK+P/iL+yv8AAD9n7w9bfFf4/J4l+JniPU9Shty2taqHt5b2RXYmSMBFZCQ2XdJH+6cE5Nc7/wAIT8Jf+jL/AIb/APgzk/8AkOvCwGcUs+c6mEpVq6g+VyhKnSjddEpy55f4pWv2R7GYZfhMDUisRyQctUpKc3bpfkSjH0V/Vn//2Q==',
-    cake:
-      '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAaABoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDL1b9sib9kb4C+FviVonh7Rrvxr431Sa18NWOuPI9jYxwJE11duiMpY7ZraJFDp81wWJYRlG+y/gR+2D4G+Mfwe0j4qeIPF3hXw3c6jaGe40RNfF59kONypJM6QFSRtyPL4LYGa+fv+CgX7Bfgm6/Zy8Iw6Fo9nfyeC/GMd2JdVV1jjtrmE2zQIE3MEe4FidpDjMSg7U3Mvy9YfDr4weDtQsr2++EV5PKlxc2dgG8O3BS6kQFnICRbZV2mVw4Z12x5RmVfl/MMuhhsuy1xlFe0UXJR196Tkly3W1lrd6JKy1Z+qZlTo55SdfDpzqKUlfmUfdUG4q0tLOSS0V05cz0TPoP4V/8ABUDwd+0f+2t4O+Dfif4I6FNBrGo6np9nrVn4hlukVIYpJIZBG8EYkUtGVDNjetyGCqUw36ACZQMBMAdBX5b/APBPP9kLXZ/2zPB/xk8SeEbPQrnRBq+rarp19aT291KPKns4wYDHsRvMu4pld2V2QBguGGz9QPtMf94fnXV/sa9+EVFvfzfr1PHzz2McVGlQvyxitLtpPra/6HMfFPwy/jv4Z+IPBrKSNV0W5tV8skMrPEwVlI5DAkEEHIIBBzXxB4J/bQi8Daba+DtU1rwt4gudEtZYJp7bxTHA1xI1zFlpovLk+zhAWjHzyF2KjAL4HqP/AAWQ8Qa94f8A2L7xtB1u7sTeeJtNtLw2dy0Xn28kpEkL7SNyMOGU8EdRX5W/2bp1l+zh4w8SWdhBFqNl428PRWV/FEFnt0ktdUZ1RwNyBmjjJAIBMak/dGOvA5ZRzDDSc907Ly2v16n1fC3D9PHZRXxk56Qa91Ld2738+3zP0A/Zv8TfHn45/H3UD8GfiNb2kOsyjU/iFrttYCY6XpkSzrZ6bEkjb1lmnml2Sv8AZ3eOyLmHy1Cv71ffswanLezSjxB4zuA0rET3N2fMk5+8/lxqm49TtULk8ADivkP/AIN7/E3iTV73xxDqviC+ukOpafMVuLt3BlljnEj4JPzP5ce49W2LnOBX6m5PrXoxynL8NaM6anpvJJ/8D8D4zMszxuCx0oUp8q0206Ld7v5v0sf/2Q==',
+    inn: '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAeABkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6G/4Jp/Czwd41+Dmm/D3TIwPh/wCGZIY1FxZr9pa5eYLs3bcGe4nm5cnktIcjkV9m+IfiZoHwv0FNE8K22m6TpcC3cKNBGkmJYWMcki7pEVsSAqxmMbO6kJ5u4E/McX7Ovxr/AGUv+CZ3xXvtI8bz+F9Y8L+Hm8W6BqxhSW4DaTPJrHkyxAqNkoi+zsDtO12ymODw3w3/AOCo3xm+Jf7Lvgrx9r1p4DvNY1nxVqFncalf6JPcS4toNPkjmaGJI1t5ybp0LKGTakbBhuZV/GspyupHASxDly1Ztu8oty+LTs9Vrbvq9rP9Vz/FzzDMvY05KVKnZJRfu35bt9U3e6v2Vup9dfG74B2f7TEugxX2tQRQWUEN8l9JZFbuSynTMYcYUCYNHMjKNoCylhtJ2iD/AId9fs+f3NU/K1/+MV+afwX/AOCjHxfvP+CpDard+MNW1jW9d1LTPCzWt9axDTvsNxfW6taGMOWjYMzGGRXUrISzo/mzh/2Z8v3r0sRkmXVcRKtVpJyla9/JLZX0PJedZ1l2Hp4elXcYJaJebd7u13r/AMA89/bF+FFt+0J+y14++CkvifUtEXxH4YurT+1NLJ82ElCwBUOnmxsVCyQllWWNnjYgOTX4z/Db4NfFf4O6fdeHL34IXtxqEEsPk3vh/U0ks71lRRuijkG+ME5UrIYwCM5VcE/sx+0L+0H4a/Z88CX3jrxHoF5fxWdhdXb29lsDPHbx+Y4yxAyV6DoT1I61+Ov7WH/BUj9oT45TzWnwJ07QvhpoFzZqUvbDTln1KdJQ6kkDy0gYjYQwMjoyna43V0UKjxdX6rGLlPda8qXq/PTZNm+T8uBw0sTXVqbdr7t90l39Wkenfs3ab+zF/wAE7PFWrftffth6ppw+IWsM954R+HlkFmk0YSGQmd+Xaa7cfIG3PDAfMVZhv+Ts/wDiJZ+Dv/Qiat/4KU/+TK+P/iL+yv8AAD9n7w9bfFf4/J4l+JniPU9Shty2taqHt5b2RXYmSMBFZCQ2XdJH+6cE5Nc7/wAIT8Jf+jL/AIb/APgzk/8AkOvCwGcUs+c6mEpVq6g+VyhKnSjddEpy55f4pWv2R7GYZfhMDUisRyQctUpKc3bpfkSjH0V/Vn//2Q==',
+    cake: '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAaABoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDL1b9sib9kb4C+FviVonh7Rrvxr431Sa18NWOuPI9jYxwJE11duiMpY7ZraJFDp81wWJYRlG+y/gR+2D4G+Mfwe0j4qeIPF3hXw3c6jaGe40RNfF59kONypJM6QFSRtyPL4LYGa+fv+CgX7Bfgm6/Zy8Iw6Fo9nfyeC/GMd2JdVV1jjtrmE2zQIE3MEe4FidpDjMSg7U3Mvy9YfDr4weDtQsr2++EV5PKlxc2dgG8O3BS6kQFnICRbZV2mVw4Z12x5RmVfl/MMuhhsuy1xlFe0UXJR196Tkly3W1lrd6JKy1Z+qZlTo55SdfDpzqKUlfmUfdUG4q0tLOSS0V05cz0TPoP4V/8ABUDwd+0f+2t4O+Dfif4I6FNBrGo6np9nrVn4hlukVIYpJIZBG8EYkUtGVDNjetyGCqUw36ACZQMBMAdBX5b/APBPP9kLXZ/2zPB/xk8SeEbPQrnRBq+rarp19aT291KPKns4wYDHsRvMu4pld2V2QBguGGz9QPtMf94fnXV/sa9+EVFvfzfr1PHzz2McVGlQvyxitLtpPra/6HMfFPwy/jv4Z+IPBrKSNV0W5tV8skMrPEwVlI5DAkEEHIIBBzXxB4J/bQi8Daba+DtU1rwt4gudEtZYJp7bxTHA1xI1zFlpovLk+zhAWjHzyF2KjAL4HqP/AAWQ8Qa94f8A2L7xtB1u7sTeeJtNtLw2dy0Xn28kpEkL7SNyMOGU8EdRX5W/2bp1l+zh4w8SWdhBFqNl428PRWV/FEFnt0ktdUZ1RwNyBmjjJAIBMak/dGOvA5ZRzDDSc907Ly2v16n1fC3D9PHZRXxk56Qa91Ld2738+3zP0A/Zv8TfHn45/H3UD8GfiNb2kOsyjU/iFrttYCY6XpkSzrZ6bEkjb1lmnml2Sv8AZ3eOyLmHy1Cv71ffswanLezSjxB4zuA0rET3N2fMk5+8/lxqm49TtULk8ADivkP/AIN7/E3iTV73xxDqviC+ukOpafMVuLt3BlljnEj4JPzP5ce49W2LnOBX6m5PrXoxynL8NaM6anpvJJ/8D8D4zMszxuCx0oUp8q0206Ld7v5v0sf/2Q==',
 
     // Rotated buildings
     artisan_r:
@@ -2493,7 +2530,7 @@ function findAndTapProductionHouse() {
   }
 
   if (config.productionDashboardEnabled && handleProductionDashboard(false)) {
-    console.log('Successfully goto production via the dashboard, returning from findAndTapProductionHouse')
+    console.log('Successfully goto production via the dashboard, returning from findAndTapProductionHouse');
     return true;
   }
 
@@ -2570,7 +2607,11 @@ function swipeDirection(direction, finishSwipeWhenInProduction, swippingPage) {
     endPnt: pnt(566, 285),
   };
 
-  if (finishSwipeWhenInProduction && !checkIsPage(pageInKingdomVillage) && waitUntilSeePages([pageInProduction, pageInMagicLab], 5)) {
+  if (
+    finishSwipeWhenInProduction &&
+    !checkIsPage(pageInKingdomVillage) &&
+    waitUntilSeePages([pageInProduction, pageInMagicLab], 5)
+  ) {
     console.log('Already in production, skip swipping');
     return true;
   }
@@ -2800,7 +2841,9 @@ function handleFindAndTapCandyHouse() {
 
   config.productionBuildingChecked = 0;
 
-  var needCollectCandy = config.worksBeforeCollectCandy > 0 && (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy * 0.6;
+  var needCollectCandy =
+    config.worksBeforeCollectCandy > 0 &&
+    (Date.now() - config.lastCollectCandyTime) / 60000 > config.worksBeforeCollectCandy * 0.6;
   if (needCollectCandy) {
     needCollectCandy = !findAndTapCandy();
   }
@@ -2909,7 +2952,7 @@ function handleLoginFailed() {
     config.run = false;
     sendEvent('gameStatus', 'login-failed');
     console.log('Max retry count reached, login failed: ', new Date().toLocaleString());
-    return false;
+    return true;
   } else {
     console.log('Restart game as not inputing login info correctly: ', config.loginRetryCount);
     config.loginRetryCount++;
@@ -2927,93 +2970,13 @@ function handleLoginFailed() {
 }
 
 function handleInputLoginInfo() {
-  if (handleAnnouncement()) {
-    console.log('Found announcement page, handleInputLoginInfo success');
-    return true;
-  } else if (checkIsPage(pageInKingdomVillage)) {
-    console.log('Found pageInKingdomVillage, handleInputLoginInfo success');
-    return true;
-  } else if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
-    console.log('Found in production, no need to relogin');
-    return true;
-  }
-  var i = 0;
-
-  checkIsFacebookPage();
-
   if (checkScreenMessage(facebookRefreshTokenExpiredLogout)) {
     console.log('Found facebook refresh token failed, tap logout cancel button');
     qTap(pnt(276, 252));
     sleep(2000);
   }
 
-  var isInputAge = false;
-  if (waitUntilSeePage(pageInputAge, 2)) {
-    console.log('start input age');
-    qTap(pnt(285 + Math.random() * 35, 213));
-    sleep(config.sleep);
-    qTap(pageInputAge);
-    sleep(config.sleep);
-    qTap(pageInputAge);
-    sleep(config.sleepAnimate * 2);
-    isInputAge = true;
-  }
-
-  // TOS page will change when login page change
-  var pageTermsOfServices = [
-    { x: 447, y: 233, r: 66, g: 66, b: 66 },
-    { x: 329, y: 126, r: 66, g: 66, b: 66 },
-    { x: 452, y: 126, r: 66, g: 66, b: 66 },
-    { x: 458, y: 216, r: 66, g: 66, b: 66 },
-    { x: 286, y: 216, r: 66, g: 66, b: 66 },
-    { x: 179, y: 126, r: 66, g: 66, b: 66 },
-  ];
-  // Nox: cookie v1.15
-  var pageTermsOfServices2 = [
-    { x: 447, y: 230, r: 255, g: 255, b: 255 },
-    { x: 43, y: 257, r: 96, g: 24, b: 22 },
-    { x: 181, y: 257, r: 95, g: 24, b: 22 },
-    { x: 31, y: 289, r: 92, g: 67, b: 18 },
-    { x: 203, y: 285, r: 90, g: 65, b: 16 },
-    { x: 161, y: 329, r: 37, g: 8, b: 13 },
-    { x: 246, y: 230, r: 255, g: 255, b: 255 },
-    { x: 179, y: 132, r: 255, g: 255, b: 255 },
-  ];
-  // Memu: cookie v1.16
-  var pageTermsOfServicesMemu = [
-    { x: 479, y: 238, r: 66, g: 66, b: 66 },
-    { x: 482, y: 238, r: 107, g: 158, b: 153 },
-    { x: 484, y: 222, r: 66, g: 66, b: 66 },
-    { x: 486, y: 110, r: 66, g: 66, b: 66 },
-    { x: 148, y: 123, r: 66, g: 66, b: 66 },
-    { x: 171, y: 117, r: 255, g: 255, b: 255 },
-    { x: 172, y: 205, r: 66, g: 66, b: 66 },
-    { x: 229, y: 206, r: 254, g: 254, b: 254 },
-  ];
-  var pageTermsOfServicesHitBack = [
-    { x: 305, y: 218, r: 255, g: 255, b: 255 },
-    { x: 320, y: 218, r: 255, g: 255, b: 255 },
-    { x: 334, y: 217, r: 254, g: 94, b: 0 },
-    { x: 350, y: 163, r: 255, g: 255, b: 255 },
-    { x: 356, y: 163, r: 255, g: 255, b: 255 },
-    { x: 148, y: 123, r: 26, g: 26, b: 26 },
-  ];
-
-  if (checkIsPage(pageTermsOfServices) || checkIsPage(pageTermsOfServices2)) {
-    console.log('accept term of service, sleep 5s');
-    qTap(pageTermsOfServices);
-    sleep(5000);
-  } else if (checkIsPage(pageTermsOfServicesHitBack)) {
-    console.log('close and accept term of service, sleep 5s');
-    qTap(pageTermsOfServicesHitBack);
-    sleep(2000);
-    qTap(pageTermsOfServicesMemu);
-    sleep(3000);
-  } else if (checkIsPage(pageTermsOfServicesMemu)) {
-    console.log('accept term of service for memu, sleep 5s');
-    qTap(pageTermsOfServicesMemu);
-    sleep(5000);
-  }
+  checkIsFacebookPage();
 
   var pageCannotFindLoginInfo = [
     { x: 316, y: 243, r: 82, g: 136, b: 5 },
@@ -3030,12 +2993,6 @@ function handleInputLoginInfo() {
     { x: 371, y: 178, r: 231, g: 220, b: 209 },
     { x: 243, y: 180, r: 80, g: 80, b: 80 },
   ];
-  if (checkIsPage(pageCannotFindLoginInfo)) {
-    console.log("quit can't find login info page");
-    keycode('BACK', 1000);
-    sleep(config.sleepAnimate);
-  }
-
   // v1.15
   var pageCanDownloadResources = [
     { x: 346, y: 240, r: 121, g: 207, b: 12 },
@@ -3045,22 +3002,6 @@ function handleInputLoginInfo() {
     { x: 219, y: 98, r: 60, g: 70, b: 105 },
     { x: 221, y: 250, r: 219, g: 207, b: 199 },
   ];
-  if (checkIsPage(pageCanDownloadResources)) {
-    console.log('start download resources, wait 10 secs');
-    qTap(pageCanDownloadResources);
-    sleep(10000);
-
-    for (i = 0; i < 18; i++) {
-      // wait for yellow bar (download progress bar) disapper
-      if (!checkIsPage([{ x: 16, y: 349, r: 255, g: 210, b: 76 }])) {
-        console.log('download finished');
-        break;
-      }
-      console.log('wait for download: ', i);
-      sleep(3000);
-    }
-  }
-
   // v2.0.1
   var pageDownloadDataAndVoiceOver = [
     { x: 207, y: 192, r: 39, g: 204, b: 0 },
@@ -3069,86 +3010,19 @@ function handleInputLoginInfo() {
     { x: 430, y: 81, r: 60, g: 70, b: 105 },
     { x: 214, y: 195, r: 255, g: 255, b: 255 },
   ];
-  if (checkIsPage(pageDownloadDataAndVoiceOver)) {
-    qTap(pageDownloadDataAndVoiceOver);
-    sleep(config.sleepAnimate);
-    qTap(pnt(320, 268));
-    console.log('start download resources, wait 10 secs');
-    sleep(10000);
-
-    for (i = 0; i < 18; i++) {
-      // wait for yellow bar (download progress bar) disapper
-      if (!checkIsPage([{ x: 16, y: 349, r: 255, g: 210, b: 76 }])) {
-        console.log('download finished');
-        break;
-      }
-      console.log('wait for download: ', i);
-      sleep(3000);
-    }
-  }
-
+  var pageDownloadDataAndVoiceOverUnchecked = [
+    { x: 207, y: 192, r: 255, g: 255, b: 255 },
+    { x: 372, y: 216, r: 12, g: 167, b: 223 },
+    { x: 445, y: 218, r: 12, g: 167, b: 223 },
+    { x: 430, y: 81, r: 60, g: 70, b: 105 },
+    { x: 214, y: 195, r: 255, g: 255, b: 255 },
+  ];
   // v2.0.1 has 'New data pak is available'
   var pageDownloadNewDataPakIsAvailable = [
     { x: 368, y: 254, r: 123, g: 207, b: 8 },
     { x: 441, y: 99, r: 57, g: 69, b: 107 },
     { x: 346, y: 251, r: 255, g: 255, b: 255 },
   ];
-  if (checkIsPage(pageDownloadNewDataPakIsAvailable)) {
-    qTap(pageDownloadNewDataPakIsAvailable);
-    sleep(config.sleepAnimate);
-    console.log('start download new data pak, wait 10 secs');
-    sleep(10000);
-
-    for (i = 0; i < 18; i++) {
-      // wait for yellow bar (download progress bar) disapper
-      if (!checkIsPage([{ x: 16, y: 349, r: 255, g: 210, b: 76 }])) {
-        console.log('download finished');
-        break;
-      }
-      console.log('wait for download: ', i);
-      sleep(3000);
-    }
-  }
-
-  var findLoginTime = isInputAge ? 5 : 2;
-  var isChooseLogin = false;
-  for (i = 0; i < findLoginTime; i++) {
-    if (checkIsPage(pageChooseLoginMethod)) {
-      console.log('choose to login via email');
-      isChooseLogin = true;
-      qTap(pageChooseLoginMethod);
-      sleep(config.sleepAnimate);
-      break;
-    } else if (checkIsPage(pageChooseLoginMethod2)) {
-      console.log('choose to login via email 2');
-      isChooseLogin = true;
-      qTap(pageChooseLoginMethod2);
-      sleep(config.sleepAnimate);
-      break;
-    } else {
-      console.log('waiting for pageChooseLoginMethod: ', i);
-      sleep(3000);
-    }
-  }
-
-  if (!isChooseLogin) {
-    if (!waitUntilSeePages([pageInKingdomVillage, pageInProduction, pageInMagicLab])) {
-      console.log('handleInputLoginInfo not sure what to do, tap(575, 22) announce page');
-      qTap(pnt(575, 22));
-
-      if (handleAnnouncement()) {
-        console.log('handleLogin handle accouncement success, login success');
-        return true;
-      }
-      if (checkIsPage(pageInFountain)) {
-        console.log('handleLogin found myself in fountain, login success');
-        return true;
-      }
-    }
-  }
-
-  var inputEmail = false;
-  var findEmailTimes = isChooseLogin ? 5 : 2;
   var pageEnterEmail = [
     { x: 298, y: 53, r: 60, g: 60, b: 60 },
     { x: 320, y: 53, r: 223, g: 223, b: 223 },
@@ -3158,22 +3032,50 @@ function handleInputLoginInfo() {
     { x: 368, y: 98, r: 255, g: 255, b: 255 },
     { x: 391, y: 124, r: 255, g: 255, b: 255 },
   ];
-  for (i = 0; i < findEmailTimes; i++) {
-    if (checkIsPage(pageEnterEmail)) {
-      console.log('inputing user email ', config.account);
-      inputEmail = true;
-      qTap(pnt(370, 150)); // input field
-      sleep(config.sleepAnimate);
-      typing(config.account, 1000);
-      sleep(4000); // sleep must equal to typing
-      typing('\n', 500);
-      sleep(500);
-      break;
-    } else {
-      console.log('cannot find input email field, i: ', i);
-      sleep(2000);
-    }
-  }
+  var pageEnterTwoPasswords = [
+    { x: 243, y: 307, r: 255, g: 255, b: 255 },
+    { x: 377, y: 229, r: 200, g: 200, b: 200 },
+    { x: 367, y: 176, r: 255, g: 255, b: 255 },
+    { x: 371, y: 50, r: 60, g: 60, b: 60 },
+    { x: 319, y: 53, r: 230, g: 230, b: 230 },
+    { x: 236, y: 149, r: 195, g: 195, b: 195 },
+    { x: 236, y: 183, r: 194, g: 194, b: 194 },
+    { x: 243, y: 303, r: 200, g: 200, b: 200 },
+  ];
+  var pageEnterpassword = [
+    { x: 370, y: 150, r: 255, g: 255, b: 255 },
+    { x: 227, y: 112, r: 125, g: 125, b: 125 },
+    { x: 235, y: 112, r: 84, g: 84, b: 84 },
+    { x: 239, y: 114, r: 255, g: 255, b: 255 },
+    { x: 368, y: 110, r: 84, g: 84, b: 84 },
+    { x: 404, y: 188, r: 200, g: 200, b: 200 },
+    { x: 227, y: 170, r: 255, g: 255, b: 255 },
+  ];
+  var pageEnterPasswordLongId = [
+    { x: 370, y: 161, r: 255, g: 255, b: 255 },
+    { x: 227, y: 127, r: 125, g: 125, b: 125 },
+    { x: 234, y: 124, r: 207, g: 207, b: 207 },
+    { x: 229, y: 110, r: 255, g: 255, b: 255 },
+    { x: 230, y: 110, r: 120, g: 120, b: 120 },
+    { x: 227, y: 183, r: 255, g: 255, b: 255 },
+  ];
+  // Check if wrong password set. Any red string in this area means wrong password
+  var pageEnteredPassword = [
+    { x: 370, y: 155, r: 255, g: 255, b: 255 },
+    { x: 301, y: 115, r: 255, g: 255, b: 255 },
+    { x: 387, y: 53, r: 60, g: 60, b: 60 },
+    { x: 298, y: 53, r: 60, g: 60, b: 60 },
+    { x: 322, y: 52, r: 60, g: 60, b: 60 },
+  ];
+  var pageServerSelection = [
+    { x: 351, y: 260, r: 121, g: 207, b: 12 },
+    { x: 428, y: 261, r: 12, g: 167, b: 223 },
+    { x: 442, y: 242, r: 60, g: 70, b: 105 },
+    { x: 422, y: 234, r: 44, g: 47, b: 62 },
+    { x: 324, y: 54, r: 101, g: 137, b: 231 },
+    { x: 302, y: 64, r: 117, g: 186, b: 100 },
+    { x: 278, y: 81, r: 254, g: 254, b: 254 },
+  ];
 
   var incorrectEmailFormat = {
     x: 222,
@@ -3182,16 +3084,9 @@ function handleInputLoginInfo() {
     height: 12,
     targetY: 6,
     lookingForColor: { r: 226, g: 86, b: 86 },
-    targetColorCount: 22,
+    targetColorCount: 44,
     targetColorThreashold: 3,
   };
-  if (checkScreenMessage(incorrectEmailFormat, pageEnterEmail)) {
-    console.log('Incorrect email format, return and try again');
-    keycode('BACK', 1000);
-    sleep(config.sleepAnimate);
-    return false;
-  }
-
   var needRegisterDevPlayAccount = {
     x: 222,
     y: 166,
@@ -3202,13 +3097,6 @@ function handleInputLoginInfo() {
     targetColorCount: 34,
     targetColorThreashold: 3,
   };
-  if (checkScreenMessage(needRegisterDevPlayAccount, pageEnterEmail)) {
-    console.log('DevPlay report user registered via social media account, but need DevPlay account');
-    config.run = false;
-    sendEvent('gameStatus', 'login-failed');
-    return false;
-  }
-
   var registerWithSocialPlatformMessageScreen = {
     x: 225,
     y: 162,
@@ -3219,45 +3107,23 @@ function handleInputLoginInfo() {
     targetColorCount: 21,
     targetColorThreashold: 3,
   };
-  if (checkScreenMessage(registerWithSocialPlatformMessageScreen, pageEnterEmail)) {
-    console.log('DevPlay report user registered via social media account, "Please use it to sign in"');
-    config.run = false;
-    sendEvent('gameStatus', 'login-failed');
-    return false;
-  }
-
-  var checkPasswordTimes = inputEmail ? 15 : 3;
-  var pageEnterpassword = [
-    { x: 370, y: 150, r: 255, g: 255, b: 255 },
-    { x: 390, y: 189, r: 200, g: 200, b: 200 },
-    { x: 314, y: 190, r: 200, g: 200, b: 200 },
-    { x: 309, y: 189, r: 200, g: 200, b: 200 },
-    { x: 301, y: 115, r: 255, g: 255, b: 255 },
-    { x: 387, y: 53, r: 60, g: 60, b: 60 },
-    { x: 298, y: 53, r: 60, g: 60, b: 60 },
-    { x: 322, y: 52, r: 60, g: 60, b: 60 },
-  ];
-  var pageEnterPasswordLongId = [
-    { x: 370, y: 161, r: 255, g: 255, b: 255 },
-    { x: 391, y: 196, r: 200, g: 200, b: 200 },
-    { x: 378, y: 56, r: 60, g: 60, b: 60 },
-  ];
-
-  // Check if wrong password set. Any red string in this area means wrong password
-  var pageEnteredPassword = [
-    { x: 370, y: 150, r: 255, g: 255, b: 255 },
-    { x: 301, y: 115, r: 255, g: 255, b: 255 },
-    { x: 387, y: 53, r: 60, g: 60, b: 60 },
-    { x: 298, y: 53, r: 60, g: 60, b: 60 },
-    { x: 322, y: 52, r: 60, g: 60, b: 60 },
-  ];
   var wrongPasswordMessageScreen = {
     x: 225,
     y: 162,
     width: 75,
     height: 13,
     targetY: 6,
-    lookingForColor: { r: 244, g: 191, b: 191 },
+    lookingForColor: { r: 230, g: 100, b: 100 },
+    targetColorCount: 25,
+    targetColorThreashold: 2,
+  };
+  var wrongPasswordMessageScreenWithLongId = {
+    x: 225,
+    y: 175,
+    width: 75,
+    height: 13,
+    targetY: 6,
+    lookingForColor: { r: 244, g: 100, b: 100 },
     targetColorCount: 25,
     targetColorThreashold: 2,
   };
@@ -3272,75 +3138,310 @@ function handleInputLoginInfo() {
     targetColorThreashold: 0,
   };
 
-  var pageEnterTwoPasswords = [
-    { x: 243, y: 307, r: 255, g: 255, b: 255 },
-    { x: 377, y: 229, r: 200, g: 200, b: 200 },
-    { x: 367, y: 176, r: 255, g: 255, b: 255 },
-    { x: 371, y: 50, r: 60, g: 60, b: 60 },
-    { x: 319, y: 53, r: 230, g: 230, b: 230 },
-    { x: 404, y: 184, r: 187, g: 187, b: 188 },
-  ];
-  for (i = 0; i < checkPasswordTimes; i++) {
-    if (checkIsPage(pageEnterTwoPasswords)) {
+  var rfpageInputAge = new RF.Page('rfpageInputAge', pageInputAge, pageInputAge[0]);
+  var rfpageTermsOfServices2 = new RF.Page('rfpageTermsOfServices2', pageTermsOfServices2, pageTermsOfServices2[0]);
+  var rfpageTermsOfServicesMemu = new RF.Page(
+    'rfpageTermsOfServicesMemu',
+    pageTermsOfServicesMemu,
+    pageTermsOfServicesMemu[0]
+  );
+  var rfpageTermsOfServicesHitBack = new RF.Page(
+    'rfpageTermsOfServicesHitBack',
+    pageTermsOfServicesHitBack,
+    pageTermsOfServicesHitBack[0]
+  );
+  var rfpageCannotFindLoginInfo = new RF.Page(
+    'rfpageCannotFindLoginInfo',
+    pageCannotFindLoginInfo,
+    pageCannotFindLoginInfo[0]
+  );
+  var rfpageCanDownloadResources = new RF.Page(
+    'rfpageCanDownloadResources',
+    pageCanDownloadResources,
+    pageCanDownloadResources[0]
+  );
+  var rfpageDownloadDataAndVoiceOver = new RF.Page(
+    'rfpageDownloadDataAndVoiceOver',
+    pageDownloadDataAndVoiceOver,
+    pageDownloadDataAndVoiceOver[0]
+  );
+  var rfpageDownloadDataAndVoiceOverUnchecked = new RF.Page(
+    'rfpageDownloadDataAndVoiceOverUnchecked',
+    pageDownloadDataAndVoiceOverUnchecked,
+    pageDownloadDataAndVoiceOverUnchecked[0]
+  );
+  var rfpageDownloadNewDataPakIsAvailable = new RF.Page(
+    'rfpageDownloadNewDataPakIsAvailable',
+    pageDownloadNewDataPakIsAvailable,
+    pageDownloadNewDataPakIsAvailable[0]
+  );
+  var rfpageChooseLoginMethod = new RF.Page('rfpageChooseLoginMethod', pageChooseLoginMethod, pageChooseLoginMethod[0]);
+  var rfpageChooseLoginMethod2 = new RF.Page(
+    'rfpageChooseLoginMethod2',
+    pageChooseLoginMethod2,
+    pageChooseLoginMethod2[0]
+  );
+  var rfpageEnterEmail = new RF.Page('rfpageEnterEmail', pageEnterEmail, pageEnterEmail[0]);
+  var rfpageEnterTwoPasswords = new RF.Page('rfpageEnterTwoPasswords', pageEnterTwoPasswords, pageEnterTwoPasswords[0]);
+  var rfpageEnterpassword = new RF.Page('rfpageEnterpassword', pageEnterpassword, pageEnterpassword[0]);
+  var rfpageEnterPasswordLongId = new RF.Page(
+    'rfpageEnterPasswordLongId',
+    pageEnterPasswordLongId,
+    pageEnterPasswordLongId[0]
+  );
+  var rfpageServerSelection = new RF.Page('rfpageServerSelection', pageServerSelection, pageServerSelection[0]);
+  var rfpageInLoginPageWithGearAndVideo = new RF.Page(
+    'rfpageInLoginPageWithGearAndVideo',
+    pageInLoginPageWithGearAndVideo,
+    pageInLoginPageWithGearAndVideo[0]
+  );
+  var rfpageNotifyQuitWindow = new RF.Page('rfpageNotifyQuitWindow', pageNotifyQuitWindow, pageNotifyQuitWindow[0]);
+
+  var groupPageLogin = new RF.GroupPage('groupPageLogin', [
+    rfpageInputAge,
+    rfpageTermsOfServices2,
+    rfpageTermsOfServicesMemu,
+    rfpageTermsOfServicesHitBack,
+    rfpageCannotFindLoginInfo,
+    rfpageCanDownloadResources,
+    rfpageDownloadDataAndVoiceOver,
+    rfpageDownloadDataAndVoiceOverUnchecked,
+    rfpageDownloadNewDataPakIsAvailable,
+    rfpageChooseLoginMethod,
+    rfpageChooseLoginMethod2,
+    rfpageEnterEmail,
+    rfpageEnterTwoPasswords,
+    rfpageEnterpassword,
+    rfpageEnterPasswordLongId,
+    rfpageServerSelection,
+    rfpageAnnouncement,
+    rfpageInKingdomVillage,
+    rfpageInProduction,
+    rfpageInMagicLab,
+    rfpageInFountain,
+    rfpageInLoginPageWithGearAndVideo,
+    rfpageNotifyQuitWindow,
+  ]);
+
+  var matchedPages = groupPageLogin.isMatchScreen(this.screen);
+  if (matchedPages.length === 0) {
+    console.log('groupPageLogin cannot find any match, skipping handleInputLoginInfo');
+    return false;
+  }
+
+  var passwordInputed = false;
+  for (var loginCounter = 0; loginCounter < 20; loginCounter++) {
+    matchedPages = groupPageLogin.isMatchScreen(this.screen);
+    console.log('groupPageLogin matchedPages at', loginCounter, ':', matchedPages);
+
+    if (matchedPages.indexOf('rfpageInputAge') !== -1) {
+      console.log('start input age');
+      qTap(pnt(285 + Math.random() * 35, 213));
+      sleep(config.sleep);
+      qTap(pageInputAge);
+      sleep(config.sleep);
+      qTap(pageInputAge);
+      sleep(config.sleepAnimate * 2);
+    } else if (matchedPages.indexOf('rfpageTermsOfServices2') !== -1) {
+      console.log('accept rfpageTermsOfServices2');
+      qTap(pageTermsOfServices2);
+      sleep(1000);
+    } else if (matchedPages.indexOf('rfpageTermsOfServicesHitBack') !== -1) {
+      console.log('close and accept rfpageTermsOfServicesHitBack');
+      qTap(pageTermsOfServicesHitBack);
+      sleep(2000);
+      qTap(pageTermsOfServicesMemu);
+      sleep(1000);
+    } else if (matchedPages.indexOf('rfpageTermsOfServicesMemu') !== -1) {
+      console.log('accept rfpageTermsOfServicesMemu');
+      qTap(pageTermsOfServicesMemu);
+      sleep(1000);
+    } else if (matchedPages.indexOf('rfpageCannotFindLoginInfo') !== -1) {
+      console.log("quit can't find login info page");
+      keycode('BACK', 1000);
+      sleep(1000);
+    } else if (matchedPages.indexOf('rfpageCanDownloadResources') !== -1) {
+      console.log('start download resources, wait 15 secs');
+      qTap(pageCanDownloadResources);
+      sleep(15000);
+
+      for (i = 0; i < 50; i++) {
+        // wait for yellow bar (download progress bar) disapper
+        if (!checkIsPage([{ x: 3, y: 349, r: 255, g: 210, b: 76 }])) {
+          console.log('download finished');
+          break;
+        }
+        console.log('wait for download: ', i);
+        sleep(3000);
+      }
+    } else if (matchedPages.indexOf('rfpageDownloadDataAndVoiceOverUnchecked') !== -1) {
+      console.log('start download resources, wait 10 secs');
+      qTap(pnt(320, 268));
+      sleep(15000);
+
+      for (i = 0; i < 18; i++) {
+        // wait for yellow bar (download progress bar) disapper
+        if (!checkIsPage([{ x: 3, y: 349, r: 255, g: 210, b: 76 }])) {
+          console.log('download finished');
+          break;
+        }
+        console.log('wait for download: ', i);
+        sleep(3000);
+      }
+    } else if (matchedPages.indexOf('rfpageDownloadDataAndVoiceOver') !== -1) {
+      console.log('rfpageDownloadDataAndVoiceOver, unckeck it');
+      qTap(pageDownloadDataAndVoiceOver);
+      sleep(2000);
+    } else if (matchedPages.indexOf('rfpageDownloadNewDataPakIsAvailable') !== -1) {
+      qTap(pageDownloadNewDataPakIsAvailable);
+      sleep(config.sleepAnimate);
+      console.log('start download new data pak, wait 10 secs');
+      sleep(10000);
+
+      for (i = 0; i < 18; i++) {
+        // wait for yellow bar (download progress bar) disapper
+        if (!checkIsPage([{ x: 16, y: 349, r: 255, g: 210, b: 76 }])) {
+          console.log('download finished');
+          break;
+        }
+        console.log('wait for download: ', i);
+        sleep(3000);
+      }
+    } else if (matchedPages.indexOf('rfpageChooseLoginMethod') !== -1) {
+      console.log('choose to login via email');
+      qTap(pageChooseLoginMethod);
+      sleep(config.sleepAnimate);
+    } else if (matchedPages.indexOf('rfpageChooseLoginMethod2') !== -1) {
+      console.log('choose to login via email 2');
+      qTap(pageChooseLoginMethod2);
+      sleep(config.sleepAnimate);
+    } else if (matchedPages.indexOf('rfpageEnterEmail') !== -1) {
+      console.log('inputing user email ', config.account);
+      qTap(pnt(370, 150)); // input field
+      sleep(config.sleepAnimate);
+      typing(config.account, 1000);
+      sleep(4000); // sleep must equal to typing
+      typing('\n', 500);
+      sleep(500);
+    } else if (
+      matchedPages.indexOf('rfpageEnterpassword') !== -1 ||
+      matchedPages.indexOf('rfpageEnterPasswordLongId') !== -1
+    ) {
+      rfpageEnterPasswordLongId.goNext(this.screen);
+      sleep(config.sleepAnimate);
+      typing(config.password, 1000);
+      sleep(1000); // sleep must equal to typing
+      typing('\n', 500);
+      sleep(500);
+      qTap(pnt(370, 190)); // Login button
+      passwordInputed = true;
+    } else if (matchedPages.indexOf('rfpageEnterTwoPasswords') !== -1) {
       config.run = false;
       sendEvent('gameStatus', 'login-failed');
       console.log('This account id does not exist');
+      if (handleLoginFailed()) {
+        return false;
+      }
+    } else if (matchedPages.indexOf('rfpageServerSelection') !== -1) {
+      console.log('Found server selection screen, seems like a new devPlayAccount');
+      if (handleLoginFailed()) {
+        return false;
+      }
+    } else if (matchedPages.indexOf('rfpageAnnouncement') !== -1) {
+      console.log('found rfpageAnnouncement, login successed, return ');
+      rfpageAnnouncement.goNext(this.screen);
+      return true;
+    } else if (
+      matchedPages.indexOf('rfpageInKingdomVillage') !== -1 ||
+      matchedPages.indexOf('rfpageInProduction') !== -1 ||
+      matchedPages.indexOf('rfpageInMagicLab') !== -1
+    ) {
+      console.log('handleInputLoginInfo found in kingdom village, login success, return');
+      return true;
+    } else if (matchedPages.indexOf('rfpageInFountain') !== -1) {
+      console.log('found pageInFountain, login successed, return ');
+      pageInFountain.goNext(this.screen);
+      return true;
+    } else if (matchedPages.indexOf('rfpageInLoginPageWithGearAndVideo') !== -1) {
+      qTap(pnt(575, 22));
+      return true;
+    } else if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+      if (checkScreenMessage(messageNotifyQuit)) {
+        console.log('Found quit notification, close it and back to login page');
+        keycode('BACK', 1000);
+        sleep(2000);
+      }
+    } else {
+      console.log('handleInputLoginInfo not sure what to do, tap(575, 22) announce page');
+
+      qTap(pnt(575, 22));
+      if (handleAnnouncement()) {
+        console.log('handleLogin handle accouncement success, login success');
+        return true;
+      }
+    }
+
+    if (checkScreenMessage(incorrectEmailFormat, pageEnterEmail)) {
+      console.log('Incorrect email format, restart the game and try again');
+      if (handleLoginFailed()) {
+        return false;
+      }
+    }
+    if (checkScreenMessage(needRegisterDevPlayAccount, pageEnterEmail)) {
+      console.log('DevPlay report user registered via social media account, but need DevPlay account');
+      config.run = false;
+      sendEvent('gameStatus', 'login-failed');
       return false;
     }
-
-    if (!checkIsPage(pageEnterpassword) && !checkIsPage(pageEnterPasswordLongId)) {
-      console.log('waiting for input password field');
-      sleep(2000);
-      continue;
+    if (checkScreenMessage(registerWithSocialPlatformMessageScreen, pageEnterEmail)) {
+      console.log('DevPlay report user registered via social media account, "Please use it to sign in"');
+      config.run = false;
+      sendEvent('gameStatus', 'login-failed');
+      return false;
     }
-
-    if (checkIsPage(pageEnterpassword)) {
-      console.log('input user pageEnterpassword');
-      qTap(pageEnterpassword);
-    } else if (checkIsPage(pageEnterPasswordLongId)) {
-      console.log('input user pageEnterPasswordLongId');
-      qTap(pageEnterPasswordLongId);
-    }
-    sleep(config.sleepAnimate);
-    typing(config.password, 1000);
-    sleep(1000); // sleep must equal to typing
-    typing('\n', 500);
-    sleep(500);
-    qTap(pnt(370, 190)); // Login button
-
-    for (var t = 0; t < 6; t++) {
-      if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
-        console.log('DevPlay report password too short');
-        return handleLoginFailed();
+    if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
+      console.log('DevPlay report password too short');
+      if (handleLoginFailed()) {
+        return false;
       }
-      if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
-        console.log('DevPlay report wrong password');
-        return handleLoginFailed();
+    }
+    if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
+      console.log('DevPlay report wrong password');
+      if (handleLoginFailed()) {
+        return false;
       }
-      sleep(1000);
+    }
+    if (checkScreenMessage(wrongPasswordMessageScreenWithLongId, pageEnteredPassword)) {
+      console.log('DevPlay report wrong password (with long id account)');
+      if (handleLoginFailed()) {
+        return false;
+      }
     }
 
-    if (checkIsPage(pageEnterpassword)) {
-      console.log(
-        'still in password page, either password too short, wrong password, or it is a new id that devPlay ask to input password twice'
-      );
-      return handleLoginFailed();
-    }
-    if (checkIsPage(pageChooseLoginMethod) || checkIsPage(pageChooseLoginMethod2)) {
-      console.log(
-        'still in LOGIN page, either password too short, wrong password, or it is a new id that devPlay ask to input password twice'
-      );
-      return handleLoginFailed();
-    }
+    checkAndRestartApp();
+    sleep(1000);
+  }
 
+  if (passwordInputed) {
     sendEvent('gameStatus', 'login-succeeded');
     console.log('Send login-succeeded');
 
-    // Touch here to start:
-    console.log('successfully input password, tap announcement icon for 10s');
-    for (i = 0; i < 100; i++) {
-      if (checkIsPage(pageAnnouncement) || checkIsPage(pageInKingdomVillage)) {
-        console.log('found announcement page, return from handleInputLoginInfo');
+    var groupPageWaitForLogin = new RF.GroupPage('groupPageLogin', [
+      rfpageAnnouncement,
+      rfpageInKingdomVillage,
+      rfpageInProduction,
+      rfpageInMagicLab,
+      rfpageInFountain,
+    ]);
+
+    console.log('successfully input password, tap announcement icon for 100s');
+    for (var i = 0; i < 100; i++) {
+      matchedPages = groupPageWaitForLogin.isMatchScreen(this.screen);
+      if (matchedPages.indexOf('rfpageAnnouncement') !== -1) {
+        if (handleAnnouncement()) {
+          return;
+        }
+      } else if (matchedPages.indexOf('rfpageInKingdomVillage') !== -1) {
         return true;
       }
 
@@ -3349,38 +3450,23 @@ function handleInputLoginInfo() {
         keycode('BACK', 1000);
         sleep(config.sleepAnimate);
       }
-
-      checkIsFacebookPage();
-
       if (checkScreenMessage(facebookRefreshTokenExpiredLogout)) {
         console.log('Found facebook refresh token failed, tap logout cancel button');
         qTap(pnt(276, 252));
         sleep(2000);
       }
 
+      checkIsFacebookPage();
+      checkAndRestartApp();
+
       qTap(pnt(575, 22));
       sleep(3000);
-      console.log('tapping (575, 22) until the game start: ', i, '/100');
+      console.log('tapping (575, 22) until the game start every 3 secs: ', i, '/100');
     }
-    return true;
-  }
-
-  var pageServerSelection = [
-    { x: 380, y: 236, r: 60, g: 70, b: 105 },
-    { x: 348, y: 239, r: 121, g: 207, b: 12 },
-    { x: 308, y: 243, r: 255, g: 255, b: 255 },
-    { x: 447, y: 149, r: 60, g: 70, b: 105 },
-    { x: 388, y: 104, r: 44, g: 46, b: 60 },
-    { x: 326, y: 75, r: 101, g: 137, b: 231 },
-    { x: 318, y: 106, r: 255, g: 255, b: 255 },
-  ];
-  if (checkIsPage(pageServerSelection)) {
-    console.log('Found server selection screen, seems like a new devPlayAccount');
-    return handleLoginFailed();
   }
 
   // sendEvent("gameStatus", "login-failed")
-  console.log('cannot find input email field');
+  console.log('handleInputLoginInfo failed, no condition matched');
   return false;
 }
 
@@ -3399,47 +3485,47 @@ function handleNextProductionBuilding() {
 
 function handleSkipProductionDashboardIntro() {
   var pageGnomeLabProdBoardIntro = [
-    {x: 281, y: 114, r: 170, g: 15, b: 35},
-    {x: 217, y: 21, r: 82, g: 17, b: 30},
-    {x: 311, y: 16, r: 86, g: 64, b: 2},
-    {x: 424, y: 19, r: 0, g: 45, b: 86},
-  ]
+    { x: 281, y: 114, r: 170, g: 15, b: 35 },
+    { x: 217, y: 21, r: 82, g: 17, b: 30 },
+    { x: 311, y: 16, r: 86, g: 64, b: 2 },
+    { x: 424, y: 19, r: 0, g: 45, b: 86 },
+  ];
 
   if (!checkIsPage(pageGnomeLabProdBoardIntro)) {
     return false;
   }
 
-  console.log('About to handle pageGnomeLabProdBoardIntro')
+  console.log('About to handle pageGnomeLabProdBoardIntro');
 
   // Tap to enter the lab
   qTap(pnt(300, 200));
   sleep(2000);
 
   if (waitUntilSeePage(pageInGnomeLab, 20, pnt(13, 13), undefined, 1)) {
-    console.log('Success skip gnome lab production dashboard intro')
+    console.log('Success skip gnome lab production dashboard intro');
   }
   return true;
 }
 
 function handleSkipProductionDashboardIsDone() {
   var pageProductionDashboardIsDone = [
-    {x: 25, y: 222, r: 227, g: 163, b: 81},
-    {x: 37, y: 220, r: 75, g: 83, b: 115},
-    {x: 212, y: 170, r: 255, g: 243, b: 239},
+    { x: 25, y: 222, r: 227, g: 163, b: 81 },
+    { x: 37, y: 220, r: 75, g: 83, b: 115 },
+    { x: 212, y: 170, r: 255, g: 243, b: 239 },
   ];
   var pageProductionDashboardIntroducing = [
-    {x: 607, y: 26, r: 3, g: 6, b: 8},
-    {x: 19, y: 9, r: 100, g: 88, b: 25},
-    {x: 26, y: 25, r: 102, g: 70, b: 42},
-    {x: 30, y: 12, r: 99, g: 8, b: 16},
-  ]
+    { x: 607, y: 26, r: 3, g: 6, b: 8 },
+    { x: 19, y: 9, r: 100, g: 88, b: 25 },
+    { x: 26, y: 25, r: 102, g: 70, b: 42 },
+    { x: 30, y: 12, r: 99, g: 8, b: 16 },
+  ];
   var pageInProductionDashboard = [
-    {x: 619, y: 340, r: 123, g: 207, b: 8},
-    {x: 19, y: 14, r: 253, g: 206, b: 74},
-    {x: 31, y: 13, r: 198, g: 36, b: 41},
-    {x: 28, y: 26, r: 239, g: 207, b: 139},
-    {x: 619, y: 19, r: 255, g: 255, b: 255},
-  ]
+    { x: 619, y: 340, r: 123, g: 207, b: 8 },
+    { x: 19, y: 14, r: 253, g: 206, b: 74 },
+    { x: 31, y: 13, r: 198, g: 36, b: 41 },
+    { x: 28, y: 26, r: 239, g: 207, b: 139 },
+    { x: 619, y: 19, r: 255, g: 255, b: 255 },
+  ];
 
   if (!checkIsPage(pageProductionDashboardIsDone)) {
     return false;
@@ -3469,11 +3555,11 @@ function handleSkipProductionDashboardIsDone() {
 
 function handleSkipKingdomStory() {
   var pageInKingdomStoryMission = [
-    {x: 562, y: 85, r: 47, g: 116, b: 156},
-    {x: 498, y: 104, r: 181, g: 48, b: 33},
-    {x: 543, y: 107, r: 48, g: 67, b: 106},
-    {x: 584, y: 19, r: 67, g: 53, b: 22},
-  ]
+    { x: 562, y: 85, r: 47, g: 116, b: 156 },
+    { x: 498, y: 104, r: 181, g: 48, b: 33 },
+    { x: 543, y: 107, r: 48, g: 67, b: 106 },
+    { x: 584, y: 19, r: 67, g: 53, b: 22 },
+  ];
 
   if (!checkIsPage(pageInKingdomStoryMission)) {
     return false;
@@ -3517,24 +3603,24 @@ function handleSkipTreasureIntro() {
   var pageTreasureIntro = new RF.Page(
     'pageTreasureIntro',
     [
-      {x: 607, y: 266, r: 117, g: 106, b: 215},
-      {x: 606, y: 266, r: 117, g: 106, b: 215},
-      {x: 445, y: 230, r: 255, g: 243, b: 239},
-      {x: 622, y: 198, r: 253, g: 196, b: 113},
-      {x: 339, y: 19, r: 47, g: 38, b: 66},
-      {x: 329, y: 15, r: 67, g: 65, b: 67},
+      { x: 607, y: 266, r: 117, g: 106, b: 215 },
+      { x: 606, y: 266, r: 117, g: 106, b: 215 },
+      { x: 445, y: 230, r: 255, g: 243, b: 239 },
+      { x: 622, y: 198, r: 253, g: 196, b: 113 },
+      { x: 339, y: 19, r: 47, g: 38, b: 66 },
+      { x: 329, y: 15, r: 67, g: 65, b: 67 },
     ],
-    {x: 607, y: 266 }
+    { x: 607, y: 266 }
   );
   var pageTreasureIntro2 = new RF.Page(
     'pageTreasureIntro2',
     [
-      {x: 603, y: 266, r: 115, g: 105, b: 214},
-      {x: 493, y: 208, r: 255, g: 243, b: 239},
-      {x: 337, y: 19, r: 52, g: 35, b: 83},
-      {x: 523, y: 21, r: 1, g: 48, b: 86},
+      { x: 603, y: 266, r: 115, g: 105, b: 214 },
+      { x: 493, y: 208, r: 255, g: 243, b: 239 },
+      { x: 337, y: 19, r: 52, g: 35, b: 83 },
+      { x: 523, y: 21, r: 1, g: 48, b: 86 },
     ],
-    {x: 603, y: 266 }
+    { x: 603, y: 266 }
   );
 
   var groupPageTreasureIntro = new RF.GroupPage('groupPageTreasureIntro', [pageTreasureIntro, pageTreasureIntro2]);
@@ -3543,7 +3629,7 @@ function handleSkipTreasureIntro() {
     return true;
   }
 
-  console.log('handleSkipTreasureIntro matchedPages: ', matchedPages)
+  console.log('handleSkipTreasureIntro matchedPages: ', matchedPages);
   if (matchedPages.indexOf('pageTreasureIntro') !== -1 || matchedPages.indexOf('pageTreasureIntro2') !== -1) {
     pageTreasureIntro.goNext(this.screen);
     sleep(2000);
@@ -3559,7 +3645,11 @@ function handleSkipTreasureIntro() {
 
 function handleTryHitBackToKingdom() {
   if (checkIsPage(pageInLoginPageWithGearAndVideo)) {
-    console.log('In login page (found gear and video icon), skipping handleTryHitBackToSpecificPage');
+    console.log(
+      'In login page (found gear and video icon), tap announcement icon and skip handleTryHitBackToSpecificPage'
+    );
+    qTap(pnt(575, 22));
+    sleep(3000);
     return false;
   }
 
@@ -3567,10 +3657,8 @@ function handleTryHitBackToKingdom() {
     return true;
   }
 
-  console.log(
-    'Found quit notification but not kingdom page, should be in login, tap announcement icon and sleep 3s'
-  );
-  qTap(pnt(585, 20));
+  console.log('Found quit notification but not kingdom page, should be in login, tap announcement icon and sleep 3s');
+  qTap(pnt(575, 22));
   sleep(3000);
   return false;
 }
@@ -3604,30 +3692,15 @@ function handleTryHitBackToSpecificPages(targetPages) {
   // New features intro that needs to be by pass
   handleSkipHallOfHeros();
   handleSkipProductionDashboardIntro();
-  handleSkipProductionDashboardIsDone()
-  handleSkipKingdomStory()
-  handleSkipTreasureIntro()
+  handleSkipProductionDashboardIsDone();
+  handleSkipKingdomStory();
+  handleSkipTreasureIntro();
 
-  var pageNotifyQuitWindow = [
-    { x: 374, y: 98, r: 57, g: 69, b: 107 },
-    { x: 301, y: 250, r: 8, g: 166, b: 222 },
-    { x: 404, y: 250, r: 123, g: 207, b: 8 },
-    { x: 425, y: 250, r: 222, g: 207, b: 198 },
-  ];
-  var pageBattlePaused = [
-    {x: 307, y: 200, r: 253, g: 253, b: 251},
-    {x: 621, y: 26, r: 56, g: 165, b: 227},
-    {x: 613, y: 23, r: 35, g: 85, b: 114},
-    {x: 278, y: 160, r: 12, g: 165, b: 219},
-    {x: 288, y: 157, r: 241, g: 241, b: 239},
-    {x: 293, y: 201, r: 241, g: 90, b: 28},
-  ]
-
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 6; i++) {
     keycode('BACK', 2000);
 
-    if (waitUntilSeePages(targetPages, 4)) {
-      console.log('No quit windows for 4 secs, and found targetPage successfully');
+    if (waitUntilSeePages(targetPages, 2)) {
+      console.log('No quit windows for 2 secs, and found targetPage successfully');
       return true;
     }
 
@@ -3740,9 +3813,9 @@ function gotoCastle() {
     { x: 205, y: 193, r: 127, g: 150, b: 194 },
   ];
   var pageFistItemIsCastle = [
-    {x: 275, y: 228, r: 57, g: 77, b: 123},
-    {x: 255, y: 151, r: 245, g: 160, b: 161},
-    {x: 252, y: 159, r: 239, g: 190, b: 115},
+    { x: 275, y: 228, r: 57, g: 77, b: 123 },
+    { x: 255, y: 151, r: 245, g: 160, b: 161 },
+    { x: 252, y: 159, r: 239, g: 190, b: 115 },
   ];
 
   if (checkScreenMessage(messageNotifyQuit)) {
@@ -3781,7 +3854,13 @@ function gotoCastle() {
 
   // Back to village and find castle missions page
   if (
-    !waitUntilSeePages([pageInCastleMission, pageInCastleUpgrading, pageInKingdomVillage], 12, pageFistItemIsCastle, null, 3)
+    !waitUntilSeePages(
+      [pageInCastleMission, pageInCastleUpgrading, pageInKingdomVillage],
+      12,
+      pageFistItemIsCastle,
+      null,
+      3
+    )
   ) {
     console.log('Failed to leave to cookie head in', 12, 'secs, skipping');
 
@@ -4198,11 +4277,11 @@ function handleGetDailyRewards() {
       { x: 45, y: 221, r: 56, g: 74, b: 107 },
     ];
     var pageDailyWatchAddGift = [
-      {x: 610, y: 329, r: 0, g: 150, b: 214},
-      {x: 441, y: 335, r: 140, g: 89, b: 107},
-      {x: 101, y: 324, r: 33, g: 218, b: 255},
-      {x: 177, y: 241, r: 175, g: 139, b: 58},
-    ]
+      { x: 610, y: 329, r: 0, g: 150, b: 214 },
+      { x: 441, y: 335, r: 140, g: 89, b: 107 },
+      { x: 101, y: 324, r: 33, g: 218, b: 255 },
+      { x: 177, y: 241, r: 175, g: 139, b: 58 },
+    ];
 
     var dailyGiftYs = [280, 225, 330];
     for (i in dailyGiftYs) {
@@ -4214,10 +4293,9 @@ function handleGetDailyRewards() {
       }
       if (checkIsPage(pageDailyWatchAddGift)) {
         // Not doing it for now as seems like will stuck in ads
-        console.log('Not doing it for now as seems like will stuck in ads')
+        console.log('Not doing it for now as seems like will stuck in ads');
         break;
-      }
-      else if (checkIsPage(pageDailyGiftNotClaimed)) {
+      } else if (checkIsPage(pageDailyGiftNotClaimed)) {
         qTap(pageDailyGiftNotClaimed);
 
         if (waitUntilSeePage(pageDailyGiftClaimed, 5, pageDailyGiftNotClaimed)) {
@@ -4347,7 +4425,7 @@ var b64N0_1 =
 var b64N0_2 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDk/wDgobc/sl/s8Wiy/wDBaT9mHxp4y8L+I/jJ40uf2T9M8B6xb20GhfDqK30OHTYIoLPULZLKyMC24gsmVZInjuXeKN52aUoooA//2Q==';
 var b64N0_3 =
-  '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'
+  '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';
 var b64N1_0 =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAHAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD8gvjJ8XPFPj3/AIJpfAj4eeJfERu4PA3xN+IOn6BZm2RPsNhcW/hq98sMqgybrq4vJMsWYb8ZChACiigD/9k=';
 var b64N1_1 =
@@ -4658,20 +4736,17 @@ function getStatusOfGivenWish(wish, records) {
   wish.golden = false;
   if (isSameColorAtPnt(wish.unfoldPnt, { r: 255, g: 249, b: 203 })) {
     wish.status = 'opened';
-  }
-  else if (isSameColorAtPnt(wish.unfoldPnt, { r: 246, g: 210, b: 135 }, 15)) {
+  } else if (isSameColorAtPnt(wish.unfoldPnt, { r: 246, g: 210, b: 135 }, 15)) {
     qTap(wish.unfoldPnt);
     sleep(config.sleepAnimate);
     wish.status = 'opened';
-    records['opened'] ++;
-  }
-  else if (isSameColorAtPnt(wish.refreshPnt, { r: 193, g: 160, b: 111 })) {
+    records['opened']++;
+  } else if (isSameColorAtPnt(wish.refreshPnt, { r: 193, g: 160, b: 111 })) {
     wish.status = 'refresh';
-  }
-  else if (isSameColorAtPnt(wish.unfoldPnt, {r: 255, g: 222, b: 41})) {
+  } else if (isSameColorAtPnt(wish.unfoldPnt, { r: 255, g: 222, b: 41 })) {
     // Folded golden wish
     wish.golden = true;
-    records['golden'] ++;
+    records['golden']++;
     if (config.wishingTreeRefreshGoldenWishes) {
       qTap(wish.refreshPnt);
       sleep(config.sleepAnimate * 2);
@@ -4683,31 +4758,31 @@ function getStatusOfGivenWish(wish, records) {
       qTap(wish.unfoldPnt);
       sleep(config.sleepAnimate);
       wish.status = 'opened';
-      records['opened'] ++;
+      records['opened']++;
     }
   } else if (isSameColorAtPnt(wish.unfoldPnt, { r: 255, g: 247, b: 123 })) {
     // Expend golden wish
     wish.golden = true;
-    records['golden'] ++;
+    records['golden']++;
     if (config.wishingTreeRefreshGoldenWishes) {
       qTap(wish.refreshPnt);
       sleep(config.sleepAnimate);
       console.log('refresh as it is a golden wish:', JSON.stringify(wish));
       wish.status = 'refreshed';
-      records['goldenAndSkip'] ++;
+      records['goldenAndSkip']++;
     } else {
       wish.status = 'opened';
     }
   }
 
-  return {wish: wish, records: records};
+  return { wish: wish, records: records };
 }
 
 function checkToSendSpecificWish(wish, records) {
   for (var pntIdx in wish.requirementIconPnts) {
     var reqPnt = wish.requirementIconPnts[pntIdx];
 
-    if (isSameColorAtPnt(reqPnt, { r: 255, g: 251, b: 206}) || isSameColorAtPnt(reqPnt, { r: 255, g: 255, b: 142})) {
+    if (isSameColorAtPnt(reqPnt, { r: 255, g: 251, b: 206 }) || isSameColorAtPnt(reqPnt, { r: 255, g: 255, b: 142 })) {
       // console.log('This point has no item, skipping:', pntIdx);
       continue;
     }
@@ -4715,10 +4790,10 @@ function checkToSendSpecificWish(wish, records) {
     qTap(reqPnt);
     sleep(config.sleepAnimate);
 
-    var ocrResult = "";
+    var ocrResult = '';
     if (waitUntilSeePage(pageCheckWishingTreeStock, 7, reqPnt, null, 3)) {
       // Use this to collect stock info
-      var img = getScreenshot()
+      var img = getScreenshot();
       var cImg1 = cropImage(img, 325, 110, 40, 15);
       ocrResult = recognizeWishingTreeRequirements(numberImagesWishingTree, cImg1, 12, 0.87, 0.7);
       releaseImage(cImg1);
@@ -4732,22 +4807,28 @@ function checkToSendSpecificWish(wish, records) {
     waitUntilSeePage(pageInWishingTree, 7, pageCheckWishingTreeStock, null, 3);
 
     ocrResult = ocrResult.trim();
-    var stockAndReq = []
+    var stockAndReq = [];
     if (ocrResult.length === 0) {
       // do nothing
     } else if (ocrResult.indexOf('/') === -1) {
-      stockAndReq = ocrResult.substr(0, ocrResult.length - 1), ocrResult.substr(ocrResult.length - 1, 1);
+      (stockAndReq = ocrResult.substr(0, ocrResult.length - 1)), ocrResult.substr(ocrResult.length - 1, 1);
     } else {
       stockAndReq = ocrResult.split('/');
     }
 
     // console.log('|>', pntIdx, JSON.stringify(stockAndReq))
-    if (stockAndReq.length === 0 || (stockAndReq[0] - stockAndReq[1] < config.wishingTreeSafetyStock)) {
-      console.log('Skip this one as the stock {0} is lower than config {1}, need {2}'.format(stockAndReq[0], config.wishingTreeSafetyStock, stockAndReq[1]));
+    if (stockAndReq.length === 0 || stockAndReq[0] - stockAndReq[1] < config.wishingTreeSafetyStock) {
+      console.log(
+        'Skip this one as the stock {0} is lower than config {1}, need {2}'.format(
+          stockAndReq[0],
+          config.wishingTreeSafetyStock,
+          stockAndReq[1]
+        )
+      );
       qTap(wish.refreshPnt);
       sleep(config.sleep);
       wish.status = 'refresh';
-      return {wish: wish, records: records};
+      return { wish: wish, records: records };
     }
 
     sleep(config.sleep);
@@ -4765,12 +4846,12 @@ function checkToSendSpecificWish(wish, records) {
     qTap(wish.refreshPnt);
     sleep(config.sleepAnimate);
     wish.status = 'refresh';
-    return {wish: wish, records: records};
+    return { wish: wish, records: records };
   }
 
   console.log('wish ', wish.id, ' is fulfilled');
-  records['fulfilled'] ++;
-  return {wish: wish, records: records};
+  records['fulfilled']++;
+  return { wish: wish, records: records };
 }
 
 function handleInWishingTree() {
@@ -4784,29 +4865,25 @@ function handleInWishingTree() {
 
   // wish(id, refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status, requirementIconPnts)
   var wishes = [
-    genWish(0, pnt(183, 79), pnt(183, 190), pnt(183, 283), undefined, 'unknown',
-    {
+    genWish(0, pnt(183, 79), pnt(163, 160), pnt(183, 283), undefined, 'unknown', {
       0: pnt(162, 198),
       1: pnt(198, 198),
       2: pnt(162, 235),
       3: pnt(198, 235),
     }),
-    genWish(1, pnt(295, 79), pnt(295, 190), pnt(295, 283), undefined, 'unknown',
-    {
+    genWish(1, pnt(295, 79), pnt(275, 160), pnt(295, 283), undefined, 'unknown', {
       0: pnt(275, 198),
       1: pnt(312, 198),
       2: pnt(275, 235),
       3: pnt(312, 235),
     }),
-    genWish(2, pnt(400, 79), pnt(400, 190), pnt(400, 283), undefined, 'unknown',
-    {
+    genWish(2, pnt(400, 79), pnt(390, 160), pnt(400, 283), undefined, 'unknown', {
       0: pnt(390, 198),
       1: pnt(425, 198),
       2: pnt(390, 235),
       3: pnt(425, 235),
     }),
-    genWish(3, pnt(520, 79), pnt(520, 190), pnt(520, 283), undefined, 'unknown',
-    {
+    genWish(3, pnt(520, 79), pnt(500, 160), pnt(520, 283), undefined, 'unknown', {
       0: pnt(508, 198),
       1: pnt(545, 198),
       2: pnt(508, 235),
@@ -4816,12 +4893,12 @@ function handleInWishingTree() {
 
   var wishingTreeStartTime = Date.now();
   var records = {
-    'opened': 0,
-    'golden': 0,
-    'fulfilled': 0,
-    'notEnoughAndSkip': 0,
-    'goldenAndSkip': 0
-  }
+    opened: 0,
+    golden: 0,
+    fulfilled: 0,
+    notEnoughAndSkip: 0,
+    goldenAndSkip: 0,
+  };
 
   while ((Date.now() - wishingTreeStartTime) / 60000 < config.wishingTreeMaxFillingMins) {
     var pageAllDailyRewardCollect = [
@@ -4844,19 +4921,18 @@ function handleInWishingTree() {
       console.log('handling wish', i, JSON.stringify(wish));
 
       if (wish.status === 'refresh') {
-        refreshing ++;
+        refreshing++;
         continue;
-      }
-      else if (wish.status === 'opened') {
+      } else if (wish.status === 'opened') {
         result = checkToSendSpecificWish(wish, records);
         wish = result['wish'];
         records = result['records'];
         console.log('handled wish', i, JSON.stringify(wish));
       }
 
-      sleep(config.sleep)
+      sleep(config.sleep);
     }
-    console.log('>>> Wising tree records', JSON.stringify(records))
+    console.log('>>> Wising tree records', JSON.stringify(records));
 
     var pageCollectTreeReward = [{ x: 85, y: 289, r: 44, g: 203, b: 8 }];
     if (checkIsPage(pageCollectTreeReward)) {
@@ -4877,6 +4953,7 @@ function handleInWishingTree() {
     }
   }
   console.log('Run wishing tree for ', (Date.now() - wishingTreeStartTime) / 60000, ' mins, ending this task');
+  sendEvent('running', '');
 
   handleTryHitBackToKingdom();
   if (checkIsPage(pageUncollapsedAffairs)) {
@@ -5029,9 +5106,9 @@ function handleInHotAirBallon() {
       console.log('ballon going to ep4');
 
       var pageBallonMapEp4 = [
-        {x: 611, y: 204, r: 236, g: 228, b: 255},
-        {x: 9, y: 37, r: 56, g: 33, b: 19},
-        {x: 40, y: 120, r: 129, g: 229, b: 81},
+        { x: 611, y: 204, r: 236, g: 228, b: 255 },
+        { x: 9, y: 37, r: 56, g: 33, b: 19 },
+        { x: 40, y: 120, r: 129, g: 229, b: 81 },
       ];
       for (var i = 0; i < 5; i++) {
         tapDown(50, 268, 40, 0);
@@ -5306,9 +5383,9 @@ function handleCollectIslandResources() {
 
   // Collect resource if ready
   var pageResourceisReady = [
-    {x: 307, y: 333, r: 123, g: 207, b: 8},
-    {x: 363, y: 331, r: 123, g: 207, b: 8},
-    {x: 33, y: 332, r: 255, g: 100, b: 176},
+    { x: 307, y: 333, r: 123, g: 207, b: 8 },
+    { x: 363, y: 331, r: 123, g: 207, b: 8 },
+    { x: 33, y: 332, r: 255, g: 100, b: 176 },
   ];
   // var pageShipOnTheWay = [
   //   { x: 275, y: 335, r: 247, g: 52, b: 86 },
@@ -5469,8 +5546,8 @@ var AdvanturesBountiesAt4th = Object.freeze({
   cookieAlliance: GenAdvanture(pnt(392, 230), true, false),
 
   superMayhem: GenAdvanture(pnt(500, 150), false, false),
-  bounties: GenAdvanture(pnt(625, 100), false, false),
-  guild: GenAdvanture(pnt(120, 100), false, true),
+  bounties: GenAdvanture(pnt(100, 100), false, true),
+  guild: GenAdvanture(pnt(120, 250), false, true),
 });
 
 // With super mayhem
@@ -5778,85 +5855,59 @@ var pageBattleTowerOfSweetChaosVictory = [
   { x: 256, y: 59, r: 123, g: 190, b: 255 },
 ];
 var pageCanEquipTopping = [
-  {x: 400, y: 266, r: 121, g: 207, b: 12},
-  {x: 267, y: 160, r: 233, g: 182, b: 131},
-  {x: 294, y: 264, r: 12, g: 167, b: 223},
-  {x: 389, y: 162, r: 199, g: 181, b: 170},
+  { x: 400, y: 266, r: 121, g: 207, b: 12 },
+  { x: 267, y: 160, r: 233, g: 182, b: 131 },
+  { x: 294, y: 264, r: 12, g: 167, b: 223 },
+  { x: 389, y: 162, r: 199, g: 181, b: 170 },
 ];
 var pageCanEquipTopping2 = [
-  {x: 397, y: 267, r: 123, g: 207, b: 8},
-  {x: 277, y: 163, r: 255, g: 255, b: 186},
-  {x: 265, y: 165, r: 198, g: 182, b: 173},
-  {x: 265, y: 165, r: 198, g: 182, b: 173},
-  {x: 252, y: 77, r: 57, g: 69, b: 107},
+  { x: 397, y: 267, r: 123, g: 207, b: 8 },
+  { x: 277, y: 163, r: 255, g: 255, b: 186 },
+  { x: 265, y: 165, r: 198, g: 182, b: 173 },
+  { x: 265, y: 165, r: 198, g: 182, b: 173 },
+  { x: 252, y: 77, r: 57, g: 69, b: 107 },
 ];
 // Mainly in guild alliance
 var pageCanEquipTopping3 = [
-  {x: 407, y: 275, r: 123, g: 207, b: 8},
-  {x: 299, y: 275, r: 8, g: 166, b: 222},
-  {x: 276, y: 154, r: 255, g: 251, b: 164},
-  {x: 276, y: 159, r: 232, g: 165, b: 96},
-  {x: 288, y: 156, r: 226, g: 226, b: 226},
-  {x: 262, y: 155, r: 198, g: 182, b: 173},
+  { x: 407, y: 275, r: 123, g: 207, b: 8 },
+  { x: 299, y: 275, r: 8, g: 166, b: 222 },
+  { x: 276, y: 154, r: 255, g: 251, b: 164 },
+  { x: 276, y: 159, r: 232, g: 165, b: 96 },
+  { x: 288, y: 156, r: 226, g: 226, b: 226 },
+  { x: 262, y: 155, r: 198, g: 182, b: 173 },
 ];
 
-var rfpageBattleVictoryButNeedTap = new RF.Page(
-  'rfpageBattleVictoryButNeedTap',
-  pageBattleVictoryButNeedTap,
-  { x: 230, y: 49 }
-);
+var rfpageBattleVictoryButNeedTap = new RF.Page('rfpageBattleVictoryButNeedTap', pageBattleVictoryButNeedTap, {
+  x: 230,
+  y: 49,
+});
 
-var rfpageBattleFinished = new RF.Page(
-  'rfpageBattleFinished',
-  pageBattleFinished,
-  { x: 56, y: 331 }
-);
-var rfpageBattleDefeat = new RF.Page(
-  'rfpageBattleDefeat',
-  pageBattleDefeat,
-  { x: 243, y: 58 }
-);
-var rfpageDefeatWithGotoKingdom = new RF.Page(
-  'rfpageDefeatWithGotoKingdom',
-  pageDefeatWithGotoKingdom,
-  { x: 81, y: 314 }
-);
-var rfpageNoArenaTicket = new RF.Page(
-  'rfpageNoArenaTicket',
-  pageNoArenaTicket,
-  { x: 280, y: 250 }
-);
-var rfpageBattleFinishedWithSunbeds = new RF.Page(
-  'rfpageBattleFinishedWithSunbeds',
-  pageBattleFinishedWithSunbeds,
-  { x: 491, y: 322 }
-);
-var rfpageIslandSunbedWithWetCookie = new RF.Page(
-  'rfpageIslandSunbedWithWetCookie',
-  pageIslandSunbedWithWetCookie,
-  { x: 218, y: 60 }
-);
+var rfpageBattleFinished = new RF.Page('rfpageBattleFinished', pageBattleFinished, { x: 56, y: 331 });
+var rfpageBattleDefeat = new RF.Page('rfpageBattleDefeat', pageBattleDefeat, { x: 243, y: 58 });
+var rfpageDefeatWithGotoKingdom = new RF.Page('rfpageDefeatWithGotoKingdom', pageDefeatWithGotoKingdom, {
+  x: 81,
+  y: 314,
+});
+var rfpageNoArenaTicket = new RF.Page('rfpageNoArenaTicket', pageNoArenaTicket, { x: 280, y: 250 });
+var rfpageBattleFinishedWithSunbeds = new RF.Page('rfpageBattleFinishedWithSunbeds', pageBattleFinishedWithSunbeds, {
+  x: 491,
+  y: 322,
+});
+var rfpageIslandSunbedWithWetCookie = new RF.Page('rfpageIslandSunbedWithWetCookie', pageIslandSunbedWithWetCookie, {
+  x: 218,
+  y: 60,
+});
 
-var rfpageFoundOctopus = new RF.Page(
-  'rfpageFoundOctopus',
-  pageFoundOctopus,
-  { x: 500, y: 330 }
-);
-var rfpageInKingdomConstructionShop = new RF.Page(
-  'rfpageInKingdomConstructionShop',
-  pageInKingdomConstructionShop,
-  { x: 624, y: 19 }
-);
-var rfpageKingdomDecorating = new RF.Page(
-  'rfpageKingdomDecorating',
-  pageKingdomDecorating,
-  { x: 619, y: 12 }
-);
-var rfpageBattleFinishedWithNextLv = new RF.Page(
-  'rfpageBattleFinishedWithNextLv',
-  pageBattleFinishedWithNextLv,
-  { x: 589, y: 333 }
-);
+var rfpageFoundOctopus = new RF.Page('rfpageFoundOctopus', pageFoundOctopus, { x: 500, y: 330 });
+var rfpageInKingdomConstructionShop = new RF.Page('rfpageInKingdomConstructionShop', pageInKingdomConstructionShop, {
+  x: 624,
+  y: 19,
+});
+var rfpageKingdomDecorating = new RF.Page('rfpageKingdomDecorating', pageKingdomDecorating, { x: 619, y: 12 });
+var rfpageBattleFinishedWithNextLv = new RF.Page('rfpageBattleFinishedWithNextLv', pageBattleFinishedWithNextLv, {
+  x: 589,
+  y: 333,
+});
 var rfpageWinBountyAndFinish = new RF.Page(
   'rfpageWinBountyAndFinish',
   pageWinBountyAndFinish,
@@ -5867,48 +5918,16 @@ var rfpageBattleFinishedWithoutNextLv = new RF.Page(
   pageBattleFinishedWithoutNextLv,
   { x: 466, y: 324 }
 );
-var rfpageNeedRefillBounties = new RF.Page(
-  'rfpageNeedRefillBounties',
-  pageNeedRefillBounties,
-  { x: 428, y: 82 }
-);
-var rfpageNeedRefillBounties2 = new RF.Page(
-  'rfpageNeedRefillBounties2',
-  pageNeedRefillBounties2,
-  { x: 442, y: 82 }
-);
+var rfpageNeedRefillBounties = new RF.Page('rfpageNeedRefillBounties', pageNeedRefillBounties, { x: 428, y: 82 });
+var rfpageNeedRefillBounties2 = new RF.Page('rfpageNeedRefillBounties2', pageNeedRefillBounties2, { x: 442, y: 82 });
 
-var rfpageAllianceReward = new RF.Page(
-  'rfpageAllianceReward',
-  pageAllianceReward,
-  { x: 397, y: 243 }
-);
-var rfpageAllianceResults = new RF.Page(
-  'rfpageAllianceResults',
-  pageAllianceResults,
-  { x: 612, y: 333 }
-);
-var rfpageAllianceResults2 = new RF.Page(
-  'rfpageAllianceResults2',
-  pageAllianceResults2,
-  { x: 310, y: 29 }
-);
-var rfpageAllianceRewardGet = new RF.Page(
-  'rfpageAllianceRewardGet',
-  pageAllianceRewardGet,
-  { x: 191, y: 187 }
-);
+var rfpageAllianceReward = new RF.Page('rfpageAllianceReward', pageAllianceReward, { x: 397, y: 243 });
+var rfpageAllianceResults = new RF.Page('rfpageAllianceResults', pageAllianceResults, { x: 612, y: 333 });
+var rfpageAllianceResults2 = new RF.Page('rfpageAllianceResults2', pageAllianceResults2, { x: 310, y: 29 });
+var rfpageAllianceRewardGet = new RF.Page('rfpageAllianceRewardGet', pageAllianceRewardGet, { x: 191, y: 187 });
 
-var rfpageSelectStartingTeam = new RF.Page(
-  'rfpageSelectStartingTeam',
-  pageSelectStartingTeam,
-  { x: 260, y: 29 }
-);
-var rfpageSelectNextTeam = new RF.Page(
-  'rfpageSelectNextTeam',
-  pageSelectNextTeam,
-  pageSelectNextTeam[0]
-);
+var rfpageSelectStartingTeam = new RF.Page('rfpageSelectStartingTeam', pageSelectStartingTeam, { x: 260, y: 29 });
+var rfpageSelectNextTeam = new RF.Page('rfpageSelectNextTeam', pageSelectNextTeam, pageSelectNextTeam[0]);
 var rfpageKeepBattleByOrderNotCheckWhenStart = new RF.Page(
   'rfpageKeepBattleByOrderNotCheckWhenStart',
   pageKeepBattleByOrderNotCheckWhenStart,
@@ -5919,26 +5938,19 @@ var rfpageKeepBattleByOrderNotCheck = new RF.Page(
   pageKeepBattleByOrderNotCheck,
   pageKeepBattleByOrderNotCheck[0]
 );
+var rfpageInTowerOfSweetChaos = new RF.Page(
+  'rfpageInTowerOfSweetChaos',
+  pageInTowerOfSweetChaos,
+  pageInTowerOfSweetChaos[0]
+);
 var rfpageBattleTowerOfSweetChaosVictory = new RF.Page(
   'rfpageBattleTowerOfSweetChaosVictory',
   pageBattleTowerOfSweetChaosVictory,
   pageBattleTowerOfSweetChaosVictory[0]
 );
-var rfpageCanEquipTopping = new RF.Page(
-  'rfpageCanEquipTopping',
-  pageCanEquipTopping,
-  pageCanEquipTopping[0]
-);
-var rfpageCanEquipTopping2 = new RF.Page(
-  'rfpageCanEquipTopping2',
-  pageCanEquipTopping2,
-  pageCanEquipTopping2[0]
-);
-var rfpageCanEquipTopping3 = new RF.Page(
-  'rfpageCanEquipTopping3',
-  pageCanEquipTopping3,
-  pageCanEquipTopping3[0]
-);
+var rfpageCanEquipTopping = new RF.Page('rfpageCanEquipTopping', pageCanEquipTopping, pageCanEquipTopping[0]);
+var rfpageCanEquipTopping2 = new RF.Page('rfpageCanEquipTopping2', pageCanEquipTopping2, pageCanEquipTopping2[0]);
+var rfpageCanEquipTopping3 = new RF.Page('rfpageCanEquipTopping3', pageCanEquipTopping3, pageCanEquipTopping3[0]);
 
 var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageBattleVictoryButNeedTap,
@@ -5969,6 +5981,7 @@ var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageSelectNextTeam,
   rfpageKeepBattleByOrderNotCheckWhenStart,
   rfpageKeepBattleByOrderNotCheck,
+  rfpageInTowerOfSweetChaos,
   rfpageBattleTowerOfSweetChaosVictory,
   rfpageCanEquipTopping,
   rfpageCanEquipTopping2,
@@ -5989,11 +6002,7 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
   }
 
   if (pageExitBattle !== undefined) {
-    groupPageBattle.pages.push(new RF.Page(
-      'rfpageExitBattle',
-      pageExitBattle,
-      pageExitBattle[0]
-    ))
+    groupPageBattle.pages.push(new RF.Page('rfpageExitBattle', pageExitBattle, pageExitBattle[0]));
   }
 
   var autoUseSkillCheckedCnt = 0;
@@ -6001,7 +6010,7 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
   var loggingCnt = 0;
   for (var j = 0; j < waitTimeInSecs && config.run; j++) {
     var matchedPages = groupPageBattle.isMatchScreen(this.screen);
-    console.log('matchedPages at', j,':', matchedPages)
+    console.log('matchedPages at', j, ':', matchedPages);
 
     if (matchedPages.indexOf('rfpageInGacha') !== -1) {
       console.log('Found in gacha page, finish auto battle: ', battleName);
@@ -6032,8 +6041,7 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       console.log('Found rfpageCanEquipTopping2, tap OK and wait for 5 secs');
       rfpageCanEquipTopping2.goNext(this.screen);
       sleep(5000);
-    }
-    else if (matchedPages.indexOf('rfpageCanEquipTopping3') !== -1) {
+    } else if (matchedPages.indexOf('rfpageCanEquipTopping3') !== -1) {
       console.log('Found rfpageCanEquipTopping3, tap OK and wait for 5 secs');
       rfpageCanEquipTopping3.goNext(this.screen);
       sleep(5000);
@@ -6107,7 +6115,10 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
 
     // Bounty finish condition
     if (battleName === 'bounty') {
-      if (matchedPages.indexOf('rfpageNeedRefillBounties') !== -1 || matchedPages.indexOf('rfpageNeedRefillBounties2') !== -1) {
+      if (
+        matchedPages.indexOf('rfpageNeedRefillBounties') !== -1 ||
+        matchedPages.indexOf('rfpageNeedRefillBounties2') !== -1
+      ) {
         console.log('No bounties left, return to kingdom');
         sendEvent('running', 'finish bounties');
         return false;
@@ -6119,9 +6130,8 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       } else if (matchedPages.indexOf('rfpageBattleFinishedWithNextLv') !== -1) {
         if (config.autoBountiesCheckBluePowder) {
           console.log('Win bounty but stay in this level for blue powder');
-          qTap(pnt(387, 322))
-        }
-        else {
+          qTap(pnt(387, 322));
+        } else {
           console.log('Win bounty and goto next level');
           rfpageBattleFinishedWithNextLv.goNext(this.screen);
         }
@@ -6195,6 +6205,10 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
     }
 
     if (battleName === 'TowerOfSweetChaos') {
+      if (matchedPages.indexOf('rfpageInTowerOfSweetChaos') !== -1) {
+        console.log('ToSC victory, return (rfpageInTowerOfSweetChaos)');
+        return true;
+      }
       if (matchedPages.indexOf('rfpageBattleTowerOfSweetChaosVictory') !== -1) {
         console.log('ToSC victory, tap next (pageBattleTowerOfSweetChaosVictory)');
         rfpageBattleTowerOfSweetChaosVictory.goNext(this.screen);
@@ -6260,16 +6274,15 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
   console.log('Battle reach time limit but does not seems finished: ', battleName);
 
   var pageBattlePauseAndExit = [
-    {x: 362, y: 202, r: 245, g: 89, b: 24},
-    {x: 373, y: 148, r: 8, g: 165, b: 219},
-    {x: 611, y: 28, r: 255, g: 255, b: 255},
-    {x: 604, y: 24, r: 57, g: 165, b: 227},
-  ]
+    { x: 362, y: 202, r: 245, g: 89, b: 24 },
+    { x: 373, y: 148, r: 8, g: 165, b: 219 },
+    { x: 611, y: 28, r: 255, g: 255, b: 255 },
+    { x: 604, y: 24, r: 57, g: 165, b: 227 },
+  ];
   if (battleName === 'alliance') {
     console.log('Quitting alliance battle for waitForBattle()');
     qTap(pnt(616, 17));
-    if (waitUntilSeePage(pageBattlePauseAndExit, 6))
-    {
+    if (waitUntilSeePage(pageBattlePauseAndExit, 6)) {
       qTap(pageBattlePauseAndExit);
       sleep(config.sleepAnimate);
       handleTryHitBackToKingdom();
@@ -6524,10 +6537,10 @@ function handleGuildBattleAlliance() {
     { x: 197, y: 104, r: 107, g: 142, b: 198 },
   ];
   var pageAllianceTimeJump = [
-    {x: 358, y: 277, r: 123, g: 207, b: 8},
-    {x: 393, y: 281, r: 189, g: 170, b: 214},
-    {x: 318, y: 32, r: 182, g: 129, b: 37},
-  ]
+    { x: 358, y: 277, r: 123, g: 207, b: 8 },
+    { x: 393, y: 281, r: 189, g: 170, b: 214 },
+    { x: 318, y: 32, r: 182, g: 129, b: 37 },
+  ];
   var pageAllianceAddMoreCookie = [
     { x: 304, y: 251, r: 8, g: 166, b: 222 },
     { x: 248, y: 102, r: 57, g: 69, b: 107 },
@@ -6558,7 +6571,6 @@ function handleGuildBattleAlliance() {
   sendEvent('running', '');
 
   if (waitUntilSeePage(pageCookieAlliance, 6)) {
-
     // check beacon
     if (checkIsPage(pageAllianceBeaconIsOff)) {
       qTap(pageAllianceBeaconIsOff);
@@ -6584,14 +6596,13 @@ function handleGuildBattleAlliance() {
       }
     }
 
-
     if (config.autoAllianceUseTimeJumpers) {
       console.log('Use time jumpers during guild alliance');
       qTap(pnt(477, 322));
 
       if (!waitUntilSeePagesCheckDelay(pageCookieAlliance, [pageAllianceTimeJump], 6)) {
         console.log('Failed to find pageAllianceTimeJump, skipping alliance battle');
-        handleGotoKingdomPage()
+        handleGotoKingdomPage();
         return false;
       }
 
@@ -6599,13 +6610,23 @@ function handleGuildBattleAlliance() {
       sleep(config.sleepAnimate);
       qTap(pnt(360, 280));
       sleep(2000);
-      if (waitUntilSeePagesCheckDelay(pageAllianceTimeJump, [pageCookieAlliance], 8, undefined, undefined, 1, pnt(360, 280))) {
+      if (
+        waitUntilSeePagesCheckDelay(
+          pageAllianceTimeJump,
+          [pageCookieAlliance],
+          8,
+          undefined,
+          undefined,
+          1,
+          pnt(360, 280)
+        )
+      ) {
         console.log('Successfully time jump the cookie alliance');
-        handleGotoKingdomPage()
-        return true
+        handleGotoKingdomPage();
+        return true;
       }
       console.log('Attemp to cookie alliance but failed, skipping');
-      handleGotoKingdomPage()
+      handleGotoKingdomPage();
       return false;
     }
 
@@ -6640,7 +6661,6 @@ function handleGuildBattleAlliance() {
         console.log('Need to light the beacon, found pageLightBeaconReminder');
         qTap(pageLightBeaconReminder);
         sleep(config.sleepAnimate);
-
       }
 
       if (waitUntilSeePage(pageSelectStartingTeam, 4)) {
@@ -6696,14 +6716,14 @@ function bountyCheckIfGetBluePowder() {
     return [-1, -1];
   }
 
-  console.log('About to check blue powder')
+  console.log('About to check blue powder');
 
   var lastPowder = ocrMaterialStorage(454, 10, 50, 18);
   var bountyLevel = countBountyLevel();
 
   if (bountyLevel > 6) {
     qTap(pnt(40, 135));
-    sleep(config.sleepAnimate*2);
+    sleep(config.sleepAnimate * 2);
 
     var bluePower = ocrMaterialStorage(454, 10, 50, 18);
 
@@ -6714,8 +6734,8 @@ function bountyCheckIfGetBluePowder() {
   }
 
   for (var j = 0; j < bountyLevelYRange.length; j++) {
-    qTap(pnt({ x: bountyLevelX, y: bountyLevelYRange[j] }))
-    sleep(config.sleep)
+    qTap(pnt({ x: bountyLevelX, y: bountyLevelYRange[j] }));
+    sleep(config.sleep);
   }
   return [lastPowder, bountyLevel];
 }
@@ -6737,7 +6757,7 @@ function handleBounties() {
       bountyCount = 4;
     }
 
-    if (foundResults.length > 0 ){
+    if (foundResults.length > 0) {
       var bountyEntryPnt = pnt(foundResults[0].x + 40, foundResults[0].y + 10);
       qTap(bountyEntryPnt);
     }
@@ -6799,7 +6819,7 @@ function handleBounties() {
   for (i = 0; i < bountyCount; i++) {
     if (targetBounty['level'] === 6) {
       qTap(pnt(40, 135));
-      sleep(config.sleepAnimate*2);
+      sleep(config.sleepAnimate * 2);
     }
     var gotBountyLevel = countBountyLevel();
     var gotMaterialStock = bountyCount === 1 ? 0 : ocrMaterialStorage(454, 10, 50, 18);
@@ -6828,8 +6848,8 @@ function handleBounties() {
     qTap(pnt(530, 330));
     sleep(1500);
 
-    if (checkIsPage(pageNeedRefillBounty)){
-      console.log("Found pageNeedRefillBounty, cannot battle bounty as no more runs left");
+    if (checkIsPage(pageNeedRefillBounty)) {
+      console.log('Found pageNeedRefillBounty, cannot battle bounty as no more runs left');
       qTap(pageNeedRefillBounty);
       sleep(config.sleepAnimate);
       handleTryHitBackToKingdom();
@@ -6837,7 +6857,7 @@ function handleBounties() {
     }
 
     if (checkIsPage(pageCannotRefillBountyAnymore)) {
-      console.log("Found pageCannotRefillBountyAnymore, cannot battle bounty as no more runs left");
+      console.log('Found pageCannotRefillBountyAnymore, cannot battle bounty as no more runs left');
       qTap(pageCannotRefillBountyAnymore);
       sleep(config.sleepAnimate);
       handleTryHitBackToKingdom();
@@ -7029,7 +7049,7 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
       return true;
     }
 
-    swipeFromToPoint(pnt(600, 234), pnt(-200, 234), 5, 0, undefined, pageInGnomeLab)
+    swipeFromToPoint(pnt(600, 234), pnt(-200, 234), 5, 0, undefined, pageInGnomeLab);
   }
 
   return false;
@@ -7041,7 +7061,7 @@ function handleTradeHabor() {
   handleGotoKingdomPage();
 }
 
-function handleGotoTradeHabor () {
+function handleGotoTradeHabor() {
   if (!checkIsPage(pageInHabor)) {
     console.log('try to handleGotoTradeHabor');
     if (!checkIsPage(pageInKingdomVillage)) {
@@ -7199,18 +7219,18 @@ function handleInHabor() {
   }
 
   var pageInSeasideMarket = [
-    {x: 617, y: 21, r: 255, g: 255, b: 255},
-    {x: 566, y: 183, r: 114, g: 76, b: 32},
-    {x: 256, y: 121, r: 101, g: 151, b: 23},
-    {x: 280, y: 5, r: 206, g: 227, b: 49},
-    {x: 178, y: 117, r: 247, g: 52, b: 90},
-  ]
+    { x: 617, y: 21, r: 255, g: 255, b: 255 },
+    { x: 566, y: 183, r: 114, g: 76, b: 32 },
+    { x: 256, y: 121, r: 101, g: 151, b: 23 },
+    { x: 280, y: 5, r: 206, g: 227, b: 49 },
+    { x: 178, y: 117, r: 247, g: 52, b: 90 },
+  ];
   var pageFreeRefreshSeasideMarket = [
-    {x: 510, y: 333, r: 155, g: 155, b: 155},
-    {x: 504, y: 333, r: 172, g: 146, b: 126},
-    {x: 498, y: 333, r: 148, g: 120, b: 111},
-    {x: 494, y: 333, r: 175, g: 148, b: 117},
-  ]
+    { x: 510, y: 333, r: 155, g: 155, b: 155 },
+    { x: 504, y: 333, r: 172, g: 146, b: 126 },
+    { x: 498, y: 333, r: 148, g: 120, b: 111 },
+    { x: 494, y: 333, r: 175, g: 148, b: 117 },
+  ];
   var pageNeedDiamondRefreshMarket = [
     { x: 426, y: 110, r: 57, g: 169, b: 231 },
     { x: 305, y: 102, r: 255, g: 255, b: 255 },
@@ -7224,13 +7244,16 @@ function handleInHabor() {
     { x: 397, y: 103, r: 57, g: 69, b: 107 },
   ];
   var pageNotEnoughItemToBuyThis = [
-    {x: 434, y: 95, r: 255, g: 255, b: 255},
-    {x: 305, y: 250, r: 8, g: 125, b: 255},
-    {x: 343, y: 160, r: 49, g: 158, b: 231},
-    {x: 339, y: 198, r: 206, g: 195, b: 181},
-  ]
+    { x: 434, y: 95, r: 255, g: 255, b: 255 },
+    { x: 305, y: 250, r: 8, g: 125, b: 255 },
+    { x: 343, y: 160, r: 49, g: 158, b: 231 },
+    { x: 339, y: 198, r: 206, g: 195, b: 181 },
+  ];
   if (
-    config.autoBalanceAuroraStocks || config.autoShopInSeasideMarket || config.autoBuyCaramelStuff || config.autoBuyRadiantShardsInHabor
+    config.autoBalanceAuroraStocks ||
+    config.autoShopInSeasideMarket ||
+    config.autoBuyCaramelStuff ||
+    config.autoBuyRadiantShardsInHabor
   ) {
     if (waitUntilSeePage(pageInHabor, 4, undefined, pageInSeasideMarket)) {
       qTap(pnt(93, 230)); // Seaside market
@@ -7247,7 +7270,7 @@ function handleInHabor() {
       }
     } else {
       // swipe to start of the list
-      swipeFromToPoint(pnt(0, 234), pnt(4000, 234), 6, 0, undefined, pageInSeasideMarket)
+      swipeFromToPoint(pnt(0, 234), pnt(4000, 234), 6, 0, undefined, pageInSeasideMarket);
     }
 
     console.log('In seaside marketing, send running');
@@ -7311,16 +7334,28 @@ function handleInHabor() {
 
     // Buy if resource > max(safetyStock, 150) and target < config.materialTarget
     if (config.autoShopInSeasideMarket) {
-      for (i = 0; i < 5; i ++) {
-        for (var purcaseIndex = 0; purcaseIndex < seasideMarketItems.length; purcaseIndex ++){
+      for (i = 0; i < 5; i++) {
+        for (var purcaseIndex = 0; purcaseIndex < seasideMarketItems.length; purcaseIndex++) {
           var foundResults = findSpecificImageInScreen(seasideMarketItems[purcaseIndex].img, 0.96);
           if (foundResults && foundResults.length > 0) {
-            console.log('found market items i: {0}, name: {1} result: {2} > '.format(i, seasideMarketItems[purcaseIndex].name, JSON.stringify(foundResults)));
-            for(var foundIdx = 0; foundIdx < foundResults.length; foundIdx++) {
+            console.log(
+              'found market items i: {0}, name: {1} result: {2} > '.format(
+                i,
+                seasideMarketItems[purcaseIndex].name,
+                JSON.stringify(foundResults)
+              )
+            );
+            for (var foundIdx = 0; foundIdx < foundResults.length; foundIdx++) {
               newStock = ocrSeasideMarketStockAfterPurchase(new rect(foundResults[foundIdx].x, 286, 65, 17));
-              console.log('newStock: ', newStock)
+              console.log('newStock: ', newStock);
               if (newStock > 1 && newStock < minStock) {
-                console.log('Does not purchase {0} as stock {1} < safety ({2})'.format(seasideMarketItems[purcaseIndex].name, newStock, minStock))
+                console.log(
+                  'Does not purchase {0} as stock {1} < safety ({2})'.format(
+                    seasideMarketItems[purcaseIndex].name,
+                    newStock,
+                    minStock
+                  )
+                );
                 continue;
               }
 
@@ -7328,15 +7363,25 @@ function handleInHabor() {
               if (waitUntilSeePage(pageMarketItemDetail, 3)) {
                 productNowHave = ocrProductStorage(rect(330, 154, 28, 14));
                 if (productNowHave < config.materialsTarget) {
-                  console.log('Purchased seaside market: ', foundIdx, seasideMarketItems[purcaseIndex].name, productNowHave);
+                  console.log(
+                    'Purchased seaside market: ',
+                    foundIdx,
+                    seasideMarketItems[purcaseIndex].name,
+                    productNowHave
+                  );
                   qTap(pageMarketItemDetail);
                   if (waitUntilSeePage(pageNotEnoughItemToBuyThis, 2)) {
                     console.log('OOPS, not enough items to buy this one, skipping');
                     qTap(pageNotEnoughItemToBuyThis);
                   }
-                  sleep(2000)
+                  sleep(2000);
                 } else {
-                  console.log('NOT purchased seaside market: ', foundIdx, seasideMarketItems[purcaseIndex].name, productNowHave);
+                  console.log(
+                    'NOT purchased seaside market: ',
+                    foundIdx,
+                    seasideMarketItems[purcaseIndex].name,
+                    productNowHave
+                  );
                 }
               }
 
@@ -7350,8 +7395,8 @@ function handleInHabor() {
           }
         }
 
-        console.log('swipe to right and see other ')
-        swipeFromToPoint(pnt(600, 234), pnt(0, 234), 6, 0, undefined, pageInSeasideMarket)
+        console.log('swipe to right and see other ');
+        swipeFromToPoint(pnt(600, 234), pnt(0, 234), 6, 0, undefined, pageInSeasideMarket);
       }
     }
 
@@ -7391,9 +7436,9 @@ function handleInHabor() {
     { x: 324, y: 38, r: 83, g: 106, b: 124 },
   ];
   var pageRelicsSoldOut = [
-    {x: 413, y: 235, r: 206, g: 20, b: 24},
-    {x: 387, y: 229, r: 198, g: 121, b: 57},
-  ]
+    { x: 413, y: 235, r: 206, g: 20, b: 24 },
+    { x: 387, y: 229, r: 198, g: 121, b: 57 },
+  ];
   var pageConfirmBuyLegendSoulEssence = [
     { x: 302, y: 254, r: 255, g: 186, b: 239 },
     { x: 312, y: 69, r: 170, g: 109, b: 38 },
@@ -7401,18 +7446,18 @@ function handleInHabor() {
     { x: 267, y: 100, r: 57, g: 69, b: 107 },
   ];
   var pageLegendSoulEssenceSoldOut = [
-    {x: 292, y: 118, r: 205, g: 22, b: 27},
-    {x: 277, y: 140, r: 246, g: 255, b: 255},
-  ]
+    { x: 292, y: 118, r: 205, g: 22, b: 27 },
+    { x: 277, y: 140, r: 246, g: 255, b: 255 },
+  ];
   var pageConfirmBuyEpicSoulEssence = [
     { x: 312, y: 253, r: 247, g: 190, b: 239 },
     { x: 315, y: 84, r: 195, g: 142, b: 60 },
     { x: 282, y: 91, r: 57, g: 69, b: 107 },
   ];
   var pageEpicSoulEssenceSoldOut = [
-    {x: 293, y: 241, r: 206, g: 20, b: 24},
-    {x: 274, y: 263, r: 247, g: 138, b: 247},
-  ]
+    { x: 293, y: 241, r: 206, g: 20, b: 24 },
+    { x: 274, y: 263, r: 247, g: 138, b: 247 },
+  ];
   if (
     (config.autoBuySeaFairy ||
       config.autoBuyGuildRelic ||
@@ -7429,7 +7474,7 @@ function handleInHabor() {
     if (waitUntilSeePage(pageInShellShop, 4)) {
       sleep(1000);
       if (config.autoBuySeaFairy) {
-        console.log('checking autoBuySeaFairy')
+        console.log('checking autoBuySeaFairy');
         if (waitUntilSeePage(pageConfirmBuySeaFairy, 4, pnt(80, 313), pageLegendarySoldOut)) {
           qTap(pageConfirmBuySeaFairy);
           sleep(1500);
@@ -7438,7 +7483,7 @@ function handleInHabor() {
       }
 
       if (config.autoBuyGuildRelic) {
-        console.log('checking autoBuyGuildRelic')
+        console.log('checking autoBuyGuildRelic');
         for (i = 0; i < 2; i++) {
           qTap(pnt(930, 316));
           if (waitUntilSeePage(pageConfirmBuyGuildRelics, 5, pnt(390, 316), pageRelicsSoldOut)) {
@@ -7450,7 +7495,7 @@ function handleInHabor() {
       }
 
       if (config.autoBuyLegendSoulEssence) {
-        console.log('checking autoBuyLegendSoulEssence')
+        console.log('checking autoBuyLegendSoulEssence');
         for (i = 0; i < 2; i++) {
           qTap(pnt(270, 192));
           if (waitUntilSeePage(pageConfirmBuyLegendSoulEssence, 5, pnt(270, 192), pageLegendSoulEssenceSoldOut)) {
@@ -7461,7 +7506,7 @@ function handleInHabor() {
         }
       }
       if (config.autoBuyEpicSoulEssence) {
-        console.log('checking autoBuyEpicSoulEssence')
+        console.log('checking autoBuyEpicSoulEssence');
         for (i = 0; i < 3; i++) {
           qTap(pnt(270, 318));
           if (waitUntilSeePage(pageConfirmBuyEpicSoulEssence, 5, pnt(270, 318), pageEpicSoulEssenceSoldOut)) {
@@ -7582,7 +7627,22 @@ function checkAndRestartApp() {
       execute('/system/bin/reboot -p');
     }
 
-    if (waitUntilSeePage(pageAnnouncement, 50, pnt(575, 22), pageInMailBox)) {
+    if (
+      waitUntilSeePages(
+        [
+          pageAnnouncement,
+          pageInMailBox,
+          pageChooseLoginMethod,
+          pageChooseLoginMethod2,
+          pageInputAge,
+          pageTermsOfServices2,
+          pageTermsOfServicesHitBack,
+          pageTermsOfServicesMemu,
+        ],
+        50,
+        pnt(575, 22)
+      )
+    ) {
       console.log('Successfully see announcement page after restart the game');
     }
     return false;
@@ -8225,7 +8285,7 @@ var gnomeLabCookies = [];
 var numberImagesPVP = [];
 var numberImagesWishingTree = [];
 var numberImagesProdutRequirements = [];
-var numberAuroraStockInTradeBird
+var numberAuroraStockInTradeBird;
 var bNumbers = [];
 var wNumbers = [];
 var seasideMarketItems = [];
@@ -8818,70 +8878,70 @@ function loadImages() {
     {
       name: 'white_powder_support',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
     {
       name: 'white_powder_charge',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
     {
       name: 'blue_powder_support',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
     {
       name: 'blue_powder_ambush',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
     {
       name: 'purple_powder',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
     {
       name: 'purity_crystals',
       img: getImageFromBase64(
-          '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'
-        ),
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAgAC4DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9xYLaC1iENtEFUdvX3ryz9rX9tD4AfsU+Ao/Hfxz8WG1+2NImj6NYoJb/AFORAC6wRFlyFyu6RysaF0DOpdc8D/wUm/4KL+CP2CPA2g6TFbWuqfEX4hXsumfDTwzeS+XHqF4piR5HO5S6RtcQAxIfNlaVEXaC8sfm3/BO/wDYa0X4i+N9U/aj/wCCg+o3njj4pXc5s7bTPF+nhdP0hVk+aK3if92zB2aPZtVY8SKqfMxP5rwpwb/a9L6/jW44dPRR+OdtGo9op7yfmkm72+hm5qnKUVe2/wDX9dyx+yx/wWy+BXxj8Tt8Pf2ifCE/we16Yyy6a3ibU1bTLmBVyN15JHCIJcrKNsiKhMYCyM7iMbOv/wDBRzQvjj42uPh3+wX+zRr3xq1qzvRBqPia3b+y/DunsEkB83UJhhyDGpEW1UmUkxyMQAem/aL/AOCef7PH7af7RmjfE74kaRIEg1ES6ilrIyf2lHDCyxoxbLR7ljt1fbhSkRG3cwkT33wt4Q+Ffw50W0+BPgvwbpVh4MttObSxo9jbeXCisDGyMAPmyOGJJJ3lmYnp+hV+BeE4YtV6VGbvG/snJ8kX19745eS5l69FhKpiKT5Xo7X+X4ang37Bn7XOk/Hu9134UfE7w5beEvjB4HeS08a+EYrsvFOgkVRf2hd3M1uTtXcHfyzIoZmV4Xf6Sr8of+CsP7MXxM/Zd+JXhn9pf9n/AFGCy+JHww1OTXPhxqeoiTHibTlRhd6NKtvgzmRJGiKfIQZWAMKXRev0I/Yj/a4+HX7c/wCy54Q/ag+GTiOx8T6Ysl5ppkZ30u+QmO6snZ0Qs0MyyR79irIFEi5R1J/O+N+GqeUYiOMwkWsPV27Rl1in23a6rVPa79CtCEZJwnzppNPrZ9+zMD/gpF+zZ+x5+1R+yD4q+Gf7c1xpeneAo7cXs3ifUNQispfDl2gKQala3Uvy29xG0hVWOVkEjQukkcskT/NH/BE39sz4r/tRfs/6r8M/ibpviDxfYfDjVpdC8D/HybRmtLXxxo1tJ5EFzcwzETxXIj8ksSrswkAcmRJGPnP/AAW++B3xN8WftgfCrxJ+0T8QL7W/2fNUl+x+F/B32uCCwsPHOxjAl/CI1a7iuLdJjbs7ylZ1lg2pHOEm/Qv9mzxb8IPG/wCzZ4Z0z4LeDrfQNIsVa3udCtcE2N1EB5iMy8yMxcyeY+HkDq7AFzX3PAGWPA5Ksd7XnjUduVbQa3vfXma0ts/km/IxGNpYfEJPRqzvtp2Xcq2mv/EHxf8AG28+D3wjvBpWkeHbZT418WzpG1zI1zbP9nhso33BfveasrKVLQgnciCO48i/Y+8SeOtCuPF/7OHjG8fV77wDrUtvHrFlKbuCS2kmcRq86O6RvuVwIWKOi/u9gaKQJ9B6t8CfBfxXvol1q91nSr+1tRB/a3hzV5bC7msfPSWSxkliILwOw5X7y73KMjNmvRfAngDwJ8JvB9r4K8AeG7LRdG0+MiCztIwkaAkszserMSSzOxLMSSxJJNfb/wBqUsKpJR5m7dLbdb6t3u1a1l8tePE14Yqzg+m/f+v+B0Pzs/4KBftj/BP9oPwVL4R1r4jadp3hT4e3K6z4r8aTOoiKpE9uEtlwXumkllK5jUKWMSx+c0kYbzD/AINyPD3xX17xF8b/ANozwNpus6F+z/8AEHxQl34F0LxXI897favFmK+1KCQSCOON2QpNtjdWkWOJJAtkwfrv+CqH/BLf4T/tt/FLUvBvgDWDYwau66prc9tats0PUx8ouowu1ZWlWSRjA5yxMjFlWSNl9s/4Jb/tq2f7Q3grVP2fdd+Gml+HPFPwljh0TVP+EKgjfwxe20Ja3t7nTHgylvbyLDujtpAjog2oHWNivi+JE8XHgyMMFhr0LxdST3ptvRNdOZ6J+X3bZdGNOrJTfv8Aby/V/kf/2Q=='
+      ),
     },
     {
       name: 'swiftness_crystal',
       img: getImageFromBase64(
-          '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'
-          ),
+        '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'
+      ),
     },
     {
       name: 'arcane_crystal',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
     {
       name: 'power_crystal',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
     {
       name: 'milk',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
     {
       name: 'cotton',
       img: getImageFromBase64(
-          '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'
-        ),
+        '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'
+      ),
     },
-  ]
+  ];
 }
 
 function testRunAtLocal() {
@@ -8947,44 +9007,32 @@ function start(inputConfig) {
 
   checkAndRestartApp();
 
-  handleCheckIfAtLoginScreen()
-
-  if (config.account !== 'default_xrobotmon_account@gmail.com' && config.account !== 'aaa@gmail.com') {
-    while (
-      !waitUntilSeePages([pageInKingdomVillage, pageAnnouncement, pageInProduction, pageInMagicLab], 2) &&
-      config.run
-    ) {
-      // sendEvent('gameStatus', 'launching');
-      if (checkScreenMessage(messageNotifyQuit)) {
-        console.log('found messageNotifyQuit while trying to login, hit back');
-        keycode('BACK', 1000);
-      }
-
-      if (handleInputLoginInfo()) {
-        console.log('handleInputLoginInfo success');
-        break;
-      }
-
-      // we might get into village but seen lots of green checks
-      // TODO: Can be improve to enhance login speed
-      if (handleTryResolveGreenChecks()) {
-        handleGotoKingdomPage();
-        console.log('successfully handled green check, we are in village, stop trying login');
-        break;
-      }
-
-      console.log('Trying to login');
+  if (config.account === 'moonminv2@gmail.com') {
+    while (true) {
+      sendEvent('running', '');
+      sendEvent('gameStatus', 'wait-for-input');
+      sleep(300 * 1000);
     }
-    if (!config.run) {
-      console.log('wrong login info, stopping');
-      return;
-    }
-    sendEvent('running', '');
-    sendEvent('gameStatus', 'playing');
+  }
 
-    if (!config.isTestAccount) {
-      config.lastGotoProduction = Date.now();
-    }
+  handleCheckIfAtLoginScreen();
+
+  if (
+    config.account !== 'default_xrobotmon_account@gmail.com' &&
+    config.account !== 'aaa@gmail.com' &&
+    handleInputLoginInfo()
+  ) {
+    console.log('handleInputLoginInfo success');
+  }
+  if (!config.run) {
+    console.log('wrong login info, stopping');
+    return;
+  }
+  sendEvent('running', '');
+  sendEvent('gameStatus', 'playing');
+
+  if (!config.isTestAccount) {
+    config.lastGotoProduction = Date.now();
   }
 
   if (waitUntilSeePages([pageInProduction, pageInMagicLab], 2)) {
@@ -9258,6 +9306,9 @@ function start(inputConfig) {
       if (checkIsPage(pageInProduction) || checkIsPage(pageInMagicLab)) {
         console.log('in production, continue work');
         config.jobFailedCount = 0;
+        continue;
+      } else if (checkIsPage(pageInputAge)) {
+        handleInputLoginInfo();
         continue;
       } else if (handleUnexpectedMessageBox()) {
         console.log('just handleUnexpectedMessageBox()');
