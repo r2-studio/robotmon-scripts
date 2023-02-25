@@ -1,6 +1,6 @@
 /* prettier-ignore */ !function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.RF=t():e.RF=t()}(this,(function(){return function(){"use strict";var e={607:function(e,t,r){var o=this&&this.__createBinding||(Object.create?function(e,t,r,o){void 0===o&&(o=r),Object.defineProperty(e,o,{enumerable:!0,get:function(){return t[r]}})}:function(e,t,r,o){void 0===o&&(o=r),e[o]=t[r]}),n=this&&this.__exportStar||function(e,t){for(var r in e)"default"===r||Object.prototype.hasOwnProperty.call(t,r)||o(t,e,r)};Object.defineProperty(t,"__esModule",{value:!0}),t.version=void 0,n(r(850),t),n(r(985),t),n(r(837),t),n(r(459),t),n(r(231),t),n(r(200),t),n(r(656),t),n(r(708),t),n(r(974),t),t.version=1},850:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.GroupPage=void 0;var r=function(){function e(e,t){this.name=e,this.pages=t}return e.prototype.isMatchImage=function(e,t){void 0===t&&(t=.9);for(var r=[],o=0,n=this.pages;o<n.length;o++){var i=n[o];i.isMatchImage(e,t)&&r.push(i.name)}return r},e.prototype.isMatchScreen=function(e,t){void 0===t&&(t=.9);var r=e.getCvtDevScreenshot(),o=this.isMatchImage(r,t);return releaseImage(r),o},e.prototype.waitScreenForMatchingOne=function(t,r,o,n,i){void 0===o&&(o=1),void 0===n&&(n=600),void 0===i&&(i=.9),e.debug&&console.log("GroupPage.waitScreenForMatchingOne "+this.name+": "+this.pages.map((function(e){return e.name})).join(","));for(var s=Date.now(),a="",c=0;Date.now()-s<r;){for(var f=t.getCvtDevScreenshot(),m=0,h=this.pages;m<h.length;m++){var g=h[m];if(g.isMatchImage(f,i)){a!==g.name&&(a=g.name,c=0),c++;break}}if(releaseImage(f),""!==a&&c>=o)break;sleep(n)}return e.debug&&console.log("GroupPage.waitScreenForMatchingOne "+this.name+": matched: "+a+", usedTime "+(Date.now()-s)),a},e.debug=!1,e}();t.GroupPage=r},985:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.Page=void 0;var o=r(656),n=function(){function e(e,t,r,o){void 0===r&&(r=void 0),void 0===o&&(o=void 0),this.name=e,this.points=t,this.next=r,this.back=o}return e.prototype.goNext=function(t){void 0!==this.next?t.tap(this.next):e.debug&&console.log("Warning Page: "+this.name+" has no next xy")},e.prototype.goBack=function(t){void 0!==this.back?t.tap(this.back):e.debug&&console.log("Warning Page: "+this.name+" has no back xy")},e.prototype.isMatchImage=function(e,t){void 0===t&&(t=.9);for(var r=!0,n=0,i=this.points;n<i.length;n++){var s=i[n],a=getImageColor(e,s.x,s.y);if(o.Colors.identityColor(s,a)<t){r=!1;break}}return r},e.prototype.isMatchScreen=function(e,t){void 0===t&&(t=.9);var r=e.getCvtDevScreenshot(),o=this.isMatchImage(r,t);return releaseImage(r),o},e.prototype.waitScreenForMatchingScreen=function(t,r,o,n,i){void 0===o&&(o=1),void 0===n&&(n=600),void 0===i&&(i=.9),e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name);for(var s=Date.now(),a=0;Date.now()-s<r&&(this.isMatchScreen(t,i)&&a++,!(a>=o));)sleep(n);return a>=o?(e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name+" success, usedTime "+(Date.now()-s)),!0):(e.debug&&console.log("Page.waitScreenForMatchingScreen "+this.name+" timeout"),!1)},e.debug=!1,e}();t.Page=n},837:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.XYRGB=void 0;t.XYRGB=function(){this.x=0,this.y=0,this.r=0,this.g=0,this.b=0}},459:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.Screen=void 0;var o=r(656),n=function(){function e(e){this.config=e;var t=getScreenSize();this.config.deviceHeight=t.height,this.config.deviceWidth=t.width,this.config.screenWidth=t.width,this.config.screenHeight=t.height,this.config.screenOffsetX=0,this.config.screenOffsetY=0}return e.prototype.calculateDeviceOffset=function(e){var t=e(this);this.config.screenWidth=t.screenWidth,this.config.screenHeight=t.screenHeight,this.config.screenOffsetX=t.screenOffsetX,this.config.screenOffsetY=t.screenOffsetY},e.prototype.getScreenX=function(e){return Math.floor(this.config.screenOffsetX+e*this.config.screenWidth/this.config.devWidth)||0},e.prototype.getScreenY=function(e){return Math.floor(this.config.screenOffsetY+e*this.config.screenHeight/this.config.devHeight)||0},e.prototype.getScreenXY=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e)return{x:this.getScreenX(e.x),y:this.getScreenY(e.y)};if("number"==typeof e&&"number"==typeof t)return{x:this.getScreenX(e),y:this.getScreenY(t)};throw new Error("getScreenXY wrong params "+e+", "+t)},e.prototype.tap=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tap(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tap(r,o,this.config.actionDuring)}},e.prototype.tapDown=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tapDown(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tapDown(r,o,this.config.actionDuring)}},e.prototype.moveTo=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);moveTo(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),moveTo(r,o,this.config.actionDuring)}},e.prototype.tapUp=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getScreenX(e.x),o=this.getScreenY(e.y);tapUp(r,o,this.config.actionDuring)}else{if("number"!=typeof e||"number"!=typeof t)throw new Error("tapDown wrong params "+e+", "+t);r=this.getScreenX(e),o=this.getScreenY(t),tapUp(r,o,this.config.actionDuring)}},e.prototype.getScreenColor=function(e,t){if(void 0===t&&(t=void 0),"object"==typeof e){var r=this.getCvtDevScreenshot(),o=getImageColor(r,e.x,e.y);return releaseImage(r),o}if("number"==typeof e&&"number"==typeof t)return r=this.getCvtDevScreenshot(),o=getImageColor(r,e,t),releaseImage(r),o;throw new Error("tapDown wrong params "+e+", "+t)},e.prototype.findImage=function(e){var t=this.getCvtDevScreenshot(),r=findImage(t,e);return releaseImage(t),r},e.prototype.tapImage=function(e){var t=this.findImage(e);this.tap(t)},e.prototype.isSameColor=function(e,t){void 0===t&&(t=.9);var r=this.getScreenColor(e);return o.Colors.identityColor(r,e)>t},e.prototype.getDeviceScreenshot=function(){return getScreenshot()},e.prototype.getScreenScreenshot=function(){return getScreenshotModify(this.config.screenOffsetX,this.config.screenOffsetY,this.config.screenWidth,this.config.screenHeight,this.config.screenWidth,this.config.screenHeight,100)},e.prototype.getCvtDevScreenshot=function(){return getScreenshotModify(this.config.screenOffsetX,this.config.screenOffsetY,this.config.screenWidth,this.config.screenHeight,this.config.devWidth,this.config.devHeight,100)},e.prototype.setActionDuring=function(e){this.config.actionDuring=e},e.debug=!1,e}();t.Screen=n},231:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.ScreenConfig=void 0;t.ScreenConfig=function(){this.devWidth=640,this.devHeight=360,this.deviceWidth=0,this.deviceHeight=0,this.screenWidth=0,this.screenHeight=0,this.screenOffsetX=0,this.screenOffsetY=0,this.actionDuring=180}},200:function(e,t,r){Object.defineProperty(t,"__esModule",{value:!0}),t.TaskManager=t.Task=void 0;var o=r(974),n=function(){this.name="",this.runTimes=1,this.maxRunningDuring=0,this.minIntervalDuring=0,this.lastRunDoneTime=0,this.run=function(){}};t.Task=n;var i=function(){function e(){this.isRunning=!1,this.runIdx=0,this.tasks=[]}return e.prototype.addTask=function(e,t,r,o,i){void 0===r&&(r=1),void 0===o&&(o=0),void 0===i&&(i=0);var s=new n;s.name=e,s.run=t,s.runTimes=r,s.maxRunningDuring=o,s.minIntervalDuring=i,this.tasks.push(s)},e.prototype.start=function(){if(0===this.tasks.length)throw new Error("TaskManager: No tasks to run");for(console.log("TaskManager start"),this.isRunning=!0;this.isRunning;){var e=Date.now(),t=this.tasks[this.runIdx%this.tasks.length];if(this.runIdx++,!(e-t.lastRunDoneTime<t.minIntervalDuring)){console.log("RunTask "+this.runIdx+" "+t.name+", times "+t.runTimes+", maxDuring "+t.maxRunningDuring);for(var r=0;this.isRunning&&(console.log("TaskRunning "+t.name+", times "+r+"/"+t.runTimes),t.run(),t.lastRunDoneTime=Date.now(),r++,!(0!==t.runTimes&&r>=t.runTimes))&&!(Date.now()-e>t.maxRunningDuring);)sleep(100)}}},e.prototype.stop=function(){this.isRunning=!1,o.Utils.sleep(1e3),console.log("TaskManager stop")},e}();t.TaskManager=i},656:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.Colors=void 0;var r=function(){function e(){}return e.getRangeColor=function(e,t,r,o,n){void 0===n&&(n=5);var i=!1;void 0===e&&(i=!0,e=getScreenshot());for(var s=getImageSize(e),a=Math.max(0,t-o),c=Math.max(0,r-o),f=Math.min(s.width,t+o),m=Math.min(s.height,r+o),h=Math.max(1,(f-a)/n),g=Math.max(1,(m-c)/n),u=0,p={r:0,g:0,b:0},y=a;y<f;y+=h)for(var v=c;v<m;v+=g){var l=getImageColor(e,Math.floor(y),Math.floor(v));p.r+=l.r,p.g+=l.g,p.b+=l.b,u++}return i&&releaseImage(e),{r:Math.floor(p.r/u),g:Math.floor(p.g/u),b:Math.floor(p.b/u)}},e.color2hex=function(e){return((1<<24)+(e.r<<16)+(e.g<<8)+e.b).toString(16).slice(1)},e.hex2Color=function(e){return{r:parseInt(e[0]+e[1],16),g:parseInt(e[2]+e[3],16),b:parseInt(e[4]+e[5],16)}},e.identityColor=function(e,t){var r=(e.r+t.r)/2,o=e.r-t.r,n=e.g-t.g,i=e.b-t.b;return 1-Math.sqrt(((512+r)*o*o>>8)+4*n*n+((767-r)*i*i>>8))/768},e}();t.Colors=r},708:function(e,t){Object.defineProperty(t,"__esModule",{value:!0}),t.OCR=void 0;var r=function(){function e(e){this.words=e}return e.prototype.recognize=function(e,t,r,o){void 0===o&&(o=.8);for(var n=0,i=[],s=0;s<this.words.length;s++){var a=this.words[s],c=getImageSize(a.img);n=Math.max(n,c.width);var f=findImages(e,a.img,r,t,!0);for(var m in f){var h=f[m];i.push({char:a.char,x:h.x,y:h.y,score:h.score,w:c.width})}}i.sort((function(e,t){return e.x-t.x}));for(var g="",u=0,p=0,y=0;y<i.length;y++){var v=i[y];v.x>u?(p=v.score,g+=v.char,u=Math.floor(v.x+v.w*o)):v.x<=u&&v.score>p&&" "!==v.char&&(p=v.score,g=g.substr(0,g.length-1)+v.char,u=Math.floor(v.x+v.w*o))}return g},e}();t.OCR=r},974:function(e,t){var r=this&&this.__spreadArray||function(e,t){for(var r=0,o=t.length,n=e.length;r<o;r++,n++)e[n]=t[r];return e};Object.defineProperty(t,"__esModule",{value:!0}),t.Utils=t.log=void 0,t.log=function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];for(var r=(new Date).toLocaleString("en-US",{timeZone:"Asia/Taipei"}),o="["+r+"] ",n=0,i=e;n<i.length;n++){var s=i[n];o+="object"==typeof s?JSON.stringify(s)+" ":s+" "}console.log(o.substr(0,o.length-1))};var o=function(){function e(){}return e.sortStringNumberMap=function(e){var t=[];for(var r in e)t.push({key:r,count:e[r]});return t.sort((function(e,t){return t.count-e.count})),t},e.sleep=function(e){for(;e>200;)e-=200,sleep(200);e>0&&sleep(e)},e.getTaiwanTime=function(){return Date.now()+288e5},e.log=function(){for(var t=[],o=0;o<arguments.length;o++)t[o]=arguments[o];for(var n=0;n<t.length;n++){var i=t[n];"object"==typeof i&&(t[n]=JSON.stringify(i))}var s=new Date(e.getTaiwanTime()),a="["+(s.getMonth()+1)+"-"+s.getDate()+"T"+s.getHours()+":"+s.getMinutes()+":"+s.getSeconds()+"]";console.log.apply(console,r([a],t))},e.notifyEvent=function(t,r){null!=sendEvent&&(e.log("sendEvent",t,r),sendEvent(""+t,""+r))},e.startApp=function(e){execute("BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am start -n "+e),execute("ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am start -n "+e)},e.stopApp=function(e){execute("BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am force-stop "+e),execute("ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop "+e)},e.getCurrentApp=function(){for(var e="",t="",r=0,o=execute("dumpsys activity top").split("\n");r<o.length;r++){var n=o[r],i=n.indexOf("ACTIVITY");if(-1!==i){e="",t="";for(var s=!0,a=i+9;a<n.length;a++){var c=n[a];if(" "===c)break;"/"===c?s=!1:s?e+=c:t+=c}}}return[e,t]},e}();t.Utils=o}},t={};return function r(o){var n=t[o];if(void 0!==n)return n.exports;var i=t[o]={exports:{}};return e[o].call(i.exports,i,i.exports,r),i.exports}(607)}()}));
 
-var versionCode = 14;
+var versionCode = 14.1;
 var gLeagueYearMin = 2022;
 
 var gSleepShort = 1500;
@@ -348,16 +348,8 @@ var gBattleModePanelPage = new RF.Page(
     { x: 623, y: 344, r: 16, g: 28, b: 33 },
     { x: 397, y: 342, r: 16, g: 28, b: 33 },
 
-    // button in middle
-    { x: 270, y: 162, r: 179, g: 182, b: 182 },
-    { x: 295, y: 158, r: 115, g: 123, b: 119 },
-    { x: 340, y: 157, r: 16, g: 20, b: 25 },
-    { x: 307, y: 243, r: 122, g: 125, b: 128 },
-    { x: 336, y: 240, r: 33, g: 40, b: 49 },
-    { x: 337, y: 247, r: 183, g: 189, b: 192 },
-    { x: 499, y: 241, r: 148, g: 154, b: 160 },
-    { x: 509, y: 248, r: 49, g: 64, b: 66 },
-    { x: 522, y: 242, r: 255, g: 255, b: 255 },
+    // player helmet to diff gSelectLeagueGameAmountPage
+    { x: 8, y: 121, r: 115, g: 44, b: 41 },
 
     // back
     { x: 25, y: 313, r: 206, g: 210, b: 214 },
@@ -1952,6 +1944,15 @@ MLB9I.prototype.init = function () {
 MLB9I.prototype.start = function () {
   console.log("############ MLB9I start ############");
   console.log("script version", versionCode);
+  if (this.config.isXr) {
+    var plan = getUserPlan();
+    if (plan != 2) {
+      console.log("user plan id: ", JSON.stringify(plan));
+      console.log("please subscribe premium plan");
+      return;
+    }
+  }
+
   this.isRunning = true;
   // TODO: search ad related activity in x;
   // var x = execute("dumpsys activity");
@@ -2263,7 +2264,7 @@ MLB9I.prototype.handleSettingsPage = function () {
     gSettingsPageBtns.graphicTabPowerSaveOn.y
   );
   releaseImage(screenshot);
-  if (rgb.r !== 8 || rgb.g !== 118 || rgb.b !== 255) {
+  if (!isSameColor(rgb, { r: 8, g: 118, b: 255 })) {
     this.screen.tap(gSettingsPageBtns.graphicTabPowerSaveOn);
     console.log("click power save mode on");
     RF.Utils.sleep(gSleepLong);
@@ -2336,10 +2337,7 @@ MLB9I.prototype.handleAchivementMissionPage = function () {
   var shortcutBtn = { x: 613, y: 130, r: 58, g: 178, b: 173 };
   for (y = 128; y < 260; y += 44) {
     var rgb = getImageColor(screenshot, canCollectBtn.x, y);
-    var canCollect =
-      rgb.r === canCollectBtn.r &&
-      rgb.g === canCollectBtn.g &&
-      rgb.b === canCollectBtn.b;
+    var canCollect = isSameColor(rgb, canCollectBtn);
     if (canCollect) {
       this.screen.tap({ x: canCollectBtn.x, y: y });
       console.log("collect");
@@ -2367,7 +2365,7 @@ MLB9I.prototype.handleWeeklyMissionBoxPage = function () {
   for (var dx = 0; dx < 3 * w; dx += w) {
     for (var dy = 0; dy < 3 * h; dy += h) {
       var rgb = getImageColor(screenshot, okItem.x + dx, okItem.y + dy);
-      if (rgb.r !== okItem.r || rgb.g !== okItem.g || rgb.b !== okItem.b) {
+      if (!isSameColor(rgb, okItem)) {
         releaseImage(screenshot);
         this.stopCurTask("wait all weekly mission complete");
         return;
@@ -2419,8 +2417,7 @@ MLB9I.prototype.handleRankedBattlePanelPage = function () {
   var screenshot = getScreenshot();
   var playingBtn = { x: 531, y: 327, r: 249, g: 249, b: 242 };
   var rgb = getImageColor(screenshot, playingBtn.x, playingBtn.y);
-  var isPlaying =
-    rgb.r === playingBtn.r && rgb.g === playingBtn.g && rgb.b === playingBtn.b;
+  var isPlaying = isSameColor(rgb, playingBtn);
 
   if (isPlaying) {
     releaseImage(screenshot);
@@ -2430,29 +2427,23 @@ MLB9I.prototype.handleRankedBattlePanelPage = function () {
   }
 
   // check if play is available
-  var disabledPlayBtn = { x: 516, y: 326, r: 58, g: 57, b: 49 };
-  rgb = getImageColor(screenshot, disabledPlayBtn.x, disabledPlayBtn.y);
-  var isPlayDisabled =
-    rgb.r === disabledPlayBtn.r &&
-    rgb.g === disabledPlayBtn.g &&
-    rgb.b === disabledPlayBtn.b;
+  var playBtn = { x: 560, y: 331, r: 255, g: 255, b: 254 };
+  rgb = getImageColor(screenshot, playBtn.x, playBtn.y);
+  var isPlayAbled = isSameColor(rgb, playBtn);
 
-  if (isPlayDisabled) {
-    var disabledFreshBtn = { x: 404, y: 64, r: 16, g: 57, b: 90 };
-    rgb = getImageColor(screenshot, disabledFreshBtn.x, disabledFreshBtn.y);
-    var isRefreshDisabled =
-      rgb.r === disabledFreshBtn.r &&
-      rgb.g === disabledFreshBtn.g &&
-      rgb.b === disabledFreshBtn.b;
+  if (!isPlayAbled) {
+    var freshBtn = { x: 473, y: 61, r: 163, g: 185, b: 213 };
+    rgb = getImageColor(screenshot, freshBtn.x, freshBtn.y);
+    var isRefreshAbled = isSameColor(rgb, freshBtn);
 
     releaseImage(screenshot);
-    if (isRefreshDisabled) {
+    if (!isRefreshAbled) {
       this.stopCurTask("play rank game disabled");
       return;
     }
 
     console.log("refresh match list");
-    this.screen.tap({ x: disabledFreshBtn.x, y: disabledFreshBtn.y });
+    this.screen.tap({ x: freshBtn.x, y: freshBtn.y });
     RF.Utils.sleep(gSleepShort);
     screenshot = getScreenshot();
   }
@@ -2460,10 +2451,7 @@ MLB9I.prototype.handleRankedBattlePanelPage = function () {
   // check if auto play on
   var selectedTeam = { x: 459, y: 104, r: 156, g: 194, b: 214 };
   rgb = getImageColor(screenshot, selectedTeam.x, selectedTeam.y);
-  var isAutoOff =
-    rgb.r === selectedTeam.r &&
-    rgb.g === selectedTeam.g &&
-    rgb.b === selectedTeam.b;
+  var isAutoOff = isSameColor(rgb, selectedTeam);
   releaseImage(screenshot);
 
   if (isAutoOff) {
@@ -2509,17 +2497,17 @@ MLB9I.prototype.handleLeagueModePanelPageNextSchedule = function () {
   var screenshot = getScreenshot();
 
   var isStillOnPage =
-    gLeagueModePanelPageNextSchedule.isMatchImage(screenshot) ||
-    gLeagueModePanelPageNextSchedule2.isMatchImage(screenshot) ||
-    gLeagueModePanelPageContinue.isMatchImage(screenshot);
+    gLeagueModePanelPageNextSchedule.isMatchImage(screenshot, 0.8) ||
+    gLeagueModePanelPageNextSchedule2.isMatchImage(screenshot, 0.8) ||
+    gLeagueModePanelPageContinue.isMatchImage(screenshot, 0.8);
   releaseImage(screenshot);
   while (this.isRunning && isStillOnPage) {
     RF.Utils.sleep(gSleepLong);
     screenshot = getScreenshot();
     isStillOnPage =
-      gLeagueModePanelPageNextSchedule.isMatchImage(screenshot) ||
-      gLeagueModePanelPageNextSchedule2.isMatchImage(screenshot) ||
-      gLeagueModePanelPageContinue.isMatchImage(screenshot);
+      gLeagueModePanelPageNextSchedule.isMatchImage(screenshot, 0.8) ||
+      gLeagueModePanelPageNextSchedule2.isMatchImage(screenshot, 0.8) ||
+      gLeagueModePanelPageContinue.isMatchImage(screenshot, 0.8);
     releaseImage(screenshot);
   }
 };
@@ -2536,10 +2524,7 @@ MLB9I.prototype.handleLeagueModeNewGamePage = function () {
 
   var emptyEnergy = { x: 551, y: 281, r: 3, g: 124, b: 213 };
   var rgb = getImageColor(screenshot, emptyEnergy.x, emptyEnergy.y);
-  var hasEnergy0 =
-    rgb.r === emptyEnergy.r &&
-    rgb.g === emptyEnergy.g &&
-    rgb.b === emptyEnergy.b;
+  var hasEnergy0 = isSameColor(rgb, emptyEnergy);
   if (hasEnergy0) {
     releaseImage(screenshot);
     this.stopCurTask("no energy");
@@ -2548,8 +2533,7 @@ MLB9I.prototype.handleLeagueModeNewGamePage = function () {
 
   var digit1 = { x: 561, y: 278, r: 169, g: 172, b: 179 };
   rgb = getImageColor(screenshot, digit1.x, digit1.y);
-  var hasEnergy10 =
-    rgb.r === digit1.r && rgb.g === digit1.g && rgb.b === digit1.b;
+  var hasEnergy10 = isSameColor(rgb, digit1);
   console.log("has10Energy:", hasEnergy10);
 
   // use quick play when has 10+ energy,
@@ -2557,7 +2541,7 @@ MLB9I.prototype.handleLeagueModeNewGamePage = function () {
   var quickPlayBtn = { x: 37, y: 284 };
   var rgb = getImageColor(screenshot, quickPlayBtn.x, quickPlayBtn.y);
   releaseImage(screenshot);
-  var isQuickPlayOn = rgb.r === 33 && rgb.g === 255 && rgb.b === 140;
+  var isQuickPlayOn = isSameColor(rgb, { r: 33, g: 255, b: 140 });
 
   if (hasEnergy10 && !isQuickPlayOn) {
     this.screen.tap(quickPlayBtn); // select quick play
@@ -2692,10 +2676,7 @@ MLB9I.prototype.handleMvpPage = function () {
   // ok button still on the screen
   for (
     var maxOkButtonRemain = 10;
-    rgb.r === okBtn.r &&
-    rgb.g === okBtn.g &&
-    rgb.b === okBtn.b &&
-    maxOkButtonRemain;
+    isSameColor(rgb, okBtn) && maxOkButtonRemain;
     maxOkButtonRemain--
   ) {
     gMvpPage.goNext(this.screen); // ok
@@ -2944,8 +2925,25 @@ MLB9I.prototype.handleUnknown = function () {
     console.log("tap back");
     return;
   }
-  // TODO: unknown too many times, force to restart app
+  if (this.config.isXr && this.unknownCount % 1000 === 0) {
+    this.reopenApp();
+  }
 };
+
+// * =========== utils ===========
+function isSameColor(rgb1, rgb2) {
+  var mean = (rgb1.r + rgb2.r) / 2;
+  var r = rgb1.r - rgb2.r;
+  var g = rgb1.g - rgb2.g;
+  var b = rgb1.b - rgb2.b;
+  var score =
+    1 -
+    Math.sqrt(
+      (((512 + mean) * r * r) >> 8) + 4 * g * g + (((767 - mean) * b * b) >> 8)
+    ) /
+      768;
+  return score >= 0.9;
+}
 
 // * =========== entry point ===========
 var mlb9i;
@@ -2957,7 +2955,6 @@ function start(jsonConfig) {
     config = jsonConfig;
   }
   mlb9i = new MLB9I(config);
-  console.log(JSON.stringify(mlb9i.start));
   mlb9i.start();
 }
 function stop() {
