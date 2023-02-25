@@ -1947,7 +1947,7 @@ MLB9I.prototype.start = function () {
   console.log("script version", versionCode);
   if (this.config.isXr) {
     var plan = getUserPlan();
-    if (plan != 2) {
+    if (plan != "user_plan_mlb9i") {
       console.log("user plan id: ", JSON.stringify(plan));
       console.log("please subscribe premium plan");
       return;
