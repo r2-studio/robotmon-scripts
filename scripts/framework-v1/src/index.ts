@@ -7,4 +7,5 @@ export * from './task/taskManager';
 export * from './utils/color';
 export * from './utils/ocr';
 export * from './utils/utils';
+export * from './robotmonRawAPI';
 export const version = 1;

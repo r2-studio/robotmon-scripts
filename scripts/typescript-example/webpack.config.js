@@ -3,6 +3,7 @@ const path = require("path");
 module.exports = {
   target: "es5",
   devtool: 'inline-source-map',
+  mode: 'development',
   module: {
     rules: [
       {

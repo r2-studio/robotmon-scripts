@@ -1,3 +1,5 @@
+import { execute, httpClient, sendEvent, sleep } from "../robotmonRawAPI";
+
 export function log(...msgs: any[]) {
   const date = new Date().toLocaleString('en-US', {
     timeZone: 'Asia/Taipei',

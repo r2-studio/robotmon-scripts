@@ -1,5 +1,6 @@
 import { Page } from './page';
 import { Screen } from '../screen/screen';
+import { Image, releaseImage, sleep } from '../robotmonRawAPI';
 
 export class GroupPage {
   public static debug = false;
