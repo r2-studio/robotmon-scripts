@@ -1,0 +1,23 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-framework": "cd ../framework-v1 && npm i && npm run build && cd - && npm i",
+    "build": "webpack --entry ./index.ts",
+    "run": "webpack --entry ./index.ts && rbm run --file=dist/index.js",
+    "test": "webpack --entry ./test.ts && rbm run --file=dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.1.2",
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0"
+  },
+  "dependencies": {
+    "framework-v1": "file:../framework-v1"
+  }
+}
