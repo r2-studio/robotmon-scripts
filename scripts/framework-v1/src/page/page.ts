@@ -1,7 +1,6 @@
 import { Colors } from '../utils/color';
 import { XY, XYRGB } from './point';
 import { Screen } from '../screen/screen';
-import { getImageColor, Image, releaseImage, sleep } from '../robotmonRawAPI';
 
 export class Page {
   public static debug = false;

@@ -1,4 +1,4 @@
-import { moveTo, tapDown, tapUp } from 'framework-v1';
+import {} from 'framework-v1'
 import { Test } from './src/test'
 
 function start() {
@@ -10,8 +10,10 @@ function start() {
   } catch (e) {
     console.log((e as Error).stack)
   }
+  console.log(execute('ls'));
   tapDown(0, 0, 100);
   moveTo(20, 20, 100);
   tapUp(30, 30, 100);
+  console.log('done')
 }
 start();

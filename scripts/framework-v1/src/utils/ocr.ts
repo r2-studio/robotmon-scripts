@@ -1,5 +1,3 @@
-import { findImages, getImageSize, Image } from "../robotmonRawAPI";
-
 export class OCR {
   public words: { char: string; img: Image }[];
 

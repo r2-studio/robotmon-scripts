@@ -1,7 +1,6 @@
 import { Colors } from '../utils/color';
 import { IXYRGB, XY } from '../page/point';
 import { ScreenConfig } from './screenConfig';
-import { findImage, getImageColor, getScreenshot, getScreenshotModify, getScreenSize, Image, moveTo, releaseImage, RGB, tap, tapDown, tapUp } from '../robotmonRawAPI';
 
 export class Screen {
   public static debug: boolean = false;

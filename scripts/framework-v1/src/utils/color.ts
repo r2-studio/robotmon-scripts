@@ -1,5 +1,3 @@
-import { getImageColor, getImageSize, getScreenshot, releaseImage, RGB } from "../robotmonRawAPI";
-
 export class Colors {
   public static getRangeColor(img: any, x: number, y: number, radius: number, dense: number = 5): RGB {
     let shouldRelease = false;
