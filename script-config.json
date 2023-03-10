@@ -75,7 +75,7 @@
     "com.r2studio.CookieKingdom": {
       "id": "com.r2studio.CookieKingdom",
       "title": "CookieKingdom: advanced management",
-      "versionCode": 3.87,
+      "versionCode": 3.91,
       "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FULL Function Cookie run Kingdom production automation script</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
