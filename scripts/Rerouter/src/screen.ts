@@ -183,6 +183,14 @@ export class Screen {
     return 'vertical';
   }
 
+  public getImageRotation(image: Image): 'vertical' | 'horizontal' {
+    const { width, height } = getImageSize(image);
+    if (width > height) {
+      return 'horizontal';
+    }
+    return 'vertical';
+  }
+
   public setActionDuring(during: number) {
     this.config.actionDuring = during;
   }

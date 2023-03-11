@@ -41,13 +41,22 @@ export class GroupPage {
   public next?: XY;
   public back?: XY;
   public thres?: number;
+  public matchOP?: '||' | '&&';
 
-  public constructor(name: string, pages: Page[], next: XY | undefined = undefined, back: XY | undefined = undefined, thres: number | undefined) {
+  public constructor(
+    name: string, 
+    pages: Page[], 
+    next: XY | undefined = undefined, 
+    back: XY | undefined = undefined, 
+    thres: number | undefined,
+    matchOP: '||' | '&&' | undefined = undefined,
+  ) {
     this.name = name;
     this.pages = pages;
     this.next = next;
     this.back = back;
     this.thres = thres;
+    this.matchOP = matchOP;
   }
 }
 
@@ -67,7 +76,6 @@ export interface RouteConfig {
   action: 'goNext' | 'goBack' | 'keycodeBack' | ((context: RouteContext, image: Image, matched: Page[], finishTask: () => void) => void);
   match?: null | Page | GroupPage;
   isMatch?: null | ((taskName: string, image: Image) => boolean);
-  matchGroupOP?: '||' | '&&';
   rotation?: 'vertical' | 'horizontal';
   shouldMatchTimes?: number;
   shouldMatchDuring?: number;
@@ -120,7 +128,7 @@ export const DefaultConfigValue: {
   XYRGBThres: number;
   PageThres: number;
   GroupPageThres: number;
-  RouteConfigMatchGroupOP: '||' | '&&';
+  GroupPageMatchOP: '||' | '&&';
   RouteConfigShouldMatchTimes: number;
   RouteConfigShouldMatchDuring: number;
   RouteConfigBeforeActionDelay: number;
@@ -136,7 +144,7 @@ export const DefaultConfigValue: {
   XYRGBThres: 0.9,
   PageThres: 0.9,
   GroupPageThres: 0.9,
-  RouteConfigMatchGroupOP: '||',
+  GroupPageMatchOP: '||',
   RouteConfigShouldMatchTimes: 1,
   RouteConfigShouldMatchDuring: 0,
   RouteConfigBeforeActionDelay: 250,

@@ -136,4 +136,22 @@ export class Utils {
       'Content-Type': 'application/json',
     });
   }
+
+  public static waitForAction(action: () => boolean, timeout: number, matchTimes: number = 1, interval = 600): boolean {
+    const now = Date.now();
+    let matchs = 0;
+    while (Date.now() - now < timeout) {
+      if (action()) {
+        matchs++;
+      }
+      if (matchs >= matchTimes) {
+        break;
+      }
+      Utils.sleep(interval);
+    }
+    if (matchs >= matchTimes) {
+      return true;
+    }
+    return false;
+  }
 }

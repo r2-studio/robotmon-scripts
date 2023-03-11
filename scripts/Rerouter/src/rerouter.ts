@@ -16,7 +16,7 @@ export class Rerouter {
   private routeContext: RouteContext | null = null;
   private unknownRouteAction: ((context: RouteContext, image: Image, finishTask: () => void) => void) | null = null;
 
-  public init(): void {
+  private init(): void {
     // sort routes by priority
     this.routes.sort((a, b) => b.priority - a.priority);
     // check and claculate screen config
@@ -76,13 +76,128 @@ export class Rerouter {
     }
   }
 
+  public checkAndStartApp(): boolean {
+    const [packageName] = Utils.getCurrentApp();
+    if (packageName !== this.rerouterConfig.packageName) {
+      this.log(`AppIsNotStarted, startApp ${packageName}`);
+      Utils.startApp(packageName);
+      Utils.sleep(this.rerouterConfig.startAppDelay);
+      return true;
+    }
+    return false;
+  }
+
+  public restartApp(): void {
+    Utils.stopApp(this.rerouterConfig.packageName);
+    Utils.sleep(1000);
+    Utils.startApp(this.rerouterConfig.packageName);
+    Utils.sleep(this.rerouterConfig.startAppDelay);
+  }
+
+  public goNext(page: Page | GroupPage): void {
+    if (page.next !== undefined) {
+      this.screen.tap(page.next);
+    } else {
+      this.warning(`${page.name} action == goNext, but no next xy`);
+    }
+  }
+
+  public goBack(page: Page | GroupPage): void {
+    if (page.back !== undefined) {
+      this.screen.tap(page.back);
+    } else {
+      this.warning(`${page.name} action == goBack, but no back xy`);
+    }
+  }
+
+  public isPageMatch(page: Page | GroupPage | string): boolean {
+    const image = this.screen.getCvtDevScreenshot();
+    const isMatch = this.isPageMatchImage(page, image);
+    releaseImage(image);
+    return isMatch;
+  }
+
+  public isPageMatchImage(page: Page | GroupPage | string, image: Image): boolean {
+    if (typeof page === 'string') {
+      const p = this.getPageByName(page);
+      if (p === null) {
+        this.warning(`isPageMatchImage ${page} not exist`);
+        return false;
+      }
+      page = p;
+    }
+    if (page instanceof Page) {
+      return this.isMatchPageImpl(image, page, this.defaultConfig.PageThres, this.debug);
+    } else {
+      const pages = this.isMatchGroupPageImpl(image, page, this.defaultConfig.GroupPageThres, this.debug);
+      return pages.length > 0;
+    }
+  }
+
+  public waitScreenForMatchingPage(page: Page | GroupPage, timeout: number, matchTimes: number = 1, interval = 600): boolean {
+    return Utils.waitForAction(() => this.isPageMatch(page), timeout, matchTimes, interval);
+  }
+
+  public isRouteMatch(route: RouteConfig | string): boolean {
+    const image = this.screen.getCvtDevScreenshot();
+    const isMatch = this.isRouteMatchImage(route, image);
+    releaseImage(image);
+    return isMatch;
+  }
+
+  public isRouteMatchImage(route: RouteConfig | string, image: Image): boolean {
+    const routeConfig = this.getRouteConfig(route);
+    if (routeConfig === null) {
+      this.warning(`isRouteMatchImage ${route} not exist`);
+      return false;
+    }
+    const filledRouteConfig = this.wrapRouteConfigWithDefault(routeConfig);
+    const rotation = this.screen.getImageRotation(image);
+    const { isMatched } = this.isMatchRouteImpl(image, rotation, filledRouteConfig, 'waitScreenForMatchingRoute');
+    if (isMatched) {
+      return true;
+    }
+    return false;
+  }
+
+  public waitScreenForMatchingRoute(route: RouteConfig | string, timeout: number, matchTimes: number = 1, interval = 600): boolean {
+    return Utils.waitForAction(() => this.isRouteMatch(route), timeout, matchTimes, interval);
+  }
+
+  public getPageByName(name: string): Page | GroupPage | null {
+    for (const route of this.routes) {
+      if (name === route.match?.name) {
+        return route.match;
+      }
+    }
+    return null;
+  }
+
+  public getRouteConfigByPath(path: string): RouteConfig | null {
+    for (const route of this.routes) {
+      if (path === route.path) {
+        return route;
+      }
+    }
+    return null;
+  }
+
+  private getRouteConfig(r: RouteConfig | string): RouteConfig | null {
+    let route: RouteConfig | null;
+    if (typeof r === 'string') {
+      route = this.getRouteConfigByPath(r);
+    } else {
+      route = r;
+    }
+    return route;
+  }
+
   private wrapRouteConfigWithDefault(config: RouteConfig): Required<RouteConfig> {
     return {
       path: config.path,
       action: config.action,
       match: config.match ?? null,
       isMatch: config.isMatch ?? null,
-      matchGroupOP: config.matchGroupOP ?? this.defaultConfig.RouteConfigMatchGroupOP,
       rotation: config.rotation ?? this.screenConfig.rotation,
       shouldMatchTimes: config.shouldMatchTimes ?? this.defaultConfig.RouteConfigShouldMatchTimes,
       shouldMatchDuring: config.shouldMatchDuring ?? this.defaultConfig.RouteConfigShouldMatchDuring,
@@ -222,7 +337,7 @@ export class Rerouter {
       return;
     }
     const nextXY = matchedPages[0]?.next;
-    const backXY = matchedPages[0]?.next;
+    const backXY = matchedPages[0]?.back;
     // matched and fit condition, do action
     Utils.sleep(route.beforeActionDelay);
     if (route.action === 'goNext') {
@@ -250,16 +365,16 @@ export class Rerouter {
     matchedPages: Page[]
   } {
     for (const route of this.routes) {
-      const { matchedRoute, matchedPages } = this.isMatchRouteImpl(image, rotation, route, taskName);
-      if (matchedRoute !== null) {
-        return { matchedRoute, matchedPages };
+      const { isMatched, matchedPages } = this.isMatchRouteImpl(image, rotation, route, taskName);
+      if (isMatched) {
+        return { matchedRoute: route, matchedPages };
       }
     }
     return { matchedRoute: null, matchedPages: [] };
   }
 
   private isMatchRouteImpl(image: Image, rotation: 'vertical' | 'horizontal', route: Required<RouteConfig>, taskName: string): {
-    matchedRoute: Required<RouteConfig> | null,
+    isMatched: boolean,
     matchedPages: Page[]
   } {
     // check rotation
@@ -267,7 +382,7 @@ export class Rerouter {
       if (route.debug) {
         Utils.log(`findMatchedRoute ${route.path} not match roataion, skip`);
       }
-      return { matchedRoute: null, matchedPages: [] };
+      return { isMatched: false, matchedPages: [] };
     }
     let matched = false;
     let matchedPages: Page[] = [];
@@ -280,7 +395,7 @@ export class Rerouter {
           matchedPages.push(route.match);
         }
       } else if (route.match instanceof GroupPage) {
-        const match = this.isMatchGroupPageImpl(image, route.match, route.matchGroupOP, this.defaultConfig.GroupPageThres, route.debug);
+        const match = this.isMatchGroupPageImpl(image, route.match, this.defaultConfig.GroupPageThres, route.debug);
         if (match.length !== 0) {
           matched = true;
           matchedPages.push(...match);
@@ -299,11 +414,11 @@ export class Rerouter {
     }
     if (matched) {
       return {
-        matchedRoute: route,
+        isMatched: true,
         matchedPages: matchedPages,
       };
     }
-    return { matchedRoute: null, matchedPages: [] };
+    return { isMatched: false, matchedPages: [] };
   }
 
   private isMatchPageImpl(image: Image, page: Page, parentThres: number, debug: boolean): boolean {
@@ -326,7 +441,7 @@ export class Rerouter {
     return isSame;
   }
 
-  private isMatchGroupPageImpl(image: Image, groupPage: GroupPage, matchGroupOP: '||' | '&&', parentThres: number, debug: boolean): Page[] {
+  private isMatchGroupPageImpl(image: Image, groupPage: GroupPage, parentThres: number, debug: boolean): Page[] {
     const thres = groupPage.thres ?? parentThres;
     for (let i = 0; i < groupPage.pages.length; i++) {
       const page = groupPage.pages[i];
@@ -334,25 +449,14 @@ export class Rerouter {
         Utils.log(`checkMatchGroupPage: ${groupPage.name}, page[${i}]: ${page.name}`);
       }
       const isPageMatch = this.isMatchPageImpl(image, page, thres, debug);
-      if (matchGroupOP === '||' && isPageMatch) {
+      if (groupPage.matchOP === '||' && isPageMatch) {
         return [page];
       }
-      if (matchGroupOP === '&&' && !isPageMatch) {
+      if (groupPage.matchOP === '&&' && !isPageMatch) {
         return [];
       }
     }
     return groupPage.pages;
-  }
-
-  public checkAndStartApp(): boolean {
-    const [packageName] = Utils.getCurrentApp();
-    if (packageName !== this.rerouterConfig.packageName) {
-      this.log(`AppIsNotStarted, startApp ${packageName}`);
-      Utils.startApp(packageName);
-      Utils.sleep(this.rerouterConfig.startAppDelay);
-      return true;
-    }
-    return false;
   }
 
   private log(...args: any[]): void {
