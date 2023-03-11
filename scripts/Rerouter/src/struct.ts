@@ -41,6 +41,9 @@ export class GroupPage {
   public next?: XY;
   public back?: XY;
   public thres?: number;
+  /**
+   * How to match pages, '&&' for match all, '||' for match one
+   */
   public matchOP?: '||' | '&&';
 
   public constructor(
@@ -76,6 +79,9 @@ export interface RouteConfig {
   action: 'goNext' | 'goBack' | 'keycodeBack' | ((context: RouteContext, image: Image, matched: Page[], finishTask: () => void) => void);
   match?: null | Page | GroupPage;
   isMatch?: null | ((taskName: string, image: Image) => boolean);
+  /**
+   * One Route should be decided to one rotation, Rerouter will check this with screen rotation
+   */
   rotation?: 'vertical' | 'horizontal';
   shouldMatchTimes?: number;
   shouldMatchDuring?: number;
@@ -90,8 +96,19 @@ export interface TaskConfig {
   runTimesPerRound?: number;
   runDuringPerRound?: number;
   minRoundInterval?: number;
+  /**
+   * If enable it and task run time > runDuringPerRound, Rerouter will stop the task and do next task
+   */
   autoStop?: boolean;
+  /**
+   * Under this task, delay(sleep) time between Rerouter to match routes
+   * If task is compact, delay time can be shorter
+   * If task is loose, delay time can be longer
+   */
   findRouteDelay?: number;
+  /**
+   * Do something before go into matching route loop, if return 'skipRouteLoop', it will not go into matching route loop
+   */
   beforeRoute?: null | ((task: Task) => undefined | 'skipRouteLoop');
   afterRoute?: null | ((task: Task) => void);
 }

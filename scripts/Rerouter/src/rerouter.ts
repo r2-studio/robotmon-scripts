@@ -16,6 +16,9 @@ export class Rerouter {
   private routeContext: RouteContext | null = null;
   private unknownRouteAction: ((context: RouteContext, image: Image, finishTask: () => void) => void) | null = null;
 
+  /**
+   * Recalculate some value like device width or height in screenConfig
+   */
   private init(): void {
     // sort routes by priority
     this.routes.sort((a, b) => b.priority - a.priority);
@@ -34,14 +37,26 @@ export class Rerouter {
     this.screen = new Screen(this.screenConfig);
   }
 
+  /**
+   * Add RouteConfig to Rerouter routes, after starting Rerouter will run over all RouteConfigs to match screen and do action
+   * @param config information about how route match and route action
+   */
   public addRoute(config: RouteConfig): void {
     this.routes.push(this.wrapRouteConfigWithDefault(config));
   }
 
+  /**
+   * Tell Rerouter what to do if not matching any route
+   * @param action function to do if not matching
+   */
   public addUnknownAction(action: ((context: RouteContext, image: Image, finishTask: () => void) => void) | null): void {
     this.unknownRouteAction = action;
   }
 
+  /**
+   * Add TaskConfig to Rerouter tasks, after starting Rerouter will run over all Tasks by task condition
+   * @param config information about how task works
+   */
   public addTask(config: TaskConfig): void {
     this.tasks.push({
       name: config.name,
@@ -52,6 +67,10 @@ export class Rerouter {
     });
   }
 
+  /**
+   * start Rerouter to run over tasks and routes
+   * @param packageName 
+   */
   public start(packageName: string): void {
     this.rerouterConfig.packageName = packageName;
     // check tasks
@@ -68,6 +87,9 @@ export class Rerouter {
     this.log(`Rerouter stopped ...`);
   }
 
+  /**
+   * stop Rerouter
+   */
   public stop(): void {
     this.log(`Rerouter stop called, trying to stop task loop`);
     this.running = false;
