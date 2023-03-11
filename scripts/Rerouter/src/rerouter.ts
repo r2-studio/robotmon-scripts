@@ -14,6 +14,7 @@ export class Rerouter {
   private routes: Required<RouteConfig>[] = [];
   private tasks: Required<Task>[] = [];
   private routeContext: RouteContext | null = null;
+  private unknownRouteAction: ((context: RouteContext, image: Image, finishTask: () => void) => void) | null = null;
 
   public init(): void {
     // sort routes by priority
@@ -35,6 +36,10 @@ export class Rerouter {
 
   public addRoute(config: RouteConfig): void {
     this.routes.push(this.wrapRouteConfigWithDefault(config));
+  }
+
+  public addUnknownAction(action: ((context: RouteContext, image: Image, finishTask: () => void) => void) | null): void {
+    this.unknownRouteAction = action;
   }
 
   public addTask(config: TaskConfig): void {
@@ -94,6 +99,8 @@ export class Rerouter {
       runTimesPerRound: config.runTimesPerRound ?? this.defaultConfig.TaskConfigRunTimesPerRound,
       runDuringPerRound: config.runDuringPerRound ?? this.defaultConfig.TaskConfigRunDuringPerRound,
       minRoundInterval: config.minRoundInterval ?? this.defaultConfig.TaskConfigMinRoundInterval,
+      autoStop: config.autoStop ?? this.defaultConfig.TaskConfigAutoStop,
+      matchRotation: config.matchRotation ?? this.screenConfig.rotation,
     }
   }
 
@@ -136,6 +143,7 @@ export class Rerouter {
       matchTimes: 0,
       matchStartTS: 0,
       matchDuring: 0,
+      unknownCount: 0,
     };
 
     let routeLoop = true;
@@ -146,15 +154,51 @@ export class Rerouter {
     // pointer for short code
     const context = this.routeContext;
     while (routeLoop && this.running) {
-      const image = this.screen.getCvtDevScreenshot();
+      // check task.autoStop
+      const taskRunDuring = Date.now() - task.startTime;
+      if (task.config.autoStop && taskRunDuring > task.config.runDuringPerRound) {
+        this.log(`Task ${task.name} AutoStop, exceed taskRunDuring`);
+        break;
+      }
+
+      // check isAppOn or auto launch it
+      if (this.rerouterConfig.autoLaunchApp) {
+        if (this.checkAndStartApp()) {
+          continue;
+        }
+      }
+
       const rotation = this.screen.getRotation();
+      // check task.matchRotation
+      if (task.config.matchRotation !== 'both' && task.config.matchRotation !== rotation) {
+        this.log(`Task ${task.name} not matchRotation, stop. currentRotation: ${rotation}`);
+        break;
+      }
+
+      const image = this.screen.getCvtDevScreenshot();
       const { matchedRoute, matchedPages } = this.findMatchedRouteImpl(task.name, image, rotation);
       if (matchedRoute === null) {
         context.path = '';
         context.lastMatchedPath = '';
         context.matchTimes = 0;
         context.matchDuring = 0;
+        context.unknownCount++;
+        if (this.unknownRouteAction !== null) {
+          this.unknownRouteAction(context, image, finishTaskFunc);
+        }
       } else {
+        context.unknownCount = 0;
+
+        context.path = matchedRoute.path;
+        if (context.path !== context.lastMatchedPath) {
+          context.matchTimes = 0;
+          context.matchStartTS = Date.now();
+          context.matchDuring = 0;
+        }
+        context.lastMatchedPath = matchedRoute.path;
+
+        context.matchTimes++;
+        context.matchDuring = Date.now() - context.matchStartTS;
         this.doActionForRoute(context, image, matchedRoute, matchedPages, finishTaskFunc);
       }
       releaseImage(image);
@@ -163,43 +207,34 @@ export class Rerouter {
   }
 
   private doActionForRoute(context: RouteContext, image: Image, route: Required<RouteConfig>, matchedPages: Page[], finishTaskFunc: () => void) {
-    context.path = route.path;
-    if (context.path !== context.lastMatchedPath) {
-      context.matchTimes = 0;
-      context.matchStartTS = Date.now();
-      context.matchDuring = 0;
-    }
-    context.lastMatchedPath = route.path;
-
-    context.matchTimes++;
-    context.matchDuring = Date.now() - context.matchStartTS;
-
     if (route.debug) {
       Utils.log(`handleMatchedRoute: ${route.path}, times: ${context.matchTimes}, during: ${context.matchDuring}`);
     }
-    if (context.matchTimes >= route.shouldMatchTimes && context.matchDuring >= route.shouldMatchDuring) {
-      const nextXY = matchedPages[0]?.next;
-      const backXY = matchedPages[0]?.next;
-      // matched and fit condition, do action
-      if (route.action === 'goNext') {
-        if (nextXY !== undefined) {
-          this.screen.tap(nextXY);
-        } else {
-          this.warning(`${route.path} action == goNext, but no next xy`);
-        }
-      } else if (route.action === 'goBack') {
-        if (backXY !== undefined) {
-          this.screen.tap(backXY);
-        } else {
-          this.warning(`${route.path} action == goBack, but no back xy`);
-        }
-      } else if (route.action === 'keycodeBack') {
-        keycode('BACK', this.screenConfig.actionDuring);
+    if (context.matchTimes < route.shouldMatchTimes || context.matchDuring < route.shouldMatchDuring) {
+      // should still wait for matching condition
+      return;
+    }
+    const nextXY = matchedPages[0]?.next;
+    const backXY = matchedPages[0]?.next;
+    // matched and fit condition, do action
+    if (route.action === 'goNext') {
+      if (nextXY !== undefined) {
+        this.screen.tap(nextXY);
       } else {
-        Utils.sleep(route.beforeActionDelay);
-        route.action(context, image, matchedPages, finishTaskFunc);
-        Utils.sleep(route.afterActionDelay);
+        this.warning(`${route.path} action == goNext, but no next xy`);
       }
+    } else if (route.action === 'goBack') {
+      if (backXY !== undefined) {
+        this.screen.tap(backXY);
+      } else {
+        this.warning(`${route.path} action == goBack, but no back xy`);
+      }
+    } else if (route.action === 'keycodeBack') {
+      keycode('BACK', this.screenConfig.actionDuring);
+    } else {
+      Utils.sleep(route.beforeActionDelay);
+      route.action(context, image, matchedPages, finishTaskFunc);
+      Utils.sleep(route.afterActionDelay);
     }
   }
 
@@ -300,6 +335,17 @@ export class Rerouter {
       }
     }
     return groupPage.pages;
+  }
+
+  public checkAndStartApp(): boolean {
+    const [packageName] = Utils.getCurrentApp();
+    if (packageName !== this.rerouterConfig.packageName) {
+      this.log(`AppIsNotStarted, startApp ${packageName}`);
+      Utils.startApp(packageName);
+      Utils.sleep(this.rerouterConfig.startAppDelay);
+      return true;
+    }
+    return false;
   }
 
   private log(...args: any[]): void {

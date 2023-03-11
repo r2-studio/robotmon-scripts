@@ -60,6 +60,7 @@ export interface RouteContext {
   matchTimes: number;
   matchStartTS: number;
   matchDuring: number;
+  unknownCount: number;
 }
 
 export interface RouteConfig {
@@ -82,6 +83,8 @@ export interface TaskConfig {
   runTimesPerRound?: number;
   runDuringPerRound?: number;
   minRoundInterval?: number;
+  autoStop?: boolean;
+  matchRotation?: 'vertical' | 'horizontal' | 'both';
 }
 
 export interface Task {
@@ -109,6 +112,8 @@ export interface RerouterConfig {
   packageName: string;
   routeDelay: number;
   taskDelay: number;
+  startAppDelay: number;
+  autoLaunchApp: boolean;
 }
 
 export const DefaultConfigValue: {
@@ -122,9 +127,10 @@ export const DefaultConfigValue: {
   RouteConfigAfterActionDelay: number;
   RouteConfigPriority: number;
   RouteConfigDebug: boolean;
-  TaskConfigRunTimesPerRound: number,
-  TaskConfigRunDuringPerRound: number,
-  TaskConfigMinRoundInterval: number,
+  TaskConfigRunTimesPerRound: number;
+  TaskConfigRunDuringPerRound: number;
+  TaskConfigMinRoundInterval: number;
+  TaskConfigAutoStop: boolean;
 } = {
   XYRGBThres: 0.9,
   PageThres: 0.9,
@@ -138,13 +144,16 @@ export const DefaultConfigValue: {
   RouteConfigDebug: false,
   TaskConfigRunTimesPerRound: 1,
   TaskConfigRunDuringPerRound: 0,
-  TaskConfigMinRoundInterval: 0
+  TaskConfigMinRoundInterval: 0,
+  TaskConfigAutoStop: false,
 };
 
 export const DefaultRerouterConfig: RerouterConfig = {
   packageName: '',
   routeDelay: 1000,
   taskDelay: 2000,
+  startAppDelay: 6000,
+  autoLaunchApp: true,
 };
 
 export const DefaultScreenConfig: ScreenConfig = {
