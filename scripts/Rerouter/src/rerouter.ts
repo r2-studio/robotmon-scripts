@@ -143,7 +143,6 @@ export class Rerouter {
       matchTimes: 0,
       matchStartTS: 0,
       matchDuring: 0,
-      unknownCount: 0,
     };
 
     let routeLoop = true;
@@ -177,28 +176,22 @@ export class Rerouter {
 
       const image = this.screen.getCvtDevScreenshot();
       const { matchedRoute, matchedPages } = this.findMatchedRouteImpl(task.name, image, rotation);
-      if (matchedRoute === null) {
-        context.path = '';
-        context.lastMatchedPath = '';
+
+      context.path = matchedRoute?.path ?? '';
+      if (context.path !== context.lastMatchedPath) {
         context.matchTimes = 0;
-        context.matchDuring = 0;
-        context.unknownCount++;
+        context.matchStartTS = Date.now();
+      }
+      context.lastMatchedPath = matchedRoute?.path ?? '';
+
+      context.matchTimes++;
+      context.matchDuring = Date.now() - context.matchStartTS;
+
+      if (matchedRoute === null) {
         if (this.unknownRouteAction !== null) {
           this.unknownRouteAction(context, image, finishTaskFunc);
         }
       } else {
-        context.unknownCount = 0;
-
-        context.path = matchedRoute.path;
-        if (context.path !== context.lastMatchedPath) {
-          context.matchTimes = 0;
-          context.matchStartTS = Date.now();
-          context.matchDuring = 0;
-        }
-        context.lastMatchedPath = matchedRoute.path;
-
-        context.matchTimes++;
-        context.matchDuring = Date.now() - context.matchStartTS;
         this.doActionForRoute(context, image, matchedRoute, matchedPages, finishTaskFunc);
       }
       releaseImage(image);

@@ -60,7 +60,6 @@ export interface RouteContext {
   matchTimes: number;
   matchStartTS: number;
   matchDuring: number;
-  unknownCount: number;
 }
 
 export interface RouteConfig {
