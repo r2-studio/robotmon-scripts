@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { after } from 'lodash';
 import { DefaultConfigValue, RerouterConfig, RouteConfig, ScreenConfig, TaskConfig, Task, RouteContext, Page, GroupPage, DefaultRerouterConfig, DefaultScreenConfig } from "./struct";
 import { Screen } from './screen';
 import { Utils } from "./utils";
@@ -100,7 +100,9 @@ export class Rerouter {
       runDuringPerRound: config.runDuringPerRound ?? this.defaultConfig.TaskConfigRunDuringPerRound,
       minRoundInterval: config.minRoundInterval ?? this.defaultConfig.TaskConfigMinRoundInterval,
       autoStop: config.autoStop ?? this.defaultConfig.TaskConfigAutoStop,
-      matchRotation: config.matchRotation ?? this.screenConfig.rotation,
+      findRouteDelay: config.findRouteDelay ?? this.defaultConfig.TaskConfigFindRouteDelay,
+      beforeRoute: config.beforeRoute ?? null,
+      afterRoute: config.afterRoute ?? null,
     }
   }
 
@@ -120,7 +122,25 @@ export class Rerouter {
       task.runTimes = 0;
       for (let i = 0; i < task.config.runTimesPerRound && this.running; i++) {
         this.log(`Task: ${task.name} run ${task.runTimes}`);
-        this.startRouteLoop(task);
+        let skipRoute = false;
+        if (task.config.beforeRoute !== null) {
+          this.log(`Task: ${task.name} run ${task.runTimes} do beforeRoute()`);
+          if (task.config.beforeRoute(task) === 'skipRouteLoop') {
+            skipRoute = true;
+          }
+        }
+
+        if (skipRoute) {
+          this.log(`Task: ${task.name} run ${task.runTimes} skipRouteLoop`);
+        } else {
+          this.startRouteLoop(task);
+        }
+
+        if (task.config.afterRoute !== null) {
+          this.log(`Task: ${task.name} run ${task.runTimes} do afterRoute()`);
+          task.config.afterRoute(task);
+        }
+
         task.runTimes++;
         task.lastRunTime = Date.now();
         const during = Date.now() - task.startTime;
@@ -168,12 +188,6 @@ export class Rerouter {
       }
 
       const rotation = this.screen.getRotation();
-      // check task.matchRotation
-      if (task.config.matchRotation !== 'both' && task.config.matchRotation !== rotation) {
-        this.log(`Task ${task.name} not matchRotation, stop. currentRotation: ${rotation}`);
-        break;
-      }
-
       const image = this.screen.getCvtDevScreenshot();
       const { matchedRoute, matchedPages } = this.findMatchedRouteImpl(task.name, image, rotation);
 
@@ -195,7 +209,7 @@ export class Rerouter {
         this.doActionForRoute(context, image, matchedRoute, matchedPages, finishTaskFunc);
       }
       releaseImage(image);
-      Utils.sleep(this.rerouterConfig.routeDelay);
+      Utils.sleep(task.config.findRouteDelay);
     }
   }
 
@@ -210,6 +224,7 @@ export class Rerouter {
     const nextXY = matchedPages[0]?.next;
     const backXY = matchedPages[0]?.next;
     // matched and fit condition, do action
+    Utils.sleep(route.beforeActionDelay);
     if (route.action === 'goNext') {
       if (nextXY !== undefined) {
         this.screen.tap(nextXY);
@@ -225,10 +240,9 @@ export class Rerouter {
     } else if (route.action === 'keycodeBack') {
       keycode('BACK', this.screenConfig.actionDuring);
     } else {
-      Utils.sleep(route.beforeActionDelay);
       route.action(context, image, matchedPages, finishTaskFunc);
-      Utils.sleep(route.afterActionDelay);
     }
+    Utils.sleep(route.afterActionDelay);
   }
 
   private findMatchedRouteImpl(taskName: string, image: Image, rotation: 'vertical' | 'horizontal'): {

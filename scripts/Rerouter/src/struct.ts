@@ -83,7 +83,9 @@ export interface TaskConfig {
   runDuringPerRound?: number;
   minRoundInterval?: number;
   autoStop?: boolean;
-  matchRotation?: 'vertical' | 'horizontal' | 'both';
+  findRouteDelay?: number;
+  beforeRoute?: null | ((task: Task) => undefined | 'skipRouteLoop');
+  afterRoute?: null | ((task: Task) => void);
 }
 
 export interface Task {
@@ -109,7 +111,6 @@ export interface ScreenConfig {
 
 export interface RerouterConfig {
   packageName: string;
-  routeDelay: number;
   taskDelay: number;
   startAppDelay: number;
   autoLaunchApp: boolean;
@@ -130,6 +131,7 @@ export const DefaultConfigValue: {
   TaskConfigRunDuringPerRound: number;
   TaskConfigMinRoundInterval: number;
   TaskConfigAutoStop: boolean;
+  TaskConfigFindRouteDelay: number;
 } = {
   XYRGBThres: 0.9,
   PageThres: 0.9,
@@ -145,11 +147,11 @@ export const DefaultConfigValue: {
   TaskConfigRunDuringPerRound: 0,
   TaskConfigMinRoundInterval: 0,
   TaskConfigAutoStop: false,
+  TaskConfigFindRouteDelay: 2000,
 };
 
 export const DefaultRerouterConfig: RerouterConfig = {
   packageName: '',
-  routeDelay: 1000,
   taskDelay: 2000,
   startAppDelay: 6000,
   autoLaunchApp: true,
