@@ -26,7 +26,7 @@ export class Page {
     devPoints: XYRGB[],
     next: XY | undefined = undefined,
     back: XY | undefined = undefined,
-    thres: number | undefined) {
+    thres: number | undefined = undefined) {
     this.name = name;
     this.points = devPoints;
     this.next = next;
@@ -51,7 +51,7 @@ export class GroupPage {
     pages: Page[], 
     next: XY | undefined = undefined, 
     back: XY | undefined = undefined, 
-    thres: number | undefined,
+    thres: number | undefined = undefined,
     matchOP: '||' | '&&' | undefined = undefined,
   ) {
     this.name = name;
@@ -76,9 +76,10 @@ export interface RouteContext {
 
 export interface RouteConfig {
   path: string;
-  action: 'goNext' | 'goBack' | 'keycodeBack' | ((context: RouteContext, image: Image, matched: Page[], finishTask: () => void) => void);
+  action: 'goNext' | 'goBack' | 'keycodeBack' | ((context: RouteContext, image: Image, matched: Page[], changeTask: () => void) => void);
   match?: null | Page | GroupPage;
-  isMatch?: null | ((taskName: string, image: Image) => boolean);
+  // TODO: notMatch?: null | Page | GroupPage;
+  customMatch?: null | ((taskName: string, image: Image) => boolean);
   /**
    * One Route should be decided to one rotation, Rerouter will check this with screen rotation
    */
@@ -99,7 +100,7 @@ export interface TaskConfig {
   /**
    * If enable it and task run time > runDuringPerRound, Rerouter will stop the task and do next task
    */
-  autoStop?: boolean;
+  forceStop?: boolean;
   /**
    * Under this task, delay(sleep) time between Rerouter to match routes
    * If task is compact, delay time can be shorter
@@ -109,7 +110,7 @@ export interface TaskConfig {
   /**
    * Do something before go into matching route loop, if return 'skipRouteLoop', it will not go into matching route loop
    */
-  beforeRoute?: null | ((task: Task) => undefined | 'skipRouteLoop');
+  beforeRoute?: null | ((task: Task) => void | 'skipRouteLoop');
   afterRoute?: null | ((task: Task) => void);
 }
 

@@ -219,7 +219,7 @@ export class Rerouter {
       path: config.path,
       action: config.action,
       match: config.match ?? null,
-      isMatch: config.isMatch ?? null,
+      customMatch: config.customMatch ?? null,
       rotation: config.rotation ?? this.screenConfig.rotation,
       shouldMatchTimes: config.shouldMatchTimes ?? this.defaultConfig.RouteConfigShouldMatchTimes,
       shouldMatchDuring: config.shouldMatchDuring ?? this.defaultConfig.RouteConfigShouldMatchDuring,
@@ -236,7 +236,7 @@ export class Rerouter {
       runTimesPerRound: config.runTimesPerRound ?? this.defaultConfig.TaskConfigRunTimesPerRound,
       runDuringPerRound: config.runDuringPerRound ?? this.defaultConfig.TaskConfigRunDuringPerRound,
       minRoundInterval: config.minRoundInterval ?? this.defaultConfig.TaskConfigMinRoundInterval,
-      autoStop: config.autoStop ?? this.defaultConfig.TaskConfigAutoStop,
+      forceStop: config.forceStop ?? this.defaultConfig.TaskConfigAutoStop,
       findRouteDelay: config.findRouteDelay ?? this.defaultConfig.TaskConfigFindRouteDelay,
       beforeRoute: config.beforeRoute ?? null,
       afterRoute: config.afterRoute ?? null,
@@ -312,7 +312,7 @@ export class Rerouter {
     while (routeLoop && this.running) {
       // check task.autoStop
       const taskRunDuring = Date.now() - task.startTime;
-      if (task.config.autoStop && taskRunDuring > task.config.runDuringPerRound) {
+      if (task.config.forceStop && taskRunDuring > task.config.runDuringPerRound) {
         this.log(`Task ${task.name} AutoStop, exceed taskRunDuring`);
         break;
       }
@@ -425,8 +425,8 @@ export class Rerouter {
       }
     }
     // check route.isMatch function
-    if (!matched && route.isMatch !== null) {
-      matched = route.isMatch(taskName, image);
+    if (!matched && route.customMatch !== null) {
+      matched = route.customMatch(taskName, image);
       if (route.debug) {
         Utils.log(`findMatchedRoute ${route.path} isMatch() => ${matched}`);
       }
