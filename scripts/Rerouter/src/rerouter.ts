@@ -22,15 +22,15 @@ export class Rerouter {
   private init(): void {
     // sort routes by priority
     this.routes.sort((a, b) => b.priority - a.priority);
-    // check and claculate screen config
+    // check and calculate screen config
     const deviceWH = getScreenSize();
     const max = Math.max(deviceWH.width, deviceWH.height);
     const min = Math.min(deviceWH.width, deviceWH.height);
-    const dWitdh = this.screenConfig.rotation === 'horizontal' ? max : min;
+    const dWidth = this.screenConfig.rotation === 'horizontal' ? max : min;
     const dHeight = this.screenConfig.rotation === 'vertical' ? max : min;
-    this.screenConfig.deviceWidth !== 0 ? this.screenConfig.deviceWidth : dWitdh;
+    this.screenConfig.deviceWidth !== 0 ? this.screenConfig.deviceWidth : dWidth;
     this.screenConfig.deviceHeight !== 0 ? this.screenConfig.deviceHeight : dHeight;
-    this.screenConfig.screenWidth !== 0 ? this.screenConfig.screenWidth : dWitdh;
+    this.screenConfig.screenWidth !== 0 ? this.screenConfig.screenWidth : dWidth;
     this.screenConfig.screenHeight !== 0 ? this.screenConfig.screenHeight : dHeight;
     this.log(`screenWidth: ${this.screenConfig.screenWidth}, screenHeight: ${this.screenConfig.screenHeight}`);
     // new screen if screen config changed
@@ -402,7 +402,7 @@ export class Rerouter {
     // check rotation
     if (route.rotation !== rotation) {
       if (route.debug) {
-        Utils.log(`findMatchedRoute ${route.path} not match roataion, skip`);
+        Utils.log(`findMatchedRoute ${route.path} not match rotation, skip`);
       }
       return { isMatched: false, matchedPages: [] };
     }
