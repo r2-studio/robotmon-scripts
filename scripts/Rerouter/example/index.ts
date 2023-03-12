@@ -1,4 +1,4 @@
-import { rerouter, Page, Utils, GroupPage } from '../src'
+import { rerouter, Page, Utils, GroupPage } from '..'
 
 var gMainPage = new Page(
   "gMainPage",
