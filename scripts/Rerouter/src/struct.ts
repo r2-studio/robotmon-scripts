@@ -1,4 +1,4 @@
-import { Screen } from './screen'
+import { Screen } from './screen';
 
 export interface XY {
   x: number;
@@ -26,7 +26,8 @@ export class Page {
     devPoints: XYRGB[],
     next: XY | undefined = undefined,
     back: XY | undefined = undefined,
-    thres: number | undefined = undefined) {
+    thres: number | undefined = undefined
+  ) {
     this.name = name;
     this.points = devPoints;
     this.next = next;
@@ -47,12 +48,12 @@ export class GroupPage {
   public matchOP?: '||' | '&&';
 
   public constructor(
-    name: string, 
-    pages: Page[], 
-    next: XY | undefined = undefined, 
-    back: XY | undefined = undefined, 
+    name: string,
+    pages: Page[],
+    next: XY | undefined = undefined,
+    back: XY | undefined = undefined,
     thres: number | undefined = undefined,
-    matchOP: '||' | '&&' | undefined = undefined,
+    matchOP: '||' | '&&' | undefined = undefined
   ) {
     this.name = name;
     this.pages = pages;

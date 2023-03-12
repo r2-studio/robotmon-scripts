@@ -72,9 +72,7 @@ export class Utils {
     execute(
       `ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am start -n ${packageName}`
     );
-    execute(
-      `ANDROID_DATA=/data monkey -p ${packageName} -c android.intent.category.LAUNCHER 1`
-    );
+    execute(`ANDROID_DATA=/data monkey -p ${packageName} -c android.intent.category.LAUNCHER 1`);
   }
 
   public static stopApp(packageName: string) {
@@ -87,19 +85,19 @@ export class Utils {
   }
 
   public static getCurrentApp(): [string, string] {
-    let result = execute("dumpsys window windows").split("mCurrentFocus");
+    let result = execute('dumpsys window windows').split('mCurrentFocus');
     if (result.length < 2) {
       return ['', ''];
     }
-    result = result[1].split(" ");
+    result = result[1].split(' ');
     if (result.length < 3) {
       return ['', ''];
     }
-    result[2] = result[2].replace("}", "");
-    result = result[2].split("/");
+    result[2] = result[2].replace('}', '');
+    result = result[2].split('/');
 
-    let packageName = "";
-    let activityName = "";
+    let packageName = '';
+    let activityName = '';
 
     if (result.length == 1) {
       packageName = result[0].trim();
@@ -107,7 +105,7 @@ export class Utils {
       packageName = result[0].trim();
       activityName = result[1].trim();
     }
-    return [packageName, activityName]
+    return [packageName, activityName];
   }
 
   public static sendSlackMessage(url: string, title: string, message: string) {

@@ -1,6 +1,18 @@
-import { DefaultConfigValue, RerouterConfig, RouteConfig, ScreenConfig, TaskConfig, Task, RouteContext, Page, GroupPage, DefaultRerouterConfig, DefaultScreenConfig } from "./struct";
+import {
+  DefaultConfigValue,
+  RerouterConfig,
+  RouteConfig,
+  ScreenConfig,
+  TaskConfig,
+  Task,
+  RouteContext,
+  Page,
+  GroupPage,
+  DefaultRerouterConfig,
+  DefaultScreenConfig,
+} from './struct';
 import { Screen } from './screen';
-import { Utils } from "./utils";
+import { Utils } from './utils';
 
 export class Rerouter {
   public debug: boolean = true;
@@ -68,7 +80,7 @@ export class Rerouter {
 
   /**
    * start Rerouter to run over tasks and routes
-   * @param packageName 
+   * @param packageName
    */
   public start(packageName: string): void {
     this.rerouterConfig.packageName = packageName;
@@ -226,7 +238,7 @@ export class Rerouter {
       afterActionDelay: config.afterActionDelay ?? this.defaultConfig.RouteConfigAfterActionDelay,
       priority: config.priority ?? this.defaultConfig.RouteConfigPriority,
       debug: config.debug ?? this.defaultConfig.RouteConfigDebug,
-    }
+    };
   }
 
   private wrapTaskConfigWithDefault(config: TaskConfig): Required<TaskConfig> {
@@ -239,7 +251,7 @@ export class Rerouter {
       findRouteDelay: config.findRouteDelay ?? this.defaultConfig.TaskConfigFindRouteDelay,
       beforeRoute: config.beforeRoute ?? null,
       afterRoute: config.afterRoute ?? null,
-    }
+    };
   }
 
   private startTaskLoop(): void {
@@ -303,7 +315,7 @@ export class Rerouter {
 
     let routeLoop = true;
     const finishTaskFunc = () => {
-      this.log(`finishTaskFunc ${this.routeContext?.task.name}`)
+      this.log(`finishTaskFunc ${this.routeContext?.task.name}`);
       routeLoop = false;
     };
     // pointer for short code
@@ -381,9 +393,13 @@ export class Rerouter {
     Utils.sleep(route.afterActionDelay);
   }
 
-  private findMatchedRouteImpl(taskName: string, image: Image, rotation: 'vertical' | 'horizontal'): {
-    matchedRoute: Required<RouteConfig> | null,
-    matchedPages: Page[]
+  private findMatchedRouteImpl(
+    taskName: string,
+    image: Image,
+    rotation: 'vertical' | 'horizontal'
+  ): {
+    matchedRoute: Required<RouteConfig> | null;
+    matchedPages: Page[];
   } {
     for (const route of this.routes) {
       const { isMatched, matchedPages } = this.isMatchRouteImpl(image, rotation, route, taskName);
@@ -394,9 +410,14 @@ export class Rerouter {
     return { matchedRoute: null, matchedPages: [] };
   }
 
-  private isMatchRouteImpl(image: Image, rotation: 'vertical' | 'horizontal', route: Required<RouteConfig>, taskName: string): {
-    isMatched: boolean,
-    matchedPages: Page[]
+  private isMatchRouteImpl(
+    image: Image,
+    rotation: 'vertical' | 'horizontal',
+    route: Required<RouteConfig>,
+    taskName: string
+  ): {
+    isMatched: boolean;
+    matchedPages: Page[];
   } {
     // check rotation
     if (route.rotation !== rotation) {

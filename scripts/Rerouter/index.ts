@@ -75,28 +75,8 @@ declare global {
   function threshold(sourceImg: Image, thr: number, maxThr: number, code: ThresholdCode): void;
   function eroid(sourceImg: Image, width: number, height: number, x: number, y: number): void;
   function dilate(sourceImg: Image, width: number, height: number, x: number, y: number): void;
-  function inRange(
-    sourceImg: Image,
-    minB: number,
-    minG: number,
-    minR: number,
-    minA: number,
-    maxB: number,
-    maxG: number,
-    maxR: number,
-    maxA: number
-  ): Image;
-  function outRange(
-    sourceImg: Image,
-    minB: number,
-    minG: number,
-    minR: number,
-    minA: number,
-    maxB: number,
-    maxG: number,
-    maxR: number,
-    maxA: number
-  ): Image;
+  function inRange(sourceImg: Image, minB: number, minG: number, minR: number, minA: number, maxB: number, maxG: number, maxR: number, maxA: number): Image;
+  function outRange(sourceImg: Image, minB: number, minG: number, minR: number, minA: number, maxB: number, maxG: number, maxR: number, maxA: number): Image;
   function cloneWithMask(sourceImg: Image, mask: Image): Image;
   enum HoughMethod {
     CV_HOUGH_GRADIENT = 3,
