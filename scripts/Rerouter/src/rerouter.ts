@@ -1,13 +1,12 @@
-import _, { after } from 'lodash';
 import { DefaultConfigValue, RerouterConfig, RouteConfig, ScreenConfig, TaskConfig, Task, RouteContext, Page, GroupPage, DefaultRerouterConfig, DefaultScreenConfig } from "./struct";
 import { Screen } from './screen';
 import { Utils } from "./utils";
 
 export class Rerouter {
   public debug: boolean = true;
-  public defaultConfig = _.cloneDeep(DefaultConfigValue);
-  public rerouterConfig: RerouterConfig = _.cloneDeep(DefaultRerouterConfig);
-  public screenConfig: ScreenConfig = _.cloneDeep(DefaultScreenConfig);
+  public defaultConfig = DefaultConfigValue;
+  public rerouterConfig: RerouterConfig = DefaultRerouterConfig;
+  public screenConfig: ScreenConfig = DefaultScreenConfig;
   public screen: Screen = new Screen(this.screenConfig);
 
   private running: boolean = false;

@@ -1,7 +1,7 @@
-export * from './screen';
-export * from './rerouter';
-export * from './struct';
-export * from './utils';
+export * from './src/screen';
+export * from './src/rerouter';
+export * from './src/struct';
+export * from './src/utils';
 export const version = 1;
 
 declare global {
