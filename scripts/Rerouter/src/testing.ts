@@ -25,7 +25,74 @@ export class Testing {
     return src;
   }
 
-  public async checkRoutes(routes: RouteConfig[]) {
+  public async checkImageMatchDuplicatePages(routes: RouteConfig[]) {
+    const pages: { [pageName: string]: Page } = {};
+    for (const route of routes) {
+      if (route.match instanceof Page) {
+        if (pages[route.match.name] !== undefined) {
+          console.log(`[Warning][DuplicatePage] ${route.path}/${route.match.name}`);
+        }
+        pages[route.match.name] = route.match;
+      } else if (route.match instanceof GroupPage) {
+        for (const page of route.match.pages) {
+          if (pages[page.name] !== undefined) {
+            console.log(`[Warning][DuplicatePage] ${route.path}/${route.match.name}/${page.name}`);
+          }
+          pages[page.name] = page;
+        }
+      }
+    }
+
+    const files = fs.readdirSync(this.screenshotPath);
+    for (const file of files) {
+      if (file === '.' || file === '..') {
+        continue;
+      }
+      if (!file.includes('.png') && !file.includes('.jpg')) {
+        continue;
+      }
+
+      const imagePath = `${this.screenshotPath}/${file}`;
+      try {
+        const mat = await this.loadImage(imagePath);
+        const matches: Page[] = [];
+        for (const pageName in pages) {
+          const page = pages[pageName];
+          const match = this.isImageMatchPage(mat, page, DefaultConfigValue.GroupPageThres);
+          if (match) {
+            matches.push(page);
+          }
+        }
+        mat.delete();
+
+        if (matches.length > 1) {
+          for (let i = 0; i < matches.length; i++) {
+            const page = matches[i];
+            console.log(`[Warning][DuplicatePageMatched] Filename ${file} matched ${i + 1}: ${page.name}`);
+          }
+        }
+      } catch (e) {
+        console.log(`[Error][checkImageMatchMultiplePages] ${(e as Error).message}`);
+      }
+    }
+  }
+
+  private isImageMatchPage(mat: cv.Mat, page: Page, parentThres: number): boolean {
+    const thres = page.thres ?? parentThres;
+    let isSame = true;
+    for (let i = 0; i < page.points.length; i++) {
+      const point = page.points[i];
+      const color = Testing.getImageColor(mat, point.x, point.y);
+      const score = Utils.identityColor(point, color);
+      if (score < thres) {
+        isSame = false;
+        break;
+      }
+    }
+    return isSame;
+  }
+
+  public async checkRoutesMatchImages(routes: RouteConfig[]) {
     for (const route of routes) {
       try {
         await this.checkRoute(route);
