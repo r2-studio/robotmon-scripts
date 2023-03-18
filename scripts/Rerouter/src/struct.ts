@@ -141,6 +141,7 @@ export interface RerouterConfig {
   taskDelay: number;
   startAppDelay: number;
   autoLaunchApp: boolean;
+  testingScreenshotPath: string;
 }
 
 export const DefaultConfigValue: {
@@ -182,6 +183,7 @@ export const DefaultRerouterConfig: RerouterConfig = {
   taskDelay: 2000,
   startAppDelay: 6000,
   autoLaunchApp: true,
+  testingScreenshotPath: './screenshot',
 };
 
 export const DefaultScreenConfig: ScreenConfig = {
