@@ -13,6 +13,7 @@ import {
 } from './struct';
 import { Screen } from './screen';
 import { Utils } from './utils';
+import { Testing } from './testing';
 
 export class Rerouter {
   public debug: boolean = true;
@@ -510,6 +511,13 @@ export class Rerouter {
 
   private warning(...args: any[]): void {
     Utils.log('[Rerouter][warning]', ...args);
+  }
+
+  public async testRoutes() {
+    const testing = new Testing(DefaultRerouterConfig.testingScreenshotPath);
+    await testing.init();
+    await testing.checkImageMatchDuplicatePages(this.routes);
+    await testing.checkRoutesMatchImages(this.routes);
   }
 }
 

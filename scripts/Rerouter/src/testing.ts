@@ -19,13 +19,14 @@ export class Testing {
     await waitForOpencvPromise;
   }
 
-  public async loadImage(path: string): Promise<cv.Mat> {
+  private async loadImage(path: string): Promise<cv.Mat> {
     const jimpSrc = await Jimp.read(path);
     const src = cv.matFromImageData(jimpSrc.bitmap);
     return src;
   }
 
   public async checkImageMatchDuplicatePages(routes: RouteConfig[]) {
+    console.log(`=====> Rerouter Testing: checkImageMatchDuplicatePages Starting`);
     const pages: { [pageName: string]: Page } = {};
     for (const route of routes) {
       if (route.match instanceof Page) {
@@ -75,6 +76,8 @@ export class Testing {
         console.log(`[Error][checkImageMatchMultiplePages] ${(e as Error).message}`);
       }
     }
+
+    console.log(`=====> Rerouter Testing: checkImageMatchDuplicatePages Finished`);
   }
 
   private isImageMatchPage(mat: cv.Mat, page: Page, parentThres: number): boolean {
@@ -93,6 +96,7 @@ export class Testing {
   }
 
   public async checkRoutesMatchImages(routes: RouteConfig[]) {
+    console.log(`=====> Rerouter Testing: checkRoutesMatchImages Starting`);
     for (const route of routes) {
       try {
         await this.checkRoute(route);
@@ -100,7 +104,7 @@ export class Testing {
         console.log(`[Error][CheckRoute][${route.path}] [${(e as Error).message}]`);
       }
     }
-    console.log(`CheckRoutes Finished`);
+    console.log(`=====> Rerouter Testing: checkRoutesMatchImages Finished`);
   }
 
   private async checkPage(page: Page, thres: number): Promise<boolean> {
