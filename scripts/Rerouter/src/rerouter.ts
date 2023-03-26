@@ -40,10 +40,10 @@ export class Rerouter {
     const min = Math.min(deviceWH.width, deviceWH.height);
     const dWidth = this.screenConfig.rotation === 'horizontal' ? max : min;
     const dHeight = this.screenConfig.rotation === 'vertical' ? max : min;
-    this.screenConfig.deviceWidth !== 0 ? this.screenConfig.deviceWidth : dWidth;
-    this.screenConfig.deviceHeight !== 0 ? this.screenConfig.deviceHeight : dHeight;
-    this.screenConfig.screenWidth !== 0 ? this.screenConfig.screenWidth : dWidth;
-    this.screenConfig.screenHeight !== 0 ? this.screenConfig.screenHeight : dHeight;
+    this.screenConfig.deviceWidth = this.screenConfig.deviceWidth || dWidth;
+    this.screenConfig.deviceHeight = this.screenConfig.deviceHeight || dHeight;
+    this.screenConfig.screenWidth = this.screenConfig.screenWidth || dWidth;
+    this.screenConfig.screenHeight = this.screenConfig.screenHeight || dHeight;
     this.log(`screenWidth: ${this.screenConfig.screenWidth}, screenHeight: ${this.screenConfig.screenHeight}`);
     // new screen if screen config changed
     this.screen = new Screen(this.screenConfig);
