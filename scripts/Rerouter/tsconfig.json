@@ -1,4 +1,7 @@
 {
+  "exclude": [
+    "./src/testing.ts"
+  ],
   "compilerOptions": {
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */
