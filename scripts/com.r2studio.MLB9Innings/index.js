@@ -16,12 +16,12 @@ var gDuringMaxAdRetry = 2 * gMinuteInMs;
 var defaultConfig = {
   isXr: true, // hidden setting
   isDev: false, // hidden, only for debug
-  leagueSeasonMode: 'full', // half, quarter, postSeason
+  leagueSeasonMode: "full", // half, quarter, postSeason
   leagueYear: gLeagueYearMin, //gLeagueYearMin, // number
 };
 
 var gLogoPage = new RF.Page(
-  'gLogoPage',
+  "gLogoPage",
   [
     { x: 227, y: 184, r: 228, g: 4, b: 33 },
     { x: 258, y: 187, r: 228, g: 4, b: 33 },
@@ -46,7 +46,7 @@ var gLogoPage = new RF.Page(
 
 // term of service
 var gTOSPAge = new RF.Page(
-  'gTOSPAge',
+  "gTOSPAge",
   [
     // logo
     { x: 289, y: 40, r: 232, g: 52, b: 74 },
@@ -110,7 +110,7 @@ var gTOSPAge = new RF.Page(
 );
 
 var gLandingPage = new RF.Page(
-  'gLandingPage',
+  "gLandingPage",
   [
     { x: 24, y: 20, r: 99, g: 101, b: 115 },
     { x: 68, y: 78, r: 24, g: 28, b: 40 },
@@ -139,7 +139,7 @@ var gLandingPage = new RF.Page(
 );
 
 var gLogInPage = new RF.Page(
-  'gLogInPage',
+  "gLogInPage",
   [
     { x: 226, y: 76, r: 48, g: 48, b: 48 },
     { x: 322, y: 78, r: 48, g: 48, b: 48 },
@@ -159,7 +159,7 @@ var gLogInPage = new RF.Page(
 );
 
 var gDownloadDataPage = new RF.Page(
-  'gDownloadDataPage',
+  "gDownloadDataPage",
   [
     { x: 103, y: 41, r: 181, g: 186, b: 189 },
     { x: 167, y: 59, r: 22, g: 30, b: 31 },
@@ -188,7 +188,7 @@ var gDownloadDataPage = new RF.Page(
 );
 
 var gMainPage = new RF.Page(
-  'gMainPage',
+  "gMainPage",
   [
     { x: 289, y: 11, r: 214, g: 215, b: 214 },
     { x: 315, y: 11, r: 222, g: 223, b: 222 },
@@ -225,7 +225,7 @@ var gMainPageBtns = {
 };
 
 var gSettingsPage = new RF.Page(
-  'gSettingsPage',
+  "gSettingsPage",
   [
     { x: 22, y: 92, r: 231, g: 235, b: 239 },
     { x: 20, y: 178, r: 206, g: 211, b: 222 },
@@ -258,7 +258,7 @@ var gSettingsPageBtns = {
 };
 
 var gBackBtnPage = new RF.Page(
-  'gBackBtnPage',
+  "gBackBtnPage",
   [
     { x: 24, y: 314, r: 214, g: 219, b: 214 },
     { x: 28, y: 310, r: 192, g: 199, b: 190 },
@@ -272,7 +272,7 @@ var gBackBtnPage = new RF.Page(
 
 // tell user the season start
 var gNewSeasonPage = new RF.Page(
-  'gNewSeasonPage',
+  "gNewSeasonPage",
   [
     { x: 153, y: 21, r: 0, g: 89, b: 165 },
     { x: 294, y: 50, r: 154, g: 182, b: 203 },
@@ -290,7 +290,7 @@ var gNewSeasonPage = new RF.Page(
 );
 
 var gEndSeasonPage = new RF.Page(
-  'gEndSeasonPage',
+  "gEndSeasonPage",
   [
     // bg
     { x: 15, y: 43, r: 0, g: 73, b: 140 },
@@ -319,7 +319,7 @@ var gEndSeasonPage = new RF.Page(
 );
 
 var gSelectSeasonModePage = new RF.Page(
-  'gSelectSeasonModePage',
+  "gSelectSeasonModePage",
   [
     { x: 104, y: 16, r: 0, g: 93, b: 173 },
     { x: 235, y: 37, r: 143, g: 181, b: 207 },
@@ -338,7 +338,7 @@ var gSelectSeasonModePage = new RF.Page(
 );
 
 var gSelectLeagueGameAmountPage = new RF.Page(
-  'gSelectLeagueGameAmountPage',
+  "gSelectLeagueGameAmountPage",
   [
     { x: 625, y: 8, r: 206, g: 215, b: 222 },
     { x: 603, y: 15, r: 66, g: 93, b: 123 },
@@ -368,7 +368,7 @@ var gSelectLeagueGameAmountPageBtns = {
 };
 
 var gSelectYearPage = new RF.Page(
-  'gSelectYearPage',
+  "gSelectYearPage",
   [
     { x: 274, y: 63, r: 16, g: 24, b: 24 },
     { x: 330, y: 58, r: 61, g: 69, b: 72 },
@@ -395,7 +395,7 @@ var gSelectYearPageBtns = {
 
 // * BattleModePages
 var gBattleModePanelPage = new RF.Page(
-  'gBattleModePanelPage',
+  "gBattleModePanelPage",
   [
     // nav bar right
     { x: 301, y: 5, r: 206, g: 214, b: 222 },
@@ -432,7 +432,7 @@ var gBattleModePanelPageBtns = {
 };
 
 var gRankedBattlePanelPage = new RF.Page(
-  'gRankedBattlePanelPage',
+  "gRankedBattlePanelPage",
   [
     // nav bar right part icon
     // sometimes nav bar will disappear
@@ -461,7 +461,7 @@ var gRankedBattlePanelPage = new RF.Page(
 );
 
 var gRankedBattleResultPage = new RF.Page(
-  'gRankedBattleResultPage',
+  "gRankedBattleResultPage",
   [
     // bg in mid
     { x: 10, y: 94, r: 58, g: 93, b: 140 },
@@ -491,7 +491,7 @@ var gRankedBattleResultPage = new RF.Page(
 );
 
 var gRankedBattleGameInfoPage = new RF.Page(
-  'gRankedBattleGameInfoPage',
+  "gRankedBattleGameInfoPage",
   [
     // right part of nav bar
     { x: 616, y: 10, r: 214, g: 210, b: 214 },
@@ -540,7 +540,7 @@ var gRankedBattleGameInfoPage = new RF.Page(
 
 // a page to start auto game
 var gAutoGameConfirmPage = new RF.Page(
-  'gAutoGameConfirmPage',
+  "gAutoGameConfirmPage",
   [
     // title
     { x: 277, y: 60, r: 180, g: 186, b: 189 },
@@ -577,7 +577,7 @@ var gAutoGameConfirmPage = new RF.Page(
 
 // a page to end auto game
 var gAutoGameConfirmEndPage = new RF.Page(
-  'gAutoGameConfirmEndPage',
+  "gAutoGameConfirmEndPage",
   [
     // title
     { x: 277, y: 60, r: 180, g: 186, b: 189 },
@@ -611,7 +611,7 @@ var gAutoGameConfirmEndPage = new RF.Page(
 
 // * LeagueModePages
 var gLeagueModePanelPageContinue = new RF.Page(
-  'gLeagueModePanelPageNextSchedule', // same behaviour as gLeagueModePanelPageNextSchedule
+  "gLeagueModePanelPageNextSchedule", // same behaviour as gLeagueModePanelPageNextSchedule
   [
     // nav bar star
     { x: 314, y: 10, r: 231, g: 231, b: 231 },
@@ -635,7 +635,7 @@ var gLeagueModePanelPageContinue = new RF.Page(
 );
 
 var gLeagueModePanelPageNextSchedule = new RF.Page(
-  'gLeagueModePanelPageNextSchedule',
+  "gLeagueModePanelPageNextSchedule",
   [
     { x: 313, y: 10, r: 229, g: 229, b: 229 },
     { x: 321, y: 7, r: 165, g: 169, b: 173 },
@@ -655,7 +655,7 @@ var gLeagueModePanelPageNextSchedule = new RF.Page(
 );
 
 var gLeagueModePanelPageNextSchedule2 = new RF.Page(
-  'gLeagueModePanelPageNextSchedule',
+  "gLeagueModePanelPageNextSchedule",
   [
     { x: 199, y: 215, r: 0, g: 0, b: 0 },
     { x: 299, y: 9, r: 214, g: 215, b: 214 },
@@ -703,7 +703,7 @@ var gLeagueModePanelPageNextSchedule2 = new RF.Page(
 );
 
 var gLeagueModeGameInfoPage = new RF.Page(
-  'gLeagueModeGameInfoPage',
+  "gLeagueModeGameInfoPage",
   [
     { x: 292, y: 9, r: 214, g: 213, b: 214 },
     { x: 314, y: 7, r: 255, g: 251, b: 255 },
@@ -735,7 +735,7 @@ var gSelectPlayRoleBtns = {
 };
 
 var gSelectPlayRole = new RF.Page(
-  'gSelectPlayRole',
+  "gSelectPlayRole",
   [
     { x: 97, y: 282, r: 255, g: 255, b: 255 },
     { x: 145, y: 282, r: 255, g: 255, b: 255 },
@@ -755,7 +755,7 @@ var gSelectPlayRole = new RF.Page(
 // sometimes happened when restarting a continued game
 // or cancel auto play during playing
 var gLeagueContinuePlayingPage = new RF.Page(
-  'gLeagueContinuePlayingPage',
+  "gLeagueContinuePlayingPage",
   [
     // fast progression
     { x: 452, y: 279, r: 8, g: 109, b: 255 },
@@ -779,7 +779,7 @@ var gLeagueContinuePlayingPage = new RF.Page(
 );
 
 var gLeagueOnPlayPageAutoOff = new RF.Page(
-  'gLeagueOnPlayPageAutoOff',
+  "gLeagueOnPlayPageAutoOff",
   [
     // auto
     { x: 514, y: 20, r: 255, g: 255, b: 255 },
@@ -794,7 +794,7 @@ var gLeagueOnPlayPageAutoOff = new RF.Page(
 );
 
 var gLeagueOnPlayPageAutoOff1 = new RF.Page(
-  'gLeagueOnPlayPageAutoOff',
+  "gLeagueOnPlayPageAutoOff",
   // has swing button
   [
     { x: 521, y: 263, r: 24, g: 29, b: 16 },
@@ -808,7 +808,7 @@ var gLeagueOnPlayPageAutoOff1 = new RF.Page(
 
 // auto play on, power save off
 var gLeagueOnPlayPagePowerSaveOff = new RF.Page(
-  'gLeagueOnPlayPagePowerSaveOff',
+  "gLeagueOnPlayPagePowerSaveOff",
   [
     // battery
     { x: 486, y: 13, r: 255, g: 255, b: 255 },
@@ -824,7 +824,7 @@ var gLeagueOnPlayPagePowerSaveOff = new RF.Page(
 // same as gLeagueOnPlayPagePowerSaveOff, but is stopped
 // need to turn on autoplay
 var gLeagueOnPlayPagePowerSaveOffStopped = new RF.Page(
-  'gLeagueOnPlayPagePowerSaveOff',
+  "gLeagueOnPlayPagePowerSaveOff",
   [
     // battery
     { x: 486, y: 13, r: 255, g: 255, b: 255 },
@@ -853,7 +853,7 @@ var gLeagueOnPlayPagePowerSaveOffStopped = new RF.Page(
 
 // don't do any thing, just avoid to enter unknown
 var gLeagueOnPlayPagePowerSaveOffMid = new RF.Page(
-  'gLeagueOnPlayPagePowerSaveOff',
+  "gLeagueOnPlayPagePowerSaveOff",
   [
     // battery
     { x: 486, y: 13, r: 255, g: 255, b: 255 },
@@ -867,7 +867,7 @@ var gLeagueOnPlayPagePowerSaveOffMid = new RF.Page(
   { x: 0, y: 0 }
 );
 var gLeagueOnPlayPagePowerSaveOffMid1 = new RF.Page(
-  'gLeagueOnPlayPagePowerSaveOff',
+  "gLeagueOnPlayPagePowerSaveOff",
   [
     // battery
     { x: 486, y: 13, r: 255, g: 255, b: 255 },
@@ -882,7 +882,7 @@ var gLeagueOnPlayPagePowerSaveOffMid1 = new RF.Page(
 );
 
 var gOnPlayPagePowerSaveOn = new RF.Page(
-  'gOnPlayPagePowerSaveOn',
+  "gOnPlayPagePowerSaveOn",
   [
     { x: 304, y: 136, r: 156, g: 160, b: 165 },
     { x: 305, y: 136, r: 156, g: 160, b: 165 },
@@ -917,7 +917,7 @@ var gOnPlayPagePowerSaveOn = new RF.Page(
 
 // FIXME: change colors
 var gOnQuickPlayPage = new RF.Page(
-  'gOnQuickPlayPage',
+  "gOnQuickPlayPage",
   [
     // bg right panel
     { x: 456, y: 11, r: 58, g: 77, b: 123 },
@@ -936,7 +936,7 @@ var gOnQuickPlayPage = new RF.Page(
 );
 
 var gOnQuickPlayPage1 = new RF.Page(
-  'gOnQuickPlayPage', // same behaviour, without blue btn on right bottom
+  "gOnQuickPlayPage", // same behaviour, without blue btn on right bottom
   [
     // bg right panel
     { x: 454, y: 8, r: 58, g: 77, b: 123 },
@@ -954,7 +954,7 @@ var gOnQuickPlayPage1 = new RF.Page(
 
 // sometimes the quick play will be paused
 var gOnQuickPlayPausePage = new RF.Page(
-  'gOnQuickPlayPausePage',
+  "gOnQuickPlayPausePage",
   [
     { x: 456, y: 11, r: 49, g: 73, b: 123 },
     { x: 472, y: 22, r: 201, g: 207, b: 218 },
@@ -971,7 +971,7 @@ var gOnQuickPlayPausePage = new RF.Page(
 
 // when playing, press back
 var gLeagueOnPlayPausePage = new RF.Page(
-  'gLeagueOnPlayPausePage',
+  "gLeagueOnPlayPausePage",
   [
     // continue button
     { x: 89, y: 148, r: 255, g: 255, b: 255 },
@@ -989,7 +989,7 @@ var gLeagueOnPlayPausePage = new RF.Page(
 );
 
 var gGameResultPage = new RF.Page(
-  'gGameResultPage',
+  "gGameResultPage",
   [
     { x: 458, y: 24, r: 41, g: 44, b: 49 }, // title
     { x: 126, y: 333, r: 49, g: 81, b: 123 }, // view all btn
@@ -1001,7 +1001,7 @@ var gGameResultPage = new RF.Page(
 );
 
 var gGameResultAquiredPage = new RF.Page(
-  'gGameResultAquiredPage',
+  "gGameResultAquiredPage",
   [
     { x: 449, y: 23, r: 41, g: 44, b: 49 }, // title
     { x: 39, y: 329, r: 213, g: 218, b: 213 }, // back btn
@@ -1013,7 +1013,7 @@ var gGameResultAquiredPage = new RF.Page(
 );
 
 var gGameResultOtherPage = new RF.Page(
-  'gGameResultOtherPage',
+  "gGameResultOtherPage",
   [
     { x: 71, y: 29, r: 0, g: 85, b: 156 },
     { x: 556, y: 15, r: 212, g: 228, b: 241 },
@@ -1036,7 +1036,7 @@ var gGameResultOtherPage = new RF.Page(
 );
 
 var gGameResultWorldChampionPage = new RF.Page(
-  'gGameResultWorldChampionPage',
+  "gGameResultWorldChampionPage",
   [
     { x: 252, y: 22, r: 57, g: 67, b: 74 },
     { x: 323, y: 42, r: 116, g: 109, b: 83 },
@@ -1055,7 +1055,7 @@ var gGameResultWorldChampionPage = new RF.Page(
 );
 
 var gGameRewardPage = new RF.Page(
-  'gGameRewardPage',
+  "gGameRewardPage",
   [
     { x: 24, y: 336, r: 16, g: 32, b: 41 },
     { x: 577, y: 26, r: 0, g: 4, b: 0 },
@@ -1071,7 +1071,7 @@ var gGameRewardPage = new RF.Page(
 );
 
 var gBestPositionAwardBonusPage = new RF.Page(
-  'gBestPositionAwardBonusPage',
+  "gBestPositionAwardBonusPage",
   [
     // bg
     { x: 141, y: 21, r: 0, g: 81, b: 148 },
@@ -1103,7 +1103,7 @@ var gBestPositionAwardBonusPage = new RF.Page(
 );
 
 var gBestPositionAwardBonusPage2 = new RF.Page(
-  'gBestPositionAwardBonusPage',
+  "gBestPositionAwardBonusPage",
   [
     // bg
     { x: 141, y: 21, r: 0, g: 81, b: 148 },
@@ -1136,7 +1136,7 @@ var gBestPositionAwardBonusPage2 = new RF.Page(
 
 // next page of gBestPositionAwardBonusPage
 var gBonusGrantedByTeamRecordPage = new RF.Page(
-  'gBonusGrantedByTeamRecordPage',
+  "gBonusGrantedByTeamRecordPage",
   [
     // table bg
     { x: 38, y: 75, r: 49, g: 69, b: 107 },
@@ -1167,7 +1167,7 @@ var gBonusGrantedByTeamRecordPage = new RF.Page(
 );
 
 var gPostSeasonAwardBonusPage = new RF.Page(
-  'gPostSeasonAwardBonusPage',
+  "gPostSeasonAwardBonusPage",
   [
     // bg
     { x: 39, y: 24, r: 0, g: 81, b: 148 },
@@ -1191,7 +1191,7 @@ var gPostSeasonAwardBonusPage = new RF.Page(
 );
 
 var gGameLineUpPage = new RF.Page(
-  'gGameLineUpPage',
+  "gGameLineUpPage",
   [
     // content top bg
     { x: 591, y: 59, r: 49, g: 73, b: 107 },
@@ -1213,7 +1213,7 @@ var gGameLineUpPage = new RF.Page(
 );
 
 var gPlayerGrowthCompeletePage = new RF.Page(
-  'gPlayerGrowthCompeletePage',
+  "gPlayerGrowthCompeletePage",
   [
     { x: 163, y: 79, r: 181, g: 186, b: 189 },
     { x: 223, y: 60, r: 41, g: 49, b: 49 },
@@ -1243,7 +1243,7 @@ var gPlayerGrowthCompeletePage = new RF.Page(
 );
 
 var gLeagueRewardAchievementGradePage = new RF.Page(
-  'gLeagueRewardAchievementGradePage',
+  "gLeagueRewardAchievementGradePage",
   [
     { x: 17, y: 32, r: 181, g: 186, b: 189 },
     { x: 179, y: 45, r: 45, g: 50, b: 54 },
@@ -1273,7 +1273,7 @@ var gLeagueRewardAchievementGradePage = new RF.Page(
 );
 
 var gPicherOfTheMonthPage = new RF.Page(
-  'gPicherOfTheMonthPage',
+  "gPicherOfTheMonthPage",
   [
     { x: 27, y: 38, r: 181, g: 186, b: 198 },
     { x: 602, y: 46, r: 154, g: 152, b: 155 },
@@ -1286,7 +1286,7 @@ var gPicherOfTheMonthPage = new RF.Page(
 );
 
 var gMvpPage = new RF.Page(
-  'gMvpPage',
+  "gMvpPage",
   [
     { x: 273, y: 23, r: 0, g: 89, b: 165 },
     { x: 297, y: 25, r: 90, g: 145, b: 200 },
@@ -1304,7 +1304,7 @@ var gMvpPage = new RF.Page(
 );
 
 var gSelectRewardPlayerPage = new RF.Page(
-  'gSelectRewardPlayerPage',
+  "gSelectRewardPlayerPage",
   [
     // bg
     { x: 4, y: 6, r: 0, g: 97, b: 189 },
@@ -1335,21 +1335,21 @@ var gSelectRewardPlayerPageBtns = {
 // {r}-{g}-{b}: prority
 // try x 23, y 260 in player info
 var gPlayerCardColorToRank = {
-  '66-74-74': 1, // normal TODO: unknown color
-  '99-65-41': 2, // brown
-  '99-65-49': 2, // brown
-  '132-129-148': 3, // silver
-  '189-166-49': 4, // gold
-  '189-166-58': 4, // gold
-  '198-170-57': 4, // gold
-  '148-101-25': 4, // gold
-  '165-166-90': 4, // gold
-  '41-69-107': 5, // diamond TODO: unknown color
+  "66-74-74": 1, // normal TODO: unknown color
+  "99-65-41": 2, // brown
+  "99-65-49": 2, // brown
+  "132-129-148": 3, // silver
+  "189-166-49": 4, // gold
+  "189-166-58": 4, // gold
+  "198-170-57": 4, // gold
+  "148-101-25": 4, // gold
+  "165-166-90": 4, // gold
+  "41-69-107": 5, // diamond TODO: unknown color
 };
 
 // adReward pages
 var gAdRewardPage = new RF.Page(
-  'gAdRewardPage',
+  "gAdRewardPage",
   [
     // title
     { x: 248, y: 41, r: 181, g: 186, b: 189 },
@@ -1375,7 +1375,7 @@ var gAdRewardPage = new RF.Page(
 );
 
 var gAdRewardRedeemPage = new RF.Page(
-  'gAdRewardRedeemPage',
+  "gAdRewardRedeemPage",
   [
     // title
     { x: 248, y: 41, r: 181, g: 186, b: 189 },
@@ -1394,7 +1394,7 @@ var gAdRewardRedeemPage = new RF.Page(
 );
 
 var gAdRewardOnCDPage = new RF.Page(
-  'gAdRewardOnCDPage',
+  "gAdRewardOnCDPage",
   [
     // title
     { x: 249, y: 53, r: 181, g: 186, b: 189 },
@@ -1419,7 +1419,7 @@ var gAdRewardOnCDPage = new RF.Page(
 
 // weekly mission pages
 var gAchivementMissionPage = new RF.Page(
-  'gAchivementMissionPage',
+  "gAchivementMissionPage",
   [
     // nav bar right part (p, star ...)
     { x: 299, y: 13, r: 214, g: 214, b: 214 },
@@ -1454,7 +1454,7 @@ var gAchivementMissionPage = new RF.Page(
 );
 
 var gWeeklyMissionBoxPage = new RF.Page(
-  'gWeeklyMissionBoxPage',
+  "gWeeklyMissionBoxPage",
   [
     // nav bar right part (p, star ...)
     { x: 299, y: 13, r: 214, g: 214, b: 214 },
@@ -1497,7 +1497,7 @@ var gWeeklyMissionBoxPageBtns = {
 };
 
 var gWeeklyMissionBoxConfirmPage = new RF.Page(
-  'gWeeklyMissionBoxConfirmPage',
+  "gWeeklyMissionBoxConfirmPage",
   [
     // bg
     { x: 111, y: 42, r: 181, g: 186, b: 189 },
@@ -1529,7 +1529,7 @@ var gWeeklyMissionBoxConfirmPage = new RF.Page(
 );
 
 var gWeeklyMissionBoxRecievedPage = new RF.Page(
-  'gWeeklyMissionBoxRecievedPage',
+  "gWeeklyMissionBoxRecievedPage",
   [
     // bg
     { x: 113, y: 53, r: 181, g: 186, b: 189 },
@@ -1559,7 +1559,7 @@ var gWeeklyMissionBoxRecievedPage = new RF.Page(
 
 // general pages
 var gPowerSavingPage = new RF.Page(
-  'gPowerSavingPage',
+  "gPowerSavingPage",
   [
     { x: 304, y: 136, r: 156, g: 160, b: 165 },
     { x: 305, y: 136, r: 156, g: 160, b: 165 },
@@ -1609,7 +1609,7 @@ var gPowerSavingPage = new RF.Page(
 );
 
 var gPromotionPage1 = new RF.Page(
-  'gPromotionPage1',
+  "gPromotionPage1",
   [
     { x: 603, y: 27, r: 124, g: 130, b: 132 },
     { x: 612, y: 33, r: 60, g: 60, b: 60 },
@@ -1624,7 +1624,7 @@ var gPromotionPage1 = new RF.Page(
 );
 
 var gPromotionPage2 = new RF.Page(
-  'gPromotionPage2',
+  "gPromotionPage2",
   [
     { x: 43, y: 31, r: 206, g: 211, b: 222 },
     { x: 306, y: 29, r: 206, g: 211, b: 222 },
@@ -1641,7 +1641,7 @@ var gPromotionPage2 = new RF.Page(
 );
 
 var gPromotionPage3 = new RF.Page(
-  'gPromotionPage3',
+  "gPromotionPage3",
   [
     { x: 598, y: 37, r: 101, g: 103, b: 102 },
     { x: 604, y: 45, r: 71, g: 73, b: 71 },
@@ -1653,7 +1653,7 @@ var gPromotionPage3 = new RF.Page(
 );
 
 var gRechargePromotionPage = new RF.Page(
-  'gRechargePromotionPage',
+  "gRechargePromotionPage",
   [
     { x: 114, y: 45, r: 181, g: 186, b: 189 },
     { x: 229, y: 59, r: 16, g: 24, b: 24 },
@@ -1677,7 +1677,7 @@ var gRechargePromotionPage = new RF.Page(
 );
 
 var gTeamSupportPackagePromotionPage = new RF.Page(
-  'gTeamSupportPackagePromotionPage',
+  "gTeamSupportPackagePromotionPage",
   [
     // header bg and x
     { x: 558, y: 37, r: 90, g: 190, b: 148 },
@@ -1697,7 +1697,7 @@ var gTeamSupportPackagePromotionPage = new RF.Page(
 
 // a page wwith a close btn but taller than promotion page
 var gEventPage = new RF.Page(
-  'gEventPage',
+  "gEventPage",
   [
     { x: 20, y: 21, r: 253, g: 254, b: 254 },
     { x: 47, y: 32, r: 132, g: 134, b: 140 },
@@ -1711,7 +1711,7 @@ var gEventPage = new RF.Page(
 );
 
 var gReviewAppPage = new RF.Page(
-  'gReviewAppPage',
+  "gReviewAppPage",
   [
     { x: 106, y: 42, r: 181, g: 186, b: 189 },
     { x: 316, y: 58, r: 84, g: 90, b: 93 },
@@ -1737,7 +1737,7 @@ var gReviewAppPage = new RF.Page(
 
 // page has ok button
 var gOkPage = new RF.Page(
-  'gOkPage',
+  "gOkPage",
   [
     { x: 279, y: 300, r: 0, g: 113, b: 247 },
     { x: 310, y: 301, r: 136, g: 188, b: 254 },
@@ -1751,7 +1751,7 @@ var gOkPage = new RF.Page(
 
 // page has next button
 var gNextPage = new RF.Page(
-  'gNextPage',
+  "gNextPage",
   [
     { x: 273, y: 304, r: 8, g: 117, b: 255 },
     { x: 305, y: 307, r: 255, g: 255, b: 255 },
@@ -1768,7 +1768,7 @@ var gNextPage = new RF.Page(
 );
 
 var gNextPage2 = new RF.Page(
-  'gNextPage',
+  "gNextPage",
   [
     { x: 226, y: 296, r: 222, g: 219, b: 222 },
     { x: 275, y: 296, r: 8, g: 121, b: 255 },
@@ -1784,7 +1784,7 @@ var gNextPage2 = new RF.Page(
 
 // non-specific confirm page with no and yes btn
 var gConfirmWithYSPage = new RF.Page(
-  'gConfirmWithYSPage',
+  "gConfirmWithYSPage",
   [
     // x on right top
     { x: 513, y: 46, r: 182, g: 186, b: 188 },
@@ -1814,7 +1814,7 @@ var gConfirmWithYSPage = new RF.Page(
 
 // need to update apk ver
 var gErrorNewUpdateAvailablePage = new RF.Page(
-  'gErrorNewUpdateAvailablePage',
+  "gErrorNewUpdateAvailablePage",
   [
     // title
     { x: 208, y: 45, r: 181, g: 186, b: 189 },
@@ -1864,7 +1864,7 @@ var gErrorNewUpdateAvailablePage = new RF.Page(
 // for some situation, unexpectedError happens
 // this also includes network error
 var gUnexpectedErrorPage = new RF.Page(
-  'gUnexpectedErrorPage',
+  "gUnexpectedErrorPage",
   [
     { x: 323, y: 39, r: 181, g: 186, b: 189 },
     { x: 514, y: 44, r: 80, g: 81, b: 81 },
@@ -1883,7 +1883,7 @@ var gUnexpectedErrorPage = new RF.Page(
 
 // with more games button
 var gQuitAppPage = new RF.Page(
-  'gQuitAppPage',
+  "gQuitAppPage",
   [
     { x: 279, y: 54, r: 170, g: 173, b: 178 },
     { x: 324, y: 60, r: 20, g: 27, b: 28 },
@@ -1902,7 +1902,7 @@ var gQuitAppPage = new RF.Page(
 );
 
 var gQuitAppPage1 = new RF.Page(
-  'gQuitAppPage1',
+  "gQuitAppPage1",
   [
     { x: 262, y: 56, r: 181, g: 186, b: 189 },
     { x: 300, y: 54, r: 16, g: 24, b: 24 },
@@ -2021,19 +2021,19 @@ var gAllPages = [
   gQuitAppPage,
   gQuitAppPage1,
 ];
-var gAllPagesGroup = new RF.GroupPage('gAllPages', gAllPages);
+var gAllPagesGroup = new RF.GroupPage("gAllPages", gAllPages);
 
 var TASK = {
-  changeGameSettings: 'changeGameSettings',
-  playLeagueGame: 'playLeagueGame',
-  playBattleGame: 'playBattleGame',
-  adReward: 'adReward',
-  weeklyMission: 'weeklyMission',
-  recieveInbox: 'recieveInbox',
+  changeGameSettings: "changeGameSettings",
+  playLeagueGame: "playLeagueGame",
+  playBattleGame: "playBattleGame",
+  adReward: "adReward",
+  weeklyMission: "weeklyMission",
+  recieveInbox: "recieveInbox",
 };
 
 function MLB9I(config) {
-  console.log('############ new MLB9I ############');
+  console.log("############ new MLB9I ############");
   console.log(JSON.stringify(config));
   this.config = config;
   this.screenConfig = new RF.ScreenConfig();
@@ -2042,7 +2042,7 @@ function MLB9I(config) {
 
   // TODO: make task selectable
   this.taskQue = [];
-  this.task = '';
+  this.task = "";
   this.taskState = {
     runCount: 0,
     targetRunCount: 0,
@@ -2062,19 +2062,19 @@ function MLB9I(config) {
   this.lastRestartTimestamp = Date.now();
 }
 MLB9I.prototype.init = function () {
-  console.log('############ MLB9I init ############');
+  console.log("############ MLB9I init ############");
   this.isRunning = true;
   this.screenConfig.devWidth = 640;
   this.screenConfig.devHeight = 360;
 };
 MLB9I.prototype.start = function () {
-  console.log('############ MLB9I start ############');
-  console.log('script version', versionCode);
+  console.log("############ MLB9I start ############");
+  console.log("script version", versionCode);
   if (this.config.isXr) {
     var plan = getUserPlan();
-    if (plan != 'user_plan_mlb9i') {
-      console.log('user plan id: ', JSON.stringify(plan));
-      console.log('please subscribe premium plan');
+    if (plan != "user_plan_mlb9i") {
+      console.log("user plan id: ", JSON.stringify(plan));
+      console.log("please subscribe premium plan");
       return;
     }
   }
@@ -2084,9 +2084,23 @@ MLB9I.prototype.start = function () {
   // var x = execute("dumpsys activity");
   // console.log(x);
   if (this.config.isXr) {
-    this.addTask(/* taskName */ TASK.changeGameSettings, /* runtimes */ 1, /* isRepeat */ false);
-    this.addTask(/* taskName */ TASK.adReward, /* runtimes */ 1, /* isRepeat */ true, /* runAt    */ 1);
-    this.addTask(/* taskName */ TASK.weeklyMission, /* runtimes */ 1, /* isRepeat */ true, /* runAt    */ 1);
+    this.addTask(
+      /* taskName */ TASK.changeGameSettings,
+      /* runtimes */ 1,
+      /* isRepeat */ false
+    );
+    this.addTask(
+      /* taskName */ TASK.adReward,
+      /* runtimes */ 1,
+      /* isRepeat */ true,
+      /* runAt    */ 1
+    );
+    this.addTask(
+      /* taskName */ TASK.weeklyMission,
+      /* runtimes */ 1,
+      /* isRepeat */ true,
+      /* runAt    */ 1
+    );
     this.addTask(
       /* taskName */ TASK.playBattleGame,
       /* runtimes */ 10, // can play 10 times at once
@@ -2095,16 +2109,20 @@ MLB9I.prototype.start = function () {
     );
   }
 
-  this.addTask(/* taskName */ TASK.playLeagueGame, /* runtimes */ 2, /* isRepeat */ true);
+  this.addTask(
+    /* taskName */ TASK.playLeagueGame,
+    /* runtimes */ 2,
+    /* isRepeat */ true
+  );
 
   this.runTasks();
 };
 MLB9I.prototype.stop = function (reason) {
-  console.log('############ MLB9I stop ############');
+  console.log("############ MLB9I stop ############");
   if (reason) {
-    console.log('reason:', reason);
+    console.log("reason:", reason);
   }
-  console.log('script version', versionCode);
+  console.log("script version", versionCode);
   this.isRunning = false;
 };
 
@@ -2148,7 +2166,7 @@ MLB9I.prototype.runTasks = function () {
       // restart after run 1+ day
       // avoid game getiing slower and checkin everyday
       if (now - this.lastRestartTimestamp >= gDayInMs) {
-        console.log('run after 1 day, reopen');
+        console.log("run after 1 day, reopen");
         this.lastRestartTimestamp = now;
         this.reopenApp();
       }
@@ -2173,7 +2191,7 @@ MLB9I.prototype.runTasks = function () {
     // run cur task
     this.runTask(taskName, targetRunCount);
     this.taskHistoryRunCount[taskName] += this.taskState.runCount;
-    console.log('>>>', taskName, 'runs:', this.taskHistoryRunCount[taskName]);
+    console.log(">>>", taskName, "runs:", this.taskHistoryRunCount[taskName]);
 
     // add tasks that need repeat or not reach target
     var remainRunCounts = targetRunCount - this.taskState.runCount;
@@ -2186,9 +2204,9 @@ MLB9I.prototype.runTasks = function () {
 };
 
 MLB9I.prototype.runTask = function (taskName, taskRunCount) {
-  console.log('====== task ======');
+  console.log("====== task ======");
   console.log(taskName);
-  console.log('==================');
+  console.log("==================");
   while (
     this.isRunning &&
     this.task === taskName &&
@@ -2197,41 +2215,42 @@ MLB9I.prototype.runTask = function (taskName, taskRunCount) {
   ) {
     var isAppOn = this.isAppOn();
     if (!isAppOn) {
-      console.log('#ERR: not in app');
+      console.log("#ERR: not in app");
       if (this.config.isXr) {
         this.reopenApp();
         RF.Utils.sleep(gSleepLong);
       } else {
-        this.stop('#ERR: not in app');
+        this.stop("#ERR: not in app");
       }
     }
     var pages = this.findPages();
     // console.log(pages);
     // RF.Utils.sleep(gSleepShort);
     // continue;
-    var currentPage = pages[0] || 'Unknown';
+    var currentPage = pages[0] || "Unknown";
 
-    if (currentPage !== 'Unknown') {
+    if (currentPage !== "Unknown") {
       this.unknownCount = 0;
     } else {
       this.unknownCount++;
     }
 
-    var handler = 'handle' + (currentPage[0] === 'g' ? currentPage.substr(1) : currentPage);
+    var handler =
+      "handle" + (currentPage[0] === "g" ? currentPage.substr(1) : currentPage);
     console.log(handler);
-    if (typeof this[handler] === 'function') {
+    if (typeof this[handler] === "function") {
       this[handler].bind(this)();
     } else {
-      console.log('#ERR:' + currentPage, handler);
+      console.log("#ERR:" + currentPage, handler);
     }
     RF.Utils.sleep(gSleepShort);
   }
 };
 
 MLB9I.prototype.stopCurTask = function (reason) {
-  console.log('[task-stop]', this.task);
+  console.log("[task-stop]", this.task);
   if (reason) {
-    console.log('reason:', reason);
+    console.log("reason:", reason);
   }
   this.taskState.isForceStopped = true;
 };
@@ -2240,24 +2259,27 @@ MLB9I.prototype.stopCurTask = function (reason) {
 MLB9I.prototype.debug = function (errMsg) {
   if (this.config.isDev) {
     var screenshot = getScreenshot();
-    saveImage(screenshot, 'mlb-error' + errMsg + '-' + new Date().toISOString() + '.jpg');
+    saveImage(
+      screenshot,
+      "mlb-error" + errMsg + "-" + new Date().toISOString() + ".jpg"
+    );
     releaseImage(screenshot);
   }
 };
 MLB9I.prototype.isAppOn = function () {
-  var result = execute('dumpsys window windows').split('mCurrentFocus');
+  var result = execute("dumpsys window windows").split("mCurrentFocus");
   if (result.length < 2) {
     return false;
   }
-  result = result[1].split(' ');
+  result = result[1].split(" ");
   if (result.length < 3) {
     return false;
   }
-  result[2] = result[2].replace('}', '');
-  result = result[2].split('/');
+  result[2] = result[2].replace("}", "");
+  result = result[2].split("/");
 
-  var packageName = '';
-  var activityName = '';
+  var packageName = "";
+  var activityName = "";
 
   if (result.length == 1) {
     packageName = result[0].trim();
@@ -2266,8 +2288,11 @@ MLB9I.prototype.isAppOn = function () {
     activityName = result[1].trim();
   }
 
-  console.log('isAppOn', packageName, activityName);
-  if (packageName === 'com.com2us.ninepb3d.normal.freefull.google.global.android.common') {
+  console.log("isAppOn", packageName, activityName);
+  if (
+    packageName ===
+    "com.com2us.ninepb3d.normal.freefull.google.global.android.common"
+  ) {
     return true;
   }
   return false;
@@ -2276,16 +2301,18 @@ MLB9I.prototype.isAppOn = function () {
 MLB9I.prototype.startApp = function () {
   do {
     execute(
-      'ANDROID_DATA=/data monkey -p com.com2us.ninepb3d.normal.freefull.google.global.android.common -c android.intent.category.LAUNCHER 1'
+      "ANDROID_DATA=/data monkey -p com.com2us.ninepb3d.normal.freefull.google.global.android.common -c android.intent.category.LAUNCHER 1"
     );
     sleep(3000);
   } while (!this.isAppOn());
-  console.log('...started app');
+  console.log("...started app");
 };
 MLB9I.prototype.stopApp = function stopApp() {
-  execute('ANDROID_DATA=/data am force-stop com.com2us.ninepb3d.normal.freefull.google.global.android.common');
+  execute(
+    "ANDROID_DATA=/data am force-stop com.com2us.ninepb3d.normal.freefull.google.global.android.common"
+  );
   sleep(6000);
-  console.log('...stopped app');
+  console.log("...stopped app");
 };
 MLB9I.prototype.reopenApp = function stopApp() {
   this.stopApp();
@@ -2293,9 +2320,9 @@ MLB9I.prototype.reopenApp = function stopApp() {
 };
 MLB9I.prototype.findPages = function () {
   var matches = gAllPagesGroup.isMatchScreen(this.screen);
-  console.log('___findPages___');
+  console.log("___findPages___");
   console.log(matches);
-  console.log('_______________');
+  console.log("_______________");
   return matches;
 };
 MLB9I.prototype.getPageByName = function (pageName) {
@@ -2357,12 +2384,12 @@ MLB9I.prototype.handleMainPage = function () {
     case TASK.adReward:
       // sometimes won't trigger anything if still on cd
       if (this.taskState.tapAdBtnCount > 2) {
-        this.stopCurTask('ad is still cd');
+        this.stopCurTask("ad is still cd");
         return;
       }
       this.taskState.tapAdBtnCount++;
       this.screen.tap(gMainPageBtns.adTab);
-      console.log('tap ad tab');
+      console.log("tap ad tab");
       break;
     case TASK.weeklyMission:
       this.screen.tap(gMainPageBtns.achievement);
@@ -2379,7 +2406,7 @@ MLB9I.prototype.handleSettingsPage = function () {
   }
   this.taskState.runCount++;
   this.screen.tap(gSettingsPageBtns.graphicTab);
-  console.log('click graphic tab');
+  console.log("click graphic tab");
   RF.Utils.sleep(gSleepMedium);
 
   // ensure is switched on
@@ -2392,7 +2419,7 @@ MLB9I.prototype.handleSettingsPage = function () {
   releaseImage(screenshot);
   if (!isSameColor(rgb, { r: 8, g: 118, b: 255 })) {
     this.screen.tap(gSettingsPageBtns.graphicTabPowerSaveOn);
-    console.log('click power save mode on');
+    console.log("click power save mode on");
     RF.Utils.sleep(gSleepLong);
   }
 };
@@ -2403,7 +2430,7 @@ MLB9I.prototype.handleAdRewardPage = function () {
     gAdRewardPage.goBack(this.screen);
     return;
   }
-  console.log('watch ad');
+  console.log("watch ad");
   gAdRewardPage.goNext(this.screen);
   var expectedEndAt = Date.now() + gSleepForAd;
   RF.Utils.sleep(gSleepForAd);
@@ -2419,8 +2446,8 @@ MLB9I.prototype.handleAdRewardPage = function () {
   var retryDuring = Date.now() - expectedEndAt;
   while (this.isRunning && isAdOn && retryDuring < gDuringMaxAdRetry) {
     RF.Utils.sleep(gSleepShort);
-    keycode('KEYCODE_BACK', 100);
-    console.log('tap back');
+    keycode("KEYCODE_BACK", 100);
+    console.log("tap back");
     RF.Utils.sleep(gSleepShort);
 
     // try tap close btn
@@ -2446,7 +2473,7 @@ MLB9I.prototype.handleAdRewardRedeemPage = function () {
 };
 MLB9I.prototype.handleAdRewardOnCDPage = function () {
   if (this.task === TASK.adReward) {
-    this.stopCurTask('ad is still cd');
+    this.stopCurTask("ad is still cd");
   }
   gAdRewardOnCDPage.goBack(this.screen);
 };
@@ -2466,7 +2493,7 @@ MLB9I.prototype.handleAchivementMissionPage = function () {
     var canCollect = isSameColor(rgb, canCollectBtn);
     if (canCollect) {
       this.screen.tap({ x: canCollectBtn.x, y: y });
-      console.log('collect');
+      console.log("collect");
       RF.Utils.sleep(gSleepMedium);
     }
   }
@@ -2493,24 +2520,24 @@ MLB9I.prototype.handleWeeklyMissionBoxPage = function () {
       var rgb = getImageColor(screenshot, okItem.x + dx, okItem.y + dy);
       if (!isSameColor(rgb, okItem)) {
         releaseImage(screenshot);
-        this.stopCurTask('wait all weekly mission complete');
+        this.stopCurTask("wait all weekly mission complete");
         return;
       }
     }
   }
 
   releaseImage(screenshot);
-  console.log('click open');
+  console.log("click open");
   this.screen.tap(gWeeklyMissionBoxPageBtns.openBox);
   RF.Utils.sleep(gSleepMedium);
 
   // TODO: let user select the item they want in the future
   // select the left bottom one
-  console.log('select right bottom item');
+  console.log("select right bottom item");
   this.screen.tap({ x: okItem.x, y: okItem.y + 2 * h });
   RF.Utils.sleep(gSleepMedium);
 
-  console.log('receive right bottom item');
+  console.log("receive right bottom item");
   this.screen.tap(gWeeklyMissionBoxPageBtns.receiveReward);
 
   // enter recieve confirm page
@@ -2531,7 +2558,7 @@ MLB9I.prototype.handleBattleModePanelPage = function () {
   }
   // TODO: check if play other mode too
   this.screen.tap(gBattleModePanelPageBtns.rankedBattle);
-  console.log('play ranked battle');
+  console.log("play ranked battle");
 };
 MLB9I.prototype.handleRankedBattlePanelPage = function () {
   if (this.task !== TASK.playBattleGame) {
@@ -2552,11 +2579,11 @@ MLB9I.prototype.handleRankedBattlePanelPage = function () {
 
     releaseImage(screenshot);
     if (!isRefreshAbled) {
-      this.stopCurTask('play rank game disabled');
+      this.stopCurTask("play rank game disabled");
       return;
     }
 
-    console.log('refresh match list');
+    console.log("refresh match list");
     this.screen.tap({ x: freshBtn.x, y: freshBtn.y });
     RF.Utils.sleep(gSleepShort);
     screenshot = getScreenshot();
@@ -2570,12 +2597,12 @@ MLB9I.prototype.handleRankedBattlePanelPage = function () {
 
   if (isAutoOff) {
     this.screen.tap({ x: 308, y: 66 });
-    console.log('turn on auto play');
+    console.log("turn on auto play");
     RF.Utils.sleep(gSleepShort);
   }
 
   gRankedBattlePanelPage.goNext(this.screen);
-  console.log('play');
+  console.log("play");
   RF.Utils.sleep(gSleepLong);
   // let it auto play with random 10
 };
@@ -2607,7 +2634,7 @@ MLB9I.prototype.handleAutoGameConfirmEndPage = function () {
 // playLeagueMode
 // start new LeagueMode pages
 MLB9I.prototype.handleLeagueModePanelPageNextSchedule = function () {
-  console.log('is enter next schedule / continue page');
+  console.log("is enter next schedule / continue page");
   if (this.task !== TASK.playLeagueGame) {
     gLeagueModePanelPageNextSchedule.goBack(this.screen);
     return;
@@ -2639,7 +2666,7 @@ MLB9I.prototype.handleLeagueModeGameInfoPage = function () {
     return;
   }
 
-  console.log('check energy');
+  console.log("check energy");
 
   // handle the energy to choose game
   var screenshot = getScreenshot();
@@ -2649,14 +2676,14 @@ MLB9I.prototype.handleLeagueModeGameInfoPage = function () {
   var hasEnergy0 = isSameColor(rgb, emptyEnergy);
   if (hasEnergy0) {
     releaseImage(screenshot);
-    this.stopCurTask('no energy');
+    this.stopCurTask("no energy");
     return;
   }
 
   var digit1 = { x: 561, y: 278, r: 169, g: 172, b: 179 };
   rgb = getImageColor(screenshot, digit1.x, digit1.y);
   var hasEnergy10 = isSameColor(rgb, digit1);
-  console.log('has10Energy:', hasEnergy10);
+  console.log("has10Energy:", hasEnergy10);
 
   // use quick play when has 10+ energy,
   // and slow play when has 10- energy
@@ -2667,27 +2694,27 @@ MLB9I.prototype.handleLeagueModeGameInfoPage = function () {
 
   if (hasEnergy10 && !isQuickPlayOn) {
     this.screen.tap(quickPlayBtn); // select quick play
-    console.log('turn on quick play');
+    console.log("turn on quick play");
     RF.Utils.sleep(gSleepLong);
   }
   if (!hasEnergy10 && isQuickPlayOn) {
     this.screen.tap(quickPlayBtn); // cancel quick play
-    console.log('turn off quick play');
+    console.log("turn off quick play");
     RF.Utils.sleep(gSleepLong);
   }
   gLeagueModeGameInfoPage.goNext(this.screen); // play ball
-  console.log('play');
+  console.log("play");
   RF.Utils.sleep(gSleepLong);
 };
 
 // play process pages
 MLB9I.prototype.handleSelectPlayRole = function () {
-  console.log('handle select play role');
+  console.log("handle select play role");
   gSelectPlayRole.goNext(this.screen);
   return true;
 };
 MLB9I.prototype.handleSelectYearPage = function () {
-  console.log('handle select year page');
+  console.log("handle select year page");
   gSelectYearPage.goNext(this.screen);
 
   // go to the min year
@@ -2709,7 +2736,11 @@ MLB9I.prototype.handleSelectYearPage = function () {
   }
 
   // check the diff, return to prev year
-  for (var yearDiff = this.config.leagueYear - gLeagueYearMin; yearDiff > 0; yearDiff--) {
+  for (
+    var yearDiff = this.config.leagueYear - gLeagueYearMin;
+    yearDiff > 0;
+    yearDiff--
+  ) {
     this.screen.tap(gSelectYearPageBtns.nextYear);
     RF.Utils.sleep(gSleepShort);
   }
@@ -2719,7 +2750,7 @@ MLB9I.prototype.handleSelectYearPage = function () {
   return;
 };
 MLB9I.prototype.handleSelectSeasonModePage = function () {
-  console.log('handle select season page');
+  console.log("handle select season page");
   gSelectSeasonModePage.goNext(this.screen);
   RF.Utils.sleep(gSleepMedium);
   this.screen.tap({ x: 568, y: 333 }); // normal mode
@@ -2729,33 +2760,33 @@ MLB9I.prototype.handleSelectSeasonModePage = function () {
   RF.Utils.sleep(gSleepLong);
 };
 MLB9I.prototype.handleSelectLeagueGameAmountPage = function () {
-  console.log('handle select game amount page');
+  console.log("handle select game amount page");
 
   // use config user setted to select which they want to play
   // TODO: handle the half, quarter, full has 2 next page
   switch (this.config.leagueSeasonMode) {
-    case 'full':
-      console.log('select full league');
+    case "full":
+      console.log("select full league");
       this.screen.tap(gSelectLeagueGameAmountPageBtns.full);
       RF.Utils.sleep(gSleepShort);
       this.screen.tap({ x: 564, y: 328 }); // go next
       break;
-    case 'half':
-      console.log('select 1/2 league');
+    case "half":
+      console.log("select 1/2 league");
       this.screen.tap(gSelectLeagueGameAmountPageBtns.half);
       RF.Utils.sleep(gSleepShort);
       this.screen.tap({ x: 564, y: 328 }); // go next
       // ? will go to ok / next pages
       break;
-    case 'quarter':
-      console.log('select 1/4 league');
+    case "quarter":
+      console.log("select 1/4 league");
       this.screen.tap(gSelectLeagueGameAmountPageBtns.quarter);
       RF.Utils.sleep(gSleepShort);
       this.screen.tap({ x: 564, y: 328 }); // go next
       // ? will go to ok / next pages
       break;
-    case 'postSeason':
-      console.log('select postSeason');
+    case "postSeason":
+      console.log("select postSeason");
       this.screen.tap(gSelectLeagueGameAmountPageBtns.post);
       // ? will go to ok / next pages
       break;
@@ -2767,21 +2798,21 @@ MLB9I.prototype.handleSelectLeagueGameAmountPage = function () {
 };
 MLB9I.prototype.handleEndSeasonPage = function () {
   // TODO: use config to select
-  console.log('end season');
+  console.log("end season");
   this.screen.tap({ x: 182, y: 178 }); // tap new season of left
   RF.Utils.sleep(gSleepMedium);
   gEndSeasonPage.goNext(this.screen);
 };
 MLB9I.prototype.handleNewSeasonPage = function () {
-  console.log('new season');
+  console.log("new season");
   gNewSeasonPage.goNext(this.screen);
 };
 MLB9I.prototype.handleGameLineUpPage = function () {
-  console.log('game lineup');
+  console.log("game lineup");
   gGameLineUpPage.goNext(this.screen);
 };
 MLB9I.prototype.handleMvpPage = function () {
-  console.log('handleMvpPage');
+  console.log("handleMvpPage");
 
   var okBtn = { x: 568, y: 320, r: 52, g: 120, b: 210 };
 
@@ -2792,7 +2823,11 @@ MLB9I.prototype.handleMvpPage = function () {
   releaseImage(screenshot);
 
   // ok button still on the screen
-  for (var maxOkButtonRemain = 10; isSameColor(rgb, okBtn) && maxOkButtonRemain; maxOkButtonRemain--) {
+  for (
+    var maxOkButtonRemain = 10;
+    isSameColor(rgb, okBtn) && maxOkButtonRemain;
+    maxOkButtonRemain--
+  ) {
     gMvpPage.goNext(this.screen); // ok
     RF.Utils.sleep(gSleepMedium);
     screenshot = getScreenshot();
@@ -2806,18 +2841,18 @@ MLB9I.prototype.handleMvpPage = function () {
   RF.Utils.sleep(gSleepMedium);
 };
 MLB9I.prototype.handlePlayerGrowthCompeletePage = function () {
-  console.log('player growth complete');
+  console.log("player growth complete");
   gPlayerGrowthCompeletePage.goNext(this.screen);
 };
 MLB9I.prototype.handlePicherOfTheMonthPage = function () {
-  console.log('pitcher of month');
+  console.log("pitcher of month");
   gPicherOfTheMonthPage.goNext(this.screen);
   RF.Utils.sleep(gSleepMedium);
 };
 MLB9I.prototype.handleGameResultPage = function () {
   // the page is shared between all mode
   if (this.task === TASK.playLeagueGame || this.task === TASK.playBattleGame) {
-    console.log('complete a game');
+    console.log("complete a game");
     this.taskState.runCount++;
   }
   gGameResultPage.goNext(this.screen);
@@ -2827,21 +2862,21 @@ MLB9I.prototype.handleGameResultAquiredPage = function () {
 };
 MLB9I.prototype.handleGameResultOtherPage = function () {
   this.screen.tap({ x: 0, y: 0 });
-  console.log('tap');
+  console.log("tap");
 };
 MLB9I.prototype.handleGameResultWorldChampionPage = function () {
-  console.log('result world champion');
+  console.log("result world champion");
   gGameResultWorldChampionPage.goNext(this.screen);
 };
 
 // game reward pages
 MLB9I.prototype.handleGameRewardPage = function () {
-  console.log('game reward');
+  console.log("game reward");
   gGameRewardPage.goNext(this.screen);
 };
 MLB9I.prototype.handleSelectRewardPlayerPage = function () {
   // TODO: handle choose the most rare card
-  console.log('handleSelectRewardPlayer');
+  console.log("handleSelectRewardPlayer");
 
   var screenshot = getScreenshot();
   var bestCardRank = -1;
@@ -2853,7 +2888,7 @@ MLB9I.prototype.handleSelectRewardPlayerPage = function () {
   for (var i in positions) {
     var pos = gSelectRewardPlayerPageBtns[positions[i]];
     var rgb = getImageColor(screenshot, pos.x, pos.y);
-    var k = rgb.r + '-' + rgb.g + '-' + rgb.b;
+    var k = rgb.r + "-" + rgb.g + "-" + rgb.b;
     console.log(pos.x, pos.y, k);
     // select if not in basic type
     var rank = gPlayerCardColorToRank[k] || 5;
@@ -2870,26 +2905,26 @@ MLB9I.prototype.handleSelectRewardPlayerPage = function () {
   RF.Utils.sleep(gSleepMedium);
 };
 MLB9I.prototype.handleLeagueRewardAchievementGradePage = function () {
-  console.log('league reward achievement');
+  console.log("league reward achievement");
   gLeagueRewardAchievementGradePage.goNext(this.screen);
 };
 MLB9I.prototype.handleBestPositionAwardBonusPage = function () {
-  console.log('best position award');
+  console.log("best position award");
   gBestPositionAwardBonusPage.goNext(this.screen);
 };
 MLB9I.prototype.handleBonusGrantedByTeamRecordPage = function () {
-  console.log('bonus granted by team');
+  console.log("bonus granted by team");
   gBonusGrantedByTeamRecordPage.goNext(this.screen);
 };
 MLB9I.prototype.handlePostSeasonAwardBonusPage = function () {
-  console.log('post season award bonus');
+  console.log("post season award bonus");
   gPostSeasonAwardBonusPage.goNext(this.screen);
 };
 
 // on play pages
 MLB9I.prototype.handleOnQuickPlayPage = function () {
   this.screen.tap({ x: 0, y: 0 });
-  console.log('tap');
+  console.log("tap");
 };
 MLB9I.prototype.handleOnQuickPlayPausePage = function () {
   gOnQuickPlayPausePage.goNext(this.screen);
@@ -2901,7 +2936,7 @@ MLB9I.prototype.handleOnPlayPagePowerSaveOn = function () {
     return;
   }
   if (this.config.isXr && !gPowerSavingPage.isMatchScreen(this.screen)) {
-    console.log('still play with power save on');
+    console.log("still play with power save on");
   } else {
     this.handlePowerSavingPage();
   }
@@ -2922,11 +2957,11 @@ MLB9I.prototype.handleLeagueOnPlayPagePowerSaveOff = function () {
 
   // TODO: handle quick switch to auto play off if was stopped
   if (this.config.isXr) {
-    console.log('turn on power save play');
+    console.log("turn on power save play");
     gLeagueOnPlayPagePowerSaveOff.goNext(this.screen);
   }
   this.screen.tap({ x: 0, y: 0 });
-  console.log('tap');
+  console.log("tap");
 };
 MLB9I.prototype.handleLeagueOnPlayPageAutoOff = function () {
   if (this.task !== TASK.playLeagueGame) {
@@ -2934,7 +2969,7 @@ MLB9I.prototype.handleLeagueOnPlayPageAutoOff = function () {
     gLeagueOnPlayPageAutoOff.goBack(this.screen);
     return;
   }
-  console.log('turn on auto play');
+  console.log("turn on auto play");
   gLeagueOnPlayPageAutoOff.goNext(this.screen);
 };
 MLB9I.prototype.handleLeagueOnPlayPausePage = function () {
@@ -2945,8 +2980,8 @@ MLB9I.prototype.handleLeagueOnPlayPausePage = function () {
     return;
   }
   // continue play
-  keycode('KEYCODE_BACK', 100);
-  console.log('tap back to stay in game');
+  keycode("KEYCODE_BACK", 100);
+  console.log("tap back to stay in game");
   // gLeagueOnPlayPausePage.goNext(this.screen);
 };
 MLB9I.prototype.handleLeagueContinuePlayingPage = function () {
@@ -2955,7 +2990,7 @@ MLB9I.prototype.handleLeagueContinuePlayingPage = function () {
 
 // general pages
 MLB9I.prototype.handlePowerSavingPage = function () {
-  console.log('handlePowerSavingPage');
+  console.log("handlePowerSavingPage");
   this.screen.tapDown({ x: 100, y: 180 });
   RF.Utils.sleep(gSleepMedium);
   this.screen.moveTo({ x: 500, y: 180 });
@@ -2964,79 +2999,79 @@ MLB9I.prototype.handlePowerSavingPage = function () {
   RF.Utils.sleep(gSleepMedium);
 };
 MLB9I.prototype.handleReviewAppPage = function () {
-  console.log('gReviewAppPage');
+  console.log("gReviewAppPage");
   gReviewAppPage.goNext(this.screen);
 };
 MLB9I.prototype.handleDownloadDataPage = function () {
-  console.log('gDownloadDataPage');
+  console.log("gDownloadDataPage");
   gDownloadDataPage.goNext(this.screen);
   RF.Utils.sleep(gSleepWaitPageLong);
 };
 MLB9I.prototype.handlePromotionPage1 = function () {
-  console.log('gPromotionPage1');
+  console.log("gPromotionPage1");
   gPromotionPage1.goNext(this.screen);
 };
 MLB9I.prototype.handlePromotionPage2 = function () {
-  console.log('gPromotionPage2');
+  console.log("gPromotionPage2");
   gPromotionPage2.goNext(this.screen);
 };
 MLB9I.prototype.handlePromotionPage3 = function () {
-  console.log('gPromotionPage3');
+  console.log("gPromotionPage3");
   gPromotionPage3.goNext(this.screen);
 };
 MLB9I.prototype.handleRechargePromotionPage = function () {
-  console.log('gRechargePromotionPage');
+  console.log("gRechargePromotionPage");
   gRechargePromotionPage.goNext(this.screen);
 };
 MLB9I.prototype.handleTeamSupportPackagePromotionPage = function () {
-  console.log('gTeamSupportPackagePromotionPage');
+  console.log("gTeamSupportPackagePromotionPage");
   gTeamSupportPackagePromotionPage.goNext(this.screen);
 };
 MLB9I.prototype.handleEventPage = function () {
-  console.log('gEventPage');
+  console.log("gEventPage");
   gEventPage.goNext(this.screen);
 };
 MLB9I.prototype.handleOkPage = function () {
-  console.log('ok page');
+  console.log("ok page");
   gOkPage.goNext(this.screen);
 };
 MLB9I.prototype.handleNextPage = function () {
-  console.log('next page');
+  console.log("next page");
   gNextPage.goNext(this.screen);
 };
 MLB9I.prototype.handleConfirmWithYSPage = function () {
-  console.log('confirm with y/s page');
+  console.log("confirm with y/s page");
   gConfirmWithYSPage.goNext(this.screen);
 };
 MLB9I.prototype.handleErrorNewUpdateAvailablePage = function () {
-  console.log('game apk require update');
+  console.log("game apk require update");
   gErrorNewUpdateAvailablePage.goNext(this.screen);
   RF.Utils.sleep(gSleepWaitPageLong);
 };
 MLB9I.prototype.handleUnexpectedErrorPage = function () {
-  console.log('unexpectedError happened during game');
+  console.log("unexpectedError happened during game");
   gUnexpectedErrorPage.goNext(this.screen);
   RF.Utils.sleep(gSleepWaitPageLong);
 };
 MLB9I.prototype.handleQuitAppPage = function () {
-  console.log('gQuitAppPage');
+  console.log("gQuitAppPage");
   gQuitAppPage.goNext(this.screen);
 };
 MLB9I.prototype.handleQuitAppPage1 = function () {
-  console.log('gQuitAppPage1');
+  console.log("gQuitAppPage1");
   gQuitAppPage1.goNext(this.screen);
 };
 
 // try to resolve by simply tap back
 MLB9I.prototype.handleUnknown = function () {
   this.screen.tap({ x: 0, y: 0 });
-  console.log('tap');
+  console.log("tap");
 
   // try to resolve by simply tap back
   if (this.unknownCount % 20 === 0) {
     RF.Utils.sleep(gSleepShort);
-    keycode('KEYCODE_BACK', 100);
-    console.log('tap back');
+    keycode("KEYCODE_BACK", 100);
+    console.log("tap back");
     return;
   }
   if (this.config.isXr && this.unknownCount % 1000 === 0) {
@@ -3050,7 +3085,12 @@ function isSameColor(rgb1, rgb2) {
   var r = rgb1.r - rgb2.r;
   var g = rgb1.g - rgb2.g;
   var b = rgb1.b - rgb2.b;
-  var score = 1 - Math.sqrt((((512 + mean) * r * r) >> 8) + 4 * g * g + (((767 - mean) * b * b) >> 8)) / 768;
+  var score =
+    1 -
+    Math.sqrt(
+      (((512 + mean) * r * r) >> 8) + 4 * g * g + (((767 - mean) * b * b) >> 8)
+    ) /
+      768;
   return score >= 0.9;
 }
 
@@ -3058,9 +3098,9 @@ function isSameColor(rgb1, rgb2) {
 var mlb9i;
 function start(jsonConfig) {
   var config = defaultConfig;
-  if (typeof jsonConfig === 'string') {
+  if (typeof jsonConfig === "string") {
     config = JSON.parse(jsonConfig);
-  } else if (typeof jsonConfig === 'object') {
+  } else if (typeof jsonConfig === "object") {
     config = jsonConfig;
   }
   mlb9i = new MLB9I(config);
