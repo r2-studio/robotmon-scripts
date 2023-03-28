@@ -18,6 +18,11 @@ var defaultConfig = {
   isDev: false, // hidden, only for debug
   leagueSeasonMode: 'full', // half, quarter, postSeason
   leagueYear: gLeagueYearMin, //gLeagueYearMin, // number
+
+  lastSentEvent: 0, // Last time send script status event, // number
+  minEventIntervalInSecs: 180, // Will block the event if send too frequently, // number
+  lastEventKey: undefined,
+  lastEventValue: undefined,
 };
 
 var gLogoPage = new RF.Page(
@@ -138,6 +143,25 @@ var gLandingPage = new RF.Page(
   { x: 0, y: 0 }
 );
 
+var gChooseLoginMethod = new RF.Page(
+  'gChooseLoginMethod',
+  [
+    { x: 38, y: 267, r: 8, g: 110, b: 247 },
+    { x: 37, y: 263, r: 255, g: 255, b: 255 },
+    { x: 33, y: 266, r: 8, g: 114, b: 247 },
+    { x: 28, y: 265, r: 19, g: 120, b: 249 },
+    { x: 30, y: 274, r: 23, g: 110, b: 247 },
+    { x: 36, y: 269, r: 8, g: 109, b: 247 },
+    { x: 36, y: 274, r: 175, g: 205, b: 253 },
+    { x: 63, y: 269, r: 92, g: 160, b: 248 },
+    { x: 59, y: 269, r: 8, g: 109, b: 247 },
+    { x: 17, y: 331, r: 0, g: 28, b: 66 },
+    { x: 25, y: 335, r: 255, g: 255, b: 255 },
+    { x: 32, y: 331, r: 203, g: 89, b: 114 },
+  ],
+  { x: 38, y: 268 }
+);
+
 var gLogInPage = new RF.Page(
   'gLogInPage',
   [
@@ -148,7 +172,7 @@ var gLogInPage = new RF.Page(
     { x: 66, y: 333, r: 238, g: 238, b: 238 },
     { x: 44, y: 235, r: 238, g: 238, b: 238 },
     { x: 136, y: 236, r: 238, g: 238, b: 238 },
-    { x: 258, y: 232, r: 143, g: 186, b: 227 },
+    { x: 132, y: 231, r: 238, g: 238, b: 238 },
     { x: 548, y: 169, r: 43, g: 132, b: 216 },
     { x: 583, y: 195, r: 43, g: 132, b: 216 },
     { x: 43, y: 142, r: 255, g: 255, b: 255 },
@@ -156,6 +180,20 @@ var gLogInPage = new RF.Page(
   ],
   { x: 554, y: 177 }, // login
   { x: 0, y: 0 }
+);
+
+var gLoginNotARobot = new RF.Page(
+  'gLoginNotARobot',
+  [
+    { x: 420, y: 311, r: 43, g: 132, b: 216 },
+    { x: 403, y: 216, r: 75, g: 141, b: 245 },
+    { x: 394, y: 213, r: 249, g: 249, b: 249 },
+    { x: 394, y: 229, r: 180, g: 180, b: 180 },
+    { x: 365, y: 226, r: 249, g: 249, b: 249 },
+    { x: 354, y: 64, r: 48, g: 48, b: 48 },
+    { x: 327, y: 81, r: 238, g: 238, b: 238 },
+  ],
+  { x: 342, y: 310 } // Next
 );
 
 var gDownloadDataPage = new RF.Page(
@@ -1926,10 +1964,12 @@ var gQuitAppPage1 = new RF.Page(
 var gAllPages = [
   // TODO: handle follow pages
   gLogoPage,
+  gChooseLoginMethod,
   gLandingPage,
 
   // speical pages
   gLogInPage,
+  gLoginNotARobot,
   gTOSPAge,
 
   // TODO: handle more task
@@ -2030,6 +2070,7 @@ var TASK = {
   adReward: 'adReward',
   weeklyMission: 'weeklyMission',
   recieveInbox: 'recieveInbox',
+  manualLogin: 'manualLogin',
 };
 
 function MLB9I(config) {
@@ -2043,13 +2084,6 @@ function MLB9I(config) {
   // TODO: make task selectable
   this.taskQue = [];
   this.task = '';
-  this.taskState = {
-    runCount: 0,
-    targetRunCount: 0,
-    isRepeat: false,
-    isForceStopped: false,
-    runAt: 0,
-  };
   this.taskHistoryRunCount = {
     changeGameSettings: 0,
     playLeagueGame: 0,
@@ -2070,7 +2104,7 @@ MLB9I.prototype.init = function () {
 MLB9I.prototype.start = function () {
   console.log('############ MLB9I start ############');
   console.log('script version', versionCode);
-  if (this.config.isXr) {
+  if (this.config.isXr && this.config.licenseId === undefined) {
     var plan = getUserPlan();
     if (plan != 'user_plan_mlb9i') {
       console.log('user plan id: ', JSON.stringify(plan));
@@ -2083,7 +2117,17 @@ MLB9I.prototype.start = function () {
   // TODO: search ad related activity in x;
   // var x = execute("dumpsys activity");
   // console.log(x);
-  if (this.config.isXr) {
+
+  // this.config.isXr && this.config.licenseId !== undefined => cloud bot, need go to wait for login page
+  if (this.config.isXr && this.config.licenseId !== undefined) {
+    this.sendEvent('gameStatus', 'wait-for-input');
+    this.addTask(/* taskName */ TASK.manualLogin, /* runtimes */ 1, /* isRepeat */ false);
+  }
+
+  // this.config.isXr && licenseId === undefined => local paid bot;
+  // this.config.isXr && this.config.licenseId !== '' => cloud paid bot
+  if (this.config.isXr && (this.config.licenseId === undefined || this.config.licenseId !== '')) {
+    console.log('adding tasks');
     this.addTask(/* taskName */ TASK.changeGameSettings, /* runtimes */ 1, /* isRepeat */ false);
     this.addTask(/* taskName */ TASK.adReward, /* runtimes */ 1, /* isRepeat */ true, /* runAt    */ 1);
     this.addTask(/* taskName */ TASK.weeklyMission, /* runtimes */ 1, /* isRepeat */ true, /* runAt    */ 1);
@@ -2093,9 +2137,9 @@ MLB9I.prototype.start = function () {
       /* isRepeat */ true,
       /* runAt    */ 1
     );
-  }
 
-  this.addTask(/* taskName */ TASK.playLeagueGame, /* runtimes */ 2, /* isRepeat */ true);
+    this.addTask(/* taskName */ TASK.playLeagueGame, /* runtimes */ 2, /* isRepeat */ true);
+  }
 
   this.runTasks();
 };
@@ -2143,6 +2187,11 @@ MLB9I.prototype.addTask = function (taskName, taskRunCount, isRepeat, runAt) {
 MLB9I.prototype.runTasks = function () {
   while (this.taskQue.length > 0 && this.isRunning) {
     var now = Date.now();
+
+    if (this.config.expireTimeMs !== 0 && Date.now() > this.config.expireTimeMs) {
+      console.log('Stop the script as expire time reached: ', this.config.expireTimeMs.toLocaleString());
+      this.stop();
+    }
 
     if (this.config.isXr) {
       // restart after run 1+ day
@@ -2221,6 +2270,7 @@ MLB9I.prototype.runTask = function (taskName, taskRunCount) {
     console.log(handler);
     if (typeof this[handler] === 'function') {
       this[handler].bind(this)();
+      // this.sendEvent('running', '');
     } else {
       console.log('#ERR:' + currentPage, handler);
     }
@@ -2237,6 +2287,30 @@ MLB9I.prototype.stopCurTask = function (reason) {
 };
 
 // * ======== general ========
+MLB9I.prototype.sendEvent = function (key, value, isForceSending) {
+  if (isForceSending || key !== this.config.lastEventKey || value !== this.config.lastEventValue) {
+    sendEvent(key, value);
+    this.config.lastEventKey = key;
+    this.config.lastEventValue = value;
+    this.config.lastSentEvent = Date.now();
+    console.log(
+      'Send event:',
+      key,
+      this.config.lastEventKey,
+      value,
+      this.config.lastEventValue,
+      new Date().toLocaleString()
+    );
+    return;
+  }
+
+  if ((Date.now() - this.config.lastSentEvent) / 1000 > this.config.minEventIntervalInSecs) {
+    sendEvent(key, value);
+    this.config.lastSentEvent = Date.now();
+    console.log('Send event periodically:', key, value, new Date().toLocaleString());
+    return;
+  }
+};
 MLB9I.prototype.debug = function (errMsg) {
   if (this.config.isDev) {
     var screenshot = getScreenshot();
@@ -2266,7 +2340,7 @@ MLB9I.prototype.isAppOn = function () {
     activityName = result[1].trim();
   }
 
-  console.log('isAppOn', packageName, activityName);
+  // console.log('isAppOn', packageName, activityName);
   if (packageName === 'com.com2us.ninepb3d.normal.freefull.google.global.android.common') {
     return true;
   }
@@ -2316,27 +2390,23 @@ MLB9I.prototype.handleLogoPage = function () {
 MLB9I.prototype.handleLandingPage = function () {
   RF.Utils.sleep(gSleepMedium);
 };
+MLB9I.prototype.handleChooseLoginMethod = function () {
+  gChooseLoginMethod.goNext(this.screen);
+};
 MLB9I.prototype.handleLogInPage = function () {
   if (!this.config.isXr) {
     return;
   }
-  // FIXME: check ok
-  // var isLogIn = false;
-  // var eventLastSendAt = 0;
-  // while (!isLogIn) {
-  //   console.log("wait user input");
-  //   var now = Date.now();
-  //   if (now - eventLastSendAt > 5 * gMinuteInMs) {
-  //     eventLastSendAt = now;
-  //     sendEvent("gameStatus", "wait-for-input");
-  //   }
 
-  //   RF.Utils.sleep(gSleepMedium);
-  //   var pages = this.findPages();
-  //   isLogIn = pages.length > 0 && pages[0] !== "gLogInPage";
-  // }
+  if (this.config.isXr && this.config.licenseId !== undefined) {
+    this.sendEvent('running', '');
+    console.log('waiting for user to input login info');
 
-  // console.log("wait user input end");
+    if (this.task !== TASK.manualLogin) {
+      this.stopCurTask();
+      this.runTask(TASK.manualLogin, 1);
+    }
+  }
 };
 
 MLB9I.prototype.handleTOSPage = function () {
@@ -2366,6 +2436,9 @@ MLB9I.prototype.handleMainPage = function () {
       break;
     case TASK.weeklyMission:
       this.screen.tap(gMainPageBtns.achievement);
+    case TASK.manualLogin:
+      this.stopCurTask('Login success');
+      this.sendEvent('gameStatus', 'login-succeeded');
     default:
       break;
   }
@@ -3029,6 +3102,10 @@ MLB9I.prototype.handleQuitAppPage1 = function () {
 
 // try to resolve by simply tap back
 MLB9I.prototype.handleUnknown = function () {
+  if (this.task === TASK.manualLogin) {
+    return;
+  }
+
   this.screen.tap({ x: 0, y: 0 });
   console.log('tap');
 
@@ -3054,15 +3131,28 @@ function isSameColor(rgb1, rgb2) {
   return score >= 0.9;
 }
 
+function mergeObject(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+    for (var key in source) {
+      if (source.hasOwnProperty(key)) {
+        // console.log('merge type: ', key, source[key], typeof(source[key]))
+        target[key] = source[key];
+      }
+    }
+  }
+  return target;
+}
+
 // * =========== entry point ===========
 var mlb9i;
 function start(jsonConfig) {
   var config = defaultConfig;
   if (typeof jsonConfig === 'string') {
-    config = JSON.parse(jsonConfig);
-  } else if (typeof jsonConfig === 'object') {
-    config = jsonConfig;
+    jsonConfig = JSON.parse(jsonConfig);
   }
+  config = mergeObject(config, jsonConfig);
+
   mlb9i = new MLB9I(config);
   mlb9i.start();
 }
@@ -3073,3 +3163,6 @@ function stop() {
   mlb9i.stop();
   mlb9i = undefined;
 }
+
+// To test the XR environment
+// start({ licenseId: '123', expireTimeMs: 0 });
