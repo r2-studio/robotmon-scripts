@@ -23,6 +23,20 @@ export class Utils {
     return 1 - Math.sqrt((((512 + mean) * r * r) >> 8) + 4 * g * g + (((767 - mean) * b * b) >> 8)) / 768;
   }
 
+  public static formatXYRGB(xyrgb: XYRGB): string {
+    const keys: (keyof XYRGB)[] = Object.keys(xyrgb) as (keyof XYRGB)[];
+    const formatObj: { [k: string]: string } = {};
+    for (const k of keys) {
+      let str = `${xyrgb[k]}`;
+      while (str.length < 3) {
+        str = ' ' + str;
+      }
+      formatObj[k] = str;
+    }
+    const { x, y, r, g, b } = formatObj;
+    return `{ x: ${x}, y: ${y}, r: ${r}, g: ${g}, b: ${b} }`;
+  }
+
   public static sortStringNumberMap(map: { [key: string]: number }): { key: string; count: number }[] {
     const results: { key: string; count: number }[] = [];
     for (const key in map) {
