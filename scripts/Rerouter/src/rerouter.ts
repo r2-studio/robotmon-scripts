@@ -25,7 +25,7 @@ export class Rerouter {
   private routes: Required<RouteConfig>[] = [];
   private tasks: Required<Task>[] = [];
   private routeContext: RouteContext | null = null;
-  private unknownRouteAction: ((context: RouteContext, image: Image, finishTask: (stopCurrentRound: boolean) => void) => void) | null = null;
+  private unknownRouteAction: ((context: RouteContext, image: Image, finishRound: (exitTask?: boolean) => void) => void) | null = null;
 
   /**
    * Recalculate some value like device width or height in screenConfig
@@ -60,18 +60,8 @@ export class Rerouter {
    * Tell Rerouter what to do if not matching any route
    * @param action function to do if not matching
    */
-  public addUnknownAction(action: ((context: RouteContext, image: Image, finishTask: (stopCurrentRound?: boolean) => void) => void) | null): void {
-    if (action) {
-      const wrappedAction = (context: RouteContext, image: Image, finishTask: (stopCurrentRound: boolean) => void) => {
-        const wrappedFinishTask = (stopCurrentRound: boolean = false) => {
-          finishTask(stopCurrentRound);
-        };
-        action(context, image, wrappedFinishTask);
-      };
-      this.unknownRouteAction = wrappedAction;
-    } else {
-      this.unknownRouteAction = null;
-    }
+  public addUnknownAction(action: ((context: RouteContext, image: Image, finishRound: (exitTask?: boolean) => void) => void) | null): void {
+    this.unknownRouteAction = action;
   }
 
   /**
@@ -273,8 +263,8 @@ export class Rerouter {
   private wrapTaskConfigWithDefault(config: TaskConfig): Required<TaskConfig> {
     return {
       name: config.name,
-      runTimesPerRound: config.runTimesPerRound ?? this.defaultConfig.TaskConfigRunTimesPerRound,
-      runDuringPerRound: config.runDuringPerRound ?? this.defaultConfig.TaskConfigRunDuringPerRound,
+      maxTaskRunTimes: config.maxTaskRunTimes ?? this.defaultConfig.TaskConfigMaxTaskRunTimes,
+      maxTaskDuring: config.maxTaskDuring ?? this.defaultConfig.TaskConfigMaxTaskDuring,
       minRoundInterval: config.minRoundInterval ?? this.defaultConfig.TaskConfigMinRoundInterval,
       forceStop: config.forceStop ?? this.defaultConfig.TaskConfigAutoStop,
       findRouteDelay: config.findRouteDelay ?? this.defaultConfig.TaskConfigFindRouteDelay,
@@ -298,8 +288,8 @@ export class Rerouter {
 
       task.startTime = now;
       task.runTimes = 0;
-      let stopCurrentRound = false;
-      for (let i = 0; i < task.config.runTimesPerRound && this.running && !stopCurrentRound; i++) {
+      let exitTask = false;
+      for (let i = 0; i < task.config.maxTaskRunTimes && this.running && !exitTask; i++) {
         this.log(`Task: ${task.name} run ${task.runTimes}`);
         let skipRoute = false;
         if (task.config.beforeRoute !== null) {
@@ -312,7 +302,7 @@ export class Rerouter {
         if (skipRoute) {
           this.log(`Task: ${task.name} run ${task.runTimes} skipRouteLoop`);
         } else {
-          stopCurrentRound = this.startRouteLoop(task);
+          exitTask = this.startRouteLoop(task);
         }
 
         if (task.config.afterRoute !== null) {
@@ -323,8 +313,8 @@ export class Rerouter {
         task.runTimes++;
         task.lastRunTime = now;
         const during = now - task.startTime;
-        if (task.config.runDuringPerRound > 0 && during >= task.config.runDuringPerRound) {
-          this.log(`Task: ${task.name} runDuringPerRound: ${during} reached, stop`);
+        if (task.config.maxTaskDuring > 0 && during >= task.config.maxTaskDuring) {
+          this.log(`Task: ${task.name} taskDuring: ${during}/${task.config.maxTaskDuring} reached, stop`);
           break;
         }
       }
@@ -345,11 +335,11 @@ export class Rerouter {
     };
 
     let routeLoop = true;
-    let stopCurrentRoundResult = false;
-    const finishTaskFunc = (stopCurrentRound: boolean = false) => {
+    let exitTaskResult = false;
+    const finishRoundFunc = (exitTask: boolean = false) => {
       routeLoop = false;
-      stopCurrentRoundResult = stopCurrentRound;
-      this.log(`finish task: ${this.routeContext?.task.name}; stop current round: ${stopCurrentRound}`);
+      exitTaskResult = exitTask;
+      this.log(`finish round: ${this.routeContext?.task.name}; exitTask: ${exitTask}`);
     };
     // pointer for short code
     const context = this.routeContext;
@@ -358,7 +348,7 @@ export class Rerouter {
 
       // check task.autoStop
       const taskRunDuring = now - task.startTime;
-      if (task.config.forceStop && taskRunDuring > task.config.runDuringPerRound) {
+      if (task.config.forceStop && taskRunDuring > task.config.maxTaskDuring) {
         this.log(`Task ${task.name} AutoStop, exceed taskRunDuring`);
         break;
       }
@@ -388,10 +378,10 @@ export class Rerouter {
 
       if (matchedRoute === null) {
         if (this.unknownRouteAction !== null) {
-          this.unknownRouteAction(context, image, finishTaskFunc);
+          this.unknownRouteAction(context, image, finishRoundFunc);
         }
       } else {
-        this.doActionForRoute(context, image, matchedRoute, matchedPages, finishTaskFunc);
+        this.doActionForRoute(context, image, matchedRoute, matchedPages, finishRoundFunc);
       }
 
       // update lastMatchedPath after action done
@@ -402,19 +392,10 @@ export class Rerouter {
       Utils.sleep(task.config.findRouteDelay);
     }
 
-    return stopCurrentRoundResult;
+    return exitTaskResult;
   }
 
-  private doActionForRoute(
-    context: RouteContext,
-    image: Image,
-    route: Required<RouteConfig>,
-    matchedPages: Page[],
-    finishTask: (stopCurrentRound: boolean) => void
-  ) {
-    const wrappedFinishTask = (stopCurrentRound: boolean = false) => {
-      finishTask(stopCurrentRound);
-    };
+  private doActionForRoute(context: RouteContext, image: Image, route: Required<RouteConfig>, matchedPages: Page[], finishRound: (exitTask?: boolean) => void) {
     this.logImpl(route.debug, `handleMatchedRoute: ${route.path}, times: ${context.matchTimes}, during: ${context.matchDuring}`);
     if (context.matchTimes < route.shouldMatchTimes || context.matchDuring < route.shouldMatchDuring) {
       // should still wait for matching condition
@@ -439,7 +420,7 @@ export class Rerouter {
     } else if (route.action === 'keycodeBack') {
       keycode('BACK', this.screenConfig.actionDuring);
     } else {
-      route.action(context, image, matchedPages, wrappedFinishTask);
+      route.action(context, image, matchedPages, finishRound);
     }
     Utils.sleep(route.afterActionDelay);
   }

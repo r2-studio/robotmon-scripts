@@ -1,7 +1,7 @@
-import { rerouter, Page, Utils, GroupPage } from '..'
+import { rerouter, Page, Utils, GroupPage } from '..';
 
 var gMainPage = new Page(
-  "gMainPage",
+  'gMainPage',
   [
     { x: 227, y: 184, r: 228, g: 4, b: 33 },
     { x: 258, y: 187, r: 228, g: 4, b: 33 },
@@ -14,7 +14,7 @@ var gMainPage = new Page(
 );
 
 var gLogoPage = new Page(
-  "gLogoPage",
+  'gLogoPage',
   [
     { x: 227, y: 184, r: 228, g: 4, b: 33 },
     { x: 258, y: 187, r: 228, g: 4, b: 33 },
@@ -27,7 +27,7 @@ var gLogoPage = new Page(
 );
 
 var gAdPage = new Page(
-  "gAdPage",
+  'gAdPage',
   [
     { x: 227, y: 184, r: 228, g: 4, b: 33 },
     { x: 258, y: 187, r: 228, g: 4, b: 33 },
@@ -41,10 +41,9 @@ var gAdPage = new Page(
 
 var groupPage = new GroupPage('', [gAdPage, gAdPage]);
 
-
 class CRK {
   public packageName: string = '';
-  public account: string = ''
+  public account: string = '';
   public password: string = '';
 
   public init() {
@@ -62,26 +61,26 @@ class CRK {
       match: gMainPage,
       action: (context, image) => {
         if (context.task.name === 'tree') {
-          rerouter.screen.tap({x: 50, y: 100}); // go tree
+          rerouter.screen.tap({ x: 50, y: 100 }); // go tree
         } else if (context.task.name === 'pvp') {
-          rerouter.screen.tap({x: 50, y: 150}); // go pvp
+          rerouter.screen.tap({ x: 50, y: 150 }); // go pvp
         } else if (context.task.name === 'tradeA' || context.task.name === 'tradeB' || context.task.name === 'tradeC') {
-          rerouter.screen.tap({x: 50, y: 200}); // go trade
+          rerouter.screen.tap({ x: 50, y: 200 }); // go trade
         }
       },
     });
 
-     // add route
+    // add route
     rerouter.addRoute({
       path: '/trade',
       match: gMainPage,
       action: (context, image, matched, changeTask) => {
         if (context.task.name === 'tradeA') {
-          rerouter.screen.tap({x: 50, y: 100}); // go tree
+          rerouter.screen.tap({ x: 50, y: 100 }); // go tree
         } else if (context.task.name === 'tradeB') {
-          rerouter.screen.tap({x: 50, y: 150}); // go pvp
+          rerouter.screen.tap({ x: 50, y: 150 }); // go pvp
         } else if (context.task.name === 'tradeC') {
-          rerouter.screen.tap({x: 50, y: 200}); // go trade
+          rerouter.screen.tap({ x: 50, y: 200 }); // go trade
           changeTask();
         }
       },
@@ -135,13 +134,13 @@ class CRK {
     });
     rerouter.addTask({
       name: 'tsumPlayGame',
-      runTimesPerRound: 100,
-      runDuringPerRound: 2 * 60 * 60 * 1000,
+      maxTaskRunTimes: 100,
+      maxTaskDuring: 2 * 60 * 60 * 1000,
       forceStop: true, // if exceed runDuringPerRound, auto stop task
     });
     rerouter.addTask({
       name: 'uploadRecord',
-      beforeRoute: (task) => {
+      beforeRoute: task => {
         // do upload record
         return 'skipRouteLoop';
       },
@@ -150,7 +149,7 @@ class CRK {
 
     // handle unknown
     this.handleUnknown();
-  };
+  }
 
   public start() {
     rerouter.start(this.packageName);
@@ -168,6 +167,4 @@ class CRK {
       }
     });
   }
-
 }
-

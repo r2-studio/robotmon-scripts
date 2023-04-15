@@ -77,11 +77,7 @@ export interface RouteContext {
 
 export interface RouteConfig {
   path: string;
-  action:
-    | 'goNext'
-    | 'goBack'
-    | 'keycodeBack'
-    | ((context: RouteContext, image: Image, matched: Page[], finishTask: (stopCurrentRound?: boolean) => void) => void);
+  action: 'goNext' | 'goBack' | 'keycodeBack' | ((context: RouteContext, image: Image, matched: Page[], finishRound: (exitTask?: boolean) => void) => void);
   match?: null | Page | GroupPage;
   // TODO: notMatch?: null | Page | GroupPage;
   customMatch?: null | ((taskName: string, image: Image) => boolean);
@@ -99,11 +95,11 @@ export interface RouteConfig {
 
 export interface TaskConfig {
   name: string;
-  runTimesPerRound?: number;
-  runDuringPerRound?: number;
+  maxTaskRunTimes?: number;
+  maxTaskDuring?: number;
   minRoundInterval?: number;
   /**
-   * If enable it and task run time > runDuringPerRound, Rerouter will stop the task and do next task
+   * If enable it and task run time > maxTaskDuring, Rerouter will stop the task and do next task
    */
   forceStop?: boolean;
   /**
@@ -124,7 +120,7 @@ export interface Task {
   config: Required<TaskConfig>;
   startTime: number;
   lastRunTime: number;
-  runTimes: number;
+  runTimes: number; // currentRunTimes
 }
 
 export interface ScreenConfig {
@@ -159,8 +155,8 @@ export const DefaultConfigValue: {
   RouteConfigAfterActionDelay: number;
   RouteConfigPriority: number;
   RouteConfigDebug: boolean;
-  TaskConfigRunTimesPerRound: number;
-  TaskConfigRunDuringPerRound: number;
+  TaskConfigMaxTaskRunTimes: number;
+  TaskConfigMaxTaskDuring: number;
   TaskConfigMinRoundInterval: number;
   TaskConfigAutoStop: boolean;
   TaskConfigFindRouteDelay: number;
@@ -175,8 +171,8 @@ export const DefaultConfigValue: {
   RouteConfigAfterActionDelay: 250,
   RouteConfigPriority: 1,
   RouteConfigDebug: false,
-  TaskConfigRunTimesPerRound: 1,
-  TaskConfigRunDuringPerRound: 0,
+  TaskConfigMaxTaskRunTimes: 1,
+  TaskConfigMaxTaskDuring: 0,
   TaskConfigMinRoundInterval: 0,
   TaskConfigAutoStop: false,
   TaskConfigFindRouteDelay: 2000,
