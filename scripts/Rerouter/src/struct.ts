@@ -45,7 +45,7 @@ export class GroupPage {
   /**
    * How to match pages, '&&' for match all, '||' for match one
    */
-  public matchOP?: '||' | '&&';
+  public matchOP: '||' | '&&';
 
   public constructor(
     name: string,
@@ -60,7 +60,7 @@ export class GroupPage {
     this.next = next;
     this.back = back;
     this.thres = thres;
-    this.matchOP = matchOP;
+    this.matchOP = matchOP || '||';
   }
 }
 
@@ -77,7 +77,11 @@ export interface RouteContext {
 
 export interface RouteConfig {
   path: string;
-  action: 'goNext' | 'goBack' | 'keycodeBack' | ((context: RouteContext, image: Image, matched: Page[], changeTask: () => void) => void);
+  action:
+    | 'goNext'
+    | 'goBack'
+    | 'keycodeBack'
+    | ((context: RouteContext, image: Image, matched: Page[], finishTask: (stopCurrentRound?: boolean) => void) => void);
   match?: null | Page | GroupPage;
   // TODO: notMatch?: null | Page | GroupPage;
   customMatch?: null | ((taskName: string, image: Image) => boolean);

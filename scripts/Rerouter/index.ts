@@ -6,6 +6,7 @@ export const version = 1;
 
 declare global {
   type RGB = { r: number; g: number; b: number };
+  type XYRGB = { x: number; y: number; r: number; g: number; b: number };
   type Image = any;
 
   function getStoragePath(): string;

@@ -25,7 +25,7 @@ export class Rerouter {
   private routes: Required<RouteConfig>[] = [];
   private tasks: Required<Task>[] = [];
   private routeContext: RouteContext | null = null;
-  private unknownRouteAction: ((context: RouteContext, image: Image, finishTask: () => void) => void) | null = null;
+  private unknownRouteAction: ((context: RouteContext, image: Image, finishTask: (stopCurrentRound: boolean) => void) => void) | null = null;
 
   /**
    * Recalculate some value like device width or height in screenConfig
@@ -60,8 +60,18 @@ export class Rerouter {
    * Tell Rerouter what to do if not matching any route
    * @param action function to do if not matching
    */
-  public addUnknownAction(action: ((context: RouteContext, image: Image, finishTask: () => void) => void) | null): void {
-    this.unknownRouteAction = action;
+  public addUnknownAction(action: ((context: RouteContext, image: Image, finishTask: (stopCurrentRound?: boolean) => void) => void) | null): void {
+    if (action) {
+      const wrappedAction = (context: RouteContext, image: Image, finishTask: (stopCurrentRound: boolean) => void) => {
+        const wrappedFinishTask = (stopCurrentRound: boolean = false) => {
+          finishTask(stopCurrentRound);
+        };
+        action(context, image, wrappedFinishTask);
+      };
+      this.unknownRouteAction = wrappedAction;
+    } else {
+      this.unknownRouteAction = null;
+    }
   }
 
   /**
@@ -109,11 +119,15 @@ export class Rerouter {
     }
   }
 
-  public checkAndStartApp(): boolean {
+  public checkInApp(): boolean {
     const [packageName] = Utils.getCurrentApp();
-    if (packageName !== this.rerouterConfig.packageName) {
-      this.log(`AppIsNotStarted, startApp ${packageName}`);
-      Utils.startApp(packageName);
+    return packageName === this.rerouterConfig.packageName;
+  }
+
+  public checkAndStartApp(): boolean {
+    if (!this.checkInApp()) {
+      this.log(`AppIsNotStarted, startApp ${this.rerouterConfig.packageName}`);
+      Utils.startApp(this.rerouterConfig.packageName);
       Utils.sleep(this.rerouterConfig.startAppDelay);
       return true;
     }
@@ -215,6 +229,21 @@ export class Rerouter {
     return null;
   }
 
+  public getCurrentMatchNames(): string[] {
+    const image = this.screen.getCvtDevScreenshot();
+    const matchedNames: string[] = [];
+    this.routes.forEach(route => {
+      const match = route.match;
+      if (
+        (match instanceof Page && this.isMatchPageImpl(image, match, this.defaultConfig.PageThres, this.debug)) ||
+        (match instanceof GroupPage && this.isMatchGroupPageImpl(image, match, this.defaultConfig.PageThres, this.debug).length > 0)
+      ) {
+        matchedNames.push(match.name);
+      }
+    });
+    this.log(`current match: `, matchedNames);
+    return matchedNames;
+  }
   private getRouteConfig(r: RouteConfig | string): RouteConfig | null {
     let route: RouteConfig | null;
     if (typeof r === 'string') {
@@ -259,16 +288,18 @@ export class Rerouter {
     while (this.running) {
       const task = this.tasks[taskIdx % this.tasks.length];
       taskIdx++;
-
-      if (Date.now() - task.lastRunTime <= task.config.minRoundInterval) {
-        this.log(`Task: ${task.name} during: ${Date.now() - task.lastRunTime} <= minRoundInterval, skip`);
+      const now = Date.now();
+      const isTaskRunFirstTime = task.lastRunTime === 0;
+      if (now - task.lastRunTime <= task.config.minRoundInterval && !isTaskRunFirstTime) {
+        this.log(`Task: ${task.name} during: ${now - task.lastRunTime} <= minRoundInterval, skip`);
         Utils.sleep(this.rerouterConfig.taskDelay);
         continue;
       }
 
-      task.startTime = Date.now();
+      task.startTime = now;
       task.runTimes = 0;
-      for (let i = 0; i < task.config.runTimesPerRound && this.running; i++) {
+      let stopCurrentRound = false;
+      for (let i = 0; i < task.config.runTimesPerRound && this.running && !stopCurrentRound; i++) {
         this.log(`Task: ${task.name} run ${task.runTimes}`);
         let skipRoute = false;
         if (task.config.beforeRoute !== null) {
@@ -281,7 +312,7 @@ export class Rerouter {
         if (skipRoute) {
           this.log(`Task: ${task.name} run ${task.runTimes} skipRouteLoop`);
         } else {
-          this.startRouteLoop(task);
+          stopCurrentRound = this.startRouteLoop(task);
         }
 
         if (task.config.afterRoute !== null) {
@@ -290,8 +321,8 @@ export class Rerouter {
         }
 
         task.runTimes++;
-        task.lastRunTime = Date.now();
-        const during = Date.now() - task.startTime;
+        task.lastRunTime = now;
+        const during = now - task.startTime;
         if (task.config.runDuringPerRound > 0 && during >= task.config.runDuringPerRound) {
           this.log(`Task: ${task.name} runDuringPerRound: ${during} reached, stop`);
           break;
@@ -301,28 +332,32 @@ export class Rerouter {
     }
   }
 
-  private startRouteLoop(task: Task): void {
+  private startRouteLoop(task: Task): boolean {
     this.routeContext = {
       task: task,
       screen: this.screen,
       scriptRunning: this.running,
       path: '',
-      lastMatchedPath: '',
+      lastMatchedPath: this.routeContext?.lastMatchedPath ?? '',
       matchTimes: 0,
       matchStartTS: 0,
       matchDuring: 0,
     };
 
     let routeLoop = true;
-    const finishTaskFunc = () => {
-      this.log(`finishTaskFunc ${this.routeContext?.task.name}`);
+    let stopCurrentRoundResult = false;
+    const finishTaskFunc = (stopCurrentRound: boolean = false) => {
       routeLoop = false;
+      stopCurrentRoundResult = stopCurrentRound;
+      this.log(`finish task: ${this.routeContext?.task.name}; stop current round: ${stopCurrentRound}`);
     };
     // pointer for short code
     const context = this.routeContext;
     while (routeLoop && this.running) {
+      const now = Date.now();
+
       // check task.autoStop
-      const taskRunDuring = Date.now() - task.startTime;
+      const taskRunDuring = now - task.startTime;
       if (task.config.forceStop && taskRunDuring > task.config.runDuringPerRound) {
         this.log(`Task ${task.name} AutoStop, exceed taskRunDuring`);
         break;
@@ -339,15 +374,17 @@ export class Rerouter {
       const image = this.screen.getCvtDevScreenshot();
       const { matchedRoute, matchedPages } = this.findMatchedRouteImpl(task.name, image, rotation);
 
+      // context.matchStartTS = 0 if init run
+      context.matchStartTS = context.matchStartTS || now;
       context.path = matchedRoute?.path ?? '';
+
+      // first match
       if (context.path !== context.lastMatchedPath) {
         context.matchTimes = 0;
-        context.matchStartTS = Date.now();
+        context.matchStartTS = now;
       }
-      context.lastMatchedPath = matchedRoute?.path ?? '';
-
+      context.matchDuring = now - context.matchStartTS;
       context.matchTimes++;
-      context.matchDuring = Date.now() - context.matchStartTS;
 
       if (matchedRoute === null) {
         if (this.unknownRouteAction !== null) {
@@ -356,15 +393,29 @@ export class Rerouter {
       } else {
         this.doActionForRoute(context, image, matchedRoute, matchedPages, finishTaskFunc);
       }
+
+      // update lastMatchedPath after action done
+      // otherwise the lastMatchedPath will be current path when doing action
+      context.lastMatchedPath = context.path;
+
       releaseImage(image);
       Utils.sleep(task.config.findRouteDelay);
     }
+
+    return stopCurrentRoundResult;
   }
 
-  private doActionForRoute(context: RouteContext, image: Image, route: Required<RouteConfig>, matchedPages: Page[], finishTaskFunc: () => void) {
-    if (route.debug) {
-      Utils.log(`handleMatchedRoute: ${route.path}, times: ${context.matchTimes}, during: ${context.matchDuring}`);
-    }
+  private doActionForRoute(
+    context: RouteContext,
+    image: Image,
+    route: Required<RouteConfig>,
+    matchedPages: Page[],
+    finishTask: (stopCurrentRound: boolean) => void
+  ) {
+    const wrappedFinishTask = (stopCurrentRound: boolean = false) => {
+      finishTask(stopCurrentRound);
+    };
+    this.logImpl(route.debug, `handleMatchedRoute: ${route.path}, times: ${context.matchTimes}, during: ${context.matchDuring}`);
     if (context.matchTimes < route.shouldMatchTimes || context.matchDuring < route.shouldMatchDuring) {
       // should still wait for matching condition
       return;
@@ -388,7 +439,7 @@ export class Rerouter {
     } else if (route.action === 'keycodeBack') {
       keycode('BACK', this.screenConfig.actionDuring);
     } else {
-      route.action(context, image, matchedPages, finishTaskFunc);
+      route.action(context, image, matchedPages, wrappedFinishTask);
     }
     Utils.sleep(route.afterActionDelay);
   }
@@ -404,6 +455,11 @@ export class Rerouter {
     for (const route of this.routes) {
       const { isMatched, matchedPages } = this.isMatchRouteImpl(image, rotation, route, taskName);
       if (isMatched) {
+        this.logImpl(
+          route.debug,
+          'current match:',
+          matchedPages.map(p => p.name)
+        );
         return { matchedRoute: route, matchedPages };
       }
     }
@@ -421,65 +477,63 @@ export class Rerouter {
   } {
     // check rotation
     if (route.rotation !== rotation) {
-      if (route.debug) {
-        Utils.log(`findMatchedRoute ${route.path} not match rotation, skip`);
-      }
+      this.logImpl(route.debug, `findMatchedRoute ${route.path} not match rotation, skip`);
       return { isMatched: false, matchedPages: [] };
     }
-    let matched = false;
-    let matchedPages: Page[] = [];
+    let isMatched = false;
+    const matchedPages: Page[] = [];
     // check route.match
     if (route.match !== null) {
       if (route.match instanceof Page) {
         const match = this.isMatchPageImpl(image, route.match, this.defaultConfig.PageThres, route.debug);
         if (match) {
-          matched = true;
+          isMatched = true;
           matchedPages.push(route.match);
         }
       } else if (route.match instanceof GroupPage) {
         const match = this.isMatchGroupPageImpl(image, route.match, this.defaultConfig.GroupPageThres, route.debug);
         if (match.length !== 0) {
-          matched = true;
+          isMatched = true;
           matchedPages.push(...match);
         }
       }
     }
     // check route.isMatch function
-    if (!matched && route.customMatch !== null) {
-      matched = route.customMatch(taskName, image);
-      if (route.debug) {
-        Utils.log(`findMatchedRoute ${route.path} isMatch() => ${matched}`);
-      }
+    if (!isMatched && route.customMatch !== null) {
+      isMatched = route.customMatch(taskName, image);
+      this.logImpl(route.debug, `findMatchedRoute ${route.path} isMatch() => ${isMatched}`);
     }
-    if (route.debug) {
-      Utils.log(`findMatchedRoute ${route.path} match: ${matched}, firstPage: ${matchedPages[0]?.name}`);
-    }
-    if (matched) {
-      return {
-        isMatched: true,
-        matchedPages: matchedPages,
-      };
-    }
-    return { isMatched: false, matchedPages: [] };
+    this.logImpl(route.debug, `findMatchedRoute ${route.path} match: ${isMatched}, firstPage: ${matchedPages[0]?.name}`);
+
+    return {
+      isMatched,
+      matchedPages,
+    };
   }
 
   private isMatchPageImpl(image: Image, page: Page, parentThres: number, debug: boolean): boolean {
     const thres = page.thres ?? parentThres;
     let isSame = true;
+    this.logImpl(debug, `checkMatchPage[${page.name}]`);
+
     for (let i = 0; i < page.points.length; i++) {
       const point = page.points[i];
       const color = getImageColor(image, point.x, point.y);
       const score = Utils.identityColor(point, color);
-      if (debug) {
-        Utils.log(`checkMatchPage[${i}]: ${page.name}, score: ${score}, thres: ${thres}, match: ${score < thres}`);
-        Utils.log(`point[${i}]: {x: ${point.x}, y: ${point.y}, r: ${point.r}, g: ${point.g}, b: ${point.b}}`);
-        Utils.log(`color[${i}]: {x: ${point.x}, y: ${point.y}, r: ${color.r}, g: ${color.g}, b: ${color.b}}`);
-      }
-      if (score < thres) {
+      const isPointColorMatch = score >= thres;
+      if (!isPointColorMatch) {
         isSame = false;
+        this.logImpl(
+          debug,
+          `point[${i}] match false: score: ${score}, thres: ${thres}\n`,
+          `expect: ${Utils.formatXYRGB(point)}\n`,
+          `   get: ${Utils.formatXYRGB({ ...color, x: point.x, y: point.y })}`
+        );
         break;
       }
     }
+
+    this.logImpl(debug, `checkMatchPage[${page.name}][match: ${isSame}]`);
     return isSame;
   }
 
@@ -487,10 +541,9 @@ export class Rerouter {
     const thres = groupPage.thres ?? parentThres;
     for (let i = 0; i < groupPage.pages.length; i++) {
       const page = groupPage.pages[i];
-      if (debug) {
-        Utils.log(`checkMatchGroupPage: ${groupPage.name}, page[${i}]: ${page.name}`);
-      }
       const isPageMatch = this.isMatchPageImpl(image, page, thres, debug);
+      this.logImpl(debug, `checkMatchGroupPage: ${groupPage.name}, page[${i}]: ${page.name} match: ${isPageMatch}`);
+
       if (groupPage.matchOP === '||' && isPageMatch) {
         return [page];
       }
@@ -498,13 +551,17 @@ export class Rerouter {
         return [];
       }
     }
-    return groupPage.pages;
+    return groupPage.matchOP === '&&' ? groupPage.pages : [];
   }
 
   private log(...args: any[]): void {
-    if (!this.debug) {
+    this.logImpl(this.debug, ...args);
+  }
+  private logImpl(debug: boolean, ...args: any[]): void {
+    if (!debug || !this.debug) {
       return;
     }
+    // only log when debug + this.debug is true
     Utils.log('[Rerouter][debug]', ...args);
   }
 
