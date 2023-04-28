@@ -639,7 +639,11 @@ class MLB9I {
       match: PAGE.endSeasonProceed,
       action: (context, image, matched, finishRound) => {
         console.log('handle end season proceed');
-        this.rerouter.screen.tap({ x: 182, y: 178 }); // tap new season of left
+        if (context.matchTimes < 2) {
+          this.rerouter.screen.tap({ x: 182, y: 178 }); // tap new season of left
+        } else {
+          this.rerouter.goNext(PAGE.endSeasonProceedSelected);
+        }
       },
     });
     this.rerouter.addRoute({
