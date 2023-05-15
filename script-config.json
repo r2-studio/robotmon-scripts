@@ -151,8 +151,8 @@
     "com.cooper.FGOTW": {
       "id": "com.cooper.FGOTW",
       "title": "Fate/Grand Order 台服",
-      "versionCode": 3.54,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.54 修正部分技能有機率誤觸從者資訊的問題<br>V3.53 在技能設定中加入切換寶具顏色與庫庫魯坎技能使用星星<br>V3.51 新增偏好設定，修正Robotmon 5.4版本產生的問題<br><br>推薦使用夜神 Android 5 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.55,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.55 修正週年改版導致無法判斷選擇好友畫面的問題<br>V3.53 在技能設定中加入切換寶具顏色與庫庫魯坎技能使用星星<br>V3.51 新增偏好設定，修正Robotmon 5.4版本產生的問題<br><br>推薦使用夜神 Android 5 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     }
