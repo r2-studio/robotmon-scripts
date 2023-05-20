@@ -95,6 +95,7 @@ function resetBox() {
 
 function getFriendPoint() {
   console.log("執行友抽");
+  sleep(1000);
   while (isScriptRunning) {
     if (!isFriendPointMainPage()) {
       console.log("請移到友抽畫面再執行");
