@@ -66,7 +66,8 @@ var config = {
   autoHandleCollectCookieOdysseyMission: true,
   buildTowardsTheLeft: true,
   isTestAccount: false,
-  isNewKingdomCheckRequired: false,
+  isNewKingdomCheckRequired: true,
+  isSendPlayingRequired: true,
 
   jobFailedCount: 4,
   jobFailedBeforeGetCandy: 3,
@@ -104,6 +105,7 @@ var config = {
   wishRefreshThreashold: 5,
   searchHouseCount: 0,
   keepProduceUntilWoodEnough: true,
+  isMaintainanceMode: false,
   loginRetryMaxTimes: 2,
   loginRetryCount: 0,
   tryRestartGameCount: 0,
@@ -236,6 +238,7 @@ var rfpageCottomFarm = new RF.Page(
     { x: 596, y: 120, r: 123, g: 207, b: 8 },
     { x: 528, y: 87, r: 254, g: 231, b: 251 },
     { x: 428, y: 92, r: 255, g: 241, b: 255 },
+    { x: 423, y: 96, r: 202, g: 49, b: 136 },
   ],
   { x: 596, y: 120 }
 );
@@ -250,6 +253,7 @@ var pageInKingdomVillage = [
 ];
 var rfpageInKingdomVillage = new RF.Page('rfpageInKingdomVillage', pageInKingdomVillage, pageInKingdomVillage[0]);
 
+// Check for gears in login page via pixel matching
 var pageInLoginPageWithGearAndVideo = [
   { x: 621, y: 13, r: 233, g: 233, b: 235 },
   { x: 622, y: 16, r: 3, g: 4, b: 9 },
@@ -258,6 +262,10 @@ var pageInLoginPageWithGearAndVideo = [
   { x: 590, y: 17, r: 233, g: 235, b: 239 },
   { x: 594, y: 23, r: 14, g: 14, b: 25 },
 ];
+var rfpageInLoginPageWithGearAndVideo = new RF.Page(
+  'rfpageInLoginPageWithGearAndVideo',
+  pageInLoginPageWithGearAndVideo
+);
 
 var pageLoginFacebook = [
   { x: 186, y: 72, r: 59, g: 89, b: 152 },
@@ -297,9 +305,38 @@ var pageChooseLoginMethod = [
   { x: 126, y: 234, r: 255, g: 255, b: 255 },
 ];
 // Smaller icons (Android 7), not updated for 5 options
-var pageChooseLoginMethod2 = [{ x: 251, y: 245, r: 255, g: 95, b: 0 }];
+var pageChooseLoginMethod2 = [
+  { x: 138, y: 229, r: 255, g: 95, b: 0 },
+  { x: 138, y: 198, r: 0, g: 0, b: 0 },
+  { x: 138, y: 155, r: 234, g: 89, b: 77 },
+  { x: 347, y: 162, r: 177, g: 204, b: 58 },
+  { x: 342, y: 195, r: 59, g: 89, b: 152 },
+];
 // TOS page will change when login page change
 // Nox: cookie v1.15
+var pageTermsOfServiceWindow = [
+  { x: 448, y: 230, r: 171, g: 220, b: 216 },
+  { x: 469, y: 240, r: 255, g: 255, b: 255 },
+  { x: 159, y: 116, r: 255, g: 255, b: 255 },
+  { x: 471, y: 116, r: 255, g: 255, b: 255 },
+  { x: 158, y: 243, r: 255, g: 255, b: 255 },
+];
+var rfpageTermsOfServiceWindow = new RF.Page(
+  'rfpageTermsOfServiceWindow',
+  pageTermsOfServiceWindow,
+  pageTermsOfServiceWindow[0]
+);
+var termOfServiceMessage = {
+  x: 168,
+  y: 127,
+  width: 140,
+  height: 6,
+
+  targetY: 4,
+  lookingForColor: { r: 37, g: 37, b: 37 },
+  targetColorCount: 32,
+  targetColorThreashold: 5,
+};
 var pageTermsOfServices2 = [
   { x: 447, y: 230, r: 255, g: 255, b: 255 },
   { x: 43, y: 257, r: 96, g: 24, b: 22 },
@@ -369,6 +406,18 @@ var rfpageStoryBuildCookieHouses1 = new RF.Page(
   pageStoryBuildCookieHouses1[0]
 );
 
+var pageKindomHasOnlySorageAndBuildIcon = [
+  { x: 613, y: 331, r: 148, g: 40, b: 33 },
+  { x: 601, y: 320, r: 66, g: 0, b: 16 },
+  { x: 44, y: 331, r: 255, g: 224, b: 247 },
+  { x: 248, y: 18, r: 231, g: 165, b: 182 },
+  { x: 339, y: 20, r: 255, g: 215, b: 0 },
+  { x: 454, y: 21, r: 0, g: 139, b: 255 },
+];
+var rfpageKindomHasOnlySorageAndBuildIcon = new RF.Page(
+  'rfpageKindomHasOnlySorageAndBuildIcon',
+  pageKindomHasOnlySorageAndBuildIcon
+);
 var pageKingdomHaveNoCookieIcon = [
   { x: 418, y: 319, r: 146, g: 80, b: 69 },
   { x: 468, y: 319, r: 136, g: 17, b: 17 },
@@ -382,6 +431,27 @@ var rfpageKingdomHaveNoCookieIcon = new RF.Page(
   pageKingdomHaveNoCookieIcon,
   pageKingdomHaveNoCookieIcon[0]
 );
+
+var pageUnfinishedBattleNeedResume = [
+  { x: 400, y: 251, r: 123, g: 207, b: 8 },
+  { x: 294, y: 251, r: 8, g: 166, b: 222 },
+];
+var rfpageUnfinishedBattleNeedResume = new RF.Page(
+  'rfpageUnfinishedBattleNeedResume',
+  pageUnfinishedBattleNeedResume,
+  pageUnfinishedBattleNeedResume[0]
+);
+var unfinishedBattleMessageScreen = {
+  x: 240,
+  y: 160,
+  width: 160,
+  height: 6,
+
+  targetY: 4,
+  lookingForColor: { r: 247, g: 235, b: 222 },
+  targetColorCount: 128,
+  targetColorThreashold: 5,
+};
 
 var pageInMailBox = [
   { x: 609, y: 11, r: 57, g: 166, b: 231 },
@@ -478,8 +548,8 @@ var pageInTropicalIsland = [
 ];
 
 var pageNotifyQuitWindow = [
-  { x: 374, y: 98, r: 57, g: 69, b: 107 },
   { x: 301, y: 250, r: 8, g: 166, b: 222 },
+  { x: 374, y: 98, r: 57, g: 69, b: 107 },
   { x: 404, y: 250, r: 123, g: 207, b: 8 },
   { x: 425, y: 250, r: 222, g: 207, b: 198 },
 ];
@@ -491,6 +561,7 @@ var pageBattlePaused = [
   { x: 288, y: 157, r: 241, g: 241, b: 239 },
   { x: 293, y: 201, r: 241, g: 90, b: 28 },
 ];
+var rfpageBattlePaused = new RF.Page('rfpageBattlePaused', pageBattlePaused, pageBattlePaused[0]);
 
 var pageInGacha = [
   { x: 619, y: 18, r: 255, g: 255, b: 255 },
@@ -551,6 +622,8 @@ var pageInCookieActivityDashboard = [
   { x: 28, y: 18, r: 229, g: 158, b: 76 },
   { x: 558, y: 339, r: 239, g: 190, b: 41 },
 ];
+// var rfpageInCookieActivityDashboard = new RF.Page('rfpageInCookieActivityDashboard', pageInCookieActivityDashboard);
+
 var pageInProductionDashboard = [
   { x: 408, y: 330, r: 56, g: 74, b: 107 },
   { x: 540, y: 341, r: 123, g: 207, b: 8 },
@@ -569,12 +642,14 @@ var pageToolShop = [
   { x: 414, y: 75, r: 135, g: 143, b: 170 },
   { x: 413, y: 84, r: 183, g: 190, b: 211 },
 ];
+var rfpageToolShop = new RF.Page('rfpageToolShop', pageToolShop);
 
 var pageIsJammery = [
   { x: 490, y: 83, r: 0, g: 178, b: 206 },
   { x: 440, y: 89, r: 19, g: 114, b: 129 },
   { x: 430, y: 88, r: 247, g: 243, b: 222 },
 ];
+var rfpageIsJammery = new RF.Page('rfpageIsJammery', pageIsJammery);
 
 // var pageIsCarpentryShop = [
 //   { x: 494, y: 83, r: 140, g: 86, b: 57 },
@@ -590,6 +665,7 @@ var pageIsJampieDiner = [
   { x: 414, y: 81, r: 217, g: 48, b: 77 },
   { x: 432, y: 73, r: 220, g: 149, b: 99 },
 ];
+var rfpageIsJampieDiner = new RF.Page('rfpageIsJampieDiner', pageIsJampieDiner);
 
 var pageIsBakery = [
   { x: 496, y: 82, r: 184, g: 174, b: 155 },
@@ -598,6 +674,7 @@ var pageIsBakery = [
   { x: 423, y: 70, r: 198, g: 116, b: 63 },
   { x: 424, y: 99, r: 255, g: 219, b: 123 },
 ];
+var rfpageIsBakery = new RF.Page('rfpageIsBakery', pageIsBakery);
 
 var pageIsFlowerShop = [
   { x: 418, y: 80, r: 255, g: 89, b: 165 },
@@ -606,13 +683,18 @@ var pageIsFlowerShop = [
   { x: 490, y: 86, r: 197, g: 39, b: 41 },
   { x: 538, y: 82, r: 165, g: 85, b: 41 },
 ];
+var rfpageIsFlowerShop = new RF.Page('rfpageIsFlowerShop', pageIsFlowerShop);
 
 var pageSelectAdvanture = [
-  { x: 41, y: 334, r: 28, g: 36, b: 48 },
-  { x: 35, y: 291, r: 241, g: 51, b: 92 },
-  { x: 110, y: 70, r: 255, g: 255, b: 255 },
-  { x: 173, y: 314, r: 28, g: 36, b: 48 },
+  { x: 620, y: 11, r: 57, g: 166, b: 231 },
+  { x: 585, y: 21, r: 222, g: 174, b: 74 },
+  { x: 514, y: 16, r: 239, g: 174, b: 99 },
+  { x: 425, y: 21, r: 0, g: 138, b: 255 },
+  { x: 26, y: 28, r: 159, g: 85, b: 28 },
+  { x: 25, y: 12, r: 255, g: 255, b: 255 },
+  { x: 17, y: 26, r: 80, g: 115, b: 187 },
 ];
+var rfpageSelectAdvanture = new RF.Page('rfpageSelectAdvanture', pageSelectAdvanture);
 
 var pageChooseAdvanture = [
   { x: 612, y: 18, r: 57, g: 166, b: 231 },
@@ -645,11 +727,13 @@ var pageCannotRefillBountyAnymore = [
 ];
 
 var pageInkingdomCanGotoGuild = [
-  { x: 319, y: 330, r: 255, g: 174, b: 0 },
-  { x: 364, y: 334, r: 107, g: 93, b: 90 },
-  { x: 417, y: 326, r: 115, g: 12, b: 0 },
-  { x: 460, y: 327, r: 206, g: 113, b: 16 },
+  { x: 321, y: 326, r: 255, g: 182, b: 0 },
+  { x: 417, y: 322, r: 132, g: 16, b: 8 },
+  { x: 466, y: 317, r: 231, g: 166, b: 87 },
+  { x: 566, y: 310, r: 57, g: 93, b: 132 },
 ];
+// var rfpageInkingdomCanGotoGuild = new RF.Page('rfpageInkingdomCanGotoGuild', pageInkingdomCanGotoGuild);
+
 var pageInGuildLand = [
   { x: 445, y: 329, r: 74, g: 61, b: 154 },
   { x: 212, y: 329, r: 173, g: 150, b: 198 },
@@ -771,6 +855,7 @@ var pageInHabor = [
   { x: 522, y: 18, r: 4, g: 135, b: 255 },
   { x: 619, y: 263, r: 57, g: 166, b: 231 },
 ];
+var rfpageInHabor = new RF.Page('rfpageInHabor', pageInHabor);
 
 var pagePvPCrystaisRefresh = [
   { x: 243, y: 100, r: 57, g: 69, b: 107 },
@@ -822,6 +907,11 @@ var pageCookieKingdomIsNotResponding = [
   { x: 242, y: 157, r: 31, g: 31, b: 31 },
   { x: 393, y: 217, r: 142, g: 202, b: 197 },
 ];
+var rfpageCookieKingdomIsNotResponding = new RF.Page(
+  'rfpageCookieKingdomIsNotResponding',
+  pageCookieKingdomIsNotResponding,
+  pageCookieKingdomIsNotResponding[0]
+);
 
 var pageCookieKingdomIsNotResponding2 = [
   { x: 478, y: 221, r: 238, g: 238, b: 238 },
@@ -831,6 +921,11 @@ var pageCookieKingdomIsNotResponding2 = [
   { x: 220, y: 156, r: 87, g: 87, b: 87 },
   { x: 325, y: 160, r: 100, g: 100, b: 100 },
 ];
+var rfpageCookieKingdomIsNotResponding2 = new RF.Page(
+  'rfpageCookieKingdomIsNotResponding2',
+  pageCookieKingdomIsNotResponding2,
+  pageCookieKingdomIsNotResponding2[0]
+);
 
 var pageCookieKingdomHasStopped = [
   { x: 484, y: 205, r: 0, g: 150, b: 136 },
@@ -838,6 +933,11 @@ var pageCookieKingdomHasStopped = [
   { x: 440, y: 172, r: 238, g: 238, b: 238 },
   { x: 402, y: 169, r: 57, g: 57, b: 57 },
 ];
+var rfpageCookieKingdomHasStopped = new RF.Page(
+  'rfpageCookieKingdomHasStopped',
+  pageCookieKingdomHasStopped,
+  pageCookieKingdomHasStopped[0]
+);
 
 var pageInCookieHead = [
   { x: 610, y: 21, r: 57, g: 166, b: 231 },
@@ -854,6 +954,7 @@ var pagePurchaseDiamond = [
   { x: 344, y: 174, r: 121, g: 207, b: 12 },
   { x: 288, y: 114, r: 112, g: 228, b: 233 },
 ];
+var rfpagePurchaseDiamond = new RF.Page('rfpagePurchaseDiamond', pagePurchaseDiamond);
 
 var pageCanGotoKingdom = [
   { x: 601, y: 322, r: 187, g: 22, b: 31 },
@@ -872,6 +973,11 @@ var pageCookieKingdomNotResponding = [
   { x: 253, y: 191, r: 238, g: 238, b: 238 },
   { x: 479, y: 222, r: 238, g: 238, b: 238 },
 ];
+var rfpageCookieKingdomNotResponding = new RF.Page(
+  'rfpageCookieKingdomNotResponding',
+  pageCookieKingdomNotResponding,
+  pageCookieKingdomNotResponding[0]
+);
 
 var pageGooglePlaystoreHasStopped = [
   { x: 485, y: 207, r: 10, g: 153, b: 140 },
@@ -880,6 +986,11 @@ var pageGooglePlaystoreHasStopped = [
   { x: 327, y: 172, r: 238, g: 238, b: 238 },
   { x: 418, y: 171, r: 238, g: 238, b: 238 },
 ];
+var rfpageGooglePlaystoreHasStopped = new RF.Page(
+  'rfpageGooglePlaystoreHasStopped',
+  pageGooglePlaystoreHasStopped,
+  pageGooglePlaystoreHasStopped[0]
+);
 
 var facebookRefreshTokenExpiredLogout = {
   x: 220,
@@ -1034,7 +1145,7 @@ function checkIsPage(page, diff, img) {
     var cbtn = page[i];
     var color = getImageColor(img, cbtn.x, cbtn.y);
     if (!isSameColor(cbtn, color, diff)) {
-      // console.log('pixel violation, ask for: ', JSON.stringify(cbtn), ', but get: ', JSON.stringify(color), diff)
+      // console.log('pixel violation, ask for: ', JSON.stringify(cbtn), ', but get: ', JSON.stringify(color), diff);
       isPage = false;
       break;
     }
@@ -1591,6 +1702,7 @@ function makeMagicLabGoodsToTarget() {
   return true;
 }
 
+var groupPageInProductions = new RF.GroupPage('groupPageProductions', [rfpageInProduction, rfpageInMagicLab]);
 function makeGoodsToTarget(target, prework, stocks) {
   // TODO: recognize building to reduce drop order time
   var goodsOneStock = ocrProductStorage(goodsLocation[1]);
@@ -1608,24 +1720,29 @@ function makeGoodsToTarget(target, prework, stocks) {
   var goodsThreeStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[3]) : -1;
   // console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock, 'target: ', target);
 
-  if (checkIsPage(pageToolShop)) {
-    setProductionBuilding('toolShop');
-  } else if (checkIsPage(pageIsJammery)) {
-    setProductionBuilding('jammery');
-  }
-  // else if (checkIsPage(pageIsCarpentryShop)) {
-  //   setProductionBuilding('carpentryShop');
-  // }
-  else if (checkIsPage(pageIsJampieDiner)) {
-    setProductionBuilding('jampieDiner');
-  } else if (checkIsPage(pageIsBakery)) {
-    setProductionBuilding('bakery');
-  } else if (checkIsPage(pageIsFlowerShop)) {
-    setProductionBuilding('flowerShop');
-  } else if (checkIsPage(pageInMagicLab)) {
-    setProductionBuilding('magicLab');
-  } else {
-    setProductionBuilding('otherGoodShop');
+  var matchedPages = groupPageGlobal.isMatchScreen(this.screen);
+  if (matchedPages.length > 0) {
+    logs(
+      'makeGoodsToTarget',
+      'makeGoodsToTarget.groupPageGlobal.matchedPages:{0}'.format(JSON.stringify(matchedPages))
+    );
+    if (matchedPages.indexOf('rfpageToolShop') !== -1) {
+      setProductionBuilding('toolShop');
+    } else if (matchedPages.indexOf('rfpageIsCarpentryShop') !== -1) {
+      setProductionBuilding('carpentryShop');
+    } else if (matchedPages.indexOf('rfpageIsJammery') !== -1) {
+      setProductionBuilding('jammery');
+    } else if (matchedPages.indexOf('rfpageIsJampieDiner') !== -1) {
+      setProductionBuilding('jampieDiner');
+    } else if (matchedPages.indexOf('rfpageIsBakery') !== -1) {
+      setProductionBuilding('bakery');
+    } else if (matchedPages.indexOf('rfpageIsFlowerShop') !== -1) {
+      setProductionBuilding('flowerShop');
+    } else if (matchedPages.indexOf('rfpageInMagicLab') !== -1) {
+      setProductionBuilding('magicLab');
+    } else {
+      setProductionBuilding('otherGoodShop');
+    }
   }
 
   var prodReqList = findProductRequirements();
@@ -1703,7 +1820,7 @@ function makeGoodsToTarget(target, prework, stocks) {
             // console.log('>>', JSON.stringify(part))
             // Assume we can make 5 items, part[0] is stock, part[1] is requirement
             if (part[0] < part[1]) {
-              console.log('Cant even build one, skip this');
+              console.log('Cant even build one, skip this (need {0} but have only {1})'.format(part[0], part[1]));
               canProduce = false;
             }
             if (part[0] - part[1] * availableSlots <= config.productSafetyStock && value > config.productSafetyStock) {
@@ -1849,19 +1966,21 @@ function makeGoodsToTarget(target, prework, stocks) {
         break;
       } else if (checkIsPage(pageLockedGood)) {
         qTap(pageLockedGood);
-        waitUntilSeePages([pageInProduction, pageInMagicLab], 5);
+        groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000);
         break;
-      } else if (waitUntilSeePages([pageInProduction, pageInMagicLab]) && availableSlots != latestCount) {
+      } else if (latestCount === 0) {
+        console.log('No slots, stop at: ', stock['id']);
+        return stocks;
+      } else if (
+        groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000) !== '' &&
+        availableSlots != latestCount
+      ) {
         availableSlots = latestCount;
         break;
       }
       sleep(1000);
     }
 
-    if (countProductionSlotAvailable() == 0) {
-      console.log('No slots, stop at: ', stock['id']);
-      return stocks;
-    }
     // Add check if there are no worker
   }
 
@@ -1919,25 +2038,23 @@ function countProductionSlotAvailable() {
   ]);
   var matchedPages = groupPageMagicLabSlot.isMatchScreen(this.screen);
 
-  console.log('countMagicLabSlotAvailable: ', matchedPages.length);
-  // TODO: test me
+  logs('countProductionSlotAvailable', 'countProductionSlotAvailable: {0}'.format(matchedPages.length));
   return matchedPages.length;
 }
 
 function JobScheduling() {
-  if (!checkIsPage(pageInProduction) && !checkIsPage(pageInMagicLab)) {
+  var matchedPages = groupPageInProductions.isMatchScreen(this.screen);
+  if (matchedPages.length === 0) {
     return false;
   }
 
-  if (checkIsPage(pageInMagicLab)) {
+  if (matchedPages.indexOf('rfpageInMagicLab') !== -1) {
     if (config.skipMagicLabProduction) {
-      console.log('Skip magic lab as requested by config');
+      logs('JobScheduling', 'Skip magic lab as requested by config');
       return true;
     } else if (config.magicLabProductIndex !== 0) {
-      console.log('Its magic lab, build selected {0}th item'.format(config.magicLabProductIndex));
+      logs('JobScheduling', 'Its magic lab, build selected {0}th item'.format(config.magicLabProductIndex));
       return makeMagicLabGoodsToTarget();
-    } else {
-      console.log('Magic lab produce the same way as other product buildings');
     }
   }
 
@@ -1959,6 +2076,7 @@ function JobScheduling() {
     { x: 303, y: 246, r: 8, g: 166, b: 222 },
     { x: 430, y: 238, r: 222, g: 207, b: 198 },
   ];
+  // Try to collect finished goods
   if (!checkIsPage(pageProducing)) {
     qTap(pnt(51, 66));
     sleep(config.sleepAnimate * 3);
@@ -1978,7 +2096,6 @@ function JobScheduling() {
     console.log('No available production slot, skip this production');
     return true;
   }
-  // console.log('emptySlots: ', emptySlots);
 
   if (checkIsPage(pageInMagicLab) && config.skipMagicLabProduction) {
     console.log('Skip magic lab as requested by config 2');
@@ -2034,86 +2151,56 @@ function JobScheduling() {
   var stocks = makeGoodsToTarget(config.goodsTarget, true);
 
   // And rerun one without prework if has enough space
-  if (countProductionSlotAvailable() > 0) {
+  var laterProductionSlotAvailable = countProductionSlotAvailable();
+  if (laterProductionSlotAvailable > 0) {
     console.log('still have space after prework, keep producing');
     SwipeProductionMenuToTop();
     makeGoodsToTarget(config.goodsTarget, false, stocks);
   }
-
-  if (countProductionSlotAvailable() !== emptySlots) {
+  if (laterProductionSlotAvailable !== emptySlots) {
     sendEvent('running', '');
     return true;
   }
   return false;
 }
 
+var pageNotEnoughStock = [
+  { x: 428, y: 98, r: 56, g: 167, b: 231 },
+  { x: 345, y: 104, r: 60, g: 70, b: 105 },
+  { x: 370, y: 176, r: 243, g: 233, b: 223 },
+  { x: 349, y: 247, r: 121, g: 207, b: 12 },
+];
+var rfpageNotEnoughStock = new RF.Page('rfpageNotEnoughStock', pageNotEnoughStock, pageNotEnoughStock[0]);
+var pageTwoItemNotEnoughStock = [
+  { x: 444, y: 98, r: 56, g: 166, b: 231 },
+  { x: 375, y: 105, r: 60, g: 70, b: 105 },
+  { x: 420, y: 203, r: 243, g: 233, b: 223 },
+  { x: 416, y: 246, r: 219, g: 207, b: 199 },
+];
+var rfpageTwoItemNotEnoughStock = new RF.Page(
+  'rfpageTwoItemNotEnoughStock',
+  pageTwoItemNotEnoughStock,
+  pageTwoItemNotEnoughStock[0]
+);
 function handleNotEnoughStock() {
-  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
+  handleUnexpectedMessageBox();
+
+  if (rfpageNotEnoughStock.waitScreenForMatchingScreen(this.screen, 2000)) {
+    logs('handleNotEnoughStock', 'rfpageNotEnoughStock.goNext');
+    rfpageNotEnoughStock.goNext(this.screen);
+
+    groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000);
+    return true;
   }
 
-  var pageNotEnoughStock = [
-    { x: 428, y: 98, r: 56, g: 167, b: 231 },
-    { x: 345, y: 104, r: 60, g: 70, b: 105 },
-    { x: 370, y: 176, r: 243, g: 233, b: 223 },
-    { x: 349, y: 247, r: 121, g: 207, b: 12 },
-  ];
-  if (checkIsPage(pageNotEnoughStock)) {
-    console.log('quiting not enougth stock (pageNotEnoughStock)');
-    qTap(pageNotEnoughStock);
-    sleep(config.sleepAnimate);
+  if (rfpageTwoItemNotEnoughStock.waitScreenForMatchingScreen(this.screen, 2000)) {
+    logs('handleNotEnoughStock', 'rfpageTwoItemNotEnoughStock.goNext');
+    rfpageTwoItemNotEnoughStock.goNext(this.screen);
 
-    return waitUntilSeePages([pageInProduction, pageInMagicLab], 6);
+    groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000);
+    return true;
   }
 
-  var pageTwoItemNotEnoughStock = [
-    { x: 444, y: 98, r: 56, g: 166, b: 231 },
-    { x: 375, y: 105, r: 60, g: 70, b: 105 },
-    { x: 420, y: 203, r: 243, g: 233, b: 223 },
-    { x: 416, y: 246, r: 219, g: 207, b: 199 },
-  ];
-  if (checkIsPage(pageTwoItemNotEnoughStock)) {
-    console.log('quiting not enougth stock (pageTwoItemNotEnoughStock)');
-    qTap(pageTwoItemNotEnoughStock);
-    sleep(config.sleep);
-    return waitUntilSeePages([pageInProduction, pageInMagicLab], 6);
-  }
-
-  // Disney materials cannot be bought via crystals
-  var pageNotEnoughDisneyMaterial = [
-    { x: 299, y: 244, r: 123, g: 207, b: 8 },
-    { x: 349, y: 243, r: 123, g: 207, b: 8 },
-    { x: 413, y: 18, r: 127, g: 105, b: 0 },
-    { x: 532, y: 21, r: 4, g: 73, b: 127 },
-    { x: 313, y: 249, r: 104, g: 175, b: 7 },
-    { x: 429, y: 96, r: 57, g: 69, b: 107 },
-    { x: 227, y: 27, r: 126, g: 126, b: 126 },
-  ];
-  if (checkIsPage(pageNotEnoughDisneyMaterial)) {
-    console.log('quiting not enougth stock (pageNotEnoughDisneyMaterial)');
-    qTap(pageNotEnoughDisneyMaterial);
-    sleep(config.sleepAnimate);
-
-    return waitUntilSeePages([pageInProduction, pageInMagicLab], 6);
-  }
   return false;
 }
 
@@ -2125,11 +2212,22 @@ var pageNewDataPackAvailable = [
   { x: 258, y: 83, r: 57, g: 69, b: 106 },
   { x: 246, y: 125, r: 153, g: 147, b: 139 },
 ];
+var rfpageNewDataPackAvailable = new RF.Page(
+  'rfpageNewDataPackAvailable',
+  pageNewDataPackAvailable,
+  pageNewDataPackAvailable[0]
+);
+
 var pageNewDataPackDownloadFailed = [
   { x: 350, y: 245, r: 123, g: 205, b: 8 },
   { x: 342, y: 107, r: 57, g: 69, b: 106 },
   { x: 264, y: 245, r: 221, g: 205, b: 195 },
 ];
+var rfpageNewDataPackDownloadFailed = new RF.Page(
+  'rfpageNewDataPackDownloadFailed',
+  pageNewDataPackDownloadFailed,
+  pageNewDataPackDownloadFailed[0]
+);
 
 // If already choose language in pageNewDataPackAvailable
 var pageNewDataPackAvaiableNoLanguage = [
@@ -2140,104 +2238,150 @@ var pageNewDataPackAvaiableNoLanguage = [
   { x: 341, y: 96, r: 255, g: 255, b: 255 },
   { x: 284, y: 99, r: 253, g: 253, b: 251 },
 ];
+var rfpageNewDataPackAvaiableNoLanguage = new RF.Page(
+  'rfpageNewDataPackAvaiableNoLanguage',
+  pageNewDataPackAvaiableNoLanguage,
+  pageNewDataPackAvaiableNoLanguage[0]
+);
 
+var pageGeneralMessageWindow = [
+  { x: 424, y: 101, r: 57, g: 69, b: 107 },
+  { x: 431, y: 128, r: 243, g: 233, b: 223 },
+  { x: 429, y: 244, r: 219, g: 207, b: 199 },
+];
+var rfpageGeneralMessageWindow = new RF.Page(
+  'rfpageGeneralMessageWindow',
+  pageGeneralMessageWindow,
+  pageGeneralMessageWindow[0]
+);
+// return false: nothing to handle; return true: did something
 function handleUnexpectedMessageBox() {
-  if (checkIsPage(pagePurchaseDiamond)) {
-    console.log('Accidentally goto purchase diamond page, hit back twice');
-    keycode('BACK', 1000);
-    sleep(2000);
-    keycode('BACK', 1000);
-    sleep(2000);
+  var matchedPages = groupPageGlobal.isMatchScreen(this.screen);
+  if (matchedPages.length === 0) {
+    return false;
+  }
+  if (matchedPages.indexOf('rfpageInKingdomVillage') !== -1 || matchedPages.indexOf('rfpageInProduction') !== -1) {
     return false;
   }
 
-  if (checkIsPage(pageGooglePlaystoreHasStopped)) {
-    console.log('Found pageGooglePlaystoreHasStopped, press it');
-    qTap(pageGooglePlaystoreHasStopped);
-    sleep(2000);
-    return false;
-  }
-
-  if (checkIsPage(pageCookieKingdomNotResponding)) {
-    console.log('Found pageCookieKingdomNotResponding, press it');
-    qTap(pageCookieKingdomNotResponding);
-    sleep(2000);
-    return false;
-  }
-
-  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-
-  if (checkIsPage(pageCookieKingdomIsNotResponding)) {
-    console.log('Found pageCookieKingdomIsNotResponding, press it');
-    qTap(pageCookieKingdomIsNotResponding);
-    sleep(2000);
-    return false;
-  }
-  if (checkIsPage(pageCookieKingdomIsNotResponding2)) {
-    console.log('Found pageCookieKingdomIsNotResponding2, press it');
-    qTap(pageCookieKingdomIsNotResponding2);
-    sleep(2000);
-    return false;
-  }
-  if (checkIsPage(pageCookieKingdomHasStopped)) {
-    console.log('Found pageCookieKingdomHasStopped, press it');
-    qTap(pageCookieKingdomHasStopped);
-    sleep(2000);
-    return false;
-  }
-
-  if (checkScreenMessage(theReloginIntoAnotherDeviceMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found theReloginIntoAnotherDeviceMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    for (var i = 0; i < config.sleepWhenDoubleLoginInMinutes; i++) {
-      sleep(60000);
-      sendEvent('running', '');
-      console.log('Detect relogin, wait: ', i, '/', config.sleepWhenDoubleLoginInMinutes, 'mins to restart...');
-    }
+  logs(
+    'handleUnexpectedMessageBox',
+    'handleUnexpectedMessageBox.groupPageGlobal.matchedPages:{0}'.format(JSON.stringify(matchedPages))
+  );
+  if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageNotifyQuitWindow.goNext()');
+    rfpageNotifyQuitWindow.goNext(this.screen);
+    sleep(1000);
     return true;
   }
-
-  if (checkIsPage(pageNewDataPackAvailable) || checkIsPage(pageNewDataPackAvaiableNoLanguage)) {
-    console.log('New data pack available found, tap and wait for download');
-    qTap(pageNewDataPackAvailable);
+  if (matchedPages.indexOf('rfpagePurchaseDiamond') !== -1) {
+    logs('handleUnexpectedMessageBox', 'Accidentally goto purchase diamond page, hit back twice');
+    keycode('BACK', 1000);
+    sleep(2000);
+    keycode('BACK', 1000);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageGooglePlaystoreHasStopped') !== -1) {
+    console.log('rfpageGooglePlaystoreHasStopped.goNext');
+    logs('handleUnexpectedMessageBox', 'rfpageGooglePlaystoreHasStopped.goNext');
+    rfpageGooglePlaystoreHasStopped.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageCookieKingdomNotResponding') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageCookieKingdomNotResponding.goNext');
+    rfpageCookieKingdomNotResponding.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageCookieKingdomIsNotResponding') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageCookieKingdomIsNotResponding.goNext');
+    rfpageCookieKingdomIsNotResponding.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageCookieKingdomIsNotResponding2') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageCookieKingdomIsNotResponding2.goNext');
+    rfpageCookieKingdomIsNotResponding2.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageCookieKingdomHasStopped') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageCookieKingdomHasStopped.goNext');
+    rfpageCookieKingdomHasStopped.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (
+    matchedPages.indexOf('rfpageNewDataPackAvailable') !== -1 ||
+    matchedPages.indexOf('rfpageNewDataPackAvaiableNoLanguage') !== -1
+  ) {
+    logs('handleUnexpectedMessageBox', 'New data pack available found, tap and wait for download');
+    rfpageNewDataPackAvailable.goNext(this.screen);
     sleep(10000);
     for (i = 0; i < 18; i++) {
       if (checkIsPage(pageNewDataPackDownloadFailed)) {
-        console.log('Failed to doenload resources, tap to continue');
+        logs('handleUnexpectedMessageBox', 'Failed to doenload resources, tap to continue');
         qTap(pageNewDataPackDownloadFailed);
         break;
       }
       // wait for yellow bar (download progress bar) disapper
       if (!checkIsPage([{ x: 16, y: 349, r: 255, g: 210, b: 76 }])) {
-        console.log('download finished');
+        logs('handleUnexpectedMessageBox', 'download finished');
         break;
       }
-      console.log('wait for download: ', i);
+      logs('handleUnexpectedMessageBox', 'wait for download: {0}'.format(i));
       sleep(3000);
     }
+  } else if (matchedPages.indexOf('rfpageInputAge') !== -1) {
+    logs('handleUnexpectedMessageBox', 'found rfpageInputAge, call handleInputLoginInfo()');
+    handleInputLoginInfo();
+    return true;
+  } else if (matchedPages.indexOf('rfpageGeneralMessageWindow') !== -1) {
+    if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
+      config.lastNetworkIssueOccurTime = Date.now();
+      config.networkIssueCount++;
+      logs(
+        'handleUnexpectedMessageBox',
+        'Found anErrorHasOccuredMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+      );
+      keycode('BACK', 1000);
+      return true;
+    }
+    if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
+      config.lastNetworkIssueOccurTime = Date.now();
+      config.networkIssueCount++;
+      logs(
+        'handleUnexpectedMessageBox',
+        'Found theNetworkIsUnstableMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+      );
+      keycode('BACK', 1000);
+      return true;
+    }
+    if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
+      config.lastNetworkIssueOccurTime = Date.now();
+      config.networkIssueCount++;
+      logs(
+        'handleUnexpectedMessageBox',
+        'Found anUnknownErrorHasOccurMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+      );
+      keycode('BACK', 1000);
+      return true;
+    }
+    if (checkScreenMessage(theReloginIntoAnotherDeviceMessageScreen)) {
+      config.lastNetworkIssueOccurTime = Date.now();
+      config.networkIssueCount++;
+      logs(
+        'handleUnexpectedMessageBox',
+        'Found theReloginIntoAnotherDeviceMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+      );
+      keycode('BACK', 1000);
+      for (var i = 0; i < config.sleepWhenDoubleLoginInMinutes; i++) {
+        sleep(60000);
+        sendEvent('running', '');
+        logs(
+          'handleUnexpectedMessageBox',
+          'Detect relogin, wait: {0}/{1} mins to restart...'.format(i, config.sleepWhenDoubleLoginInMinutes)
+        );
+      }
+    }
   }
+  return false;
 }
 
 function handleWelcomePage() {
@@ -2586,7 +2730,7 @@ function findAndTapProductionHouse() {
         qTap(house);
         sleep(config.sleepAnimate);
 
-        if (waitUntilSeePages([pageInProduction, pageInMagicLab], 5)) {
+        if (groupPageInProductions.waitScreenForMatchingOne(this.screen, 6000) !== '') {
           console.log('Found production house successfully: ', key, i);
           return true;
         } else if (checkIsPage(pageStockIsFull)) {
@@ -2636,7 +2780,7 @@ function swipeDirection(direction, finishSwipeWhenInProduction, swippingPage) {
   if (
     finishSwipeWhenInProduction &&
     !checkIsPage(pageInKingdomVillage) &&
-    waitUntilSeePages([pageInProduction, pageInMagicLab], 5)
+    groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000) !== ''
   ) {
     console.log('Already in production, skip swipping');
     return true;
@@ -2697,10 +2841,7 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage, swipingPag
     return false;
   }
 
-  if (handleUnexpectedMessageBox()) {
-    console.log('handleGotoKingdomPage just wait for relogin screen: ', config.sleepWhenDoubleLoginInMinutes);
-    return false;
-  }
+  handleUnexpectedMessageBox();
 
   steps = steps == undefined ? 4 : steps;
   var step_x = (toPnt.x - fromPnt.x) / steps;
@@ -2733,10 +2874,7 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage, swipingPag
 function handleGotoKingdomPage() {
   console.log('trying to get to kingdom page');
 
-  if (handleUnexpectedMessageBox()) {
-    console.log('handleGotoKingdomPage just wait for relogin screen: ', config.sleepWhenDoubleLoginInMinutes);
-    return false;
-  }
+  handleUnexpectedMessageBox();
 
   if (checkIsPage(pageInKingdomVillage)) {
     console.log('already in kingdom');
@@ -2798,7 +2936,7 @@ function findHouseInNotSureWhere(tryCount) {
     handleUnexpectedMessageBox();
     tapRandom(75, 95, 553, 285);
     sleep(config.sleepAnimate * 2);
-    if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
+    if (groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000) !== '') {
       console.log('found production in try: ', i);
       return true;
     }
@@ -2924,7 +3062,7 @@ function handleFindAndTapCandyHouse() {
         }
       }
 
-      if (waitUntilSeePages([pageInProduction, pageInMagicLab], 2) && config.searchHouseCount > 3) {
+      if (groupPageInProductions.waitScreenForMatchingOne(this.screen, 2000) !== '' && config.searchHouseCount > 3) {
         console.log(
           'found production when swipping, start working, config.searchHouseCount: ',
           config.searchHouseCount,
@@ -3220,15 +3358,11 @@ var rfpageEnterPasswordLongId = new RF.Page(
   pageEnterPasswordLongId[0]
 );
 var rfpageServerSelection = new RF.Page('rfpageServerSelection', pageServerSelection, pageServerSelection[0]);
-var rfpageInLoginPageWithGearAndVideo = new RF.Page(
-  'rfpageInLoginPageWithGearAndVideo',
-  pageInLoginPageWithGearAndVideo,
-  pageInLoginPageWithGearAndVideo[0]
-);
 var rfpageNotifyQuitWindow = new RF.Page('rfpageNotifyQuitWindow', pageNotifyQuitWindow, pageNotifyQuitWindow[0]);
 
 var groupPageLogin = new RF.GroupPage('groupPageLogin', [
   rfpageInputAge,
+  rfpageTermsOfServiceWindow,
   rfpageTermsOfServices2,
   rfpageTermsOfServicesMemu,
   rfpageTermsOfServicesHitBack,
@@ -3280,6 +3414,12 @@ function handleInputLoginInfo() {
       sleep(config.sleep);
       qTap(pageInputAge);
       sleep(config.sleepAnimate * 2);
+    } else if (matchedPages.indexOf('rfpageTermsOfServiceWindow') !== -1) {
+      if (checkScreenMessage(termOfServiceMessage, pageTermsOfServiceWindow)) {
+        console.log('accept rfpageTermsOfServiceWindow');
+        rfpageTermsOfServiceWindow.goNext(this.screen);
+        sleep(1000);
+      }
     } else if (matchedPages.indexOf('rfpageTermsOfServices2') !== -1) {
       console.log('accept rfpageTermsOfServices2');
       qTap(pageTermsOfServices2);
@@ -3345,6 +3485,12 @@ function handleInputLoginInfo() {
         console.log('wait for download: ', i);
         sleep(3000);
       }
+    } else if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+      if (checkScreenMessage(messageNotifyQuit)) {
+        console.log('Found quit notification, close it and back to login page');
+        rfpageNotifyQuitWindow.goNext(this.screen);
+        sleep(2000);
+      }
     } else if (matchedPages.indexOf('rfpageChooseLoginMethod') !== -1) {
       console.log('choose to login via email');
       qTap(pageChooseLoginMethod);
@@ -3353,106 +3499,104 @@ function handleInputLoginInfo() {
       console.log('choose to login via email 2');
       qTap(pageChooseLoginMethod2);
       sleep(config.sleepAnimate);
-    } else if (matchedPages.indexOf('rfpageEnterEmail') !== -1) {
-      console.log('inputing user email ', config.account);
-      qTap(pnt(370, 150)); // input field
-      sleep(config.sleepAnimate);
-      typing(config.account, 1000);
-      sleep(4000); // sleep must equal to typing
-      typing('\n', 500);
-      sleep(500);
-    } else if (
-      matchedPages.indexOf('rfpageEnterpassword') !== -1 ||
-      matchedPages.indexOf('rfpageEnterPasswordLongId') !== -1
-    ) {
-      rfpageEnterPasswordLongId.goNext(this.screen);
-      sleep(config.sleepAnimate);
-      typing(config.password, 1000);
-      sleep(1000); // sleep must equal to typing
-      typing('\n', 500);
-      sleep(500);
-      qTap(pnt(370, 190)); // Login button
-      passwordInputed = true;
-    } else if (matchedPages.indexOf('rfpageEnterTwoPasswords') !== -1) {
-      config.run = false;
-      sendEvent('gameStatus', 'login-failed');
-      console.log('This account id does not exist');
-      if (handleLoginFailed()) {
-        return false;
-      }
-    } else if (matchedPages.indexOf('rfpageServerSelection') !== -1) {
-      console.log('Found server selection screen, seems like a new devPlayAccount');
-      if (handleLoginFailed()) {
-        return false;
-      }
-    } else if (matchedPages.indexOf('rfpageAnnouncement') !== -1) {
-      console.log('found rfpageAnnouncement, login successed, return ');
-      rfpageAnnouncement.goNext(this.screen);
-      return true;
-    } else if (
-      matchedPages.indexOf('rfpageInKingdomVillage') !== -1 ||
-      matchedPages.indexOf('rfpageInProduction') !== -1 ||
-      matchedPages.indexOf('rfpageInMagicLab') !== -1
-    ) {
-      console.log('handleInputLoginInfo found in kingdom village, login success, return');
-      return true;
-    } else if (matchedPages.indexOf('rfpageInFountain') !== -1) {
-      console.log('found pageInFountain, login successed, return ');
-      pageInFountain.goNext(this.screen);
-      return true;
-    } else if (matchedPages.indexOf('rfpageInLoginPageWithGearAndVideo') !== -1) {
-      qTap(pnt(575, 22));
-      return true;
-    } else if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
-      if (checkScreenMessage(messageNotifyQuit)) {
-        console.log('Found quit notification, close it and back to login page');
-        keycode('BACK', 1000);
-        sleep(2000);
-      }
-    } else {
-      console.log('handleInputLoginInfo not sure what to do, tap(575, 22) announce page');
+    }
 
-      qTap(pnt(575, 22));
-      if (handleAnnouncement()) {
-        console.log('handleLogin handle accouncement success, login success');
+    if (!config.isMaintainanceMode) {
+      if (matchedPages.indexOf('rfpageEnterEmail') !== -1) {
+        console.log('inputing user email ', config.account);
+        qTap(pnt(370, 150)); // input field
+        sleep(config.sleepAnimate);
+        typing(config.account, 1000);
+        sleep(4000); // sleep must equal to typing
+        typing('\n', 500);
+        sleep(500);
+      } else if (
+        matchedPages.indexOf('rfpageEnterpassword') !== -1 ||
+        matchedPages.indexOf('rfpageEnterPasswordLongId') !== -1
+      ) {
+        rfpageEnterPasswordLongId.goNext(this.screen);
+        sleep(config.sleepAnimate);
+        typing(config.password, 1000);
+        sleep(1000); // sleep must equal to typing
+        typing('\n', 500);
+        sleep(500);
+        qTap(pnt(370, 190)); // Login button
+        passwordInputed = true;
+      } else if (matchedPages.indexOf('rfpageEnterTwoPasswords') !== -1) {
+        config.run = false;
+        sendEvent('gameStatus', 'login-failed');
+        console.log('This account id does not exist');
+        if (handleLoginFailed()) {
+          return false;
+        }
+      } else if (matchedPages.indexOf('rfpageServerSelection') !== -1) {
+        console.log('Found server selection screen, seems like a new devPlayAccount');
+        if (handleLoginFailed()) {
+          return false;
+        }
+      } else if (matchedPages.indexOf('rfpageAnnouncement') !== -1) {
+        console.log('found rfpageAnnouncement, login successed, return ');
+        rfpageAnnouncement.goNext(this.screen);
         return true;
-      }
-    }
+      } else if (
+        matchedPages.indexOf('rfpageInKingdomVillage') !== -1 ||
+        matchedPages.indexOf('rfpageInProduction') !== -1 ||
+        matchedPages.indexOf('rfpageInMagicLab') !== -1
+      ) {
+        console.log('handleInputLoginInfo found in kingdom village, login success, return');
+        return true;
+      } else if (matchedPages.indexOf('rfpageInFountain') !== -1) {
+        console.log('found pageInFountain, login successed, return ');
+        pageInFountain.goNext(this.screen);
+        return true;
+      } else if (matchedPages.indexOf('rfpageInLoginPageWithGearAndVideo') !== -1) {
+        qTap(pnt(575, 22));
+        return true;
+      } else {
+        console.log('handleInputLoginInfo not sure what to do, tap(575, 22) announce page');
 
-    if (checkScreenMessage(incorrectEmailFormat, pageEnterEmail)) {
-      console.log('Incorrect email format, restart the game and try again');
-      if (handleLoginFailed()) {
+        qTap(pnt(575, 22));
+        if (handleAnnouncement()) {
+          console.log('handleLogin handle accouncement success, login success');
+          return true;
+        }
+      }
+
+      if (checkScreenMessage(incorrectEmailFormat, pageEnterEmail)) {
+        console.log('Incorrect email format, restart the game and try again');
+        if (handleLoginFailed()) {
+          return false;
+        }
+      }
+      if (checkScreenMessage(needRegisterDevPlayAccount, pageEnterEmail)) {
+        console.log('DevPlay report user registered via social media account, but need DevPlay account');
+        config.run = false;
+        sendEvent('gameStatus', 'login-failed');
         return false;
       }
-    }
-    if (checkScreenMessage(needRegisterDevPlayAccount, pageEnterEmail)) {
-      console.log('DevPlay report user registered via social media account, but need DevPlay account');
-      config.run = false;
-      sendEvent('gameStatus', 'login-failed');
-      return false;
-    }
-    if (checkScreenMessage(registerWithSocialPlatformMessageScreen, pageEnterEmail)) {
-      console.log('DevPlay report user registered via social media account, "Please use it to sign in"');
-      config.run = false;
-      sendEvent('gameStatus', 'login-failed');
-      return false;
-    }
-    if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
-      console.log('DevPlay report password too short');
-      if (handleLoginFailed()) {
+      if (checkScreenMessage(registerWithSocialPlatformMessageScreen, pageEnterEmail)) {
+        console.log('DevPlay report user registered via social media account, "Please use it to sign in"');
+        config.run = false;
+        sendEvent('gameStatus', 'login-failed');
         return false;
       }
-    }
-    if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
-      console.log('DevPlay report wrong password');
-      if (handleLoginFailed()) {
-        return false;
+      if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
+        console.log('DevPlay report password too short');
+        if (handleLoginFailed()) {
+          return false;
+        }
       }
-    }
-    if (checkScreenMessage(wrongPasswordMessageScreenWithLongId, pageEnteredPassword)) {
-      console.log('DevPlay report wrong password (with long id account)');
-      if (handleLoginFailed()) {
-        return false;
+      if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
+        console.log('DevPlay report wrong password');
+        if (handleLoginFailed()) {
+          return false;
+        }
+      }
+      if (checkScreenMessage(wrongPasswordMessageScreenWithLongId, pageEnteredPassword)) {
+        console.log('DevPlay report wrong password (with long id account)');
+        if (handleLoginFailed()) {
+          return false;
+        }
       }
     }
 
@@ -3473,8 +3617,13 @@ function handleInputLoginInfo() {
         }
       } else if (matchedPages.indexOf('rfpageInKingdomVillage') !== -1) {
         return true;
+      } else if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+        if (checkScreenMessage(messageNotifyQuit)) {
+          console.log('Found quit notification, close it and back to login page');
+          rfpageNotifyQuitWindow.goNext(this.screen);
+          sleep(2000);
+        }
       }
-
       if (checkScreenMessage(messageNotifyQuit)) {
         console.log('found unexpected quit window, closing it');
         keycode('BACK', 1000);
@@ -3513,75 +3662,75 @@ function handleNextProductionBuilding() {
   }
 }
 
-function handleSkipProductionDashboardIntro() {
-  var pageGnomeLabProdBoardIntro = [
-    { x: 281, y: 114, r: 170, g: 15, b: 35 },
-    { x: 217, y: 21, r: 82, g: 17, b: 30 },
-    { x: 311, y: 16, r: 86, g: 64, b: 2 },
-    { x: 424, y: 19, r: 0, g: 45, b: 86 },
-  ];
+// function handleSkipProductionDashboardIntro() {
+//   var pageGnomeLabProdBoardIntro = [
+//     { x: 281, y: 114, r: 170, g: 15, b: 35 },
+//     { x: 217, y: 21, r: 82, g: 17, b: 30 },
+//     { x: 311, y: 16, r: 86, g: 64, b: 2 },
+//     { x: 424, y: 19, r: 0, g: 45, b: 86 },
+//   ];
 
-  if (!checkIsPage(pageGnomeLabProdBoardIntro)) {
-    return false;
-  }
+//   if (!checkIsPage(pageGnomeLabProdBoardIntro)) {
+//     return false;
+//   }
 
-  console.log('About to handle pageGnomeLabProdBoardIntro');
+//   console.log('About to handle pageGnomeLabProdBoardIntro');
 
-  // Tap to enter the lab
-  qTap(pnt(300, 200));
-  sleep(2000);
+//   // Tap to enter the lab
+//   qTap(pnt(300, 200));
+//   sleep(2000);
 
-  if (waitUntilSeePage(pageInGnomeLab, 20, pnt(13, 13), undefined, 1)) {
-    console.log('Success skip gnome lab production dashboard intro');
-  }
-  return true;
-}
+//   if (waitUntilSeePage(pageInGnomeLab, 20, pnt(13, 13), undefined, 1)) {
+//     console.log('Success skip gnome lab production dashboard intro');
+//   }
+//   return true;
+// }
 
-function handleSkipProductionDashboardIsDone() {
-  var pageProductionDashboardIsDone = [
-    { x: 25, y: 222, r: 227, g: 163, b: 81 },
-    { x: 37, y: 220, r: 75, g: 83, b: 115 },
-    { x: 212, y: 170, r: 255, g: 243, b: 239 },
-  ];
-  var pageProductionDashboardIntroducing = [
-    { x: 607, y: 26, r: 3, g: 6, b: 8 },
-    { x: 19, y: 9, r: 100, g: 88, b: 25 },
-    { x: 26, y: 25, r: 102, g: 70, b: 42 },
-    { x: 30, y: 12, r: 99, g: 8, b: 16 },
-  ];
-  var pageInProductionDashboard = [
-    { x: 619, y: 340, r: 123, g: 207, b: 8 },
-    { x: 19, y: 14, r: 253, g: 206, b: 74 },
-    { x: 31, y: 13, r: 198, g: 36, b: 41 },
-    { x: 28, y: 26, r: 239, g: 207, b: 139 },
-    { x: 619, y: 19, r: 255, g: 255, b: 255 },
-  ];
+// function handleSkipProductionDashboardIsDone() {
+//   var pageProductionDashboardIsDone = [
+//     { x: 25, y: 222, r: 227, g: 163, b: 81 },
+//     { x: 37, y: 220, r: 75, g: 83, b: 115 },
+//     { x: 212, y: 170, r: 255, g: 243, b: 239 },
+//   ];
+//   var pageProductionDashboardIntroducing = [
+//     { x: 607, y: 26, r: 3, g: 6, b: 8 },
+//     { x: 19, y: 9, r: 100, g: 88, b: 25 },
+//     { x: 26, y: 25, r: 102, g: 70, b: 42 },
+//     { x: 30, y: 12, r: 99, g: 8, b: 16 },
+//   ];
+//   var pageInProductionDashboard = [
+//     { x: 619, y: 340, r: 123, g: 207, b: 8 },
+//     { x: 19, y: 14, r: 253, g: 206, b: 74 },
+//     { x: 31, y: 13, r: 198, g: 36, b: 41 },
+//     { x: 28, y: 26, r: 239, g: 207, b: 139 },
+//     { x: 619, y: 19, r: 255, g: 255, b: 255 },
+//   ];
 
-  if (!checkIsPage(pageProductionDashboardIsDone)) {
-    return false;
-  }
+//   if (!checkIsPage(pageProductionDashboardIsDone)) {
+//     return false;
+//   }
 
-  console.log('About to handle pageProductionDashboardIsDone');
-  // Tap production dashboard icon
-  qTap(pnt(27, 226));
+//   console.log('About to handle pageProductionDashboardIsDone');
+//   // Tap production dashboard icon
+//   qTap(pnt(27, 226));
 
-  if (!waitUntilSeePage(pageProductionDashboardIntroducing, 7)) {
-    return false;
-  }
-  // Tap skip
-  qTap(pageProductionDashboardIntroducing);
+//   if (!waitUntilSeePage(pageProductionDashboardIntroducing, 7)) {
+//     return false;
+//   }
+//   // Tap skip
+//   qTap(pageProductionDashboardIntroducing);
 
-  if (!waitUntilSeePage(pageProductionDashboardIntroducing, 7)) {
-    return false;
-  }
+//   if (!waitUntilSeePage(pageProductionDashboardIntroducing, 7)) {
+//     return false;
+//   }
 
-  if (waitUntilSeePage(pageInProductionDashboard)) {
-    console.log('Succssfully resolved production dashboard intro');
-    return true;
-  }
+//   if (waitUntilSeePage(pageInProductionDashboard)) {
+//     console.log('Succssfully resolved production dashboard intro');
+//     return true;
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
 function handleSkipKingdomStory() {
   var pageInKingdomStoryMission = [
@@ -3600,34 +3749,34 @@ function handleSkipKingdomStory() {
   return waitUntilSeePage(pageInKingdomVillage);
 }
 
-function handleSkipHallOfHeros() {
-  var pageHallIntro = [
-    { x: 365, y: 138, r: 177, g: 196, b: 209 },
-    { x: 285, y: 110, r: 90, g: 209, b: 225 },
-    { x: 277, y: 150, r: 74, g: 182, b: 82 },
-  ];
-  var pageSpeedUpSlot = [
-    { x: 456, y: 41, r: 255, g: 255, b: 255 },
-    { x: 318, y: 35, r: 96, g: 144, b: 194 },
-    { x: 312, y: 50, r: 202, g: 146, b: 89 },
-    { x: 255, y: 50, r: 57, g: 69, b: 107 },
-  ];
+// function handleSkipHallOfHeros() {
+//   var pageHallIntro = [
+//     { x: 365, y: 138, r: 177, g: 196, b: 209 },
+//     { x: 285, y: 110, r: 90, g: 209, b: 225 },
+//     { x: 277, y: 150, r: 74, g: 182, b: 82 },
+//   ];
+//   var pageSpeedUpSlot = [
+//     { x: 456, y: 41, r: 255, g: 255, b: 255 },
+//     { x: 318, y: 35, r: 96, g: 144, b: 194 },
+//     { x: 312, y: 50, r: 202, g: 146, b: 89 },
+//     { x: 255, y: 50, r: 57, g: 69, b: 107 },
+//   ];
 
-  if (checkIsPage(pageHallIntro)) {
-    for (var i = 0; i < 15; i++) {
-      qTap(pageHallIntro);
-      sleep(1000);
+//   if (checkIsPage(pageHallIntro)) {
+//     for (var i = 0; i < 15; i++) {
+//       qTap(pageHallIntro);
+//       sleep(1000);
 
-      if (checkIsPage(pageSpeedUpSlot)) {
-        qTap(pnt(64, 241));
-        sleep(2000);
-      }
-    }
-    qTap(pnt(64, 241));
-    sleep(2000);
-    keycode('BACK', 1000);
-  }
-}
+//       if (checkIsPage(pageSpeedUpSlot)) {
+//         qTap(pnt(64, 241));
+//         sleep(2000);
+//       }
+//     }
+//     qTap(pnt(64, 241));
+//     sleep(2000);
+//     keycode('BACK', 1000);
+//   }
+// }
 
 function handleSkipTreasureIntro() {
   var pageTreasureIntro = new RF.Page(
@@ -3673,15 +3822,69 @@ function handleSkipTreasureIntro() {
   }
 }
 
-var groupPageGlobal = new RF.GroupPage('groupPageGlobal', [
-  rfpageInLoginPageWithGearAndVideo,
-  rfpageNameYourKingdom,
-  rfpageStoryBuildCookieHouses1,
-  rfpageKingdomHaveNoCookieIcon,
-]);
 function handleTryHitBackToKingdom() {
-  if (config.isNewKingdomCheckRequired) {
-    var matchedPages = groupPageGlobal.isMatchScreen(this.screen);
+  if (handleRFTryHitBackToSpecificPages([rfpageInKingdomVillage])) {
+    config.tryRestartGameCount = 0;
+    console.log('Found pageInKingdomVillage, reset config.tryRestartGameCount to 0');
+
+    if (config.isSendPlayingRequired) {
+      sendEvent('gameStatus', 'playing');
+      config.isSendPlayingRequired = false;
+    }
+    return true;
+  }
+
+  console.log('Found quit notification but not kingdom page, should be in login, tap announcement icon and sleep 3s');
+  qTap(pnt(575, 22));
+  sleep(3000);
+  return false;
+}
+
+var pageMessageWindow = [
+  { x: 424, y: 101, r: 57, g: 69, b: 107 },
+  { x: 431, y: 128, r: 243, g: 233, b: 223 },
+  { x: 429, y: 244, r: 219, g: 207, b: 199 },
+];
+var rfpageMessageWindow = new RF.Page('rfpageMessageWindow', pageMessageWindow);
+function handleRFTryHitBackToSpecificPages(rfPages) {
+  var groupPageTarget = new RF.GroupPage('groupPageTarget', rfPages);
+
+  // handleSkipHallOfHeros();
+  // handleSkipProductionDashboardIntro();
+  // handleSkipProductionDashboardIsDone();
+  handleSkipKingdomStory();
+  handleSkipTreasureIntro();
+
+  var matchedPages;
+  for (var i = 0; i < 6; i++) {
+    handleCheckIfAtLoginScreenByIcon();
+
+    matchedPages = groupPageTarget.waitScreenForMatchingOne(this.screen, 2000);
+    if (matchedPages.length > 0) {
+      logs('handleRFTryHitBackToSpecificPages', 'Return as found: {0}'.format(JSON.stringify(matchedPages)));
+      return true;
+    }
+
+    // Handle errors
+    checkAndRestartApp();
+
+    matchedPages = groupPageGlobal.waitScreenForMatchingOne(this.screen, 2000);
+    if (matchedPages.length === 0) {
+      logs(
+        'handleRFTryHitBackToSpecificPages',
+        'groupPageGlobal has no match screen found, tap another back: {0}'.format(i)
+      );
+      keycode('BACK', 2000);
+      continue;
+    }
+
+    logs('handleTryHitBackToKingdom', 'matchedPages: {0}'.format(JSON.stringify(matchedPages)));
+    if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+      logs('handleTryHitBackToKingdom', 'rfpageNotifyQuitWindow.goNext()');
+      rfpageNotifyQuitWindow.goNext(this.screen);
+      sleep(1000);
+      return true;
+    }
     if (matchedPages.indexOf('rfpageInLoginPageWithGearAndVideo') !== -1) {
       console.log(
         'In login page (found gear and video icon), tap announcement icon and skip handleTryHitBackToSpecificPage'
@@ -3692,93 +3895,79 @@ function handleTryHitBackToKingdom() {
     } else if (
       matchedPages.indexOf('rfpageNameYourKingdom') !== -1 ||
       matchedPages.indexOf('rfpageStoryBuildCookieHouses1') !== -1 ||
-      matchedPages.indexOf('rfpageKingdomHaveNoCookieIcon') !== -1
+      matchedPages.indexOf('rfpageKingdomHaveNoCookieIcon') !== -1 ||
+      matchedPages.indexOf('rfpageKindomHasOnlySorageAndBuildIcon') !== -1
     ) {
       logs(
-        'handleTryHitBackToKingdom',
-        'its a new kingdom so stop the script: {0}, {1}, {2}, {3}'.format(
-          JSON.stringify(matchedPages),
-
-          matchedPages.indexOf('rfpageNameYourKingdom'),
-          matchedPages.indexOf('rfpageStoryBuildCookieHouses1'),
-          matchedPages.indexOf('rfpageKingdomHaveNoCookieIcon')
-        )
+        'handleRFTryHitBackToSpecificPages',
+        'its a new kingdom so idle for 5 mins: {0}'.format(JSON.stringify(matchedPages))
       );
-      sendEvent('gameStatus', 'new-account');
-      config.run = false;
+      if (config.isNewKingdomCheckRequired) {
+        sendEvent('gameStatus', 'new-account');
+        config.isNewKingdomCheckRequired = false;
+      }
+      sendEvent('running', '');
+      sleep(300 * 1000);
       return false;
+    } else if (matchedPages.indexOf('rfpageUnfinishedBattleNeedResume') !== -1) {
+      if (checkScreenMessage(unfinishedBattleMessageScreen)) {
+        console.log('rfpageUnfinishedBattleNeedResume.goNext()');
+        rfpageUnfinishedBattleNeedResume.goNext(this.screen);
+
+        if (waitForBattle('pvp', 120, false, kingdomArena)) {
+          console.log('In handleTryHitBackToKingdom, PvP battle finished, try next one');
+        } else {
+          console.log('In handleTryHitBackToKingdom, PvP battle finished, but failed');
+        }
+      }
+    } else if (matchedPages.indexOf('rfpageBattlePaused') !== -1) {
+      logs(
+        'handleRFTryHitBackToSpecificPages',
+        'Need to go back to kingdom but found in battle, tap exit and sleep 2s'
+      );
+      rfpageBattlePaused.goNext(this.screen);
+      sleep(2000);
+      continue;
     }
-  }
-
-  if (handleTryHitBackToSpecificPages([pageInKingdomVillage])) {
-    config.isNewKingdomCheckRequired = false;
-    config.tryRestartGameCount = 0;
-    console.log('Found pageInKingdomVillage, reset config.tryRestartGameCount to 0');
-    return true;
-  }
-
-  console.log('Found quit notification but not kingdom page, should be in login, tap announcement icon and sleep 3s');
-  qTap(pnt(575, 22));
-  sleep(3000);
-  return false;
-}
-
-function handleTryHitBackToSpecificPages(targetPages) {
-  if (waitUntilSeePages(targetPages, 2)) {
-    return true;
-  }
-
-  console.log('trying to go to specific page by hitting back');
-
-  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-  }
-  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-  }
-  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-  }
-
-  // New features intro that needs to be by pass
-  handleSkipHallOfHeros();
-  handleSkipProductionDashboardIntro();
-  handleSkipProductionDashboardIsDone();
-  handleSkipKingdomStory();
-  handleSkipTreasureIntro();
-
-  for (var i = 0; i < 6; i++) {
-    keycode('BACK', 2000);
-
-    if (waitUntilSeePages(targetPages, 2)) {
-      console.log('No quit windows for 2 secs, and found targetPage successfully');
-      return true;
-    }
-
-    if (checkIsPage(pageNotifyQuitWindow)) {
-      if (checkScreenMessage(messageNotifyQuit)) {
-        console.log('Found quit notification, should be in kingdom or login page');
+    if (matchedPages.indexOf('rfpageMessageWindow') !== -1) {
+      if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
+        config.lastNetworkIssueOccurTime = Date.now();
+        config.networkIssueCount++;
+        logs(
+          'handleRFTryHitBackToSpecificPages',
+          'Found anErrorHasOccuredMessageScreen, error count is now: {0]'.format(config.networkIssueCount)
+        );
         keycode('BACK', 1000);
-        return false;
+        sleep(10000);
+        continue;
+      }
+      if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
+        config.lastNetworkIssueOccurTime = Date.now();
+        config.networkIssueCount++;
+        logs(
+          'handleRFTryHitBackToSpecificPages',
+          'Found theNetworkIsUnstableMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+        );
+        keycode('BACK', 1000);
+        sleep(10000);
+        continue;
+      }
+      if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
+        config.lastNetworkIssueOccurTime = Date.now();
+        config.networkIssueCount++;
+        logs(
+          'handleRFTryHitBackToSpecificPages',
+          'Found anUnknownErrorHasOccurMessageScreen, error count is now: '.format(config.networkIssueCount)
+        );
+        keycode('BACK', 1000);
+        sleep(10000);
+        continue;
       }
     }
-    if (checkIsPage(pageBattlePaused)) {
-      console.log('Need to go back to kingdom but found in battle, tap exit and sleep 2s');
-      qTap(pageBattlePaused);
-      sleep(2000);
-    }
 
-    checkAndRestartApp();
-    handleCheckIfAtLoginScreen();
+    logs('handleRFTryHitBackToSpecificPages', 'Page not handled, tap another back');
+    keycode('BACK', 2000);
+    sleep(2000);
   }
   return false;
 }
@@ -3855,29 +4044,31 @@ function handleAutoCollectMail() {
   console.log('completed: handleAutoCollectMail');
 }
 
+var pageInCastleMission = [
+  { x: 405, y: 20, r: 255, g: 215, b: 8 },
+  { x: 527, y: 15, r: 0, g: 195, b: 255 },
+  { x: 535, y: 54, r: 90, g: 52, b: 49 },
+];
+// var rfpageInCastleMission = new RF.Page('rfpageInCastleMission', pageInCastleMission);
+var pageInCastleUpgrading = [
+  { x: 275, y: 112, r: 98, g: 115, b: 136 },
+  { x: 271, y: 114, r: 255, g: 255, b: 255 },
+  { x: 210, y: 188, r: 240, g: 230, b: 224 },
+  { x: 205, y: 193, r: 127, g: 150, b: 194 },
+];
+// var rfpageInCastleUpgrading = new RF.Page('rfpageInCastleUpgrading', pageInCastleUpgrading);
+var pageFistItemIsCastle = [
+  { x: 275, y: 228, r: 57, g: 77, b: 123 },
+  { x: 255, y: 151, r: 245, g: 160, b: 161 },
+  { x: 252, y: 159, r: 239, g: 190, b: 115 },
+];
+// var rfpageFistItemIsCastle = new RF.Page('rfpageFistItemIsCastle', pageFistItemIsCastle);
 function gotoCastle() {
   console.log('about to gotoCastle');
   if (!checkIsPage(pageInKingdomVillage)) {
     console.log('hit back to kingdom');
     handleGotoKingdomPage();
   }
-
-  var pageInCastleMission = [
-    { x: 405, y: 20, r: 255, g: 215, b: 8 },
-    { x: 527, y: 15, r: 0, g: 195, b: 255 },
-    { x: 535, y: 54, r: 90, g: 52, b: 49 },
-  ];
-  var pageInCastleUpgrading = [
-    { x: 275, y: 112, r: 98, g: 115, b: 136 },
-    { x: 271, y: 114, r: 255, g: 255, b: 255 },
-    { x: 210, y: 188, r: 240, g: 230, b: 224 },
-    { x: 205, y: 193, r: 127, g: 150, b: 194 },
-  ];
-  var pageFistItemIsCastle = [
-    { x: 275, y: 228, r: 57, g: 77, b: 123 },
-    { x: 255, y: 151, r: 245, g: 160, b: 161 },
-    { x: 252, y: 159, r: 239, g: 190, b: 115 },
-  ];
 
   if (checkScreenMessage(messageNotifyQuit)) {
     // todo: debug log
@@ -4182,14 +4373,16 @@ function handleGetDailyRewards() {
     { x: 427, y: 19, r: 0, g: 23, b: 45 },
   ];
   var pageInKingdomPass = [
-    { x: 528, y: 340, r: 123, g: 207, b: 16 },
-    { x: 471, y: 68, r: 247, g: 158, b: 0 },
-    { x: 491, y: 73, r: 181, g: 117, b: 24 },
+    { x: 618, y: 341, r: 82, g: 211, b: 0 },
+    { x: 193, y: 19, r: 255, g: 223, b: 0 },
+    { x: 393, y: 16, r: 0, g: 195, b: 255 },
+    { x: 484, y: 16, r: 255, g: 255, b: 255 },
   ];
   var kingdomPassItemCollected = [
-    { x: 528, y: 338, r: 161, g: 161, b: 161 },
-    { x: 501, y: 344, r: 49, g: 32, b: 24 },
-    { x: 630, y: 71, r: 181, g: 117, b: 24 },
+    { x: 616, y: 343, r: 0, g: 0, b: 0 },
+    { x: 193, y: 19, r: 255, g: 223, b: 0 },
+    { x: 393, y: 16, r: 0, g: 195, b: 255 },
+    { x: 484, y: 16, r: 255, g: 255, b: 255 },
   ];
   // Collect Kingdom Pass Rewards
   qTap(pnt(600, 85));
@@ -4203,28 +4396,29 @@ function handleGetDailyRewards() {
     console.log('about to collect kingdom pass, send running');
     sendEvent('running', '');
 
-    qTap(pnt(66, 57));
+    qTap(pnt(270, 336));
     sleep(1000);
     qTap(pnt(581, 340));
     waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
 
-    qTap(pnt(151, 56));
+    qTap(pnt(340, 340));
     sleep(1000);
     qTap(pnt(581, 340));
     waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
 
-    qTap(pnt(254, 57));
+    qTap(pnt(610, 112));
     sleep(1000);
-    qTap(pnt(581, 340));
     waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
 
     qTap(pageInKingdomPass);
     console.log('successfully claimed all the kingdom pass rewards');
+  } else if (checkIsPage(kingdomPassItemCollected)) {
+    logs('handleGetDailyRewards', 'Found kingdomPassItemCollected so pass collecting kingdompass');
   } else {
     console.log('failed to find the kingdom pass page');
   }
-
   handleGotoKingdomPage();
+
   // Send friend rewards ======
   var pageFriends = [
     { x: 519, y: 24, r: 231, g: 159, b: 85 },
@@ -4321,10 +4515,11 @@ function handleGetDailyRewards() {
 
   // Rewards in Gacha ======
   var pageGacha = [
-    { x: 381, y: 329, r: 132, g: 74, b: 63 },
-    { x: 373, y: 328, r: 247, g: 211, b: 148 },
-    { x: 355, y: 328, r: 148, g: 81, b: 74 },
+    { x: 368, y: 320, r: 148, g: 81, b: 66 },
+    { x: 366, y: 331, r: 107, g: 97, b: 90 },
     { x: 418, y: 320, r: 132, g: 16, b: 8 },
+    { x: 466, y: 319, r: 231, g: 162, b: 85 },
+    { x: 567, y: 340, r: 49, g: 77, b: 107 },
   ];
   if (checkIsPage(pageGacha)) {
     console.log('about to get daily free gacha gifts, send running');
@@ -4360,8 +4555,7 @@ function handleGetDailyRewards() {
       qTap(pnt(30, dailyGiftYs[i]));
       if (waitUntilSeePage(pageDailyGiftClaimed, 2)) {
         console.log('Daily gacha gift already claimed');
-        handleGotoKingdomPage();
-        return true;
+        break;
       }
       if (checkIsPage(pageDailyWatchAddGift)) {
         // Not doing it for now as seems like will stuck in ads
@@ -4372,8 +4566,7 @@ function handleGetDailyRewards() {
 
         if (waitUntilSeePage(pageDailyGiftClaimed, 5, pageDailyGiftNotClaimed)) {
           console.log('Daily gacha gift claimed successfully: ');
-          handleGotoKingdomPage();
-          return true;
+          break;
         }
       }
     }
@@ -4381,6 +4574,14 @@ function handleGetDailyRewards() {
     console.log('daily gacha gift NOT claimed');
     handleGotoKingdomPage();
     return false;
+  } else {
+    logs(
+      'handleGetDailyRewards',
+      'check pageGacha: {0}, check pageInKingdomVillage: {1}'.format(
+        checkIsPage(pageGacha),
+        checkIsPage(pageInKingdomVillage)
+      )
+    );
   }
 }
 
@@ -4636,16 +4837,17 @@ function handlePVP() {
   sendEvent('running', '');
 
   var pageHasPageMedalShop = [
-    { x: 41, y: 333, r: 245, g: 187, b: 44 },
-    { x: 122, y: 298, r: 57, g: 166, b: 231 },
-    { x: 118, y: 261, r: 57, g: 166, b: 231 },
-    { x: 54, y: 334, r: 49, g: 77, b: 107 },
+    { x: 120, y: 335, r: 255, g: 223, b: 24 },
+    { x: 353, y: 20, r: 227, g: 166, b: 22 },
+    { x: 448, y: 21, r: 230, g: 177, b: 49 },
+    { x: 521, y: 19, r: 0, g: 130, b: 255 },
   ];
   var pageInMedalShop = [
-    { x: 39, y: 336, r: 113, g: 65, b: 1 },
-    { x: 89, y: 67, r: 255, g: 255, b: 255 },
-    { x: 357, y: 17, r: 113, g: 77, b: 16 },
-    { x: 452, y: 20, r: 61, g: 8, b: 10 },
+    { x: 510, y: 66, r: 255, g: 230, b: 0 },
+    { x: 349, y: 19, r: 96, g: 43, b: 4 },
+    { x: 441, y: 20, r: 99, g: 30, b: 4 },
+    { x: 517, y: 22, r: 0, g: 91, b: 127 },
+    { x: 87, y: 62, r: 225, g: 228, b: 237 },
   ];
   var pageAncientCookieSoldout = [
     { x: 86, y: 109, r: 206, g: 20, b: 24 },
@@ -4715,9 +4917,9 @@ function handlePVP() {
   }
 
   var arenaReadyToBattlePage = [
-    { x: 533, y: 331, r: 77, g: 170, b: 4 },
-    { x: 490, y: 322, r: 194, g: 11, b: 27 },
-    { x: 611, y: 279, r: 227, g: 219, b: 211 },
+    { x: 500, y: 337, r: 233, g: 125, b: 43 },
+    { x: 548, y: 328, r: 123, g: 207, b: 8 },
+    { x: 558, y: 330, r: 123, g: 207, b: 8 },
     { x: 164, y: 332, r: 123, g: 207, b: 8 },
     { x: 78, y: 330, r: 0, g: 150, b: 214 },
   ];
@@ -5643,7 +5845,7 @@ var AdvanturesBountiesAt4th = Object.freeze({
 
   superMayhem: GenAdvanture(pnt(500, 150), false, false),
   bounties: GenAdvanture(pnt(100, 100), false, true),
-  guild: GenAdvanture(pnt(120, 250), false, true),
+  guild: GenAdvanture(pnt(320, 100), false, true),
 });
 
 // With super mayhem
@@ -5734,7 +5936,7 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
       }
 
       qTap(pnt(560, 330)); // tap play
-      if (!waitUntilSeePage(pageSelectAdvanture, 6)) {
+      if (!rfpageSelectAdvanture.waitScreenForMatchingScreen(this.screen, 6000)) {
         console.log('failed to goto choose adventure, skipping');
         return false;
       }
@@ -5754,15 +5956,15 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
 
     if (destination.backward) {
       for (var swipe = 0; swipe < 3; swipe++) {
-        tapDown(410, 186, 40, 0);
+        tapDown(600, 190, 40, 0);
         sleep(config.sleep);
-        moveTo(200, 186, 40, 0);
+        moveTo(200, 190, 40, 0);
         sleep(config.sleep);
-        moveTo(0, 186, 40, 0);
+        moveTo(0, 190, 40, 0);
         sleep(config.sleep);
-        moveTo(-400, 186, 40, 0);
+        moveTo(-400, 190, 40, 0);
         sleep(config.sleep);
-        tapUp(-400, 186, 40, 0);
+        tapUp(-400, 190, 40, 0);
         sleep(config.sleepAnimate);
       }
     }
@@ -5812,10 +6014,12 @@ var pageDefeatWithGotoKingdom = [
 ];
 
 var pageNoArenaTicket = [
-  { x: 314, y: 111, r: 228, g: 121, b: 37 },
-  { x: 347, y: 104, r: 36, g: 46, b: 65 },
-  { x: 414, y: 120, r: 243, g: 233, b: 223 },
-  { x: 300, y: 259, r: 12, g: 167, b: 223 },
+  { x: 496, y: 27, r: 255, g: 255, b: 255 },
+  { x: 484, y: 26, r: 56, g: 167, b: 231 },
+  { x: 317, y: 84, r: 243, g: 157, b: 69 },
+  { x: 454, y: 161, r: 4, g: 151, b: 211 },
+  { x: 457, y: 231, r: 4, g: 151, b: 211 },
+  { x: 458, y: 303, r: 219, g: 207, b: 199 },
 ];
 
 var pageBattleFinishedWithSunbeds = [
@@ -5874,6 +6078,19 @@ var pageBattleFinishedWithoutNextLv = [
   { x: 320, y: 25, r: 255, g: 255, b: 132 },
   { x: 330, y: 25, r: 228, g: 52, b: 74 },
   { x: 401, y: 323, r: 26, g: 4, b: 12 },
+];
+var pageBattleFinishedWithMVPCookie = [
+  { x: 328, y: 29, r: 201, g: 33, b: 52 },
+  { x: 375, y: 53, r: 198, g: 223, b: 222 },
+  { x: 413, y: 69, r: 49, g: 138, b: 214 },
+  { x: 624, y: 334, r: 40, g: 30, b: 22 },
+  { x: 544, y: 333, r: 17, g: 3, b: 3 },
+];
+var pageBattleFinishedWithMVPCookieWithExit = [
+  { x: 609, y: 320, r: 8, g: 166, b: 222 },
+  { x: 509, y: 334, r: 247, g: 89, b: 24 },
+  { x: 374, y: 55, r: 203, g: 223, b: 222 },
+  { x: 409, y: 67, r: 54, g: 139, b: 214 },
 ];
 var pageNeedRefillBounties = [
   { x: 428, y: 82, r: 56, g: 167, b: 231 },
@@ -5979,6 +6196,14 @@ var pageCannotRefilAllianceTicketToday = [
   { x: 333, y: 24, r: 126, g: 124, b: 127 },
   { x: 218, y: 74, r: 60, g: 70, b: 105 },
 ];
+var pagePVPPromoted = [
+  { x: 354, y: 18, r: 43, g: 29, b: 6 },
+  { x: 447, y: 23, r: 28, g: 11, b: 3 },
+  { x: 523, y: 22, r: 11, g: 18, b: 18 },
+  { x: 27, y: 196, r: 42, g: 29, b: 17 },
+  { x: 177, y: 307, r: 22, g: 33, b: 39 },
+  { x: 177, y: 258, r: 19, g: 28, b: 30 },
+];
 
 var rfpageBattleVictoryButNeedTap = new RF.Page('rfpageBattleVictoryButNeedTap', pageBattleVictoryButNeedTap, {
   x: 230,
@@ -6021,6 +6246,16 @@ var rfpageBattleFinishedWithoutNextLv = new RF.Page(
   pageBattleFinishedWithoutNextLv,
   { x: 466, y: 324 }
 );
+var rfpageBattleFinishedWithMVPCookie = new RF.Page(
+  'rfpageBattleFinishedWithMVPCookie',
+  pageBattleFinishedWithMVPCookie,
+  { x: 333, y: 298 }
+);
+var rfpageBattleFinishedWithMVPCookieWithExit = new RF.Page(
+  'rfpageBattleFinishedWithMVPCookieWithExit',
+  pageBattleFinishedWithMVPCookieWithExit,
+  pageBattleFinishedWithMVPCookieWithExit[0]
+);
 var rfpageNeedRefillBounties = new RF.Page('rfpageNeedRefillBounties', pageNeedRefillBounties, { x: 428, y: 82 });
 var rfpageNeedRefillBounties2 = new RF.Page('rfpageNeedRefillBounties2', pageNeedRefillBounties2, { x: 442, y: 82 });
 
@@ -6059,12 +6294,15 @@ var rfpageBattleTowerOfSweetChaosVictory = new RF.Page(
 var rfpageCanEquipTopping = new RF.Page('rfpageCanEquipTopping', pageCanEquipTopping, pageCanEquipTopping[0]);
 var rfpageCanEquipTopping2 = new RF.Page('rfpageCanEquipTopping2', pageCanEquipTopping2, pageCanEquipTopping2[0]);
 var rfpageCanEquipTopping3 = new RF.Page('rfpageCanEquipTopping3', pageCanEquipTopping3, pageCanEquipTopping3[0]);
+var rfpagePVPPromoted = new RF.Page('rfpagePVPPromoted', pagePVPPromoted, { x: 318, y: 327 });
 
 var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageBattleVictoryButNeedTap,
   rfpageBattleFinished,
   rfpageBattleDefeat,
   rfpageDefeatWithGotoKingdom,
+  rfpageBattleFinishedWithMVPCookie,
+  rfpageBattleFinishedWithMVPCookieWithExit,
   rfpageNoArenaTicket,
   rfpagePvPCrystaisRefresh,
   rfpageBattleFinishedWithSunbeds,
@@ -6101,6 +6339,7 @@ var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageSpeedBoostEnabled,
   rfpageSpeed1x,
   rfpageSpeed1_2x,
+  rfpagePVPPromoted,
 ]);
 
 function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, pageExitBattle) {
@@ -6167,6 +6406,22 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       console.log('Battle successfully finished, return');
       // qTap(pnt(306, 326));
       return true;
+    }
+
+    if (matchedPages.indexOf('rfpageBattleFinishedWithMVPCookie') !== -1) {
+      console.log('found rfpageBattleFinishedWithMVPCookie, goNext');
+      rfpageBattleFinishedWithMVPCookie.goNext(this.screen);
+      sleep(1000);
+    }
+    if (matchedPages.indexOf('rfpageBattleFinishedWithMVPCookieWithExit') !== -1) {
+      console.log('found rfpageBattleFinishedWithMVPCookie, goNext');
+      rfpageBattleFinishedWithMVPCookieWithExit.goNext(this.screen);
+      sleep(1000);
+    }
+    if (matchedPages.indexOf('rfpagePVPPromoted') !== -1) {
+      console.log('found rfpagePVPPromoted, goNext');
+      rfpagePVPPromoted.goNext(this.screen);
+      sleep(1000);
     }
 
     if (matchedPages.indexOf('rfpageBattleFinished') !== -1) {
@@ -7216,7 +7471,9 @@ function handleTradeHabor() {
 }
 
 function handleGotoTradeHabor() {
-  if (!checkIsPage(pageInHabor)) {
+  if (checkIsPage(pageInHabor)) {
+    return true;
+  } else {
     console.log('try to handleGotoTradeHabor');
     if (!checkIsPage(pageInKingdomVillage)) {
       handleGotoKingdomPage(gnomeLabKingdom);
@@ -7251,7 +7508,7 @@ function handleGotoTradeHabor() {
       qTap(pageHaborUncollapsed2);
       sleep(config.sleepAnimate * 2);
     }
-    return waitUntilSeePage(pageInHabor, 4);
+    return rfpageInHabor.waitScreenForMatchingScreen(this.screen, 4000);
   }
 }
 
@@ -7280,35 +7537,91 @@ function ocrSeasideMarketStockAfterPurchase(rect) {
   }
 }
 
-function handleInHabor() {
-  var pageShipInHabor = [
-    { x: 418, y: 212, r: 55, g: 34, b: 22 },
-    { x: 609, y: 211, r: 176, g: 133, b: 66 },
-    { x: 585, y: 229, r: 123, g: 78, b: 44 },
-  ];
-  var pageNoShipInHabor = [
-    { x: 246, y: 66, r: 255, g: 12, b: 82 },
-    { x: 233, y: 88, r: 249, g: 242, b: 212 },
-    { x: 255, y: 138, r: 126, g: 114, b: 41 },
-  ];
-  var pageCanLoadThisItem = [
-    { x: 424, y: 201, r: 59, g: 205, b: 0 },
-    { x: 351, y: 246, r: 123, g: 207, b: 8 },
-    { x: 414, y: 242, r: 222, g: 207, b: 198 },
-    { x: 433, y: 309, r: 57, g: 69, b: 107 },
-  ];
-  var pageLoadTooMuchWarning = [
-    { x: 400, y: 252, r: 123, g: 207, b: 8 },
-    { x: 304, y: 253, r: 8, g: 166, b: 222 },
-    { x: 436, y: 288, r: 27, g: 33, b: 51 },
-    { x: 260, y: 55, r: 28, g: 34, b: 53 },
-  ];
+var pageShipInHabor = [
+  { x: 418, y: 212, r: 55, g: 34, b: 22 },
+  { x: 609, y: 211, r: 176, g: 133, b: 66 },
+  { x: 585, y: 229, r: 123, g: 78, b: 44 },
+];
+var rfpageShipInHabor = new RF.Page('rfpageShipInHabor', pageShipInHabor, pageShipInHabor[0]);
+var pageNoShipInHabor = [
+  { x: 246, y: 66, r: 255, g: 12, b: 82 },
+  { x: 233, y: 88, r: 249, g: 242, b: 212 },
+  { x: 255, y: 138, r: 126, g: 114, b: 41 },
+];
+var rfpageNoShipInHabor = new RF.Page('rfpageNoShipInHabor', pageNoShipInHabor, pageNoShipInHabor[0]);
+var pageCanLoadThisItem = [
+  { x: 424, y: 201, r: 59, g: 205, b: 0 },
+  { x: 351, y: 246, r: 123, g: 207, b: 8 },
+  { x: 414, y: 242, r: 222, g: 207, b: 198 },
+  { x: 433, y: 309, r: 57, g: 69, b: 107 },
+];
+var rfpageCanLoadThisItem = new RF.Page('rfpageCanLoadThisItem', pageCanLoadThisItem, pageCanLoadThisItem[0]);
+var pageLoadTooMuchWarning = [
+  { x: 400, y: 252, r: 123, g: 207, b: 8 },
+  { x: 304, y: 253, r: 8, g: 166, b: 222 },
+  { x: 436, y: 288, r: 27, g: 33, b: 51 },
+  { x: 260, y: 55, r: 28, g: 34, b: 53 },
+];
+var rfpageLoadTooMuchWarning = new RF.Page(
+  'rfpageLoadTooMuchWarning',
+  pageLoadTooMuchWarning,
+  pageLoadTooMuchWarning[0]
+);
+var pageInSeasideMarket = [
+  { x: 617, y: 21, r: 255, g: 255, b: 255 },
+  { x: 566, y: 183, r: 114, g: 76, b: 32 },
+  { x: 256, y: 121, r: 101, g: 151, b: 23 },
+  { x: 280, y: 5, r: 206, g: 227, b: 49 },
+  { x: 178, y: 117, r: 247, g: 52, b: 90 },
+];
+var rfpageInSeasideMarket = new RF.Page('rfpageInSeasideMarket', pageInSeasideMarket, pageInSeasideMarket[0]);
+var pageFreeRefreshSeasideMarket = [
+  { x: 510, y: 333, r: 155, g: 155, b: 155 },
+  { x: 504, y: 333, r: 172, g: 146, b: 126 },
+  { x: 498, y: 333, r: 148, g: 120, b: 111 },
+  { x: 494, y: 333, r: 175, g: 148, b: 117 },
+];
+var rfpageFreeRefreshSeasideMarket = new RF.Page(
+  'rfpageFreeRefreshSeasideMarket',
+  pageFreeRefreshSeasideMarket,
+  pageFreeRefreshSeasideMarket[0]
+);
+var pageNeedDiamondRefreshMarket = [
+  { x: 426, y: 110, r: 57, g: 169, b: 231 },
+  { x: 305, y: 102, r: 255, g: 255, b: 255 },
+  { x: 363, y: 118, r: 57, g: 69, b: 107 },
+  { x: 297, y: 124, r: 33, g: 44, b: 66 },
+];
+var rfpageNeedDiamondRefreshMarket = new RF.Page(
+  'rfpageNeedDiamondRefreshMarket',
+  pageNeedDiamondRefreshMarket,
+  pageNeedDiamondRefreshMarket[0]
+);
+var pageMarketItemDetail = [
+  { x: 350, y: 246, r: 123, g: 207, b: 8 },
+  { x: 411, y: 16, r: 127, g: 93, b: 8 },
+  { x: 521, y: 21, r: 0, g: 71, b: 126 },
+  { x: 397, y: 103, r: 57, g: 69, b: 107 },
+];
+var rfpageMarketItemDetail = new RF.Page('rfpageMarketItemDetail', pageMarketItemDetail, pageMarketItemDetail[0]);
+var pageNotEnoughItemToBuyThis = [
+  { x: 434, y: 95, r: 255, g: 255, b: 255 },
+  { x: 305, y: 250, r: 8, g: 125, b: 255 },
+  { x: 343, y: 160, r: 49, g: 158, b: 231 },
+  { x: 339, y: 198, r: 206, g: 195, b: 181 },
+];
+var rfpageNotEnoughItemToBuyThis = new RF.Page(
+  'rfpageNotEnoughItemToBuyThis',
+  pageNotEnoughItemToBuyThis,
+  pageNotEnoughItemToBuyThis[0]
+);
 
+function handleInHabor() {
   if (config.autoHandleTradeHabor && !waitUntilSeePage(pageNoShipInHabor, 4, pageShipInHabor, pageShipInHabor)) {
     console.log('ship still there, load all items and send running');
     sendEvent('running', '');
-    var i = 0;
 
+    var i = 0;
     var shipInHabor = true;
     for (i = 0; i < 5 && shipInHabor; i++) {
       for (var xPixel = i === 0 ? 55 : 200; xPixel < 620; xPixel += 60) {
@@ -7340,13 +7653,13 @@ function handleInHabor() {
           sleep(config.sleepAnimate * 2);
         }
 
-        if (waitUntilSeePage(pageNoShipInHabor, 3)) {
+        if (rfpageNoShipInHabor.waitScreenForMatchingScreen(this.screen, 3000)) {
           console.log('Send the ship successfully');
           shipInHabor = false;
           break;
         }
 
-        if (!handleTryHitBackToSpecificPages([pageShipInHabor, pageNoShipInHabor])) {
+        if (!handleRFTryHitBackToSpecificPages([rfpageShipInHabor, rfpageNoShipInHabor])) {
           handleGotoTradeHabor();
         }
       }
@@ -7372,37 +7685,6 @@ function handleInHabor() {
     console.log('No need to send ship, config.autoHandleTradeHabor: ', config.autoHandleTradeHabor);
   }
 
-  var pageInSeasideMarket = [
-    { x: 617, y: 21, r: 255, g: 255, b: 255 },
-    { x: 566, y: 183, r: 114, g: 76, b: 32 },
-    { x: 256, y: 121, r: 101, g: 151, b: 23 },
-    { x: 280, y: 5, r: 206, g: 227, b: 49 },
-    { x: 178, y: 117, r: 247, g: 52, b: 90 },
-  ];
-  var pageFreeRefreshSeasideMarket = [
-    { x: 510, y: 333, r: 155, g: 155, b: 155 },
-    { x: 504, y: 333, r: 172, g: 146, b: 126 },
-    { x: 498, y: 333, r: 148, g: 120, b: 111 },
-    { x: 494, y: 333, r: 175, g: 148, b: 117 },
-  ];
-  var pageNeedDiamondRefreshMarket = [
-    { x: 426, y: 110, r: 57, g: 169, b: 231 },
-    { x: 305, y: 102, r: 255, g: 255, b: 255 },
-    { x: 363, y: 118, r: 57, g: 69, b: 107 },
-    { x: 297, y: 124, r: 33, g: 44, b: 66 },
-  ];
-  var pageMarketItemDetail = [
-    { x: 350, y: 246, r: 123, g: 207, b: 8 },
-    { x: 411, y: 16, r: 127, g: 93, b: 8 },
-    { x: 521, y: 21, r: 0, g: 71, b: 126 },
-    { x: 397, y: 103, r: 57, g: 69, b: 107 },
-  ];
-  var pageNotEnoughItemToBuyThis = [
-    { x: 434, y: 95, r: 255, g: 255, b: 255 },
-    { x: 305, y: 250, r: 8, g: 125, b: 255 },
-    { x: 343, y: 160, r: 49, g: 158, b: 231 },
-    { x: 339, y: 198, r: 206, g: 195, b: 181 },
-  ];
   if (
     config.autoBalanceAuroraStocks ||
     config.autoShopInSeasideMarket ||
@@ -7415,11 +7697,11 @@ function handleInHabor() {
     }
 
     console.log('should be in seaside market');
-    if (checkIsPage(pageFreeRefreshSeasideMarket)) {
+    if (rfpageFreeRefreshSeasideMarket.isMatchScreen(this.screen)) {
       qTap(pnt(543, 336)); // market free refresh, no need to pull to the head of the list as refresh will reset the list
       sleep(config.sleepAnimate);
-      if (waitUntilSeePage(pageNeedDiamondRefreshMarket, 3)) {
-        qTap(pageNeedDiamondRefreshMarket);
+      if (rfpageNeedDiamondRefreshMarket.waitScreenForMatchingScreen(this.screen, 3000)) {
+        rfpageNeedDiamondRefreshMarket.goNext(this.screen);
         sleep(config.sleepAnimate);
       }
     } else {
@@ -7438,16 +7720,16 @@ function handleInHabor() {
         newStock = ocrSeasideMarketStockAfterPurchase(seasideStockRect[auroraIdx]);
         if (newStock > 50) {
           qTap(seasideStockRect[auroraIdx]);
-          if (waitUntilSeePage(pageMarketItemDetail, 3)) {
+          if (rfpageMarketItemDetail.waitScreenForMatchingScreen(this.screen, 3000)) {
             var productNowHave = ocrProductStorage(rect(330, 154, 28, 14));
             if (newStock > productNowHave) {
               console.log('Purchased seaside market: ', auroraIdx, newStock, productNowHave);
-              qTap(pageMarketItemDetail);
+              rfpageMarketItemDetail.goNext(this.screen);
               sleep(2000);
             } else {
               console.log('NOT purchased seaside market: ', auroraIdx, newStock, productNowHave);
             }
-            if (!handleTryHitBackToSpecificPages([pageInSeasideMarket])) {
+            if (!handleRFTryHitBackToSpecificPages([rfpageInSeasideMarket])) {
               handleGotoTradeHabor();
               qTap(pnt(93, 230)); // Seaside market
               sleep(config.sleepAnimate * 2);
@@ -7463,7 +7745,7 @@ function handleInHabor() {
         qTap(pnt(420, 250));
         sleep(config.sleepAnimate);
         qTap(pnt(315, 247));
-        waitUntilSeePage(pageInSeasideMarket);
+        rfpageInSeasideMarket.waitScreenForMatchingScreen(this.screen, 5000);
         console.log('Purchased carmel spyglass');
       }
 
@@ -7472,7 +7754,7 @@ function handleInHabor() {
         qTap(pnt(530, 245));
         sleep(config.sleepAnimate);
         qTap(pnt(315, 247));
-        waitUntilSeePage(pageInSeasideMarket);
+        rfpageInSeasideMarket.waitScreenForMatchingScreen(this.screen, 5000);
         console.log('Purchased carmel map fragment');
       }
       console.log('Purchased carmel stuff successfully');
@@ -7482,7 +7764,7 @@ function handleInHabor() {
       qTap(pnt(612, 270));
       sleep(config.sleepAnimate);
       qTap(pnt(315, 247));
-      waitUntilSeePage(pageInSeasideMarket);
+      rfpageInSeasideMarket.waitScreenForMatchingScreen(this.screen, 5000);
       console.log('Purchased radiant shards successfully');
     }
 
@@ -7514,7 +7796,7 @@ function handleInHabor() {
               }
 
               qTap(foundResults[foundIdx]);
-              if (waitUntilSeePage(pageMarketItemDetail, 3)) {
+              if (rfpageMarketItemDetail.waitScreenForMatchingScreen(this.screen, 3000)) {
                 productNowHave = ocrProductStorage(rect(330, 154, 28, 14));
                 if (productNowHave < config.materialsTarget) {
                   console.log(
@@ -7523,10 +7805,10 @@ function handleInHabor() {
                     seasideMarketItems[purcaseIndex].name,
                     productNowHave
                   );
-                  qTap(pageMarketItemDetail);
-                  if (waitUntilSeePage(pageNotEnoughItemToBuyThis, 2)) {
+                  rfpageMarketItemDetail.goNext(this.screen);
+                  if (rfpageNotEnoughItemToBuyThis.waitScreenForMatchingScreen(this.screen, 2000)) {
                     console.log('OOPS, not enough items to buy this one, skipping');
-                    qTap(pageNotEnoughItemToBuyThis);
+                    rfpageNotEnoughItemToBuyThis.goNext(this.screen);
                   }
                   sleep(2000);
                 } else {
@@ -7539,7 +7821,7 @@ function handleInHabor() {
                 }
               }
 
-              if (!handleTryHitBackToSpecificPages([pageInSeasideMarket])) {
+              if (!handleRFTryHitBackToSpecificPages([rfpageInSeasideMarket])) {
                 console.log('Going back to trade habor');
                 handleGotoTradeHabor();
                 qTap(pnt(93, 230)); // Seaside market
@@ -7554,7 +7836,7 @@ function handleInHabor() {
       }
     }
 
-    if (!handleTryHitBackToSpecificPages([pageShipInHabor, pageNoShipInHabor])) {
+    if (!handleRFTryHitBackToSpecificPages([rfpageShipInHabor, rfpageNoShipInHabor])) {
       handleGotoTradeHabor();
     }
   } else {
@@ -7671,7 +7953,7 @@ function handleInHabor() {
         }
       }
 
-      handleTryHitBackToSpecificPages([pageShipInHabor, pageNoShipInHabor]);
+      handleRFTryHitBackToSpecificPages([rfpageShipInHabor, rfpageNoShipInHabor]);
     }
   } else {
     console.log('No need to autoBuySeaFairy');
@@ -7680,7 +7962,8 @@ function handleInHabor() {
   sendEvent('running', '');
 }
 
-function handleCheckIfAtLoginScreen() {
+// Check if in login via image match for gear icon
+function handleCheckIfAtLoginScreenByIcon() {
   var img = getScreenshot();
   var upperRightImage = cropImage(img, 580, 1, 55, 40);
   var foundResults = findImages(upperRightImage, loginGearIcon, 0.92, 1, true);
@@ -8346,8 +8629,8 @@ function handleTryResolveGreenChecks() {
 }
 
 function checkIsFreeze() {
-  if ((Date.now() - config.lastFreezeCheckScreenShotTime) / 1000 < 5) {
-    // Builtin cool down 3 secs
+  if ((Date.now() - config.lastFreezeCheckScreenShotTime) / 1000 < 10) {
+    // Builtin cool down 10 secs
     return true;
   }
 
@@ -9197,6 +9480,44 @@ function logs(activity, message) {
   console.log('{0}, {1}, {2}'.format(new Date().toLocaleString(), activity, message));
 }
 
+var groupPageGlobal = new RF.GroupPage('groupPageGlobal', [
+  rfpageNotifyQuitWindow,
+  rfpageInLoginPageWithGearAndVideo,
+  rfpageNameYourKingdom,
+  rfpageStoryBuildCookieHouses1,
+  rfpageKingdomHaveNoCookieIcon,
+  rfpageKindomHasOnlySorageAndBuildIcon,
+  rfpageUnfinishedBattleNeedResume,
+  rfpageInKingdomVillage,
+  rfpageInProduction,
+  rfpageInMagicLab,
+  rfpagePurchaseDiamond,
+  rfpageGooglePlaystoreHasStopped,
+  rfpageCookieKingdomNotResponding,
+  rfpageCookieKingdomIsNotResponding,
+  rfpageCookieKingdomIsNotResponding2,
+  rfpageCookieKingdomHasStopped,
+  rfpageTermsOfServiceWindow,
+  rfpageNewDataPackAvailable,
+  rfpageNewDataPackDownloadFailed,
+  rfpageNewDataPackAvaiableNoLanguage,
+  rfpageGeneralMessageWindow,
+  rfpageInputAge,
+  rfpageMessageWindow,
+  rfpageBattlePaused,
+
+  rfpageToolShop,
+  rfpageIsJammery,
+  rfpageIsJampieDiner,
+  rfpageIsBakery,
+  rfpageIsFlowerShop,
+
+  rfpageShipInHabor,
+  rfpageNoShipInHabor,
+  rfpageCanLoadThisItem,
+  rfpageLoadTooMuchWarning,
+]);
+
 function start(inputConfig) {
   console.log('inputConfig: ', inputConfig);
   config.run = true;
@@ -9226,11 +9547,13 @@ function start(inputConfig) {
   }
 
   if (config.licenseId === '') {
-    logs('start', 'config.account and config.password are both empty thus goto maintainance mode');
+    logs('start', 'config.licenseId is empty thus goto maintainance mode');
+    config.isMaintainanceMode = true;
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
       checkAndRestartApp();
+      handleInputLoginInfo();
       var matchedPages = groupPageLogin.isMatchScreen(this.screen);
       if (matchedPages.length > 0) {
         logs(
@@ -9255,16 +9578,15 @@ function start(inputConfig) {
     config.autoBuyLegendSoulEssence = false;
     config.autoBuyGuildRelic = false;
     config.autoHandleCollectCookieOdysseyMission = false;
-    config.isNewKingdomCheckRequired = true;
+    config.isNewKingdomCheckRequired = false;
+    config.isSendPlayingRequired = false;
   }
-
-  console.log('start with: ', config.materialsTarget, config.goodsTarget, config.run);
 
   loadImages();
 
   checkAndRestartApp();
 
-  if (config.account === 'moonminv3@gmail.com') {
+  if (config.account === 'moonminv4@gmail.com') {
     var lastSentEvent = 0;
     sendEvent('gameStatus', 'wait-for-input');
 
@@ -9274,9 +9596,6 @@ function start(inputConfig) {
         sendEvent('running', '');
         lastSentEvent = Date.now();
       }
-      sleep(1000);
-
-      console.log('Wait another 60s');
       checkAndRestartApp();
 
       if (checkIsPage(pageInLoginPageWithGearAndVideo)) {
@@ -9292,10 +9611,13 @@ function start(inputConfig) {
         sendEvent('gameStatus', 'login-succeeded');
         break;
       }
+
+      console.log('Wait a second');
+      sleep(1000);
     }
   }
 
-  handleCheckIfAtLoginScreen();
+  handleCheckIfAtLoginScreenByIcon();
 
   if (
     config.account !== 'default_xrobotmon_account@gmail.com' &&
@@ -9308,14 +9630,12 @@ function start(inputConfig) {
     console.log('wrong login info, stopping');
     return;
   }
-  sendEvent('running', '');
-  sendEvent('gameStatus', 'playing');
 
   if (!config.isTestAccount) {
     config.lastGotoProduction = Date.now();
   }
 
-  if (waitUntilSeePages([pageInProduction, pageInMagicLab], 2)) {
+  if (groupPageInProductions.waitScreenForMatchingOne(this.screen, 2000) !== '') {
     console.log('Already in production, reset all side tasks');
     config.lastCollectMail = Date.now();
     config.lastCollectDailyReward = Date.now();
@@ -9588,15 +9908,12 @@ function start(inputConfig) {
         console.log('in production, continue work');
         config.jobFailedCount = 0;
         continue;
-      } else if (checkIsPage(pageInputAge)) {
-        handleInputLoginInfo();
-        continue;
       } else if (handleUnexpectedMessageBox()) {
         console.log('just handleUnexpectedMessageBox()');
         config.jobFailedCount = 0;
         continue;
-      } else if (handleCheckIfAtLoginScreen()) {
-        console.log('just handleCheckIfAtLoginScreen()');
+      } else if (handleCheckIfAtLoginScreenByIcon()) {
+        console.log('just handleCheckIfAtLoginScreenByIcon()');
         config.jobFailedCount = 0;
         continue;
       } else if (handleTryResolveGreenChecks()) {
@@ -9650,7 +9967,7 @@ function start(inputConfig) {
       }
     } else {
       config.jobFailedCount = 0;
-      sendEvent('running', '');
+      // sendEvent('running', '');
       // console.log('Cookie action successfully at: ', new Date().toLocaleString());
     }
   }

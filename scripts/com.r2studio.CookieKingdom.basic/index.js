@@ -66,6 +66,8 @@ var config = {
   autoHandleCollectCookieOdysseyMission: true,
   buildTowardsTheLeft: true,
   isTestAccount: false,
+  isNewKingdomCheckRequired: true,
+  isSendPlayingRequired: true,
 
   jobFailedCount: 4,
   jobFailedBeforeGetCandy: 3,
@@ -103,8 +105,10 @@ var config = {
   wishRefreshThreashold: 5,
   searchHouseCount: 0,
   keepProduceUntilWoodEnough: true,
+  isMaintainanceMode: false,
   loginRetryMaxTimes: 2,
   loginRetryCount: 0,
+  tryRestartGameCount: 0,
   tryRestartGameLimit: 5,
 
   stock_axe: 60,
@@ -234,6 +238,7 @@ var rfpageCottomFarm = new RF.Page(
     { x: 596, y: 120, r: 123, g: 207, b: 8 },
     { x: 528, y: 87, r: 254, g: 231, b: 251 },
     { x: 428, y: 92, r: 255, g: 241, b: 255 },
+    { x: 423, y: 96, r: 202, g: 49, b: 136 },
   ],
   { x: 596, y: 120 }
 );
@@ -248,6 +253,7 @@ var pageInKingdomVillage = [
 ];
 var rfpageInKingdomVillage = new RF.Page('rfpageInKingdomVillage', pageInKingdomVillage, pageInKingdomVillage[0]);
 
+// Check for gears in login page via pixel matching
 var pageInLoginPageWithGearAndVideo = [
   { x: 621, y: 13, r: 233, g: 233, b: 235 },
   { x: 622, y: 16, r: 3, g: 4, b: 9 },
@@ -256,6 +262,10 @@ var pageInLoginPageWithGearAndVideo = [
   { x: 590, y: 17, r: 233, g: 235, b: 239 },
   { x: 594, y: 23, r: 14, g: 14, b: 25 },
 ];
+var rfpageInLoginPageWithGearAndVideo = new RF.Page(
+  'rfpageInLoginPageWithGearAndVideo',
+  pageInLoginPageWithGearAndVideo
+);
 
 var pageLoginFacebook = [
   { x: 186, y: 72, r: 59, g: 89, b: 152 },
@@ -295,9 +305,38 @@ var pageChooseLoginMethod = [
   { x: 126, y: 234, r: 255, g: 255, b: 255 },
 ];
 // Smaller icons (Android 7), not updated for 5 options
-var pageChooseLoginMethod2 = [{ x: 251, y: 245, r: 255, g: 95, b: 0 }];
+var pageChooseLoginMethod2 = [
+  { x: 138, y: 229, r: 255, g: 95, b: 0 },
+  { x: 138, y: 198, r: 0, g: 0, b: 0 },
+  { x: 138, y: 155, r: 234, g: 89, b: 77 },
+  { x: 347, y: 162, r: 177, g: 204, b: 58 },
+  { x: 342, y: 195, r: 59, g: 89, b: 152 },
+];
 // TOS page will change when login page change
 // Nox: cookie v1.15
+var pageTermsOfServiceWindow = [
+  { x: 448, y: 230, r: 171, g: 220, b: 216 },
+  { x: 469, y: 240, r: 255, g: 255, b: 255 },
+  { x: 159, y: 116, r: 255, g: 255, b: 255 },
+  { x: 471, y: 116, r: 255, g: 255, b: 255 },
+  { x: 158, y: 243, r: 255, g: 255, b: 255 },
+];
+var rfpageTermsOfServiceWindow = new RF.Page(
+  'rfpageTermsOfServiceWindow',
+  pageTermsOfServiceWindow,
+  pageTermsOfServiceWindow[0]
+);
+var termOfServiceMessage = {
+  x: 168,
+  y: 127,
+  width: 140,
+  height: 6,
+
+  targetY: 4,
+  lookingForColor: { r: 37, g: 37, b: 37 },
+  targetColorCount: 32,
+  targetColorThreashold: 5,
+};
 var pageTermsOfServices2 = [
   { x: 447, y: 230, r: 255, g: 255, b: 255 },
   { x: 43, y: 257, r: 96, g: 24, b: 22 },
@@ -338,6 +377,82 @@ var pageAnnouncement = [
 ];
 var rfpageAnnouncement = new RF.Page('rfpageAnnouncement', pageAnnouncement, pageAnnouncement[0]);
 
+var pageNameYourKingdom = [
+  { x: 362, y: 247, r: 160, g: 160, b: 160 },
+  { x: 269, y: 242, r: 180, g: 180, b: 180 },
+  { x: 410, y: 154, r: 255, g: 255, b: 255 },
+  { x: 286, y: 155, r: 171, g: 161, b: 159 },
+  { x: 230, y: 153, r: 130, g: 127, b: 124 },
+  { x: 233, y: 100, r: 60, g: 70, b: 105 },
+  { x: 267, y: 103, r: 173, g: 173, b: 173 },
+  { x: 295, y: 104, r: 60, g: 70, b: 105 },
+  { x: 356, y: 104, r: 2, g: 2, b: 2 },
+];
+var rfpageNameYourKingdom = new RF.Page('rfpageNameYourKingdom', pageNameYourKingdom, pageNameYourKingdom[0]);
+
+var pageStoryBuildCookieHouses1 = [
+  { x: 563, y: 86, r: 59, g: 127, b: 161 },
+  { x: 477, y: 83, r: 211, g: 131, b: 56 },
+  { x: 492, y: 104, r: 178, g: 50, b: 32 },
+  { x: 25, y: 320, r: 75, g: 75, b: 75 },
+  { x: 22, y: 330, r: 28, g: 12, b: 12 },
+  { x: 94, y: 333, r: 26, g: 54, b: 33 },
+  { x: 523, y: 270, r: 48, g: 68, b: 109 },
+  { x: 468, y: 268, r: 255, g: 189, b: 8 },
+];
+var rfpageStoryBuildCookieHouses1 = new RF.Page(
+  'rfpageStoryBuildCookieHouses1',
+  pageStoryBuildCookieHouses1,
+  pageStoryBuildCookieHouses1[0]
+);
+
+var pageKindomHasOnlySorageAndBuildIcon = [
+  { x: 613, y: 331, r: 148, g: 40, b: 33 },
+  { x: 601, y: 320, r: 66, g: 0, b: 16 },
+  { x: 44, y: 331, r: 255, g: 224, b: 247 },
+  { x: 248, y: 18, r: 231, g: 165, b: 182 },
+  { x: 339, y: 20, r: 255, g: 215, b: 0 },
+  { x: 454, y: 21, r: 0, g: 139, b: 255 },
+];
+var rfpageKindomHasOnlySorageAndBuildIcon = new RF.Page(
+  'rfpageKindomHasOnlySorageAndBuildIcon',
+  pageKindomHasOnlySorageAndBuildIcon
+);
+var pageKingdomHaveNoCookieIcon = [
+  { x: 418, y: 319, r: 146, g: 80, b: 69 },
+  { x: 468, y: 319, r: 136, g: 17, b: 17 },
+  { x: 505, y: 322, r: 0, g: 0, b: 0 },
+  { x: 582, y: 310, r: 56, g: 92, b: 134 },
+  { x: 37, y: 312, r: 159, g: 6, b: 40 },
+  { x: 253, y: 16, r: 241, g: 51, b: 92 },
+];
+var rfpageKingdomHaveNoCookieIcon = new RF.Page(
+  'rfpageKingdomHaveNoCookieIcon',
+  pageKingdomHaveNoCookieIcon,
+  pageKingdomHaveNoCookieIcon[0]
+);
+
+var pageUnfinishedBattleNeedResume = [
+  { x: 400, y: 251, r: 123, g: 207, b: 8 },
+  { x: 294, y: 251, r: 8, g: 166, b: 222 },
+];
+var rfpageUnfinishedBattleNeedResume = new RF.Page(
+  'rfpageUnfinishedBattleNeedResume',
+  pageUnfinishedBattleNeedResume,
+  pageUnfinishedBattleNeedResume[0]
+);
+var unfinishedBattleMessageScreen = {
+  x: 240,
+  y: 160,
+  width: 160,
+  height: 6,
+
+  targetY: 4,
+  lookingForColor: { r: 247, g: 235, b: 222 },
+  targetColorCount: 128,
+  targetColorThreashold: 5,
+};
+
 var pageInMailBox = [
   { x: 609, y: 11, r: 57, g: 166, b: 231 },
   { x: 609, y: 19, r: 255, g: 255, b: 255 },
@@ -349,7 +464,7 @@ var pageInFountain = [
   { x: 505, y: 305, r: 121, g: 207, b: 12 },
   { x: 569, y: 310, r: 219, g: 207, b: 199 },
   { x: 368, y: 23, r: 60, g: 70, b: 105 },
-  { x: 525, y: 68, r: 142, g: 79, b: 71 },
+  { x: 526, y: 67, r: 255, g: 85, b: 66 },
 ];
 var rfpageInFountain = new RF.Page('rfpageInFountain', pageInFountain, pageInFountain[0]);
 
@@ -412,10 +527,10 @@ var pageInWishingTree = [
 ];
 
 var pageNotEnoughForTree = [
-  { x: 428, y: 98, r: 56, g: 166, b: 231 },
-  { x: 386, y: 107, r: 60, g: 70, b: 105 },
-  { x: 427, y: 171, r: 243, g: 233, b: 223 },
-  { x: 403, y: 240, r: 219, g: 207, b: 199 },
+  { x: 429, y: 97, r: 56, g: 167, b: 231 },
+  { x: 407, y: 104, r: 60, g: 70, b: 105 },
+  { x: 419, y: 127, r: 243, g: 233, b: 223 },
+  { x: 352, y: 246, r: 121, g: 207, b: 12 },
 ];
 
 var pageCheckWishingTreeStock = [
@@ -433,8 +548,8 @@ var pageInTropicalIsland = [
 ];
 
 var pageNotifyQuitWindow = [
-  { x: 374, y: 98, r: 57, g: 69, b: 107 },
   { x: 301, y: 250, r: 8, g: 166, b: 222 },
+  { x: 374, y: 98, r: 57, g: 69, b: 107 },
   { x: 404, y: 250, r: 123, g: 207, b: 8 },
   { x: 425, y: 250, r: 222, g: 207, b: 198 },
 ];
@@ -446,6 +561,7 @@ var pageBattlePaused = [
   { x: 288, y: 157, r: 241, g: 241, b: 239 },
   { x: 293, y: 201, r: 241, g: 90, b: 28 },
 ];
+var rfpageBattlePaused = new RF.Page('rfpageBattlePaused', pageBattlePaused, pageBattlePaused[0]);
 
 var pageInGacha = [
   { x: 619, y: 18, r: 255, g: 255, b: 255 },
@@ -506,6 +622,8 @@ var pageInCookieActivityDashboard = [
   { x: 28, y: 18, r: 229, g: 158, b: 76 },
   { x: 558, y: 339, r: 239, g: 190, b: 41 },
 ];
+// var rfpageInCookieActivityDashboard = new RF.Page('rfpageInCookieActivityDashboard', pageInCookieActivityDashboard);
+
 var pageInProductionDashboard = [
   { x: 408, y: 330, r: 56, g: 74, b: 107 },
   { x: 540, y: 341, r: 123, g: 207, b: 8 },
@@ -524,12 +642,14 @@ var pageToolShop = [
   { x: 414, y: 75, r: 135, g: 143, b: 170 },
   { x: 413, y: 84, r: 183, g: 190, b: 211 },
 ];
+var rfpageToolShop = new RF.Page('rfpageToolShop', pageToolShop);
 
 var pageIsJammery = [
   { x: 490, y: 83, r: 0, g: 178, b: 206 },
   { x: 440, y: 89, r: 19, g: 114, b: 129 },
   { x: 430, y: 88, r: 247, g: 243, b: 222 },
 ];
+var rfpageIsJammery = new RF.Page('rfpageIsJammery', pageIsJammery);
 
 // var pageIsCarpentryShop = [
 //   { x: 494, y: 83, r: 140, g: 86, b: 57 },
@@ -545,6 +665,7 @@ var pageIsJampieDiner = [
   { x: 414, y: 81, r: 217, g: 48, b: 77 },
   { x: 432, y: 73, r: 220, g: 149, b: 99 },
 ];
+var rfpageIsJampieDiner = new RF.Page('rfpageIsJampieDiner', pageIsJampieDiner);
 
 var pageIsBakery = [
   { x: 496, y: 82, r: 184, g: 174, b: 155 },
@@ -553,6 +674,7 @@ var pageIsBakery = [
   { x: 423, y: 70, r: 198, g: 116, b: 63 },
   { x: 424, y: 99, r: 255, g: 219, b: 123 },
 ];
+var rfpageIsBakery = new RF.Page('rfpageIsBakery', pageIsBakery);
 
 var pageIsFlowerShop = [
   { x: 418, y: 80, r: 255, g: 89, b: 165 },
@@ -561,13 +683,18 @@ var pageIsFlowerShop = [
   { x: 490, y: 86, r: 197, g: 39, b: 41 },
   { x: 538, y: 82, r: 165, g: 85, b: 41 },
 ];
+var rfpageIsFlowerShop = new RF.Page('rfpageIsFlowerShop', pageIsFlowerShop);
 
 var pageSelectAdvanture = [
-  { x: 41, y: 334, r: 28, g: 36, b: 48 },
-  { x: 35, y: 291, r: 241, g: 51, b: 92 },
-  { x: 110, y: 70, r: 255, g: 255, b: 255 },
-  { x: 173, y: 314, r: 28, g: 36, b: 48 },
+  { x: 620, y: 11, r: 57, g: 166, b: 231 },
+  { x: 585, y: 21, r: 222, g: 174, b: 74 },
+  { x: 514, y: 16, r: 239, g: 174, b: 99 },
+  { x: 425, y: 21, r: 0, g: 138, b: 255 },
+  { x: 26, y: 28, r: 159, g: 85, b: 28 },
+  { x: 25, y: 12, r: 255, g: 255, b: 255 },
+  { x: 17, y: 26, r: 80, g: 115, b: 187 },
 ];
+var rfpageSelectAdvanture = new RF.Page('rfpageSelectAdvanture', pageSelectAdvanture);
 
 var pageChooseAdvanture = [
   { x: 612, y: 18, r: 57, g: 166, b: 231 },
@@ -600,11 +727,13 @@ var pageCannotRefillBountyAnymore = [
 ];
 
 var pageInkingdomCanGotoGuild = [
-  { x: 319, y: 330, r: 255, g: 174, b: 0 },
-  { x: 364, y: 334, r: 107, g: 93, b: 90 },
-  { x: 417, y: 326, r: 115, g: 12, b: 0 },
-  { x: 460, y: 327, r: 206, g: 113, b: 16 },
+  { x: 321, y: 326, r: 255, g: 182, b: 0 },
+  { x: 417, y: 322, r: 132, g: 16, b: 8 },
+  { x: 466, y: 317, r: 231, g: 166, b: 87 },
+  { x: 566, y: 310, r: 57, g: 93, b: 132 },
 ];
+// var rfpageInkingdomCanGotoGuild = new RF.Page('rfpageInkingdomCanGotoGuild', pageInkingdomCanGotoGuild);
+
 var pageInGuildLand = [
   { x: 445, y: 329, r: 74, g: 61, b: 154 },
   { x: 212, y: 329, r: 173, g: 150, b: 198 },
@@ -726,6 +855,7 @@ var pageInHabor = [
   { x: 522, y: 18, r: 4, g: 135, b: 255 },
   { x: 619, y: 263, r: 57, g: 166, b: 231 },
 ];
+var rfpageInHabor = new RF.Page('rfpageInHabor', pageInHabor);
 
 var pagePvPCrystaisRefresh = [
   { x: 243, y: 100, r: 57, g: 69, b: 107 },
@@ -777,6 +907,11 @@ var pageCookieKingdomIsNotResponding = [
   { x: 242, y: 157, r: 31, g: 31, b: 31 },
   { x: 393, y: 217, r: 142, g: 202, b: 197 },
 ];
+var rfpageCookieKingdomIsNotResponding = new RF.Page(
+  'rfpageCookieKingdomIsNotResponding',
+  pageCookieKingdomIsNotResponding,
+  pageCookieKingdomIsNotResponding[0]
+);
 
 var pageCookieKingdomIsNotResponding2 = [
   { x: 478, y: 221, r: 238, g: 238, b: 238 },
@@ -786,6 +921,11 @@ var pageCookieKingdomIsNotResponding2 = [
   { x: 220, y: 156, r: 87, g: 87, b: 87 },
   { x: 325, y: 160, r: 100, g: 100, b: 100 },
 ];
+var rfpageCookieKingdomIsNotResponding2 = new RF.Page(
+  'rfpageCookieKingdomIsNotResponding2',
+  pageCookieKingdomIsNotResponding2,
+  pageCookieKingdomIsNotResponding2[0]
+);
 
 var pageCookieKingdomHasStopped = [
   { x: 484, y: 205, r: 0, g: 150, b: 136 },
@@ -793,6 +933,11 @@ var pageCookieKingdomHasStopped = [
   { x: 440, y: 172, r: 238, g: 238, b: 238 },
   { x: 402, y: 169, r: 57, g: 57, b: 57 },
 ];
+var rfpageCookieKingdomHasStopped = new RF.Page(
+  'rfpageCookieKingdomHasStopped',
+  pageCookieKingdomHasStopped,
+  pageCookieKingdomHasStopped[0]
+);
 
 var pageInCookieHead = [
   { x: 610, y: 21, r: 57, g: 166, b: 231 },
@@ -809,6 +954,7 @@ var pagePurchaseDiamond = [
   { x: 344, y: 174, r: 121, g: 207, b: 12 },
   { x: 288, y: 114, r: 112, g: 228, b: 233 },
 ];
+var rfpagePurchaseDiamond = new RF.Page('rfpagePurchaseDiamond', pagePurchaseDiamond);
 
 var pageCanGotoKingdom = [
   { x: 601, y: 322, r: 187, g: 22, b: 31 },
@@ -827,6 +973,11 @@ var pageCookieKingdomNotResponding = [
   { x: 253, y: 191, r: 238, g: 238, b: 238 },
   { x: 479, y: 222, r: 238, g: 238, b: 238 },
 ];
+var rfpageCookieKingdomNotResponding = new RF.Page(
+  'rfpageCookieKingdomNotResponding',
+  pageCookieKingdomNotResponding,
+  pageCookieKingdomNotResponding[0]
+);
 
 var pageGooglePlaystoreHasStopped = [
   { x: 485, y: 207, r: 10, g: 153, b: 140 },
@@ -835,6 +986,11 @@ var pageGooglePlaystoreHasStopped = [
   { x: 327, y: 172, r: 238, g: 238, b: 238 },
   { x: 418, y: 171, r: 238, g: 238, b: 238 },
 ];
+var rfpageGooglePlaystoreHasStopped = new RF.Page(
+  'rfpageGooglePlaystoreHasStopped',
+  pageGooglePlaystoreHasStopped,
+  pageGooglePlaystoreHasStopped[0]
+);
 
 var facebookRefreshTokenExpiredLogout = {
   x: 220,
@@ -989,7 +1145,7 @@ function checkIsPage(page, diff, img) {
     var cbtn = page[i];
     var color = getImageColor(img, cbtn.x, cbtn.y);
     if (!isSameColor(cbtn, color, diff)) {
-      // console.log('pixel violation, ask for: ', JSON.stringify(cbtn), ', but get: ', JSON.stringify(color), diff)
+      // console.log('pixel violation, ask for: ', JSON.stringify(cbtn), ', but get: ', JSON.stringify(color), diff);
       isPage = false;
       break;
     }
@@ -1004,7 +1160,7 @@ function mergeObject(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
     for (var key in source) {
-      if (source.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
         // console.log('merge type: ', key, source[key], typeof(source[key]))
         target[key] = source[key];
       }
@@ -1299,9 +1455,9 @@ function setProductionBuilding(building) {
   }
 }
 
-var pageFirstItemEnabled = [{ x: 569, y: 119, r: 121, g: 207, b: 12 }];
-var pageSecondItemEnabled = [{ x: 571, y: 223, r: 121, g: 207, b: 12 }];
-var pageThirdItemEnabled = [{ x: 603, y: 331, r: 123, g: 207, b: 8 }];
+var pageFirstItemEnabled = [{ x: 596, y: 120, r: 121, g: 207, b: 12 }];
+var pageSecondItemEnabled = [{ x: 596, y: 228, r: 121, g: 207, b: 12 }];
+var pageThirdItemEnabled = [{ x: 596, y: 333, r: 121, g: 207, b: 12 }];
 var pageFourthItemEnabled = [{ x: 599, y: 128, r: 121, g: 207, b: 12 }];
 var pageFifthItemEnabled = [{ x: 596, y: 232, r: 121, g: 207, b: 12 }];
 var pageSixItemEnabled = [{ x: 597, y: 339, r: 121, g: 207, b: 12 }];
@@ -1533,10 +1689,10 @@ function makeMagicLabGoodsToTarget() {
     3: pageThirdItemEnabled,
   };
 
-  if (!checkIsPage(productMapping[productIdx])) {
-    console.log('The selected product is not active, skipping');
-    return false;
-  }
+  // if (!checkIsPage(productMapping[productIdx])) {
+  //   console.log('The selected product is not active, skipping');
+  //   return false;
+  // }
 
   var stock = ocrProductStorage(goodsLocation[productIdx]);
   qTap(productMapping[productIdx]);
@@ -1546,6 +1702,7 @@ function makeMagicLabGoodsToTarget() {
   return true;
 }
 
+var groupPageInProductions = new RF.GroupPage('groupPageProductions', [rfpageInProduction, rfpageInMagicLab]);
 function makeGoodsToTarget(target, prework, stocks) {
   // TODO: recognize building to reduce drop order time
   var goodsOneStock = ocrProductStorage(goodsLocation[1]);
@@ -1563,24 +1720,29 @@ function makeGoodsToTarget(target, prework, stocks) {
   var goodsThreeStock = checkIsPage(pageThirdItemEnabled) ? ocrProductStorage(goodsLocation[3]) : -1;
   // console.log('In stock: ', goodsOneStock, goodsTwoStock, goodsThreeStock, 'target: ', target);
 
-  if (checkIsPage(pageToolShop)) {
-    setProductionBuilding('toolShop');
-  } else if (checkIsPage(pageIsJammery)) {
-    setProductionBuilding('jammery');
-  }
-  // else if (checkIsPage(pageIsCarpentryShop)) {
-  //   setProductionBuilding('carpentryShop');
-  // }
-  else if (checkIsPage(pageIsJampieDiner)) {
-    setProductionBuilding('jampieDiner');
-  } else if (checkIsPage(pageIsBakery)) {
-    setProductionBuilding('bakery');
-  } else if (checkIsPage(pageIsFlowerShop)) {
-    setProductionBuilding('flowerShop');
-  } else if (checkIsPage(pageInMagicLab)) {
-    setProductionBuilding('magicLab');
-  } else {
-    setProductionBuilding('otherGoodShop');
+  var matchedPages = groupPageGlobal.isMatchScreen(this.screen);
+  if (matchedPages.length > 0) {
+    logs(
+      'makeGoodsToTarget',
+      'makeGoodsToTarget.groupPageGlobal.matchedPages:{0}'.format(JSON.stringify(matchedPages))
+    );
+    if (matchedPages.indexOf('rfpageToolShop') !== -1) {
+      setProductionBuilding('toolShop');
+    } else if (matchedPages.indexOf('rfpageIsCarpentryShop') !== -1) {
+      setProductionBuilding('carpentryShop');
+    } else if (matchedPages.indexOf('rfpageIsJammery') !== -1) {
+      setProductionBuilding('jammery');
+    } else if (matchedPages.indexOf('rfpageIsJampieDiner') !== -1) {
+      setProductionBuilding('jampieDiner');
+    } else if (matchedPages.indexOf('rfpageIsBakery') !== -1) {
+      setProductionBuilding('bakery');
+    } else if (matchedPages.indexOf('rfpageIsFlowerShop') !== -1) {
+      setProductionBuilding('flowerShop');
+    } else if (matchedPages.indexOf('rfpageInMagicLab') !== -1) {
+      setProductionBuilding('magicLab');
+    } else {
+      setProductionBuilding('otherGoodShop');
+    }
   }
 
   var prodReqList = findProductRequirements();
@@ -1658,7 +1820,7 @@ function makeGoodsToTarget(target, prework, stocks) {
             // console.log('>>', JSON.stringify(part))
             // Assume we can make 5 items, part[0] is stock, part[1] is requirement
             if (part[0] < part[1]) {
-              console.log('Cant even build one, skip this');
+              console.log('Cant even build one, skip this (need {0} but have only {1})'.format(part[0], part[1]));
               canProduce = false;
             }
             if (part[0] - part[1] * availableSlots <= config.productSafetyStock && value > config.productSafetyStock) {
@@ -1804,19 +1966,21 @@ function makeGoodsToTarget(target, prework, stocks) {
         break;
       } else if (checkIsPage(pageLockedGood)) {
         qTap(pageLockedGood);
-        waitUntilSeePages([pageInProduction, pageInMagicLab], 5);
+        groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000);
         break;
-      } else if (waitUntilSeePages([pageInProduction, pageInMagicLab]) && availableSlots != latestCount) {
+      } else if (latestCount === 0) {
+        console.log('No slots, stop at: ', stock['id']);
+        return stocks;
+      } else if (
+        groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000) !== '' &&
+        availableSlots != latestCount
+      ) {
         availableSlots = latestCount;
         break;
       }
       sleep(1000);
     }
 
-    if (countProductionSlotAvailable() == 0) {
-      console.log('No slots, stop at: ', stock['id']);
-      return stocks;
-    }
     // Add check if there are no worker
   }
 
@@ -1874,25 +2038,23 @@ function countProductionSlotAvailable() {
   ]);
   var matchedPages = groupPageMagicLabSlot.isMatchScreen(this.screen);
 
-  console.log('countMagicLabSlotAvailable: ', matchedPages.length);
-  // TODO: test me
+  logs('countProductionSlotAvailable', 'countProductionSlotAvailable: {0}'.format(matchedPages.length));
   return matchedPages.length;
 }
 
 function JobScheduling() {
-  if (!checkIsPage(pageInProduction) && !checkIsPage(pageInMagicLab)) {
+  var matchedPages = groupPageInProductions.isMatchScreen(this.screen);
+  if (matchedPages.length === 0) {
     return false;
   }
 
-  if (checkIsPage(pageInMagicLab)) {
+  if (matchedPages.indexOf('rfpageInMagicLab') !== -1) {
     if (config.skipMagicLabProduction) {
-      console.log('Skip magic lab as requested by config');
+      logs('JobScheduling', 'Skip magic lab as requested by config');
       return true;
     } else if (config.magicLabProductIndex !== 0) {
-      console.log('Its magic lab, build selected {0}th item'.format(config.magicLabProductIndex));
+      logs('JobScheduling', 'Its magic lab, build selected {0}th item'.format(config.magicLabProductIndex));
       return makeMagicLabGoodsToTarget();
-    } else {
-      console.log('Magic lab produce the same way as other product buildings');
     }
   }
 
@@ -1914,6 +2076,7 @@ function JobScheduling() {
     { x: 303, y: 246, r: 8, g: 166, b: 222 },
     { x: 430, y: 238, r: 222, g: 207, b: 198 },
   ];
+  // Try to collect finished goods
   if (!checkIsPage(pageProducing)) {
     qTap(pnt(51, 66));
     sleep(config.sleepAnimate * 3);
@@ -1933,7 +2096,6 @@ function JobScheduling() {
     console.log('No available production slot, skip this production');
     return true;
   }
-  // console.log('emptySlots: ', emptySlots);
 
   if (checkIsPage(pageInMagicLab) && config.skipMagicLabProduction) {
     console.log('Skip magic lab as requested by config 2');
@@ -1989,86 +2151,56 @@ function JobScheduling() {
   var stocks = makeGoodsToTarget(config.goodsTarget, true);
 
   // And rerun one without prework if has enough space
-  if (countProductionSlotAvailable() > 0) {
+  var laterProductionSlotAvailable = countProductionSlotAvailable();
+  if (laterProductionSlotAvailable > 0) {
     console.log('still have space after prework, keep producing');
     SwipeProductionMenuToTop();
     makeGoodsToTarget(config.goodsTarget, false, stocks);
   }
-
-  if (countProductionSlotAvailable() !== emptySlots) {
+  if (laterProductionSlotAvailable !== emptySlots) {
     sendEvent('running', '');
     return true;
   }
   return false;
 }
 
+var pageNotEnoughStock = [
+  { x: 428, y: 98, r: 56, g: 167, b: 231 },
+  { x: 345, y: 104, r: 60, g: 70, b: 105 },
+  { x: 370, y: 176, r: 243, g: 233, b: 223 },
+  { x: 349, y: 247, r: 121, g: 207, b: 12 },
+];
+var rfpageNotEnoughStock = new RF.Page('rfpageNotEnoughStock', pageNotEnoughStock, pageNotEnoughStock[0]);
+var pageTwoItemNotEnoughStock = [
+  { x: 444, y: 98, r: 56, g: 166, b: 231 },
+  { x: 375, y: 105, r: 60, g: 70, b: 105 },
+  { x: 420, y: 203, r: 243, g: 233, b: 223 },
+  { x: 416, y: 246, r: 219, g: 207, b: 199 },
+];
+var rfpageTwoItemNotEnoughStock = new RF.Page(
+  'rfpageTwoItemNotEnoughStock',
+  pageTwoItemNotEnoughStock,
+  pageTwoItemNotEnoughStock[0]
+);
 function handleNotEnoughStock() {
-  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
+  handleUnexpectedMessageBox();
+
+  if (rfpageNotEnoughStock.waitScreenForMatchingScreen(this.screen, 2000)) {
+    logs('handleNotEnoughStock', 'rfpageNotEnoughStock.goNext');
+    rfpageNotEnoughStock.goNext(this.screen);
+
+    groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000);
+    return true;
   }
 
-  var pageNotEnoughStock = [
-    { x: 428, y: 98, r: 56, g: 167, b: 231 },
-    { x: 345, y: 104, r: 60, g: 70, b: 105 },
-    { x: 370, y: 176, r: 243, g: 233, b: 223 },
-    { x: 349, y: 247, r: 121, g: 207, b: 12 },
-  ];
-  if (checkIsPage(pageNotEnoughStock)) {
-    console.log('quiting not enougth stock (pageNotEnoughStock)');
-    qTap(pageNotEnoughStock);
-    sleep(config.sleepAnimate);
+  if (rfpageTwoItemNotEnoughStock.waitScreenForMatchingScreen(this.screen, 2000)) {
+    logs('handleNotEnoughStock', 'rfpageTwoItemNotEnoughStock.goNext');
+    rfpageTwoItemNotEnoughStock.goNext(this.screen);
 
-    return waitUntilSeePages([pageInProduction, pageInMagicLab], 6);
+    groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000);
+    return true;
   }
 
-  var pageTwoItemNotEnoughStock = [
-    { x: 444, y: 98, r: 56, g: 166, b: 231 },
-    { x: 375, y: 105, r: 60, g: 70, b: 105 },
-    { x: 420, y: 203, r: 243, g: 233, b: 223 },
-    { x: 416, y: 246, r: 219, g: 207, b: 199 },
-  ];
-  if (checkIsPage(pageTwoItemNotEnoughStock)) {
-    console.log('quiting not enougth stock (pageTwoItemNotEnoughStock)');
-    qTap(pageTwoItemNotEnoughStock);
-    sleep(config.sleep);
-    return waitUntilSeePages([pageInProduction, pageInMagicLab], 6);
-  }
-
-  // Disney materials cannot be bought via crystals
-  var pageNotEnoughDisneyMaterial = [
-    { x: 299, y: 244, r: 123, g: 207, b: 8 },
-    { x: 349, y: 243, r: 123, g: 207, b: 8 },
-    { x: 413, y: 18, r: 127, g: 105, b: 0 },
-    { x: 532, y: 21, r: 4, g: 73, b: 127 },
-    { x: 313, y: 249, r: 104, g: 175, b: 7 },
-    { x: 429, y: 96, r: 57, g: 69, b: 107 },
-    { x: 227, y: 27, r: 126, g: 126, b: 126 },
-  ];
-  if (checkIsPage(pageNotEnoughDisneyMaterial)) {
-    console.log('quiting not enougth stock (pageNotEnoughDisneyMaterial)');
-    qTap(pageNotEnoughDisneyMaterial);
-    sleep(config.sleepAnimate);
-
-    return waitUntilSeePages([pageInProduction, pageInMagicLab], 6);
-  }
   return false;
 }
 
@@ -2080,11 +2212,22 @@ var pageNewDataPackAvailable = [
   { x: 258, y: 83, r: 57, g: 69, b: 106 },
   { x: 246, y: 125, r: 153, g: 147, b: 139 },
 ];
+var rfpageNewDataPackAvailable = new RF.Page(
+  'rfpageNewDataPackAvailable',
+  pageNewDataPackAvailable,
+  pageNewDataPackAvailable[0]
+);
+
 var pageNewDataPackDownloadFailed = [
   { x: 350, y: 245, r: 123, g: 205, b: 8 },
   { x: 342, y: 107, r: 57, g: 69, b: 106 },
   { x: 264, y: 245, r: 221, g: 205, b: 195 },
 ];
+var rfpageNewDataPackDownloadFailed = new RF.Page(
+  'rfpageNewDataPackDownloadFailed',
+  pageNewDataPackDownloadFailed,
+  pageNewDataPackDownloadFailed[0]
+);
 
 // If already choose language in pageNewDataPackAvailable
 var pageNewDataPackAvaiableNoLanguage = [
@@ -2095,149 +2238,150 @@ var pageNewDataPackAvaiableNoLanguage = [
   { x: 341, y: 96, r: 255, g: 255, b: 255 },
   { x: 284, y: 99, r: 253, g: 253, b: 251 },
 ];
+var rfpageNewDataPackAvaiableNoLanguage = new RF.Page(
+  'rfpageNewDataPackAvaiableNoLanguage',
+  pageNewDataPackAvaiableNoLanguage,
+  pageNewDataPackAvaiableNoLanguage[0]
+);
 
+var pageGeneralMessageWindow = [
+  { x: 424, y: 101, r: 57, g: 69, b: 107 },
+  { x: 431, y: 128, r: 243, g: 233, b: 223 },
+  { x: 429, y: 244, r: 219, g: 207, b: 199 },
+];
+var rfpageGeneralMessageWindow = new RF.Page(
+  'rfpageGeneralMessageWindow',
+  pageGeneralMessageWindow,
+  pageGeneralMessageWindow[0]
+);
+// return false: nothing to handle; return true: did something
 function handleUnexpectedMessageBox() {
-  if (checkIsPage(pagePurchaseDiamond)) {
-    console.log('Accidentally goto purchase diamond page, hit back twice');
-    keycode('BACK', 1000);
-    sleep(2000);
-    keycode('BACK', 1000);
-    sleep(2000);
+  var matchedPages = groupPageGlobal.isMatchScreen(this.screen);
+  if (matchedPages.length === 0) {
+    return false;
+  }
+  if (matchedPages.indexOf('rfpageInKingdomVillage') !== -1 || matchedPages.indexOf('rfpageInProduction') !== -1) {
     return false;
   }
 
-  if (checkIsPage(pageGooglePlaystoreHasStopped)) {
-    console.log('Found pageGooglePlaystoreHasStopped, press it');
-    qTap(pageGooglePlaystoreHasStopped);
-    sleep(2000);
-    return false;
-  }
-
-  if (checkIsPage(pageCookieKingdomNotResponding)) {
-    console.log('Found pageCookieKingdomNotResponding, press it');
-    qTap(pageCookieKingdomNotResponding);
-    sleep(2000);
-    return false;
-  }
-
-  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    return false;
-  }
-
-  if (checkIsPage(pageCookieKingdomIsNotResponding)) {
-    console.log('Found pageCookieKingdomIsNotResponding, press it');
-    qTap(pageCookieKingdomIsNotResponding);
-    sleep(2000);
-    return false;
-  }
-  if (checkIsPage(pageCookieKingdomIsNotResponding2)) {
-    console.log('Found pageCookieKingdomIsNotResponding2, press it');
-    qTap(pageCookieKingdomIsNotResponding2);
-    sleep(2000);
-    return false;
-  }
-  if (checkIsPage(pageCookieKingdomHasStopped)) {
-    console.log('Found pageCookieKingdomHasStopped, press it');
-    qTap(pageCookieKingdomHasStopped);
-    sleep(2000);
-    return false;
-  }
-
-  if (checkScreenMessage(theReloginIntoAnotherDeviceMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found theReloginIntoAnotherDeviceMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-    for (var i = 0; i < config.sleepWhenDoubleLoginInMinutes; i++) {
-      sleep(60000);
-      sendEvent('running', '');
-      console.log('Detect relogin, wait: ', i, '/', config.sleepWhenDoubleLoginInMinutes, 'mins to restart...');
-    }
+  logs(
+    'handleUnexpectedMessageBox',
+    'handleUnexpectedMessageBox.groupPageGlobal.matchedPages:{0}'.format(JSON.stringify(matchedPages))
+  );
+  if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageNotifyQuitWindow.goNext()');
+    rfpageNotifyQuitWindow.goNext(this.screen);
+    sleep(1000);
     return true;
   }
-
-  if (checkIsPage(pageNewDataPackAvailable) || checkIsPage(pageNewDataPackAvaiableNoLanguage)) {
-    console.log('New data pack available found, tap and wait for download');
-    qTap(pageNewDataPackAvailable);
+  if (matchedPages.indexOf('rfpagePurchaseDiamond') !== -1) {
+    logs('handleUnexpectedMessageBox', 'Accidentally goto purchase diamond page, hit back twice');
+    keycode('BACK', 1000);
+    sleep(2000);
+    keycode('BACK', 1000);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageGooglePlaystoreHasStopped') !== -1) {
+    console.log('rfpageGooglePlaystoreHasStopped.goNext');
+    logs('handleUnexpectedMessageBox', 'rfpageGooglePlaystoreHasStopped.goNext');
+    rfpageGooglePlaystoreHasStopped.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageCookieKingdomNotResponding') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageCookieKingdomNotResponding.goNext');
+    rfpageCookieKingdomNotResponding.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageCookieKingdomIsNotResponding') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageCookieKingdomIsNotResponding.goNext');
+    rfpageCookieKingdomIsNotResponding.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageCookieKingdomIsNotResponding2') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageCookieKingdomIsNotResponding2.goNext');
+    rfpageCookieKingdomIsNotResponding2.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (matchedPages.indexOf('rfpageCookieKingdomHasStopped') !== -1) {
+    logs('handleUnexpectedMessageBox', 'rfpageCookieKingdomHasStopped.goNext');
+    rfpageCookieKingdomHasStopped.goNext(this.screen);
+    sleep(2000);
+    return true;
+  } else if (
+    matchedPages.indexOf('rfpageNewDataPackAvailable') !== -1 ||
+    matchedPages.indexOf('rfpageNewDataPackAvaiableNoLanguage') !== -1
+  ) {
+    logs('handleUnexpectedMessageBox', 'New data pack available found, tap and wait for download');
+    rfpageNewDataPackAvailable.goNext(this.screen);
     sleep(10000);
     for (i = 0; i < 18; i++) {
       if (checkIsPage(pageNewDataPackDownloadFailed)) {
-        console.log('Failed to doenload resources, tap to continue');
+        logs('handleUnexpectedMessageBox', 'Failed to doenload resources, tap to continue');
         qTap(pageNewDataPackDownloadFailed);
         break;
       }
       // wait for yellow bar (download progress bar) disapper
       if (!checkIsPage([{ x: 16, y: 349, r: 255, g: 210, b: 76 }])) {
-        console.log('download finished');
+        logs('handleUnexpectedMessageBox', 'download finished');
         break;
       }
-      console.log('wait for download: ', i);
+      logs('handleUnexpectedMessageBox', 'wait for download: {0}'.format(i));
       sleep(3000);
     }
-  }
-
-  handleBTSIntro();
-}
-
-function handleBTSIntro() {
-  var pageACookieIntroBTSRoom = [
-    { x: 167, y: 322, r: 205, g: 142, b: 247 },
-    { x: 218, y: 21, r: 65, g: 14, b: 24 },
-    { x: 315, y: 20, r: 67, g: 54, b: 0 },
-    { x: 423, y: 18, r: 0, g: 34, b: 67 },
-  ];
-
-  if (!checkIsPage(pageAnnouncement) && checkIsPage(pageACookieIntroBTSRoom)) {
-    console.log('Found pageACookieIntroBTSRoom, tap into');
-    qTap(pageACookieIntroBTSRoom);
-    sleep(2000);
-    qTap(pageACookieIntroBTSRoom);
-    sleep(2000);
-  }
-
-  var pageInBTSTrailer = [
-    { x: 524, y: 333, r: 107, g: 52, b: 231 },
-    { x: 33, y: 326, r: 255, g: 255, b: 255 },
-    { x: 24, y: 18, r: 209, g: 142, b: 242 },
-    { x: 24, y: 14, r: 206, g: 130, b: 244 },
-  ];
-  // var pageInBTSTrailerLeaving = [
-  //   {x: 619, y: 12, r: 49, g: 162, b: 231},
-  //   {x: 524, y: 19, r: 86, g: 86, b: 86},
-  //   {x: 28, y: 16, r: 86, g: 70, b: 45},
-  // ]
-  if (checkIsPage(pageInBTSTrailer)) {
-    console.log('found pageInBTSTrailer, leaving');
-
-    for (var i = 0; i < 20; i++) {
-      if (checkIsPage(pageInBTSTrailer)) {
-        console.log('trying to leave the BTS trailer: ', i);
-        qTap(pnt(620, 20));
-        sleep(2000);
-      } else {
-        console.log('Finally left the BTS trailer');
-        break;
+  } else if (matchedPages.indexOf('rfpageInputAge') !== -1) {
+    logs('handleUnexpectedMessageBox', 'found rfpageInputAge, call handleInputLoginInfo()');
+    handleInputLoginInfo();
+    return true;
+  } else if (matchedPages.indexOf('rfpageGeneralMessageWindow') !== -1) {
+    if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
+      config.lastNetworkIssueOccurTime = Date.now();
+      config.networkIssueCount++;
+      logs(
+        'handleUnexpectedMessageBox',
+        'Found anErrorHasOccuredMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+      );
+      keycode('BACK', 1000);
+      return true;
+    }
+    if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
+      config.lastNetworkIssueOccurTime = Date.now();
+      config.networkIssueCount++;
+      logs(
+        'handleUnexpectedMessageBox',
+        'Found theNetworkIsUnstableMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+      );
+      keycode('BACK', 1000);
+      return true;
+    }
+    if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
+      config.lastNetworkIssueOccurTime = Date.now();
+      config.networkIssueCount++;
+      logs(
+        'handleUnexpectedMessageBox',
+        'Found anUnknownErrorHasOccurMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+      );
+      keycode('BACK', 1000);
+      return true;
+    }
+    if (checkScreenMessage(theReloginIntoAnotherDeviceMessageScreen)) {
+      config.lastNetworkIssueOccurTime = Date.now();
+      config.networkIssueCount++;
+      logs(
+        'handleUnexpectedMessageBox',
+        'Found theReloginIntoAnotherDeviceMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+      );
+      keycode('BACK', 1000);
+      for (var i = 0; i < config.sleepWhenDoubleLoginInMinutes; i++) {
+        sleep(60000);
+        sendEvent('running', '');
+        logs(
+          'handleUnexpectedMessageBox',
+          'Detect relogin, wait: {0}/{1} mins to restart...'.format(i, config.sleepWhenDoubleLoginInMinutes)
+        );
       }
     }
   }
+  return false;
 }
 
 function handleWelcomePage() {
@@ -2313,6 +2457,11 @@ function handleAnnouncement() {
 }
 
 function findAndTapCandy() {
+  var pageInCandyHouse = [
+    { x: 268, y: 240, r: 127, g: 241, b: 205 },
+    { x: 316, y: 236, r: 212, g: 212, b: 212 },
+    { x: 316, y: 239, r: 58, g: 58, b: 58 },
+  ];
   var pageCanUpgradeCandyMansion = [{ x: 303, y: 289, r: 123, g: 207, b: 8 }];
   var pageCanUpgradeCandyHouse = [{ x: 243, y: 287, r: 151, g: 218, b: 55 }];
   var pageCookieHouseUpgradeRequirement = [
@@ -2320,7 +2469,14 @@ function findAndTapCandy() {
     { x: 282, y: 322, r: 148, g: 219, b: 57 },
     { x: 199, y: 199, r: 118, g: 234, b: 231 },
   ];
+  var pageNotEnoughGnomeBuilders = [
+    { x: 381, y: 319, r: 190, g: 1, b: 36 },
+    { x: 381, y: 325, r: 254, g: 254, b: 253 },
+    { x: 386, y: 327, r: 255, g: 221, b: 240 },
+    { x: 465, y: 79, r: 58, g: 165, b: 231 },
+  ];
 
+  var collectedCandySuccess = false;
   var foundResults = findSpecificImageInScreen(candy, 0.95);
   // console.log('candies > ', JSON.stringify(foundResults));
   if (foundResults.length === 0) {
@@ -2345,14 +2501,22 @@ function findAndTapCandy() {
         '{0}, tapping candy {1} > {2}'.format(new Date().toLocaleString(), i, JSON.stringify(foundResults[i]))
       );
       qTap(pnt(foundResults[i].x + 5, foundResults[i].y + 5));
-      sleep(3000);
+
+      if (waitUntilSeePage(pageInCandyHouse, 2)) {
+        console.log('pageInCandyHouse, successfully collected candy');
+        config.lastCollectCandyTime = Date.now();
+        console.log('Candy collected successfully:', i);
+        collectedCandySuccess = true;
+        break;
+      }
       handleTryHitBackToKingdom();
 
-      foundResults = findSpecificImageInScreen(candy, 0.91);
+      foundResults = findSpecificImageInScreen(candy, 0.95);
       console.log('candies left > ', i, JSON.stringify(foundResults));
       if (foundResults.length === 0 || foundResults[i + 1] === undefined) {
         config.lastCollectCandyTime = Date.now();
-        console.log('Candy collected successfully:', i);
+        console.log('Candy collected successfully due to candies are gone:', i);
+        collectedCandySuccess = true;
         break;
       }
     }
@@ -2386,9 +2550,14 @@ function findAndTapCandy() {
       }
       console.log('Tap candy house green upgrade at: ', JSON.stringify(foundResults[i]));
       qTap(pnt(foundResults[i].x, foundResults[i].y + 25));
-      if (waitUntilSeePages([pageCanUpgradeCandyMansion, pageCanUpgradeCandyHouse], 3)) {
+      if (waitUntilSeePages([pageCanUpgradeCandyMansion, pageCanUpgradeCandyHouse], 2)) {
         qTap(pageCanUpgradeCandyHouse);
         sleep(config.sleepAnimate * 2);
+        if (waitUntilSeePages([pageNotEnoughGnomeBuilders], 2)) {
+          console.log('Not enough gnome builders, skipping upgrade cookie houses');
+          break;
+        }
+
         if (waitUntilSeePage(pageCookieHouseUpgradeRequirement, 4)) {
           qTap(pnt(357, 321));
         }
@@ -2416,7 +2585,7 @@ function findAndTapCandy() {
     handleTryHitBackToKingdom();
   }
 
-  return true;
+  return collectedCandySuccess;
 }
 
 function handleProductionDashboard(needProduceAll) {
@@ -2432,14 +2601,11 @@ function handleProductionDashboard(needProduceAll) {
 
   qTap(pageHasDashboard);
   if (waitUntilSeePages([pageInCookieActivityDashboard], 5, undefined, pageInProductionDashboard)) {
-    qTap(pnt(408, 330));
-    sleep(config.sleepAnimate);
-  }
-
-  if (!checkIsPage(pageInProductionDashboard)) {
-    config.productionDashboardEnabled = false;
-    console.log('Failed to find pageInProductionDashboard, skipping handleProductionDashboard');
-    return false;
+    if (!waitUntilSeePages([pageInProductionDashboard], 5, pnt(408, 330))) {
+      config.productionDashboardEnabled = false;
+      console.log('Failed to find pageInProductionDashboard, skipping handleProductionDashboard');
+      return false;
+    }
   }
 
   if (needProduceAll) {
@@ -2564,11 +2730,15 @@ function findAndTapProductionHouse() {
         qTap(house);
         sleep(config.sleepAnimate);
 
-        if (waitUntilSeePages([pageInProduction, pageInMagicLab], 5)) {
+        if (groupPageInProductions.waitScreenForMatchingOne(this.screen, 6000) !== '') {
           console.log('Found production house successfully: ', key, i);
           return true;
         } else if (checkIsPage(pageStockIsFull)) {
-          console.log('Found house but stock is full, send running event and keep doing other tasks, i: ', i);
+          console.log(
+            'Found house but stock is full, send running event and keep doing other tasks, reset find production timer, i: ',
+            i
+          );
+          config.lastGotoProduction = Date.now();
           sendEvent('running', '');
         } else if (checkIsPage(pageInGacha)) {
           console.log('accidentally get into gacha when searching for houses, leaving');
@@ -2610,7 +2780,7 @@ function swipeDirection(direction, finishSwipeWhenInProduction, swippingPage) {
   if (
     finishSwipeWhenInProduction &&
     !checkIsPage(pageInKingdomVillage) &&
-    waitUntilSeePages([pageInProduction, pageInMagicLab], 5)
+    groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000) !== ''
   ) {
     console.log('Already in production, skip swipping');
     return true;
@@ -2671,10 +2841,7 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage, swipingPag
     return false;
   }
 
-  if (handleUnexpectedMessageBox()) {
-    console.log('handleGotoKingdomPage just wait for relogin screen: ', config.sleepWhenDoubleLoginInMinutes);
-    return false;
-  }
+  handleUnexpectedMessageBox();
 
   steps = steps == undefined ? 4 : steps;
   var step_x = (toPnt.x - fromPnt.x) / steps;
@@ -2707,10 +2874,7 @@ function swipeFromToPoint(fromPnt, toPnt, steps, id, stopIfFoundPage, swipingPag
 function handleGotoKingdomPage() {
   console.log('trying to get to kingdom page');
 
-  if (handleUnexpectedMessageBox()) {
-    console.log('handleGotoKingdomPage just wait for relogin screen: ', config.sleepWhenDoubleLoginInMinutes);
-    return false;
-  }
+  handleUnexpectedMessageBox();
 
   if (checkIsPage(pageInKingdomVillage)) {
     console.log('already in kingdom');
@@ -2772,7 +2936,7 @@ function findHouseInNotSureWhere(tryCount) {
     handleUnexpectedMessageBox();
     tapRandom(75, 95, 553, 285);
     sleep(config.sleepAnimate * 2);
-    if (waitUntilSeePages([pageInProduction, pageInMagicLab])) {
+    if (groupPageInProductions.waitScreenForMatchingOne(this.screen, 5000) !== '') {
       console.log('found production in try: ', i);
       return true;
     }
@@ -2848,6 +3012,8 @@ function handleFindAndTapCandyHouse() {
     needCollectCandy = !findAndTapCandy();
   }
 
+  console.log('needCollectCandy: ', needCollectCandy);
+
   config.searchHouseCount++;
   if (config.searchHouseCount < 8) {
     console.log('send running when searchHouseCount:', config.searchHouseCount);
@@ -2869,7 +3035,9 @@ function handleFindAndTapCandyHouse() {
 
   for (var i = 0; i < directions.length; i++) {
     // TODO: this does not show properly
-    console.log('going towards path {0}, step {1}'.format(config.searchHouseCount % 3, i));
+    console.log(
+      'going towards path {0}, step {1}, needCollectCandy: {2}'.format(config.searchHouseCount % 3, i, needCollectCandy)
+    );
     if (swipeDirection(directions[i], true)) {
       if (needCollectCandy) {
         needCollectCandy = !findAndTapCandy();
@@ -2894,7 +3062,7 @@ function handleFindAndTapCandyHouse() {
         }
       }
 
-      if (waitUntilSeePages([pageInProduction, pageInMagicLab], 2) && config.searchHouseCount > 3) {
+      if (groupPageInProductions.waitScreenForMatchingOne(this.screen, 2000) !== '' && config.searchHouseCount > 3) {
         console.log(
           'found production when swipping, start working, config.searchHouseCount: ',
           config.searchHouseCount,
@@ -2935,7 +3103,10 @@ function handleFindAndTapCandyHouse() {
         sendEvent('running', '');
         return true;
       } else if (checkIsPage(pageStockIsFull)) {
-        console.log('Found house but stock is full, send running event and keep doing other tasks');
+        console.log(
+          'Found house but stock is full, send running event and keep doing other tasks, reset find production timer'
+        );
+        config.lastGotoProduction = Date.now();
         sendEvent('running', '');
       }
     } else if (checkIsPage(pageInHabor)) {
@@ -2944,6 +3115,12 @@ function handleFindAndTapCandyHouse() {
       return false;
     }
   }
+
+  console.log(
+    'find candy house failed, duration of looking for candy and production is:',
+    (Date.now() - timeStartFindHouses) / 1000,
+    'secs'
+  );
   return false;
 }
 
@@ -2969,6 +3146,246 @@ function handleLoginFailed() {
   }
 }
 
+var pageCannotFindLoginInfo = [
+  { x: 316, y: 243, r: 82, g: 136, b: 5 },
+  { x: 323, y: 242, r: 254, g: 254, b: 254 },
+  { x: 332, y: 243, r: 123, g: 207, b: 8 },
+  { x: 305, y: 242, r: 123, g: 207, b: 8 },
+  { x: 300, y: 242, r: 123, g: 207, b: 8 },
+  { x: 343, y: 243, r: 123, g: 207, b: 8 },
+  { x: 201, y: 106, r: 57, g: 69, b: 107 },
+  { x: 422, y: 95, r: 57, g: 69, b: 107 },
+  { x: 438, y: 106, r: 57, g: 69, b: 107 },
+  { x: 383, y: 177, r: 215, g: 205, b: 195 },
+  { x: 377, y: 178, r: 231, g: 220, b: 209 },
+  { x: 371, y: 178, r: 231, g: 220, b: 209 },
+  { x: 243, y: 180, r: 80, g: 80, b: 80 },
+];
+// v1.15
+var pageCanDownloadResources = [
+  { x: 346, y: 240, r: 121, g: 207, b: 12 },
+  { x: 420, y: 237, r: 219, g: 207, b: 199 },
+  { x: 418, y: 172, r: 243, g: 233, b: 223 },
+  { x: 412, y: 103, r: 60, g: 70, b: 105 },
+  { x: 219, y: 98, r: 60, g: 70, b: 105 },
+  { x: 221, y: 250, r: 219, g: 207, b: 199 },
+];
+// v2.0.1
+var pageDownloadDataAndVoiceOver = [
+  { x: 207, y: 192, r: 39, g: 204, b: 0 },
+  { x: 372, y: 216, r: 12, g: 167, b: 223 },
+  { x: 445, y: 218, r: 12, g: 167, b: 223 },
+  { x: 430, y: 81, r: 60, g: 70, b: 105 },
+  { x: 214, y: 195, r: 255, g: 255, b: 255 },
+];
+var pageDownloadDataAndVoiceOverUnchecked = [
+  { x: 207, y: 192, r: 255, g: 255, b: 255 },
+  { x: 372, y: 216, r: 12, g: 167, b: 223 },
+  { x: 445, y: 218, r: 12, g: 167, b: 223 },
+  { x: 430, y: 81, r: 60, g: 70, b: 105 },
+  { x: 214, y: 195, r: 255, g: 255, b: 255 },
+];
+// v2.0.1 has 'New data pak is available'
+var pageDownloadNewDataPakIsAvailable = [
+  { x: 368, y: 254, r: 123, g: 207, b: 8 },
+  { x: 441, y: 99, r: 57, g: 69, b: 107 },
+  { x: 346, y: 251, r: 255, g: 255, b: 255 },
+];
+var pageEnterEmail = [
+  { x: 298, y: 53, r: 60, g: 60, b: 60 },
+  { x: 320, y: 53, r: 223, g: 223, b: 223 },
+  { x: 322, y: 99, r: 245, g: 245, b: 245 },
+  { x: 357, y: 97, r: 70, g: 70, b: 70 },
+  { x: 362, y: 98, r: 255, g: 255, b: 255 },
+  { x: 368, y: 98, r: 255, g: 255, b: 255 },
+  { x: 391, y: 124, r: 255, g: 255, b: 255 },
+];
+var pageEnterTwoPasswords = [
+  { x: 243, y: 307, r: 255, g: 255, b: 255 },
+  { x: 377, y: 229, r: 200, g: 200, b: 200 },
+  { x: 367, y: 176, r: 255, g: 255, b: 255 },
+  { x: 371, y: 50, r: 60, g: 60, b: 60 },
+  { x: 319, y: 53, r: 230, g: 230, b: 230 },
+  { x: 236, y: 149, r: 195, g: 195, b: 195 },
+  { x: 236, y: 183, r: 194, g: 194, b: 194 },
+  { x: 243, y: 303, r: 200, g: 200, b: 200 },
+];
+var pageEnterpassword = [
+  { x: 370, y: 150, r: 255, g: 255, b: 255 },
+  { x: 227, y: 112, r: 125, g: 125, b: 125 },
+  { x: 235, y: 112, r: 84, g: 84, b: 84 },
+  { x: 239, y: 114, r: 255, g: 255, b: 255 },
+  { x: 368, y: 110, r: 84, g: 84, b: 84 },
+  { x: 404, y: 188, r: 200, g: 200, b: 200 },
+  { x: 227, y: 170, r: 255, g: 255, b: 255 },
+];
+var pageEnterPasswordLongId = [
+  { x: 370, y: 161, r: 255, g: 255, b: 255 },
+  { x: 227, y: 127, r: 125, g: 125, b: 125 },
+  { x: 234, y: 124, r: 207, g: 207, b: 207 },
+  { x: 229, y: 110, r: 255, g: 255, b: 255 },
+  { x: 230, y: 110, r: 120, g: 120, b: 120 },
+  { x: 227, y: 183, r: 255, g: 255, b: 255 },
+];
+// Check if wrong password set. Any red string in this area means wrong password
+var pageEnteredPassword = [
+  { x: 370, y: 155, r: 255, g: 255, b: 255 },
+  { x: 301, y: 115, r: 255, g: 255, b: 255 },
+  { x: 387, y: 53, r: 60, g: 60, b: 60 },
+  { x: 298, y: 53, r: 60, g: 60, b: 60 },
+  { x: 322, y: 52, r: 60, g: 60, b: 60 },
+];
+var pageServerSelection = [
+  { x: 351, y: 260, r: 121, g: 207, b: 12 },
+  { x: 428, y: 261, r: 12, g: 167, b: 223 },
+  { x: 442, y: 242, r: 60, g: 70, b: 105 },
+  { x: 422, y: 234, r: 44, g: 47, b: 62 },
+  { x: 324, y: 54, r: 101, g: 137, b: 231 },
+  { x: 302, y: 64, r: 117, g: 186, b: 100 },
+  { x: 278, y: 81, r: 254, g: 254, b: 254 },
+];
+
+var incorrectEmailFormat = {
+  x: 222,
+  y: 166,
+  width: 172,
+  height: 12,
+  targetY: 6,
+  lookingForColor: { r: 226, g: 86, b: 86 },
+  targetColorCount: 44,
+  targetColorThreashold: 3,
+};
+var needRegisterDevPlayAccount = {
+  x: 222,
+  y: 166,
+  width: 172,
+  height: 12,
+  targetY: 6,
+  lookingForColor: { r: 226, g: 86, b: 86 },
+  targetColorCount: 34,
+  targetColorThreashold: 3,
+};
+var registerWithSocialPlatformMessageScreen = {
+  x: 225,
+  y: 162,
+  width: 75,
+  height: 13,
+  targetY: 8,
+  lookingForColor: { r: 244, g: 191, b: 191 },
+  targetColorCount: 21,
+  targetColorThreashold: 3,
+};
+var wrongPasswordMessageScreen = {
+  x: 225,
+  y: 162,
+  width: 75,
+  height: 13,
+  targetY: 6,
+  lookingForColor: { r: 230, g: 100, b: 100 },
+  targetColorCount: 17,
+  targetColorThreashold: 2,
+};
+var wrongPasswordMessageScreenWithLongId = {
+  x: 225,
+  y: 175,
+  width: 75,
+  height: 13,
+  targetY: 6,
+  lookingForColor: { r: 244, g: 100, b: 100 },
+  targetColorCount: 25,
+  targetColorThreashold: 2,
+};
+var passwordTooShortMessageScreen = {
+  x: 225,
+  y: 162,
+  width: 75,
+  height: 13,
+  targetY: 4,
+  lookingForColor: { r: 244, g: 191, b: 191 },
+  targetColorCount: 2,
+  targetColorThreashold: 0,
+};
+
+var rfpageInputAge = new RF.Page('rfpageInputAge', pageInputAge, pageInputAge[0]);
+var rfpageTermsOfServices2 = new RF.Page('rfpageTermsOfServices2', pageTermsOfServices2, pageTermsOfServices2[0]);
+var rfpageTermsOfServicesMemu = new RF.Page(
+  'rfpageTermsOfServicesMemu',
+  pageTermsOfServicesMemu,
+  pageTermsOfServicesMemu[0]
+);
+var rfpageTermsOfServicesHitBack = new RF.Page(
+  'rfpageTermsOfServicesHitBack',
+  pageTermsOfServicesHitBack,
+  pageTermsOfServicesHitBack[0]
+);
+var rfpageCannotFindLoginInfo = new RF.Page(
+  'rfpageCannotFindLoginInfo',
+  pageCannotFindLoginInfo,
+  pageCannotFindLoginInfo[0]
+);
+var rfpageCanDownloadResources = new RF.Page(
+  'rfpageCanDownloadResources',
+  pageCanDownloadResources,
+  pageCanDownloadResources[0]
+);
+var rfpageDownloadDataAndVoiceOver = new RF.Page(
+  'rfpageDownloadDataAndVoiceOver',
+  pageDownloadDataAndVoiceOver,
+  pageDownloadDataAndVoiceOver[0]
+);
+var rfpageDownloadDataAndVoiceOverUnchecked = new RF.Page(
+  'rfpageDownloadDataAndVoiceOverUnchecked',
+  pageDownloadDataAndVoiceOverUnchecked,
+  pageDownloadDataAndVoiceOverUnchecked[0]
+);
+var rfpageDownloadNewDataPakIsAvailable = new RF.Page(
+  'rfpageDownloadNewDataPakIsAvailable',
+  pageDownloadNewDataPakIsAvailable,
+  pageDownloadNewDataPakIsAvailable[0]
+);
+var rfpageChooseLoginMethod = new RF.Page('rfpageChooseLoginMethod', pageChooseLoginMethod, pageChooseLoginMethod[0]);
+var rfpageChooseLoginMethod2 = new RF.Page(
+  'rfpageChooseLoginMethod2',
+  pageChooseLoginMethod2,
+  pageChooseLoginMethod2[0]
+);
+var rfpageEnterEmail = new RF.Page('rfpageEnterEmail', pageEnterEmail, pageEnterEmail[0]);
+var rfpageEnterTwoPasswords = new RF.Page('rfpageEnterTwoPasswords', pageEnterTwoPasswords, pageEnterTwoPasswords[0]);
+var rfpageEnterpassword = new RF.Page('rfpageEnterpassword', pageEnterpassword, pageEnterpassword[0]);
+var rfpageEnterPasswordLongId = new RF.Page(
+  'rfpageEnterPasswordLongId',
+  pageEnterPasswordLongId,
+  pageEnterPasswordLongId[0]
+);
+var rfpageServerSelection = new RF.Page('rfpageServerSelection', pageServerSelection, pageServerSelection[0]);
+var rfpageNotifyQuitWindow = new RF.Page('rfpageNotifyQuitWindow', pageNotifyQuitWindow, pageNotifyQuitWindow[0]);
+
+var groupPageLogin = new RF.GroupPage('groupPageLogin', [
+  rfpageInputAge,
+  rfpageTermsOfServiceWindow,
+  rfpageTermsOfServices2,
+  rfpageTermsOfServicesMemu,
+  rfpageTermsOfServicesHitBack,
+  rfpageCannotFindLoginInfo,
+  rfpageCanDownloadResources,
+  rfpageDownloadDataAndVoiceOver,
+  rfpageDownloadDataAndVoiceOverUnchecked,
+  rfpageDownloadNewDataPakIsAvailable,
+  rfpageChooseLoginMethod,
+  rfpageChooseLoginMethod2,
+  rfpageEnterEmail,
+  rfpageEnterTwoPasswords,
+  rfpageEnterpassword,
+  rfpageEnterPasswordLongId,
+  rfpageServerSelection,
+  rfpageAnnouncement,
+  rfpageInKingdomVillage,
+  rfpageInProduction,
+  rfpageInMagicLab,
+  rfpageInFountain,
+  rfpageInLoginPageWithGearAndVideo,
+  rfpageNotifyQuitWindow,
+]);
 function handleInputLoginInfo() {
   if (checkScreenMessage(facebookRefreshTokenExpiredLogout)) {
     console.log('Found facebook refresh token failed, tap logout cancel button');
@@ -2977,251 +3394,6 @@ function handleInputLoginInfo() {
   }
 
   checkIsFacebookPage();
-
-  var pageCannotFindLoginInfo = [
-    { x: 316, y: 243, r: 82, g: 136, b: 5 },
-    { x: 323, y: 242, r: 254, g: 254, b: 254 },
-    { x: 332, y: 243, r: 123, g: 207, b: 8 },
-    { x: 305, y: 242, r: 123, g: 207, b: 8 },
-    { x: 300, y: 242, r: 123, g: 207, b: 8 },
-    { x: 343, y: 243, r: 123, g: 207, b: 8 },
-    { x: 201, y: 106, r: 57, g: 69, b: 107 },
-    { x: 422, y: 95, r: 57, g: 69, b: 107 },
-    { x: 438, y: 106, r: 57, g: 69, b: 107 },
-    { x: 383, y: 177, r: 215, g: 205, b: 195 },
-    { x: 377, y: 178, r: 231, g: 220, b: 209 },
-    { x: 371, y: 178, r: 231, g: 220, b: 209 },
-    { x: 243, y: 180, r: 80, g: 80, b: 80 },
-  ];
-  // v1.15
-  var pageCanDownloadResources = [
-    { x: 346, y: 240, r: 121, g: 207, b: 12 },
-    { x: 420, y: 237, r: 219, g: 207, b: 199 },
-    { x: 418, y: 172, r: 243, g: 233, b: 223 },
-    { x: 412, y: 103, r: 60, g: 70, b: 105 },
-    { x: 219, y: 98, r: 60, g: 70, b: 105 },
-    { x: 221, y: 250, r: 219, g: 207, b: 199 },
-  ];
-  // v2.0.1
-  var pageDownloadDataAndVoiceOver = [
-    { x: 207, y: 192, r: 39, g: 204, b: 0 },
-    { x: 372, y: 216, r: 12, g: 167, b: 223 },
-    { x: 445, y: 218, r: 12, g: 167, b: 223 },
-    { x: 430, y: 81, r: 60, g: 70, b: 105 },
-    { x: 214, y: 195, r: 255, g: 255, b: 255 },
-  ];
-  var pageDownloadDataAndVoiceOverUnchecked = [
-    { x: 207, y: 192, r: 255, g: 255, b: 255 },
-    { x: 372, y: 216, r: 12, g: 167, b: 223 },
-    { x: 445, y: 218, r: 12, g: 167, b: 223 },
-    { x: 430, y: 81, r: 60, g: 70, b: 105 },
-    { x: 214, y: 195, r: 255, g: 255, b: 255 },
-  ];
-  // v2.0.1 has 'New data pak is available'
-  var pageDownloadNewDataPakIsAvailable = [
-    { x: 368, y: 254, r: 123, g: 207, b: 8 },
-    { x: 441, y: 99, r: 57, g: 69, b: 107 },
-    { x: 346, y: 251, r: 255, g: 255, b: 255 },
-  ];
-  var pageEnterEmail = [
-    { x: 298, y: 53, r: 60, g: 60, b: 60 },
-    { x: 320, y: 53, r: 223, g: 223, b: 223 },
-    { x: 322, y: 99, r: 245, g: 245, b: 245 },
-    { x: 357, y: 97, r: 70, g: 70, b: 70 },
-    { x: 362, y: 98, r: 255, g: 255, b: 255 },
-    { x: 368, y: 98, r: 255, g: 255, b: 255 },
-    { x: 391, y: 124, r: 255, g: 255, b: 255 },
-  ];
-  var pageEnterTwoPasswords = [
-    { x: 243, y: 307, r: 255, g: 255, b: 255 },
-    { x: 377, y: 229, r: 200, g: 200, b: 200 },
-    { x: 367, y: 176, r: 255, g: 255, b: 255 },
-    { x: 371, y: 50, r: 60, g: 60, b: 60 },
-    { x: 319, y: 53, r: 230, g: 230, b: 230 },
-    { x: 236, y: 149, r: 195, g: 195, b: 195 },
-    { x: 236, y: 183, r: 194, g: 194, b: 194 },
-    { x: 243, y: 303, r: 200, g: 200, b: 200 },
-  ];
-  var pageEnterpassword = [
-    { x: 370, y: 150, r: 255, g: 255, b: 255 },
-    { x: 227, y: 112, r: 125, g: 125, b: 125 },
-    { x: 235, y: 112, r: 84, g: 84, b: 84 },
-    { x: 239, y: 114, r: 255, g: 255, b: 255 },
-    { x: 368, y: 110, r: 84, g: 84, b: 84 },
-    { x: 404, y: 188, r: 200, g: 200, b: 200 },
-    { x: 227, y: 170, r: 255, g: 255, b: 255 },
-  ];
-  var pageEnterPasswordLongId = [
-    { x: 370, y: 161, r: 255, g: 255, b: 255 },
-    { x: 227, y: 127, r: 125, g: 125, b: 125 },
-    { x: 234, y: 124, r: 207, g: 207, b: 207 },
-    { x: 229, y: 110, r: 255, g: 255, b: 255 },
-    { x: 230, y: 110, r: 120, g: 120, b: 120 },
-    { x: 227, y: 183, r: 255, g: 255, b: 255 },
-  ];
-  // Check if wrong password set. Any red string in this area means wrong password
-  var pageEnteredPassword = [
-    { x: 370, y: 155, r: 255, g: 255, b: 255 },
-    { x: 301, y: 115, r: 255, g: 255, b: 255 },
-    { x: 387, y: 53, r: 60, g: 60, b: 60 },
-    { x: 298, y: 53, r: 60, g: 60, b: 60 },
-    { x: 322, y: 52, r: 60, g: 60, b: 60 },
-  ];
-  var pageServerSelection = [
-    { x: 351, y: 260, r: 121, g: 207, b: 12 },
-    { x: 428, y: 261, r: 12, g: 167, b: 223 },
-    { x: 442, y: 242, r: 60, g: 70, b: 105 },
-    { x: 422, y: 234, r: 44, g: 47, b: 62 },
-    { x: 324, y: 54, r: 101, g: 137, b: 231 },
-    { x: 302, y: 64, r: 117, g: 186, b: 100 },
-    { x: 278, y: 81, r: 254, g: 254, b: 254 },
-  ];
-
-  var incorrectEmailFormat = {
-    x: 222,
-    y: 166,
-    width: 172,
-    height: 12,
-    targetY: 6,
-    lookingForColor: { r: 226, g: 86, b: 86 },
-    targetColorCount: 44,
-    targetColorThreashold: 3,
-  };
-  var needRegisterDevPlayAccount = {
-    x: 222,
-    y: 166,
-    width: 172,
-    height: 12,
-    targetY: 6,
-    lookingForColor: { r: 226, g: 86, b: 86 },
-    targetColorCount: 34,
-    targetColorThreashold: 3,
-  };
-  var registerWithSocialPlatformMessageScreen = {
-    x: 225,
-    y: 162,
-    width: 75,
-    height: 13,
-    targetY: 8,
-    lookingForColor: { r: 244, g: 191, b: 191 },
-    targetColorCount: 21,
-    targetColorThreashold: 3,
-  };
-  var wrongPasswordMessageScreen = {
-    x: 225,
-    y: 162,
-    width: 75,
-    height: 13,
-    targetY: 6,
-    lookingForColor: { r: 230, g: 100, b: 100 },
-    targetColorCount: 25,
-    targetColorThreashold: 2,
-  };
-  var wrongPasswordMessageScreenWithLongId = {
-    x: 225,
-    y: 175,
-    width: 75,
-    height: 13,
-    targetY: 6,
-    lookingForColor: { r: 244, g: 100, b: 100 },
-    targetColorCount: 25,
-    targetColorThreashold: 2,
-  };
-  var passwordTooShortMessageScreen = {
-    x: 225,
-    y: 162,
-    width: 75,
-    height: 13,
-    targetY: 4,
-    lookingForColor: { r: 244, g: 191, b: 191 },
-    targetColorCount: 2,
-    targetColorThreashold: 0,
-  };
-
-  var rfpageInputAge = new RF.Page('rfpageInputAge', pageInputAge, pageInputAge[0]);
-  var rfpageTermsOfServices2 = new RF.Page('rfpageTermsOfServices2', pageTermsOfServices2, pageTermsOfServices2[0]);
-  var rfpageTermsOfServicesMemu = new RF.Page(
-    'rfpageTermsOfServicesMemu',
-    pageTermsOfServicesMemu,
-    pageTermsOfServicesMemu[0]
-  );
-  var rfpageTermsOfServicesHitBack = new RF.Page(
-    'rfpageTermsOfServicesHitBack',
-    pageTermsOfServicesHitBack,
-    pageTermsOfServicesHitBack[0]
-  );
-  var rfpageCannotFindLoginInfo = new RF.Page(
-    'rfpageCannotFindLoginInfo',
-    pageCannotFindLoginInfo,
-    pageCannotFindLoginInfo[0]
-  );
-  var rfpageCanDownloadResources = new RF.Page(
-    'rfpageCanDownloadResources',
-    pageCanDownloadResources,
-    pageCanDownloadResources[0]
-  );
-  var rfpageDownloadDataAndVoiceOver = new RF.Page(
-    'rfpageDownloadDataAndVoiceOver',
-    pageDownloadDataAndVoiceOver,
-    pageDownloadDataAndVoiceOver[0]
-  );
-  var rfpageDownloadDataAndVoiceOverUnchecked = new RF.Page(
-    'rfpageDownloadDataAndVoiceOverUnchecked',
-    pageDownloadDataAndVoiceOverUnchecked,
-    pageDownloadDataAndVoiceOverUnchecked[0]
-  );
-  var rfpageDownloadNewDataPakIsAvailable = new RF.Page(
-    'rfpageDownloadNewDataPakIsAvailable',
-    pageDownloadNewDataPakIsAvailable,
-    pageDownloadNewDataPakIsAvailable[0]
-  );
-  var rfpageChooseLoginMethod = new RF.Page('rfpageChooseLoginMethod', pageChooseLoginMethod, pageChooseLoginMethod[0]);
-  var rfpageChooseLoginMethod2 = new RF.Page(
-    'rfpageChooseLoginMethod2',
-    pageChooseLoginMethod2,
-    pageChooseLoginMethod2[0]
-  );
-  var rfpageEnterEmail = new RF.Page('rfpageEnterEmail', pageEnterEmail, pageEnterEmail[0]);
-  var rfpageEnterTwoPasswords = new RF.Page('rfpageEnterTwoPasswords', pageEnterTwoPasswords, pageEnterTwoPasswords[0]);
-  var rfpageEnterpassword = new RF.Page('rfpageEnterpassword', pageEnterpassword, pageEnterpassword[0]);
-  var rfpageEnterPasswordLongId = new RF.Page(
-    'rfpageEnterPasswordLongId',
-    pageEnterPasswordLongId,
-    pageEnterPasswordLongId[0]
-  );
-  var rfpageServerSelection = new RF.Page('rfpageServerSelection', pageServerSelection, pageServerSelection[0]);
-  var rfpageInLoginPageWithGearAndVideo = new RF.Page(
-    'rfpageInLoginPageWithGearAndVideo',
-    pageInLoginPageWithGearAndVideo,
-    pageInLoginPageWithGearAndVideo[0]
-  );
-  var rfpageNotifyQuitWindow = new RF.Page('rfpageNotifyQuitWindow', pageNotifyQuitWindow, pageNotifyQuitWindow[0]);
-
-  var groupPageLogin = new RF.GroupPage('groupPageLogin', [
-    rfpageInputAge,
-    rfpageTermsOfServices2,
-    rfpageTermsOfServicesMemu,
-    rfpageTermsOfServicesHitBack,
-    rfpageCannotFindLoginInfo,
-    rfpageCanDownloadResources,
-    rfpageDownloadDataAndVoiceOver,
-    rfpageDownloadDataAndVoiceOverUnchecked,
-    rfpageDownloadNewDataPakIsAvailable,
-    rfpageChooseLoginMethod,
-    rfpageChooseLoginMethod2,
-    rfpageEnterEmail,
-    rfpageEnterTwoPasswords,
-    rfpageEnterpassword,
-    rfpageEnterPasswordLongId,
-    rfpageServerSelection,
-    rfpageAnnouncement,
-    rfpageInKingdomVillage,
-    rfpageInProduction,
-    rfpageInMagicLab,
-    rfpageInFountain,
-    rfpageInLoginPageWithGearAndVideo,
-    rfpageNotifyQuitWindow,
-  ]);
 
   var matchedPages = groupPageLogin.isMatchScreen(this.screen);
   if (matchedPages.length === 0) {
@@ -3242,6 +3414,12 @@ function handleInputLoginInfo() {
       sleep(config.sleep);
       qTap(pageInputAge);
       sleep(config.sleepAnimate * 2);
+    } else if (matchedPages.indexOf('rfpageTermsOfServiceWindow') !== -1) {
+      if (checkScreenMessage(termOfServiceMessage, pageTermsOfServiceWindow)) {
+        console.log('accept rfpageTermsOfServiceWindow');
+        rfpageTermsOfServiceWindow.goNext(this.screen);
+        sleep(1000);
+      }
     } else if (matchedPages.indexOf('rfpageTermsOfServices2') !== -1) {
       console.log('accept rfpageTermsOfServices2');
       qTap(pageTermsOfServices2);
@@ -3307,6 +3485,12 @@ function handleInputLoginInfo() {
         console.log('wait for download: ', i);
         sleep(3000);
       }
+    } else if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+      if (checkScreenMessage(messageNotifyQuit)) {
+        console.log('Found quit notification, close it and back to login page');
+        rfpageNotifyQuitWindow.goNext(this.screen);
+        sleep(2000);
+      }
     } else if (matchedPages.indexOf('rfpageChooseLoginMethod') !== -1) {
       console.log('choose to login via email');
       qTap(pageChooseLoginMethod);
@@ -3315,106 +3499,104 @@ function handleInputLoginInfo() {
       console.log('choose to login via email 2');
       qTap(pageChooseLoginMethod2);
       sleep(config.sleepAnimate);
-    } else if (matchedPages.indexOf('rfpageEnterEmail') !== -1) {
-      console.log('inputing user email ', config.account);
-      qTap(pnt(370, 150)); // input field
-      sleep(config.sleepAnimate);
-      typing(config.account, 1000);
-      sleep(4000); // sleep must equal to typing
-      typing('\n', 500);
-      sleep(500);
-    } else if (
-      matchedPages.indexOf('rfpageEnterpassword') !== -1 ||
-      matchedPages.indexOf('rfpageEnterPasswordLongId') !== -1
-    ) {
-      rfpageEnterPasswordLongId.goNext(this.screen);
-      sleep(config.sleepAnimate);
-      typing(config.password, 1000);
-      sleep(1000); // sleep must equal to typing
-      typing('\n', 500);
-      sleep(500);
-      qTap(pnt(370, 190)); // Login button
-      passwordInputed = true;
-    } else if (matchedPages.indexOf('rfpageEnterTwoPasswords') !== -1) {
-      config.run = false;
-      sendEvent('gameStatus', 'login-failed');
-      console.log('This account id does not exist');
-      if (handleLoginFailed()) {
-        return false;
-      }
-    } else if (matchedPages.indexOf('rfpageServerSelection') !== -1) {
-      console.log('Found server selection screen, seems like a new devPlayAccount');
-      if (handleLoginFailed()) {
-        return false;
-      }
-    } else if (matchedPages.indexOf('rfpageAnnouncement') !== -1) {
-      console.log('found rfpageAnnouncement, login successed, return ');
-      rfpageAnnouncement.goNext(this.screen);
-      return true;
-    } else if (
-      matchedPages.indexOf('rfpageInKingdomVillage') !== -1 ||
-      matchedPages.indexOf('rfpageInProduction') !== -1 ||
-      matchedPages.indexOf('rfpageInMagicLab') !== -1
-    ) {
-      console.log('handleInputLoginInfo found in kingdom village, login success, return');
-      return true;
-    } else if (matchedPages.indexOf('rfpageInFountain') !== -1) {
-      console.log('found pageInFountain, login successed, return ');
-      pageInFountain.goNext(this.screen);
-      return true;
-    } else if (matchedPages.indexOf('rfpageInLoginPageWithGearAndVideo') !== -1) {
-      qTap(pnt(575, 22));
-      return true;
-    } else if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
-      if (checkScreenMessage(messageNotifyQuit)) {
-        console.log('Found quit notification, close it and back to login page');
-        keycode('BACK', 1000);
-        sleep(2000);
-      }
-    } else {
-      console.log('handleInputLoginInfo not sure what to do, tap(575, 22) announce page');
+    }
 
-      qTap(pnt(575, 22));
-      if (handleAnnouncement()) {
-        console.log('handleLogin handle accouncement success, login success');
+    if (!config.isMaintainanceMode) {
+      if (matchedPages.indexOf('rfpageEnterEmail') !== -1) {
+        console.log('inputing user email ', config.account);
+        qTap(pnt(370, 150)); // input field
+        sleep(config.sleepAnimate);
+        typing(config.account, 1000);
+        sleep(4000); // sleep must equal to typing
+        typing('\n', 500);
+        sleep(500);
+      } else if (
+        matchedPages.indexOf('rfpageEnterpassword') !== -1 ||
+        matchedPages.indexOf('rfpageEnterPasswordLongId') !== -1
+      ) {
+        rfpageEnterPasswordLongId.goNext(this.screen);
+        sleep(config.sleepAnimate);
+        typing(config.password, 1000);
+        sleep(1000); // sleep must equal to typing
+        typing('\n', 500);
+        sleep(500);
+        qTap(pnt(370, 190)); // Login button
+        passwordInputed = true;
+      } else if (matchedPages.indexOf('rfpageEnterTwoPasswords') !== -1) {
+        config.run = false;
+        sendEvent('gameStatus', 'login-failed');
+        console.log('This account id does not exist');
+        if (handleLoginFailed()) {
+          return false;
+        }
+      } else if (matchedPages.indexOf('rfpageServerSelection') !== -1) {
+        console.log('Found server selection screen, seems like a new devPlayAccount');
+        if (handleLoginFailed()) {
+          return false;
+        }
+      } else if (matchedPages.indexOf('rfpageAnnouncement') !== -1) {
+        console.log('found rfpageAnnouncement, login successed, return ');
+        rfpageAnnouncement.goNext(this.screen);
         return true;
-      }
-    }
+      } else if (
+        matchedPages.indexOf('rfpageInKingdomVillage') !== -1 ||
+        matchedPages.indexOf('rfpageInProduction') !== -1 ||
+        matchedPages.indexOf('rfpageInMagicLab') !== -1
+      ) {
+        console.log('handleInputLoginInfo found in kingdom village, login success, return');
+        return true;
+      } else if (matchedPages.indexOf('rfpageInFountain') !== -1) {
+        console.log('found pageInFountain, login successed, return ');
+        pageInFountain.goNext(this.screen);
+        return true;
+      } else if (matchedPages.indexOf('rfpageInLoginPageWithGearAndVideo') !== -1) {
+        qTap(pnt(575, 22));
+        return true;
+      } else {
+        console.log('handleInputLoginInfo not sure what to do, tap(575, 22) announce page');
 
-    if (checkScreenMessage(incorrectEmailFormat, pageEnterEmail)) {
-      console.log('Incorrect email format, restart the game and try again');
-      if (handleLoginFailed()) {
+        qTap(pnt(575, 22));
+        if (handleAnnouncement()) {
+          console.log('handleLogin handle accouncement success, login success');
+          return true;
+        }
+      }
+
+      if (checkScreenMessage(incorrectEmailFormat, pageEnterEmail)) {
+        console.log('Incorrect email format, restart the game and try again');
+        if (handleLoginFailed()) {
+          return false;
+        }
+      }
+      if (checkScreenMessage(needRegisterDevPlayAccount, pageEnterEmail)) {
+        console.log('DevPlay report user registered via social media account, but need DevPlay account');
+        config.run = false;
+        sendEvent('gameStatus', 'login-failed');
         return false;
       }
-    }
-    if (checkScreenMessage(needRegisterDevPlayAccount, pageEnterEmail)) {
-      console.log('DevPlay report user registered via social media account, but need DevPlay account');
-      config.run = false;
-      sendEvent('gameStatus', 'login-failed');
-      return false;
-    }
-    if (checkScreenMessage(registerWithSocialPlatformMessageScreen, pageEnterEmail)) {
-      console.log('DevPlay report user registered via social media account, "Please use it to sign in"');
-      config.run = false;
-      sendEvent('gameStatus', 'login-failed');
-      return false;
-    }
-    if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
-      console.log('DevPlay report password too short');
-      if (handleLoginFailed()) {
+      if (checkScreenMessage(registerWithSocialPlatformMessageScreen, pageEnterEmail)) {
+        console.log('DevPlay report user registered via social media account, "Please use it to sign in"');
+        config.run = false;
+        sendEvent('gameStatus', 'login-failed');
         return false;
       }
-    }
-    if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
-      console.log('DevPlay report wrong password');
-      if (handleLoginFailed()) {
-        return false;
+      if (checkScreenMessage(passwordTooShortMessageScreen, pageEnteredPassword)) {
+        console.log('DevPlay report password too short');
+        if (handleLoginFailed()) {
+          return false;
+        }
       }
-    }
-    if (checkScreenMessage(wrongPasswordMessageScreenWithLongId, pageEnteredPassword)) {
-      console.log('DevPlay report wrong password (with long id account)');
-      if (handleLoginFailed()) {
-        return false;
+      if (checkScreenMessage(wrongPasswordMessageScreen, pageEnteredPassword)) {
+        console.log('DevPlay report wrong password');
+        if (handleLoginFailed()) {
+          return false;
+        }
+      }
+      if (checkScreenMessage(wrongPasswordMessageScreenWithLongId, pageEnteredPassword)) {
+        console.log('DevPlay report wrong password (with long id account)');
+        if (handleLoginFailed()) {
+          return false;
+        }
       }
     }
 
@@ -3426,25 +3608,22 @@ function handleInputLoginInfo() {
     sendEvent('gameStatus', 'login-succeeded');
     console.log('Send login-succeeded');
 
-    var groupPageWaitForLogin = new RF.GroupPage('groupPageLogin', [
-      rfpageAnnouncement,
-      rfpageInKingdomVillage,
-      rfpageInProduction,
-      rfpageInMagicLab,
-      rfpageInFountain,
-    ]);
-
     console.log('successfully input password, tap announcement icon for 100s');
     for (var i = 0; i < 100; i++) {
-      matchedPages = groupPageWaitForLogin.isMatchScreen(this.screen);
+      matchedPages = groupPageLogin.isMatchScreen(this.screen);
       if (matchedPages.indexOf('rfpageAnnouncement') !== -1) {
         if (handleAnnouncement()) {
           return;
         }
       } else if (matchedPages.indexOf('rfpageInKingdomVillage') !== -1) {
         return true;
+      } else if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+        if (checkScreenMessage(messageNotifyQuit)) {
+          console.log('Found quit notification, close it and back to login page');
+          rfpageNotifyQuitWindow.goNext(this.screen);
+          sleep(2000);
+        }
       }
-
       if (checkScreenMessage(messageNotifyQuit)) {
         console.log('found unexpected quit window, closing it');
         keycode('BACK', 1000);
@@ -3483,75 +3662,75 @@ function handleNextProductionBuilding() {
   }
 }
 
-function handleSkipProductionDashboardIntro() {
-  var pageGnomeLabProdBoardIntro = [
-    { x: 281, y: 114, r: 170, g: 15, b: 35 },
-    { x: 217, y: 21, r: 82, g: 17, b: 30 },
-    { x: 311, y: 16, r: 86, g: 64, b: 2 },
-    { x: 424, y: 19, r: 0, g: 45, b: 86 },
-  ];
+// function handleSkipProductionDashboardIntro() {
+//   var pageGnomeLabProdBoardIntro = [
+//     { x: 281, y: 114, r: 170, g: 15, b: 35 },
+//     { x: 217, y: 21, r: 82, g: 17, b: 30 },
+//     { x: 311, y: 16, r: 86, g: 64, b: 2 },
+//     { x: 424, y: 19, r: 0, g: 45, b: 86 },
+//   ];
 
-  if (!checkIsPage(pageGnomeLabProdBoardIntro)) {
-    return false;
-  }
+//   if (!checkIsPage(pageGnomeLabProdBoardIntro)) {
+//     return false;
+//   }
 
-  console.log('About to handle pageGnomeLabProdBoardIntro');
+//   console.log('About to handle pageGnomeLabProdBoardIntro');
 
-  // Tap to enter the lab
-  qTap(pnt(300, 200));
-  sleep(2000);
+//   // Tap to enter the lab
+//   qTap(pnt(300, 200));
+//   sleep(2000);
 
-  if (waitUntilSeePage(pageInGnomeLab, 20, pnt(13, 13), undefined, 1)) {
-    console.log('Success skip gnome lab production dashboard intro');
-  }
-  return true;
-}
+//   if (waitUntilSeePage(pageInGnomeLab, 20, pnt(13, 13), undefined, 1)) {
+//     console.log('Success skip gnome lab production dashboard intro');
+//   }
+//   return true;
+// }
 
-function handleSkipProductionDashboardIsDone() {
-  var pageProductionDashboardIsDone = [
-    { x: 25, y: 222, r: 227, g: 163, b: 81 },
-    { x: 37, y: 220, r: 75, g: 83, b: 115 },
-    { x: 212, y: 170, r: 255, g: 243, b: 239 },
-  ];
-  var pageProductionDashboardIntroducing = [
-    { x: 607, y: 26, r: 3, g: 6, b: 8 },
-    { x: 19, y: 9, r: 100, g: 88, b: 25 },
-    { x: 26, y: 25, r: 102, g: 70, b: 42 },
-    { x: 30, y: 12, r: 99, g: 8, b: 16 },
-  ];
-  var pageInProductionDashboard = [
-    { x: 619, y: 340, r: 123, g: 207, b: 8 },
-    { x: 19, y: 14, r: 253, g: 206, b: 74 },
-    { x: 31, y: 13, r: 198, g: 36, b: 41 },
-    { x: 28, y: 26, r: 239, g: 207, b: 139 },
-    { x: 619, y: 19, r: 255, g: 255, b: 255 },
-  ];
+// function handleSkipProductionDashboardIsDone() {
+//   var pageProductionDashboardIsDone = [
+//     { x: 25, y: 222, r: 227, g: 163, b: 81 },
+//     { x: 37, y: 220, r: 75, g: 83, b: 115 },
+//     { x: 212, y: 170, r: 255, g: 243, b: 239 },
+//   ];
+//   var pageProductionDashboardIntroducing = [
+//     { x: 607, y: 26, r: 3, g: 6, b: 8 },
+//     { x: 19, y: 9, r: 100, g: 88, b: 25 },
+//     { x: 26, y: 25, r: 102, g: 70, b: 42 },
+//     { x: 30, y: 12, r: 99, g: 8, b: 16 },
+//   ];
+//   var pageInProductionDashboard = [
+//     { x: 619, y: 340, r: 123, g: 207, b: 8 },
+//     { x: 19, y: 14, r: 253, g: 206, b: 74 },
+//     { x: 31, y: 13, r: 198, g: 36, b: 41 },
+//     { x: 28, y: 26, r: 239, g: 207, b: 139 },
+//     { x: 619, y: 19, r: 255, g: 255, b: 255 },
+//   ];
 
-  if (!checkIsPage(pageProductionDashboardIsDone)) {
-    return false;
-  }
+//   if (!checkIsPage(pageProductionDashboardIsDone)) {
+//     return false;
+//   }
 
-  console.log('About to handle pageProductionDashboardIsDone');
-  // Tap production dashboard icon
-  qTap(pnt(27, 226));
+//   console.log('About to handle pageProductionDashboardIsDone');
+//   // Tap production dashboard icon
+//   qTap(pnt(27, 226));
 
-  if (!waitUntilSeePage(pageProductionDashboardIntroducing, 7)) {
-    return false;
-  }
-  // Tap skip
-  qTap(pageProductionDashboardIntroducing);
+//   if (!waitUntilSeePage(pageProductionDashboardIntroducing, 7)) {
+//     return false;
+//   }
+//   // Tap skip
+//   qTap(pageProductionDashboardIntroducing);
 
-  if (!waitUntilSeePage(pageProductionDashboardIntroducing, 7)) {
-    return false;
-  }
+//   if (!waitUntilSeePage(pageProductionDashboardIntroducing, 7)) {
+//     return false;
+//   }
 
-  if (waitUntilSeePage(pageInProductionDashboard)) {
-    console.log('Succssfully resolved production dashboard intro');
-    return true;
-  }
+//   if (waitUntilSeePage(pageInProductionDashboard)) {
+//     console.log('Succssfully resolved production dashboard intro');
+//     return true;
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
 function handleSkipKingdomStory() {
   var pageInKingdomStoryMission = [
@@ -3570,34 +3749,34 @@ function handleSkipKingdomStory() {
   return waitUntilSeePage(pageInKingdomVillage);
 }
 
-function handleSkipHallOfHeros() {
-  var pageHallIntro = [
-    { x: 365, y: 138, r: 177, g: 196, b: 209 },
-    { x: 285, y: 110, r: 90, g: 209, b: 225 },
-    { x: 277, y: 150, r: 74, g: 182, b: 82 },
-  ];
-  var pageSpeedUpSlot = [
-    { x: 456, y: 41, r: 255, g: 255, b: 255 },
-    { x: 318, y: 35, r: 96, g: 144, b: 194 },
-    { x: 312, y: 50, r: 202, g: 146, b: 89 },
-    { x: 255, y: 50, r: 57, g: 69, b: 107 },
-  ];
+// function handleSkipHallOfHeros() {
+//   var pageHallIntro = [
+//     { x: 365, y: 138, r: 177, g: 196, b: 209 },
+//     { x: 285, y: 110, r: 90, g: 209, b: 225 },
+//     { x: 277, y: 150, r: 74, g: 182, b: 82 },
+//   ];
+//   var pageSpeedUpSlot = [
+//     { x: 456, y: 41, r: 255, g: 255, b: 255 },
+//     { x: 318, y: 35, r: 96, g: 144, b: 194 },
+//     { x: 312, y: 50, r: 202, g: 146, b: 89 },
+//     { x: 255, y: 50, r: 57, g: 69, b: 107 },
+//   ];
 
-  if (checkIsPage(pageHallIntro)) {
-    for (var i = 0; i < 15; i++) {
-      qTap(pageHallIntro);
-      sleep(1000);
+//   if (checkIsPage(pageHallIntro)) {
+//     for (var i = 0; i < 15; i++) {
+//       qTap(pageHallIntro);
+//       sleep(1000);
 
-      if (checkIsPage(pageSpeedUpSlot)) {
-        qTap(pnt(64, 241));
-        sleep(2000);
-      }
-    }
-    qTap(pnt(64, 241));
-    sleep(2000);
-    keycode('BACK', 1000);
-  }
-}
+//       if (checkIsPage(pageSpeedUpSlot)) {
+//         qTap(pnt(64, 241));
+//         sleep(2000);
+//       }
+//     }
+//     qTap(pnt(64, 241));
+//     sleep(2000);
+//     keycode('BACK', 1000);
+//   }
+// }
 
 function handleSkipTreasureIntro() {
   var pageTreasureIntro = new RF.Page(
@@ -3644,16 +3823,14 @@ function handleSkipTreasureIntro() {
 }
 
 function handleTryHitBackToKingdom() {
-  if (checkIsPage(pageInLoginPageWithGearAndVideo)) {
-    console.log(
-      'In login page (found gear and video icon), tap announcement icon and skip handleTryHitBackToSpecificPage'
-    );
-    qTap(pnt(575, 22));
-    sleep(3000);
-    return false;
-  }
+  if (handleRFTryHitBackToSpecificPages([rfpageInKingdomVillage])) {
+    config.tryRestartGameCount = 0;
+    console.log('Found pageInKingdomVillage, reset config.tryRestartGameCount to 0');
 
-  if (handleTryHitBackToSpecificPages([pageInKingdomVillage])) {
+    if (config.isSendPlayingRequired) {
+      sendEvent('gameStatus', 'playing');
+      config.isSendPlayingRequired = false;
+    }
     return true;
   }
 
@@ -3663,62 +3840,134 @@ function handleTryHitBackToKingdom() {
   return false;
 }
 
-function handleTryHitBackToSpecificPages(targetPages) {
-  if (waitUntilSeePages(targetPages, 2)) {
-    return true;
-  }
+var pageMessageWindow = [
+  { x: 424, y: 101, r: 57, g: 69, b: 107 },
+  { x: 431, y: 128, r: 243, g: 233, b: 223 },
+  { x: 429, y: 244, r: 219, g: 207, b: 199 },
+];
+var rfpageMessageWindow = new RF.Page('rfpageMessageWindow', pageMessageWindow);
+function handleRFTryHitBackToSpecificPages(rfPages) {
+  var groupPageTarget = new RF.GroupPage('groupPageTarget', rfPages);
 
-  console.log('trying to go to specific page by hitting back');
-
-  if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anErrorHasOccuredMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-  }
-  if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found theNetworkIsUnstableMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-  }
-  if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
-    config.lastNetworkIssueOccurTime = Date.now();
-    config.networkIssueCount++;
-    console.log('Found anUnknownErrorHasOccurMessageScreen, error count is now: ', config.networkIssueCount);
-    keycode('BACK', 1000);
-  }
-
-  // New features intro that needs to be by pass
-  handleSkipHallOfHeros();
-  handleSkipProductionDashboardIntro();
-  handleSkipProductionDashboardIsDone();
+  // handleSkipHallOfHeros();
+  // handleSkipProductionDashboardIntro();
+  // handleSkipProductionDashboardIsDone();
   handleSkipKingdomStory();
   handleSkipTreasureIntro();
 
+  var matchedPages;
   for (var i = 0; i < 6; i++) {
-    keycode('BACK', 2000);
+    handleCheckIfAtLoginScreenByIcon();
 
-    if (waitUntilSeePages(targetPages, 2)) {
-      console.log('No quit windows for 2 secs, and found targetPage successfully');
+    matchedPages = groupPageTarget.waitScreenForMatchingOne(this.screen, 2000);
+    if (matchedPages.length > 0) {
+      logs('handleRFTryHitBackToSpecificPages', 'Return as found: {0}'.format(JSON.stringify(matchedPages)));
       return true;
     }
 
-    if (checkIsPage(pageNotifyQuitWindow)) {
-      if (checkScreenMessage(messageNotifyQuit)) {
-        console.log('Found quit notification, should be in kingdom or login page');
-        keycode('BACK', 1000);
-        return false;
-      }
-    }
-    if (checkIsPage(pageBattlePaused)) {
-      console.log('Need to go back to kingdom but found in battle, tap exit and sleep 2s');
-      qTap(pageBattlePaused);
-      sleep(2000);
+    // Handle errors
+    checkAndRestartApp();
+
+    matchedPages = groupPageGlobal.waitScreenForMatchingOne(this.screen, 2000);
+    if (matchedPages.length === 0) {
+      logs(
+        'handleRFTryHitBackToSpecificPages',
+        'groupPageGlobal has no match screen found, tap another back: {0}'.format(i)
+      );
+      keycode('BACK', 2000);
+      continue;
     }
 
-    checkAndRestartApp();
-    handleCheckIfAtLoginScreen();
+    logs('handleTryHitBackToKingdom', 'matchedPages: {0}'.format(JSON.stringify(matchedPages)));
+    if (matchedPages.indexOf('rfpageNotifyQuitWindow') !== -1) {
+      logs('handleTryHitBackToKingdom', 'rfpageNotifyQuitWindow.goNext()');
+      rfpageNotifyQuitWindow.goNext(this.screen);
+      sleep(1000);
+      return true;
+    }
+    if (matchedPages.indexOf('rfpageInLoginPageWithGearAndVideo') !== -1) {
+      console.log(
+        'In login page (found gear and video icon), tap announcement icon and skip handleTryHitBackToSpecificPage'
+      );
+      qTap(pnt(575, 22));
+      sleep(3000);
+      return false;
+    } else if (
+      matchedPages.indexOf('rfpageNameYourKingdom') !== -1 ||
+      matchedPages.indexOf('rfpageStoryBuildCookieHouses1') !== -1 ||
+      matchedPages.indexOf('rfpageKingdomHaveNoCookieIcon') !== -1 ||
+      matchedPages.indexOf('rfpageKindomHasOnlySorageAndBuildIcon') !== -1
+    ) {
+      logs(
+        'handleRFTryHitBackToSpecificPages',
+        'its a new kingdom so idle for 5 mins: {0}'.format(JSON.stringify(matchedPages))
+      );
+      if (config.isNewKingdomCheckRequired) {
+        sendEvent('gameStatus', 'new-account');
+        config.isNewKingdomCheckRequired = false;
+      }
+      sendEvent('running', '');
+      sleep(300 * 1000);
+      return false;
+    } else if (matchedPages.indexOf('rfpageUnfinishedBattleNeedResume') !== -1) {
+      if (checkScreenMessage(unfinishedBattleMessageScreen)) {
+        console.log('rfpageUnfinishedBattleNeedResume.goNext()');
+        rfpageUnfinishedBattleNeedResume.goNext(this.screen);
+
+        if (waitForBattle('pvp', 120, false, kingdomArena)) {
+          console.log('In handleTryHitBackToKingdom, PvP battle finished, try next one');
+        } else {
+          console.log('In handleTryHitBackToKingdom, PvP battle finished, but failed');
+        }
+      }
+    } else if (matchedPages.indexOf('rfpageBattlePaused') !== -1) {
+      logs(
+        'handleRFTryHitBackToSpecificPages',
+        'Need to go back to kingdom but found in battle, tap exit and sleep 2s'
+      );
+      rfpageBattlePaused.goNext(this.screen);
+      sleep(2000);
+      continue;
+    }
+    if (matchedPages.indexOf('rfpageMessageWindow') !== -1) {
+      if (checkScreenMessage(anErrorHasOccuredMessageScreen)) {
+        config.lastNetworkIssueOccurTime = Date.now();
+        config.networkIssueCount++;
+        logs(
+          'handleRFTryHitBackToSpecificPages',
+          'Found anErrorHasOccuredMessageScreen, error count is now: {0]'.format(config.networkIssueCount)
+        );
+        keycode('BACK', 1000);
+        sleep(10000);
+        continue;
+      }
+      if (checkScreenMessage(theNetworkIsUnstableMessageScreen)) {
+        config.lastNetworkIssueOccurTime = Date.now();
+        config.networkIssueCount++;
+        logs(
+          'handleRFTryHitBackToSpecificPages',
+          'Found theNetworkIsUnstableMessageScreen, error count is now: {0}'.format(config.networkIssueCount)
+        );
+        keycode('BACK', 1000);
+        sleep(10000);
+        continue;
+      }
+      if (checkScreenMessage(anUnknownErrorHasOccurMessageScreen)) {
+        config.lastNetworkIssueOccurTime = Date.now();
+        config.networkIssueCount++;
+        logs(
+          'handleRFTryHitBackToSpecificPages',
+          'Found anUnknownErrorHasOccurMessageScreen, error count is now: '.format(config.networkIssueCount)
+        );
+        keycode('BACK', 1000);
+        sleep(10000);
+        continue;
+      }
+    }
+
+    logs('handleRFTryHitBackToSpecificPages', 'Page not handled, tap another back');
+    keycode('BACK', 2000);
+    sleep(2000);
   }
   return false;
 }
@@ -3738,6 +3987,7 @@ function getCurrentApp() {
       for (var j = p + 9; j < line.length; j++) {
         var c = line[j];
         if (c === ' ') {
+          // Intentionally empty
         } else if (c === '/') {
           isApp = false;
         } else if (isApp) {
@@ -3794,29 +4044,31 @@ function handleAutoCollectMail() {
   console.log('completed: handleAutoCollectMail');
 }
 
+var pageInCastleMission = [
+  { x: 405, y: 20, r: 255, g: 215, b: 8 },
+  { x: 527, y: 15, r: 0, g: 195, b: 255 },
+  { x: 535, y: 54, r: 90, g: 52, b: 49 },
+];
+// var rfpageInCastleMission = new RF.Page('rfpageInCastleMission', pageInCastleMission);
+var pageInCastleUpgrading = [
+  { x: 275, y: 112, r: 98, g: 115, b: 136 },
+  { x: 271, y: 114, r: 255, g: 255, b: 255 },
+  { x: 210, y: 188, r: 240, g: 230, b: 224 },
+  { x: 205, y: 193, r: 127, g: 150, b: 194 },
+];
+// var rfpageInCastleUpgrading = new RF.Page('rfpageInCastleUpgrading', pageInCastleUpgrading);
+var pageFistItemIsCastle = [
+  { x: 275, y: 228, r: 57, g: 77, b: 123 },
+  { x: 255, y: 151, r: 245, g: 160, b: 161 },
+  { x: 252, y: 159, r: 239, g: 190, b: 115 },
+];
+// var rfpageFistItemIsCastle = new RF.Page('rfpageFistItemIsCastle', pageFistItemIsCastle);
 function gotoCastle() {
   console.log('about to gotoCastle');
   if (!checkIsPage(pageInKingdomVillage)) {
     console.log('hit back to kingdom');
     handleGotoKingdomPage();
   }
-
-  var pageInCastleMission = [
-    { x: 405, y: 20, r: 255, g: 215, b: 8 },
-    { x: 527, y: 15, r: 0, g: 195, b: 255 },
-    { x: 535, y: 54, r: 90, g: 52, b: 49 },
-  ];
-  var pageInCastleUpgrading = [
-    { x: 275, y: 112, r: 98, g: 115, b: 136 },
-    { x: 271, y: 114, r: 255, g: 255, b: 255 },
-    { x: 210, y: 188, r: 240, g: 230, b: 224 },
-    { x: 205, y: 193, r: 127, g: 150, b: 194 },
-  ];
-  var pageFistItemIsCastle = [
-    { x: 275, y: 228, r: 57, g: 77, b: 123 },
-    { x: 255, y: 151, r: 245, g: 160, b: 161 },
-    { x: 252, y: 159, r: 239, g: 190, b: 115 },
-  ];
 
   if (checkScreenMessage(messageNotifyQuit)) {
     // todo: debug log
@@ -4019,17 +4271,28 @@ function handleTrainStation() {
   var imageSendAll = getImageFromBase64(
     'iVBORw0KGgoAAAANSUhEUgAAAEsAAAAxCAYAAACS91RNAAAAA3NCSVQICAjb4U/gAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAA0mSURBVGhD7VsJdBRFGv66e67cEAiHgAECBEGQI3Iop1nkEBAEFmVXVx6+RdYFLx4KD1ZcAc3j8Ip47e4TheByugRkww3hEINyJSFkCAkkgdyTazJnd+9f1TMkKGzYZTJo9Jup6a7q6uqqr///r/+v7hE2nLuqwgOZkqTtXgeTJKCZUUSYQUKITgRtYBSoLiWF0u2AtQHBc1XaF4T6GlShsh4rbF+GfK33teDHCU7aOtxAoV1Bbo1Tq3uD+rcK4Z91yPKCdZcRZxCB84cPIDlxEyzFhdrACPUN51ZQPyn/Kzwk/gBefhhRDvpxK1SPH9HQtEUrDBg5Fv1HjOb5QBqkURI1YaB7yMYsqiJU2gobMoksb4siu8Mq0o4lY/PqVdBTBaNOAlWFeJtj83aQcaQ1dZsN3gTqjRgjeIfICHMwwiijUh8ET8/YyCXq3HNzX8GAQQ/CQN1jZTpRhI7tk+AIGzML67Qu4rXfjaMDAmqCy/DmJ+3gKAhEQZuj2mGDTAzXqd4YoBihc0lwu93Y+nQXXsRu47bERM+NpY9nzMIWc/G10b/21GNQZTdeebs/fv/As1QSzcsr6RNvbgcphNFJFDcmCGT8mM0h6JQAOByBODi7DaqrgMQdiZo4epRA2JJFZFH9vzw5EWF3BeO5ed3xRP8V2tE6eD4tAEF2gyfXeKDT6RBgIqUxGEjIaniZYtfh4J+7obJKxfYd23kZAzNHyDh1nIyYgtCxSTck6qPSPgiwB2iK28iSm8ZfZQNKK5yorKAymKALMGDwh+lcBffv36+RQOBa9eXKN2GAG0OHNvUU1yI+oycqcio8ucYI5oNoSXYAliKyy0439ESMWy7FiuW1wiPqyeSTC4VJ64opqyInJ5t+VXx3cTde/S4cRUVFsNDnlwMZFs9wh64t0HY8ENN3JaJpKLP45bzSp+X9sOBkM2yqmApBJL8k1EEeBbkOlH4pUImwMouMCCGMNFXCzq938nIpSC8trii3InpCMZwuRoiiTZmedDuQneQ9Z8gwH3Dh3G4X8k7KsJUr0JHHZwxmN8hT8f9EVZGCvO/dKM5SYLOoCAgTIDHn0EeQdDUwb2uJ3Nw8TBj/KMRSUjPWvFf0fAWXTcXxtQ4cWKpHp6rpmNxjCWJbz4P76BAcep9EPY/HK7eF83tcqD7UF/dYZ+FcApmM8x4fwEewWrXZv7CggPvrzPw3CHLpjuftDsfRvamIf/8DzH15LhYvfh3btu5Et4hYlGRRXEeSV12soOKqguoS8mAojmOgiRkOmrbLLssoSHej5KKMmjKypHX4dTtUZO53Ycoj07Fk0XJEt3wA+Wd8SxbDtbBM+JGH6TsRvnhMxtTHnkLr1q2RnJyMvn37Yvjw4YiLi0NGmhllOTL2rrRh+8s6pCzriC2zVSQtq8GFZBf2v2fDhllOHFjQDKnxnXBqRQdsecGJ4587UJqj4PsNDmyYbYUttymaNWvGr8fCl7Jc35LFbBcD48ug/xFZvjPiTGLcbu1ier0ely9fxsGDB7Bg4au4YsnEhcNu9AqdhvRv8/Ft8knknC3FiE6zcWi1A80tQ3HpTDUyUrPx7dGTlE7jeFIWyo60x57lNlQc6ob17x4i9SjCuHHj+DUYWc4aX09CFD0SUUy6JNHYcGoY3FzA+vUJKC0txYABA5CdnY2lS5chvGUQwttLaKpG4+OPPiVbaSH1XMyPx8UtR7vg+8hBNkCkAJadu2HDBk40k9Dn/vgiXHktuCoPHDgQKSkpyMzM9FyR4GuuCJoaahrXYGR1GKhHSUU+evfujc8++wxGoxHz58/H5oSvkX/KjdEjx0KSJJw+fRrBwcEoLCzkHRs7diycThdv48SJE5g6dSoWLlzI81FRUZgyeSoiIiKwefNm9OvXD8eOHePHGg61pqnByGrRRURkfx0KSvIwffp0dO/eHZWVlRgyZAi6Rt0Hk5ECMsKoUaMwd+5c9OjRA1lZWbA7HHwFwAuyq6iqoqjWg5AQiuYJFy5c4Ft/ga22iIw43y/EUaxFBjzUHYX33/4A06Y9gZ49e/JglcFms12TiLS0NMTGxmLixIlYvXo14t56Cy6XJlkMEltM8sBut+Obb77h+3PmzOGTRXS0tjLC4fthXAMz7w0mWZVXga6RfTBz5iysW5eATZs2wWQycfXJNJ/H7j27sGbNGi5xe/fuxb59+7BkyRLoTAIcDjtvQ5ZliESWomgTRU1NDXbtSsKKFSu4TZs3bx63hwwq+RXM0W1ICIMHD2YLhnhgVapPQ5qM3U4kLXWgR9cY9OrVi9slJkVJSUmI6EwCTbepkJzIQQ8O4m4Fk5rDhw/janUGnOV6PDLqUSI1E5dKz0C1BmPUiDE4m3oW5uw0OKwqmoQ1QUxMDMLDw/lsu3tvEno+acX904yeHvgGR1+8j08c7GY2GFml2TKSP3Ig+5gbTqvCJyrJIKD1PSL6/8HEw5Ljn9u5IymTg8nm6MBwAdEP6VBZoKLgnEx1gOgRBhTRfjE5poYAoNMQPWootLmU4oatgjmyKnTUbqtuOjz0khGtaetL+IUsdoHqUgUlFxSUXiJCyAw1aSuiZRcJYXdp2s9iu2KzFvpINEbmUjTvKBEZCuyVWiNhd0mwV1C+mgwsnRYeKcEQKKCigDz/fIW3YQwR0ITabNZR5MT5ErVk7WlAsuoBC11YLFdMYY9C+82IhJYkdaIocKmqJBJYPNacCLRT6OPNt+gkcdL9BUYWW4Lft39fwxn4+sDU9FC8jCjLDHS1zkTKx0bkfS9zSTnxDwldK2dCdzIWKevt1+VPbXV4WvAfmAjJFMjeMbLSdroQ034c3l75HlbErcJvH/4TThIRLPYLdnbCstdX4oVZ83HxiHxd/kKy74Pl+sGeN9LM7Mn5FWx1ga0YTH5siqcEmDx5Ci6fkLnEeVcfmP/H7FfdfHWRf8lizyH5s0hKd4SsEiLEVW7C6NGjkZeXhyNHjuDee+9FZKvOKM4kMuqYTpk9Ubgu79nxExw0MzGyRIFsZkN6vTdDepILI38zBoGBgUhMTMRXX33FyyeRpF1Nq0dy6hDnD9jddlhd5OKUlRJZfr44c8bNTAVJ7RjYWheTLIYpU6bAcsXPHboFuFUZmRSS+F0NS7MVOCwGjBkzhucTEhJw9Kj2egCLHzvcHeXv+1cvmPKJIlNDP4OFQSNjxyAoKAj5+fk4ePAgT95VhMmTSOJ+esLF4X/JIm9+3LjxfH/RokUYNmwYTzNmzOBl48ePh+JZbFfIW2WrDtfl78AbBN43c6TIyMjFTM7ajSziwW1Dg8WKO9Yex7lzGdi8eROM4S6ERIgwp+XiSv4VvPPOO7iYlcWDbrZSUenOR0mBBWdPa/kaXT56T/JtsPzfYN6uPaV/eNIYiAoZL3/i7hgdbIarSNj6dwS3r8GEt4LweHwQIu8XsXbjJ7haYUZgaye27foSZy8cQ5dhOrTs4a7NP0TRtZ/B1/tIuIS+A2NUiSLU4e+a/RIbsocK7KGoIqvQGwVEREl8daGI/CunTYXiEriquZ0UspKkN2kjwmlVYS3T8uF3iwgmSfQPVOx4tgMnKm7dagh9iCxWPGp1DpX52eP7yUNHZLXlZC1fG+8x8CRlJTJTxzvgof6EoXBOGASoFHOJpgAylsScorSnwoZXw58diBJTgAlBdivE/oP6sUVKmEtKiMlfJYuDaKid9lT07NMNJkc5xOlzpvMFt8zMXO+xX8GYovTJdxaioxoTnrkHZcZcCqZJrFSFiiyhiKODCvsXwC+YMOZ/KqqATy8KcF0JICGTodfbgECXZuA7d+uMLnu0528fZ9EULeiokm8X/n8uUElYGAfstYKO/26FDl1bk+zwfwJASLlygDswsyY/D7vNgdSZ6fykV/pqnit7PsedMoL3rZJGBZrx7EGhfNdgtXLtYui8pg1Mbj1WrmNhGPl/qgThX6mvMVHiIjb/6S9QLbiRM+MSP4EhtgnQvn0oWhoMjVI7C8uq4NCpWJfh9JQAHf/WCiFSIFZ+8Qx/NZcUk6unsCP9ddqQlyw0hw0ReOOpxVCDgYzHU3k1DhIsUecvr9m/UFwaHV702tgRqAJWrX2G52sFhGRql/mvlJfgVoxwqgF8+XTBk/EkdpokWWLLUN6pDC7UMt+YEOYIRnCeAeH7tBdOmGCsIom6EYTdmW8QZZ4cQVUDUaG0hY2IS/xwI9KPn4GO/SuKPk4Kh0SaKXRELjvFJdhpK0EnsL+nCSSsRsprjbFnbTL7oS9bu2b13B7CdaTqOoFmFzYTs7rexH5YwU3ADnnTjcBUhfVT68EtwHM9hbyBHjGRmPHSw1r5TSDsMy+rvTad7FDCYJXDOSkGNQQtlFYIJHocNNQqIqeSUgvSU0U9j0oxl4bP9FmFpNrhUsIRIoYhGG2pNBBWoYa8lGqEqU5IRE6NaoFDLef1TWQnTHo9TcsmPkj2sgwji83B3r/q/RBMYRw0x9zId2ZGgsZMfaAKrEGfA/gPla3E2EIuQrcAAAAASUVORK5CYII='
   );
+  var imageSendAllSmall = getImageFromBase64(
+    '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'
+  );
   var img = getScreenshot();
 
-  var foundResults = findImages(img, imageSendAll, 0.92, 5, true);
-  console.log('Found send trains at: ', JSON.stringify(foundResults));
+  var foundResults = findImages(img, imageSendAll, 0.9, 5, true);
+  console.log('Found imageSendAll icon at: ', JSON.stringify(foundResults));
+
+  if (foundResults.length === 0) {
+    foundResults = findImages(img, imageSendAllSmall, 0.9, 5, true);
+    console.log('Found imageSendAllSmall icon at: ', JSON.stringify(foundResults));
+  }
   releaseImage(img);
   releaseImage(imageSendAll);
+  releaseImage(imageSendAllSmall);
 
   for (var i in foundResults) {
     var sendTrainBtn = foundResults[i];
     sendTrainBtn.x += 30;
-    sendTrainBtn.y += 20;
+    sendTrainBtn.y += 15;
+    qTap(foundResults[i]);
+    sleep(config.sleepAnimate);
     qTap(foundResults[i]);
     sleep(config.sleepAnimate);
   }
@@ -4067,33 +4330,33 @@ function handleTrain() {
     { x: 84, y: 258, r: 49, g: 85, b: 132 },
     { x: 99, y: 247, r: 228, g: 176, b: 110 },
   ];
-  if (checkIsPage(pageTrainNotCollapsed)) {
-    qTap(pageTrainNotCollapsed);
-    sleep(config.sleepAnimate * 2);
 
-    handleTrainStation();
-  } else if (checkIsPage(pageTrainUncollapsed)) {
-    qTap(pageTrainUncollapsed);
-    sleep(config.sleepAnimate * 2);
-
-    handleTrainStation();
-  } else if (checkIsPage(pageTrainCollapsed)) {
-    qTap(pageTrainCollapsed);
-    sleep(config.sleepAnimate);
-
-    var pageTrainArrived = [
-      { x: 114, y: 255, r: 245, g: 215, b: 130 },
-      { x: 117, y: 242, r: 206, g: 57, b: 55 },
-      { x: 110, y: 245, r: 49, g: 89, b: 132 },
-    ];
-
-    if (checkIsPage(pageTrainArrived)) {
-      qTap(pnt(105, 252));
+  if (!checkIsPage(pageInTrainStation)) {
+    if (checkIsPage(pageTrainNotCollapsed)) {
+      qTap(pageTrainNotCollapsed);
       sleep(config.sleepAnimate * 2);
+    } else if (checkIsPage(pageTrainUncollapsed)) {
+      qTap(pageTrainUncollapsed);
+      sleep(config.sleepAnimate * 2);
+    } else if (checkIsPage(pageTrainCollapsed)) {
+      qTap(pageTrainCollapsed);
+      sleep(config.sleepAnimate);
 
-      handleTrainStation();
+      var pageTrainArrived = [
+        { x: 114, y: 255, r: 245, g: 215, b: 130 },
+        { x: 117, y: 242, r: 206, g: 57, b: 55 },
+        { x: 110, y: 245, r: 49, g: 89, b: 132 },
+      ];
+
+      if (checkIsPage(pageTrainArrived)) {
+        qTap(pnt(105, 252));
+        sleep(config.sleepAnimate * 2);
+      }
     }
   }
+
+  handleTrainStation();
+
   console.log('Finish handleTrain');
   qTap(pnt(614, 20));
   sleep(2000);
@@ -4110,14 +4373,16 @@ function handleGetDailyRewards() {
     { x: 427, y: 19, r: 0, g: 23, b: 45 },
   ];
   var pageInKingdomPass = [
-    { x: 528, y: 340, r: 123, g: 207, b: 16 },
-    { x: 471, y: 68, r: 247, g: 158, b: 0 },
-    { x: 491, y: 73, r: 181, g: 117, b: 24 },
+    { x: 618, y: 341, r: 82, g: 211, b: 0 },
+    { x: 193, y: 19, r: 255, g: 223, b: 0 },
+    { x: 393, y: 16, r: 0, g: 195, b: 255 },
+    { x: 484, y: 16, r: 255, g: 255, b: 255 },
   ];
   var kingdomPassItemCollected = [
-    { x: 528, y: 338, r: 161, g: 161, b: 161 },
-    { x: 501, y: 344, r: 49, g: 32, b: 24 },
-    { x: 630, y: 71, r: 181, g: 117, b: 24 },
+    { x: 616, y: 343, r: 0, g: 0, b: 0 },
+    { x: 193, y: 19, r: 255, g: 223, b: 0 },
+    { x: 393, y: 16, r: 0, g: 195, b: 255 },
+    { x: 484, y: 16, r: 255, g: 255, b: 255 },
   ];
   // Collect Kingdom Pass Rewards
   qTap(pnt(600, 85));
@@ -4131,28 +4396,29 @@ function handleGetDailyRewards() {
     console.log('about to collect kingdom pass, send running');
     sendEvent('running', '');
 
-    qTap(pnt(66, 57));
+    qTap(pnt(270, 336));
     sleep(1000);
     qTap(pnt(581, 340));
     waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
 
-    qTap(pnt(151, 56));
+    qTap(pnt(340, 340));
     sleep(1000);
     qTap(pnt(581, 340));
     waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
 
-    qTap(pnt(254, 57));
+    qTap(pnt(610, 112));
     sleep(1000);
-    qTap(pnt(581, 340));
     waitUntilSeePage(kingdomPassItemCollected, 3, pnt(581, 340));
 
     qTap(pageInKingdomPass);
     console.log('successfully claimed all the kingdom pass rewards');
+  } else if (checkIsPage(kingdomPassItemCollected)) {
+    logs('handleGetDailyRewards', 'Found kingdomPassItemCollected so pass collecting kingdompass');
   } else {
     console.log('failed to find the kingdom pass page');
   }
-
   handleGotoKingdomPage();
+
   // Send friend rewards ======
   var pageFriends = [
     { x: 519, y: 24, r: 231, g: 159, b: 85 },
@@ -4249,10 +4515,11 @@ function handleGetDailyRewards() {
 
   // Rewards in Gacha ======
   var pageGacha = [
-    { x: 381, y: 329, r: 132, g: 74, b: 63 },
-    { x: 373, y: 328, r: 247, g: 211, b: 148 },
-    { x: 355, y: 328, r: 148, g: 81, b: 74 },
+    { x: 368, y: 320, r: 148, g: 81, b: 66 },
+    { x: 366, y: 331, r: 107, g: 97, b: 90 },
     { x: 418, y: 320, r: 132, g: 16, b: 8 },
+    { x: 466, y: 319, r: 231, g: 162, b: 85 },
+    { x: 567, y: 340, r: 49, g: 77, b: 107 },
   ];
   if (checkIsPage(pageGacha)) {
     console.log('about to get daily free gacha gifts, send running');
@@ -4288,8 +4555,7 @@ function handleGetDailyRewards() {
       qTap(pnt(30, dailyGiftYs[i]));
       if (waitUntilSeePage(pageDailyGiftClaimed, 2)) {
         console.log('Daily gacha gift already claimed');
-        handleGotoKingdomPage();
-        return true;
+        break;
       }
       if (checkIsPage(pageDailyWatchAddGift)) {
         // Not doing it for now as seems like will stuck in ads
@@ -4300,8 +4566,7 @@ function handleGetDailyRewards() {
 
         if (waitUntilSeePage(pageDailyGiftClaimed, 5, pageDailyGiftNotClaimed)) {
           console.log('Daily gacha gift claimed successfully: ');
-          handleGotoKingdomPage();
-          return true;
+          break;
         }
       }
     }
@@ -4309,6 +4574,14 @@ function handleGetDailyRewards() {
     console.log('daily gacha gift NOT claimed');
     handleGotoKingdomPage();
     return false;
+  } else {
+    logs(
+      'handleGetDailyRewards',
+      'check pageGacha: {0}, check pageInKingdomVillage: {1}'.format(
+        checkIsPage(pageGacha),
+        checkIsPage(pageInKingdomVillage)
+      )
+    );
   }
 }
 
@@ -4319,6 +4592,8 @@ var b64N0_2_tree =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAMAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3b4FeCv2ZfjF+0F8Zv2f/ABx/wTi+Glzovwd8VQaH4UfT/CAtLw2zxuS13cIxN7I3lK/msAQXcY6sSvYfA3g34w61478X+Bbb9r34j6Zb+FdSjsbe90mPRYLu/jCEK95MNN3XUiqiqHclsZySSSSvL/tDCreL+5f5nTy1Xqnb5s//2Q==';
 var b64N0_3_tree =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAMAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzn9psWth8GPBHxetfCnhv9n/X9d8W+LNG1PQPCuly2dlqNnplzaJaTfZrgkLPH9pnglmUDzXiySdq4K/Z0/8ABMT9j7WrhtS+KXgbUviBqJRY4tV+IfiO71m6ghXO2GOS5kYxxgknauMkknJJNFeNHj3F4ZezpTqKK2Slb8Lni4vgDhXMcRLE4rBUp1JbycItu1lq7dkf/9k=';
+var b64N0_4_tree =
+  '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAALAAcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDqtV+L/iL4nftBeF9M8R+IvEEH/CaanrywPpXiOezbSbazlvY7eG3hjwkhK2LmZny26YYwABRXC/tbfELxX8G/jt47X4b3tvpreH9aFzoUv9nwTSafJqCxyXhheVGaMSuWZlUhcs2ANxyV8zVpYqc37OVl6v1/KyP2bKsZw3h8DD61hlNtRa9yDslFJpttN3kpSu/5j//Z';
 var b64N1_1_tree =
   '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAMAAUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD65/4I5/s1/ss/tOfDXxb4X/aX/Yu+H2q+LfA+oWFtqup6/pz6nqEk91aC6kiuftyF7aSJnMZhTMQ27omkjZJGK6X9u/4tfFn9jf8AaGn1b9nP4hXPh4eM9BsZNctP7NsrqJ5LRXghZPtEDsh8shSA2DtHA5yVy0s2+uU1XaactXq3q99W7vXqzOlgqeFpxoxStFWWiSstrJJJWXRaH//Z';
 var b64N1_2_tree =
@@ -4562,16 +4837,17 @@ function handlePVP() {
   sendEvent('running', '');
 
   var pageHasPageMedalShop = [
-    { x: 41, y: 333, r: 245, g: 187, b: 44 },
-    { x: 122, y: 298, r: 57, g: 166, b: 231 },
-    { x: 118, y: 261, r: 57, g: 166, b: 231 },
-    { x: 54, y: 334, r: 49, g: 77, b: 107 },
+    { x: 120, y: 335, r: 255, g: 223, b: 24 },
+    { x: 353, y: 20, r: 227, g: 166, b: 22 },
+    { x: 448, y: 21, r: 230, g: 177, b: 49 },
+    { x: 521, y: 19, r: 0, g: 130, b: 255 },
   ];
   var pageInMedalShop = [
-    { x: 39, y: 336, r: 113, g: 65, b: 1 },
-    { x: 89, y: 67, r: 255, g: 255, b: 255 },
-    { x: 357, y: 17, r: 113, g: 77, b: 16 },
-    { x: 452, y: 20, r: 61, g: 8, b: 10 },
+    { x: 510, y: 66, r: 255, g: 230, b: 0 },
+    { x: 349, y: 19, r: 96, g: 43, b: 4 },
+    { x: 441, y: 20, r: 99, g: 30, b: 4 },
+    { x: 517, y: 22, r: 0, g: 91, b: 127 },
+    { x: 87, y: 62, r: 225, g: 228, b: 237 },
   ];
   var pageAncientCookieSoldout = [
     { x: 86, y: 109, r: 206, g: 20, b: 24 },
@@ -4590,8 +4866,7 @@ function handlePVP() {
   if (config.autoPvPPurchaseAncientCookie && checkIsPage(pageHasPageMedalShop)) {
     console.log('Auto purchase ancient cookie...');
     qTap(pageHasPageMedalShop);
-    sleep(1500);
-    if (checkIsPage(pageInMedalShop)) {
+    if (waitUntilSeePage(pageInMedalShop, 3)) {
       if (!checkIsPage(pageAncientCookieSoldout)) {
         qTap(pnt(57, 125));
         sleep(1000);
@@ -4642,9 +4917,9 @@ function handlePVP() {
   }
 
   var arenaReadyToBattlePage = [
-    { x: 533, y: 331, r: 77, g: 170, b: 4 },
-    { x: 490, y: 322, r: 194, g: 11, b: 27 },
-    { x: 611, y: 279, r: 227, g: 219, b: 211 },
+    { x: 500, y: 337, r: 233, g: 125, b: 43 },
+    { x: 548, y: 328, r: 123, g: 207, b: 8 },
+    { x: 558, y: 330, r: 123, g: 207, b: 8 },
     { x: 164, y: 332, r: 123, g: 207, b: 8 },
     { x: 78, y: 330, r: 0, g: 150, b: 214 },
   ];
@@ -4729,21 +5004,28 @@ function handleWishingTree() {
     }
   }
 
-  return handleInWishingTree();
+  handleInWishingTree();
+
+  handleTryHitBackToKingdom();
+  if (checkIsPage(pageUncollapsedAffairs)) {
+    qTap(pageUncollapsedAffairs);
+  }
+
+  return true;
 }
 
 function getStatusOfGivenWish(wish, records) {
   wish.golden = false;
-  if (isSameColorAtPnt(wish.unfoldPnt, { r: 255, g: 249, b: 203 })) {
+  if (isSameColorAtPnt(wish.refreshPnt, { r: 255, g: 249, b: 203 })) {
     wish.status = 'opened';
-  } else if (isSameColorAtPnt(wish.unfoldPnt, { r: 246, g: 210, b: 135 }, 15)) {
+  } else if (isSameColorAtPnt(wish.refreshPnt, { r: 246, g: 210, b: 135 }, 15)) {
     qTap(wish.unfoldPnt);
     sleep(config.sleepAnimate);
     wish.status = 'opened';
     records['opened']++;
   } else if (isSameColorAtPnt(wish.refreshPnt, { r: 193, g: 160, b: 111 })) {
     wish.status = 'refresh';
-  } else if (isSameColorAtPnt(wish.unfoldPnt, { r: 255, g: 222, b: 41 })) {
+  } else if (isSameColorAtPnt(wish.refreshPnt, { r: 255, g: 222, b: 41 })) {
     // Folded golden wish
     wish.golden = true;
     records['golden']++;
@@ -4760,8 +5042,8 @@ function getStatusOfGivenWish(wish, records) {
       wish.status = 'opened';
       records['opened']++;
     }
-  } else if (isSameColorAtPnt(wish.unfoldPnt, { r: 255, g: 247, b: 123 })) {
-    // Expend golden wish
+  } else if (isSameColorAtPnt(wish.refreshPnt, { r: 255, g: 247, b: 123 })) {
+    // Expended golden wish
     wish.golden = true;
     records['golden']++;
     if (config.wishingTreeRefreshGoldenWishes) {
@@ -4779,6 +5061,13 @@ function getStatusOfGivenWish(wish, records) {
 }
 
 function checkToSendSpecificWish(wish, records) {
+  if (checkIsPage(pageNotEnoughForTree)) {
+    console.log('checkToSendSpecificWish found pageNotEnoughForTree, tap to close that');
+    qTap(pageNotEnoughForTree);
+    sleep(config.sleepAnimate);
+  }
+
+  var stocks = {};
   for (var pntIdx in wish.requirementIconPnts) {
     var reqPnt = wish.requirementIconPnts[pntIdx];
 
@@ -4816,8 +5105,23 @@ function checkToSendSpecificWish(wish, records) {
       stockAndReq = ocrResult.split('/');
     }
 
-    // console.log('|>', pntIdx, JSON.stringify(stockAndReq))
-    if (stockAndReq.length === 0 || stockAndReq[0] - stockAndReq[1] < config.wishingTreeSafetyStock) {
+    stockAndReq[0] = parseInt(stockAndReq[0], 10);
+    stockAndReq[1] = parseInt(stockAndReq[1], 10);
+
+    stocks[pntIdx] = {
+      stock: stockAndReq[0],
+      need: stockAndReq[1],
+    };
+
+    if (stockAndReq.length === 0 || stockAndReq[0] === null) {
+      console.log('OCR failed, skip this one, pntIdx, stockAndReq: ', pntIdx, JSON.stringify(stockAndReq));
+      qTap(wish.refreshPnt);
+      sleep(config.sleep);
+      wish.status = 'refresh';
+      return { wish: wish, records: records };
+    }
+
+    if (stockAndReq[0] - stockAndReq[1] < config.wishingTreeSafetyStock) {
       console.log(
         'Skip this one as the stock {0} is lower than config {1}, need {2}'.format(
           stockAndReq[0],
@@ -4834,9 +5138,9 @@ function checkToSendSpecificWish(wish, records) {
     sleep(config.sleep);
   }
 
-  console.log('Stock is enough, fulfill this wish', JSON.stringify(wish));
+  console.log('Stock is enough, fulfill this wish', JSON.stringify(wish), JSON.stringify(stocks));
   qTap(wish.fulfillPnt);
-  sleep(config.sleep);
+  sleep(config.sleepAnimate);
 
   if (checkIsPage(pageNotEnoughForTree)) {
     qTap(pageNotEnoughForTree);
@@ -4854,6 +5158,33 @@ function checkToSendSpecificWish(wish, records) {
   return { wish: wish, records: records };
 }
 
+// wish(id, refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status, requirementIconPnts)
+var wishes = [
+  genWish(0, pnt(149, 74), pnt(163, 160), pnt(183, 283), undefined, 'unknown', {
+    0: pnt(162, 198),
+    1: pnt(198, 198),
+    2: pnt(162, 235),
+    3: pnt(198, 235),
+  }),
+  genWish(1, pnt(264, 74), pnt(275, 160), pnt(295, 283), undefined, 'unknown', {
+    0: pnt(275, 198),
+    1: pnt(312, 198),
+    2: pnt(275, 235),
+    3: pnt(312, 235),
+  }),
+  genWish(2, pnt(377, 74), pnt(390, 160), pnt(400, 283), undefined, 'unknown', {
+    0: pnt(390, 198),
+    1: pnt(425, 198),
+    2: pnt(390, 235),
+    3: pnt(425, 235),
+  }),
+  genWish(3, pnt(490, 74), pnt(500, 160), pnt(520, 283), undefined, 'unknown', {
+    0: pnt(508, 198),
+    1: pnt(545, 198),
+    2: pnt(508, 235),
+    3: pnt(545, 235),
+  }),
+];
 function handleInWishingTree() {
   if (!checkIsPage(pageInWishingTree)) {
     console.log('handleInWishingTree cannot find the wishing tree, skipping');
@@ -4862,34 +5193,6 @@ function handleInWishingTree() {
 
   console.log('handleInWishingTree: ', new Date());
   sendEvent('running', '');
-
-  // wish(id, refreshPnt, unfoldPnt, fulfillPnt, recogDetail, status, requirementIconPnts)
-  var wishes = [
-    genWish(0, pnt(183, 79), pnt(163, 160), pnt(183, 283), undefined, 'unknown', {
-      0: pnt(162, 198),
-      1: pnt(198, 198),
-      2: pnt(162, 235),
-      3: pnt(198, 235),
-    }),
-    genWish(1, pnt(295, 79), pnt(275, 160), pnt(295, 283), undefined, 'unknown', {
-      0: pnt(275, 198),
-      1: pnt(312, 198),
-      2: pnt(275, 235),
-      3: pnt(312, 235),
-    }),
-    genWish(2, pnt(400, 79), pnt(390, 160), pnt(400, 283), undefined, 'unknown', {
-      0: pnt(390, 198),
-      1: pnt(425, 198),
-      2: pnt(390, 235),
-      3: pnt(425, 235),
-    }),
-    genWish(3, pnt(520, 79), pnt(500, 160), pnt(520, 283), undefined, 'unknown', {
-      0: pnt(508, 198),
-      1: pnt(545, 198),
-      2: pnt(508, 235),
-      3: pnt(545, 235),
-    }),
-  ];
 
   var wishingTreeStartTime = Date.now();
   var records = {
@@ -4954,11 +5257,6 @@ function handleInWishingTree() {
   }
   console.log('Run wishing tree for ', (Date.now() - wishingTreeStartTime) / 60000, ' mins, ending this task');
   sendEvent('running', '');
-
-  handleTryHitBackToKingdom();
-  if (checkIsPage(pageUncollapsedAffairs)) {
-    qTap(pageUncollapsedAffairs);
-  }
 
   return true;
 }
@@ -5547,7 +5845,7 @@ var AdvanturesBountiesAt4th = Object.freeze({
 
   superMayhem: GenAdvanture(pnt(500, 150), false, false),
   bounties: GenAdvanture(pnt(100, 100), false, true),
-  guild: GenAdvanture(pnt(120, 250), false, true),
+  guild: GenAdvanture(pnt(320, 100), false, true),
 });
 
 // With super mayhem
@@ -5638,7 +5936,7 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
       }
 
       qTap(pnt(560, 330)); // tap play
-      if (!waitUntilSeePage(pageSelectAdvanture, 6)) {
+      if (!rfpageSelectAdvanture.waitScreenForMatchingScreen(this.screen, 6000)) {
         console.log('failed to goto choose adventure, skipping');
         return false;
       }
@@ -5658,15 +5956,15 @@ function handleGotoAdventure(targetAdvanture, targetPage) {
 
     if (destination.backward) {
       for (var swipe = 0; swipe < 3; swipe++) {
-        tapDown(410, 186, 40, 0);
+        tapDown(600, 190, 40, 0);
         sleep(config.sleep);
-        moveTo(200, 186, 40, 0);
+        moveTo(200, 190, 40, 0);
         sleep(config.sleep);
-        moveTo(0, 186, 40, 0);
+        moveTo(0, 190, 40, 0);
         sleep(config.sleep);
-        moveTo(-400, 186, 40, 0);
+        moveTo(-400, 190, 40, 0);
         sleep(config.sleep);
-        tapUp(-400, 186, 40, 0);
+        tapUp(-400, 190, 40, 0);
         sleep(config.sleepAnimate);
       }
     }
@@ -5716,10 +6014,12 @@ var pageDefeatWithGotoKingdom = [
 ];
 
 var pageNoArenaTicket = [
-  { x: 314, y: 111, r: 228, g: 121, b: 37 },
-  { x: 347, y: 104, r: 36, g: 46, b: 65 },
-  { x: 414, y: 120, r: 243, g: 233, b: 223 },
-  { x: 300, y: 259, r: 12, g: 167, b: 223 },
+  { x: 496, y: 27, r: 255, g: 255, b: 255 },
+  { x: 484, y: 26, r: 56, g: 167, b: 231 },
+  { x: 317, y: 84, r: 243, g: 157, b: 69 },
+  { x: 454, y: 161, r: 4, g: 151, b: 211 },
+  { x: 457, y: 231, r: 4, g: 151, b: 211 },
+  { x: 458, y: 303, r: 219, g: 207, b: 199 },
 ];
 
 var pageBattleFinishedWithSunbeds = [
@@ -5778,6 +6078,19 @@ var pageBattleFinishedWithoutNextLv = [
   { x: 320, y: 25, r: 255, g: 255, b: 132 },
   { x: 330, y: 25, r: 228, g: 52, b: 74 },
   { x: 401, y: 323, r: 26, g: 4, b: 12 },
+];
+var pageBattleFinishedWithMVPCookie = [
+  { x: 328, y: 29, r: 201, g: 33, b: 52 },
+  { x: 375, y: 53, r: 198, g: 223, b: 222 },
+  { x: 413, y: 69, r: 49, g: 138, b: 214 },
+  { x: 624, y: 334, r: 40, g: 30, b: 22 },
+  { x: 544, y: 333, r: 17, g: 3, b: 3 },
+];
+var pageBattleFinishedWithMVPCookieWithExit = [
+  { x: 609, y: 320, r: 8, g: 166, b: 222 },
+  { x: 509, y: 334, r: 247, g: 89, b: 24 },
+  { x: 374, y: 55, r: 203, g: 223, b: 222 },
+  { x: 409, y: 67, r: 54, g: 139, b: 214 },
 ];
 var pageNeedRefillBounties = [
   { x: 428, y: 82, r: 56, g: 167, b: 231 },
@@ -5876,6 +6189,21 @@ var pageCanEquipTopping3 = [
   { x: 288, y: 156, r: 226, g: 226, b: 226 },
   { x: 262, y: 155, r: 198, g: 182, b: 173 },
 ];
+var pageCannotRefilAllianceTicketToday = [
+  { x: 345, y: 275, r: 121, g: 207, b: 12 },
+  { x: 331, y: 129, r: 52, g: 159, b: 227 },
+  { x: 306, y: 147, r: 69, g: 52, b: 160 },
+  { x: 333, y: 24, r: 126, g: 124, b: 127 },
+  { x: 218, y: 74, r: 60, g: 70, b: 105 },
+];
+var pagePVPPromoted = [
+  { x: 354, y: 18, r: 43, g: 29, b: 6 },
+  { x: 447, y: 23, r: 28, g: 11, b: 3 },
+  { x: 523, y: 22, r: 11, g: 18, b: 18 },
+  { x: 27, y: 196, r: 42, g: 29, b: 17 },
+  { x: 177, y: 307, r: 22, g: 33, b: 39 },
+  { x: 177, y: 258, r: 19, g: 28, b: 30 },
+];
 
 var rfpageBattleVictoryButNeedTap = new RF.Page('rfpageBattleVictoryButNeedTap', pageBattleVictoryButNeedTap, {
   x: 230,
@@ -5918,6 +6246,16 @@ var rfpageBattleFinishedWithoutNextLv = new RF.Page(
   pageBattleFinishedWithoutNextLv,
   { x: 466, y: 324 }
 );
+var rfpageBattleFinishedWithMVPCookie = new RF.Page(
+  'rfpageBattleFinishedWithMVPCookie',
+  pageBattleFinishedWithMVPCookie,
+  { x: 333, y: 298 }
+);
+var rfpageBattleFinishedWithMVPCookieWithExit = new RF.Page(
+  'rfpageBattleFinishedWithMVPCookieWithExit',
+  pageBattleFinishedWithMVPCookieWithExit,
+  pageBattleFinishedWithMVPCookieWithExit[0]
+);
 var rfpageNeedRefillBounties = new RF.Page('rfpageNeedRefillBounties', pageNeedRefillBounties, { x: 428, y: 82 });
 var rfpageNeedRefillBounties2 = new RF.Page('rfpageNeedRefillBounties2', pageNeedRefillBounties2, { x: 442, y: 82 });
 
@@ -5925,6 +6263,11 @@ var rfpageAllianceReward = new RF.Page('rfpageAllianceReward', pageAllianceRewar
 var rfpageAllianceResults = new RF.Page('rfpageAllianceResults', pageAllianceResults, { x: 612, y: 333 });
 var rfpageAllianceResults2 = new RF.Page('rfpageAllianceResults2', pageAllianceResults2, { x: 310, y: 29 });
 var rfpageAllianceRewardGet = new RF.Page('rfpageAllianceRewardGet', pageAllianceRewardGet, { x: 191, y: 187 });
+var rfpageCannotRefilAllianceTicketToday = new RF.Page(
+  'rfpageCannotRefilAllianceTicketToday',
+  pageCannotRefilAllianceTicketToday,
+  pageCannotRefilAllianceTicketToday[0]
+);
 
 var rfpageSelectStartingTeam = new RF.Page('rfpageSelectStartingTeam', pageSelectStartingTeam, { x: 260, y: 29 });
 var rfpageSelectNextTeam = new RF.Page('rfpageSelectNextTeam', pageSelectNextTeam, pageSelectNextTeam[0]);
@@ -5951,12 +6294,15 @@ var rfpageBattleTowerOfSweetChaosVictory = new RF.Page(
 var rfpageCanEquipTopping = new RF.Page('rfpageCanEquipTopping', pageCanEquipTopping, pageCanEquipTopping[0]);
 var rfpageCanEquipTopping2 = new RF.Page('rfpageCanEquipTopping2', pageCanEquipTopping2, pageCanEquipTopping2[0]);
 var rfpageCanEquipTopping3 = new RF.Page('rfpageCanEquipTopping3', pageCanEquipTopping3, pageCanEquipTopping3[0]);
+var rfpagePVPPromoted = new RF.Page('rfpagePVPPromoted', pagePVPPromoted, { x: 318, y: 327 });
 
 var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageBattleVictoryButNeedTap,
   rfpageBattleFinished,
   rfpageBattleDefeat,
   rfpageDefeatWithGotoKingdom,
+  rfpageBattleFinishedWithMVPCookie,
+  rfpageBattleFinishedWithMVPCookieWithExit,
   rfpageNoArenaTicket,
   rfpagePvPCrystaisRefresh,
   rfpageBattleFinishedWithSunbeds,
@@ -5977,6 +6323,7 @@ var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageAllianceResults,
   rfpageAllianceResults2,
   rfpageAllianceRewardGet,
+  rfpageCannotRefilAllianceTicketToday,
   rfpageSelectStartingTeam,
   rfpageSelectNextTeam,
   rfpageKeepBattleByOrderNotCheckWhenStart,
@@ -5992,6 +6339,7 @@ var groupPageBattle = new RF.GroupPage('groupPageBattle', [
   rfpageSpeedBoostEnabled,
   rfpageSpeed1x,
   rfpageSpeed1_2x,
+  rfpagePVPPromoted,
 ]);
 
 function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, pageExitBattle) {
@@ -6058,6 +6406,22 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       console.log('Battle successfully finished, return');
       // qTap(pnt(306, 326));
       return true;
+    }
+
+    if (matchedPages.indexOf('rfpageBattleFinishedWithMVPCookie') !== -1) {
+      console.log('found rfpageBattleFinishedWithMVPCookie, goNext');
+      rfpageBattleFinishedWithMVPCookie.goNext(this.screen);
+      sleep(1000);
+    }
+    if (matchedPages.indexOf('rfpageBattleFinishedWithMVPCookieWithExit') !== -1) {
+      console.log('found rfpageBattleFinishedWithMVPCookie, goNext');
+      rfpageBattleFinishedWithMVPCookieWithExit.goNext(this.screen);
+      sleep(1000);
+    }
+    if (matchedPages.indexOf('rfpagePVPPromoted') !== -1) {
+      console.log('found rfpagePVPPromoted, goNext');
+      rfpagePVPPromoted.goNext(this.screen);
+      sleep(1000);
     }
 
     if (matchedPages.indexOf('rfpageBattleFinished') !== -1) {
@@ -6176,6 +6540,10 @@ function waitForBattle(battleName, waitTimeInSecs, needToCheckAutoUseSkill, page
       } else if (matchedPages.indexOf('rfpageAllianceRewardGet') !== -1) {
         console.log('rfpageAllianceRewardGet, tap middle');
         qTap(pnt(323, 337));
+      } else if (matchedPages.indexOf('rfpageCannotRefilAllianceTicketToday') !== -1) {
+        console.log('rfpageCannotRefilAllianceTicketToday, tap it');
+        qTap(pageCannotRefilAllianceTicketToday);
+        return true;
       }
     }
 
@@ -6499,62 +6867,75 @@ function handleGuildBattleDragon() {
   }
 }
 
+var pageNoAllianceTicket = [
+  { x: 244, y: 252, r: 49, g: 190, b: 231 },
+  { x: 327, y: 77, r: 156, g: 144, b: 217 },
+  { x: 317, y: 100, r: 244, g: 235, b: 231 },
+  { x: 355, y: 256, r: 0, g: 198, b: 255 },
+  { x: 334, y: 22, r: 85, g: 80, b: 109 },
+];
+var pageNoAllianceTicket2 = [
+  { x: 248, y: 278, r: 12, g: 167, b: 223 },
+  { x: 355, y: 282, r: 0, g: 193, b: 255 },
+  { x: 318, y: 154, r: 181, g: 169, b: 219 },
+  { x: 343, y: 126, r: 52, g: 159, b: 227 },
+];
+var pageAllianceSteupTeam = [
+  { x: 619, y: 18, r: 255, g: 255, b: 255 },
+  { x: 606, y: 90, r: 247, g: 89, b: 24 },
+  { x: 603, y: 112, r: 123, g: 207, b: 8 },
+  { x: 608, y: 139, r: 0, g: 150, b: 214 },
+  { x: 610, y: 168, r: 0, g: 150, b: 214 },
+  { x: 507, y: 129, r: 134, g: 17, b: 158 },
+];
+var pageAllianceBeaconIsOff = [
+  { x: 215, y: 198, r: 94, g: 102, b: 153 },
+  { x: 202, y: 201, r: 209, g: 226, b: 248 },
+  { x: 209, y: 198, r: 99, g: 109, b: 156 },
+];
+var pageBeaconOfValor = [
+  { x: 223, y: 300, r: 255, g: 187, b: 8 },
+  { x: 178, y: 288, r: 49, g: 60, b: 90 },
+  { x: 196, y: 177, r: 49, g: 40, b: 8 },
+  { x: 182, y: 168, r: 190, g: 192, b: 208 },
+  { x: 183, y: 87, r: 247, g: 198, b: 159 },
+  { x: 464, y: 22, r: 57, g: 166, b: 231 },
+  { x: 487, y: 246, r: 88, g: 104, b: 156 },
+];
+var pageCannotLightBeacon = [
+  { x: 436, y: 284, r: 0, g: 134, b: 189 },
+  { x: 261, y: 112, r: 114, g: 80, b: 44 },
+  { x: 261, y: 226, r: 118, g: 82, b: 50 },
+  { x: 250, y: 192, r: 83, g: 87, b: 104 },
+  { x: 197, y: 104, r: 107, g: 142, b: 198 },
+];
+var pageAllianceTimeJump = [
+  { x: 358, y: 277, r: 123, g: 207, b: 8 },
+  { x: 393, y: 281, r: 189, g: 170, b: 214 },
+  { x: 318, y: 32, r: 182, g: 129, b: 37 },
+];
+var pageAllianceAddMoreCookie = [
+  { x: 304, y: 251, r: 8, g: 166, b: 222 },
+  { x: 248, y: 102, r: 57, g: 69, b: 107 },
+  { x: 341, y: 11, r: 25, g: 36, b: 54 },
+  { x: 480, y: 320, r: 23, g: 34, b: 9 },
+  { x: 497, y: 320, r: 35, g: 29, b: 35 },
+];
+var pageLightBeaconReminder = [
+  { x: 301, y: 250, r: 8, g: 166, b: 222 },
+  { x: 403, y: 248, r: 123, g: 207, b: 8 },
+  { x: 333, y: 19, r: 49, g: 38, b: 75 },
+  { x: 187, y: 166, r: 104, g: 111, b: 122 },
+];
+// A very long text down below saying fight already started, cannot light beacon, need to be closed
+var pageStartedFightingSoCannotStartBeacon = [
+  { x: 473, y: 23, r: 255, g: 255, b: 255 },
+  { x: 191, y: 82, r: 227, g: 165, b: 82 },
+  { x: 197, y: 183, r: 219, g: 147, b: 77 },
+  { x: 184, y: 185, r: 242, g: 213, b: 49 },
+  { x: 179, y: 312, r: 55, g: 62, b: 96 },
+];
 function handleGuildBattleAlliance() {
-  var pageNoAllianceTicket = [
-    { x: 244, y: 252, r: 49, g: 190, b: 231 },
-    { x: 327, y: 77, r: 156, g: 144, b: 217 },
-    { x: 317, y: 100, r: 244, g: 235, b: 231 },
-    { x: 355, y: 256, r: 0, g: 198, b: 255 },
-    { x: 334, y: 22, r: 85, g: 80, b: 109 },
-  ];
-  var pageAllianceSteupTeam = [
-    { x: 619, y: 18, r: 255, g: 255, b: 255 },
-    { x: 606, y: 90, r: 247, g: 89, b: 24 },
-    { x: 603, y: 112, r: 123, g: 207, b: 8 },
-    { x: 608, y: 139, r: 0, g: 150, b: 214 },
-    { x: 610, y: 168, r: 0, g: 150, b: 214 },
-    { x: 507, y: 129, r: 134, g: 17, b: 158 },
-  ];
-  var pageAllianceBeaconIsOff = [
-    { x: 215, y: 198, r: 94, g: 102, b: 153 },
-    { x: 202, y: 201, r: 209, g: 226, b: 248 },
-    { x: 209, y: 198, r: 99, g: 109, b: 156 },
-  ];
-  var pageBeaconOfValor = [
-    { x: 223, y: 300, r: 255, g: 187, b: 8 },
-    { x: 178, y: 288, r: 49, g: 60, b: 90 },
-    { x: 196, y: 177, r: 49, g: 40, b: 8 },
-    { x: 182, y: 168, r: 190, g: 192, b: 208 },
-    { x: 183, y: 87, r: 247, g: 198, b: 159 },
-    { x: 464, y: 22, r: 57, g: 166, b: 231 },
-    { x: 487, y: 246, r: 88, g: 104, b: 156 },
-  ];
-  var pageCannotLightBeacon = [
-    { x: 436, y: 284, r: 0, g: 134, b: 189 },
-    { x: 261, y: 112, r: 114, g: 80, b: 44 },
-    { x: 261, y: 226, r: 118, g: 82, b: 50 },
-    { x: 250, y: 192, r: 83, g: 87, b: 104 },
-    { x: 197, y: 104, r: 107, g: 142, b: 198 },
-  ];
-  var pageAllianceTimeJump = [
-    { x: 358, y: 277, r: 123, g: 207, b: 8 },
-    { x: 393, y: 281, r: 189, g: 170, b: 214 },
-    { x: 318, y: 32, r: 182, g: 129, b: 37 },
-  ];
-  var pageAllianceAddMoreCookie = [
-    { x: 304, y: 251, r: 8, g: 166, b: 222 },
-    { x: 248, y: 102, r: 57, g: 69, b: 107 },
-    { x: 341, y: 11, r: 25, g: 36, b: 54 },
-    { x: 480, y: 320, r: 23, g: 34, b: 9 },
-    { x: 497, y: 320, r: 35, g: 29, b: 35 },
-  ];
-  var pageLightBeaconReminder = [
-    { x: 301, y: 250, r: 8, g: 166, b: 222 },
-    { x: 403, y: 248, r: 123, g: 207, b: 8 },
-    { x: 333, y: 19, r: 49, g: 38, b: 75 },
-    { x: 187, y: 166, r: 104, g: 111, b: 122 },
-  ];
-
   if (!config.autoGuildAllianceBattle) {
     return;
   }
@@ -6573,6 +6954,7 @@ function handleGuildBattleAlliance() {
   if (waitUntilSeePage(pageCookieAlliance, 6)) {
     // check beacon
     if (checkIsPage(pageAllianceBeaconIsOff)) {
+      console.log('pageAllianceBeaconIsOff, enter');
       qTap(pageAllianceBeaconIsOff);
 
       if (waitUntilSeePage(pageBeaconOfValor, 4)) {
@@ -6580,6 +6962,12 @@ function handleGuildBattleAlliance() {
         sleep(config.sleepAnimate);
         qTap(pageBeaconOfValor);
         sleep(config.sleepAnimate * 2);
+      }
+
+      if (checkIsPage(pageStartedFightingSoCannotStartBeacon)) {
+        console.log('Found pageStartedFightingCannotStartBeacon, skip it and force start this round');
+        qTap(pageStartedFightingSoCannotStartBeacon);
+        sleep(config.sleepAnimate);
       }
 
       if (waitUntilSeePage(pageCannotLightBeacon, 4)) {
@@ -6641,6 +7029,13 @@ function handleGuildBattleAlliance() {
         keycode('BACK', 1000);
         sleep(1500);
         break;
+      } else if (checkIsPage(pageNoAllianceTicket2)) {
+        console.log('Not enough pageNoAllianceTicket2, skipping');
+        qTap(pageNoAllianceTicket2);
+        sleep(1500);
+        keycode('BACK', 1000);
+        sleep(1500);
+        break;
       }
 
       if (checkIsPage(pageAllianceAddMoreCookie)) {
@@ -6654,6 +7049,10 @@ function handleGuildBattleAlliance() {
 
       if (checkIsPage(pageAllianceSteupTeam)) {
         console.log('got into team setup page, skip alliance');
+        break;
+      }
+      if (checkIsPage(pageCannotRefilAllianceTicketToday)) {
+        console.log('pageCannotRefilAllianceTicketToday, skipping alliance');
         break;
       }
 
@@ -7036,9 +7435,16 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
               return true;
             }
           } else {
-            console.log('Research requirement not met (btn not enabled)');
-            keycode('BACK', 1000);
-            sleep(config.sleepAnimate * 3);
+            if (checkIsPage(pageInKingdomVillage)) {
+              console.log('Lab research accidentally fall back to village, return with false');
+              return false;
+            } else if (!checkIsPage(pageInGnomeLab)) {
+              console.log('Research requirement not met (btn not enabled)');
+              keycode('BACK', 1000);
+              sleep(config.sleepAnimate * 3);
+            } else {
+              console.log('Not in kingdom nor lab');
+            }
           }
         }
       }
@@ -7056,13 +7462,18 @@ function handleResearchInGnomeLab(targetIconList, threashold) {
 }
 
 function handleTradeHabor() {
-  handleGotoTradeHabor();
-  handleInHabor();
-  handleGotoKingdomPage();
+  if (handleGotoTradeHabor()) {
+    handleInHabor();
+    handleGotoKingdomPage();
+  } else {
+    console.log('Unable to go to habor, skipping this task');
+  }
 }
 
 function handleGotoTradeHabor() {
-  if (!checkIsPage(pageInHabor)) {
+  if (checkIsPage(pageInHabor)) {
+    return true;
+  } else {
     console.log('try to handleGotoTradeHabor');
     if (!checkIsPage(pageInKingdomVillage)) {
       handleGotoKingdomPage(gnomeLabKingdom);
@@ -7097,7 +7508,7 @@ function handleGotoTradeHabor() {
       qTap(pageHaborUncollapsed2);
       sleep(config.sleepAnimate * 2);
     }
-    return waitUntilSeePage(pageInHabor, 4);
+    return rfpageInHabor.waitScreenForMatchingScreen(this.screen, 4000);
   }
 }
 
@@ -7126,35 +7537,91 @@ function ocrSeasideMarketStockAfterPurchase(rect) {
   }
 }
 
-function handleInHabor() {
-  var pageShipInHabor = [
-    { x: 418, y: 212, r: 55, g: 34, b: 22 },
-    { x: 609, y: 211, r: 176, g: 133, b: 66 },
-    { x: 585, y: 229, r: 123, g: 78, b: 44 },
-  ];
-  var pageNoShipInHabor = [
-    { x: 246, y: 66, r: 255, g: 12, b: 82 },
-    { x: 233, y: 88, r: 249, g: 242, b: 212 },
-    { x: 255, y: 138, r: 126, g: 114, b: 41 },
-  ];
-  var pageCanLoadThisItem = [
-    { x: 424, y: 201, r: 59, g: 205, b: 0 },
-    { x: 351, y: 246, r: 123, g: 207, b: 8 },
-    { x: 414, y: 242, r: 222, g: 207, b: 198 },
-    { x: 433, y: 309, r: 57, g: 69, b: 107 },
-  ];
-  var pageLoadTooMuchWarning = [
-    { x: 400, y: 252, r: 123, g: 207, b: 8 },
-    { x: 304, y: 253, r: 8, g: 166, b: 222 },
-    { x: 436, y: 288, r: 27, g: 33, b: 51 },
-    { x: 260, y: 55, r: 28, g: 34, b: 53 },
-  ];
+var pageShipInHabor = [
+  { x: 418, y: 212, r: 55, g: 34, b: 22 },
+  { x: 609, y: 211, r: 176, g: 133, b: 66 },
+  { x: 585, y: 229, r: 123, g: 78, b: 44 },
+];
+var rfpageShipInHabor = new RF.Page('rfpageShipInHabor', pageShipInHabor, pageShipInHabor[0]);
+var pageNoShipInHabor = [
+  { x: 246, y: 66, r: 255, g: 12, b: 82 },
+  { x: 233, y: 88, r: 249, g: 242, b: 212 },
+  { x: 255, y: 138, r: 126, g: 114, b: 41 },
+];
+var rfpageNoShipInHabor = new RF.Page('rfpageNoShipInHabor', pageNoShipInHabor, pageNoShipInHabor[0]);
+var pageCanLoadThisItem = [
+  { x: 424, y: 201, r: 59, g: 205, b: 0 },
+  { x: 351, y: 246, r: 123, g: 207, b: 8 },
+  { x: 414, y: 242, r: 222, g: 207, b: 198 },
+  { x: 433, y: 309, r: 57, g: 69, b: 107 },
+];
+var rfpageCanLoadThisItem = new RF.Page('rfpageCanLoadThisItem', pageCanLoadThisItem, pageCanLoadThisItem[0]);
+var pageLoadTooMuchWarning = [
+  { x: 400, y: 252, r: 123, g: 207, b: 8 },
+  { x: 304, y: 253, r: 8, g: 166, b: 222 },
+  { x: 436, y: 288, r: 27, g: 33, b: 51 },
+  { x: 260, y: 55, r: 28, g: 34, b: 53 },
+];
+var rfpageLoadTooMuchWarning = new RF.Page(
+  'rfpageLoadTooMuchWarning',
+  pageLoadTooMuchWarning,
+  pageLoadTooMuchWarning[0]
+);
+var pageInSeasideMarket = [
+  { x: 617, y: 21, r: 255, g: 255, b: 255 },
+  { x: 566, y: 183, r: 114, g: 76, b: 32 },
+  { x: 256, y: 121, r: 101, g: 151, b: 23 },
+  { x: 280, y: 5, r: 206, g: 227, b: 49 },
+  { x: 178, y: 117, r: 247, g: 52, b: 90 },
+];
+var rfpageInSeasideMarket = new RF.Page('rfpageInSeasideMarket', pageInSeasideMarket, pageInSeasideMarket[0]);
+var pageFreeRefreshSeasideMarket = [
+  { x: 510, y: 333, r: 155, g: 155, b: 155 },
+  { x: 504, y: 333, r: 172, g: 146, b: 126 },
+  { x: 498, y: 333, r: 148, g: 120, b: 111 },
+  { x: 494, y: 333, r: 175, g: 148, b: 117 },
+];
+var rfpageFreeRefreshSeasideMarket = new RF.Page(
+  'rfpageFreeRefreshSeasideMarket',
+  pageFreeRefreshSeasideMarket,
+  pageFreeRefreshSeasideMarket[0]
+);
+var pageNeedDiamondRefreshMarket = [
+  { x: 426, y: 110, r: 57, g: 169, b: 231 },
+  { x: 305, y: 102, r: 255, g: 255, b: 255 },
+  { x: 363, y: 118, r: 57, g: 69, b: 107 },
+  { x: 297, y: 124, r: 33, g: 44, b: 66 },
+];
+var rfpageNeedDiamondRefreshMarket = new RF.Page(
+  'rfpageNeedDiamondRefreshMarket',
+  pageNeedDiamondRefreshMarket,
+  pageNeedDiamondRefreshMarket[0]
+);
+var pageMarketItemDetail = [
+  { x: 350, y: 246, r: 123, g: 207, b: 8 },
+  { x: 411, y: 16, r: 127, g: 93, b: 8 },
+  { x: 521, y: 21, r: 0, g: 71, b: 126 },
+  { x: 397, y: 103, r: 57, g: 69, b: 107 },
+];
+var rfpageMarketItemDetail = new RF.Page('rfpageMarketItemDetail', pageMarketItemDetail, pageMarketItemDetail[0]);
+var pageNotEnoughItemToBuyThis = [
+  { x: 434, y: 95, r: 255, g: 255, b: 255 },
+  { x: 305, y: 250, r: 8, g: 125, b: 255 },
+  { x: 343, y: 160, r: 49, g: 158, b: 231 },
+  { x: 339, y: 198, r: 206, g: 195, b: 181 },
+];
+var rfpageNotEnoughItemToBuyThis = new RF.Page(
+  'rfpageNotEnoughItemToBuyThis',
+  pageNotEnoughItemToBuyThis,
+  pageNotEnoughItemToBuyThis[0]
+);
 
+function handleInHabor() {
   if (config.autoHandleTradeHabor && !waitUntilSeePage(pageNoShipInHabor, 4, pageShipInHabor, pageShipInHabor)) {
     console.log('ship still there, load all items and send running');
     sendEvent('running', '');
-    var i = 0;
 
+    var i = 0;
     var shipInHabor = true;
     for (i = 0; i < 5 && shipInHabor; i++) {
       for (var xPixel = i === 0 ? 55 : 200; xPixel < 620; xPixel += 60) {
@@ -7186,13 +7653,13 @@ function handleInHabor() {
           sleep(config.sleepAnimate * 2);
         }
 
-        if (waitUntilSeePage(pageNoShipInHabor, 3)) {
+        if (rfpageNoShipInHabor.waitScreenForMatchingScreen(this.screen, 3000)) {
           console.log('Send the ship successfully');
           shipInHabor = false;
           break;
         }
 
-        if (!handleTryHitBackToSpecificPages([pageShipInHabor, pageNoShipInHabor])) {
+        if (!handleRFTryHitBackToSpecificPages([rfpageShipInHabor, rfpageNoShipInHabor])) {
           handleGotoTradeHabor();
         }
       }
@@ -7218,37 +7685,6 @@ function handleInHabor() {
     console.log('No need to send ship, config.autoHandleTradeHabor: ', config.autoHandleTradeHabor);
   }
 
-  var pageInSeasideMarket = [
-    { x: 617, y: 21, r: 255, g: 255, b: 255 },
-    { x: 566, y: 183, r: 114, g: 76, b: 32 },
-    { x: 256, y: 121, r: 101, g: 151, b: 23 },
-    { x: 280, y: 5, r: 206, g: 227, b: 49 },
-    { x: 178, y: 117, r: 247, g: 52, b: 90 },
-  ];
-  var pageFreeRefreshSeasideMarket = [
-    { x: 510, y: 333, r: 155, g: 155, b: 155 },
-    { x: 504, y: 333, r: 172, g: 146, b: 126 },
-    { x: 498, y: 333, r: 148, g: 120, b: 111 },
-    { x: 494, y: 333, r: 175, g: 148, b: 117 },
-  ];
-  var pageNeedDiamondRefreshMarket = [
-    { x: 426, y: 110, r: 57, g: 169, b: 231 },
-    { x: 305, y: 102, r: 255, g: 255, b: 255 },
-    { x: 363, y: 118, r: 57, g: 69, b: 107 },
-    { x: 297, y: 124, r: 33, g: 44, b: 66 },
-  ];
-  var pageMarketItemDetail = [
-    { x: 350, y: 246, r: 123, g: 207, b: 8 },
-    { x: 411, y: 16, r: 127, g: 93, b: 8 },
-    { x: 521, y: 21, r: 0, g: 71, b: 126 },
-    { x: 397, y: 103, r: 57, g: 69, b: 107 },
-  ];
-  var pageNotEnoughItemToBuyThis = [
-    { x: 434, y: 95, r: 255, g: 255, b: 255 },
-    { x: 305, y: 250, r: 8, g: 125, b: 255 },
-    { x: 343, y: 160, r: 49, g: 158, b: 231 },
-    { x: 339, y: 198, r: 206, g: 195, b: 181 },
-  ];
   if (
     config.autoBalanceAuroraStocks ||
     config.autoShopInSeasideMarket ||
@@ -7261,11 +7697,11 @@ function handleInHabor() {
     }
 
     console.log('should be in seaside market');
-    if (checkIsPage(pageFreeRefreshSeasideMarket)) {
+    if (rfpageFreeRefreshSeasideMarket.isMatchScreen(this.screen)) {
       qTap(pnt(543, 336)); // market free refresh, no need to pull to the head of the list as refresh will reset the list
       sleep(config.sleepAnimate);
-      if (waitUntilSeePage(pageNeedDiamondRefreshMarket, 3)) {
-        qTap(pageNeedDiamondRefreshMarket);
+      if (rfpageNeedDiamondRefreshMarket.waitScreenForMatchingScreen(this.screen, 3000)) {
+        rfpageNeedDiamondRefreshMarket.goNext(this.screen);
         sleep(config.sleepAnimate);
       }
     } else {
@@ -7284,16 +7720,16 @@ function handleInHabor() {
         newStock = ocrSeasideMarketStockAfterPurchase(seasideStockRect[auroraIdx]);
         if (newStock > 50) {
           qTap(seasideStockRect[auroraIdx]);
-          if (waitUntilSeePage(pageMarketItemDetail, 3)) {
+          if (rfpageMarketItemDetail.waitScreenForMatchingScreen(this.screen, 3000)) {
             var productNowHave = ocrProductStorage(rect(330, 154, 28, 14));
             if (newStock > productNowHave) {
               console.log('Purchased seaside market: ', auroraIdx, newStock, productNowHave);
-              qTap(pageMarketItemDetail);
+              rfpageMarketItemDetail.goNext(this.screen);
               sleep(2000);
             } else {
               console.log('NOT purchased seaside market: ', auroraIdx, newStock, productNowHave);
             }
-            if (!handleTryHitBackToSpecificPages([pageInSeasideMarket])) {
+            if (!handleRFTryHitBackToSpecificPages([rfpageInSeasideMarket])) {
               handleGotoTradeHabor();
               qTap(pnt(93, 230)); // Seaside market
               sleep(config.sleepAnimate * 2);
@@ -7309,7 +7745,7 @@ function handleInHabor() {
         qTap(pnt(420, 250));
         sleep(config.sleepAnimate);
         qTap(pnt(315, 247));
-        waitUntilSeePage(pageInSeasideMarket);
+        rfpageInSeasideMarket.waitScreenForMatchingScreen(this.screen, 5000);
         console.log('Purchased carmel spyglass');
       }
 
@@ -7318,7 +7754,7 @@ function handleInHabor() {
         qTap(pnt(530, 245));
         sleep(config.sleepAnimate);
         qTap(pnt(315, 247));
-        waitUntilSeePage(pageInSeasideMarket);
+        rfpageInSeasideMarket.waitScreenForMatchingScreen(this.screen, 5000);
         console.log('Purchased carmel map fragment');
       }
       console.log('Purchased carmel stuff successfully');
@@ -7328,7 +7764,7 @@ function handleInHabor() {
       qTap(pnt(612, 270));
       sleep(config.sleepAnimate);
       qTap(pnt(315, 247));
-      waitUntilSeePage(pageInSeasideMarket);
+      rfpageInSeasideMarket.waitScreenForMatchingScreen(this.screen, 5000);
       console.log('Purchased radiant shards successfully');
     }
 
@@ -7360,7 +7796,7 @@ function handleInHabor() {
               }
 
               qTap(foundResults[foundIdx]);
-              if (waitUntilSeePage(pageMarketItemDetail, 3)) {
+              if (rfpageMarketItemDetail.waitScreenForMatchingScreen(this.screen, 3000)) {
                 productNowHave = ocrProductStorage(rect(330, 154, 28, 14));
                 if (productNowHave < config.materialsTarget) {
                   console.log(
@@ -7369,10 +7805,10 @@ function handleInHabor() {
                     seasideMarketItems[purcaseIndex].name,
                     productNowHave
                   );
-                  qTap(pageMarketItemDetail);
-                  if (waitUntilSeePage(pageNotEnoughItemToBuyThis, 2)) {
+                  rfpageMarketItemDetail.goNext(this.screen);
+                  if (rfpageNotEnoughItemToBuyThis.waitScreenForMatchingScreen(this.screen, 2000)) {
                     console.log('OOPS, not enough items to buy this one, skipping');
-                    qTap(pageNotEnoughItemToBuyThis);
+                    rfpageNotEnoughItemToBuyThis.goNext(this.screen);
                   }
                   sleep(2000);
                 } else {
@@ -7385,7 +7821,7 @@ function handleInHabor() {
                 }
               }
 
-              if (!handleTryHitBackToSpecificPages([pageInSeasideMarket])) {
+              if (!handleRFTryHitBackToSpecificPages([rfpageInSeasideMarket])) {
                 console.log('Going back to trade habor');
                 handleGotoTradeHabor();
                 qTap(pnt(93, 230)); // Seaside market
@@ -7400,7 +7836,7 @@ function handleInHabor() {
       }
     }
 
-    if (!handleTryHitBackToSpecificPages([pageShipInHabor, pageNoShipInHabor])) {
+    if (!handleRFTryHitBackToSpecificPages([rfpageShipInHabor, rfpageNoShipInHabor])) {
       handleGotoTradeHabor();
     }
   } else {
@@ -7517,7 +7953,7 @@ function handleInHabor() {
         }
       }
 
-      handleTryHitBackToSpecificPages([pageShipInHabor, pageNoShipInHabor]);
+      handleRFTryHitBackToSpecificPages([rfpageShipInHabor, rfpageNoShipInHabor]);
     }
   } else {
     console.log('No need to autoBuySeaFairy');
@@ -7526,7 +7962,8 @@ function handleInHabor() {
   sendEvent('running', '');
 }
 
-function handleCheckIfAtLoginScreen() {
+// Check if in login via image match for gear icon
+function handleCheckIfAtLoginScreenByIcon() {
   var img = getScreenshot();
   var upperRightImage = cropImage(img, 580, 1, 55, 40);
   var foundResults = findImages(upperRightImage, loginGearIcon, 0.92, 1, true);
@@ -7578,7 +8015,7 @@ function checkIsCookieGachaPage() {
 }
 
 function checkAndRestartApp() {
-  for (var i = 0; i < config.tryRestartGameLimit; i++) {
+  while (config.tryRestartGameCount < config.tryRestartGameLimit) {
     if (checkIsFacebookPage()) {
       console.log('Skip checkAndRestartApp() as its facebook page');
       return false;
@@ -7589,25 +8026,38 @@ function checkAndRestartApp() {
       return true;
     }
 
-    console.log('Cookie not active, restart CookieKingdom and wait up to 50s till see pageInputAge');
+    console.log(
+      'Cookie not active, send running, restart CookieKingdom and wait up to 50s till see pageInputAge, config.tryRestartGameCount:',
+      config.tryRestartGameCount
+    );
+    sendEvent('running', '');
+    config.tryRestartGameCount++;
 
-    var rtn = execute('ls /data/data/com.devsisters.ck/shared_prefs');
-    if (rtn === 'exit status 1') {
-      console.log('Did not find shared_pref, removing all related dirs');
-      execute('rm -r /data/data/com.devsisters.ck/app_payload_lib');
-      execute('rm -r /data/data/com.devsisters.ck/cache');
-      execute('rm -r /data/data/com.devsisters.ck/code_cache');
-      execute('rm -r /data/data/com.devsisters.ck/.sealing_reports');
-      execute('rm -r /data/data/com.devsisters.ck/files');
-    }
+    for (var i = 0; i < 5; i++) {
+      if (getCurrentApp()[0] === 'com.devsisters.ck') {
+        break;
+      }
 
-    rtn = execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
+      var rtn = execute('ls /data/data/com.devsisters.ck/shared_prefs');
+      if (rtn === 'exit status 1') {
+        console.log('Did not find shared_pref, removing all related dirs');
+        execute('rm -r /data/data/com.devsisters.ck/app_payload_lib');
+        execute('rm -r /data/data/com.devsisters.ck/cache');
+        execute('rm -r /data/data/com.devsisters.ck/code_cache');
+        execute('rm -r /data/data/com.devsisters.ck/.sealing_reports');
+        execute('rm -r /data/data/com.devsisters.ck/files');
+      }
 
-    if (rtn == 'signal: aborted') {
-      // MEmu
-      execute(
-        'ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity'
-      );
+      rtn = execute('am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity');
+
+      if (rtn == 'signal: aborted') {
+        // MEmu
+        execute(
+          'ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am start -n com.devsisters.ck/com.devsisters.plugin.OvenUnityPlayerActivity'
+        );
+      }
+
+      sleep(2000);
     }
 
     var img;
@@ -7623,7 +8073,15 @@ function checkAndRestartApp() {
     }
 
     if (whSize.width !== 640) {
-      console.log('Reboot as failed to start the game after 50 secs');
+      console.log('Reboot emulator as failed to whSize still wrong after 30 secs');
+      execute('/system/bin/reboot -p');
+    } else if (getCurrentApp()[0] !== 'com.devsisters.ck') {
+      console.log(
+        'Reboot emulator as current app still wrong after 30 secs, should be {0}, but found {1}'.format(
+          'com.devsisters.ck',
+          getCurrentApp()[0]
+        )
+      );
       execute('/system/bin/reboot -p');
     }
 
@@ -7639,13 +8097,21 @@ function checkAndRestartApp() {
           pageTermsOfServicesHitBack,
           pageTermsOfServicesMemu,
         ],
-        50,
+        90,
         pnt(575, 22)
       )
     ) {
-      console.log('Successfully see announcement page after restart the game');
+      console.log('Successfully restart the app');
     }
     return false;
+  }
+
+  if (config.tryRestartGameCount >= config.tryRestartGameLimit) {
+    console.log(
+      'Game restart count exceed limit, restart the emulator, config.tryRestartGameCount: ',
+      config.tryRestartGameCount
+    );
+    execute('/system/bin/reboot -p');
   }
 }
 
@@ -7667,7 +8133,15 @@ function handleTowerOfRecords() {
   var adventuresRecordsRedCheck = [{ x: 117, y: 49, r: 255, g: 0, b: 0 }];
   var specialRecordsRedCheck = [{ x: 117, y: 89, r: 255, g: 0, b: 0 }];
   var cookieStoriesRedCheck = [{ x: 117, y: 128, r: 255, g: 0, b: 0 }];
-  var recordList = [adventuresRecordsRedCheck, specialRecordsRedCheck, cookieStoriesRedCheck];
+  var guildMuseumRedCheck = [{ x: 117, y: 169, r: 255, g: 0, b: 0 }];
+  var memoryGalleryRedCheck = [{ x: 117, y: 206, r: 255, g: 0, b: 0 }];
+  var recordList = [
+    adventuresRecordsRedCheck,
+    specialRecordsRedCheck,
+    cookieStoriesRedCheck,
+    guildMuseumRedCheck,
+    memoryGalleryRedCheck,
+  ];
   for (var i = 0; i < recordList.length; i++) {
     var recordTab = recordList[i];
     if (checkIsPage(recordTab)) {
@@ -7747,6 +8221,7 @@ function getMayhemScores() {
   return scores;
 }
 
+// eslint-disable-next-line no-unused-vars
 function handleSuperMayhem() {
   if (!handleGotoAdventure(Advantures.superMayhem, pageInSuperMayhem)) {
     console.log('skipping handleSuperMayhem as cannot find the path');
@@ -7761,12 +8236,6 @@ function handleSuperMayhem() {
     { x: 505, y: 325, r: 255, g: 251, b: 255 },
     { x: 270, y: 334, r: 123, g: 207, b: 8 },
     { x: 304, y: 218, r: 255, g: 223, b: 24 },
-  ];
-
-  var battleFinishPage = [
-    { x: 56, y: 331, r: 247, g: 89, b: 24 },
-    { x: 584, y: 332, r: 8, g: 166, b: 222 },
-    { x: 606, y: 24, r: 57, g: 169, b: 231 },
   ];
 
   var pageNoMayhemTicket = [
@@ -8160,8 +8629,8 @@ function handleTryResolveGreenChecks() {
 }
 
 function checkIsFreeze() {
-  if ((Date.now() - config.lastFreezeCheckScreenShotTime) / 1000 < 5) {
-    // Builtin cool down 3 secs
+  if ((Date.now() - config.lastFreezeCheckScreenShotTime) / 1000 < 10) {
+    // Builtin cool down 10 secs
     return true;
   }
 
@@ -8206,6 +8675,7 @@ function checkIsFreeze() {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function stop() {
   releaseImage(candy);
   releaseImage(greenCheckedWhiteBackground);
@@ -8424,6 +8894,12 @@ function loadImages() {
       ),
     },
     {
+      name: 'dairyFactory',
+      img: getImageFromBase64(
+        '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'
+      ),
+    },
+    {
       name: 'latte',
       img: getImageFromBase64(
         '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAWABsDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD7Q8S/Ef4h+P8A9pbwv+yr8INU0/TNT8Q300cut38XmpaJZw2t9f8AmR9SfsdzAkKLjzZLl3aa3FmIr3ET9lf4ga34d8LeIPD/AO3l8WNG1DxFb20cV1qPhuPULGK7mc+Ulw0VoLa2nbdBG1pJIvlSSugmnMQEnzH+1p/wVN0v9m/9otdb8NfC241q7t9amsLSDTdaax1PTntrqW0uLqK5W0n8ma/k082ot1WWN7eyt5ZtrvGlv9b/ALL3x4179uDwPqfxq+CH7WdikV1qMVl4xltvhxBperQoI4p2t5LsRwTM4ikQLOu+IsG2ljGyj8yWUOdCMuRttLZrqlv7y632vo12s/1CGY/VKV3KMI9XKPNd3ez5J6Wto7ap2ve6x/2evit8YbT4seIf2YfjrqOn694j8IWNvPqHizR7Zbe1u/tO6SBPLO1hNtWeOSMRhY3s3+dzJsi9syfWvBvifF8C/wBnzxRY+Hvg62meItN8TzWumx+KtQt3/tddf/tS10/7dZ6kEiinjsn1GKGewt2CDZdxTRFri7Ne81x5hgK2AcI1FZtdn0duv3PzTOKnmGDzKc6uFacLra3ZO9k3a97pdmj4+/bk/wCCWuj/ALROsy+PfhXd2NlqVyJmv/D+oX8tlY3lxNIhecTRQz/Z8nzZpFW3ZpZiHWSBpLhp+G+Anjj4N/sx+A/Ff7Gn7O/7NOoXmrf2Rq9x4p/4Sz4v3o0nU5JIpBI8tvDZNbz7EEcUatZodkKFmMheRiivWynFYh07OW2i/AWIo061LknqtdLv9BPid4q0G++OMnwk/s0t4gs/ADa7qus3Vsk0E3h5tQ8u4014mbbeGb7JJFsmULEsgdHPzxP3nw00f9vb42/DzQ/jL8G/jxbeHfCfizSbfWPDmj6jqNvdXNvZXMYmi857nSbmRZWRw7xefKkTMY43aNENFFfvviniZUsNSahB/vJL3oQlsltzRdvNrV9dj+Ifo75Ng8Ri8ReVSNqNJ+5Vq09ZSle/s5xuvdVk7qN5OKTlK/8A/9k='
@@ -8460,6 +8936,18 @@ function loadImages() {
       ),
     },
     {
+      name: 'fasterTrainTrading1',
+      img: getImageFromBase64(
+        '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'
+      ),
+    },
+    {
+      name: 'fountainFasterProduction2',
+      img: getImageFromBase64(
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAYABoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6GuJ5Z5XurqZnd2LSSSNksTySSev1rwSx+MP7QnxBgk8b/DfWPDv/AAjmr3V6PBy6V4Nk183Nra389gZ57mPVrVQ00luZ440jP7m4gO5t24+teIvhR4z/AGkf7Z+EXhLSruTQdM0lNQ+JV7FpTzq2ky+ai6ZDtdSbi8MciMyB/Ito7mV9j/ZxLwniv4pa14/u9C+IGv634c8Jt4p05rm0tbrTJ51mjgvJbcx2n2S28uzYNZNGUuGRVVVfzQmPL+jyLL8DXo1MZi5Q9lCUINSk4LmnKKXvR1Ts7pWfM1Z2vzL5HijOMzwVell+Xxl7apGU7xgqjUYRm7KElyvmcfed4uEfeXN8L7H4S/EMfELQ9STULnRm1nw74k1Lw/4jg0LVlvbaG/sbuS2kMcgCkxyCNZ49yqxiniYj5hXU151498X+KLLTPEf7WGt3XhXQbLwD4p/4Qnx5p1xeWobW7SIXNzENPuw8Ud3e2PmSyfZo1kkureS4aNDKIlf0RHWRBIjAqwyCO4ry80wP9mZhPC83Ny219YqXRtaXs7Nq63PbyXM1nWVU8cocnPze7e9uWTjvaLs7cy0Xutdbnn+tfFjwn+zf8cLzxP8AE3UvF1h4C+JngWTw14w1rQdQMFto93DqNk9hPMzvHbxxypcXsErXMiKYiUjkjaR0uOk0DxZ/wTq8S+EfFd/oH7QSS2GiaW72sOneJNHltlWUXk0kMn2K5vIbVPllbzbyWzhcskIcbzLCUV8rmHF3EfC3NRyzEOnCo1KSUYO8tFe7i3slpez6n2WE8PuFeNfZYrNqLnUpxnGL5pL3Um0uW/L1ava6WzT1PnU/tkfs1w+DvBvwo0D9oXQH8W3Xh7Sbizv/AO1ImtrLyreWNYLxozJFcuYp72NNMy80n2hljNt9oW6HZXkqX93LfaJ+yd8Y7qymkaS0udO+Ib6VbzRE5R4rKTxFbPZoVwVga3gaIEIYoipRSiv1DGcV4+VOPNSpvXrBPZLXW6u+r66dEj+bcm8I+Ho4mpOlicTT5kpfu68qfxym2r01F8qavGLbSbk/ik2//9k='
+      ),
+    },
+    {
       name: 'materialsFaster2',
       img: getImageFromBase64(
         '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'
@@ -8472,6 +8960,12 @@ function loadImages() {
       ),
     },
     {
+      name: 'toyStore',
+      img: getImageFromBase64(
+        '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'
+      ),
+    },
+    {
       name: 'cottom',
       img: getImageFromBase64(
         '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wAARCAAYABsDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9K/GXjO91KS58V+MNYeTy42eaeUkiNBlsKB0A5woHfgV09p8BfifeaJp+pFtAt7rVtrafp11qkokZTGZMOyQMquFByAWQY++eMy/BDwJ4p1NNT+KBvVg0p9I1Sw0q5sLnE0DpiOW4OcFJhNHJHGVB2rFIxY+coX228u9KsknsdYvoTdo8RM1zOI2mRipMiFiNoU+ZhQcDbznIz8/kvDGDlgo18bHnnPW12uVdNmtXu76ray1Z9/isTHDpUaMU5J672W3u2XLtf3nfR6aWbPlbStWtNXt2ntWw0UzwXERYFoZUYq8bbSRlWBHBIOMgkEGuo034o/EDSLGPTdO8VXUcEK7YowwO0enIrZ+OdmfFejXXxutLW5ksPD3w8v8AUE8RQpbpaXqW05lFq8e8XDO8EcjIxAjgL5G8ySR1w9fNcQ5LWyDFJ05Pknfl11VrXjLzV10V97HXONCvRjWhZxleyupWt0vbs1rZPytvb+G/xAi+DfxJh8W+JvE3ib/hFr3empafYl7m1srsxhI7t4VDSCEhRG4jDBXMUzLGi3Eta03/AAUE+BsuuR6GmpaVrvh3yrm5OvWixzaVpPllfLt7q8i329rIY3bYHwMRkFgXiEhRX2HCmPxGIylqq+b2cowV/wCV/wCV7LysfVZNkeAzjCzxOJTco2irO2i2emt/ete+yXz+D9O+IPxQvvB/gfwFf/HHxVJax6Zc3dl4Y1nxLdX8t3N51lOmoh5/tHnPZTYkQXaT26zXkI3RhLeOtu9/4KJfFOG5eDwP8B4vHOmx4SLxR4e0rxZLaXjgYlVG03w/qVrmOQPEyx3kxV42V/LcPEhRX6j4hZVkqwFGtUwsJS5+W75k7OCk9YSi3q9ndLolqf59+Due8ZZzn+Kw1XN8QoKnzJN06iTVaVNW9tTqW92OrVpPaTcYwUf/2Q=='
@@ -8481,6 +8975,18 @@ function loadImages() {
       name: 'researchSpeed',
       img: getImageFromBase64(
         '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'
+      ),
+    },
+    {
+      name: 'moreStorageSpace1',
+      img: getImageFromBase64(
+        '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'
+      ),
+    },
+    {
+      name: 'fasterBallonExploration2',
+      img: getImageFromBase64(
+        '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'
       ),
     },
     {
@@ -8600,6 +9106,7 @@ function loadImages() {
     { char: '0', img: getImageFromBase64(b64N0_1_tree) },
     { char: '0', img: getImageFromBase64(b64N0_2_tree) },
     { char: '0', img: getImageFromBase64(b64N0_3_tree) },
+    { char: '0', img: getImageFromBase64(b64N0_4_tree) },
     { char: '1', img: getImageFromBase64(b64N1_1_tree) },
     { char: '1', img: getImageFromBase64(b64N1_2_tree) },
     { char: '1', img: getImageFromBase64(b64N1_3_tree) },
@@ -8944,6 +9451,7 @@ function loadImages() {
   ];
 }
 
+// eslint-disable-next-line no-unused-vars
 function testRunAtLocal() {
   config.autoPvPIntervalInMins = 30;
   config.autoUpgradeCandyHouse = true;
@@ -8968,6 +9476,48 @@ function initRobotmonFramework() {
   // this.taskManager = new RF.TaskManager();
 }
 
+function logs(activity, message) {
+  console.log('{0}, {1}, {2}'.format(new Date().toLocaleString(), activity, message));
+}
+
+var groupPageGlobal = new RF.GroupPage('groupPageGlobal', [
+  rfpageNotifyQuitWindow,
+  rfpageInLoginPageWithGearAndVideo,
+  rfpageNameYourKingdom,
+  rfpageStoryBuildCookieHouses1,
+  rfpageKingdomHaveNoCookieIcon,
+  rfpageKindomHasOnlySorageAndBuildIcon,
+  rfpageUnfinishedBattleNeedResume,
+  rfpageInKingdomVillage,
+  rfpageInProduction,
+  rfpageInMagicLab,
+  rfpagePurchaseDiamond,
+  rfpageGooglePlaystoreHasStopped,
+  rfpageCookieKingdomNotResponding,
+  rfpageCookieKingdomIsNotResponding,
+  rfpageCookieKingdomIsNotResponding2,
+  rfpageCookieKingdomHasStopped,
+  rfpageTermsOfServiceWindow,
+  rfpageNewDataPackAvailable,
+  rfpageNewDataPackDownloadFailed,
+  rfpageNewDataPackAvaiableNoLanguage,
+  rfpageGeneralMessageWindow,
+  rfpageInputAge,
+  rfpageMessageWindow,
+  rfpageBattlePaused,
+
+  rfpageToolShop,
+  rfpageIsJammery,
+  rfpageIsJampieDiner,
+  rfpageIsBakery,
+  rfpageIsFlowerShop,
+
+  rfpageShipInHabor,
+  rfpageNoShipInHabor,
+  rfpageCanLoadThisItem,
+  rfpageLoadTooMuchWarning,
+]);
+
 function start(inputConfig) {
   console.log('inputConfig: ', inputConfig);
   config.run = true;
@@ -8986,6 +9536,35 @@ function start(inputConfig) {
   inputConfig = JSON.parse(inputConfig);
   config = mergeObject(config, inputConfig);
 
+  try {
+    if (typeof xDecodeHex !== 'undefined') {
+      config.account = xDecodeHex(config.account);
+      config.password = xDecodeHex(config.password);
+      console.log('Decode successfully, ', config.account);
+    }
+  } catch (e) {
+    console.log('Unable to decode, fall back to original account: ', e);
+  }
+
+  if (config.licenseId === '') {
+    logs('start', 'config.licenseId is empty thus goto maintainance mode');
+    config.isMaintainanceMode = true;
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      checkAndRestartApp();
+      handleInputLoginInfo();
+      var matchedPages = groupPageLogin.isMatchScreen(this.screen);
+      if (matchedPages.length > 0) {
+        logs(
+          'start',
+          'found page {0} so sleep 60secs and keep maintaining game on'.format(JSON.stringify(matchedPages))
+        );
+        sleep(60000);
+      }
+    }
+  }
+
   if (!config.isXR) {
     config.magicLabProductIndex = 0;
     config.autoUpgradeCandyHouse = false;
@@ -8999,23 +9578,46 @@ function start(inputConfig) {
     config.autoBuyLegendSoulEssence = false;
     config.autoBuyGuildRelic = false;
     config.autoHandleCollectCookieOdysseyMission = false;
+    config.isNewKingdomCheckRequired = false;
+    config.isSendPlayingRequired = false;
   }
-
-  console.log('start with: ', config.materialsTarget, config.goodsTarget, config.run);
 
   loadImages();
 
   checkAndRestartApp();
 
-  if (config.account === 'moonminv2@gmail.com') {
+  if (config.account === 'moonminv4@gmail.com') {
+    var lastSentEvent = 0;
+    sendEvent('gameStatus', 'wait-for-input');
+
+    // eslint-disable-next-line no-constant-condition
     while (true) {
-      sendEvent('running', '');
-      sendEvent('gameStatus', 'wait-for-input');
-      sleep(300 * 1000);
+      if ((Date.now() - lastSentEvent) / 60000 > 5) {
+        sendEvent('running', '');
+        lastSentEvent = Date.now();
+      }
+      checkAndRestartApp();
+
+      if (checkIsPage(pageInLoginPageWithGearAndVideo)) {
+        console.log(
+          'In login page (found gear and video icon), tap announcement icon and skip handleTryHitBackToSpecificPage'
+        );
+        qTap(pnt(575, 22));
+        sleep(3000);
+      }
+
+      if (checkIsPage(pageInKingdomVillage) || handleAnnouncement()) {
+        console.log('We are in kingdom, login finished, bot starting');
+        sendEvent('gameStatus', 'login-succeeded');
+        break;
+      }
+
+      console.log('Wait a second');
+      sleep(1000);
     }
   }
 
-  handleCheckIfAtLoginScreen();
+  handleCheckIfAtLoginScreenByIcon();
 
   if (
     config.account !== 'default_xrobotmon_account@gmail.com' &&
@@ -9028,14 +9630,12 @@ function start(inputConfig) {
     console.log('wrong login info, stopping');
     return;
   }
-  sendEvent('running', '');
-  sendEvent('gameStatus', 'playing');
 
   if (!config.isTestAccount) {
     config.lastGotoProduction = Date.now();
   }
 
-  if (waitUntilSeePages([pageInProduction, pageInMagicLab], 2)) {
+  if (groupPageInProductions.waitScreenForMatchingOne(this.screen, 2000) !== '') {
     console.log('Already in production, reset all side tasks');
     config.lastCollectMail = Date.now();
     config.lastCollectDailyReward = Date.now();
@@ -9158,14 +9758,14 @@ function start(inputConfig) {
         config.lastAutoPvP = Date.now();
       }
 
-      if (
-        config.autoSuperMayhemIntervalInMins != 0 &&
-        (Date.now() - config.lastAutoSuperMayhem) / 60000 > config.autoSuperMayhemIntervalInMins
-      ) {
-        console.log('Auto Super Mayhem: ', (Date.now() - config.lastAutoSuperMayhem) / 60000, ' just passed');
-        handleSuperMayhem();
-        config.lastAutoSuperMayhem = Date.now();
-      }
+      // if (
+      //   config.autoSuperMayhemIntervalInMins != 0 &&
+      //   (Date.now() - config.lastAutoSuperMayhem) / 60000 > config.autoSuperMayhemIntervalInMins
+      // ) {
+      //   console.log('Auto Super Mayhem: ', (Date.now() - config.lastAutoSuperMayhem) / 60000, ' just passed');
+      //   handleSuperMayhem();
+      //   config.lastAutoSuperMayhem = Date.now();
+      // }
 
       if (
         config.autoCollectTropicalIslandsIntervalInMins != 0 &&
@@ -9245,6 +9845,7 @@ function start(inputConfig) {
           ' just passed'
         );
         handleTryResolveGreenChecks();
+        config.lastTryResolveGreenChecks = Date.now();
       }
 
       if ((Date.now() - config.lastAutoGuildBattle) / 60000 > 180) {
@@ -9307,15 +9908,12 @@ function start(inputConfig) {
         console.log('in production, continue work');
         config.jobFailedCount = 0;
         continue;
-      } else if (checkIsPage(pageInputAge)) {
-        handleInputLoginInfo();
-        continue;
       } else if (handleUnexpectedMessageBox()) {
         console.log('just handleUnexpectedMessageBox()');
         config.jobFailedCount = 0;
         continue;
-      } else if (handleCheckIfAtLoginScreen()) {
-        console.log('just handleCheckIfAtLoginScreen()');
+      } else if (handleCheckIfAtLoginScreenByIcon()) {
+        console.log('just handleCheckIfAtLoginScreenByIcon()');
         config.jobFailedCount = 0;
         continue;
       } else if (handleTryResolveGreenChecks()) {
@@ -9369,12 +9967,12 @@ function start(inputConfig) {
       }
     } else {
       config.jobFailedCount = 0;
-      sendEvent('running', '');
+      // sendEvent('running', '');
       // console.log('Cookie action successfully at: ', new Date().toLocaleString());
     }
   }
 }
 
 // testRunAtLocal();
-// loadImages()
-// initRobotmonFramework()
+// loadImages();
+// initRobotmonFramework();
