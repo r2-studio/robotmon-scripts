@@ -1,7 +1,7 @@
-import { Rerouter, rerouter, Utils, XYRGB, Page } from 'Rerouter';
+import { Rerouter, rerouter, Utils, XYRGB, Page, Task } from 'Rerouter';
 import { ScriptConfig } from './src/types';
 import { logs, getCurrentApp, sendKeyBack } from './src/utils';
-import { scrollDownALot, scrollRightALot } from './src/helper';
+import { scrollDownALot, scrollLeftALot, scrollRightALot } from './src/helper';
 import { defaultConfig } from './src/defaultScriptConfig';
 
 import * as PAGES from './src/pages';
@@ -78,30 +78,38 @@ class CookieKingdom {
     //   forceStop: false,
     // });
 
+    // this.rerouter.addTask({
+    //   name: TASKS.collectKingdomPass,
+    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+    // this.rerouter.addTask({
+    //   name: TASKS.sendFriendReward,
+    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+    // this.rerouter.addTask({
+    //   name: TASKS.getInShopFreeDailyPack,
+    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+    // this.rerouter.addTask({
+    //   name: TASKS.collectMail,
+    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
     this.rerouter.addTask({
-      name: TASKS.collectKingdomPass,
+      name: TASKS.sendHotAirBallon,
       maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
       forceStop: false,
     });
-    this.rerouter.addTask({
-      name: TASKS.sendFriendReward,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.getInShopFreeDailyPack,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.collectMail,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
+
+    // ====
   }
 
   public addRoutes() {
@@ -222,16 +230,61 @@ class CookieKingdom {
           });
           Utils.sleep(CONSTANTS.sleepAnimate * 2);
           // items swipe to left most
-          scrollRightALot(rerouter, { x: 137, y: 268 });
+          scrollLeftALot(rerouter, { x: 137, y: 268 });
           Utils.sleep(CONSTANTS.sleepAnimate * 2);
 
           this.taskStatus[TASKS.getInShopFreeDailyPack]['trials']++;
         }
       },
     });
+
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageUncollapsedAffairs.name}`,
+      match: PAGES.rfpageUncollapsedAffairs,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, `rfpageUncollapsedAffairs, goint to task related affair: ${context.task.name}`);
+        switch (context.task.name) {
+          case TASKS.sendHotAirBallon:
+            this.rerouter.screen.tap({ x: 103, y: 203 });
+            break;
+        }
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInHotAirBallon.name}`,
+      match: PAGES.rfpageInHotAirBallon,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, 'rfpageInHotAirBallon, choose next step');
+        if (this.taskStatus[TASKS.sendHotAirBallon]['changeMapFinished']) {
+          this.rerouter.screen.tap({ x: 258, y: 330 }); // tap Auto
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap({ x: 575, y: 330 }); // tap Start
+        } else {
+          this.rerouter.screen.tap({ x: 412, y: 330 }); // tap Change
+        }
+        finishRound(true);
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageChooseBallonDestination.name}`,
+      match: PAGES.rfpageChooseBallonDestination,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, `rfpageChooseBallonDestination, goto ep4: ${this.config.isHotAirBallonGotoEp4}`);
+        scrollLeftALot(rerouter, { x: 618, y: 151 });
+        if (this.config.isHotAirBallonGotoEp4 && this.rerouter.isPageMatchImage(PAGES.rfpageBallonMapEp4, image)) {
+          this.rerouter.goNext(PAGES.rfpageBallonMapEp4); // tap EP4 map
+        } else {
+          // scroll to right most and find the last map
+          // scrollRightALot(rerouter, { x: 618, y: 151 });
+          // TODO: continue here
+          console.log('Need to find last map and continue');
+        }
+      },
+    });
+
     // this.rerouter.addRoute({
-    //   path: `/${PAGES.rfpageIsDailyFreePackage.name}`,
-    //   match: PAGES.rfpageIsDailyFreePackage,
+    //   path: `/${PAGES.AAAAAAAAA.name}`,
+    //   match: PAGES.AAAAAAAAA,
     //   action: (context, image, matched, finishRound) => {
     //     logs(context.task.name, 'rfpageIsDailyFreePackage, daily gift collected correctly');
     //     finishRound(true);
@@ -259,6 +312,12 @@ class CookieKingdom {
               trials: 0,
             };
             this.rerouter.screen.tap({ x: 26, y: 86 });
+            break;
+          case TASKS.sendHotAirBallon:
+            this.taskStatus[TASKS.sendHotAirBallon] = {
+              changeMapFinished: false,
+            };
+            this.rerouter.screen.tap({ x: 105, y: 330 });
             break;
           default:
             logs(context.task.name, 'Unknown task in rfpageInKingdomVillage');
@@ -363,4 +422,4 @@ declare global {
 // (window as any).stop = stop;
 // (window as any).rerouter = rerouter;
 
-// start();
+start();

@@ -4,4 +4,5 @@ export enum TASKS {
   collectKingdomPass = 'collectKingdomPass',
   sendFriendReward = 'sendFriendReward',
   getInShopFreeDailyPack = 'getInShopFreeDailyPack',
+  sendHotAirBallon = 'sendHotAirBallon',
 }

@@ -17,7 +17,7 @@ export function scrollDownALot(rerouter: Rerouter, startPnt: XY) {
   Utils.sleep(CONSTANTS.sleepAnimate * 3);
 }
 
-export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
+export function scrollLeftALot(rerouter: Rerouter, startPnt: XY) {
   rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
   Utils.sleep(CONSTANTS.sleep);
   rerouter.screen.moveTo({ x: startPnt.x * 2, y: startPnt.y });
@@ -32,7 +32,22 @@ export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
   Utils.sleep(CONSTANTS.sleepAnimate * 3);
 }
 
-export function checkScreenMessage(rerouter: Rerouter, message:MessageWindow, pageMessageWindow: Page) {
+export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
+  rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
+  Utils.sleep(CONSTANTS.sleep);
+  rerouter.screen.moveTo({ x: startPnt.x / 2, y: startPnt.y });
+  Utils.sleep(CONSTANTS.sleep);
+  rerouter.screen.moveTo({ x: 0, y: startPnt.y });
+  Utils.sleep(CONSTANTS.sleep);
+  rerouter.screen.moveTo({ x: -1000, y: startPnt.y });
+  Utils.sleep(CONSTANTS.sleep);
+  rerouter.screen.moveTo({ x: -2000, y: startPnt.y });
+  Utils.sleep(CONSTANTS.sleep);
+  rerouter.screen.tapUp({ x: -2000, y: startPnt.y });
+  Utils.sleep(CONSTANTS.sleepAnimate * 3);
+}
+
+export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, pageMessageWindow: Page) {
   if (pageMessageWindow === undefined) {
     pageMessageWindow = PAGES.rfpageGeneralMessageWindow;
   }
