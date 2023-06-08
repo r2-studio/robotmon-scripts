@@ -14,6 +14,18 @@ export interface XYRGB {
   thres?: number;
 }
 
+export interface MessageWindow {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+
+  targetY: number;
+  lookingForColor: { r: number; g: number; b: number };
+  targetColorCount: number;
+  targetColorThreashold: number;
+}
+
 export class Page {
   public name: string;
   public points: XYRGB[];

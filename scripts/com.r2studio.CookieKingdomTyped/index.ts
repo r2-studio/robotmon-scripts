@@ -96,6 +96,12 @@ class CookieKingdom {
       minRoundInterval: 240 * CONSTANTS.minuteInMs,
       forceStop: false,
     });
+    this.rerouter.addTask({
+      name: TASKS.collectMail,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
   }
 
   public addRoutes() {
@@ -168,15 +174,26 @@ class CookieKingdom {
       },
     });
     this.rerouter.addRoute({
+      path: `/${PAGES.rfpageMailsAllClaimed.name}`,
+      match: PAGES.rfpageMailsAllClaimed,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, 'rfpageMailsAllClaimed, task finished');
+        this.rerouter.goNext(PAGES.rfkingdomPassItemCollected);
+        finishRound(true);
+      },
+    });
+    // TODO: double verify friend reward is sent
+    this.rerouter.addRoute({
       path: `/${PAGES.rfpageInFriendsList.name}`,
       match: PAGES.rfpageInFriendsList,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, 'rfpageInFriendsList, task finished');
-        this.rerouter.goNext(PAGES.rfpageCanSendFriendRewards);
+        this.rerouter.goNext(PAGES.rfpageFriendRewardsSent);
         sendKeyBack();
         finishRound(true);
       },
     });
+
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageInShop.name}`,
       match: PAGES.rfpageInShop,
@@ -185,6 +202,15 @@ class CookieKingdom {
         const x = PAGES.rfpageNecessities.points[0].x;
         const y = PAGES.rfpageNecessities.points[0].y + trial * 20;
         logs(context.task.name, `rfpageInShop, scroll down to daily gift, trial: #${trial}, tapping (${x}, ${y})`);
+
+        if (this.rerouter.isPageMatchImage(PAGES.rfpageIsDailyFreePackageClaimed, image)) {
+          logs(context.task.name, 'rfpageIsDailyFreePackageClaimed, task finished');
+          sendKeyBack();
+          finishRound(true);
+        } else if (this.rerouter.isPageMatchImage(PAGES.rfpageIsDailyFreePackageNotClaimed, image)) {
+          logs(context.task.name, 'rfpageIsDailyFreePackageNotClaimed, tap it');
+          this.rerouter.goNext(PAGES.rfpageIsDailyFreePackageNotClaimed);
+        }
 
         if (trial < 7) {
           // Shop menu swipe up
@@ -201,29 +227,16 @@ class CookieKingdom {
 
           this.taskStatus[TASKS.getInShopFreeDailyPack]['trials']++;
         }
-
-        if (this.rerouter.isPageMatchImage(PAGES.rfpageIsDailyFreePackageClaimed, image)) {
-          logs(context.task.name, 'rfpageIsDailyFreePackageClaimed, task finished');
-          sendKeyBack();
-          finishRound(true);
-        }
-
-        // TODO: need a page collecting reward
-        // console.log('Got daily reward correctly at ', i, 'y: ', pageNecessities[0].y - i * 10);
-        // qTap(pnt(265, 323));
-        // sleep(config.sleepAnimate);
-        // qTap(pnt(265, 323));
-        // sleep(config.sleepAnimate);
       },
     });
-    this.rerouter.addRoute({
-      path: `/${PAGES.rfpageIsDailyFreePackage.name}`,
-      match: PAGES.rfpageIsDailyFreePackage,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, 'rfpageIsDailyFreePackage, daily gift collected correctly');
-        finishRound(true);
-      },
-    });
+    // this.rerouter.addRoute({
+    //   path: `/${PAGES.rfpageIsDailyFreePackage.name}`,
+    //   match: PAGES.rfpageIsDailyFreePackage,
+    //   action: (context, image, matched, finishRound) => {
+    //     logs(context.task.name, 'rfpageIsDailyFreePackage, daily gift collected correctly');
+    //     finishRound(true);
+    //   },
+    // });
 
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageInKingdomVillage.name}`,
@@ -232,6 +245,9 @@ class CookieKingdom {
         logs(context.task.name, `in ${context.path}`);
 
         switch (context.task.name) {
+          case TASKS.collectMail:
+            this.rerouter.screen.tap({ x: 550, y: 20 });
+            break;
           case TASKS.collectKingdomPass:
             this.rerouter.screen.tap({ x: 600, y: 85 });
             break;
@@ -286,10 +302,7 @@ class CookieKingdom {
       if (this.rerouter.checkAndStartApp()) {
         return;
       }
-      // if (context.matchTimes % 2 === 0) {
-      //   this.rerouter.screen.tap({ x: 0, y: 0 });
-      //   Utils.log('tap for unknown');
-      // }
+
       if (context.matchTimes % 4 === 0) {
         keycode('KEYCODE_BACK', 100);
         Utils.log('keycode back for unknown');

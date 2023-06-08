@@ -269,12 +269,31 @@ export const unfinishedBattleMessageScreen = {
   targetColorThreashold: 5,
 };
 
-export const pageInMailBox = [
-  { x: 609, y: 11, r: 57, g: 166, b: 231 },
-  { x: 609, y: 19, r: 255, g: 255, b: 255 },
-  { x: 53, y: 130, r: 255, g: 239, b: 214 },
-  { x: 37, y: 33, r: 57, g: 69, b: 107 },
-];
+export const rfpageHasUnreadMails = new Page(
+  'rfpageHasUnreadMails',
+  [
+    { x: 584, y: 316, r: 123, g: 207, b: 8 },
+    { x: 591, y: 133, r: 126, g: 209, b: 14 },
+    { x: 607, y: 10, r: 57, g: 166, b: 231 },
+    { x: 54, y: 131, r: 255, g: 239, b: 214 },
+  ],
+  { x: 577, y: 317 }
+);
+export const rfpageMailsAllClaimed = new Page(
+  'rfpageMailsAllClaimed',
+  [
+    { x: 615, y: 20, r: 255, g: 255, b: 255 },
+    { x: 607, y: 18, r: 66, g: 109, b: 123 },
+    { x: 362, y: 27, r: 57, g: 69, b: 107 },
+    { x: 342, y: 30, r: 52, g: 53, b: 57 },
+    { x: 333, y: 30, r: 255, g: 255, b: 255 },
+    { x: 336, y: 30, r: 9, g: 10, b: 16 },
+    { x: 488, y: 315, r: 180, g: 180, b: 180 },
+    { x: 506, y: 324, r: 160, g: 160, b: 160 },
+    { x: 462, y: 324, r: 49, g: 60, b: 90 },
+  ],
+  { x: 606, y: 20 }
+);
 
 export const pageInFountain = [
   { x: 505, y: 305, r: 121, g: 207, b: 12 },
@@ -1168,8 +1187,14 @@ export const rfpageCanSendFriendRewards = new Page(
     { x: 24, y: 89, r: 255, g: 227, b: 0 },
     { x: 19, y: 107, r: 135, g: 152, b: 192 },
   ],
-  { x: 402, y: 345 }
+  { x: 390, y: 335 }
 );
+export const rfpageFriendRewardsSent = new Page('rfpageFriendRewardsSent', [
+  { x: 400, y: 329, r: 85, g: 85, b: 85 },
+  { x: 20, y: 89, r: 4, g: 4, b: 3 },
+  { x: 214, y: 341, r: 57, g: 69, b: 107 },
+  { x: 173, y: 341, r: 57, g: 69, b: 107 },
+]);
 // export const rfpageShop = new Page('rfpageShop', [
 //   { x: 20, y: 84, r: 247, g: 190, b: 140 },
 //   { x: 23, y: 112, r: 181, g: 0, b: 24 },
@@ -1177,12 +1202,23 @@ export const rfpageCanSendFriendRewards = new Page(
 // ],{x: 20, y: 84}
 // );
 export const rfpageNecessities = new Page('rfpageNecessities', [{ x: 114, y: 70, r: 255, g: 109, b: 107 }]);
-export const rfpageIsDailyFreePackage = new Page('rfpageIsDailyFreePackage', [
-  { x: 181, y: 186, r: 13, g: 203, b: 252 },
-  { x: 190, y: 204, r: 255, g: 255, b: 255 },
-  { x: 235, y: 220, r: 242, g: 121, b: 189 },
-  { x: 253, y: 166, r: 255, g: 253, b: 166 },
-]);
+// export const rfpageIsDailyFreePackage = new Page('rfpageIsDailyFreePackage', [
+//   { x: 181, y: 186, r: 13, g: 203, b: 252 },
+//   { x: 190, y: 204, r: 255, g: 255, b: 255 },
+//   { x: 235, y: 220, r: 242, g: 121, b: 189 },
+//   { x: 253, y: 166, r: 255, g: 253, b: 166 },
+// ]);
+export const rfpageIsDailyFreePackageNotClaimed = new Page(
+  'rfpageIsDailyFreePackageNotClaimed',
+  [
+    { x: 268, y: 314, r: 123, g: 207, b: 8 },
+    { x: 177, y: 317, r: 115, g: 207, b: 16 },
+    { x: 223, y: 270, r: 239, g: 105, b: 143 },
+    { x: 193, y: 164, r: 34, g: 231, b: 255 },
+    { x: 242, y: 144, r: 255, g: 121, b: 189 },
+  ],
+  { x: 268, y: 314 }
+);
 export const rfpageIsDailyFreePackageClaimed = new Page('rfpageIsDailyFreePackageClaimed', [
   { x: 273, y: 329, r: 125, g: 125, b: 125 },
   { x: 180, y: 321, r: 125, g: 125, b: 125 },
@@ -1198,3 +1234,17 @@ export const rfpageInShop = new Page('rfpageInShop', [
   { x: 13, y: 19, r: 91, g: 91, b: 95 },
   { x: 41, y: 24, r: 147, g: 147, b: 149 },
 ]);
+
+export const rfpageGameSettings = new Page(
+  'rfpageGameSettings',
+  [
+    { x: 602, y: 15, r: 28, g: 39, b: 51 },
+    { x: 574, y: 22, r: 247, g: 211, b: 107 },
+    { x: 543, y: 15, r: 255, g: 235, b: 198 },
+    { x: 510, y: 23, r: 239, g: 166, b: 90 },
+    { x: 488, y: 69, r: 40, g: 55, b: 73 },
+    { x: 488, y: 101, r: 40, g: 55, b: 73 },
+    { x: 488, y: 86, r: 40, g: 55, b: 73 },
+  ],
+  { x: 612, y: 19 }
+);

@@ -1,4 +1,4 @@
-import { Rerouter, rerouter, Utils, XYRGB, Page, XY } from 'Rerouter';
+import { Rerouter, rerouter, Utils, XYRGB, Page, XY, MessageWindow } from 'Rerouter';
 import * as PAGES from './pages';
 import * as CONSTANTS from './constants';
 
@@ -30,4 +30,36 @@ export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
   Utils.sleep(CONSTANTS.sleep);
   rerouter.screen.tapUp({ x: 2000, y: startPnt.y });
   Utils.sleep(CONSTANTS.sleepAnimate * 3);
+}
+
+export function checkScreenMessage(rerouter: Rerouter, message:MessageWindow, pageMessageWindow: Page) {
+  if (pageMessageWindow === undefined) {
+    pageMessageWindow = PAGES.rfpageGeneralMessageWindow;
+  }
+
+  if (!rerouter.isPageMatch(pageMessageWindow)) {
+    return false;
+  }
+
+  var img = getScreenshot();
+  var croppedImage = cropImage(img, message.x, message.y, message.width, message.height);
+
+  var whSize = getImageSize(croppedImage);
+
+  var cnt = 0;
+  for (var i = 0; i < whSize.width; i++) {
+    if (isSameColor(getImageColor(croppedImage, i, message.targetY), message.lookingForColor)) {
+      cnt++;
+    }
+  }
+  // console.log(
+  //   'cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ',
+  //   cnt,
+  //   messageScreen.targetColorCount,
+  //   messageScreen.targetColorThreashold
+  // );
+
+  releaseImage(img);
+  releaseImage(croppedImage);
+  return Math.abs(message.targetColorCount - cnt) < message.targetColorThreashold ? true : false;
 }
