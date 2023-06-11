@@ -117,18 +117,31 @@ export class Rerouter {
   public checkAndStartApp(): boolean {
     if (!this.checkInApp()) {
       this.log(`AppIsNotStarted, startApp ${this.rerouterConfig.packageName}`);
-      Utils.startApp(this.rerouterConfig.packageName);
-      Utils.sleep(this.rerouterConfig.startAppDelay);
+      this.startApp();
       return true;
     }
     return false;
   }
-
-  public restartApp(): void {
-    Utils.stopApp(this.rerouterConfig.packageName);
-    Utils.sleep(1000);
+  public startApp(): void {
+    if (!this.rerouterConfig.packageName) {
+      this.log(`Rerouter start app failed, no packageName ...`);
+      return;
+    }
     Utils.startApp(this.rerouterConfig.packageName);
     Utils.sleep(this.rerouterConfig.startAppDelay);
+  }
+  public stopApp(): void {
+    if (!this.rerouterConfig.packageName) {
+      this.log(`Rerouter stop app failed, no packageName ...`);
+      return;
+    }
+    Utils.stopApp(this.rerouterConfig.packageName);
+    Utils.sleep(1000);
+  }
+
+  public restartApp(): void {
+    this.stopApp();
+    this.startApp();
   }
 
   public goNext(page: Page | GroupPage): void {
