@@ -95,4 +95,25 @@ declare global {
   function getBase64FromImage(image: any): string;
   function httpClient(method: string, url: string, body: string, headers: { [key: string]: string }): string;
   function getUserPlan(): string | undefined;
+  function s3UploadFile(
+    filepath: string,
+    objectName: string,
+    contentType: string,
+    endpoint: string,
+    bucket: string,
+    keyId: string,
+    accessKey: string,
+    token: string,
+    ssl: boolean
+  ): any;
+  function s3DownloadFile(
+    filepath: string,
+    objectName: string,
+    endpoint: string,
+    bucket: string,
+    keyId: string,
+    accessKey: string,
+    token: string,
+    ssl: boolean
+  ): number;
 }
