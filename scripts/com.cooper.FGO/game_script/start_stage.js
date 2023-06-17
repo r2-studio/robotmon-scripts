@@ -42,18 +42,27 @@ function selectStage(useApple) {
   }
   var status = -1;
   while (isScriptRunning) {
-    if (isItemOrServantFullDialog()) {
+    if(iswhiteStartFailedDialog()){
+      status = 3;
+    } else if (isItemOrServantFullDialog()) {
       status = 0;
     } else if (isUseAppleDialog()) {
       status = 1;
     } else if (isSelectFriendPage()) {
       status = 2;
+    } else if(isWhiteConfirmDialog()){
+      tapScale(1250,850);
+      sleep(1000);
     }
     if (status >= 0) {
       break;
     }
   }
-  if (status == 0) {
+  if (status == 3) {
+    console.log("膠囊不足-選擇關卡失敗");
+    isScriptRunning = false;
+    return;
+  } else if (status == 0) {
     console.log("倉庫已滿-選擇關卡失敗");
     sendUrgentMessage(runningScriptName, "倉庫已滿-選擇關卡失敗");
     isScriptRunning = false;
@@ -114,9 +123,12 @@ function selectStage(useApple) {
   }
   while (isScriptRunning) {
     waitLoading();
-    if (isSelectFriendPage()) {
+    if(isWhiteConfirmDialog()){
+      tapScale(1250,850);
+      sleep(1000);
+    } else if (isSelectFriendPage()) {
       waitLoading();
-      sleep(2000);
+      sleep(1000);
       break;
     }
   }

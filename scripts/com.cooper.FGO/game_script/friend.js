@@ -38,9 +38,9 @@ var selectFriendList = [];
 var friendThreshole = 0.9
 
 function setFriendMargin() {
-  if (server == "TW") {
-    reloadPosition = 1237;
-  }
+  // if (server == "TW") {
+  //   reloadPosition = 1237;
+  // }
   if (resolution <= 16 / 9) {
     friendX = 76;
     friendServantPosition[0][0] = friendX;
