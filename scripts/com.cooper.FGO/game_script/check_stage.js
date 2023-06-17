@@ -4,15 +4,11 @@ var iconMargin = [];
 function setMarginIcon() {
   if (server == "TW") {
     icon["friendPointMain"] = [625, 538, 675, 108];
-    icon["friendPointFree"] = [787, 790, 337, 75];
-    icon["friendPointTen"] = [1125, 790, 240, 75];
     icon["boxNoPoint"] = [360, 630, 195, 82];
     icon["settingDialog"] = [840, 220, 240, 60];
     icon["stageFailed"] = [900, 154, 140, 60];
   }else{
     icon["friendPointMain"] = [675, 538, 675, 108];
-    icon["friendPointFree"] = [787, 740, 337, 75];
-    icon["friendPointTen"] = [1125, 740, 240, 75];
     icon["boxNoPoint"] = [470, 530, 200, 100];
     icon["settingDialog"] = [750, 220, 350, 60];
     icon["stageFailed"] = [750, 160, 300, 60];
@@ -202,6 +198,9 @@ icon["main"] = [1710, 924, 150, 75];
 icon["apple"] = [795, 67, 300, 75];
 icon["selectStageItemFull"] = [487, 225, 900, 187];
 icon["selectStageServantFull"] = [487, 225, 900, 187];
+icon["whiteConfirm"] = [450, 700, 500, 200];
+icon["whiteFinish"] = [550, 550, 800, 350];
+icon["whiteStartFailed"] = [550, 400, 800, 500];
 
 function isMainPage() {
   return checkIconInScreen("main");
@@ -224,6 +223,18 @@ function isItemOrServantFullDialog() {
 
 function isUseAppleDialog() {
   return checkIconInScreen("apple", 0.75);
+}
+
+function isWhiteConfirmDialog() {
+  return checkIconInScreen("whiteConfirm");
+}
+
+function iswhiteStartFailedDialog() {
+  return checkIconInScreen("whiteStartFailed");
+}
+
+function isWhiteFinishDialog() {
+  return checkIconInScreen("whiteFinish");
 }
 
 //select friend-----------------------------------------------

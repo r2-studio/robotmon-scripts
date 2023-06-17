@@ -440,6 +440,10 @@ function finishQuest() {
         clickIcon("itemPage");
         sleep(1500);
       }
+    } else if (isWhiteFinishDialog()) {
+      isScriptRunning = false;
+      console.log("膠囊不足，結束周回");
+      return;
     }
   }
 }
