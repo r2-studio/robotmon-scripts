@@ -105,7 +105,7 @@ declare global {
     accessKey: string,
     token: string,
     ssl: boolean
-  ): any;
+  ): number | string;
   function s3DownloadFile(
     filepath: string,
     objectName: string,
@@ -115,5 +115,7 @@ declare global {
     accessKey: string,
     token: string,
     ssl: boolean
-  ): number;
+  ): true | string;
+  function readFile(path: string): string | undefined;
+  function writeFile(path: string, content: string): void;
 }
