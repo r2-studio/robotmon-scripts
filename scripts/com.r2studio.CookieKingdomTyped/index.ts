@@ -507,6 +507,7 @@ class CookieKingdom {
 
         // console.log('Run wishing tree for ', (Date.now() - wishingTreeStartTime) / 60000, ' mins, ending this task');
         sendEvent('running', '');
+        finishRound();
 
         return true;
       },
