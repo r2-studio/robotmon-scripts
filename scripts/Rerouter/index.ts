@@ -93,6 +93,7 @@ declare global {
     maxR: number
   ): { [i: string]: { x: number; y: number; r: number } };
   function getBase64FromImage(image: any): string;
+  function getImageFromBase64(string: any): Image;
   function httpClient(method: string, url: string, body: string, headers: { [key: string]: string }): string;
   function getUserPlan(): string | undefined;
   function s3UploadFile(

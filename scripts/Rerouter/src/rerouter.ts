@@ -10,6 +10,7 @@ import {
   GroupPage,
   DefaultRerouterConfig,
   DefaultScreenConfig,
+  Icon,
 } from './struct';
 import { Screen } from './screen';
 import { Utils } from './utils';
@@ -185,6 +186,38 @@ export class Rerouter {
       const pages = this.isMatchGroupPageImpl(image, page, this.defaultConfig.GroupPageThres, this.debug);
       return pages.length > 0;
     }
+  }
+
+  public findIcon(icon: Icon): { [idx: string]: { score: number; x: number; y: number } } {
+    const image = this.screen.getCvtDevScreenshot();
+    const isMatch = this.findIconInImage(icon, image);
+    releaseImage(image);
+    return isMatch;
+  }
+
+  public findIconInImage(icon: Icon, image: Image): { [idx: string]: { score: number; x: number; y: number } } {
+    return this.findIconImpl(image, icon);
+  }
+
+  private findIconImpl(image: Image, icon: Icon, resultCount?: number): { [idx: string]: { score: number; x: number; y: number } } {
+    let isSame = true;
+    this.logImpl(this.debug, `checkMatchIcon[${icon.name}]`);
+
+    const threshold = icon.thres !== undefined ? icon.thres : 0.95;
+    resultCount = resultCount !== undefined ? resultCount : 5;
+
+    let needReleaseImage = false;
+    if (icon.image === undefined) {
+      icon.image = getImageFromBase64(icon.base64String);
+    }
+    var foundResults = findImages(image, icon.image, threshold, resultCount, true);
+
+    if (needReleaseImage) {
+      releaseImage(icon.image);
+    }
+
+    this.logImpl(this.debug, `checkMatchPage[${icon.name}][match: ${isSame}]`);
+    return foundResults;
   }
 
   public waitScreenForMatchingPage(page: Page | GroupPage, timeout: number, matchTimes: number = 1, interval = 600): boolean {

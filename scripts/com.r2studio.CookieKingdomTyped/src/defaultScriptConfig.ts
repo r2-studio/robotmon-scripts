@@ -1,3 +1,5 @@
+import { WishStatus } from './types';
+
 export const defaultConfig = {
   sleep: 240,
   sleepAnimate: 800,
@@ -164,3 +166,69 @@ export const defaultConfig = {
   stock_bearJellyCrown: 40,
 };
 
+export const defaultWishes = [
+  {
+    id: 0,
+    refreshPnt: { x: 149, y: 74 },
+    unfoldPnt: { x: 163, y: 160 },
+    fulfillPnt: { x: 183, y: 283 },
+    status: WishStatus.unknown,
+    requirementIconPnts: {
+      0: { x: 162, y: 198 },
+      1: { x: 198, y: 198 },
+      2: { x: 162, y: 235 },
+      3: { x: 198, y: 235 },
+    },
+    failedCount: 0,
+    requireFulfilled: 0,
+    golden: false,
+  },
+  {
+    id: 1,
+    refreshPnt: { x: 264, y: 74 },
+    unfoldPnt: { x: 275, y: 160 },
+    fulfillPnt: { x: 295, y: 283 },
+    status: WishStatus.unknown,
+    requirementIconPnts: {
+      0: { x: 275, y: 198 },
+      1: { x: 312, y: 198 },
+      2: { x: 275, y: 235 },
+      3: { x: 312, y: 235 },
+    },
+    failedCount: 0,
+    requireFulfilled: 0,
+    golden: false,
+  },
+  {
+    id: 2,
+    refreshPnt: { x: 377, y: 74 },
+    unfoldPnt: { x: 390, y: 160 },
+    fulfillPnt: { x: 400, y: 283 },
+    status: WishStatus.unknown,
+    requirementIconPnts: {
+      0: { x: 390, y: 198 },
+      1: { x: 425, y: 198 },
+      2: { x: 390, y: 235 },
+      3: { x: 425, y: 235 },
+    },
+    failedCount: 0,
+    requireFulfilled: 0,
+    golden: false,
+  },
+  {
+    id: 3,
+    refreshPnt: { x: 490, y: 74 },
+    unfoldPnt: { x: 500, y: 160 },
+    fulfillPnt: { x: 520, y: 283 },
+    status: WishStatus.unknown,
+    requirementIconPnts: {
+      0: { x: 508, y: 198 },
+      1: { x: 545, y: 198 },
+      2: { x: 508, y: 235 },
+      3: { x: 545, y: 235 },
+    },
+    failedCount: 0,
+    requireFulfilled: 0,
+    golden: false,
+  },
+];

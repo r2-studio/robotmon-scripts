@@ -26,6 +26,37 @@ export interface MessageWindow {
   targetColorThreashold: number;
 }
 
+export class Icon {
+  public name: string;
+  public base64String: string;
+  public image: Image;
+  public thres?: number;
+  public next?: XY;
+  public back?: XY;
+
+  public constructor(
+    name: string,
+    base64String: string,
+    thres: number | undefined = undefined,
+    next: XY | undefined = undefined,
+    back: XY | undefined = undefined
+  ) {
+    this.name = name;
+    this.base64String = base64String;
+    this.thres = thres;
+    this.next = next;
+    this.back = back;
+  }
+
+  public loadImage() {
+    this.image = getImageFromBase64(this.base64String);
+  }
+
+  public releaseImage() {
+    releaseImage(this.image);
+  }
+}
+
 export class Page {
   public name: string;
   public points: XYRGB[];

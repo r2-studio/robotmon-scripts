@@ -324,13 +324,17 @@ export const rfpageUncollapsedAffairs = new Page(
   { x: 115, y: 330 }
 );
 
-export const pageBallonFlyingDock = [
-  { x: 611, y: 17, r: 57, g: 166, b: 231 },
-  { x: 213, y: 15, r: 50, g: 21, b: 37 },
-  { x: 250, y: 51, r: 255, g: 255, b: 255 },
-  { x: 269, y: 51, r: 217, g: 217, b: 217 },
-  { x: 346, y: 50, r: 40, g: 6, b: 21 },
-];
+export const rfpageBallonFlyingDock = new Page(
+  'rfpageBallonFlyingDock',
+  [
+    { x: 611, y: 17, r: 57, g: 166, b: 231 },
+    { x: 213, y: 15, r: 50, g: 21, b: 37 },
+    { x: 250, y: 51, r: 255, g: 255, b: 255 },
+    { x: 269, y: 51, r: 217, g: 217, b: 217 },
+    { x: 346, y: 50, r: 40, g: 6, b: 21 },
+  ],
+  { x: 616, y: 17 }
+);
 
 export const pageInHotAirBallon = [
   { x: 270, y: 330, r: 255, g: 211, b: 0 },
@@ -362,44 +366,51 @@ export const rfpageBallonMapEp4 = new Page(
   { x: 610, y: 230 }
 );
 
-export const pageInTrainStation = [
+export const rfpageInTrainStation = new Page('rfpageInTrainStation', [
   { x: 618, y: 11, r: 56, g: 165, b: 231 },
   { x: 411, y: 19, r: 255, g: 208, b: 2 },
   { x: 393, y: 12, r: 93, g: 48, b: 32 },
   { x: 10, y: 355, r: 56, g: 34, b: 28 },
   { x: 605, y: 327, r: 130, g: 22, b: 31 },
-];
+]);
+export const rfpageTrainArrived = new Page('rfpageTrainArrived', [
+  { x: 114, y: 255, r: 245, g: 215, b: 130 },
+  { x: 117, y: 242, r: 206, g: 57, b: 55 },
+  { x: 110, y: 245, r: 49, g: 89, b: 132 },
+]);
+export const rfpageTrainNotEnoughGoods = new Page(
+  'rfpageTrainNotEnoughGoods',
+  [
+    { x: 477, y: 28, r: 55, g: 163, b: 229 },
+    { x: 221, y: 40, r: 60, g: 70, b: 105 },
+    { x: 222, y: 100, r: 243, g: 233, b: 223 },
+    { x: 211, y: 300, r: 219, g: 207, b: 199 },
+    { x: 357, y: 300, r: 121, g: 207, b: 12 },
+  ],
+  { x: 477, y: 28 }
+);
 
-export const pageTrainNotEnoughGoods = [
-  { x: 477, y: 28, r: 55, g: 163, b: 229 },
-  { x: 221, y: 40, r: 60, g: 70, b: 105 },
-  { x: 222, y: 100, r: 243, g: 233, b: 223 },
-  { x: 211, y: 300, r: 219, g: 207, b: 199 },
-  { x: 357, y: 300, r: 121, g: 207, b: 12 },
-];
-
-export const pageInWishingTree = [
+export const rfpageInWishingTree = new Page('rfpageInWishingTree', [
   { x: 157, y: 29, r: 107, g: 56, b: 82 },
   { x: 235, y: 35, r: 255, g: 0, b: 81 },
   { x: 348, y: 22, r: 255, g: 40, b: 123 },
   { x: 412, y: 18, r: 255, g: 190, b: 8 },
   { x: 523, y: 15, r: 0, g: 195, b: 255 },
-];
-
-export const pageNotEnoughForTree = [
+]);
+export const rfpageNotEnoughForTree = new Page('rfpageNotEnoughForTree', [
   { x: 429, y: 97, r: 56, g: 167, b: 231 },
   { x: 407, y: 104, r: 60, g: 70, b: 105 },
   { x: 419, y: 127, r: 243, g: 233, b: 223 },
   { x: 352, y: 246, r: 121, g: 207, b: 12 },
-];
+]);
 
-export const pageCheckWishingTreeStock = [
+export const rfpageCheckWishingTreeStock = new Page('rfpageCheckWishingTreeStock', [
   { x: 355, y: 302, r: 121, g: 207, b: 12 },
   { x: 244, y: 46, r: 60, g: 70, b: 105 },
   { x: 257, y: 21, r: 127, g: 12, b: 46 },
   { x: 410, y: 18, r: 127, g: 94, b: 4 },
   { x: 6, y: 25, r: 50, g: 31, b: 93 },
-];
+]);
 
 export const pageInTropicalIsland = [
   { x: 38, y: 333, r: 255, g: 97, b: 173 },
@@ -490,12 +501,12 @@ export const pageInProductionDashboard = [
   { x: 27, y: 16, r: 206, g: 32, b: 49 },
 ];
 
-export const pageStockIsFull = [
+export const rfpageStockIsFull = new Page('rfpageStockIsFull', [
   { x: 436, y: 96, r: 255, g: 255, b: 255 },
   { x: 320, y: 83, r: 107, g: 48, b: 49 },
   { x: 320, y: 93, r: 132, g: 16, b: 8 },
   { x: 321, y: 108, r: 241, g: 229, b: 216 },
-];
+]);
 
 export const pageToolShop = [
   { x: 420, y: 191, r: 178, g: 16, b: 13 },
@@ -555,6 +566,19 @@ export const pageSelectAdvanture = [
   { x: 17, y: 26, r: 80, g: 115, b: 187 },
 ];
 export const rfpageSelectAdvanture = new Page('rfpageSelectAdvanture', pageSelectAdvanture);
+export const rfpageSelectAdvantureFirstIsKingdom = new Page(
+  'rfpageSelectAdvantureFirstIsKingdom',
+  [
+    { x: 51, y: 55, r: 41, g: 81, b: 57 },
+    { x: 107, y: 68, r: 255, g: 255, b: 255 },
+    { x: 308, y: 19, r: 255, g: 211, b: 0 },
+    { x: 422, y: 18, r: 8, g: 125, b: 255 },
+    { x: 22, y: 16, r: 255, g: 255, b: 255 },
+    { x: 40, y: 9, r: 29, g: 63, b: 96 },
+    { x: 40, y: 23, r: 150, g: 150, b: 150 },
+  ],
+  { x: 51, y: 55 }
+);
 
 export const pageChooseAdvanture = [
   { x: 612, y: 18, r: 57, g: 166, b: 231 },

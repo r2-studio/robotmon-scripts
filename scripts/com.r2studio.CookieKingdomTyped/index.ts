@@ -1,10 +1,11 @@
-import { Rerouter, rerouter, Utils, XYRGB, Page, Task } from 'Rerouter';
-import { ScriptConfig } from './src/types';
+import { Rerouter, rerouter, Utils, XYRGB, Page, Task, Icon, XY } from 'Rerouter';
+import { ScriptConfig, Wish, WishStatus } from './src/types';
 import { logs, getCurrentApp, sendKeyBack } from './src/utils';
-import { scrollDownALot, scrollLeftALot, scrollRightALot } from './src/helper';
-import { defaultConfig } from './src/defaultScriptConfig';
+import { scrollDownALot, scrollLeftALot, scrollRightALot, getStatusOfGivenWish, checkToSendSpecificWish } from './src/helper';
+import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
 import * as PAGES from './src/pages';
+import * as ICONS from './src/icons';
 import * as CONSTANTS from './src/constants';
 import { TASKS } from './src/tasks';
 
@@ -19,6 +20,7 @@ class CookieKingdom {
   public rerouter: Rerouter;
 
   public config = defaultConfig;
+  wishes = defaultWishes;
   taskStatus: TaskStatus = {};
 
   constructor(config: any) {
@@ -52,6 +54,18 @@ class CookieKingdom {
     this.rerouter.start(this.packageName);
   }
   public stop() {
+    // TODO: seems not working
+    console.log('stopping');
+    const allIcons: { [key: string]: Icon } = ICONS as any;
+    for (const iconIdx in allIcons) {
+      const icon = allIcons[iconIdx];
+      if (!(icon instanceof Icon)) {
+        continue;
+      }
+      releaseImage(icon.image);
+      console.log(`release: ${iconIdx}`);
+    }
+
     this.rerouter.stop();
   }
 
@@ -62,11 +76,29 @@ class CookieKingdom {
 
     // show current page
     this.rerouter.getCurrentMatchNames();
+
+    for (let idx in ICONS.numberImagesProdutRequirements) {
+      if (ICONS.numberImagesProdutRequirements[idx].image === undefined) {
+        ICONS.numberImagesProdutRequirements[idx].loadImage();
+      }
+    }
   }
 
   public initTaskStatus() {
     this.taskStatus[TASKS.getInShopFreeDailyPack] = {
       trials: 0,
+    };
+    this.taskStatus[TASKS.hotAirBallon] = {
+      changeMapFinished: false,
+    };
+    this.taskStatus[TASKS.wishingTree] = {
+      records: {
+        opened: 0,
+        golden: 0,
+        fulfilled: 0,
+        notEnoughAndSkip: 0,
+        goldenAndSkip: 0,
+      },
     };
   }
 
@@ -102,10 +134,22 @@ class CookieKingdom {
     //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
     //   forceStop: false,
     // });
+    // this.rerouter.addTask({
+    //   name: TASKS.hotAirBallon,
+    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+    // this.rerouter.addTask({
+    //   name: TASKS.train,
+    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
     this.rerouter.addTask({
-      name: TASKS.sendHotAirBallon,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
+      name: TASKS.wishingTree,
+      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
       forceStop: false,
     });
 
@@ -113,6 +157,7 @@ class CookieKingdom {
   }
 
   public addRoutes() {
+    // Login pages
     // TODO: verify me
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageNewDataPackAvaiableNoLanguage.name}`,
@@ -121,7 +166,6 @@ class CookieKingdom {
         console.log('> in ', PAGES.rfpageNewDataPackAvaiableNoLanguage.name);
       },
     });
-
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageEnterEmail.name}`,
       match: PAGES.rfpageEnterEmail,
@@ -172,6 +216,8 @@ class CookieKingdom {
         this.rerouter.goNext(PAGES.rfpageAnnouncement);
       },
     });
+
+    // Daily tasks
     this.rerouter.addRoute({
       path: `/${PAGES.rfkingdomPassItemCollected.name}`,
       match: PAGES.rfkingdomPassItemCollected,
@@ -201,7 +247,6 @@ class CookieKingdom {
         finishRound(true);
       },
     });
-
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageInShop.name}`,
       match: PAGES.rfpageInShop,
@@ -238,30 +283,29 @@ class CookieKingdom {
       },
     });
 
-    this.rerouter.addRoute({
-      path: `/${PAGES.rfpageUncollapsedAffairs.name}`,
-      match: PAGES.rfpageUncollapsedAffairs,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, `rfpageUncollapsedAffairs, goint to task related affair: ${context.task.name}`);
-        switch (context.task.name) {
-          case TASKS.sendHotAirBallon:
-            this.rerouter.screen.tap({ x: 103, y: 203 });
-            break;
-        }
-      },
-    });
+    // Hot air ballon pages
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageInHotAirBallon.name}`,
       match: PAGES.rfpageInHotAirBallon,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, 'rfpageInHotAirBallon, choose next step');
-        if (this.taskStatus[TASKS.sendHotAirBallon]['changeMapFinished']) {
+        if (this.taskStatus[TASKS.hotAirBallon]['changeMapFinished']) {
           this.rerouter.screen.tap({ x: 258, y: 330 }); // tap Auto
           Utils.sleep(CONSTANTS.sleepAnimate);
           this.rerouter.screen.tap({ x: 575, y: 330 }); // tap Start
+          logs(context.task.name, `rfpageInHotAirBallon, start new ballon trip, ep4: ${this.config.isHotAirBallonGotoEp4}`);
+          finishRound(true);
         } else {
           this.rerouter.screen.tap({ x: 412, y: 330 }); // tap Change
         }
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageBallonFlyingDock.name}`,
+      match: PAGES.rfpageBallonFlyingDock,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, 'rfpageBallonFlyingDock, ballon is flying, finish task');
+        this.rerouter.goNext(PAGES.rfpageBallonFlyingDock); // close this screen
         finishRound(true);
       },
     });
@@ -273,11 +317,272 @@ class CookieKingdom {
         scrollLeftALot(rerouter, { x: 618, y: 151 });
         if (this.config.isHotAirBallonGotoEp4 && this.rerouter.isPageMatchImage(PAGES.rfpageBallonMapEp4, image)) {
           this.rerouter.goNext(PAGES.rfpageBallonMapEp4); // tap EP4 map
+          this.taskStatus[TASKS.hotAirBallon]['changeMapFinished'] = true;
+          return;
         } else {
           // scroll to right most and find the last map
-          // scrollRightALot(rerouter, { x: 618, y: 151 });
-          // TODO: continue here
-          console.log('Need to find last map and continue');
+          scrollRightALot(rerouter, { x: 618, y: 151 });
+          console.log('scrolled');
+          scrollRightALot(rerouter, { x: 618, y: 151 });
+          console.log('scrolled');
+          scrollRightALot(rerouter, { x: 618, y: 151 });
+          console.log('scrolled');
+
+          for (let i = 0; i < 4; i++) {
+            for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
+              for (var yLocation = 140; yLocation <= 260; yLocation += 120) {
+                this.rerouter.screen.tap({ x: xLocation, y: yLocation });
+
+                if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInHotAirBallon, 2000)) {
+                  this.taskStatus[TASKS.hotAirBallon]['changeMapFinished'] = true;
+                  logs(context.task.name, `ballon destination choosed successfully, i, x, y = ${i}, ${xLocation}, ${yLocation}`);
+                  return;
+                }
+              }
+            }
+
+            tapDown(30, 268, 40, 0);
+            Utils.sleep(CONSTANTS.sleep);
+            moveTo(250, 268, 40, 0);
+            Utils.sleep(CONSTANTS.sleep);
+            moveTo(620, 268, 40, 0);
+            Utils.sleep(CONSTANTS.sleepAnimate);
+            tapUp(620, 268, 40, 0);
+            Utils.sleep(CONSTANTS.sleepAnimate * 3);
+          }
+        }
+      },
+    });
+
+    // Train pages
+    // TODO: NG！ 用鑽買東西的頁面會被判斷成 rfpageNewDataPackDownloadFailed，會自動按下花鑽石買東西
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInTrainStation.name}`,
+      match: PAGES.rfpageInTrainStation,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.train) {
+          logs(context.task.name, `rfpageInTrainStation, leave because current task is not wishing tree, but: ${context.task.name}`);
+          this.rerouter.screen.tap({ x: 618, y: 28 }); // tap X
+          return;
+        }
+
+        logs(context.task.name, 'rfpageInTrainStation, handle train');
+
+        const rfpageFirstTrainOut = new Page('rfpageFirstTrainOut', [
+          { x: 430, y: 95, r: 121, g: 227, b: 0 },
+          { x: 454, y: 94, r: 231, g: 142, b: 83 },
+        ]);
+        const rfpageSecondTrainOut = new Page('rfpageSecondTrainOut', [
+          { x: 430, y: 198, r: 129, g: 227, b: 0 },
+          { x: 453, y: 199, r: 229, g: 148, b: 85 },
+        ]);
+        const rfpageThirdTrainOut = new Page('rfpageThirdTrainOut', [
+          { x: 430, y: 302, r: 121, g: 227, b: 0 },
+          { x: 455, y: 301, r: 231, g: 138, b: 82 },
+        ]);
+
+        if (!this.rerouter.isPageMatchImage(rfpageFirstTrainOut, image)) {
+          this.rerouter.screen.tap({ x: 255, y: 110 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap({ x: 210, y: 110 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap({ x: 170, y: 110 });
+
+          this.checkIfTrainRequirementMet();
+        }
+        if (!this.rerouter.isPageMatchImage(rfpageSecondTrainOut, image)) {
+          this.rerouter.screen.tap({ x: 255, y: 208 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap({ x: 210, y: 208 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap({ x: 170, y: 208 });
+
+          this.checkIfTrainRequirementMet();
+        }
+        if (!this.rerouter.isPageMatchImage(rfpageThirdTrainOut, image)) {
+          this.rerouter.screen.tap({ x: 255, y: 307 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap({ x: 210, y: 307 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap({ x: 170, y: 307 });
+
+          this.checkIfTrainRequirementMet();
+        }
+
+        if (this.config.autoCollectTrainIntervalInMins == 0) {
+          logs(context.task.name, 'handleTrainStation skipped as autoCollectTrainIntervalInMins is set to 0');
+          finishRound(true);
+          return;
+        }
+
+        Utils.sleep(9000);
+
+        const foundResults = this.rerouter.findIcon(ICONS.iconSendAll);
+        for (let i in foundResults) {
+          var sendTrainBtn = foundResults[i];
+          sendTrainBtn.x += 30;
+          sendTrainBtn.y += 15;
+          this.rerouter.screen.tap(foundResults[i]);
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap(foundResults[i]);
+          Utils.sleep(CONSTANTS.sleepAnimate);
+        }
+
+        this.rerouter.goNext(PAGES.rfpageInTrainStation);
+        Utils.sleep(CONSTANTS.sleepAnimate);
+        logs(context.task.name, `Tried to sent ${foundResults.length} trains`);
+        finishRound();
+      },
+    });
+
+    // Wishing trees
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInWishingTree.name}`,
+      match: PAGES.rfpageInWishingTree,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.wishingTree) {
+          logs(context.task.name, `rfpageInWishingTree, leave because current task is not wishing tree, but: ${context.task.name}`);
+          this.rerouter.screen.tap({ x: 618, y: 28 }); // tap X
+          return;
+        }
+
+        logs(context.task.name, `rfpageInWishingTree, start working`);
+
+        const rfpageAllWishingDailyRewardCollected = new Page('rfpageAllWishingDailyRewardCollected', [
+          { x: 59, y: 242, r: 247, g: 247, b: 247 },
+          { x: 60, y: 256, r: 138, g: 138, b: 138 },
+        ]);
+
+        if (this.rerouter.isPageMatch(rfpageAllWishingDailyRewardCollected) && !this.config.alwaysFulfillWishes) {
+          logs(context.task.name, `rfpageInWishingTree, All wish fulfilled, skipping and send running`);
+          sendEvent('running', '');
+          finishRound();
+        }
+
+        let refreshing = 0;
+        for (var i in this.wishes) {
+          var wish = this.wishes[i];
+
+          let records = this.taskStatus[TASKS.wishingTree].records;
+          var result = getStatusOfGivenWish(wish, this.taskStatus[TASKS.wishingTree].records, this.config.wishingTreeRefreshGoldenWishes, rerouter);
+          wish = result['wish'];
+          records = result['records'];
+          console.log('handling wish', i, JSON.stringify(wish));
+
+          if (wish.status === 'refresh') {
+            refreshing++;
+            continue;
+          } else if (wish.status === 'opened') {
+            result = checkToSendSpecificWish(wish, records, this.config.wishingTreeSafetyStock, rerouter);
+            wish = result['wish'];
+            records = result['records'];
+            console.log('handled wish', i, JSON.stringify(wish));
+          }
+
+          this.taskStatus[TASKS.wishingTree].records = records;
+          Utils.sleep(CONSTANTS.sleep);
+        }
+        console.log('>>> Wising tree records', JSON.stringify(this.taskStatus[TASKS.wishingTree].records));
+
+        var rfpageCollectTreeReward = new Page('rfpageCollectTreeReward', [{ x: 85, y: 289, r: 44, g: 203, b: 8 }]);
+        if (this.rerouter.isPageMatch(rfpageCollectTreeReward)) {
+          console.log('Daily reward collected');
+          this.rerouter.screen.tap({ x: 60, y: 255 });
+          Utils.sleep(2000);
+
+          this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInWishingTree, 8000);
+          // waitUntilSeePage(pageInWishingTree, 8, pageCollectTreeReward);
+        }
+
+        if (refreshing === 4) {
+          console.log('All wishes are refreshing, jobs done here');
+          // break;
+          return;
+        }
+
+        // if (!checkAndRestartApp()) {
+        //   console.log('detected game crashed, restart and finish handleInWishingTree');
+        //   return false;
+        // }
+
+        // console.log('Run wishing tree for ', (Date.now() - wishingTreeStartTime) / 60000, ' mins, ending this task');
+        sendEvent('running', '');
+
+        return true;
+      },
+    });
+
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInProduction.name}`,
+      match: PAGES.rfpageInProduction,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.production) {
+          logs(context.task.name, `rfpageInProduction, leave because current task is not production, but: ${context.task.name}`);
+          sendKeyBack();
+        }
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInMagicLab.name}`,
+      match: PAGES.rfpageInMagicLab,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.production) {
+          logs(context.task.name, `rfpageInMagicLab, leave because current task is not production, but: ${context.task.name}`);
+          sendKeyBack();
+        }
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageSelectAdvantureFirstIsKingdom.name}`,
+      match: PAGES.rfpageSelectAdvantureFirstIsKingdom,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.production) {
+          logs(context.task.name, `rfpageInProduction, leave because current task is not production, but: ${context.task.name}`);
+          this.rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
+        }
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageSelectAdvanture.name}`,
+      match: PAGES.rfpageSelectAdvanture,
+      action: (context, image, matched, finishRound) => {
+        if (this.rerouter.isPageMatchImage(PAGES.rfpageSelectAdvantureFirstIsKingdom, image)) {
+          logs(context.task.name, `rfpageSelectAdvantureFirstIsKingdom, go back to "My Kingdom"`);
+          this.rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
+          return;
+        }
+
+        // switch(context.task.name) {
+        //   case TASKS.
+        // }
+      },
+    });
+
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageUncollapsedAffairs.name}`,
+      match: PAGES.rfpageUncollapsedAffairs,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, `rfpageUncollapsedAffairs, going to task related affair: ${context.task.name}`);
+        switch (context.task.name) {
+          case TASKS.hotAirBallon:
+            this.rerouter.screen.tap({ x: 103, y: 203 });
+            return;
+          case TASKS.train:
+            if (this.rerouter.isPageMatchImage(PAGES.rfpageTrainArrived, image)) {
+              this.rerouter.screen.tap({ x: 103, y: 252 });
+              logs(context.task.name, `rfpageTrainArrived, goto handle train`);
+            } else {
+              logs(context.task.name, `no rfpageTrainArrived, no train can be send/collected, skipp this round`);
+              this.rerouter.screen.tap({ x: 103, y: 336 }); // fold affairs page
+              finishRound(true);
+            }
+            return;
+          case TASKS.wishingTree:
+            logs(context.task.name, `about to send wishing tree`);
+            this.rerouter.screen.tap({ x: 103, y: 306 });
+            return;
+          default:
+            this.rerouter.screen.tap({ x: 103, y: 335 });
         }
       },
     });
@@ -308,15 +613,15 @@ class CookieKingdom {
             this.rerouter.screen.tap({ x: 512, y: 20 });
             break;
           case TASKS.getInShopFreeDailyPack:
-            this.taskStatus[TASKS.getInShopFreeDailyPack] = {
-              trials: 0,
-            };
             this.rerouter.screen.tap({ x: 26, y: 86 });
             break;
-          case TASKS.sendHotAirBallon:
-            this.taskStatus[TASKS.sendHotAirBallon] = {
-              changeMapFinished: false,
-            };
+          case TASKS.hotAirBallon:
+            this.rerouter.screen.tap({ x: 105, y: 330 });
+            break;
+          case TASKS.train:
+            this.rerouter.screen.tap({ x: 105, y: 330 });
+            break;
+          case TASKS.wishingTree:
             this.rerouter.screen.tap({ x: 105, y: 330 });
             break;
           default:
@@ -351,6 +656,14 @@ class CookieKingdom {
           this.rerouter.goNext(page);
         },
       });
+    }
+  }
+
+  checkIfTrainRequirementMet() {
+    // TODO: or isMessageWindowWithDiamond()
+    if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageTrainNotEnoughGoods, 2000)) {
+      this.rerouter.goNext(PAGES.rfpageTrainNotEnoughGoods);
+      return false;
     }
   }
 
@@ -412,9 +725,9 @@ export function stop() {
 
 // run();
 
-declare global {
-  interface Window {}
-}
+// declare global {
+//   interface Window {}
+// }
 // if (window === undefined) {
 //   (window as any) = {};
 // }
@@ -422,4 +735,7 @@ declare global {
 // (window as any).stop = stop;
 // (window as any).rerouter = rerouter;
 
+sendEvent('running', '');
+defaultConfig.alwaysFulfillWishes = true;
 start();
+console.log('jobs done');
