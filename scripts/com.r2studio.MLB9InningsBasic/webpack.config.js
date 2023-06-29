@@ -36,14 +36,12 @@ module.exports = {
             passes: 2,
             dead_code: false,
             drop_console: false,
-            // unused: false,
+            unused: false,
+            keep_fnames: true,
           },
           mangle: {
-            properties: {
-              regex: /(hasCoolFeature|isLocalPaid)/g,
-            },
-            // properties: false,
-            // reserved: ['stop', 'start', 'window'], // keep them otherwise script failed bc notFound
+            properties: false,
+            reserved: ['stop', 'start', 'window'], // keep them otherwise script failed bc notFound
           },
         },
       }),

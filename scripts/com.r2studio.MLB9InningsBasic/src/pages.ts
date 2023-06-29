@@ -89,6 +89,28 @@ export const TOS = new Page(
   { x: 320, y: 306 }
 );
 
+// term of service, suit dgi90
+export const TOS90 = new Page(
+  'TOS90',
+  [
+    // bg
+    { x: 32, y: 28, r: 255, g: 255, b: 255 },
+    { x: 10, y: 342, r: 255, g: 255, b: 255 },
+    { x: 622, y: 343, r: 255, g: 255, b: 255 },
+    { x: 621, y: 32, r: 255, g: 255, b: 255 },
+
+    // logo
+    { x: 288, y: 27, r: 255, g: 255, b: 255 },
+    { x: 301, y: 27, r: 246, g: 177, b: 185 },
+    { x: 321, y: 24, r: 255, g: 255, b: 255 },
+    { x: 320, y: 28, r: 245, g: 161, b: 171 },
+    { x: 330, y: 28, r: 230, g: 36, b: 60 },
+    { x: 344, y: 28, r: 255, g: 255, b: 255 },
+  ],
+  { x: 321, y: 321 },
+  { x: 321, y: 321 }
+);
+
 // like landing but has progress bar
 export const landingLoading = new Page(
   'landingLoading',
@@ -145,6 +167,84 @@ export const logIn = new Page(
   { x: 0, y: 0 }
 );
 
+// suit for dpi 90
+export const logIn90 = new Page(
+  'logIn90',
+  [
+    // bg
+    { x: 19, y: 30, r: 48, g: 48, b: 48 },
+    { x: 6, y: 132, r: 238, g: 238, b: 238 },
+    { x: 630, y: 25, r: 48, g: 48, b: 48 },
+    { x: 631, y: 339, r: 238, g: 238, b: 238 },
+    { x: 14, y: 345, r: 238, g: 238, b: 238 },
+    { x: 80, y: 340, r: 238, g: 238, b: 238 },
+    { x: 282, y: 340, r: 238, g: 238, b: 238 },
+    { x: 420, y: 336, r: 238, g: 238, b: 238 },
+    { x: 567, y: 338, r: 238, g: 238, b: 238 },
+
+    // input
+    { x: 478, y: 131, r: 255, g: 255, b: 255 },
+    { x: 478, y: 188, r: 255, g: 255, b: 255 },
+
+    // login btn
+    { x: 500, y: 130, r: 43, g: 132, b: 216 },
+    { x: 500, y: 155, r: 43, g: 132, b: 216 },
+    { x: 499, y: 184, r: 43, g: 132, b: 216 },
+    { x: 595, y: 129, r: 43, g: 132, b: 216 },
+    { x: 597, y: 155, r: 43, g: 132, b: 216 },
+    { x: 598, y: 188, r: 43, g: 132, b: 216 },
+    { x: 548, y: 124, r: 43, g: 132, b: 216 },
+  ],
+  { x: 554, y: 177 }, // login
+  { x: 0, y: 0 }
+);
+
+export const fbLogIn90 = new Page('fbLogIn90', [
+  // fb logo
+  { x: 304, y: 14, r: 24, g: 119, b: 242 },
+  { x: 316, y: 17, r: 255, g: 255, b: 255 },
+  { x: 309, y: 31, r: 24, g: 119, b: 242 },
+  { x: 325, y: 32, r: 24, g: 119, b: 242 },
+  { x: 331, y: 15, r: 24, g: 119, b: 242 },
+  { x: 324, y: 12, r: 255, g: 255, b: 255 },
+  { x: 345, y: 11, r: 255, g: 255, b: 255 },
+  { x: 323, y: 19, r: 24, g: 119, b: 242 },
+  { x: 330, y: 23, r: 24, g: 119, b: 242 },
+
+  // bg
+  { x: 73, y: 102, r: 255, g: 255, b: 255 },
+  { x: 52, y: 261, r: 255, g: 255, b: 255 },
+  { x: 312, y: 315, r: 255, g: 255, b: 255 },
+  { x: 591, y: 197, r: 255, g: 255, b: 255 },
+  { x: 492, y: 62, r: 255, g: 255, b: 255 },
+  { x: 318, y: 86, r: 255, g: 255, b: 255 },
+
+  // login btn bg
+  { x: 203, y: 194, r: 24, g: 119, b: 242 },
+  { x: 433, y: 197, r: 24, g: 119, b: 242 },
+]);
+
+export const googleLogIn90 = new Page('googleLogIn90', [
+  // google logo
+  { x: 295, y: 64, r: 255, g: 255, b: 255 },
+  { x: 306, y: 67, r: 255, g: 255, b: 255 },
+  { x: 318, y: 68, r: 251, g: 188, b: 5 },
+  { x: 321, y: 68, r: 253, g: 221, b: 130 },
+  { x: 329, y: 68, r: 66, g: 133, b: 244 },
+  { x: 335, y: 68, r: 234, g: 67, b: 53 },
+
+  // bg
+  { x: 94, y: 33, r: 75, g: 129, b: 218 },
+  { x: 67, y: 227, r: 79, g: 132, b: 221 },
+  { x: 142, y: 329, r: 255, g: 255, b: 255 },
+  { x: 559, y: 338, r: 61, g: 114, b: 203 },
+  { x: 539, y: 80, r: 63, g: 117, b: 205 },
+  { x: 350, y: 334, r: 255, g: 255, b: 255 },
+
+  // login btn bg
+  { x: 478, y: 224, r: 26, g: 115, b: 232 },
+]);
+
 export const downloadData = new Page(
   'downloadData',
   [
@@ -189,25 +289,32 @@ export const progressBarRunning = new Page(
 export const main = new Page(
   'main',
   [
-    { x: 289, y: 11, r: 214, g: 215, b: 214 },
-    { x: 315, y: 11, r: 222, g: 223, b: 222 },
-    { x: 380, y: 7, r: 207, g: 210, b: 210 },
-    { x: 390, y: 12, r: 130, g: 128, b: 130 },
-    { x: 481, y: 7, r: 74, g: 85, b: 90 },
-    { x: 493, y: 11, r: 252, g: 209, b: 38 },
-    { x: 622, y: 9, r: 214, g: 211, b: 214 },
-    { x: 41, y: 324, r: 110, g: 112, b: 102 },
-    { x: 58, y: 341, r: 41, g: 52, b: 33 },
-    { x: 86, y: 323, r: 255, g: 255, b: 255 },
-    { x: 103, y: 340, r: 208, g: 211, b: 208 },
-    { x: 187, y: 325, r: 255, g: 255, b: 255 },
-    { x: 211, y: 341, r: 57, g: 65, b: 49 },
-    { x: 241, y: 323, r: 123, g: 132, b: 122 },
-    { x: 326, y: 331, r: 57, g: 71, b: 49 },
-    { x: 520, y: 323, r: 131, g: 46, b: 44 },
-    { x: 530, y: 350, r: 57, g: 65, b: 49 },
-    { x: 587, y: 325, r: 255, g: 255, b: 255 },
-    { x: 627, y: 341, r: 49, g: 65, b: 41 },
+    // navi bar right
+    { x: 622, y: 9, r: 214, g: 210, b: 214 },
+    { x: 598, y: 11, r: 214, g: 226, b: 238 },
+    { x: 592, y: 14, r: 74, g: 93, b: 123 },
+    { x: 494, y: 15, r: 239, g: 179, b: 28 },
+    { x: 503, y: 17, r: 74, g: 84, b: 90 },
+    { x: 389, y: 12, r: 197, g: 202, b: 197 },
+    { x: 313, y: 11, r: 174, g: 178, b: 179 },
+    { x: 297, y: 15, r: 214, g: 214, b: 214 },
+
+    //btns in left bottom
+    { x: 29, y: 324, r: 255, g: 255, b: 255 },
+    { x: 63, y: 322, r: 58, g: 69, b: 50 },
+    { x: 91, y: 322, r: 255, g: 255, b: 255 },
+    { x: 134, y: 322, r: 213, g: 213, b: 210 },
+    { x: 186, y: 321, r: 255, g: 255, b: 255 },
+    { x: 237, y: 324, r: 255, g: 255, b: 255 },
+    { x: 218, y: 322, r: 66, g: 73, b: 58 },
+
+    // btns in right bottom
+    { x: 493, y: 323, r: 58, g: 69, b: 49 },
+    { x: 516, y: 324, r: 225, g: 213, b: 213 },
+    { x: 525, y: 318, r: 155, g: 47, b: 57 },
+    { x: 566, y: 322, r: 16, g: 114, b: 124 },
+    { x: 586, y: 320, r: 255, g: 255, b: 255 },
+    { x: 601, y: 325, r: 16, g: 109, b: 123 },
   ],
   { x: 0, y: 0 },
   { x: 0, y: 0 }
@@ -252,10 +359,86 @@ export const settings = new Page(
   { x: 41, y: 320 }
 );
 export const settingsBtns = {
+  soundAndLanTab: { x: 79, y: 70 },
   graphicTab: { x: 152, y: 62 },
 };
 
-// FIXME: add page
+// FIXME: add lan change pages
+export const settingsSoundTab = new Page(
+  'settings/sound',
+  [
+    // nav bar right
+    { x: 621, y: 8, r: 214, g: 210, b: 214 },
+    { x: 595, y: 10, r: 74, g: 97, b: 131 },
+    { x: 503, y: 15, r: 74, g: 85, b: 90 },
+    { x: 392, y: 12, r: 176, g: 173, b: 176 },
+    { x: 315, y: 8, r: 238, g: 243, b: 238 },
+    { x: 302, y: 17, r: 214, g: 214, b: 214 },
+
+    // highlighted sound tab
+    { x: 19, y: 60, r: 0, g: 101, b: 247 },
+    { x: 20, y: 71, r: 0, g: 89, b: 222 },
+    { x: 95, y: 69, r: 0, g: 92, b: 230 },
+
+    // other tabs
+    { x: 117, y: 56, r: 58, g: 65, b: 74 },
+    { x: 205, y: 54, r: 58, g: 65, b: 74 },
+    { x: 300, y: 52, r: 58, g: 65, b: 74 },
+    { x: 394, y: 55, r: 58, g: 65, b: 74 },
+
+    // bg table
+    { x: 20, y: 85, r: 230, g: 231, b: 238 },
+    { x: 20, y: 292, r: 206, g: 210, b: 214 },
+    { x: 459, y: 85, r: 230, g: 231, b: 238 },
+    { x: 460, y: 289, r: 206, g: 210, b: 214 },
+
+    // right sidebar bg
+    { x: 480, y: 120, r: 41, g: 45, b: 58 },
+    { x: 483, y: 179, r: 41, g: 45, b: 58 },
+    { x: 485, y: 232, r: 41, g: 45, b: 58 },
+    { x: 486, y: 286, r: 41, g: 45, b: 58 },
+    { x: 612, y: 119, r: 41, g: 45, b: 58 },
+    { x: 610, y: 180, r: 41, g: 45, b: 58 },
+    { x: 608, y: 234, r: 41, g: 45, b: 58 },
+    { x: 610, y: 287, r: 41, g: 45, b: 58 },
+  ],
+  { x: 41, y: 320 },
+  { x: 41, y: 320 }
+);
+export const settingsSoundTabBtns = {
+  lang: { x: 401, y: 190 },
+  // add more if need more setting
+};
+export const settingsSoundTabLanSelect = new Page(
+  'settings/sound/lanSelect',
+  [
+    // bg
+    { x: 293, y: 18, r: 25, g: 20, b: 25 },
+    { x: 43, y: 343, r: 8, g: 4, b: 0 },
+    { x: 622, y: 345, r: 8, g: 8, b: 8 },
+
+    // lang english btn
+    { x: 160, y: 127, r: 49, g: 89, b: 123 },
+    { x: 190, y: 132, r: 58, g: 92, b: 129 },
+    { x: 213, y: 133, r: 80, g: 113, b: 151 },
+    { x: 229, y: 133, r: 166, g: 189, b: 218 },
+    { x: 241, y: 133, r: 49, g: 85, b: 123 },
+    { x: 266, y: 142, r: 49, g: 81, b: 115 },
+    { x: 282, y: 129, r: 49, g: 89, b: 123 },
+    { x: 166, y: 145, r: 41, g: 77, b: 115 },
+
+    // back
+    { x: 26, y: 316, r: 206, g: 210, b: 206 },
+    { x: 43, y: 321, r: 206, g: 210, b: 206 },
+    { x: 34, y: 329, r: 201, g: 206, b: 201 },
+  ],
+  { x: 200, y: 131 }, // english btn
+  { x: 200, y: 131 } // english btn
+);
+export const settingsSoundTabLanSelectProceedBtns = {
+  yes: { x: 407, y: 307 },
+};
+
 export const settingsGraphTab = new Page(
   'settings/graph',
   [
@@ -292,7 +475,10 @@ export const settingsGraphTab = new Page(
   { x: 41, y: 320 }
 );
 export const settingsGraphTabBtns = {
+  qualityNormal: { x: 212, y: 120 },
+  maxFPS30: { x: 83, y: 175 },
   powerSaveOn: { x: 222, y: 222 },
+  bigHeadModeOff: { x: 86, y: 283 },
   // add more if need more setting
 };
 
@@ -370,17 +556,6 @@ export const endSeasonProceed = new Page(
 export const endSeasonProceedSelected = new Page(
   'endSeasonProceedSelected',
   [
-    // how would you like to proceed with next season ?
-    { x: 223, y: 36, r: 212, g: 224, b: 236 },
-    { x: 271, y: 40, r: 233, g: 240, b: 245 },
-    { x: 320, y: 33, r: 141, g: 176, b: 209 },
-    { x: 393, y: 31, r: 98, g: 150, b: 190 },
-    { x: 433, y: 39, r: 245, g: 245, b: 250 },
-    { x: 474, y: 37, r: 231, g: 239, b: 246 },
-    { x: 512, y: 34, r: 228, g: 236, b: 244 },
-    { x: 557, y: 36, r: 251, g: 249, b: 253 },
-    { x: 608, y: 29, r: 8, g: 85, b: 156 },
-
     // bg corner
     { x: 8, y: 13, r: 0, g: 97, b: 181 },
     { x: 8, y: 343, r: 16, g: 16, b: 8 },
@@ -395,6 +570,98 @@ export const endSeasonProceedSelected = new Page(
   ],
   { x: 570, y: 325 },
   { x: 570, y: 325 }
+);
+
+export const selectNormalMasterLeagueMode = new Page(
+  'selectNormalMasterLeagueMode',
+  [
+    // bg
+    { x: 26, y: 16, r: 0, g: 93, b: 173 },
+    { x: 628, y: 12, r: 0, g: 97, b: 181 },
+    { x: 16, y: 350, r: 16, g: 20, b: 16 },
+    { x: 628, y: 350, r: 8, g: 16, b: 8 },
+    { x: 9, y: 198, r: 45, g: 44, b: 41 },
+    { x: 316, y: 188, r: 29, g: 27, b: 29 },
+    { x: 621, y: 196, r: 25, g: 26, b: 25 },
+
+    // selection bg
+    { x: 54, y: 84, r: 181, g: 186, b: 189 },
+    { x: 50, y: 282, r: 181, g: 186, b: 189 },
+    { x: 292, y: 84, r: 181, g: 186, b: 189 },
+    { x: 294, y: 287, r: 181, g: 186, b: 189 },
+    { x: 333, y: 83, r: 181, g: 186, b: 189 },
+    { x: 341, y: 279, r: 181, g: 186, b: 189 },
+    { x: 585, y: 79, r: 181, g: 186, b: 189 },
+    { x: 583, y: 281, r: 181, g: 186, b: 189 },
+    { x: 95, y: 266, r: 8, g: 130, b: 255 },
+    { x: 388, y: 262, r: 8, g: 133, b: 255 },
+    { x: 241, y: 282, r: 0, g: 89, b: 238 },
+    { x: 536, y: 279, r: 8, g: 93, b: 247 },
+
+    // NORMAL LEAGUE
+    { x: 144, y: 162, r: 41, g: 105, b: 25 },
+
+    // MASTER LEAGUE
+    { x: 453, y: 169, r: 164, g: 28, b: 238 },
+  ],
+  { x: 565, y: 328 },
+  { x: 565, y: 328 }
+);
+
+export const selectNormalMasterLeagueModeBtns = {
+  normal: {
+    x: 170,
+    y: 160,
+  },
+  master: {
+    x: 470,
+    y: 160,
+  },
+};
+
+export const selectNormalMasterLeagueModeProceed = new Page(
+  'selectNormalMasterLeagueModeProceed',
+  [
+    // bg
+    { x: 26, y: 16, r: 0, g: 93, b: 173 },
+    { x: 628, y: 12, r: 0, g: 97, b: 181 },
+    { x: 16, y: 350, r: 16, g: 20, b: 16 },
+    { x: 628, y: 350, r: 8, g: 16, b: 8 },
+    { x: 9, y: 198, r: 45, g: 44, b: 41 },
+    { x: 316, y: 188, r: 29, g: 27, b: 29 },
+    { x: 621, y: 196, r: 25, g: 26, b: 25 },
+
+    // ok
+    { x: 234, y: 276, r: 8, g: 105, b: 247 },
+    { x: 528, y: 272, r: 8, g: 114, b: 247 },
+    { x: 531, y: 322, r: 0, g: 117, b: 247 },
+    { x: 560, y: 323, r: 13, g: 123, b: 244 },
+    { x: 584, y: 324, r: 7, g: 114, b: 247 },
+    { x: 618, y: 326, r: 8, g: 113, b: 247 },
+  ],
+  { x: 565, y: 328 },
+  { x: 565, y: 328 }
+);
+
+export const leagueResetDialog = new Page(
+  'leagueResetDialog',
+  [
+    { x: 115, y: 54, r: 181, g: 186, b: 189 },
+    { x: 108, y: 305, r: 214, g: 219, b: 222 },
+    { x: 508, y: 308, r: 214, g: 219, b: 222 },
+    { x: 514, y: 50, r: 181, g: 182, b: 181 },
+    { x: 531, y: 48, r: 167, g: 172, b: 174 },
+    { x: 262, y: 57, r: 181, g: 186, b: 189 },
+    { x: 286, y: 58, r: 16, g: 24, b: 33 },
+    { x: 319, y: 61, r: 181, g: 186, b: 189 },
+    { x: 347, y: 62, r: 127, g: 133, b: 137 },
+    { x: 374, y: 62, r: 181, g: 186, b: 189 },
+    { x: 220, y: 302, r: 41, g: 73, b: 123 },
+    { x: 399, y: 306, r: 155, g: 195, b: 251 },
+    { x: 443, y: 305, r: 8, g: 105, b: 247 },
+  ],
+  { x: 193, y: 300 }, // no, cancel
+  { x: 371, y: 300 } // yes, reset
 );
 
 export const selectSeasonMode = new Page(
@@ -520,16 +787,20 @@ export const rankedBattlePanel = new Page(
     // { x: 493, y: 13, r: 208, g: 189, b: 51 },
     // { x: 597, y: 13, r: 74, g: 93, b: 123 },
 
-    // match list
-    { x: 18, y: 60, r: 238, g: 235, b: 230 },
-    { x: 39, y: 63, r: 234, g: 230, b: 226 },
-    { x: 78, y: 63, r: 238, g: 235, b: 230 },
-    { x: 100, y: 65, r: 238, g: 235, b: 230 },
+    // bg in left
+    { x: 22, y: 66, r: 189, g: 190, b: 189 },
+    { x: 16, y: 194, r: 230, g: 227, b: 230 },
+    { x: 18, y: 260, r: 247, g: 243, b: 247 },
 
-    // ranked shop btn
-    { x: 342, y: 321, r: 94, g: 52, b: 25 },
-    { x: 379, y: 322, r: 219, g: 161, b: 85 },
-    { x: 400, y: 322, r: 234, g: 193, b: 137 },
+    // bg of win/lose ratio in bottom
+    { x: 150, y: 279, r: 66, g: 65, b: 66 },
+    { x: 369, y: 284, r: 66, g: 69, b: 66 },
+
+    // energy (ball) in bottom
+    { x: 436, y: 325, r: 255, g: 254, b: 255 },
+    { x: 436, y: 325, r: 255, g: 254, b: 255 },
+    { x: 427, y: 325, r: 255, g: 253, b: 255 },
+    { x: 426, y: 323, r: 156, g: 158, b: 165 },
 
     // back
     { x: 24, y: 313, r: 200, g: 201, b: 198 },
@@ -538,6 +809,12 @@ export const rankedBattlePanel = new Page(
   { x: 557, y: 332 }, // play ball
   { x: 41, y: 320 }
 );
+
+export const rankedBattlePanelBtns = {
+  awayGame: { x: 185, y: 65 },
+  homeGame: { x: 293, y: 65 },
+  disabledPlayBtn: { x: 502, y: 317, r: 90, g: 73, b: 49 },
+};
 
 // click refresh btn in rankedBattlePanel
 export const rankedBattleWaitToRefresh = new Page(
@@ -714,103 +991,102 @@ export const autoGameConfirmEnd = new Page(
 );
 
 // * LeagueModes
-export const leagueModePanelContinue = new Page(
-  'leagueModePanelNextSchedule', // same behaviour as gLeagueModePanelNextSchedule
-  [
-    // nav bar star
-    { x: 314, y: 10, r: 231, g: 231, b: 231 },
-    { x: 320, y: 8, r: 247, g: 243, b: 247 },
-    { x: 392, y: 13, r: 168, g: 169, b: 168 },
-    { x: 394, y: 9, r: 142, g: 144, b: 142 },
-    { x: 620, y: 6, r: 214, g: 211, b: 214 },
+// export const leagueModePanelContinue = new Page(
+//   'leagueModePanelNextSchedule', // same behaviour as gLeagueModePanelNextSchedule
+//   [
+//     // nav bar star
+//     { x: 314, y: 10, r: 231, g: 231, b: 231 },
+//     { x: 320, y: 8, r: 247, g: 243, b: 247 },
+//     { x: 392, y: 13, r: 168, g: 169, b: 168 },
+//     { x: 394, y: 9, r: 142, g: 144, b: 142 },
+//     { x: 620, y: 6, r: 214, g: 211, b: 214 },
 
-    // button on bottom
-    { x: 41, y: 323, r: 67, g: 71, b: 60 },
-    { x: 81, y: 324, r: 118, g: 132, b: 156 },
-    { x: 131, y: 325, r: 57, g: 91, b: 124 },
-    { x: 167, y: 321, r: 122, g: 138, b: 156 },
-    { x: 180, y: 327, r: 24, g: 69, b: 123 },
-    { x: 254, y: 327, r: 255, g: 255, b: 255 },
-    { x: 338, y: 322, r: 255, g: 255, b: 255 },
-    { x: 351, y: 334, r: 24, g: 60, b: 107 },
+//     // button on bottom
+//     { x: 41, y: 323, r: 67, g: 71, b: 60 },
+//     { x: 81, y: 324, r: 118, g: 132, b: 156 },
+//     { x: 131, y: 325, r: 57, g: 91, b: 124 },
+//     { x: 167, y: 321, r: 122, g: 138, b: 156 },
+//     { x: 180, y: 327, r: 24, g: 69, b: 123 },
+//     { x: 254, y: 327, r: 255, g: 255, b: 255 },
+//     { x: 338, y: 322, r: 255, g: 255, b: 255 },
+//     { x: 351, y: 334, r: 24, g: 60, b: 107 },
+//   ],
+//   { x: 616, y: 336 },
+//   { x: 41, y: 320 }
+// );
+
+// export const leagueModePanelNextSchedule2 = new Page(
+//   'leagueModePanelNextSchedule',
+//   [
+//     { x: 199, y: 215, r: 0, g: 0, b: 0 },
+//     { x: 299, y: 9, r: 214, g: 215, b: 214 },
+//     { x: 312, y: 7, r: 255, g: 251, b: 255 },
+//     { x: 371, y: 12, r: 57, g: 97, b: 132 },
+//     { x: 387, y: 8, r: 221, g: 221, b: 221 },
+//     { x: 390, y: 10, r: 143, g: 141, b: 143 },
+//     { x: 393, y: 11, r: 67, g: 70, b: 67 },
+//     { x: 470, y: 12, r: 177, g: 191, b: 202 },
+//     { x: 476, y: 12, r: 177, g: 191, b: 202 },
+//     { x: 493, y: 9, r: 255, g: 246, b: 192 },
+//     { x: 496, y: 13, r: 245, g: 166, b: 8 },
+//     { x: 568, y: 13, r: 117, g: 124, b: 134 },
+//     { x: 573, y: 15, r: 74, g: 81, b: 90 },
+//     { x: 580, y: 18, r: 214, g: 211, b: 214 },
+//     { x: 597, y: 13, r: 74, g: 93, b: 123 },
+//     { x: 603, y: 15, r: 74, g: 93, b: 123 },
+//     { x: 622, y: 14, r: 214, g: 215, b: 214 },
+//     { x: 621, y: 29, r: 0, g: 56, b: 90 },
+//     { x: 600, y: 30, r: 246, g: 242, b: 246 },
+//     { x: 600, y: 30, r: 246, g: 242, b: 246 },
+//     { x: 27, y: 315, r: 214, g: 219, b: 214 },
+//     { x: 45, y: 319, r: 215, g: 219, b: 214 },
+//     { x: 37, y: 330, r: 214, g: 219, b: 214 },
+//     { x: 71, y: 316, r: 24, g: 77, b: 141 },
+//     { x: 80, y: 320, r: 144, g: 162, b: 185 },
+//     { x: 108, y: 320, r: 194, g: 214, b: 233 },
+//     { x: 174, y: 315, r: 24, g: 77, b: 148 },
+//     { x: 173, y: 320, r: 168, g: 181, b: 198 },
+//     { x: 206, y: 321, r: 214, g: 231, b: 244 },
+//     { x: 245, y: 320, r: 24, g: 73, b: 140 },
+//     { x: 251, y: 321, r: 181, g: 195, b: 214 },
+//     { x: 286, y: 323, r: 94, g: 133, b: 172 },
+//     { x: 315, y: 328, r: 24, g: 65, b: 116 },
+//     { x: 337, y: 324, r: 177, g: 193, b: 207 },
+//     { x: 376, y: 320, r: 185, g: 207, b: 227 },
+//     { x: 402, y: 330, r: 21, g: 62, b: 112 },
+//     { x: 611, y: 327, r: 194, g: 173, b: 87 },
+//     { x: 599, y: 326, r: 255, g: 255, b: 254 },
+//     { x: 561, y: 326, r: 255, g: 255, b: 255 },
+//     { x: 506, y: 324, r: 240, g: 230, b: 196 },
+//   ],
+//   { x: 616, y: 336 },
+//   { x: 41, y: 320 }
+// );
+
+export const leagueModePanel = new Page(
+  'leagueModePanel',
+  [
+    // navi bar
+    { x: 300, y: 12, r: 214, g: 214, b: 214 },
+    { x: 316, y: 9, r: 238, g: 234, b: 238 },
+    { x: 320, y: 15, r: 144, g: 148, b: 149 },
+    { x: 388, y: 10, r: 238, g: 234, b: 238 },
+    { x: 385, y: 9, r: 64, g: 67, b: 71 },
+    { x: 493, y: 11, r: 244, g: 204, b: 39 },
+    { x: 571, y: 14, r: 147, g: 161, b: 171 },
+    { x: 606, y: 14, r: 74, g: 93, b: 123 },
+    { x: 631, y: 15, r: 214, g: 219, b: 214 },
+
+    // btn in bottom
+    { x: 85, y: 326, r: 234, g: 238, b: 238 },
+    { x: 112, y: 327, r: 214, g: 231, b: 238 },
+    { x: 163, y: 326, r: 222, g: 225, b: 227 },
+    { x: 198, y: 327, r: 80, g: 117, b: 159 },
+    { x: 251, y: 324, r: 255, g: 255, b: 255 },
+    { x: 278, y: 330, r: 189, g: 206, b: 219 },
   ],
   { x: 616, y: 336 },
   { x: 41, y: 320 }
-);
-
-export const leagueModePanelNextSchedule = new Page(
-  'leagueModePanelNextSchedule',
-  [
-    { x: 313, y: 10, r: 229, g: 229, b: 229 },
-    { x: 321, y: 7, r: 165, g: 169, b: 173 },
-    { x: 389, y: 9, r: 250, g: 248, b: 250 },
-    { x: 495, y: 11, r: 253, g: 203, b: 18 },
-    { x: 631, y: 11, r: 214, g: 211, b: 214 },
-    { x: 41, y: 322, r: 62, g: 77, b: 62 },
-    { x: 91, y: 324, r: 24, g: 69, b: 132 },
-    { x: 173, y: 324, r: 93, g: 112, b: 140 },
-    { x: 254, y: 327, r: 255, g: 255, b: 255 },
-    { x: 351, y: 329, r: 24, g: 63, b: 109 },
-    { x: 533, y: 335, r: 181, g: 150, b: 0 },
-    { x: 459, y: 334, r: 48, g: 56, b: 33 },
-  ],
-  { x: 616, y: 336 },
-  { x: 41, y: 320 }
-);
-
-export const leagueModePanelNextSchedule2 = new Page(
-  'leagueModePanelNextSchedule',
-  [
-    { x: 199, y: 215, r: 0, g: 0, b: 0 },
-    { x: 299, y: 9, r: 214, g: 215, b: 214 },
-    { x: 312, y: 7, r: 255, g: 251, b: 255 },
-    { x: 371, y: 12, r: 57, g: 97, b: 132 },
-    { x: 387, y: 8, r: 221, g: 221, b: 221 },
-    { x: 390, y: 10, r: 143, g: 141, b: 143 },
-    { x: 393, y: 11, r: 67, g: 70, b: 67 },
-    { x: 470, y: 12, r: 177, g: 191, b: 202 },
-    { x: 476, y: 12, r: 177, g: 191, b: 202 },
-    { x: 493, y: 9, r: 255, g: 246, b: 192 },
-    { x: 496, y: 13, r: 245, g: 166, b: 8 },
-    { x: 568, y: 13, r: 117, g: 124, b: 134 },
-    { x: 573, y: 15, r: 74, g: 81, b: 90 },
-    { x: 580, y: 18, r: 214, g: 211, b: 214 },
-    { x: 597, y: 13, r: 74, g: 93, b: 123 },
-    { x: 603, y: 15, r: 74, g: 93, b: 123 },
-    { x: 622, y: 14, r: 214, g: 215, b: 214 },
-    { x: 621, y: 29, r: 0, g: 56, b: 90 },
-    { x: 600, y: 30, r: 246, g: 242, b: 246 },
-    { x: 600, y: 30, r: 246, g: 242, b: 246 },
-    { x: 27, y: 315, r: 214, g: 219, b: 214 },
-    { x: 45, y: 319, r: 215, g: 219, b: 214 },
-    { x: 37, y: 330, r: 214, g: 219, b: 214 },
-    { x: 71, y: 316, r: 24, g: 77, b: 141 },
-    { x: 80, y: 320, r: 144, g: 162, b: 185 },
-    { x: 108, y: 320, r: 194, g: 214, b: 233 },
-    { x: 174, y: 315, r: 24, g: 77, b: 148 },
-    { x: 173, y: 320, r: 168, g: 181, b: 198 },
-    { x: 206, y: 321, r: 214, g: 231, b: 244 },
-    { x: 245, y: 320, r: 24, g: 73, b: 140 },
-    { x: 251, y: 321, r: 181, g: 195, b: 214 },
-    { x: 286, y: 323, r: 94, g: 133, b: 172 },
-    { x: 315, y: 328, r: 24, g: 65, b: 116 },
-    { x: 337, y: 324, r: 177, g: 193, b: 207 },
-    { x: 376, y: 320, r: 185, g: 207, b: 227 },
-    { x: 402, y: 330, r: 21, g: 62, b: 112 },
-    { x: 611, y: 327, r: 194, g: 173, b: 87 },
-    { x: 599, y: 326, r: 255, g: 255, b: 254 },
-    { x: 561, y: 326, r: 255, g: 255, b: 255 },
-    { x: 506, y: 324, r: 240, g: 230, b: 196 },
-  ],
-  { x: 616, y: 336 },
-  { x: 41, y: 320 }
-);
-
-export const leagueModeScheduleGroup = new GroupPage(
-  'leagueModeScheduleGroup',
-  [leagueModePanelContinue, leagueModePanelNextSchedule, leagueModePanelNextSchedule2],
-  leagueModePanelContinue.next /* next*/,
-  leagueModePanelContinue.back /* back*/
 );
 
 export const leagueModeGameInfo = new Page(
@@ -1348,28 +1624,21 @@ export const gameLineUp = new Page(
 export const playerGrowthComplete = new Page(
   'playerGrowthComplete',
   [
-    { x: 163, y: 79, r: 181, g: 186, b: 189 },
-    { x: 223, y: 60, r: 41, g: 49, b: 49 },
-    { x: 347, y: 57, r: 49, g: 56, b: 58 },
-    { x: 308, y: 70, r: 181, g: 186, b: 189 },
-    { x: 303, y: 62, r: 82, g: 89, b: 91 },
-    { x: 517, y: 50, r: 188, g: 189, b: 189 },
-    { x: 521, y: 63, r: 181, g: 183, b: 189 },
-    { x: 527, y: 46, r: 60, g: 63, b: 67 },
-    { x: 131, y: 165, r: 206, g: 211, b: 222 },
-    { x: 146, y: 144, r: 57, g: 81, b: 99 },
-    { x: 489, y: 138, r: 214, g: 32, b: 247 },
-    { x: 488, y: 157, r: 187, g: 190, b: 203 },
-    { x: 172, y: 246, r: 181, g: 186, b: 189 },
-    { x: 265, y: 297, r: 8, g: 118, b: 255 },
-    { x: 287, y: 306, r: 219, g: 231, b: 255 },
-    { x: 298, y: 302, r: 232, g: 240, b: 251 },
-    { x: 310, y: 305, r: 255, g: 255, b: 255 },
-    { x: 324, y: 298, r: 251, g: 253, b: 255 },
-    { x: 407, y: 294, r: 8, g: 122, b: 255 },
-    { x: 416, y: 315, r: 0, g: 85, b: 239 },
-    { x: 464, y: 309, r: 222, g: 219, b: 222 },
-    { x: 108, y: 300, r: 222, g: 219, b: 222 },
+    // bg
+    { x: 115, y: 47, r: 181, g: 186, b: 189 },
+    { x: 114, y: 300, r: 214, g: 219, b: 222 },
+    { x: 514, y: 301, r: 214, g: 219, b: 222 },
+    { x: 522, y: 74, r: 181, g: 186, b: 189 },
+    { x: 110, y: 169, r: 206, g: 210, b: 214 },
+    { x: 110, y: 230, r: 181, g: 186, b: 189 },
+    { x: 522, y: 156, r: 206, g: 210, b: 214 },
+    { x: 513, y: 230, r: 181, g: 186, b: 189 },
+
+    // continue
+    { x: 240, y: 300, r: 8, g: 114, b: 248 },
+    { x: 312, y: 301, r: 223, g: 233, b: 247 },
+    { x: 337, y: 306, r: 255, g: 255, b: 255 },
+    { x: 399, y: 302, r: 8, g: 110, b: 247 },
   ],
   { x: 325, y: 304 },
   { x: 325, y: 304 }
@@ -1858,7 +2127,17 @@ export const teamSupportPackagePromotion = new Page(
   { x: 583, y: 45 }
 );
 
-// a page wwith a close btn but taller than promotion page
+// TODO: add this page
+// export const enterGamePromotion = new Page(
+//   'enterGamePromotion',
+//   [
+
+//   ],
+//   { x: 583, y: 45 },
+//   { x: 583, y: 45 }
+// );
+
+// a page with a close btn but taller than promotion page
 export const event = new Page(
   'event',
   [

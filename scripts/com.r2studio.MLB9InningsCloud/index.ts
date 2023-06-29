@@ -1,12 +1,12 @@
 import { default as MD5 } from 'md5';
-import { Rerouter, rerouter, Utils, XYRGB, RouteConfig, Page } from 'Rerouter';
+import { Rerouter, rerouter, Utils, RouteConfig } from 'Rerouter';
 import { ScriptConfig } from './src/types';
 import { defaultConfig } from './src/defaultConfig';
 
 import * as PAGE from './src/pages';
 import * as CONSTANTS from './src/constants';
 import { TASK } from './src/task';
-import { executeCommands } from './src/utils';
+import { executeCommands, isSameColor } from './src/utils';
 
 const VERSION_CODE: number = 15.1;
 
@@ -88,8 +88,6 @@ class MLB9I {
   }
 
   public start() {
-    // FIXME: remove after debug
-    console.log('start script', JSON.stringify(this.config));
     if (this.config.isCloud) {
       this.handleCloudState();
     }
@@ -98,23 +96,11 @@ class MLB9I {
     this.rerouter.start(MLB9I.packageName);
   }
   public stop() {
-    // FIXME: remove after debug
-    console.log('stop script', JSON.stringify(this.config));
     this.rerouter.stop();
     if (!this.config.isCloud) {
       return;
     }
     if (this.config.licenseId) {
-      let [oriAndroidId] = executeCommands('ANDROID_DATA=/data settings get secure android_id');
-      console.log('oriAndroidId', oriAndroidId);
-      // let isInApp = this.rerouter.checkInApp();
-      // while (isInApp) {
-      //   this.rerouter.stopApp();
-      //   sleep(3000);
-      //   isInApp = this.rerouter.checkInApp();
-      // }
-
-      // this.uploadSession();
       this.handleCloudLogOut();
       sleep(3000);
       console.log('==== stop script: has licenseId; close app and clear session');
@@ -131,12 +117,13 @@ class MLB9I {
     console.log(`lastLicenseId: ${lastLicenseId}, currentLicenseId: ${currentLicenseId}`);
 
     // lastLicenseId === '' means already logout
-    // if (lastLicenseId !== '' && currentLicenseId !== lastLicenseId) {
-    //   this.handleCloudLogOut();
-    //   sleep(3000);
-    // }
+    if (lastLicenseId !== '' && currentLicenseId !== lastLicenseId) {
+      this.handleCloudLogOut();
+      sleep(3000);
+    }
 
     const hasCloudSession = this.fetchSession();
+    console.log('hasCloudSession', hasCloudSession);
     if (hasCloudSession) {
       this.handleCloudLogIn();
       sleep(3000);
@@ -145,9 +132,11 @@ class MLB9I {
     // restart app
     let isInApp = this.rerouter.checkInApp();
     while (!isInApp) {
+      console.log('startApp1');
       this.rerouter.startApp();
       sleep(3000);
       isInApp = this.rerouter.checkInApp();
+      console.log('startApp2', isInApp);
     }
     sleep(3000);
   }
@@ -209,14 +198,12 @@ class MLB9I {
 
     // clear app session to avoid cannot overwrite
     const gameRecordFileName = this.getGameRecordFileName() || 'NOT_EXIST_RECORD';
-    const oriAppFiles = [`${appSessionRoot}/files`, `${appSessionRoot}/shared_prefs`, `${appRecordRoot}/${gameRecordFileName}`];
-    executeCommands(`chmod -R 777 ${appSessionRoot}`, `chmod -R 777 ${appRecordRoot}`, `rm -rf ${oriAppFiles.join(' ')}`);
+    executeCommands(`rm -rf ${appSessionRoot}/files`, `rm -rf ${appSessionRoot}/shared_prefs`, `rm -rf ${appRecordRoot}/${gameRecordFileName}`);
 
     // untargz cloud session and overwrite app session
     console.log(`set session start`);
+    untargz(`${scriptCacheRoot}.gz`);
     executeCommands(
-      `tar -xvzf ${scriptCacheRoot}.gz`,
-
       `cp -r ${scriptCacheRoot}/files ${appSessionRoot}/`,
       `cp -r ${scriptCacheRoot}/shared_prefs ${appSessionRoot}/`,
       `cp -r ${scriptCacheRoot}/gameRecord/* ${appRecordRoot}/`,
@@ -255,7 +242,7 @@ class MLB9I {
     console.log(`upload androidId: ${androidId}`);
     writeFile(`${scriptCacheRoot}/android_id.txt`, androidId);
 
-    executeCommands(`tar -cvzf ${scriptCacheRoot}.gz ${scriptCacheRoot}`);
+    targz(`${scriptCacheRoot}.gz`, `${scriptCacheRoot}`);
 
     // upload session
     const now = Date.now();
@@ -280,16 +267,15 @@ class MLB9I {
     this.setAndroidId('random');
     const { scriptCacheRoot, appSessionRoot, appRecordRoot } = MLB9I;
     const gameRecordFileName = this.getGameRecordFileName() || 'NOT_EXIST_RECORD';
-    const files = [
-      `${scriptCacheRoot}.gz`,
-      `${scriptCacheRoot}`,
+    executeCommands(
+      `rm -rf ${scriptCacheRoot}.gz`,
+      `rm -rf ${scriptCacheRoot}`,
 
-      `${appSessionRoot}/files`,
-      `${appSessionRoot}/shared_prefs`,
-      `${appRecordRoot}/${gameRecordFileName}`,
-    ];
+      `rm -rf ${appSessionRoot}/files`,
+      `rm -rf ${appSessionRoot}/shared_prefs`,
+      `rm -rf ${appRecordRoot}/${gameRecordFileName}`
+    );
 
-    executeCommands(`chmod -R 777 ${appSessionRoot}`, `chmod -R 777 ${appRecordRoot}`, `rm -rf ${files.join(' ')}`);
     console.log('clear session done');
     sleep(2000);
   }
@@ -333,6 +319,15 @@ class MLB9I {
     });
   }
   public addPremiumTasks() {
+    // only run once
+    this.rerouter.addTask({
+      name: TASK.changeGameSettings,
+      // maxTaskRunTimes: 1,
+      minRoundInterval: Number.POSITIVE_INFINITY,
+      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      forceStop: true,
+    });
+
     this.rerouter.addTask({
       name: TASK.restartAppPerDay,
       // maxTaskRunTimes: 1,
@@ -366,15 +361,6 @@ class MLB9I {
       forceStop: true,
     });
 
-    // only run once
-    this.rerouter.addTask({
-      name: TASK.changeGameSettings,
-      // maxTaskRunTimes: 1,
-      minRoundInterval: Number.POSITIVE_INFINITY,
-      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
-      forceStop: true,
-    });
-
     this.rerouter.addTask({
       name: TASK.playBattleGame,
       minRoundInterval: CONSTANTS.hourInMs,
@@ -390,7 +376,7 @@ class MLB9I {
   }
 
   public addRoutes() {
-    // ** enter app
+    // ** launching pages
     this.rerouter.addRoute({
       path: `/${PAGE.logo.name}`,
       match: PAGE.logo,
@@ -401,19 +387,16 @@ class MLB9I {
           return;
         }
 
-        const now = Date.now();
-        if (this.config.isCloud) {
-          if (this.state.lastSendLaunchEvent === 0 || now - this.state.lastSendLaunchEvent >= CONSTANTS.sendRunningEventInterval) {
-            this.state.lastSendLaunchEvent = now;
-            sendEvent('gameStatus', 'launching');
-          }
-        }
-
         // reopen if stuck
+        const now = Date.now();
         if (now - context.matchStartTS > 5 * CONSTANTS.minuteInMs) {
           console.log('stuck in launch page too long, restart app');
           this.rerouter.restartApp();
+          Utils.sleep(CONSTANTS.sleepMedium);
+          return;
         }
+
+        this.handleSendEventLaunching();
       },
     });
     this.rerouter.addRoute({
@@ -421,15 +404,41 @@ class MLB9I {
       match: PAGE.landingLoading,
       action: this.wrapRouteActionRunning(_ => {
         console.log('landing loading...');
-        Utils.sleep(CONSTANTS.sleepMedium);
+        this.handleSendEventLaunching();
       }),
+      afterActionDelay: CONSTANTS.sleepMedium,
     });
     this.rerouter.addRoute({
       path: `/${PAGE.landing.name}`,
       match: PAGE.landing,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteActionRunning(_ => {
+        this.handleSendEventLaunching();
+        this.rerouter.goNext(PAGE.landing);
+      }),
+    });
+    [PAGE.downloadData, PAGE.progressBarRunning].forEach(p => {
+      this.rerouter.addRoute({
+        path: `/${p.name}`,
+        match: p,
+        action: this.wrapRouteActionRunning(_ => {
+          this.handleSendEventLaunching();
+          this.rerouter.goNext(p);
+        }),
+        afterActionDelay: CONSTANTS.sleepLong,
+      });
+    });
+    [PAGE.TOS, PAGE.TOS90].forEach(p => {
+      this.rerouter.addRoute({
+        path: `/${p.name}`,
+        match: p,
+        action: this.wrapRouteActionRunning(_ => {
+          this.handleSendEventLaunching();
+          this.rerouter.goNext(p);
+        }),
+      });
     });
 
+    // ** login pages
     [PAGE.logIn, PAGE.logIn90].forEach(p => {
       this.rerouter.addRoute({
         path: `/${p.name}`,
@@ -446,11 +455,18 @@ class MLB9I {
             return;
           }
 
-          this.handleLogInInputing();
+          // sometimes game will automatically logout during playing
+          // so reset all states in order to send event properly
+          this.state.isPlaying = false;
+          this.state.lastSendLaunchEvent = 0;
+          this.state.lastWaitInputEvent = 0;
+          this.state.lastRunningEvent = 0;
+          this.state.lastUploadSession = 0;
+
+          this.handleSendEventLoginInputing();
         },
       });
     });
-
     [PAGE.fbLogIn90, PAGE.googleLogIn90].forEach(p => {
       this.rerouter.addRoute({
         path: `/${p.name}`,
@@ -459,36 +475,27 @@ class MLB9I {
       });
     });
 
-    [PAGE.TOS, PAGE.TOS90].forEach(p => {
-      this.rerouter.addRoute({
-        path: `/${p.name}`,
-        match: p,
-        action: this.wrapRouteActionRunning('goNext'),
-      });
-    });
-
     // ** main
     this.rerouter.addRoute({
       path: `/${PAGE.main.name}`,
       match: PAGE.main,
       action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
-        this.handleSendEventPlaying();
+        const task = context.task.name;
+        console.log(task);
 
-        switch (context.task.name) {
+        switch (task) {
           case TASK.stayInLogin:
-            console.log('restart to stay in login');
-            this.rerouter.restartApp();
-            break;
+            // should be inaccessible unless clear session is failed
+            this.handleCloudLogOut();
+
+            return;
           case TASK.playLeagueGame:
             this.rerouter.screen.tap(PAGE.mainBtns.leagueMode);
-            console.log('click league mode');
             break;
           case TASK.playBattleGame:
             this.rerouter.screen.tap(PAGE.mainBtns.battleMode);
-            console.log('click battle mode');
             break;
           case TASK.changeGameSettings:
-            console.log('click setting');
             this.rerouter.screen.tap(PAGE.mainBtns.settings);
             break;
           case TASK.adReward:
@@ -496,17 +503,17 @@ class MLB9I {
             if (context.matchTimes > 2) {
               console.log('ad is still on cd');
               finishRound();
-              return;
+            } else {
+              this.rerouter.screen.tap(PAGE.mainBtns.adTab);
             }
-            this.rerouter.screen.tap(PAGE.mainBtns.adTab);
-            console.log('tap ad tab');
             break;
           case TASK.weeklyMission:
             this.rerouter.screen.tap(PAGE.mainBtns.achievement);
-            console.log('click achievement');
+            break;
           default:
             break;
         }
+        this.handleSendEventPlaying();
       }),
     });
 
@@ -596,7 +603,7 @@ class MLB9I {
         const x = 613;
         const canCollectColor = { r: 8, g: 125, b: 255 };
         for (let y = 128; y < 260; y += 44) {
-          const canCollect = this.isSameColor(image, { x, y, ...canCollectColor });
+          const canCollect = isSameColor(image, { x, y, ...canCollectColor });
           if (canCollect) {
             this.rerouter.screen.tap({ x, y });
             console.log('collect');
@@ -623,7 +630,7 @@ class MLB9I {
         // bc it is abled once a week
         for (var dx = 0; dx < 3 * w; dx += w) {
           for (var dy = 0; dy < 3 * h; dy += h) {
-            const canCollect = this.isSameColor(image, { x: x + dx, y: y + dy, ...canCollectColor });
+            const canCollect = isSameColor(image, { x: x + dx, y: y + dy, ...canCollectColor });
             if (!canCollect) {
               console.log('wait all weekly mission complete');
               finishRound();
@@ -689,7 +696,7 @@ class MLB9I {
         }
 
         // check if play is available
-        const isPlayDisabled = this.isSameColor(image, PAGE.rankedBattlePanelBtns.disabledPlayBtn);
+        const isPlayDisabled = isSameColor(image, PAGE.rankedBattlePanelBtns.disabledPlayBtn);
         if (isPlayDisabled) {
           finishRound();
           console.log('ranked battle play disabled');
@@ -765,17 +772,17 @@ class MLB9I {
     // ** playLeagueMode
     // enter game info
     this.rerouter.addRoute({
-      path: `/${PAGE.leagueModeScheduleGroup.name}`,
-      match: PAGE.leagueModeScheduleGroup,
+      path: `/${PAGE.leagueModePanel.name}`,
+      match: PAGE.leagueModePanel,
       action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playLeagueGame) {
-          this.rerouter.goBack(PAGE.leagueModeScheduleGroup);
+          this.rerouter.goBack(PAGE.leagueModePanel);
           return;
         }
 
         // avoid to click btn too many time for trigger next page immediately
         if (context.matchTimes < 2) {
-          this.rerouter.goNext(PAGE.leagueModeScheduleGroup);
+          this.rerouter.goNext(PAGE.leagueModePanel);
         }
         Utils.sleep(CONSTANTS.sleepShort);
       }),
@@ -791,7 +798,7 @@ class MLB9I {
 
         console.log('check energy');
         const emptyEnergy = { x: 551, y: 281, r: 3, g: 124, b: 213 };
-        const hasEnergy0 = this.isSameColor(image, emptyEnergy, 0.9);
+        const hasEnergy0 = isSameColor(image, emptyEnergy, 0.9);
         if (hasEnergy0) {
           console.log('no energy');
           finishRound(true);
@@ -799,13 +806,13 @@ class MLB9I {
         }
 
         const digit1 = { x: 561, y: 278, r: 169, g: 172, b: 179 };
-        const hasEnergy10 = this.isSameColor(image, digit1);
+        const hasEnergy10 = isSameColor(image, digit1);
         console.log('has10Energy:', hasEnergy10);
 
         // use quick play when has 10+ energy,
         // and slow play when has 10- energy
         const quickPlayOnBtn = { x: 37, y: 284, r: 33, g: 255, b: 140 };
-        const isQuickPlayOn = this.isSameColor(image, quickPlayOnBtn);
+        const isQuickPlayOn = isSameColor(image, quickPlayOnBtn);
 
         if (hasEnergy10 && !isQuickPlayOn) {
           this.rerouter.screen.tap(quickPlayOnBtn); // select quick play
@@ -1221,7 +1228,7 @@ class MLB9I {
         this.handlePowerSavingPage();
       }),
     });
-    [PAGE.downloadData, PAGE.errorNewUpdateAvailable, PAGE.unexpectedError].forEach(p => {
+    [PAGE.errorNewUpdateAvailable, PAGE.unexpectedError].forEach(p => {
       this.rerouter.addRoute({
         path: `/${p.name}`,
         match: p,
@@ -1230,7 +1237,6 @@ class MLB9I {
       });
     });
     [
-      PAGE.progressBarRunning,
       PAGE.reviewApp,
       PAGE.promotion1,
       PAGE.promotion2,
@@ -1272,7 +1278,7 @@ class MLB9I {
           break;
       }
       if (this.state.lastWaitInputEvent !== 0) {
-        return this.handleLogInInputing();
+        return this.handleSendEventLoginInputing();
       }
 
       this.rerouter.screen.tap({ x: 0, y: 0 });
@@ -1322,24 +1328,6 @@ class MLB9I {
     Utils.sleep(CONSTANTS.sleepMedium);
   }
 
-  public isSameColor(image: Image, xyrgb: XYRGB, thres: number = 0.8): boolean {
-    const rgb = getImageColor(image, xyrgb.x, xyrgb.y);
-    const score = Utils.identityColor(rgb, xyrgb);
-    return score > thres;
-  }
-
-  public handleLogInInputing() {
-    if (!this.config.isCloud) {
-      return;
-    }
-    console.log('wait user input');
-    const now = Date.now();
-    if (this.state.lastWaitInputEvent === 0 || now - this.state.lastWaitInputEvent >= CONSTANTS.sendWaitInputEventInterval) {
-      this.state.lastWaitInputEvent = now;
-      sendEvent('gameStatus', 'wait-for-input');
-    }
-  }
-
   public wrapRouteActionRunning(action: RouteConfig['action']): RouteConfig['action'] {
     if (!this.config.isCloud) {
       return action;
@@ -1366,6 +1354,45 @@ class MLB9I {
     };
   }
 
+  public handleSendEventLoginInputing() {
+    if (!this.config.isCloud) {
+      return;
+    }
+    console.log('wait user input');
+    const now = Date.now();
+    if (now - this.state.lastWaitInputEvent >= CONSTANTS.sendWaitInputEventInterval) {
+      this.state.lastWaitInputEvent = now;
+      sendEvent('gameStatus', 'wait-for-input');
+    }
+  }
+  public handleSendEventLoginSuccess() {
+    if (!this.config.isCloud) {
+      return;
+    }
+    if (this.state.lastWaitInputEvent !== 0) {
+      // re-init all states to send events if it's after re-login
+      this.state.isPlaying = false;
+      this.state.lastSendLaunchEvent = 0;
+      this.state.lastWaitInputEvent = 0;
+      this.state.lastRunningEvent = 0;
+      this.state.lastUploadSession = 0;
+
+      sendEvent('gameStatus', 'login-succeeded');
+      console.log('send login success event');
+    }
+  }
+  public handleSendEventLaunching() {
+    if (!this.config.isCloud) {
+      return;
+    }
+    const now = Date.now();
+    if (now - this.state.lastSendLaunchEvent < CONSTANTS.sendRunningEventInterval) {
+      return;
+    }
+    this.state.lastSendLaunchEvent = now;
+    sendEvent('gameStatus', 'launching');
+    console.log('send launch event');
+  }
   public handleSendEventRunning() {
     if (!this.config.isCloud) {
       return;
@@ -1377,19 +1404,6 @@ class MLB9I {
     this.state.lastRunningEvent = now;
     sendEvent('running', '');
     console.log('send running event');
-  }
-  public handleSendEventLoginSuccess() {
-    if (!this.config.isCloud) {
-      return;
-    }
-    if (this.state.lastWaitInputEvent !== 0) {
-      this.state.lastWaitInputEvent = 0;
-      sendEvent('gameStatus', 'login-succeeded');
-      console.log('send login success event');
-
-      // FIXME: check if need to upload session
-      // this.uploadSession();
-    }
   }
   public handleSendEventPlaying() {
     if (!this.config.isCloud) {
