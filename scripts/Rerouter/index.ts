@@ -118,4 +118,6 @@ declare global {
   ): true | string;
   function readFile(path: string): string | undefined;
   function writeFile(path: string, content: string): void;
+  function targz(targetPath: string, sourcePath: string): string | 'success';
+  function untargz(sourcePath: string): string | 'success';
 }

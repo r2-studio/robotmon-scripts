@@ -25,7 +25,7 @@ module.exports = {
     clean: true,
   },
   optimization: {
-    minimize: true,
+    minimize: false,
     usedExports: false, // <- no remove unused function
     minimizer: [
       new TerserPlugin({
