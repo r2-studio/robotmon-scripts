@@ -3,7 +3,7 @@
     "com.r2studio.MLB9Innings": {
       "id": "com.r2studio.MLB9Innings",
       "title": "*MLB9 Innings Premium*",
-      "versionCode": 15,
+      "versionCode": 15.1,
       "description": "<h3>MLB9 Innings Premium</h3><ul><li>一鍵自動暢玩聯賽<br><small>play league automatically through one click</small></li><li> 自動解任看廣告領獎勵<br><small> auto complete mission and ad reward</small></li><li> 體力判斷省電速刷模式 <br><small> 體力判斷速刷模式<br><small>better efficiency in power saving mode</small></li></ul><b>* 若欲執行腳本時出現此畫面，請重開robotmon app<br><small>please restart robotmon app if this shows up when trying to execute the script</small></b>",
       "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9Innings/index.zip",
@@ -12,7 +12,7 @@
     "com.r2studio.MLB9InningsBasic": {
       "id": "com.r2studio.MLB9InningsBasic",
       "title": "*MLB9 Innings Basic*",
-      "versionCode": 14.4,
+      "versionCode": 15.1,
       "description": "<h3>MLB9 Innings Basic</h3><ul><li>一鍵自動暢玩聯賽<br><small>play league automatically through one click</small></li><li>體力判斷速刷模式<br><small>better energy controlling and play efficiency</small></li><li>遊玩畫面不中斷<br><small>decrease disruptions caused by power save view</small></li></ul>",
       "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9InningsBasic/index.zip",
