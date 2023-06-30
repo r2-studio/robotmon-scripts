@@ -10,4 +10,5 @@ export enum TASKS {
   fountain = 'fountain',
   pvp = 'pvp',
   pvpPurchaseAncientCookie = 'pvpPurchaseAncientCookie',
+  superMayhem = 'superMayhem',
 }

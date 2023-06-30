@@ -10,6 +10,8 @@ import {
   AdvanturesBountiesAt3rd,
   getCEs,
   checkScreenMessage,
+  AdvanturesBountiesAt2nd,
+  getMayhemScores,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -203,10 +205,17 @@ class CookieKingdom {
     //     forceStop: false,
     //   });
     // }
+    // this.rerouter.addTask({
+    //   name: TASKS.pvp,
+    //   maxTaskDuring: 12 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+
     this.rerouter.addTask({
-      name: TASKS.pvp,
-      maxTaskDuring: 12 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
+      name: TASKS.superMayhem,
+      maxTaskDuring: 15 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
       forceStop: false,
     });
 
@@ -269,7 +278,10 @@ class CookieKingdom {
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, 'send login-success as saw rfpageAnnouncement');
 
-        sendEvent('gameStatus', 'login-succeeded');
+        if (this.config.needToSendLoginSuccess) {
+          sendEvent('gameStatus', 'login-succeeded');
+          this.config.needToSendLoginSuccess = false;
+        }
         this.rerouter.goNext(PAGES.rfpageAnnouncement);
       },
     });
@@ -488,7 +500,7 @@ class CookieKingdom {
         this.rerouter.goNext(PAGES.rfpageInTrainStation);
         Utils.sleep(CONSTANTS.sleepAnimate);
         logs(context.task.name, `Tried to sent ${foundResults.length} trains`);
-        finishRound();
+        finishRound(true);
       },
     });
 
@@ -510,10 +522,10 @@ class CookieKingdom {
           { x: 60, y: 256, r: 138, g: 138, b: 138 },
         ]);
 
-        if (this.rerouter.isPageMatch(rfpageAllWishingDailyRewardCollected) && !this.config.alwaysFulfillWishes) {
+        if (this.rerouter.isPageMatchImage(rfpageAllWishingDailyRewardCollected, image) && !this.config.alwaysFulfillWishes) {
           logs(context.task.name, `rfpageInWishingTree, All wish fulfilled, skipping and send running`);
           sendEvent('running', '');
-          finishRound();
+          finishRound(true);
         }
 
         let refreshing = 0;
@@ -564,7 +576,7 @@ class CookieKingdom {
 
         // console.log('Run wishing tree for ', (Date.now() - wishingTreeStartTime) / 60000, ' mins, ending this task');
         sendEvent('running', '');
-        finishRound();
+        finishRound(true);
 
         return true;
       },
@@ -614,19 +626,20 @@ class CookieKingdom {
         }
 
         // 3rd raw is empty, fountain is pretty clean
-        if (this.rerouter.isPageMatch(PAGES.rfpageFountain3rdRawEmpty)) {
+        if (this.rerouter.isPageMatchImage(PAGES.rfpageFountain3rdRawEmpty, image)) {
           logs(context.task.name, 'rfpageFountain3rdRawEmpty 3party empty, set task complete');
           this.rerouter.screen.tap({ x: 500, y: 310 }); // tap Claim
-          finishRound();
+          finishRound(true);
           return;
         }
 
         logs(context.task.name, 'rfpageInFountain and collect it');
         this.rerouter.screen.tap({ x: 500, y: 310 }); // tap Claim
-        finishRound(); // 如果可以正確辨識收成功，這個可以刪除，否則是用水池偏空當作有收成功
+        finishRound(true); // 如果可以正確辨識收成功，這個可以刪除，否則是用水池偏空當作有收成功
       },
     });
 
+    // PVP
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageInPVPArena.name}`,
       match: PAGES.rfpageInPVPArena,
@@ -647,7 +660,7 @@ class CookieKingdom {
                 }
 
                 logs(context.task.name, `Battle with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
-                this.rerouter.screen.tap({ x: 590, y: battleY[i] });
+                this.rerouter.screen.tap({ x: 590, y: battleY[i] }); // tap Battle
                 if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpagePVPArenaReadyToBattlePage, 2000)) {
                   return;
                 }
@@ -658,10 +671,10 @@ class CookieKingdom {
 
             if (this.rerouter.isPageMatch(PAGES.rfpageBattleTargetCanRefresh)) {
               logs(context.task.name, `Tap PVP refresh`);
-              this.rerouter.goNext(PAGES.rfpageBattleTargetCanRefresh);
+              this.rerouter.screen.tap({ x: 532, y: 329 });
             } else {
               logs(context.task.name, `Cannot tap PVP refresh, job done`);
-              finishRound();
+              finishRound(true);
               return;
             }
 
@@ -682,7 +695,7 @@ class CookieKingdom {
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, `in rfpagePvPNoArenaTicket, job done`);
         sendKeyBack();
-        finishRound();
+        finishRound(true);
       },
     });
     this.rerouter.addRoute({
@@ -696,7 +709,50 @@ class CookieKingdom {
 
         logs(context.task.name, `in rfpagePVPArenaReadyToBattlePage, tap it`);
         this.rerouter.goNext(PAGES.rfpagePVPArenaReadyToBattlePage);
-        this.taskStatus[TASKS.pvp].battleing = true;
+      },
+    });
+
+    // Super Mayhem
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInSuperMayhem.name}`,
+      match: PAGES.rfpageInSuperMayhem,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.superMayhem) {
+          sendKeyBack();
+          return;
+        }
+
+        logs(context.task.name, `in rfpageInSuperMayhem`);
+        const battleY = [75, 160, 250];
+
+        var scores = getMayhemScores();
+        logs(context.task.name, `super mayhem scores: ${JSON.stringify(scores)}`);
+        for (let i = 0; i < scores.length; i++) {
+          var ce = scores[i];
+          if (ce < this.config.autoPvPTargetScoreLimit && ce !== 0) {
+            if (!this.rerouter.screen.isSameColor({ x: 590, y: battleY[i], r: 121, g: 207, b: 16 })) {
+              logs(context.task.name, `Already Battled with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
+              continue;
+            }
+
+            logs(context.task.name, `Battle with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
+            this.rerouter.screen.tap({ x: 590, y: battleY[i] }); // tap Battle
+            if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageSuperMayhemReadyToBattle, 2000)) {
+              return;
+            }
+          } else {
+            logs(context.task.name, `Not to battle with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
+          }
+        }
+
+        if (this.rerouter.isPageMatch(PAGES.rfpageBattleTargetCanRefresh)) {
+          logs(context.task.name, `Tap Super mayhem refresh`);
+          this.rerouter.screen.tap({ x: 532, y: 329 });
+        } else {
+          logs(context.task.name, `Cannot tap Super mayhem refresh, job done`);
+          finishRound(true);
+          return;
+        }
       },
     });
 
@@ -707,7 +763,9 @@ class CookieKingdom {
         logs(context.task.name, `in rfpageBattlePaused, skipping`);
         switch (context.task.name) {
           case TASKS.pvp:
+          case TASKS.superMayhem:
             this.rerouter.screen.tap({ x: 315, y: 159 });
+            break;
           default:
             // TODO: will fail when resume battle
             console.log('I am rfpageBattlePaused, panic and donno what to do');
@@ -722,7 +780,7 @@ class CookieKingdom {
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, `in rfpageInPVPArena`);
 
-        if (!this.rerouter.isPageMatch(PAGES.rfpagePVPAncientCookieSoldout)) {
+        if (!this.rerouter.isPageMatchImage(PAGES.rfpagePVPAncientCookieSoldout, image)) {
           this.rerouter.screen.tap({ x: 57, y: 125 });
           Utils.sleep(1000);
           this.rerouter.screen.tap({ x: 317, y: 252 });
@@ -732,7 +790,7 @@ class CookieKingdom {
           logs(context.task.name, `ancient cookie already sold out`);
         }
 
-        if (!this.rerouter.isPageMatch(PAGES.rfpagePVPSuperEpicCookieSoldout)) {
+        if (!this.rerouter.isPageMatchImage(PAGES.rfpagePVPSuperEpicCookieSoldout, image)) {
           this.rerouter.screen.tap({ x: 145, y: 125 });
           Utils.sleep(1000);
           this.rerouter.screen.tap({ x: 317, y: 252 });
@@ -743,7 +801,7 @@ class CookieKingdom {
         }
 
         sendKeyBack();
-        finishRound();
+        finishRound(true);
       },
     });
     this.rerouter.addRoute({
@@ -751,14 +809,8 @@ class CookieKingdom {
       match: PAGES.rfpagePVPNotEnoughMedal,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, `in rfpagePVPNotEnoughMedal, Need more medals, skipping`);
-
-        if (!this.rerouter.isPageMatch(PAGES.rfpagePVPAncientCookieSoldout)) {
-          this.rerouter.goNext(PAGES.rfpagePVPNotEnoughMedal);
-          Utils.sleep(1000);
-          this.rerouter.screen.tap({ x: 439, y: 92 }); // TODO: what is this
-          Utils.sleep(2000);
-          finishRound();
-        }
+        this.rerouter.goNext(PAGES.rfpagePVPNotEnoughMedal);
+        finishRound(true);
       },
     });
 
@@ -786,7 +838,7 @@ class CookieKingdom {
       path: `/${PAGES.rfpageSelectAdvantureFirstIsKingdom.name}`,
       match: PAGES.rfpageSelectAdvantureFirstIsKingdom,
       action: (context, image, matched, finishRound) => {
-        logs(context.task.name, `rfpageInProduction, leave because current task is not production, but: ${context.task.name}`);
+        logs(context.task.name, `rfpageSelectAdvantureFirstIsKingdom, tap the 1st one to back to kingdom`);
         this.rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
       },
     });
@@ -800,9 +852,19 @@ class CookieKingdom {
           return;
         }
 
+        let advantureSetting = AdvanturesBountiesAt3rd;
+        if (this.rerouter.isPageMatchImage(PAGES.rfpageBountiesAt2ndSlot, image)) {
+          advantureSetting = AdvanturesBountiesAt2nd;
+        }
+
         switch (context.task.name) {
+          case TASKS.superMayhem:
+            logs(context.task.name, `rfpageSelectAdvanture goto superMayhem`);
+            this.rerouter.screen.tap(advantureSetting[TASKS.superMayhem].pnt);
+            break;
           default:
-            logs(context.task.name, `rfpageSelectAdvanture don't know what to do, return`);
+            logs(context.task.name, `rfpageSelectAdvanture don't know what to do, crash it`);
+            ii++;
             sendKeyBack();
         }
       },
@@ -849,6 +911,7 @@ class CookieKingdom {
           if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageFistItemIsCastle, 3000)) {
             logs(context.task.name, 'tap goto castle');
             this.rerouter.screen.tap({ x: 260, y: 224 });
+            return;
           }
         } else if (context.task.name === TASKS.pvp) {
           if (AdvanturesBountiesAt3rd[TASKS.pvp].fromHead) {
@@ -858,6 +921,7 @@ class CookieKingdom {
             Utils.sleep(CONSTANTS.sleepAnimate);
 
             this.rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name].pnt);
+            return;
           }
         }
       },
@@ -876,8 +940,24 @@ class CookieKingdom {
       path: `/${PAGES.rfpageGeneralMessageWindow.name}`,
       match: PAGES.rfpageGeneralMessageWindow,
       action: (context, image, matched, finishRound) => {
-        if (checkScreenMessage(this.rerouter, PAGES.unfinishedBattleMessageScreen)) {
+        if (checkScreenMessage(this.rerouter, PAGES.unfinishedPVPBattleMessageScreen)) {
+          if (context.task.name !== TASKS.pvp) {
+            logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedBattleMessageScreen, skip current task');
+            finishRound(true);
+            return;
+          }
+
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedBattleMessageScreen, tap it');
+          this.rerouter.screen.tap({ x: 394, y: 253 });
+          return;
+        } else if (checkScreenMessage(this.rerouter, PAGES.unfinishedSuperMayhemBattleMessageScreen)) {
+          if (context.task.name !== TASKS.superMayhem) {
+            logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedSuperMayhemBattleMessageScreen, skip current task');
+            finishRound(true);
+            return;
+          }
+
+          logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedSuperMayhemBattleMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 394, y: 253 });
           return;
         }
@@ -918,6 +998,9 @@ class CookieKingdom {
           case TASKS.fountain:
           case TASKS.pvp:
             this.rerouter.screen.tap({ x: 25, y: 25 }); // goto head
+            break;
+          case TASKS.superMayhem:
+            this.rerouter.screen.tap({ x: 560, y: 325 }); // goto PLAY!
             break;
           default:
             logs(context.task.name, 'Unknown task in rfpageInKingdomVillage');
@@ -971,16 +1054,22 @@ class CookieKingdom {
       }
 
       const rfpageBattling = new Page('rfpageBattling', [
-        { x: 284, y: 17, r: 145, g: 219, b: 143 },
-        { x: 351, y: 16, r: 77, g: 32, b: 12 },
+        // From PVP
+        // { x: 284, y: 17, r: 145, g: 219, b: 143 },
+        // { x: 351, y: 16, r: 77, g: 32, b: 12 },
+
+        // From Super mayhem
+        { x: 354, y: 14, r: 125, g: 12, b: 251 },
+        { x: 285, y: 15, r: 65, g: 205, b: 12 },
       ]);
-      if (this.rerouter.isPageMatch(rfpageBattling)) {
+      if (this.rerouter.isPageMatchImage(rfpageBattling, image)) {
         logs(context.task.name, 'unknown but should be rfpageBattling so continue');
+        context.matchTimes = 0;
         return;
       }
 
       let unknownTarget = 4;
-      if (context.task.name === TASKS.pvp) {
+      if (context.task.name === TASKS.pvp || context.task.name === TASKS.superMayhem) {
         unknownTarget = 60;
       }
 

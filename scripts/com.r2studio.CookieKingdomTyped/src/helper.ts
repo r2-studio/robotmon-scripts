@@ -57,6 +57,7 @@ export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, p
   }
 
   if (!rerouter.isPageMatch(pageMessageWindow)) {
+    console.log('no')
     return false;
   }
 
@@ -71,12 +72,12 @@ export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, p
       cnt++;
     }
   }
-  // console.log(
-  //   'cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ',
-  //   cnt,
-  //   messageScreen.targetColorCount,
-  //   messageScreen.targetColorThreashold
-  // );
+  console.log(
+    'cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ',
+    cnt,
+    message.targetColorCount,
+    message.targetColorThreashold
+  );
 
   releaseImage(img);
   releaseImage(croppedImage);
@@ -326,27 +327,6 @@ export const AdvanturesBountiesAt4th: { [key: string]: Advanture } = {
   guild: GenAdvanture({ x: 320, y: 100 }, false, true),
 };
 
-// Case not exist for now
-export const pageBountiesAt2ndSlot = [
-  { x: 242, y: 68, r: 255, g: 255, b: 255 },
-  { x: 347, y: 102, r: 198, g: 65, b: 0 },
-  { x: 328, y: 112, r: 206, g: 150, b: 66 },
-  { x: 294, y: 130, r: 222, g: 147, b: 96 },
-  { x: 231, y: 138, r: 253, g: 234, b: 74 },
-];
-
-// Most general case, 1. world exploration 2. guild battle 3 Bounties & pvp
-export const pageBountiesAt3rdSlot = [
-  { x: 595, y: 86, r: 148, g: 73, b: 33 },
-  { x: 588, y: 152, r: 173, g: 122, b: 66 },
-  { x: 585, y: 177, r: 24, g: 12, b: 8 },
-];
-
-// Perhaps with Cooklie Odysses and super mayhem not finished
-export const pageBountiesAt4rdSlot = [
-  // TODO
-];
-
 function handleGotoAdventure(targetAdvanture: Advantures, targetPage: Page, rerouter: Rerouter) {
   logs('handleGotoAdventure task', `going to Advanture: ${targetAdvanture} with page: ${targetPage}`);
 
@@ -479,4 +459,42 @@ export function getCEs(): number[] {
   releaseImage(croppedImage4);
   releaseImage(img);
   return [value1, value2, value3, value4];
+}
+
+export function getMayhemScores() {
+  var img = getScreenshot();
+  var scores = [0, 0, 0];
+  var imagesLocation = [
+    [
+      { x: 495, y: 56, w: 47, h: 12 },
+      { x: 495, y: 84, w: 47, h: 12 },
+      { x: 495, y: 110, w: 47, h: 12 },
+    ],
+    [
+      { x: 495, y: 145, w: 47, h: 12 },
+      { x: 495, y: 172, w: 47, h: 12 },
+      { x: 495, y: 198, w: 47, h: 12 },
+    ],
+    [
+      { x: 495, y: 232, w: 47, h: 12 },
+      { x: 495, y: 260, w: 47, h: 12 },
+      { x: 495, y: 288, w: 47, h: 12 },
+    ],
+  ];
+  for (var mayhemIdx = 0; mayhemIdx < imagesLocation.length; mayhemIdx++) {
+    for (var teamIdx = 0; teamIdx < imagesLocation[mayhemIdx].length; teamIdx++) {
+      var tImage = imagesLocation[mayhemIdx][teamIdx];
+      var croppedImage = cropImage(img, tImage.x, tImage.y, tImage.w, tImage.h);
+      var value = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage, 7, 0.7, 0.7) || 0;
+      releaseImage(croppedImage);
+
+      if (value > scores[mayhemIdx]) {
+        scores[mayhemIdx] = value;
+      }
+    }
+  }
+
+  releaseImage(img);
+  console.log('>> ', JSON.stringify(scores));
+  return scores;
 }

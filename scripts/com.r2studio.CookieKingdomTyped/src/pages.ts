@@ -257,7 +257,7 @@ export const pageUnfinishedBattleNeedResume = [
 //   pageUnfinishedBattleNeedResume,
 //   pageUnfinishedBattleNeedResume[0]
 // );
-export const unfinishedBattleMessageScreen = {
+export const unfinishedPVPBattleMessageScreen = {
   x: 240,
   y: 160,
   width: 160,
@@ -266,6 +266,17 @@ export const unfinishedBattleMessageScreen = {
   targetY: 4,
   lookingForColor: { r: 247, g: 235, b: 222 },
   targetColorCount: 128,
+  targetColorThreashold: 5,
+};
+export const unfinishedSuperMayhemBattleMessageScreen = {
+  x: 240,
+  y: 166,
+  width: 160,
+  height: 12,
+
+  targetY: 6,
+  lookingForColor: { r: 227, g: 218, b: 209 },
+  targetColorCount: 84,
   targetColorThreashold: 5,
 };
 
@@ -501,9 +512,14 @@ export const rfpagePvPNoArenaTicket = new Page('rfpagePvPNoArenaTicket', [
   { x: 457, y: 231, r: 4, g: 151, b: 211 },
   { x: 458, y: 303, r: 219, g: 207, b: 199 },
 ]);
-// TODO: fix rfpageBattleTargetCanRefresh
 export const rfpageBattleTargetCanRefresh = new Page('rfpageBattleTargetCanRefresh', [
-])
+  { x: 532, y: 329, r: 117, g: 113, b: 111 },
+  { x: 513, y: 327, r: 88, g: 85, b: 84 },
+  { x: 519, y: 334, r: 255, g: 255, b: 255 },
+  { x: 516, y: 332, r: 117, g: 113, b: 111 },
+  { x: 608, y: 331, r: 117, g: 113, b: 111 },
+  { x: 522, y: 17, r: 0, g: 195, b: 255 },
+]);
 
 export const rfpageBattleVictoryButNeedTap = new Page(
   'rfpageBattleVictoryButNeedTap',
@@ -541,7 +557,6 @@ export const rfpageBattleDefeat = new Page(
 //   { x: 284, y: 17, r: 145, g: 219, b: 143 },
 //   { x: 351, y: 16, r: 77, g: 32, b: 12 },
 // ]);
-
 export const rfpageDefeatWithGotoKingdom = new Page(
   'rfpageDefeatWithGotoKingdom',
   [
@@ -552,6 +567,31 @@ export const rfpageDefeatWithGotoKingdom = new Page(
     { x: 294, y: 58, r: 41, g: 44, b: 41 },
   ],
   { x: 81, y: 314 }
+);
+
+export const rfpageInSuperMayhem = new Page('rfpageInSuperMayhem', [
+  { x: 451, y: 11, r: 255, g: 29, b: 134 },
+  { x: 448, y: 19, r: 231, g: 207, b: 235 },
+  { x: 49, y: 85, r: 250, g: 82, b: 133 },
+  { x: 34, y: 135, r: 206, g: 132, b: 66 },
+  { x: 18, y: 137, r: 244, g: 77, b: 122 },
+]);
+export const rfpageNoMayhemTicket = new Page('rfpageNoMayhemTicket', [
+  { x: 301, y: 250, r: 8, g: 166, b: 222 },
+  { x: 355, y: 254, r: 0, g: 195, b: 255 },
+  { x: 317, y: 92, r: 231, g: 204, b: 220 },
+  { x: 307, y: 80, r: 148, g: 0, b: 68 },
+  { x: 261, y: 97, r: 57, g: 69, b: 107 },
+]);
+export const rfpageSuperMayhemReadyToBattle = new Page(
+  'rfpageSuperMayhemReadyToBattle',
+  [
+    { x: 548, y: 329, r: 123, g: 207, b: 8 },
+    { x: 505, y: 325, r: 255, g: 251, b: 255 },
+    { x: 270, y: 334, r: 123, g: 207, b: 8 },
+    { x: 304, y: 218, r: 255, g: 223, b: 24 },
+  ],
+  { x: 550, y: 325 }
 );
 
 export const pageBattleFinishedWithSunbeds = [
@@ -571,24 +611,6 @@ export const pageIslandSunbedWithWetCookie = [
 export const pageFoundOctopus = [
   { x: 500, y: 330, r: 8, g: 166, b: 222 }, // exit
   { x: 360, y: 243, r: 229, g: 18, b: 50 },
-];
-
-export const pageInKingdomConstructionShop = [
-  { x: 624, y: 19, r: 33, g: 85, b: 123 },
-  { x: 20, y: 12, r: 181, g: 8, b: 33 },
-  { x: 11, y: 24, r: 99, g: 40, b: 41 },
-  { x: 28, y: 27, r: 255, g: 223, b: 247 },
-  { x: 330, y: 15, r: 178, g: 8, b: 33 },
-  { x: 179, y: 340, r: 156, g: 101, b: 74 },
-  { x: 194, y: 335, r: 255, g: 255, b: 255 },
-];
-export const pageKingdomDecorating = [
-  { x: 619, y: 12, r: 57, g: 169, b: 231 },
-  { x: 42, y: 23, r: 99, g: 174, b: 49 },
-  { x: 33, y: 25, r: 48, g: 100, b: 14 },
-  { x: 33, y: 81, r: 255, g: 255, b: 255 },
-  { x: 20, y: 222, r: 57, g: 69, b: 107 },
-  { x: 33, y: 212, r: 255, g: 255, b: 255 },
 ];
 
 export const pageBattleFinishedWithNextLv = [
@@ -699,42 +721,12 @@ export const pageBattleTowerOfSweetChaosVictory = [
   { x: 209, y: 59, r: 38, g: 121, b: 198 },
   { x: 256, y: 59, r: 123, g: 190, b: 255 },
 ];
-export const pageCanEquipTopping = [
-  { x: 400, y: 266, r: 121, g: 207, b: 12 },
-  { x: 267, y: 160, r: 233, g: 182, b: 131 },
-  { x: 294, y: 264, r: 12, g: 167, b: 223 },
-  { x: 389, y: 162, r: 199, g: 181, b: 170 },
-];
-export const pageCanEquipTopping2 = [
-  { x: 397, y: 267, r: 123, g: 207, b: 8 },
-  { x: 277, y: 163, r: 255, g: 255, b: 186 },
-  { x: 265, y: 165, r: 198, g: 182, b: 173 },
-  { x: 265, y: 165, r: 198, g: 182, b: 173 },
-  { x: 252, y: 77, r: 57, g: 69, b: 107 },
-];
-// Mainly in guild alliance
-export const pageCanEquipTopping3 = [
-  { x: 407, y: 275, r: 123, g: 207, b: 8 },
-  { x: 299, y: 275, r: 8, g: 166, b: 222 },
-  { x: 276, y: 154, r: 255, g: 251, b: 164 },
-  { x: 276, y: 159, r: 232, g: 165, b: 96 },
-  { x: 288, y: 156, r: 226, g: 226, b: 226 },
-  { x: 262, y: 155, r: 198, g: 182, b: 173 },
-];
 export const pageCannotRefilAllianceTicketToday = [
   { x: 345, y: 275, r: 121, g: 207, b: 12 },
   { x: 331, y: 129, r: 52, g: 159, b: 227 },
   { x: 306, y: 147, r: 69, g: 52, b: 160 },
   { x: 333, y: 24, r: 126, g: 124, b: 127 },
   { x: 218, y: 74, r: 60, g: 70, b: 105 },
-];
-export const pagePVPPromoted = [
-  { x: 354, y: 18, r: 43, g: 29, b: 6 },
-  { x: 447, y: 23, r: 28, g: 11, b: 3 },
-  { x: 523, y: 22, r: 11, g: 18, b: 18 },
-  { x: 27, y: 196, r: 42, g: 29, b: 17 },
-  { x: 177, y: 307, r: 22, g: 33, b: 39 },
-  { x: 177, y: 258, r: 19, g: 28, b: 30 },
 ];
 
 export const rfpageBattleFinishedWithSunbeds = new Page('rfpageBattleFinishedWithSunbeds', pageBattleFinishedWithSunbeds, {
@@ -747,11 +739,34 @@ export const rfpageIslandSunbedWithWetCookie = new Page('rfpageIslandSunbedWithW
 });
 
 export const rfpageFoundOctopus = new Page('rfpageFoundOctopus', pageFoundOctopus, { x: 500, y: 330 });
-export const rfpageInKingdomConstructionShop = new Page('rfpageInKingdomConstructionShop', pageInKingdomConstructionShop, {
-  x: 624,
-  y: 19,
-});
-export const rfpageKingdomDecorating = new Page('rfpageKingdomDecorating', pageKingdomDecorating, { x: 619, y: 12 });
+export const rfpageInKingdomConstructionShop = new Page(
+  'rfpageInKingdomConstructionShop',
+  [
+    { x: 624, y: 19, r: 33, g: 85, b: 123 },
+    { x: 20, y: 12, r: 181, g: 8, b: 33 },
+    { x: 11, y: 24, r: 99, g: 40, b: 41 },
+    { x: 28, y: 27, r: 255, g: 223, b: 247 },
+    { x: 330, y: 15, r: 178, g: 8, b: 33 },
+    { x: 179, y: 340, r: 156, g: 101, b: 74 },
+    { x: 194, y: 335, r: 255, g: 255, b: 255 },
+  ],
+  {
+    x: 624,
+    y: 19,
+  }
+);
+export const rfpageKingdomDecorating = new Page(
+  'rfpageKingdomDecorating',
+  [
+    { x: 619, y: 12, r: 57, g: 169, b: 231 },
+    { x: 42, y: 23, r: 99, g: 174, b: 49 },
+    { x: 33, y: 25, r: 48, g: 100, b: 14 },
+    { x: 33, y: 81, r: 255, g: 255, b: 255 },
+    { x: 20, y: 222, r: 57, g: 69, b: 107 },
+    { x: 33, y: 212, r: 255, g: 255, b: 255 },
+  ],
+  { x: 619, y: 12 }
+);
 export const rfpageBattleFinishedWithNextLv = new Page('rfpageBattleFinishedWithNextLv', pageBattleFinishedWithNextLv, {
   x: 589,
   y: 333,
@@ -801,10 +816,52 @@ export const rfpageBattleTowerOfSweetChaosVictory = new Page(
   pageBattleTowerOfSweetChaosVictory,
   pageBattleTowerOfSweetChaosVictory[0]
 );
-export const rfpageCanEquipTopping = new Page('rfpageCanEquipTopping', pageCanEquipTopping, pageCanEquipTopping[0]);
-export const rfpageCanEquipTopping2 = new Page('rfpageCanEquipTopping2', pageCanEquipTopping2, pageCanEquipTopping2[0]);
-export const rfpageCanEquipTopping3 = new Page('rfpageCanEquipTopping3', pageCanEquipTopping3, pageCanEquipTopping3[0]);
-export const rfpagePVPPromoted = new Page('rfpagePVPPromoted', pagePVPPromoted, { x: 318, y: 327 });
+export const rfpageCanEquipTopping = new Page(
+  'rfpageCanEquipTopping',
+  [
+    { x: 400, y: 266, r: 121, g: 207, b: 12 },
+    { x: 267, y: 160, r: 233, g: 182, b: 131 },
+    { x: 294, y: 264, r: 12, g: 167, b: 223 },
+    { x: 389, y: 162, r: 199, g: 181, b: 170 },
+  ],
+  { x: 400, y: 266 }
+);
+export const rfpageCanEquipTopping2 = new Page(
+  'rfpageCanEquipTopping2',
+  [
+    { x: 397, y: 267, r: 123, g: 207, b: 8 },
+    { x: 277, y: 163, r: 255, g: 255, b: 186 },
+    { x: 265, y: 165, r: 198, g: 182, b: 173 },
+    { x: 265, y: 165, r: 198, g: 182, b: 173 },
+    { x: 252, y: 77, r: 57, g: 69, b: 107 },
+  ],
+  { x: 397, y: 267 }
+);
+// Mainly in guild alliance
+export const rfpageCanEquipTopping3 = new Page(
+  'rfpageCanEquipTopping3',
+  [
+    { x: 407, y: 275, r: 123, g: 207, b: 8 },
+    { x: 299, y: 275, r: 8, g: 166, b: 222 },
+    { x: 276, y: 154, r: 255, g: 251, b: 164 },
+    { x: 276, y: 159, r: 232, g: 165, b: 96 },
+    { x: 288, y: 156, r: 226, g: 226, b: 226 },
+    { x: 262, y: 155, r: 198, g: 182, b: 173 },
+  ],
+  { x: 407, y: 275 }
+);
+export const rfpagePVPPromoted = new Page(
+  'rfpagePVPPromoted',
+  [
+    { x: 354, y: 18, r: 43, g: 29, b: 6 },
+    { x: 447, y: 23, r: 28, g: 11, b: 3 },
+    { x: 523, y: 22, r: 11, g: 18, b: 18 },
+    { x: 27, y: 196, r: 42, g: 29, b: 17 },
+    { x: 177, y: 307, r: 22, g: 33, b: 39 },
+    { x: 177, y: 258, r: 19, g: 28, b: 30 },
+  ],
+  { x: 318, y: 327 }
+);
 
 export const pageInTropicalIsland = [
   { x: 38, y: 333, r: 255, g: 97, b: 173 },
@@ -818,25 +875,27 @@ export const pageNotifyQuitWindow = [
   { x: 404, y: 250, r: 123, g: 207, b: 8 },
   { x: 425, y: 250, r: 222, g: 207, b: 198 },
 ];
-export const pageBattlePaused = [
+export const rfpageBattlePaused = new Page('rfpageBattlePaused', [
   { x: 307, y: 200, r: 253, g: 253, b: 251 },
   { x: 621, y: 26, r: 56, g: 165, b: 227 },
   { x: 613, y: 23, r: 35, g: 85, b: 114 },
   { x: 278, y: 160, r: 12, g: 165, b: 219 },
   { x: 288, y: 157, r: 241, g: 241, b: 239 },
   { x: 293, y: 201, r: 241, g: 90, b: 28 },
-];
-export const rfpageBattlePaused = new Page('rfpageBattlePaused', pageBattlePaused);
+]);
 
-export const pageInGacha = [
-  { x: 619, y: 18, r: 255, g: 255, b: 255 },
-  { x: 626, y: 18, r: 62, g: 164, b: 232 },
-  { x: 521, y: 14, r: 0, g: 192, b: 255 },
-  { x: 407, y: 19, r: 255, g: 209, b: 0 },
-  { x: 21, y: 14, r: 117, g: 54, b: 40 },
-  { x: 37, y: 24, r: 74, g: 58, b: 58 },
-];
-export const rfpageInGacha = new Page('rfpageInGacha', pageInGacha, pageInGacha[0]);
+export const rfpageInGacha = new Page(
+  'rfpageInGacha',
+  [
+    { x: 619, y: 18, r: 255, g: 255, b: 255 },
+    { x: 626, y: 18, r: 62, g: 164, b: 232 },
+    { x: 521, y: 14, r: 0, g: 192, b: 255 },
+    { x: 407, y: 19, r: 255, g: 209, b: 0 },
+    { x: 21, y: 14, r: 117, g: 54, b: 40 },
+    { x: 37, y: 24, r: 74, g: 58, b: 58 },
+  ],
+  { x: 619, y: 18 }
+);
 
 export const pageInTowerOfRecords = [
   { x: 618, y: 23, r: 255, g: 255, b: 255 },
@@ -950,6 +1009,27 @@ export const pageIsFlowerShop = [
 ];
 export const rfpageIsFlowerShop = new Page('rfpageIsFlowerShop', pageIsFlowerShop);
 
+// Case not exist for now
+export const rfpageBountiesAt2ndSlot = new Page('rfpageBountiesAt2ndSlot', [
+  { x: 242, y: 68, r: 255, g: 255, b: 255 },
+  { x: 347, y: 102, r: 198, g: 65, b: 0 },
+  { x: 328, y: 112, r: 206, g: 150, b: 66 },
+  { x: 294, y: 130, r: 222, g: 147, b: 96 },
+  { x: 231, y: 138, r: 253, g: 234, b: 74 },
+]);
+
+// Most general case, 1. world exploration/PVP 2. super mayhem
+export const rfpageBountiesAt3rdSlot = new Page('rfpageBountiesAt3rdSlot', [
+  { x: 595, y: 86, r: 148, g: 73, b: 33 },
+  { x: 588, y: 152, r: 173, g: 122, b: 66 },
+  { x: 585, y: 177, r: 24, g: 12, b: 8 },
+]);
+
+// Perhaps with Cooklie Odysses and super mayhem not finished
+// export const pageBountiesAt4rdSlot = new Page('pageBountiesAt4rdSlot', [
+//   // TODO
+// ]);
+
 export const pageSelectAdvanture = [
   { x: 620, y: 11, r: 57, g: 166, b: 231 },
   { x: 585, y: 21, r: 222, g: 174, b: 74 },
@@ -1040,21 +1120,6 @@ export const pageInBounties = [
   { x: 479, y: 19, r: 40, g: 32, b: 23 },
   { x: 456, y: 26, r: 70, g: 50, b: 37 },
   { x: 416, y: 5, r: 122, g: 84, b: 95 },
-];
-
-export const kingdomArena = [
-  { x: 181, y: 267, r: 56, g: 167, b: 231 },
-  { x: 181, y: 306, r: 56, g: 167, b: 231 },
-  { x: 182, y: 335, r: 48, g: 76, b: 109 },
-  { x: 373, y: 327, r: 41, g: 35, b: 33 },
-  { x: 296, y: 70, r: 65, g: 58, b: 56 },
-];
-
-export const pageInSuperMayhem = [
-  { x: 450, y: 13, r: 181, g: 132, b: 178 },
-  { x: 449, y: 21, r: 239, g: 235, b: 247 },
-  { x: 37, y: 134, r: 145, g: 69, b: 8 },
-  { x: 137, y: 333, r: 214, g: 134, b: 8 },
 ];
 
 export const pageBattleDragon = [
