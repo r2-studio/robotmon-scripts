@@ -33,3 +33,19 @@ export type Records = {
   notEnoughAndSkip: number;
   goldenAndSkip: number;
 };
+
+export enum Advantures {
+  bounties = 'bounties',
+  pvp = 'pvp',
+  guild = 'guild',
+  towerOfSweetChaos = 'towerOfSweetChaos',
+  superMayhem = 'superMayhem',
+  tropicalIsland = 'tropicalIsland',
+  cookieAlliance = 'cookieAlliance',
+}
+
+export type Advanture = {
+  pnt: XY;
+  fromHead: boolean;
+  backward: boolean;
+};

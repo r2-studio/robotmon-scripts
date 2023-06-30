@@ -7,4 +7,7 @@ export enum TASKS {
   hotAirBallon = 'hotAirBallon',
   train = 'train',
   wishingTree = 'wishingTree',
+  fountain = 'fountain',
+  pvp = 'pvp',
+  pvpPurchaseAncientCookie = 'pvpPurchaseAncientCookie',
 }

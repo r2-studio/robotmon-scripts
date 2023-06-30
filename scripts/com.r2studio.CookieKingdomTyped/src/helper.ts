@@ -2,7 +2,7 @@ import { Rerouter, Utils, XYRGB, Page, XY, MessageWindow, Icon } from 'Rerouter'
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
-import { Records, Wish, WishStatus } from './types';
+import { Advanture, Advantures, Records, Wish, WishStatus } from './types';
 import { logs, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 
@@ -51,7 +51,7 @@ export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
   Utils.sleep(CONSTANTS.sleepAnimate * 3);
 }
 
-export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, pageMessageWindow: Page) {
+export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, pageMessageWindow?: Page) {
   if (pageMessageWindow === undefined) {
     pageMessageWindow = PAGES.rfpageGeneralMessageWindow;
   }
@@ -282,4 +282,201 @@ export function recognizeWishingTreeRequirements(words: Icon[], devImg: Image, m
     }
   }
   return str;
+}
+
+export function GenAdvanture(pnt: XY, fromHead: boolean, backward: boolean) {
+  return {
+    pnt: pnt,
+    fromHead: fromHead,
+    backward: backward,
+  };
+}
+
+// When there are NO timed event
+export const AdvanturesBountiesAt2nd: { [key: string]: Advanture } = {
+  pvp: GenAdvanture({ x: 123, y: 230 }, true, false),
+  towerOfSweetChaos: GenAdvanture({ x: 214, y: 230 }, true, false),
+  tropicalIsland: GenAdvanture({ x: 300, y: 230 }, true, false),
+  cookieAlliance: GenAdvanture({ x: 392, y: 230 }, true, false),
+
+  superMayhem: GenAdvanture({ x: 500, y: 150 }, false, false),
+  bounties: GenAdvanture({ x: 300, y: 100 }, false, false),
+  guild: GenAdvanture({ x: 10, y: 100 }, false, true),
+};
+
+export const AdvanturesBountiesAt3rd: { [key: string]: Advanture } = {
+  pvp: GenAdvanture({ x: 123, y: 230 }, true, false),
+  towerOfSweetChaos: GenAdvanture({ x: 214, y: 230 }, true, false),
+  tropicalIsland: GenAdvanture({ x: 300, y: 230 }, true, false),
+  cookieAlliance: GenAdvanture({ x: 392, y: 230 }, true, false),
+
+  superMayhem: GenAdvanture({ x: 500, y: 150 }, false, false),
+  bounties: GenAdvanture({ x: 500, y: 100 }, false, false),
+  guild: GenAdvanture({ x: 630, y: 100 }, false, false),
+};
+
+export const AdvanturesBountiesAt4th: { [key: string]: Advanture } = {
+  pvp: GenAdvanture({ x: 123, y: 230 }, true, false),
+  towerOfSweetChaos: GenAdvanture({ x: 214, y: 230 }, true, false),
+  tropicalIsland: GenAdvanture({ x: 300, y: 230 }, true, false),
+  cookieAlliance: GenAdvanture({ x: 392, y: 230 }, true, false),
+
+  superMayhem: GenAdvanture({ x: 500, y: 150 }, false, false),
+  bounties: GenAdvanture({ x: 100, y: 100 }, false, true),
+  guild: GenAdvanture({ x: 320, y: 100 }, false, true),
+};
+
+// Case not exist for now
+export const pageBountiesAt2ndSlot = [
+  { x: 242, y: 68, r: 255, g: 255, b: 255 },
+  { x: 347, y: 102, r: 198, g: 65, b: 0 },
+  { x: 328, y: 112, r: 206, g: 150, b: 66 },
+  { x: 294, y: 130, r: 222, g: 147, b: 96 },
+  { x: 231, y: 138, r: 253, g: 234, b: 74 },
+];
+
+// Most general case, 1. world exploration 2. guild battle 3 Bounties & pvp
+export const pageBountiesAt3rdSlot = [
+  { x: 595, y: 86, r: 148, g: 73, b: 33 },
+  { x: 588, y: 152, r: 173, g: 122, b: 66 },
+  { x: 585, y: 177, r: 24, g: 12, b: 8 },
+];
+
+// Perhaps with Cooklie Odysses and super mayhem not finished
+export const pageBountiesAt4rdSlot = [
+  // TODO
+];
+
+function handleGotoAdventure(targetAdvanture: Advantures, targetPage: Page, rerouter: Rerouter) {
+  logs('handleGotoAdventure task', `going to Advanture: ${targetAdvanture} with page: ${targetPage}`);
+
+  if (rerouter.isPageMatch(targetPage)) {
+    return true;
+  }
+
+  // Route from Head
+  if (AdvanturesBountiesAt3rd[targetAdvanture].fromHead) {
+  }
+
+  if (!checkIsPage(targetPage)) {
+    // Route from Head
+    if (AdvanturesBountiesAt3rd[targetAdvanture].fromHead) {
+      if (!checkIsPage(pageInCookieHead)) {
+        if (!checkIsPage(pageInKingdomVillage)) {
+          handleTryHitBackToKingdom();
+        }
+
+        // Tap head
+        if (checkScreenMessage(messageNotifyQuit)) {
+          // todo: debug log
+          console.log('seems like im in notify quit page');
+        }
+        // Tap head
+        if (!waitUntilSeePage(pageInCookieHead, 12, pnt(20, 30), null, 3)) {
+          console.log('Failed to get to cookie head in', 12, 'secs, skipping');
+
+          handleGotoKingdomPage();
+          return false;
+        }
+      }
+
+      // swipe to the end of the list in head
+      for (var i = 0; i < 3; i++) {
+        tapDown(560, 186, 40, 0);
+        sleep(config.sleep);
+        moveTo(560, 186, 40, 0);
+        sleep(config.sleep);
+        moveTo(400, 186, 40, 0);
+        sleep(config.sleep);
+        moveTo(200, 186, 40, 0);
+        sleep(config.sleep);
+        moveTo(0, 186, 40, 0);
+        sleep(config.sleep);
+        tapUp(0, 186, 40, 0);
+        sleep(config.sleepAnimate * 2);
+      }
+
+      qTap(AdvanturesBountiesAt3rd[targetAdvanture].pnt);
+      if (waitUntilSeePage(targetPage, 15)) {
+        console.log(targetAdvanture, 'page found');
+        return true;
+      }
+      return false;
+    }
+
+    // Route from PLAY! btn
+    if (!checkIsPage(pageChooseAdvanture)) {
+      if (!checkIsPage(pageInKingdomVillage)) {
+        handleGotoKingdomPage();
+      }
+      if (!waitUntilSeePage(pageInKingdomVillage, 6)) {
+        console.log('Skipping ', targetAdvanture, ' as cannot goto kingdom');
+        return false;
+      }
+
+      qTap(pnt(560, 330)); // tap play
+      if (!rfpageSelectAdvanture.waitScreenForMatchingScreen(this.screen, 6000)) {
+        console.log('failed to goto choose adventure, skipping');
+        return false;
+      }
+    }
+
+    var destination;
+    if (checkIsPage(pageBountiesAt2ndSlot)) {
+      console.log('pageBountiesAt2ndSlot', JSON.stringify(AdvanturesBountiesAt2nd[targetAdvanture]));
+      destination = AdvanturesBountiesAt2nd[targetAdvanture];
+    } else if (checkIsPage(pageBountiesAt3rdSlot)) {
+      console.log('pageBountiesAt3rdSlot', JSON.stringify(AdvanturesBountiesAt3rd[targetAdvanture]));
+      destination = AdvanturesBountiesAt3rd[targetAdvanture];
+    } else if (checkIsPage(pageBountiesAt4rdSlot)) {
+      console.log('pageBountiesAt4rdSlot', JSON.stringify(AdvanturesBountiesAt4th[targetAdvanture]));
+      destination = AdvanturesBountiesAt4th[targetAdvanture];
+    }
+
+    if (destination.backward) {
+      for (var swipe = 0; swipe < 3; swipe++) {
+        tapDown(600, 190, 40, 0);
+        sleep(config.sleep);
+        moveTo(200, 190, 40, 0);
+        sleep(config.sleep);
+        moveTo(0, 190, 40, 0);
+        sleep(config.sleep);
+        moveTo(-400, 190, 40, 0);
+        sleep(config.sleep);
+        tapUp(-400, 190, 40, 0);
+        sleep(config.sleepAnimate);
+      }
+    }
+
+    qTap(destination.pnt);
+    if (waitUntilSeePage(targetPage, 8, destination.pnt, null, 3)) {
+      return true;
+    } else {
+      console.log('Cannot goto ', JSON.stringify(destination), ', skipping');
+      return false;
+    }
+  } else {
+    console.log('already in target page');
+    return true;
+  }
+}
+
+export function getCEs(): number[] {
+  var img = getScreenshot();
+  var croppedImage1 = cropImage(img, 430, 88, 46, 10);
+  var croppedImage2 = cropImage(img, 430, 148, 46, 10);
+  var croppedImage3 = cropImage(img, 430, 208, 46, 10);
+  var croppedImage4 = cropImage(img, 430, 266, 46, 12);
+
+  var value1 = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage1, 7, 0.75, 0.7) || 0;
+  var value2 = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage2, 7, 0.75, 0.7) || 0;
+  var value3 = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage3, 7, 0.75, 0.7) || 0;
+  var value4 = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage4, 7, 0.75, 0.7) || 0;
+
+  releaseImage(croppedImage1);
+  releaseImage(croppedImage2);
+  releaseImage(croppedImage3);
+  releaseImage(croppedImage4);
+  releaseImage(img);
+  return [value1, value2, value3, value4];
 }
