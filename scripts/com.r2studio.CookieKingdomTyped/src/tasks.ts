@@ -11,4 +11,7 @@ export enum TASKS {
   pvp = 'pvp',
   pvpPurchaseAncientCookie = 'pvpPurchaseAncientCookie',
   superMayhem = 'superMayhem',
+  tropicalIslandShip = 'tropicalIslandShip',
+  tropicalIslandSunbed = 'tropicalIslandSunbed',
+  tropicalIslandClearBubble = 'tropicalIslandClearBubble',
 }

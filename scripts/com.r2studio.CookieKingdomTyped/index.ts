@@ -1,4 +1,4 @@
-import { Rerouter, rerouter, Utils, XYRGB, Page, Task, Icon, XY } from 'Rerouter';
+import { Rerouter, rerouter, Utils, XYRGB, Page, Task, Icon, XY, GroupPage } from 'Rerouter';
 import { ScriptConfig, Wish, WishStatus } from './src/types';
 import { logs, getCurrentApp, sendKeyBack } from './src/utils';
 import {
@@ -12,6 +12,7 @@ import {
   checkScreenMessage,
   AdvanturesBountiesAt2nd,
   getMayhemScores,
+  findSpecificIconInScreen,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -212,13 +213,31 @@ class CookieKingdom {
     //   forceStop: false,
     // });
 
+    // this.rerouter.addTask({
+    //   name: TASKS.superMayhem,
+    //   maxTaskDuring: 15 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+
+    // this.rerouter.addTask({
+    //   name: TASKS.tropicalIslandShip,
+    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+    // this.rerouter.addTask({
+    //   name: TASKS.tropicalIslandSunbed,
+    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
     this.rerouter.addTask({
-      name: TASKS.superMayhem,
-      maxTaskDuring: 15 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
+      name: TASKS.tropicalIslandClearBubble,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
       forceStop: false,
     });
-
     // ====
   }
 
@@ -321,8 +340,11 @@ class CookieKingdom {
       match: PAGES.rfpageInShop,
       action: (context, image, matched, finishRound) => {
         const trial = this.taskStatus[TASKS.getInShopFreeDailyPack]['trials'];
-        const x = PAGES.rfpageNecessities.points[0].x;
-        const y = PAGES.rfpageNecessities.points[0].y + trial * 20;
+
+        // const rfpageNecessities = new Page('rfpageNecessities', [{ x: 114, y: 70, r: 255, g: 109, b: 107 }]);
+        const rfpageNecessitiesPnt = { x: 114, y: 70 };
+        const x = rfpageNecessitiesPnt.x;
+        const y = rfpageNecessitiesPnt.y + trial * 20;
         logs(context.task.name, `rfpageInShop, scroll down to daily gift, trial: #${trial}, tapping (${x}, ${y})`);
 
         if (this.rerouter.isPageMatchImage(PAGES.rfpageIsDailyFreePackageClaimed, image)) {
@@ -602,7 +624,7 @@ class CookieKingdom {
           releaseImage(img);
           releaseImage(checked);
 
-          if (foundResults.length > 0) {
+          if (Object.keys(foundResults).length > 0) {
             console.log('Fount fountain full check icon, tap it');
             this.rerouter.screen.tap({ x: foundResults[0].x + 10, y: foundResults[0].y + 10 });
           } else {
@@ -756,11 +778,181 @@ class CookieKingdom {
       },
     });
 
+    // Tropical Island
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInTropicalIsland.name}`,
+      match: PAGES.rfpageInTropicalIsland,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name.substring(0, 14) !== 'tropicalIsland') {
+          sendKeyBack();
+          return;
+        }
+
+        switch (context.task.name) {
+          case TASKS.tropicalIslandShip:
+            logs(context.task.name, `in rfpageInTropicalIsland, check the ship status`);
+            const rfpageCanClaimResource = new Page(
+              'rfpageCanClaimResource',
+              [
+                { x: 307, y: 333, r: 123, g: 207, b: 8 },
+                { x: 363, y: 331, r: 123, g: 207, b: 8 },
+                { x: 33, y: 332, r: 255, g: 100, b: 176 },
+              ],
+              { x: 360, y: 333 }
+            );
+            if (this.rerouter.isPageMatchImage(rfpageCanClaimResource, image)) {
+              this.rerouter.goNext(rfpageCanClaimResource);
+              logs(context.task.name, `successfully collected island resource`);
+            } else {
+              logs(context.task.name, `more resources are on the way`);
+            }
+            finishRound(true);
+            return;
+
+          case TASKS.tropicalIslandSunbed:
+            logs(context.task.name, `check sunbed`);
+            const rfpageSunbeds = new Page(
+              'rfpageSunbeds',
+              [
+                { x: 52, y: 323, r: 238, g: 68, b: 119 },
+                { x: 61, y: 336, r: 44, g: 77, b: 110 },
+              ],
+              { x: 52, y: 323 }
+            );
+            const rfpageFreeAllCrispyCookie = new Page(
+              'rfpageFreeAllCrispyCookie',
+              [
+                { x: 341, y: 316, r: 123, g: 207, b: 8 },
+                { x: 376, y: 313, r: 49, g: 60, b: 90 },
+                { x: 223, y: 85, r: 255, g: 101, b: 173 },
+              ],
+              { x: 341, y: 316 }
+            );
+            const rfpageHasNoCrispyCookie = new Page('rfpageHasNoCrispyCookie', [
+              { x: 425, y: 111, r: 44, g: 46, b: 60 },
+              { x: 422, y: 132, r: 44, g: 46, b: 60 },
+            ]);
+
+            this.rerouter.goNext(rfpageSunbeds);
+            if (
+              this.rerouter.waitScreenForMatchingPage(
+                new GroupPage('groupInSunbed', [rfpageFreeAllCrispyCookie, rfpageHasNoCrispyCookie, PAGES.rfpageEmptySunbedsListInMiddle]),
+                6000
+              )
+            ) {
+              if (this.rerouter.isPageMatch(PAGES.rfpageEmptySunbedsListInMiddle)) {
+                logs(context.task.name, `sun bed cookie list is empty`);
+              } else if (this.rerouter.isPageMatch(rfpageFreeAllCrispyCookie)) {
+                this.rerouter.goNext(rfpageFreeAllCrispyCookie);
+                Utils.sleep(this.config.sleepAnimate);
+                logs(context.task.name, `successfully collect sunbed cookies`);
+              }
+            }
+            logs(context.task.name, `finish collecting cookies`);
+            finishRound(true);
+            return;
+
+          case TASKS.tropicalIslandClearBubble:
+            var i = 0;
+            let foundResults = findSpecificIconInScreen(ICONS.iconGreenCheckedWhiteBackground);
+            logs(context.task.name, `handle iconGreenCheckedWhiteBackground, found ${Object.keys(foundResults).length} of them`);
+            if (Object.keys(foundResults).length > 0) {
+              for (i = 0; i < Object.keys(foundResults).length; i++) {
+                this.rerouter.screen.tap(foundResults[i]);
+                Utils.sleep(this.config.sleepAnimate);
+              }
+            }
+
+            foundResults = findSpecificIconInScreen(ICONS.iconRedExclamation);
+            logs(context.task.name, `handle iconRedExclamation, found ${Object.keys(foundResults).length} of them`);
+            if (Object.keys(foundResults).length > 0) {
+              for (i = 0; i < Object.keys(foundResults).length; i++) {
+                this.rerouter.screen.tap(foundResults[i]);
+                Utils.sleep(this.config.sleepAnimate);
+                this.rerouter.screen.tap(foundResults[i]);
+                Utils.sleep(this.config.sleepAnimate);
+              }
+            }
+
+            // Clear hammers
+            foundResults = findSpecificIconInScreen(ICONS.iconIslandHammer);
+            logs(context.task.name, `handle iconIslandHammer, found ${Object.keys(foundResults).length} of them`);
+            if (Object.keys(foundResults).length > 0) {
+              for (i = 0; i < Object.keys(foundResults).length; i++) {
+                this.rerouter.screen.tap(foundResults[i]);
+                Utils.sleep(this.config.sleepAnimate * 3);
+                this.rerouter.screen.tap({ x: 324, y: 263 }); // Tab build
+
+                if (!this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInTropicalIsland, 4000)) {
+                  logs(context.task.name, `Not enough resource to build island, skipping`);
+                  sendKeyBack();
+                  sendKeyBack();
+                } else {
+                  logs(context.task.name, `Build hammer successfully`);
+                }
+              }
+            }
+
+            // Clear battles
+            foundResults = findSpecificIconInScreen(ICONS.iconRedSword);
+            logs(context.task.name, `handle iconRedSword, found ${Object.keys(foundResults).length} of them`);
+            if (Object.keys(foundResults).length > 0) {
+              // this.rerouter.screen.tap(foundResults[i]);
+              this.rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
+              return;
+            }
+
+            foundResults = findSpecificIconInScreen(ICONS.iconWhiteSword);
+            logs(context.task.name, `handle iconWhiteSword, found ${Object.keys(foundResults).length} of them`);
+            if (Object.keys(foundResults).length > 0) {
+              // this.rerouter.screen.tap(foundResults[i]);
+              this.rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
+              return;
+            }
+
+            logs(context.task.name, `Finish tropical island`);
+            sendKeyBack();
+            finishRound(true);
+        }
+      },
+    });
+    // this.rerouter.addRoute({
+    //   path: `/${PAGES.rfpageEmptySunbedsListInMiddle.name}`,
+    //   match: PAGES.rfpageEmptySunbedsListInMiddle,
+    //   action: (context, image, matched, finishRound) => {
+    //     logs(context.task.name, `in rfpageEmptySunbedsListInMiddle, some cookies are wet so finish current task`);
+    //     this.rerouter.screen.tap({ x: 441, y: 53 });
+    //     sendKeyBack();
+    //     finishRound(true);
+    //   },
+    // });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageBattleHasWetCookieCannotStart.name}`,
+      match: PAGES.rfpageBattleHasWetCookieCannotStart,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, `in rfpageBattleHasWetCookieCannotStart, cannot start battle so finish current task`);
+        this.rerouter.goNext(PAGES.rfpageBattleHasWetCookieCannotStart);
+        sendKeyBack();
+        finishRound(true);
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageAddMoreCookies.name}`,
+      match: PAGES.rfpageAddMoreCookies,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, `in rfpageAddMoreCookies, cannot start battle so finish current task`);
+        this.rerouter.goNext(PAGES.rfpageAddMoreCookies);
+        sendKeyBack();
+        finishRound(true);
+      },
+    });
+
+    // Battle handling
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageBattlePaused.name}`,
       match: PAGES.rfpageBattlePaused,
       action: (context, image, matched, finishRound) => {
-        logs(context.task.name, `in rfpageBattlePaused, skipping`);
+        logs(context.task.name, `in rfpageBattlePaused, handle it`);
         switch (context.task.name) {
           case TASKS.pvp:
           case TASKS.superMayhem:
@@ -862,6 +1054,10 @@ class CookieKingdom {
             logs(context.task.name, `rfpageSelectAdvanture goto superMayhem`);
             this.rerouter.screen.tap(advantureSetting[TASKS.superMayhem].pnt);
             break;
+          // case TASKS.tropicalIsland:
+          //   logs(context.task.name, `rfpageSelectAdvanture goto tropicalIsland`);
+          //   this.rerouter.screen.tap(advantureSetting[TASKS.tropicalIsland].pnt);
+          //   break;
           default:
             logs(context.task.name, `rfpageSelectAdvanture don't know what to do, crash it`);
             ii++;
@@ -921,6 +1117,20 @@ class CookieKingdom {
             Utils.sleep(CONSTANTS.sleepAnimate);
 
             this.rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name].pnt);
+            return;
+          }
+        } else if (
+          context.task.name === TASKS.tropicalIslandShip ||
+          context.task.name === TASKS.tropicalIslandSunbed ||
+          context.task.name === TASKS.tropicalIslandClearBubble
+        ) {
+          if (AdvanturesBountiesAt3rd[TASKS.pvp].fromHead) {
+            scrollRightALot(this.rerouter, { x: 560, y: 186 });
+            Utils.sleep(CONSTANTS.sleepAnimate);
+            scrollRightALot(this.rerouter, { x: 560, y: 186 });
+            Utils.sleep(CONSTANTS.sleepAnimate);
+
+            this.rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name.substring(0, 14)].pnt);
             return;
           }
         }
@@ -997,6 +1207,9 @@ class CookieKingdom {
             break;
           case TASKS.fountain:
           case TASKS.pvp:
+          case TASKS.tropicalIslandShip:
+          case TASKS.tropicalIslandSunbed:
+          case TASKS.tropicalIslandClearBubble:
             this.rerouter.screen.tap({ x: 25, y: 25 }); // goto head
             break;
           case TASKS.superMayhem:
@@ -1062,9 +1275,38 @@ class CookieKingdom {
         { x: 354, y: 14, r: 125, g: 12, b: 251 },
         { x: 285, y: 15, r: 65, g: 205, b: 12 },
       ]);
+
+      // const rfpageAutoUseSkillEnabled = new Page('rfpageAutoUseSkillEnabled', [{ x: 28, y: 291, r: 223, g: 221, b: 1 }], { x: 28, y: 291 });
+      // const rfpageSpeedBoostEnabled = new Page('rfpageSpeedBoostEnabled', [{ x: 31, y: 333, r: 113, g: 107, b: 17 }], { x: 31, y: 333 });
+      const rfpageAutoUseSkillNotEnabled = new Page('rfpageAutoUseSkillNotEnabled', [{ x: 41, y: 289, r: 203, g: 203, b: 203 }], { x: 41, y: 289 });
+      const rfpageSpeedBoostNotEnabled = new Page('rfpageSpeedBoostNotEnabled', [{ x: 33, y: 319, r: 203, g: 203, b: 203 }], { x: 33, y: 319 });
+      const rfpageSpeed1_2x = new Page(
+        'rfpageSpeed1_2x',
+        [
+          { x: 20, y: 333, r: 211, g: 209, b: 2 },
+          { x: 32, y: 334, r: 161, g: 159, b: 8 },
+        ],
+        { x: 20, y: 333 }
+      );
       if (this.rerouter.isPageMatchImage(rfpageBattling, image)) {
         logs(context.task.name, 'unknown but should be rfpageBattling so continue');
         context.matchTimes = 0;
+
+        if (!this.rerouter.isPageMatchImage(rfpageAutoUseSkillNotEnabled, image)) {
+          this.rerouter.goNext(rfpageAutoUseSkillNotEnabled);
+          Utils.sleep(this.config.sleepAnimate);
+          logs(context.task.name, `Tap auto skill enable 1 time for rfpageAutoUseSkillNotEnabled`);
+        } else if (!this.rerouter.isPageMatchImage(rfpageSpeedBoostNotEnabled, image)) {
+          this.rerouter.goNext(rfpageSpeedBoostNotEnabled);
+          Utils.sleep(this.config.sleepAnimate);
+          this.rerouter.goNext(rfpageSpeedBoostNotEnabled);
+          Utils.sleep(this.config.sleepAnimate);
+          logs(context.task.name, `Tap speed boost 2 times for rfpageSpeedBoostNotEnabled`);
+        } else if (!this.rerouter.isPageMatchImage(rfpageSpeed1_2x, image)) {
+          this.rerouter.goNext(rfpageSpeedBoostNotEnabled);
+          Utils.sleep(this.config.sleepAnimate);
+          logs(context.task.name, `Tap speed boost 1 time for rfpageSpeed1_2x`);
+        }
         return;
       }
 

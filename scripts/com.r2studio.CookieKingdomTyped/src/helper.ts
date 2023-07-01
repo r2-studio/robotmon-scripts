@@ -57,7 +57,6 @@ export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, p
   }
 
   if (!rerouter.isPageMatch(pageMessageWindow)) {
-    console.log('no')
     return false;
   }
 
@@ -72,12 +71,7 @@ export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, p
       cnt++;
     }
   }
-  console.log(
-    'cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ',
-    cnt,
-    message.targetColorCount,
-    message.targetColorThreashold
-  );
+  // console.log('cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ', cnt, message.targetColorCount, message.targetColorThreashold);
 
   releaseImage(img);
   releaseImage(croppedImage);
@@ -497,4 +491,25 @@ export function getMayhemScores() {
   releaseImage(img);
   console.log('>> ', JSON.stringify(scores));
   return scores;
+}
+
+export function findSpecificIconInScreen(target: Icon, isDev?: boolean): { [idx: string]: { score: number; x: number; y: number } } {
+  if (target.image === undefined) {
+    target.loadImage();
+  }
+  return findSpecificImageInScreen(target.image, target.thres, isDev);
+}
+
+export function findSpecificImageInScreen(target: Image, threashold?: number, isDev?: boolean): { [idx: string]: { score: number; x: number; y: number } } {
+  if (threashold === undefined) {
+    threashold = 0.95;
+  }
+
+  var img = getScreenshot();
+  var foundResults = findImages(img, target, threashold, 10, true);
+  if (isDev) {
+    console.log('findSpecificImageInScreen, found target icon at: ', JSON.stringify(foundResults));
+  }
+  releaseImage(img);
+  return foundResults;
 }

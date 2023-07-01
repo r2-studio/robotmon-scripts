@@ -729,14 +729,15 @@ export const pageCannotRefilAllianceTicketToday = [
   { x: 218, y: 74, r: 60, g: 70, b: 105 },
 ];
 
-export const rfpageBattleFinishedWithSunbeds = new Page('rfpageBattleFinishedWithSunbeds', pageBattleFinishedWithSunbeds, {
-  x: 491,
-  y: 322,
-});
-export const rfpageIslandSunbedWithWetCookie = new Page('rfpageIslandSunbedWithWetCookie', pageIslandSunbedWithWetCookie, {
-  x: 218,
-  y: 60,
-});
+// export const rfpageBattleFinishedWithSunbeds = new Page('rfpageBattleFinishedWithSunbeds', pageBattleFinishedWithSunbeds, {
+//   x: 491,
+//   y: 322,
+// });
+// TODO: fix this, rfpageIslandSunbedWithWetCookie now trigger when the list is empty
+// export const rfpageIslandSunbedWithWetCookie = new Page('rfpageIslandSunbedWithWetCookie', pageIslandSunbedWithWetCookie, {
+//   x: 218,
+//   y: 60,
+// });
 
 export const rfpageFoundOctopus = new Page('rfpageFoundOctopus', pageFoundOctopus, { x: 500, y: 330 });
 export const rfpageInKingdomConstructionShop = new Page(
@@ -863,11 +864,65 @@ export const rfpagePVPPromoted = new Page(
   { x: 318, y: 327 }
 );
 
-export const pageInTropicalIsland = [
+export const rfpageInTropicalIsland = new Page('rfpageInTropicalIsland', [
   { x: 38, y: 333, r: 255, g: 97, b: 173 },
   { x: 49, y: 323, r: 239, g: 77, b: 140 },
   { x: 62, y: 341, r: 44, g: 81, b: 118 },
-];
+]);
+
+export const rfpageReadyToClearRedSword = new Page(
+  'rfpageReadyToClearRedSword',
+  [
+    { x: 531, y: 324, r: 121, g: 207, b: 12 },
+    { x: 456, y: 28, r: 241, g: 53, b: 60 },
+    { x: 494, y: 23, r: 252, g: 246, b: 216 },
+    { x: 572, y: 327, r: 60, g: 70, b: 105 },
+  ],
+  { x: 531, y: 324 }
+);
+export const rfpageBattleToClearSodaIsland = new Page(
+  'rfpageBattleToClearSodaIsland',
+  [
+    { x: 601, y: 326, r: 121, g: 207, b: 12 },
+    { x: 623, y: 313, r: 60, g: 70, b: 105 },
+    { x: 573, y: 84, r: 254, g: 253, b: 251 },
+    { x: 165, y: 335, r: 121, g: 207, b: 12 },
+  ],
+  { x: 601, y: 326 }
+);
+export const rfpageBattleHasWetCookieCannotStart = new Page(
+  'rfpageBattleHasWetCookieCannotStart',
+  [
+    { x: 350, y: 250, r: 123, g: 207, b: 8 },
+    { x: 420, y: 200, r: 247, g: 235, b: 222 },
+    { x: 400, y: 100, r: 57, g: 69, b: 107 },
+  ],
+  { x: 350, y: 250 }
+);
+export const rfpageAddMoreCookies = new Page(
+  'rfpageAddMoreCookies',
+  [
+    { x: 304, y: 253, r: 12, g: 167, b: 223 },
+    { x: 168, y: 331, r: 60, g: 103, b: 6 },
+    { x: 152, y: 180, r: 65, g: 65, b: 53 },
+    { x: 131, y: 203, r: 65, g: 66, b: 52 },
+    { x: 101, y: 235, r: 65, g: 68, b: 53 },
+    { x: 176, y: 242, r: 97, g: 75, b: 33 },
+  ],
+  { x: 304, y: 253 }
+);
+export const rfpageEmptySunbedsListInMiddle = new Page(
+  'rfpageEmptySunbedsListInMiddle',
+  [
+    { x: 217, y: 60, r: 133, g: 231, b: 74 },
+    { x: 229, y: 132, r: 44, g: 46, b: 60 },
+    { x: 247, y: 52, r: 57, g: 69, b: 107 },
+    { x: 226, y: 82, r: 165, g: 60, b: 90 },
+    { x: 428, y: 19, r: 2, g: 67, b: 127 },
+    { x: 47, y: 328, r: 119, g: 40, b: 67 },
+  ],
+  { x: 437, y: 57 }
+);
 
 export const pageNotifyQuitWindow = [
   { x: 301, y: 250, r: 8, g: 166, b: 222 },
@@ -904,22 +959,6 @@ export const pageInTowerOfRecords = [
   { x: 16, y: 14, r: 179, g: 179, b: 179 },
   { x: 4, y: 18, r: 35, g: 34, b: 33 },
 ];
-
-// export const pageAutoUseSkillEnabled = [{ x: 28, y: 291, r: 223, g: 221, b: 1 }];
-// export const pageSpeedBoostEnabled = [{ x: 31, y: 333, r: 113, g: 107, b: 17 }];
-// export const pageSpeed1x = [{ x: 24, y: 332, r: 135, g: 137, b: 135 }];
-// export const pageSpeed1_2x = [
-//   { x: 20, y: 333, r: 211, g: 209, b: 2 },
-//   { x: 32, y: 334, r: 161, g: 159, b: 8 },
-// ];
-// export const rfpageAutoUseSkillEnabled = new Page(
-//   'rfpageAutoUseSkillEnabled',
-//   pageAutoUseSkillEnabled,
-//   pageAutoUseSkillEnabled[0]
-// );
-// export const rfpageSpeedBoostEnabled = new Page('rfpageSpeedBoostEnabled', pageSpeedBoostEnabled, pageSpeedBoostEnabled[0]);
-// export const rfpageSpeed1x = new Page('rfpageSpeed1x', pageSpeed1x, pageSpeed1x[0]);
-// export const rfpageSpeed1_2x = new Page('rfpageSpeed1_2x', pageSpeed1_2x, pageSpeed1_2x[0]);
 
 //rgb(166,104,65)
 export const pageInProduction = [
@@ -1703,19 +1742,22 @@ export const rfpageCanSendFriendRewards = new Page(
   ],
   { x: 390, y: 335 }
 );
-export const rfpageFriendRewardsSent = new Page('rfpageFriendRewardsSent', [
-  { x: 400, y: 329, r: 85, g: 85, b: 85 },
-  { x: 20, y: 89, r: 4, g: 4, b: 3 },
-  { x: 214, y: 341, r: 57, g: 69, b: 107 },
-  { x: 173, y: 341, r: 57, g: 69, b: 107 },
-]);
+export const rfpageFriendRewardsSent = new Page(
+  'rfpageFriendRewardsSent',
+  [
+    { x: 400, y: 329, r: 85, g: 85, b: 85 },
+    { x: 20, y: 89, r: 4, g: 4, b: 3 },
+    { x: 214, y: 341, r: 57, g: 69, b: 107 },
+    { x: 173, y: 341, r: 57, g: 69, b: 107 },
+  ],
+  { x: 400, y: 329 }
+);
 // export const rfpageShop = new Page('rfpageShop', [
 //   { x: 20, y: 84, r: 247, g: 190, b: 140 },
 //   { x: 23, y: 112, r: 181, g: 0, b: 24 },
 //   { x: 28, y: 119, r: 255, g: 235, b: 173 },
 // ],{x: 20, y: 84}
 // );
-export const rfpageNecessities = new Page('rfpageNecessities', [{ x: 114, y: 70, r: 255, g: 109, b: 107 }]);
 // export const rfpageIsDailyFreePackage = new Page('rfpageIsDailyFreePackage', [
 //   { x: 181, y: 186, r: 13, g: 203, b: 252 },
 //   { x: 190, y: 204, r: 255, g: 255, b: 255 },
