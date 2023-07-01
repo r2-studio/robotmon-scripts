@@ -788,9 +788,13 @@ export const rankedBattlePanel = new Page(
     // { x: 597, y: 13, r: 74, g: 93, b: 123 },
 
     // bg in left
-    { x: 22, y: 66, r: 189, g: 190, b: 189 },
-    { x: 16, y: 194, r: 230, g: 227, b: 230 },
-    { x: 18, y: 260, r: 247, g: 243, b: 247 },
+    // { x: 22, y: 66, r: 189, g: 190, b: 189 },
+    // { x: 16, y: 194, r: 230, g: 227, b: 230 },
+    // { x: 18, y: 260, r: 247, g: 243, b: 247 },
+
+    // team support bg
+    { x: 490, y: 89, r: 247, g: 243, b: 247 },
+    { x: 615, y: 88, r: 247, g: 243, b: 247 },
 
     // bg of win/lose ratio in bottom
     { x: 150, y: 279, r: 66, g: 65, b: 66 },

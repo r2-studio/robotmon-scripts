@@ -8,7 +8,7 @@ import * as CONSTANTS from './src/constants';
 import { TASK } from './src/task';
 import { executeCommands, isSameColor } from './src/utils';
 
-const VERSION_CODE: number = 15.1;
+const VERSION_CODE: number = 15.2;
 
 class MLB9I {
   public static packageName: string = 'com.com2us.ninepb3d.normal.freefull.google.global.android.common';
@@ -66,8 +66,7 @@ class MLB9I {
 
     this.addRoutes();
     this.handleUnknown();
-    // this.rerouter.debugCurrentMatch();
-
+    // this.rerouter.getCurrentMatchNames()
     if (!this.config.hasCoolFeature) {
       this.addBasicTasks();
       return;
