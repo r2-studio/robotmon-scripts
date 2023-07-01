@@ -306,8 +306,8 @@ export const AdvanturesBountiesAt3rd: { [key: string]: Advanture } = {
   cookieAlliance: GenAdvanture({ x: 392, y: 230 }, true, false),
 
   superMayhem: GenAdvanture({ x: 500, y: 150 }, false, false),
-  bounties: GenAdvanture({ x: 500, y: 100 }, false, false),
-  guild: GenAdvanture({ x: 630, y: 100 }, false, false),
+  bounties: GenAdvanture({ x: 120, y: 100 }, false, true),
+  guild: GenAdvanture({ x: 320, y: 100 }, false, true),
 };
 
 export const AdvanturesBountiesAt4th: { [key: string]: Advanture } = {
@@ -512,4 +512,19 @@ export function findSpecificImageInScreen(target: Image, threashold?: number, is
   }
   releaseImage(img);
   return foundResults;
+}
+
+export function dynamicSort(property: any) {
+  var sortOrder = 1;
+  if (property[0] === '-') {
+    sortOrder = -1;
+    property = property.substr(1);
+  }
+  return function (a, b) {
+    /* next line works with strings and numbers,
+     * and you may want to customize it to your needs
+     */
+    var result = a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+    return result * sortOrder;
+  };
 }

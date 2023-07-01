@@ -869,7 +869,6 @@ export const rfpageInTropicalIsland = new Page('rfpageInTropicalIsland', [
   { x: 49, y: 323, r: 239, g: 77, b: 140 },
   { x: 62, y: 341, r: 44, g: 81, b: 118 },
 ]);
-
 export const rfpageReadyToClearRedSword = new Page(
   'rfpageReadyToClearRedSword',
   [
@@ -923,6 +922,32 @@ export const rfpageEmptySunbedsListInMiddle = new Page(
   ],
   { x: 437, y: 57 }
 );
+
+export const rfpageInBounties = new Page('rfpageInBounties', [
+  { x: 616, y: 341, r: 49, g: 77, b: 107 },
+  { x: 634, y: 337, r: 54, g: 32, b: 22 },
+  { x: 479, y: 19, r: 40, g: 32, b: 23 },
+  { x: 456, y: 26, r: 70, g: 50, b: 37 },
+  { x: 416, y: 5, r: 122, g: 84, b: 95 },
+]);
+export const rfpageInOneOfTheBounty = new Page('rfpageInOneOfTheBounty', [
+  { x: 533, y: 327, r: 121, g: 207, b: 12 },
+  { x: 622, y: 329, r: 207, g: 237, b: 255 },
+  { x: 614, y: 314, r: 227, g: 155, b: 65 },
+  { x: 171, y: 39, r: 174, g: 167, b: 152 },
+]);
+export const rfpageNeedRefillBounty = new Page('rfpageNeedRefillBounty', [
+  { x: 427, y: 82, r: 57, g: 166, b: 231 },
+  { x: 317, y: 76, r: 132, g: 130, b: 99 },
+  { x: 323, y: 81, r: 115, g: 70, b: 58 },
+  { x: 343, y: 92, r: 57, g: 69, b: 107 },
+  { x: 309, y: 264, r: 0, g: 195, b: 255 },
+]);
+export const rfpageCannotRefillBountyAnymore = new Page('rfpageCannotRefillBountyAnymore', [
+  { x: 345, y: 244, r: 123, g: 207, b: 8 },
+  { x: 192, y: 29, r: 57, g: 59, b: 46 },
+  { x: 190, y: 41, r: 49, g: 30, b: 24 },
+]);
 
 export const pageNotifyQuitWindow = [
   { x: 301, y: 250, r: 8, g: 166, b: 222 },
@@ -1102,27 +1127,6 @@ export const pageChooseAdvanture = [
   { x: 44, y: 22, r: 255, g: 255, b: 255 },
 ];
 
-export const pageInOneOfTheBounty = [
-  { x: 533, y: 327, r: 121, g: 207, b: 12 },
-  { x: 622, y: 329, r: 207, g: 237, b: 255 },
-  { x: 614, y: 314, r: 227, g: 155, b: 65 },
-  { x: 171, y: 39, r: 174, g: 167, b: 152 },
-];
-
-export const pageNeedRefillBounty = [
-  { x: 427, y: 82, r: 57, g: 166, b: 231 },
-  { x: 317, y: 76, r: 132, g: 130, b: 99 },
-  { x: 323, y: 81, r: 115, g: 70, b: 58 },
-  { x: 343, y: 92, r: 57, g: 69, b: 107 },
-  { x: 309, y: 264, r: 0, g: 195, b: 255 },
-];
-
-export const pageCannotRefillBountyAnymore = [
-  { x: 345, y: 244, r: 123, g: 207, b: 8 },
-  { x: 192, y: 29, r: 57, g: 59, b: 46 },
-  { x: 190, y: 41, r: 49, g: 30, b: 24 },
-];
-
 export const pageInkingdomCanGotoGuild = [
   { x: 321, y: 326, r: 255, g: 182, b: 0 },
   { x: 417, y: 322, r: 132, g: 16, b: 8 },
@@ -1151,14 +1155,6 @@ export const pageInGnomeLab = [
 export const pageAlreadyResearching = [
   { x: 47, y: 69, r: 237, g: 237, b: 229 },
   { x: 159, y: 67, r: 117, g: 223, b: 0 },
-];
-
-export const pageInBounties = [
-  { x: 616, y: 341, r: 49, g: 77, b: 107 },
-  { x: 634, y: 337, r: 54, g: 32, b: 22 },
-  { x: 479, y: 19, r: 40, g: 32, b: 23 },
-  { x: 456, y: 26, r: 70, g: 50, b: 37 },
-  { x: 416, y: 5, r: 122, g: 84, b: 95 },
 ];
 
 export const pageBattleDragon = [

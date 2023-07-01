@@ -1,5 +1,5 @@
 import { Rerouter, rerouter, Utils, XYRGB, Page, Task, Icon, XY, GroupPage } from 'Rerouter';
-import { ScriptConfig, Wish, WishStatus } from './src/types';
+import { ScriptConfig, Wish, WishStatus, BountyInfo } from './src/types';
 import { logs, getCurrentApp, sendKeyBack } from './src/utils';
 import {
   scrollDownALot,
@@ -13,6 +13,7 @@ import {
   AdvanturesBountiesAt2nd,
   getMayhemScores,
   findSpecificIconInScreen,
+  dynamicSort,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -138,7 +139,10 @@ class CookieKingdom {
         goldenAndSkip: 0,
       },
     };
-    this.taskStatus[TASKS.pvp] = {};
+    this.taskStatus[TASKS.bounties] = {
+      hasBountiesLeft: true,
+      bountyCount: 0,
+    };
   }
 
   public addTasks() {
@@ -232,10 +236,17 @@ class CookieKingdom {
     //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
     //   forceStop: false,
     // });
+    // this.rerouter.addTask({
+    //   name: TASKS.tropicalIslandClearBubble,
+    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+
     this.rerouter.addTask({
-      name: TASKS.tropicalIslandClearBubble,
+      name: TASKS.bounties,
       maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
       forceStop: false,
     });
     // ====
@@ -916,16 +927,6 @@ class CookieKingdom {
         }
       },
     });
-    // this.rerouter.addRoute({
-    //   path: `/${PAGES.rfpageEmptySunbedsListInMiddle.name}`,
-    //   match: PAGES.rfpageEmptySunbedsListInMiddle,
-    //   action: (context, image, matched, finishRound) => {
-    //     logs(context.task.name, `in rfpageEmptySunbedsListInMiddle, some cookies are wet so finish current task`);
-    //     this.rerouter.screen.tap({ x: 441, y: 53 });
-    //     sendKeyBack();
-    //     finishRound(true);
-    //   },
-    // });
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageBattleHasWetCookieCannotStart.name}`,
       match: PAGES.rfpageBattleHasWetCookieCannotStart,
@@ -944,6 +945,107 @@ class CookieKingdom {
         this.rerouter.goNext(PAGES.rfpageAddMoreCookies);
         sendKeyBack();
         finishRound(true);
+      },
+    });
+
+    // Bounties
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInBounties.name}`,
+      match: PAGES.rfpageInBounties,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, `in rfpageInBounties`);
+
+        if (!this.taskStatus[context.task.name]['hasBountiesLeft']) {
+          logs(context.task.name, `bounty finished`);
+          finishRound(true);
+        }
+
+        let foundResults = findSpecificIconInScreen(ICONS.iconBountiesGreenEnter);
+        foundResults.sort(dynamicSort('x'));
+
+        const bountyCount = Object.keys(foundResults).length > 2 ? 4 : Object.keys(foundResults).length;
+        if (bountyCount === 0) {
+          logs(context.task.name, `cannot find bounty entry button, skipping task`);
+          sendKeyBack();
+          finishRound(true);
+        }
+
+        this.taskStatus[context.task.name]['bountyCount'] = bountyCount;
+        this.rerouter.screen.tap({ x: foundResults[0].x + 40, y: foundResults[0].y + 10 });
+        return;
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInOneOfTheBounty.name}`,
+      match: PAGES.rfpageInOneOfTheBounty,
+      action: (context, image, matched, finishRound) => {
+        if (!this.taskStatus[context.task.name]['hasBountiesLeft']) {
+          // logs(context.task.name, `bounty finished, leave this page`);
+          sendKeyBack();
+        }
+
+        logs(context.task.name, `about to start handleBounties, send running`);
+        sendEvent('running', '');
+        let i = 0;
+
+        const bountyCount = this.taskStatus[context.task.name]['bountyCount'];
+        let bounties: BountyInfo[] = [];
+        for (var bountyIdx = 0; bountyIdx < bountyCount; bountyIdx++) {
+          // When there are only one bounty (Sunday), it gets all types of powder thus nothing to OCR
+          var powder = bountyCount === 1 ? 0 : ocrMaterialStorage(454, 10, 50, 18);
+          var bountyLevel = bountyCount === 1 ? 12 : countBountyLevel();
+
+          if (bountyCount !== 1 && this.config.autoBountiesCheckBluePowder) {
+            var rtn = bountyCheckIfGetBluePowder();
+            powder = rtn[0];
+            bountyLevel = rtn[1];
+          }
+
+          if (powder !== -1) {
+            bounties.push({
+              index: bountyIdx,
+              // entryPnt: bountyEntryPnt,
+              powderStock: powder,
+              level: bountyLevel,
+            });
+          }
+
+          // Goto right bounty
+          qTap(pnt(435, 178));
+          sleep(1500);
+        }
+
+        bounties.sort(dynamicSort('level'));
+        // console.log('sorted level bounties: ', JSON.stringify(bounties, ['index', 'level', 'powderStock']));
+
+        bounties = bounties.filter(function (bounty) {
+          return bounty.level === bounties[0].level;
+        });
+        bounties.sort(dynamicSort('powderStock'));
+        console.log('sorted & filtered level bounties: ', JSON.stringify(bounties, ['index', 'level', 'powderStock']));
+
+        if (bounties.length === 0) {
+          console.log('No bounties can be run, skipping, bounties: ', JSON.stringify(bounties));
+          return handleGotoKingdomPage();
+        }
+
+        var targetBounty = bounties[0];
+        for (i = 0; i < bountyCount; i++) {
+          if (targetBounty['level'] === 6) {
+            qTap(pnt(40, 135));
+            sleep(config.sleepAnimate * 2);
+          }
+          var gotBountyLevel = countBountyLevel();
+          var gotMaterialStock = bountyCount === 1 ? 0 : ocrMaterialStorage(454, 10, 50, 18);
+          if (gotBountyLevel === targetBounty.level && gotMaterialStock === targetBounty.powderStock) {
+            console.log('found it, level, stock: ', gotBountyLevel, gotMaterialStock);
+            break;
+          } else {
+            console.log('wrong: ', gotBountyLevel, gotMaterialStock, gotBountyLevel === targetBounty.level, gotMaterialStock === targetBounty.powderStock);
+            qTap(pnt(435, 178)); // check next one
+            sleep(1500);
+          }
+        }
       },
     });
 
@@ -1052,12 +1154,13 @@ class CookieKingdom {
         switch (context.task.name) {
           case TASKS.superMayhem:
             logs(context.task.name, `rfpageSelectAdvanture goto superMayhem`);
-            this.rerouter.screen.tap(advantureSetting[TASKS.superMayhem].pnt);
+            this.rerouter.screen.tap(advantureSetting[context.task.name].pnt);
             break;
-          // case TASKS.tropicalIsland:
-          //   logs(context.task.name, `rfpageSelectAdvanture goto tropicalIsland`);
-          //   this.rerouter.screen.tap(advantureSetting[TASKS.tropicalIsland].pnt);
-          //   break;
+          case TASKS.bounties:
+            logs(context.task.name, `rfpageSelectAdvanture goto bounties`);
+            this.taskStatus['bounties'].hasBountiesLeft = true;
+            this.rerouter.screen.tap(advantureSetting[context.task.name].pnt);
+            break;
           default:
             logs(context.task.name, `rfpageSelectAdvanture don't know what to do, crash it`);
             ii++;
@@ -1213,6 +1316,8 @@ class CookieKingdom {
             this.rerouter.screen.tap({ x: 25, y: 25 }); // goto head
             break;
           case TASKS.superMayhem:
+          case TASKS.bounties:
+          case TASKS.guild:
             this.rerouter.screen.tap({ x: 560, y: 325 }); // goto PLAY!
             break;
           default:

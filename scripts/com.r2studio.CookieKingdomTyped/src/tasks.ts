@@ -14,4 +14,6 @@ export enum TASKS {
   tropicalIslandShip = 'tropicalIslandShip',
   tropicalIslandSunbed = 'tropicalIslandSunbed',
   tropicalIslandClearBubble = 'tropicalIslandClearBubble',
+  bounties = 'bounties',
+  guild = 'guild',
 }

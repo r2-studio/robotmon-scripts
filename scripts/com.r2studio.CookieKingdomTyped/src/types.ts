@@ -34,6 +34,13 @@ export type Records = {
   goldenAndSkip: number;
 };
 
+export type BountyInfo = {
+  index: number;
+  // entryPnt: XY;
+  powderStock: number;
+  level: number;
+};
+
 export enum Advantures {
   bounties = 'bounties',
   pvp = 'pvp',
