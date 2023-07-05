@@ -244,9 +244,19 @@ function getSelectTeam(id) {
       '<option value = "6">隊伍7</option>' +
       '<option value = "7">隊伍8</option>' +
       '<option value = "8">隊伍9</option>' +
-      '<option value = "9">隊伍10</option></select></div>'
+      '<option value = "9">隊伍10</option></select></div>'+
+      "<div class='commandSelectDiv'>" +
+      '<div class="commandItem"  id = "selectTeamAutoBuildTitle'+ 
+      id +
+      '">自動編成</div>' +
+      '<select id = "selectTeamAutoBuild' +
+      id +
+      '">' +
+      '<option value = "0" selected>不啟用</option>' +
+      '<option value = "1">啟用</option></select></div>'
   );
 }
+
 function getStartQuest(id) {
   return getCommandItem(
     id,

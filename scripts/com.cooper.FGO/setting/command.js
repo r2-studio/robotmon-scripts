@@ -55,7 +55,11 @@ function getCurrentScript() {
             ");";
           break;
         case "選擇隊伍":
-          newScript += "selectTeam(" + $("#selectTeam" + itemId).val() + ");";
+          newScript += "selectTeam(" +
+          $("#selectTeam" + itemId).val() + 
+          ',' +
+          $("#selectTeamAutoBuild" + itemId).val() + 
+          ");";
           break;
         case "進入關卡":
           newScript +=
@@ -395,12 +399,34 @@ function addSelectTeam(commandId, content) {
     width: "120px",
   });
 
+  if(server != "JP"){
+    $("#selectTeamAutoBuild" + commandId).css("display", "none");
+    $("#selectTeamAutoBuildTitle" + commandId).css("display", "none");
+  }else{
+    $("#selectTeamAutoBuild" + commandId).select2({
+      minimumResultsForSearch: -1,
+      width: "120px",
+    });
+  }
+
   if (content == undefined) {
     return;
   }
+  var scriptValue = content.split(",");
+  var teamIndex = scriptValue[0];
+  var autoBuild = 0;
+  if(scriptValue.length >= 2){
+    autoBuild = scriptValue[1];
+  }
   $("#selectTeam" + commandId)
-    .val(content)
+    .val(teamIndex)
     .trigger("change");
+
+    if (server == "JP") {
+      $("#selectTeamAutoBuild" + commandId)
+        .val(autoBuild)
+        .trigger("change");
+    }
 }
 
 function addStartQuest(commandId, content) {

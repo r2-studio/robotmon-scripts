@@ -14,14 +14,18 @@ function setMarginIcon() {
     icon["stageFailed"] = [750, 160, 300, 60];
   }
   
+    //1920 default
   if (resolution < 17 / 9) {
-    //default
     icon["main"][0] = 1710;
     iconMargin["main"] = undefined;
 
     icon["teamPage"][0] = 1702;
     icon["teamPage"][1] = 975;
     iconMargin["teamPage"] = undefined;
+
+    icon["teamAutoBuild"][0] = 400;
+    icon["teamAutoBuild"][1] = 975;
+    iconMargin["teamAutoBuild"] = undefined;
 
     icon["friendPage"][0] = 1110;
     iconMargin["friendPage"] = undefined;
@@ -47,8 +51,18 @@ function setMarginIcon() {
     iconMargin["itemPage"] = undefined;
     return;
   }
+
+  //1921~2160
   icon["main"][0] = realScreenSize[0] / screenScale[0] - 337;
   iconMargin["main"] = true;
+
+  icon["teamPage"][0] = 1702;
+  icon["teamPage"][1] = 975;
+  iconMargin["teamPage"] = undefined;
+
+  icon["teamAutoBuild"][0] = 400;
+  icon["teamAutoBuild"][1] = 975;
+  iconMargin["teamAutoBuild"] = undefined;
 
   icon["battleMain1"][0] = realScreenSize[0] / screenScale[0] - 220;
   iconMargin["battleMain1"] = true;
@@ -59,9 +73,14 @@ function setMarginIcon() {
   if (resolution <= 18 / 9) {
     return;
   }
+  //2161~
   icon["teamPage"][0] = realScreenSize[0] / screenScale[0] - 305;
   icon["teamPage"][1] = realScreenSize[1] / screenScale[1] - 150;
   iconMargin["teamPage"] = true;
+
+  icon["teamAutoBuild"][0] = 536;
+  icon["teamAutoBuild"][1] = realScreenSize[1] / screenScale[1] - 150;
+  iconMargin["teamAutoBuild"] = true;
 
   icon["friendPage"][0] = 1237;
   iconMargin["friendPage"] = true;
@@ -75,18 +94,16 @@ function setMarginIcon() {
   icon["battleMain3"][0] = realScreenSize[0] / screenScale[0] - 375;
   iconMargin["battleMain3"] = true;
 
-  if (resolution > 18 / 9) {
-    icon["battleMain1"][0] = realScreenSize[0] / screenScale[0] - 265;
-    iconMargin["battleMain1"] = true;
+  icon["battleMain1"][0] = realScreenSize[0] / screenScale[0] - 265;
+  iconMargin["battleMain1"] = true;
 
-    icon["battleMain2"][0] = realScreenSize[0] / screenScale[0] - 265;
-    iconMargin["battleMain2"] = true;
+  icon["battleMain2"][0] = realScreenSize[0] / screenScale[0] - 265;
+  iconMargin["battleMain2"] = true;
 
-    icon["friendPointContinue"][1] = 975 - 22;
+  icon["friendPointContinue"][1] = 975 - 22;
 
-    icon["itemPage"][0] = 160;
-    iconMargin["itemPage"] = true;
-  }
+  icon["itemPage"][0] = 160;
+  iconMargin["itemPage"] = true;
 }
 function checkIconListInScreen(iconList, allPass, threshold) {
   if (threshold == undefined) {
@@ -267,6 +284,9 @@ function isSelectFriendEmpty() {
 //select team-----------------------------------------------
 icon["teamPage"] = [1702, 975, 172, 75];
 icon["useItemDialog"] = [1140, 960, 200, 60];
+icon["teamAutoBuild"] = [400, 975, 100, 75];
+icon["teamAutoBuildDialog"] = [1230, 800, 320, 60];
+icon["startStageMemberFailed"] = [450, 100, 1000, 80];
 
 function isSelectTeamPage() {
   return checkIconInScreen("teamPage");
@@ -278,6 +298,18 @@ function isUseItemDialog() {
   }
   //TODO
   return false;
+}
+
+function isTeamAutoBuild(){
+  return checkIconInScreen("teamPage");
+}
+
+function isTeamAutoBuildDialog(){
+  return checkIconInScreen("teamAutoBuildDialog");
+}
+
+function isStartStageMemberFailed(){
+  return checkIconInScreen("startStageMemberFailed");
 }
 
 //battle-----------------------------------------------
