@@ -48,7 +48,7 @@ function selectStage(useApple) {
       status = 0;
     } else if (isUseAppleDialog()) {
       status = 1;
-    } else if (isSelectFriendPage()) {
+    } else if (isSelectFriendPage() || isSelectTeamPage()) {
       status = 2;
     } else if(isWhiteConfirmDialog()){
       tapScale(1250,850);
@@ -130,6 +130,11 @@ function selectStage(useApple) {
       waitLoading();
       sleep(1000);
       break;
+    } else if (isSelectTeamPage()) {
+      console.log("關卡跳過選擇好友介面");
+      waitLoading();
+      sleep(1000);
+      break;
     }
   }
 }
@@ -159,9 +164,12 @@ function selectStageAutoRestore() {
 //-----------------------------------------------------team menu
 var itemPositionY = [300, 525, 750];
 
-function selectTeam(team) {
+function selectTeam(team, useTeamAutoBuild) {
   if (!isScriptRunning) {
     return;
+  }
+  if (useTeamAutoBuild == undefined || useTeamAutoBuild == null) {
+    useTeamAutoBuild = 0;
   }
   if (team < 0 || team >= 10) {
     return;
@@ -186,6 +194,20 @@ function selectTeam(team) {
   sleep(1000);
   tapScale(x, 75);
   sleep(2000);
+
+  if (useTeamAutoBuild) {
+    clickIcon("teamAutoBuild");
+    sleep(1000);
+    if (isTeamAutoBuildDialog()) {
+      clickIcon("teamAutoBuildDialog");
+    }
+    sleep(1000);
+    clickIcon("teamPage");
+    sleep(3000);
+    while (!isSelectTeamPage()) {
+      sleep(1000);
+    }
+  }
 }
 
 function startQuest(useItem, checkStageLoadFinish) {
@@ -224,6 +246,11 @@ function startQuest(useItem, checkStageLoadFinish) {
       }
       selectItem(useItem);
       break;
+    }
+
+    if(isStartStageMemberFailed()){
+      console.log("隊伍成員無法出擊，結束腳本");
+      isScriptRunning = false;
     }
   }
   if (checkStageLoadFinish == 1) {
