@@ -7,7 +7,8 @@ export function executeCommands(...commands: string[]): string[] {
     if (endsWith(res, 'exit status 1')) {
       console.log(`[Error]: ${command} :\n ${res}\n`);
     } else {
-      console.log(`[Ok]: ${command} :\n ${res}\n`);
+      // console.log(`[Ok]: ${command} :\n ${res}\n`);
+      console.log(`[Ok]: ${command}`);
     }
     results.push(res);
   }

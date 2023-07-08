@@ -164,7 +164,7 @@ export const logIn = new Page(
     { x: 43, y: 195, r: 255, g: 255, b: 255 },
   ],
   { x: 554, y: 177 }, // login
-  { x: 0, y: 0 }
+  { x: 574, y: 40 } // back to game
 );
 
 // suit for dpi 90
@@ -196,7 +196,7 @@ export const logIn90 = new Page(
     { x: 548, y: 124, r: 43, g: 132, b: 216 },
   ],
   { x: 554, y: 177 }, // login
-  { x: 0, y: 0 }
+  { x: 574, y: 40 } // back to game
 );
 
 export const fbLogIn90 = new Page('fbLogIn90', [
@@ -2325,6 +2325,29 @@ export const unexpectedError = new Page(
   ],
   { x: 314, y: 299 },
   { x: 314, y: 299 }
+);
+
+export const appIsNotResponding = new Page(
+  'appIsNotResponding',
+  [
+    { x: 164, y: 154, r: 255, g: 255, b: 255 },
+    { x: 189, y: 157, r: 203, g: 203, b: 203 },
+    { x: 223, y: 158, r: 171, g: 171, b: 171 },
+    { x: 254, y: 158, r: 48, g: 48, b: 48 },
+    { x: 273, y: 157, r: 96, g: 96, b: 96 },
+    { x: 302, y: 157, r: 54, g: 54, b: 54 },
+    { x: 168, y: 185, r: 255, g: 255, b: 255 },
+    { x: 205, y: 190, r: 119, g: 119, b: 119 },
+    { x: 218, y: 184, r: 255, g: 255, b: 255 },
+    { x: 230, y: 186, r: 85, g: 85, b: 85 },
+    { x: 170, y: 211, r: 127, g: 202, b: 195 },
+    { x: 210, y: 213, r: 255, g: 255, b: 255 },
+    { x: 199, y: 213, r: 111, g: 111, b: 111 },
+    { x: 466, y: 166, r: 255, g: 255, b: 255 },
+    { x: 469, y: 218, r: 255, g: 255, b: 255 },
+  ],
+  { x: 220, y: 186 }, // close app
+  { x: 220, y: 186 }
 );
 
 // with more games button
