@@ -43,7 +43,7 @@ export const defaultConfig = {
   autoGuildBattleDragon: false,
   autoHandleBountiesIntervalInMins: 180,
   autoBountiesCheckBluePowder: true,
-  autoLabResearch: false,
+  autoLabResearch: true,
   autoResearchKingdom: true,
   autoResearchCookies: true,
   autoLabUseAuroraMaterial: true,

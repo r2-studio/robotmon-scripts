@@ -1,4 +1,4 @@
-import { Rerouter, Utils, XYRGB, Page, XY, MessageWindow, Icon } from 'Rerouter';
+import { Rerouter, Utils, XYRGB, Page, XY, MessageWindow, Icon, RECT } from 'Rerouter';
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
@@ -37,18 +37,59 @@ export function scrollLeftALot(rerouter: Rerouter, startPnt: XY) {
 }
 
 export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
-  rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
-  Utils.sleep(CONSTANTS.sleep);
-  rerouter.screen.moveTo({ x: startPnt.x / 2, y: startPnt.y });
-  Utils.sleep(CONSTANTS.sleep);
-  rerouter.screen.moveTo({ x: 0, y: startPnt.y });
-  Utils.sleep(CONSTANTS.sleep);
-  rerouter.screen.moveTo({ x: -1000, y: startPnt.y });
-  Utils.sleep(CONSTANTS.sleep);
-  rerouter.screen.moveTo({ x: -2000, y: startPnt.y });
-  Utils.sleep(CONSTANTS.sleep);
-  rerouter.screen.tapUp({ x: -2000, y: startPnt.y });
-  Utils.sleep(CONSTANTS.sleepAnimate * 3);
+  // rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
+  // Utils.sleep(CONSTANTS.sleep);
+  // rerouter.screen.moveTo({ x: startPnt.x / 2, y: startPnt.y });
+  // Utils.sleep(CONSTANTS.sleep);
+  // rerouter.screen.moveTo({ x: 0, y: startPnt.y });
+  // Utils.sleep(CONSTANTS.sleep);
+  // rerouter.screen.moveTo({ x: -1000, y: startPnt.y });
+  // Utils.sleep(CONSTANTS.sleep);
+  // rerouter.screen.moveTo({ x: -2000, y: startPnt.y });
+  // Utils.sleep(CONSTANTS.sleep);
+  // rerouter.screen.tapUp({ x: -2000, y: startPnt.y });
+  // Utils.sleep(CONSTANTS.sleepAnimate * 3);
+
+  return swipeFromToPoint(rerouter, { x: startPnt.x, y: startPnt.y }, { x: -2000, y: startPnt.y }, 5);
+}
+
+export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, steps: number, stopIfFoundPage?: Page, swipingPage?: Page) {
+  if (swipingPage === undefined) {
+    swipingPage = PAGES.rfpageInKingdomVillage;
+  }
+
+  if (!rerouter.isPageMatch(swipingPage)) {
+    // console.log('swipe from this point will get to another page, try again: ', fromPnt.x, fromPnt.y);
+    keycode('BACK', 100);
+    return false;
+  }
+
+  steps = steps == undefined ? 4 : steps;
+  var step_x = (toPnt.x - fromPnt.x) / steps;
+  var step_y = (toPnt.y - fromPnt.y) / steps;
+
+  tapDown(fromPnt.x, fromPnt.y, 40, 0);
+  sleep(10);
+  moveTo(fromPnt.x, fromPnt.y, 40, 0);
+  sleep(10);
+
+  for (var i = 0; i < steps; i++) {
+    moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0);
+    // console.log('in pnt: ', fromPnt.x + step_x * i, fromPnt.y + step_y * i)
+    sleep(50);
+  }
+
+  moveTo(toPnt.x, toPnt.y, 40, 0);
+  sleep(500);
+  tapUp(toPnt.x, toPnt.y, 40, 0);
+  sleep(500);
+
+  if (!rerouter.isPageMatch(swipingPage)) {
+    console.log('swipe but page changed, failed x, y: ', fromPnt.x, fromPnt.y);
+    keycode('BACK', 100);
+    return false;
+  }
+  return true;
 }
 
 export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, pageMessageWindow?: Page) {
@@ -321,120 +362,6 @@ export const AdvanturesBountiesAt4th: { [key: string]: Advanture } = {
   guild: GenAdvanture({ x: 320, y: 100 }, false, true),
 };
 
-function handleGotoAdventure(targetAdvanture: Advantures, targetPage: Page, rerouter: Rerouter) {
-  logs('handleGotoAdventure task', `going to Advanture: ${targetAdvanture} with page: ${targetPage}`);
-
-  if (rerouter.isPageMatch(targetPage)) {
-    return true;
-  }
-
-  // Route from Head
-  if (AdvanturesBountiesAt3rd[targetAdvanture].fromHead) {
-  }
-
-  if (!checkIsPage(targetPage)) {
-    // Route from Head
-    if (AdvanturesBountiesAt3rd[targetAdvanture].fromHead) {
-      if (!checkIsPage(pageInCookieHead)) {
-        if (!checkIsPage(pageInKingdomVillage)) {
-          handleTryHitBackToKingdom();
-        }
-
-        // Tap head
-        if (checkScreenMessage(messageNotifyQuit)) {
-          // todo: debug log
-          console.log('seems like im in notify quit page');
-        }
-        // Tap head
-        if (!waitUntilSeePage(pageInCookieHead, 12, pnt(20, 30), null, 3)) {
-          console.log('Failed to get to cookie head in', 12, 'secs, skipping');
-
-          handleGotoKingdomPage();
-          return false;
-        }
-      }
-
-      // swipe to the end of the list in head
-      for (var i = 0; i < 3; i++) {
-        tapDown(560, 186, 40, 0);
-        sleep(config.sleep);
-        moveTo(560, 186, 40, 0);
-        sleep(config.sleep);
-        moveTo(400, 186, 40, 0);
-        sleep(config.sleep);
-        moveTo(200, 186, 40, 0);
-        sleep(config.sleep);
-        moveTo(0, 186, 40, 0);
-        sleep(config.sleep);
-        tapUp(0, 186, 40, 0);
-        sleep(config.sleepAnimate * 2);
-      }
-
-      qTap(AdvanturesBountiesAt3rd[targetAdvanture].pnt);
-      if (waitUntilSeePage(targetPage, 15)) {
-        console.log(targetAdvanture, 'page found');
-        return true;
-      }
-      return false;
-    }
-
-    // Route from PLAY! btn
-    if (!checkIsPage(pageChooseAdvanture)) {
-      if (!checkIsPage(pageInKingdomVillage)) {
-        handleGotoKingdomPage();
-      }
-      if (!waitUntilSeePage(pageInKingdomVillage, 6)) {
-        console.log('Skipping ', targetAdvanture, ' as cannot goto kingdom');
-        return false;
-      }
-
-      qTap(pnt(560, 330)); // tap play
-      if (!rfpageSelectAdvanture.waitScreenForMatchingScreen(this.screen, 6000)) {
-        console.log('failed to goto choose adventure, skipping');
-        return false;
-      }
-    }
-
-    var destination;
-    if (checkIsPage(pageBountiesAt2ndSlot)) {
-      console.log('pageBountiesAt2ndSlot', JSON.stringify(AdvanturesBountiesAt2nd[targetAdvanture]));
-      destination = AdvanturesBountiesAt2nd[targetAdvanture];
-    } else if (checkIsPage(pageBountiesAt3rdSlot)) {
-      console.log('pageBountiesAt3rdSlot', JSON.stringify(AdvanturesBountiesAt3rd[targetAdvanture]));
-      destination = AdvanturesBountiesAt3rd[targetAdvanture];
-    } else if (checkIsPage(pageBountiesAt4rdSlot)) {
-      console.log('pageBountiesAt4rdSlot', JSON.stringify(AdvanturesBountiesAt4th[targetAdvanture]));
-      destination = AdvanturesBountiesAt4th[targetAdvanture];
-    }
-
-    if (destination.backward) {
-      for (var swipe = 0; swipe < 3; swipe++) {
-        tapDown(600, 190, 40, 0);
-        sleep(config.sleep);
-        moveTo(200, 190, 40, 0);
-        sleep(config.sleep);
-        moveTo(0, 190, 40, 0);
-        sleep(config.sleep);
-        moveTo(-400, 190, 40, 0);
-        sleep(config.sleep);
-        tapUp(-400, 190, 40, 0);
-        sleep(config.sleepAnimate);
-      }
-    }
-
-    qTap(destination.pnt);
-    if (waitUntilSeePage(targetPage, 8, destination.pnt, null, 3)) {
-      return true;
-    } else {
-      console.log('Cannot goto ', JSON.stringify(destination), ', skipping');
-      return false;
-    }
-  } else {
-    console.log('already in target page');
-    return true;
-  }
-}
-
 export function getCEs(): number[] {
   var img = getScreenshot();
   var croppedImage1 = cropImage(img, 430, 88, 46, 10);
@@ -520,11 +447,201 @@ export function dynamicSort(property: any) {
     sortOrder = -1;
     property = property.substr(1);
   }
-  return function (a, b) {
+  return function (a: any, b: any) {
     /* next line works with strings and numbers,
      * and you may want to customize it to your needs
      */
     var result = a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
     return result * sortOrder;
   };
+}
+
+export function ocrProductionStorage(rect: RECT, icons: Icon[]) {
+  var img = getScreenshot();
+  // x = typeof x !== 'undefined' ? x : 355;
+  // y = typeof y !== 'undefined' ? y : 10;
+  // w = typeof w !== 'undefined' ? w : 35;
+  // h = typeof h !== 'undefined' ? h : 18;
+
+  var croppedImage = cropImage(img, rect.x, rect.y, rect.w, rect.h);
+  releaseImage(img);
+
+  var results: { score: number; x: number; y: number; target: string }[] = [];
+  for (var i in icons) {
+    // numbers[i] = bgrToGray(numbers[i], 40)
+    var foundResults = findImages(croppedImage, icons[i].image, icons[i].thres, 10, true);
+    for (var j in foundResults) {
+      results.push({
+        x: foundResults[j].x,
+        y: foundResults[j].y,
+        score: foundResults[j].score,
+        target: icons[i].name,
+      });
+    }
+  }
+  results.sort(dynamicSort('x'));
+  // console.log('=> ', JSON.stringify(results));
+
+  releaseImage(croppedImage);
+  return ocrResultToInt(results);
+}
+
+function ocrResultToInt(results: { score: number; x: number; y: number; target: string }[]) {
+  if (results.length == 0) {
+    return -1;
+  }
+
+  var digit_width = 4;
+  var count = '';
+  var idx = 1;
+  while (idx < results.length) {
+    if (results[idx].x - results[idx - 1].x < digit_width) {
+      // results[i].score > results[i - 1].score ? results.splice(i - 1, 1) : results.splice(i, 1);
+      if (results[idx].score > results[idx - 1].score) {
+        results.splice(idx - 1, 1);
+      } else {
+        results.splice(idx, 1);
+      }
+    } else {
+      idx++;
+    }
+    // console.log('>>', idx, JSON.stringify(results))
+  }
+
+  for (var i in results) {
+    count += results[i].target;
+  }
+
+  return parseInt(count, 10);
+}
+
+var bountyLevelX = 20;
+var bountyLevelYRange = [60, 84, 119, 158, 190, 230, 260, 296, 333];
+export function countBountyLevel(rerouter: Rerouter) {
+  for (var j = 0; j < bountyLevelYRange.length; j++) {
+    if (rerouter.screen.isSameColor({ x: bountyLevelX, y: bountyLevelYRange[j], r: 205, g: 66, b: 36 })) {
+      return j + 4; // first one in list is Lv.4
+    }
+  }
+  return -1;
+}
+
+export function bountyCheckIfGetBluePowder(rerouter: Rerouter): number[] {
+  const lastPowder = ocrProductionStorage({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+  const bountyLevel = countBountyLevel(rerouter);
+
+  if (bountyLevel > 6) {
+    rerouter.screen.tap({ x: 40, y: 135 });
+    Utils.sleep(2000);
+
+    const bluePower = ocrProductionStorage({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+
+    // console.log('Check if we need to get blue powder: ', bluePower, lastPowder);
+    if (bluePower < lastPowder && bluePower < 350) {
+      return [bluePower, 6];
+    }
+  }
+
+  for (var j = 0; j < bountyLevelYRange.length; j++) {
+    rerouter.screen.tap({ x: bountyLevelX, y: bountyLevelYRange[j] });
+    Utils.sleep(300);
+  }
+  return [lastPowder, bountyLevel];
+}
+
+function handleResearchInGnomeLab(targetIconList: Icon[], threashold: number) {
+  var foundResults = [];
+  for (var i = 0; i < 12; i++) {
+    for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
+      foundResults = findSpecificImageInScreen(targetIconList[imageIdx].img, threashold);
+      // console.log('>', i, JSON.stringify(foundResults), foundResults.length, foundResults.length > 0);
+      if (foundResults.length > 0) {
+        console.log('Tap gnome reserach check: ', targetIconList[imageIdx].name, JSON.stringify(foundResults));
+        for (var j = 0; j < foundResults.length; j++) {
+          qTap(foundResults[j]);
+          sleep(config.sleepAnimate * 3);
+          if (checkIsPage(pageCanTapResearch)) {
+            if (!config.autoLabUseAuroraMaterial) {
+              var hasAuroraRequirement = false;
+              for (var auroraIndex = 0; auroraIndex < auroraItems.length; auroraIndex++) {
+                if (findSpecificImageInScreen(auroraItems[auroraIndex].img, 0.92).length > 0) {
+                  console.log('lab restrict use of aurora items, skip this one');
+                  qTap(pnt(570, 31));
+                  sleep(1500);
+                  hasAuroraRequirement = true;
+                  break;
+                }
+              }
+
+              if (!hasAuroraRequirement) {
+                console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
+                qTap(pageCanTapResearch);
+
+                // Check for not enough items for research
+                sleep(1000);
+                if (checkIsPage(pageNotEnoughAuroraItemForReserch)) {
+                  console.log('Not enough aurora items, continue');
+                  qTap(pageNotEnoughAuroraItemForReserch);
+                  sleep(1000);
+                  qTap(pnt(570, 31));
+                  sleep(1500);
+                  break;
+                } else if (checkIsPage(pageNotEnoughItemsForResearch)) {
+                  console.log('Not enough items, continue');
+                  qTap(pageNotEnoughItemsForResearch);
+                  sleep(1000);
+                  qTap(pnt(570, 31));
+                  sleep(1500);
+                  break;
+                } else {
+                  console.log('Start researching');
+                }
+
+                sendEvent('running', '');
+                return true;
+              }
+            } else {
+              console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
+              qTap(pageCanTapResearch);
+
+              sleep(1000);
+              if (checkIsPage(pageNotEnoughItemsForResearch)) {
+                console.log('Not enough items, continue');
+                qTap(pageNotEnoughItemsForResearch);
+                sleep(1000);
+                qTap(pnt(570, 31));
+                sleep(1500);
+                break;
+              } else {
+                sendEvent('running', '');
+                console.log('Start researching');
+              }
+
+              return true;
+            }
+          } else {
+            if (checkIsPage(pageInKingdomVillage)) {
+              console.log('Lab research accidentally fall back to village, return with false');
+              return false;
+            } else if (!checkIsPage(pageInGnomeLab)) {
+              console.log('Research requirement not met (btn not enabled)');
+              keycode('BACK', 1000);
+              sleep(config.sleepAnimate * 3);
+            } else {
+              console.log('Not in kingdom nor lab');
+            }
+          }
+        }
+      }
+    }
+
+    if (checkIsPage(pageAlreadyResearching)) {
+      console.log('Already researching, skipping handleInGnomeLab');
+      return true;
+    }
+
+    swipeFromToPoint(pnt(600, 234), pnt(-200, 234), 5, 0, undefined, pageInGnomeLab);
+  }
+
+  return false;
 }

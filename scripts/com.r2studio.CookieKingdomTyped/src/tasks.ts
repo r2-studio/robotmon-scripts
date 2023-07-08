@@ -15,5 +15,16 @@ export enum TASKS {
   tropicalIslandSunbed = 'tropicalIslandSunbed',
   tropicalIslandClearBubble = 'tropicalIslandClearBubble',
   bounties = 'bounties',
-  guild = 'guild',
+
+  gnomeLab = 'gnomeLab',
+  tradeHabor = 'tradeHabor',
+  towerOfSweetChoas = 'towerOfSweetChoas',
+  CollectCookieOdyssey = 'CollectCookieOdyssey',
+  resolveGreenChecks = 'resolveGreenChecks',
+  // guild = 'guild',
+  guildCheckin = 'guildCheckin',
+  guildBattleDragon = 'guildBattleDragon',
+  guildBattleAlliance = 'guildBattleAlliance',
+  findAndTapCandy = 'findAndTapCandy',
+  upgradeCandyHouse = 'upgradeCandyHouse',
 }

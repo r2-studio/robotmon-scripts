@@ -541,7 +541,7 @@ export const rfpageBattleFinished = new Page(
     { x: 584, y: 332, r: 8, g: 166, b: 222 },
     { x: 606, y: 24, r: 57, g: 169, b: 231 },
   ],
-  { x: 56, y: 331 }
+  { x: 605, y: 322 }
 );
 export const rfpageBattleDefeat = new Page(
   'rfpageBattleDefeat',
@@ -889,15 +889,16 @@ export const rfpageBattleToClearSodaIsland = new Page(
   ],
   { x: 601, y: 326 }
 );
-export const rfpageBattleHasWetCookieCannotStart = new Page(
-  'rfpageBattleHasWetCookieCannotStart',
-  [
-    { x: 350, y: 250, r: 123, g: 207, b: 8 },
-    { x: 420, y: 200, r: 247, g: 235, b: 222 },
-    { x: 400, y: 100, r: 57, g: 69, b: 107 },
-  ],
-  { x: 350, y: 250 }
-);
+// TODO: 這頁會跟懸賞打完的頁面混淆
+// export const rfpageBattleHasWetCookieCannotStart = new Page(
+//   'rfpageBattleHasWetCookieCannotStart',
+//   [
+//     { x: 350, y: 250, r: 123, g: 207, b: 8 },
+//     { x: 420, y: 200, r: 247, g: 235, b: 222 },
+//     { x: 400, y: 100, r: 57, g: 69, b: 107 },
+//   ],
+//   { x: 350, y: 250 }
+// );
 export const rfpageAddMoreCookies = new Page(
   'rfpageAddMoreCookies',
   [
@@ -936,18 +937,38 @@ export const rfpageInOneOfTheBounty = new Page('rfpageInOneOfTheBounty', [
   { x: 614, y: 314, r: 227, g: 155, b: 65 },
   { x: 171, y: 39, r: 174, g: 167, b: 152 },
 ]);
-export const rfpageNeedRefillBounty = new Page('rfpageNeedRefillBounty', [
-  { x: 427, y: 82, r: 57, g: 166, b: 231 },
-  { x: 317, y: 76, r: 132, g: 130, b: 99 },
-  { x: 323, y: 81, r: 115, g: 70, b: 58 },
-  { x: 343, y: 92, r: 57, g: 69, b: 107 },
-  { x: 309, y: 264, r: 0, g: 195, b: 255 },
-]);
-export const rfpageCannotRefillBountyAnymore = new Page('rfpageCannotRefillBountyAnymore', [
-  { x: 345, y: 244, r: 123, g: 207, b: 8 },
-  { x: 192, y: 29, r: 57, g: 59, b: 46 },
-  { x: 190, y: 41, r: 49, g: 30, b: 24 },
-]);
+export const rfpageReadyToBattleBounty = new Page(
+  'rfpageReadyToBattleBounty',
+  [
+    { x: 612, y: 321, r: 121, g: 207, b: 12 },
+    { x: 461, y: 323, r: 255, g: 230, b: 65 },
+    { x: 520, y: 19, r: 6, g: 127, b: 254 },
+    { x: 407, y: 19, r: 255, g: 209, b: 0 },
+    { x: 159, y: 331, r: 121, g: 207, b: 12 },
+    { x: 71, y: 329, r: 12, g: 167, b: 223 },
+  ],
+  { x: 612, y: 321 }
+);
+export const rfpageNeedRefillBounty = new Page(
+  'rfpageNeedRefillBounty',
+  [
+    { x: 427, y: 82, r: 57, g: 166, b: 231 },
+    { x: 317, y: 76, r: 132, g: 130, b: 99 },
+    { x: 323, y: 81, r: 115, g: 70, b: 58 },
+    { x: 343, y: 92, r: 57, g: 69, b: 107 },
+    { x: 309, y: 264, r: 0, g: 195, b: 255 },
+  ],
+  { x: 427, y: 82 }
+);
+export const rfpageCannotRefillBountyAnymore = new Page(
+  'rfpageCannotRefillBountyAnymore',
+  [
+    { x: 345, y: 244, r: 123, g: 207, b: 8 },
+    { x: 192, y: 29, r: 57, g: 59, b: 46 },
+    { x: 190, y: 41, r: 49, g: 30, b: 24 },
+  ],
+  { x: 345, y: 244 }
+);
 
 export const pageNotifyQuitWindow = [
   { x: 301, y: 250, r: 8, g: 166, b: 222 },
@@ -1145,17 +1166,55 @@ export const pageInGuildLand = [
   { x: 19, y: 267, r: 206, g: 195, b: 247 },
 ];
 
-export const pageInGnomeLab = [
+export const rfpageInGnomeLab = new Page('rfpageInGnomeLab', [
   { x: 15, y: 11, r: 211, g: 9, b: 35 },
   { x: 25, y: 21, r: 255, g: 223, b: 244 },
   { x: 328, y: 15, r: 169, g: 8, b: 36 },
   { x: 308, y: 28, r: 16, g: 12, b: 8 },
-];
+]);
 
-export const pageAlreadyResearching = [
-  { x: 47, y: 69, r: 237, g: 237, b: 229 },
-  { x: 159, y: 67, r: 117, g: 223, b: 0 },
-];
+export const rfpageCanTapResearch = new Page(
+  'rfpageCanTapResearch',
+  [
+    { x: 276, y: 318, r: 121, g: 207, b: 12 },
+    { x: 220, y: 317, r: 54, g: 62, b: 95 },
+    { x: 398, y: 315, r: 54, g: 62, b: 95 },
+  ],
+  { x: 276, y: 318 }
+);
+export const rfpageResearchComplete = new Page(
+  'rfpageResearchComplete',
+  [
+    { x: 432, y: 62, r: 24, g: 81, b: 115 },
+    { x: 326, y: 14, r: 93, g: 4, b: 16 },
+    { x: 407, y: 20, r: 104, g: 77, b: 0 },
+    { x: 419, y: 260, r: 215, g: 241, b: 157 },
+    { x: 425, y: 102, r: 247, g: 235, b: 222 },
+    { x: 354, y: 200, r: 255, g: 243, b: 0 },
+  ],
+  { x: 432, y: 62 }
+);
+export const rfpageNotEnoughAuroraItemForReserch = new Page(
+  'rfpageNotEnoughAuroraItemForReserch',
+  [
+    { x: 434, y: 96, r: 255, g: 255, b: 255 },
+    { x: 22, y: 21, r: 127, g: 108, b: 122 },
+    { x: 13, y: 11, r: 95, g: 1, b: 17 },
+    { x: 4, y: 16, r: 7, g: 0, b: 0 },
+    { x: 292, y: 235, r: 189, g: 85, b: 247 },
+    { x: 350, y: 251, r: 0, g: 182, b: 255 },
+  ],
+  { x: 434, y: 96 }
+);
+// Tools, etc
+export const rfpageNotEnoughItemsForResearch = new Page('rfpageNotEnoughItemsForResearch', [
+  { x: 435, y: 95, r: 255, g: 255, b: 255 },
+  { x: 303, y: 250, r: 8, g: 125, b: 255 },
+  { x: 287, y: 247, r: 123, g: 207, b: 16 },
+  { x: 261, y: 245, r: 222, g: 207, b: 198 },
+  { x: 305, y: 100, r: 57, g: 69, b: 107 },
+  { x: 22, y: 20, r: 127, g: 102, b: 122 },
+]);
 
 export const pageBattleDragon = [
   { x: 317, y: 18, r: 0, g: 36, b: 132 },
@@ -1711,16 +1770,17 @@ export const rfpageWorldChat = new Page(
   ],
   { x: 22, y: 81 }
 );
-export const rfpageFriends = new Page(
-  'rfpageFriends',
-  [
-    { x: 519, y: 24, r: 231, g: 159, b: 85 },
-    { x: 553, y: 14, r: 251, g: 239, b: 215 },
-    { x: 587, y: 19, r: 219, g: 175, b: 73 },
-    { x: 618, y: 28, r: 64, g: 98, b: 132 },
-  ],
-  { x: 519, y: 24 }
-);
+// Seems like not required
+// export const rfpageFriends = new Page(
+//   'rfpageFriends',
+//   [
+//     { x: 519, y: 24, r: 231, g: 159, b: 85 },
+//     { x: 553, y: 14, r: 251, g: 239, b: 215 },
+//     { x: 587, y: 19, r: 219, g: 175, b: 73 },
+//     { x: 618, y: 28, r: 64, g: 98, b: 132 },
+//   ],
+//   { x: 519, y: 24 }
+// );
 export const rfpageInFriendsList = new Page('rfpageInFriendsList', [
   { x: 23, y: 90, r: 255, g: 227, b: 0 },
   { x: 14, y: 70, r: 135, g: 152, b: 192 },

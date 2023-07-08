@@ -4,6 +4,12 @@ export interface XY {
   x: number;
   y: number;
 }
+export interface RECT {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
 
 export interface XYRGB {
   x: number;
@@ -30,17 +36,11 @@ export class Icon {
   public name: string;
   public base64String: string;
   public image: Image;
-  public thres?: number;
+  public thres: number;
   public next?: XY;
   public back?: XY;
 
-  public constructor(
-    name: string,
-    base64String: string,
-    thres: number | undefined = undefined,
-    next: XY | undefined = undefined,
-    back: XY | undefined = undefined
-  ) {
+  public constructor(name: string, base64String: string, thres: number | undefined = 0.9, next: XY | undefined = undefined, back: XY | undefined = undefined) {
     this.name = name;
     this.base64String = base64String;
     this.thres = thres;
