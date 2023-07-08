@@ -1,4 +1,4 @@
-import { XY } from 'Rerouter';
+import { RECT, XY } from 'Rerouter';
 
 export type ScriptConfig = {
   isCloud?: boolean; // hidden setting
@@ -55,4 +55,12 @@ export type Advanture = {
   pnt: XY;
   fromHead: boolean;
   backward: boolean;
+};
+
+export const seasideStockRect: { [key: number]: RECT } = {
+  0: { x: 75, y: 286, w: 60, h: 17 },
+  1: { x: 180, y: 286, w: 60, h: 17 },
+  2: { x: 292, y: 286, w: 60, h: 17 },
+  3: { x: 400, y: 286, w: 60, h: 17 },
+  4: { x: 508, y: 286, w: 60, h: 17 },
 };

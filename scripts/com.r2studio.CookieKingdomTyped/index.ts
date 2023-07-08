@@ -1,5 +1,5 @@
 import { Rerouter, rerouter, Utils, XYRGB, Page, Task, Icon, XY, GroupPage } from 'Rerouter';
-import { ScriptConfig, Wish, WishStatus, BountyInfo, ResearchTarget } from './src/types';
+import { ScriptConfig, Wish, WishStatus, BountyInfo, ResearchTarget, seasideStockRect } from './src/types';
 import { logs, getCurrentApp, sendKeyBack } from './src/utils';
 import {
   scrollDownALot,
@@ -14,11 +14,15 @@ import {
   getMayhemScores,
   findSpecificIconInScreen,
   dynamicSort,
-  ocrProductionStorage,
+  ocrTextInRect,
   bountyCheckIfGetBluePowder,
   countBountyLevel,
   findSpecificImageInScreen,
   swipeFromToPoint,
+  handleResearchInGnomeLab,
+  ocrNumberInRect,
+  ocrStocksInRect,
+  considerPurchaseSeasideMarket,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -110,7 +114,7 @@ class CookieKingdom {
     this.handleUnknown();
 
     // show current page
-    this.rerouter.getCurrentMatchNames();
+    // this.rerouter.getCurrentMatchNames();
 
     for (let idx in ICONS.numberImagesProdutRequirements) {
       if (ICONS.numberImagesProdutRequirements[idx].image === undefined) {
@@ -137,17 +141,17 @@ class CookieKingdom {
         ICONS.wNumbers[idx].loadImage();
       }
     }
+    for (let idx in ICONS.numberAuroraStockInTradeBird) {
+      if (ICONS.numberAuroraStockInTradeBird[idx].image === undefined) {
+        ICONS.numberAuroraStockInTradeBird[idx].loadImage();
+      }
+    }
 
-    for (let idx in ICONS.iconsGnomeLabKingdom) {
-      if (ICONS.iconsGnomeLabKingdom[idx].image === undefined) {
-        ICONS.iconsGnomeLabKingdom[idx].loadImage();
-      }
-    }
-    for (let idx in ICONS.iconsGnomeLabCookies) {
-      if (ICONS.iconsGnomeLabCookies[idx].image === undefined) {
-        ICONS.iconsGnomeLabCookies[idx].loadImage();
-      }
-    }
+    // for (let idx in ICONS.iconsGnomeLabCookies) {
+    //   if (ICONS.iconsGnomeLabCookies[idx].image === undefined) {
+    //     ICONS.iconsGnomeLabCookies[idx].loadImage();
+    //   }
+    // }
   }
 
   public initTaskStatus() {
@@ -178,6 +182,17 @@ class CookieKingdom {
       needResearchKingdom: this.config.autoResearchKingdom,
       needResearchCookie: this.config.autoResearchCookies,
     };
+
+    this.taskStatus[TASKS.haborShopInSeaMarket] = {
+      // rareItems: [seasideStockRect[0], seasideStockRect[1], seasideStockRect[2], seasideStockRect[3], seasideStockRect[4], { x: 530, y: 245 }],
+    };
+    // WIP: 把rare items push進來
+    // if (this.config.autoBalanceAuroraStocks) {
+    //   for (let auroraIdx)
+    //   this.taskStatus[TASKS.haborShopInSeaMarket].rareItems = [...seasideStockRect];
+    // }
+
+    this.config.autoBalanceAuroraStocks || this.config.autoShopInSeasideMarket || this.config.autoBuyCaramelStuff || this.config.autoBuyRadiantShardsInHabor;
   }
 
   public addTasks() {
@@ -285,14 +300,45 @@ class CookieKingdom {
     //   forceStop: false,
     // });
 
-    if (this.config.autoLabResearch) {
+    // if (this.config.autoLabResearch) {
+    //   this.rerouter.addTask({
+    //     name: TASKS.gnomeLab,
+    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //     minRoundInterval: 15 * CONSTANTS.minuteInMs,
+    //     forceStop: false,
+    //   });
+    // }
+
+    // if (this.config.autoHandleTradeHabor) {
+    //   this.rerouter.addTask({
+    //     name: TASKS.haborSendShip,
+    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
+    //     forceStop: false,
+    //   });
+    // }
+
+    if (
+      this.config.autoBalanceAuroraStocks ||
+      this.config.autoShopInSeasideMarket ||
+      this.config.autoBuyCaramelStuff ||
+      this.config.autoBuyRadiantShardsInHabor
+    ) {
       this.rerouter.addTask({
-        name: TASKS.gnomeLab,
+        name: TASKS.haborShopInSeaMarket,
         maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-        minRoundInterval: 15 * CONSTANTS.minuteInMs,
+        minRoundInterval: 120 * CONSTANTS.minuteInMs,
         forceStop: false,
       });
     }
+    // if (this.config.autoHandleTradeHabor) {
+    //   this.rerouter.addTask({
+    //     name: TASKS.haborShopInShellGallery,
+    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
+    //     forceStop: false,
+    //   });
+    // }
 
     // ====
   }
@@ -366,6 +412,11 @@ class CookieKingdom {
       path: `/${PAGES.rfkingdomPassItemCollected.name}`,
       match: PAGES.rfkingdomPassItemCollected,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.collectKingdomPass) {
+          sendKeyBack();
+          return;
+        }
+
         logs(context.task.name, 'rfkingdomPassItemCollected, task finished');
         this.rerouter.goNext(PAGES.rfkingdomPassItemCollected);
         finishRound(true);
@@ -375,6 +426,11 @@ class CookieKingdom {
       path: `/${PAGES.rfpageMailsAllClaimed.name}`,
       match: PAGES.rfpageMailsAllClaimed,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.collectMail) {
+          sendKeyBack();
+          return;
+        }
+
         logs(context.task.name, 'rfpageMailsAllClaimed, task finished');
         this.rerouter.goNext(PAGES.rfkingdomPassItemCollected);
         finishRound(true);
@@ -400,6 +456,11 @@ class CookieKingdom {
       path: `/${PAGES.rfpageInShop.name}`,
       match: PAGES.rfpageInShop,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.getInShopFreeDailyPack) {
+          sendKeyBack();
+          return;
+        }
+
         const trial = this.taskStatus[TASKS.getInShopFreeDailyPack]['trials'];
 
         // const rfpageNecessities = new Page('rfpageNecessities', [{ x: 114, y: 70, r: 255, g: 109, b: 107 }]);
@@ -440,6 +501,11 @@ class CookieKingdom {
       path: `/${PAGES.rfpageInHotAirBallon.name}`,
       match: PAGES.rfpageInHotAirBallon,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.hotAirBallon) {
+          sendKeyBack();
+          return;
+        }
+
         logs(context.task.name, 'rfpageInHotAirBallon, choose next step');
         if (this.taskStatus[TASKS.hotAirBallon]['changeMapFinished']) {
           this.rerouter.screen.tap({ x: 258, y: 330 }); // tap Auto
@@ -456,6 +522,11 @@ class CookieKingdom {
       path: `/${PAGES.rfpageBallonFlyingDock.name}`,
       match: PAGES.rfpageBallonFlyingDock,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.hotAirBallon) {
+          sendKeyBack();
+          return;
+        }
+
         logs(context.task.name, 'rfpageBallonFlyingDock, ballon is flying, finish task');
         this.rerouter.goNext(PAGES.rfpageBallonFlyingDock); // close this screen
         finishRound(true);
@@ -465,6 +536,11 @@ class CookieKingdom {
       path: `/${PAGES.rfpageChooseBallonDestination.name}`,
       match: PAGES.rfpageChooseBallonDestination,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.hotAirBallon) {
+          sendKeyBack();
+          return;
+        }
+
         logs(context.task.name, `rfpageChooseBallonDestination, goto ep4: ${this.config.isHotAirBallonGotoEp4}`);
         scrollLeftALot(rerouter, { x: 618, y: 151 });
         if (this.config.isHotAirBallonGotoEp4 && this.rerouter.isPageMatchImage(PAGES.rfpageBallonMapEp4, image)) {
@@ -706,6 +782,7 @@ class CookieKingdom {
       action: (context, image, matched, finishRound) => {
         if (context.task.name !== TASKS.fountain) {
           sendKeyBack();
+          return;
         }
 
         // 3rd raw is empty, fountain is pretty clean
@@ -727,6 +804,11 @@ class CookieKingdom {
       path: `/${PAGES.rfpageInPVPArena.name}`,
       match: PAGES.rfpageInPVPArena,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.pvp) {
+          sendKeyBack();
+          return;
+        }
+
         logs(context.task.name, `in rfpageInPVPArena`);
 
         switch (context.task.name) {
@@ -776,6 +858,11 @@ class CookieKingdom {
       path: `/${PAGES.rfpagePvPNoArenaTicket.name}`,
       match: PAGES.rfpagePvPNoArenaTicket,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.pvp) {
+          sendKeyBack();
+          return;
+        }
+
         logs(context.task.name, `in rfpagePvPNoArenaTicket, job done`);
         sendKeyBack();
         finishRound(true);
@@ -1004,6 +1091,10 @@ class CookieKingdom {
       path: `/${PAGES.rfpageInBounties.name}`,
       match: PAGES.rfpageInBounties,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.bounties) {
+          sendKeyBack();
+          return;
+        }
         logs(context.task.name, `in rfpageInBounties`);
 
         if (!this.taskStatus[context.task.name]['hasBountiesLeft']) {
@@ -1030,6 +1121,10 @@ class CookieKingdom {
       path: `/${PAGES.rfpageInOneOfTheBounty.name}`,
       match: PAGES.rfpageInOneOfTheBounty,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.bounties) {
+          sendKeyBack();
+          return;
+        }
         if (!this.taskStatus[context.task.name]['hasBountiesLeft']) {
           // logs(context.task.name, `bounty finished, leave this page`);
           sendKeyBack();
@@ -1043,7 +1138,7 @@ class CookieKingdom {
         let bounties: BountyInfo[] = [];
         for (var bountyIdx = 0; bountyIdx < bountyCount; bountyIdx++) {
           // When there are only one bounty (Sunday), it gets all types of powder thus nothing to OCR
-          var powder = bountyCount === 1 ? 0 : ocrProductionStorage({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+          var powder = bountyCount === 1 ? 0 : ocrTextInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
           var bountyLevel = bountyCount === 1 ? 12 : countBountyLevel(this.rerouter);
 
           if (bountyCount !== 1 && this.config.autoBountiesCheckBluePowder) {
@@ -1087,7 +1182,7 @@ class CookieKingdom {
             Utils.sleep(this.config.sleepAnimate * 2);
           }
           var gotBountyLevel = countBountyLevel(this.rerouter);
-          var gotMaterialStock = bountyCount === 1 ? 0 : ocrProductionStorage({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+          var gotMaterialStock = bountyCount === 1 ? 0 : ocrTextInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
           if (gotBountyLevel === targetBounty.level && gotMaterialStock === targetBounty.powderStock) {
             logs(context.task.name, `found it, level, stock: ${gotBountyLevel}, ${gotMaterialStock}`);
             this.rerouter.screen.tap({ x: 530, y: 330 });
@@ -1109,11 +1204,12 @@ class CookieKingdom {
       action: (context, image, matched, finishRound) => {
         if (context.task.name !== TASKS.bounties) {
           sendKeyBack();
+          return;
         }
 
         logs(context.task.name, `rfpageNeedRefillBounty, cannot battle bounty as no more runs left so finishRound`);
         this.rerouter.goNext(PAGES.rfpageNeedRefillBounty);
-        finishRound();
+        finishRound(true);
       },
     });
     this.rerouter.addRoute({
@@ -1122,11 +1218,12 @@ class CookieKingdom {
       action: (context, image, matched, finishRound) => {
         if (context.task.name !== TASKS.bounties) {
           sendKeyBack();
+          return;
         }
 
         logs(context.task.name, `rfpageCannotRefillBountyAnymore, cannot battle bounty as no more runs left so finishRound`);
         this.rerouter.goNext(PAGES.rfpageCannotRefillBountyAnymore);
-        finishRound();
+        finishRound(true);
       },
     });
 
@@ -1160,108 +1257,18 @@ class CookieKingdom {
             this.taskStatus[context.task.name].targetImageIndex
           }`
         );
-        for (var i = 0; i < 12; i++) {
-          for (var imageIdx = 0; imageIdx < iconsGnomeLabKingdom.length; imageIdx++) {
-            let foundResults = findSpecificImageInScreen(iconsGnomeLabKingdom[imageIdx].image, iconsGnomeLabKingdom[imageIdx].thres);
-            console.log('>', i, iconsGnomeLabKingdom[imageIdx].name, JSON.stringify(foundResults));
 
-            for (let j = 0; j < Object.keys(foundResults).length; j++) {
-              this.rerouter.screen.tap(foundResults[j]);
-              if (
-                this.rerouter.waitScreenForMatchingPage(
-                  new GroupPage('groupPageLabResult', [
-                    PAGES.rfpageCanTapResearch,
-                    PAGES.rfpageNotEnoughAuroraItemForReserch,
-                    PAGES.rfpageNotEnoughItemsForResearch,
-                    PAGES.rfpageResearchComplete,
-                  ]),
-                  3000
-                )
-              ) {
-                if (this.rerouter.isPageMatch(PAGES.rfpageCanTapResearch)) {
-                  logs(context.task.name, `rfpageCanTapResearch, tap it`);
-                  this.rerouter.goNext(PAGES.rfpageCanTapResearch);
-
-                  if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughAuroraItemForReserch, 3000)) {
-                    logs(context.task.name, `rfpageNotEnoughAuroraItemForReserch, back`);
-                    sendKeyBack();
-                    Utils.sleep(this.config.sleepAnimate);
-                    sendKeyBack();
-                  } else {
-                    sendKeyBack();
-                    finishRound(true);
-                  }
-                  return;
-                } else {
-                  logs(context.task.name, `rfpageInGnomeLab, cannot tap this one, continue: ${this.rerouter.getCurrentMatchNames()}`);
-                  sendKeyBack();
-                  this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInGnomeLab, 2000);
-                }
-              } else {
-                console.log('nn');
-              }
-            }
-          }
-
-          console.log('dragging');
-          swipeFromToPoint(rerouter, { x: 600, y: 234 }, { x: -200, y: 234 }, 5, undefined, PAGES.rfpageInGnomeLab);
+        // TODO： 極光產品檢查還沒做
+        if (this.config.autoResearchKingdom) {
+          this.rerouter.screen.tap({ x: 200, y: 340 });
+          handleResearchInGnomeLab(this.rerouter, finishRound, ICONS.iconsGnomeLabKingdom, 0.94);
+        }
+        if (this.config.autoResearchCookies) {
+          this.rerouter.screen.tap({ x: 310, y: 340 });
+          handleResearchInGnomeLab(this.rerouter, finishRound, ICONS.iconsGnomeLabCookies, 0.9);
         }
 
         return;
-
-        logs(
-          context.task.name,
-          `rfpageInGnomeLab, cookieSearchCount: ${this.taskStatus[context.task.name].cookieSearchCount}, targetImageInde: ${
-            this.taskStatus[context.task.name].targetImageIndex
-          }`
-        );
-        if (
-          this.taskStatus[context.task.name].needResearchKingdom &&
-          this.taskStatus[context.task.name].kingdomSearchCount < this.taskStatus[context.task.name].searchLimit
-        ) {
-          if (this.taskStatus[context.task.name].targetImageIndex < iconsGnomeLabKingdom.length) {
-            let foundResults = findSpecificImageInScreen(
-              iconsGnomeLabKingdom[this.taskStatus[context.task.name].targetImageIndex].image,
-              iconsGnomeLabKingdom[this.taskStatus[context.task.name].targetImageIndex].thres
-            );
-
-            for (let j = 0; j < Object.keys(foundResults).length; j++) {
-              this.rerouter.screen.tap(foundResults[j]);
-              if (
-                this.rerouter.waitScreenForMatchingPage(
-                  new GroupPage('groupPageLabResult', [
-                    PAGES.rfpageCanTapResearch,
-                    PAGES.rfpageNotEnoughAuroraItemForReserch,
-                    PAGES.rfpageNotEnoughItemsForResearch,
-                  ]),
-                  1000
-                )
-              ) {
-                logs(context.task.name, `rfpageInGnomeLab, found next step window, return`);
-                return;
-              }
-            }
-
-            this.taskStatus[context.task.name].targetImageIndex++;
-          }
-
-          this.taskStatus[context.task.name].kingdomSearchCount++;
-          this.taskStatus[context.task.name].targetImageIndex = 0;
-        }
-
-        // var researching = false;
-        // if (this.config.autoResearchKingdom) {
-        //   this.rerouter.screen.tap({ x: 296, y: 340 });
-        //   Utils.sleep(this.config.sleepAnimate);
-        //   logs(context.task.name, `Research kingdom tech`);
-        //   researching = handleResearchInGnomeLab(gnomeLabKingdom, 0.94);
-        // }
-        // if (!researching && this.config.autoResearchCookies) {
-        //   this.rerouter.screen.tap({ x: 416, y: 340 });
-        //   Utils.sleep(this.config.sleepAnimate);
-        //   logs(context.task.name, `Research cookie tech`);
-        //   handleResearchInGnomeLab(gnomeLabCookies, 0.9);
-        // }
       },
     });
     this.rerouter.addRoute({
@@ -1276,8 +1283,16 @@ class CookieKingdom {
 
         logs(context.task.name, `rfpageCanTapResearch, start researching and finishRound`);
         this.rerouter.goNext(PAGES.rfpageCanTapResearch);
-        sendKeyBack();
-        finishRound();
+
+        if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughAuroraItemForReserch, 2000)) {
+          logs(context.task.name, `rfpageNotEnoughAuroraItemForReserch, cannot research this one`);
+          sendKeyBack();
+          Utils.sleep(this.config.sleep);
+          sendKeyBack();
+        } else {
+          sendKeyBack();
+          finishRound(true);
+        }
       },
     });
     this.rerouter.addRoute({
@@ -1293,7 +1308,7 @@ class CookieKingdom {
         logs(context.task.name, `rfpageNotEnoughAuroraItemForReserch, skip and finishRound`);
         this.rerouter.goNext(PAGES.rfpageNotEnoughAuroraItemForReserch);
         sendKeyBack();
-        finishRound();
+        finishRound(true);
       },
     });
     this.rerouter.addRoute({
@@ -1309,7 +1324,139 @@ class CookieKingdom {
         logs(context.task.name, `rfpageNotEnoughItemsForResearch, skip and finishRound`);
         this.rerouter.goNext(PAGES.rfpageNotEnoughItemsForResearch);
         sendKeyBack();
-        finishRound();
+        finishRound(true);
+      },
+    });
+
+    // Trade habor
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInTradeHabor.name}`,
+      match: PAGES.rfpageInTradeHabor,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name.substring(0, 5) !== 'habor') {
+          logs(context.task.name, `rfpageInTradeHabor, but current task is ${context.task.name}, skipping`);
+          sendKeyBack();
+          return;
+        }
+
+        logs(context.task.name, `rfpageInTradeHabor`);
+
+        switch (context.task.name) {
+          case TASKS.haborSendShip:
+            if (this.rerouter.isPageMatchImage(PAGES.rfpageNoShipInHabor, image)) {
+              logs(context.task.name, `No ship in habor, finish ${context.task.name}`);
+              finishRound(true);
+              return;
+            }
+
+            // TODO: send ship not test yet
+            var i = 0;
+            var shipInHabor = true;
+            for (i = 0; i < 5 && shipInHabor; i++) {
+              for (var xPixel = i === 0 ? 55 : 200; xPixel < 620; xPixel += 60) {
+                this.rerouter.screen.tap({ x: xPixel, y: 318 });
+                Utils.sleep(this.config.sleepAnimate * 2);
+
+                if (this.rerouter.isPageMatch(PAGES.rfpageCanLoadThisItem)) {
+                  logs(context.task.name, `can load the item at x: ${xPixel}`);
+                  this.rerouter.goNext(PAGES.rfpageCanLoadThisItem); // tap Max
+                  Utils.sleep(this.config.sleep);
+
+                  this.rerouter.screen.tap({ x: 342, y: 240 }); // tap load
+                  Utils.sleep(this.config.sleepAnimate);
+                }
+                if (this.rerouter.isPageMatch(PAGES.rfpageLoadTooMuchWarning)) {
+                  this.rerouter.screen.tap({ x: 270, y: 252 }); // Cancel ship confirm
+                  Utils.sleep(this.config.sleepAnimate);
+                  this.rerouter.screen.tap({ x: 270, y: 200 }); // tap minus icon
+                  Utils.sleep(this.config.sleepAnimate);
+                  this.rerouter.screen.tap({ x: 320, y: 240 }); // tap load
+                  Utils.sleep(this.config.sleepAnimate);
+                }
+                if (this.rerouter.isPageMatch(PAGES.rfpageLoadTooMuchWarning)) {
+                  //Even one item is too much
+                  this.rerouter.screen.tap({ x: 270, y: 252 }); // Cancel ship confirm
+                  Utils.sleep(this.config.sleepAnimate);
+                  this.rerouter.screen.tap({ x: 434, y: 50 }); // tap close icon
+                  Utils.sleep(this.config.sleepAnimate);
+                  this.rerouter.screen.tap({ x: 320, y: 240 }); // tap load
+                  Utils.sleep(this.config.sleepAnimate * 2);
+                }
+
+                if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNoShipInHabor, 3000)) {
+                  logs(context.task.name, `Send the ship successfully`);
+                  shipInHabor = false;
+                  break;
+                }
+              }
+
+              if (this.rerouter.isPageMatch(PAGES.rfpageNoShipInHabor)) {
+                break;
+              }
+              swipeFromToPoint(this.rerouter, { x: 629, y: 319 }, { x: 200, y: 319 }, 5);
+            }
+
+            return;
+          case TASKS.haborShopInSeaMarket:
+            this.rerouter.screen.tap({ x: 95, y: 230 });
+            return;
+          case TASKS.haborShopInShellGallery:
+            this.rerouter.screen.tap({ x: 32, y: 226 });
+            return;
+          default:
+            console.log('donno what to do in rfpageInTradeHabor, panic');
+            ii++;
+        }
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInSeasideMarket.name}`,
+      match: PAGES.rfpageInSeasideMarket,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name.substring(0, 5) !== 'habor') {
+          logs(context.task.name, `rfpageInSeasideMarket, but current task is ${context.task.name}, skipping`);
+          sendKeyBack();
+          return;
+        }
+
+        logs(context.task.name, `In seaside marketing, send running`);
+        sendEvent('running', '');
+
+        if (this.rerouter.isPageMatch(PAGES.rfpageFreeRefreshSeasideMarket)) {
+          this.rerouter.screen.tap({ x: 543, y: 336 }); // market free refresh, no need to pull to the head of the list as refresh will reset the list
+          Utils.sleep(this.config.sleepAnimate);
+
+          if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNeedDiamondRefreshMarket, 3000)) {
+            this.rerouter.goNext(PAGES.rfpageNeedDiamondRefreshMarket);
+            Utils.sleep(this.config.sleepAnimate);
+          }
+        } else {
+          // swipe to start of the list
+          swipeFromToPoint(this.rerouter, { x: 0, y: 234 }, { x: 4000, y: 234 }, 6, undefined, PAGES.rfpageInSeasideMarket);
+        }
+
+        // var newStock;
+        // var minStock = Math.max(this.config.productSafetyStock, 150);
+
+        if (this.config.autoBalanceAuroraStocks) {
+          for (var auroraIdx = 0; auroraIdx < 3; auroraIdx++) {
+            console.log('>>', considerPurchaseSeasideMarket(this.rerouter, seasideStockRect[auroraIdx]));
+          }
+        }
+        if (this.config.autoBuyCaramelStuff) {
+          for (var caramleIdx = 3; caramleIdx < 5; caramleIdx++) {
+            console.log('>>', considerPurchaseSeasideMarket(this.rerouter, seasideStockRect[caramleIdx]));
+          }
+        }
+        if (this.config.autoBuyRadiantShardsInHabor) {
+          console.log('>>', considerPurchaseSeasideMarket(this.rerouter, { x: 612, y: 270 }));
+        }
+
+        ii++;
+        logs(context.task.name, `rfpageNotEnoughItemsForResearch, skip and finishRound`);
+        this.rerouter.goNext(PAGES.rfpageNotEnoughItemsForResearch);
+        sendKeyBack();
+        finishRound(true);
       },
     });
 
@@ -1466,6 +1613,12 @@ class CookieKingdom {
             logs(context.task.name, `about to goto gnome lab`);
             this.rerouter.screen.tap({ x: 103, y: 150 });
             return;
+          case TASKS.haborSendShip:
+          case TASKS.haborShopInSeaMarket:
+          case TASKS.haborShopInShellGallery:
+            logs(context.task.name, `about to goto trade habor`);
+            this.rerouter.screen.tap({ x: 103, y: 53 });
+            return;
           default:
             this.rerouter.screen.tap({ x: 103, y: 335 });
         }
@@ -1527,7 +1680,11 @@ class CookieKingdom {
       path: `/${PAGES.rfpageGeneralMessageWindow.name}`,
       match: PAGES.rfpageGeneralMessageWindow,
       action: (context, image, matched, finishRound) => {
-        if (checkScreenMessage(this.rerouter, PAGES.unfinishedPVPBattleMessageScreen)) {
+        if (checkScreenMessage(this.rerouter, PAGES.messageNotifyQuit) || checkScreenMessage(this.rerouter, PAGES.messageNotifyQuit2)) {
+          logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageNotifyQuit/messageNotifyQuit2, send back');
+          sendKeyBack();
+          return;
+        } else if (checkScreenMessage(this.rerouter, PAGES.unfinishedPVPBattleMessageScreen)) {
           if (context.task.name !== TASKS.pvp) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedBattleMessageScreen, skip current task');
             finishRound(true);
@@ -1577,6 +1734,9 @@ class CookieKingdom {
           case TASKS.train:
           case TASKS.wishingTree:
           case TASKS.gnomeLab:
+          case TASKS.haborSendShip:
+          case TASKS.haborShopInSeaMarket:
+          case TASKS.haborShopInShellGallery:
             this.rerouter.screen.tap({ x: 105, y: 330 });
             break;
           case TASKS.fountain:
@@ -1753,6 +1913,6 @@ export function stop() {
 // (window as any).rerouter = rerouter;
 
 sendEvent('running', '');
-defaultConfig.alwaysFulfillWishes = true;
+defaultConfig.autoResearchKingdom = false;
 start();
 console.log('jobs done');

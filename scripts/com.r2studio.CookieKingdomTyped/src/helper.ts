@@ -1,4 +1,4 @@
-import { Rerouter, Utils, XYRGB, Page, XY, MessageWindow, Icon, RECT } from 'Rerouter';
+import { Rerouter, Utils, XYRGB, Page, XY, MessageWindow, Icon, RECT, GroupPage } from 'Rerouter';
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
@@ -112,7 +112,7 @@ export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, p
       cnt++;
     }
   }
-  // console.log('cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ', cnt, message.targetColorCount, message.targetColorThreashold);
+  console.log('cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ', cnt, message.targetColorCount, message.targetColorThreashold);
 
   releaseImage(img);
   releaseImage(croppedImage);
@@ -456,12 +456,42 @@ export function dynamicSort(property: any) {
   };
 }
 
-export function ocrProductionStorage(rect: RECT, icons: Icon[]) {
+// Stocks like 220/2, means need 2 while we have 200
+export function ocrStocksInRect(rect: RECT, icons: Icon[]): number {
   var img = getScreenshot();
-  // x = typeof x !== 'undefined' ? x : 355;
-  // y = typeof y !== 'undefined' ? y : 10;
-  // w = typeof w !== 'undefined' ? w : 35;
-  // h = typeof h !== 'undefined' ? h : 18;
+  var croppedImage = cropImage(img, rect.x, rect.y, rect.w, rect.h);
+  releaseImage(img);
+
+  var txt = recognizeWishingTreeRequirements(icons, croppedImage, 10, 0.8, 0.5);
+  releaseImage(croppedImage);
+
+  if (txt.length === 0) {
+    return -1;
+  } else if (txt.indexOf('/') === -1) {
+    return -1;
+  } else {
+    var stock = txt.split('/');
+    return +stock[0] - +stock[1];
+  }
+}
+
+export function ocrNumberInRect(rect: RECT, icons: Icon[]): number {
+  var img = getScreenshot();
+  var croppedImage = cropImage(img, rect.x, rect.y, rect.w, rect.h);
+  releaseImage(img);
+
+  var txt = recognizeWishingTreeRequirements(icons, croppedImage, 10, 0.8, 0.5);
+  releaseImage(croppedImage);
+
+  if (txt.length === 0) {
+    return -1;
+  } else {
+    return +txt;
+  }
+}
+
+export function ocrTextInRect(rect: RECT, icons: Icon[]) {
+  var img = getScreenshot();
 
   var croppedImage = cropImage(img, rect.x, rect.y, rect.w, rect.h);
   releaseImage(img);
@@ -527,14 +557,14 @@ export function countBountyLevel(rerouter: Rerouter) {
 }
 
 export function bountyCheckIfGetBluePowder(rerouter: Rerouter): number[] {
-  const lastPowder = ocrProductionStorage({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+  const lastPowder = ocrTextInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
   const bountyLevel = countBountyLevel(rerouter);
 
   if (bountyLevel > 6) {
     rerouter.screen.tap({ x: 40, y: 135 });
     Utils.sleep(2000);
 
-    const bluePower = ocrProductionStorage({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+    const bluePower = ocrTextInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
 
     // console.log('Check if we need to get blue powder: ', bluePower, lastPowder);
     if (bluePower < lastPowder && bluePower < 350) {
@@ -549,7 +579,53 @@ export function bountyCheckIfGetBluePowder(rerouter: Rerouter): number[] {
   return [lastPowder, bountyLevel];
 }
 
-function handleResearchInGnomeLab(targetIconList: Icon[], threashold: number) {
+export function handleResearchInGnomeLab(rerouter: Rerouter, finishRound: any, targetIconList: Icon[], threashold: number) {
+  for (var i = 0; i < 12; i++) {
+    for (var imageIdx = 0; imageIdx < ICONS.iconsGnomeLabKingdom.length; imageIdx++) {
+      let foundResults = findSpecificIconInScreen(targetIconList[imageIdx]);
+      console.log('>', i, imageIdx, targetIconList[imageIdx].name, JSON.stringify(foundResults));
+
+      for (let j = 0; j < Object.keys(foundResults).length; j++) {
+        rerouter.screen.tap(foundResults[j]);
+        if (
+          rerouter.waitScreenForMatchingPage(
+            new GroupPage('groupPageLabResult', [
+              PAGES.rfpageCanTapResearch,
+              PAGES.rfpageNotEnoughAuroraItemForReserch,
+              PAGES.rfpageNotEnoughItemsForResearch,
+              PAGES.rfpageResearchComplete,
+            ]),
+            3000
+          )
+        ) {
+          if (rerouter.isPageMatch(PAGES.rfpageCanTapResearch)) {
+            logs(TASKS.gnomeLab, `rfpageCanTapResearch, tap it`);
+            rerouter.goNext(PAGES.rfpageCanTapResearch);
+
+            if (rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughAuroraItemForReserch, 3000)) {
+              logs(TASKS.gnomeLab, `rfpageNotEnoughAuroraItemForReserch, back`);
+              sendKeyBack();
+              Utils.sleep(1000);
+              sendKeyBack();
+            } else {
+              sendKeyBack();
+              finishRound(true);
+            }
+            return;
+          } else {
+            logs(TASKS.gnomeLab, `rfpageInGnomeLab, cannot tap this one, continue: ${rerouter.getCurrentMatchNames()}`);
+            sendKeyBack();
+            rerouter.waitScreenForMatchingPage(PAGES.rfpageInGnomeLab, 2000);
+          }
+        }
+      }
+    }
+
+    swipeFromToPoint(rerouter, { x: 600, y: 234 }, { x: -200, y: 234 }, 5, undefined, PAGES.rfpageInGnomeLab);
+  }
+}
+
+function handleResearchInGnomeLab_bak(targetIconList: Icon[], threashold: number) {
   var foundResults = [];
   for (var i = 0; i < 12; i++) {
     for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
@@ -641,6 +717,31 @@ function handleResearchInGnomeLab(targetIconList: Icon[], threashold: number) {
     }
 
     swipeFromToPoint(pnt(600, 234), pnt(-200, 234), 5, 0, undefined, pageInGnomeLab);
+  }
+
+  return false;
+}
+
+export function considerPurchaseSeasideMarket(rerouter: Rerouter, target: XY | RECT): boolean {
+  if (target as RECT) {
+    let newStock = ocrStocksInRect(target as RECT, ICONS.numberAuroraStockInTradeBird);
+    console.log('newStock', newStock);
+    if (newStock > 50) {
+      rerouter.screen.tap(target);
+      if (rerouter.waitScreenForMatchingPage(PAGES.rfpageMarketItemDetail, 2000)) {
+        var productNowHave = ocrNumberInRect({ x: 330, y: 154, w: 28, h: 14 }, ICONS.bNumbers);
+        console.log('productNowHave', productNowHave);
+
+        if (newStock > productNowHave) {
+          console.log('Purchased seaside market: ', newStock, productNowHave);
+          rerouter.goNext(PAGES.rfpageMarketItemDetail);
+          sleep(2000);
+        } else {
+          console.log('NOT purchased seaside market: ', newStock, productNowHave);
+          rerouter.screen.tap({ x: 438, y: 90 }); // close the window
+        }
+      }
+    }
   }
 
   return false;

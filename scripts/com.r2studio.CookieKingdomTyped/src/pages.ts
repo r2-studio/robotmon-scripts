@@ -663,6 +663,136 @@ export const pageNeedRefillBounties2 = [
   { x: 198, y: 62, r: 115, g: 99, b: 74 },
 ];
 
+// Gnome lab
+export const rfpageInGnomeLab = new Page('rfpageInGnomeLab', [
+  { x: 15, y: 11, r: 211, g: 9, b: 35 },
+  { x: 25, y: 21, r: 255, g: 223, b: 244 },
+  { x: 328, y: 15, r: 169, g: 8, b: 36 },
+  { x: 308, y: 28, r: 16, g: 12, b: 8 },
+]);
+export const rfpageCanTapResearch = new Page(
+  'rfpageCanTapResearch',
+  [
+    { x: 276, y: 318, r: 121, g: 207, b: 12 },
+    { x: 220, y: 317, r: 54, g: 62, b: 95 },
+    { x: 398, y: 315, r: 54, g: 62, b: 95 },
+  ],
+  { x: 276, y: 318 }
+);
+export const rfpageResearchComplete = new Page(
+  'rfpageResearchComplete',
+  [
+    { x: 432, y: 62, r: 24, g: 81, b: 115 },
+    { x: 326, y: 14, r: 93, g: 4, b: 16 },
+    { x: 407, y: 20, r: 104, g: 77, b: 0 },
+    { x: 419, y: 260, r: 215, g: 241, b: 157 },
+    { x: 425, y: 102, r: 247, g: 235, b: 222 },
+    { x: 354, y: 200, r: 255, g: 243, b: 0 },
+  ],
+  { x: 432, y: 62 }
+);
+export const rfpageNotEnoughAuroraItemForReserch = new Page(
+  'rfpageNotEnoughAuroraItemForReserch',
+  [
+    { x: 434, y: 96, r: 255, g: 255, b: 255 },
+    { x: 22, y: 21, r: 127, g: 108, b: 122 },
+    { x: 13, y: 11, r: 95, g: 1, b: 17 },
+    { x: 4, y: 16, r: 7, g: 0, b: 0 },
+    { x: 292, y: 235, r: 189, g: 85, b: 247 },
+    { x: 350, y: 251, r: 0, g: 182, b: 255 },
+  ],
+  { x: 434, y: 96 }
+);
+// Tools, etc
+export const rfpageNotEnoughItemsForResearch = new Page('rfpageNotEnoughItemsForResearch', [
+  { x: 435, y: 95, r: 255, g: 255, b: 255 },
+  { x: 303, y: 250, r: 8, g: 125, b: 255 },
+  { x: 287, y: 247, r: 123, g: 207, b: 16 },
+  { x: 261, y: 245, r: 222, g: 207, b: 198 },
+  { x: 305, y: 100, r: 57, g: 69, b: 107 },
+  { x: 22, y: 20, r: 127, g: 102, b: 122 },
+]);
+
+// Habor
+export const rfpageInTradeHabor = new Page('rfpageInTradeHabor', [
+  { x: 314, y: 18, r: 247, g: 254, b: 203 },
+  { x: 404, y: 20, r: 243, g: 232, b: 12 },
+  { x: 519, y: 21, r: 0, g: 178, b: 255 },
+  { x: 34, y: 222, r: 255, g: 235, b: 206 },
+  { x: 96, y: 229, r: 132, g: 120, b: 32 },
+  { x: 613, y: 261, r: 57, g: 166, b: 231 },
+]);
+export const rfpageShipInHabor = new Page('rfpageShipInHabor', [
+  { x: 418, y: 212, r: 55, g: 34, b: 22 },
+  { x: 609, y: 211, r: 176, g: 133, b: 66 },
+  { x: 585, y: 229, r: 123, g: 78, b: 44 },
+]);
+export const rfpageNoShipInHabor = new Page('rfpageNoShipInHabor', [
+  { x: 246, y: 66, r: 255, g: 12, b: 82 },
+  { x: 233, y: 88, r: 249, g: 242, b: 212 },
+  { x: 255, y: 138, r: 126, g: 114, b: 41 },
+]);
+export const rfpageCanLoadThisItem = new Page(
+  'rfpageCanLoadThisItem',
+  [
+    { x: 424, y: 201, r: 59, g: 205, b: 0 },
+    { x: 351, y: 246, r: 123, g: 207, b: 8 },
+    { x: 414, y: 242, r: 222, g: 207, b: 198 },
+    { x: 433, y: 309, r: 57, g: 69, b: 107 },
+  ],
+  { x: 424, y: 201 }
+);
+export const rfpageLoadTooMuchWarning = new Page('rfpageLoadTooMuchWarning', [
+  { x: 400, y: 252, r: 123, g: 207, b: 8 },
+  { x: 304, y: 253, r: 8, g: 166, b: 222 },
+  { x: 436, y: 288, r: 27, g: 33, b: 51 },
+  { x: 260, y: 55, r: 28, g: 34, b: 53 },
+]);
+export const rfpageInSeasideMarket = new Page('rfpageInSeasideMarket', [
+  { x: 617, y: 21, r: 255, g: 255, b: 255 },
+  { x: 566, y: 183, r: 114, g: 76, b: 32 },
+  { x: 256, y: 121, r: 101, g: 151, b: 23 },
+  { x: 280, y: 5, r: 206, g: 227, b: 49 },
+  { x: 178, y: 117, r: 247, g: 52, b: 90 },
+]);
+export const rfpageFreeRefreshSeasideMarket = new Page('rfpageFreeRefreshSeasideMarket', [
+  { x: 510, y: 333, r: 155, g: 155, b: 155 },
+  { x: 504, y: 333, r: 172, g: 146, b: 126 },
+  { x: 498, y: 333, r: 148, g: 120, b: 111 },
+  { x: 494, y: 333, r: 175, g: 148, b: 117 },
+]);
+export const rfpageNeedDiamondRefreshMarket = new Page(
+  'rfpageNeedDiamondRefreshMarket',
+  [
+    { x: 426, y: 110, r: 57, g: 169, b: 231 },
+    { x: 305, y: 102, r: 255, g: 255, b: 255 },
+    { x: 363, y: 118, r: 57, g: 69, b: 107 },
+    { x: 297, y: 124, r: 33, g: 44, b: 66 },
+  ],
+  { x: 426, y: 110 }
+);
+export const rfpageMarketItemDetail = new Page(
+  'rfpageMarketItemDetail',
+  [
+    { x: 350, y: 246, r: 123, g: 207, b: 8 },
+    { x: 411, y: 16, r: 127, g: 93, b: 8 },
+    { x: 521, y: 21, r: 0, g: 71, b: 126 },
+    { x: 397, y: 103, r: 57, g: 69, b: 107 },
+    { x: 268, y: 11, r: 103, g: 113, b: 24 },
+  ],
+  { x: 350, y: 246 }
+);
+export const rfpageNotEnoughItemToBuyThis = new Page(
+  'rfpageNotEnoughItemToBuyThis',
+  [
+    { x: 434, y: 95, r: 255, g: 255, b: 255 },
+    { x: 305, y: 250, r: 8, g: 125, b: 255 },
+    { x: 343, y: 160, r: 49, g: 158, b: 231 },
+    { x: 339, y: 198, r: 206, g: 195, b: 181 },
+  ],
+  { x: 434, y: 95 }
+);
+
 export const pageAllianceReward = [
   { x: 397, y: 243, r: 189, g: 150, b: 82 },
   { x: 257, y: 41, r: 19, g: 29, b: 6 },
@@ -1165,56 +1295,6 @@ export const pageInGuildLand = [
   { x: 41, y: 303, r: 217, g: 146, b: 99 },
   { x: 19, y: 267, r: 206, g: 195, b: 247 },
 ];
-
-export const rfpageInGnomeLab = new Page('rfpageInGnomeLab', [
-  { x: 15, y: 11, r: 211, g: 9, b: 35 },
-  { x: 25, y: 21, r: 255, g: 223, b: 244 },
-  { x: 328, y: 15, r: 169, g: 8, b: 36 },
-  { x: 308, y: 28, r: 16, g: 12, b: 8 },
-]);
-
-export const rfpageCanTapResearch = new Page(
-  'rfpageCanTapResearch',
-  [
-    { x: 276, y: 318, r: 121, g: 207, b: 12 },
-    { x: 220, y: 317, r: 54, g: 62, b: 95 },
-    { x: 398, y: 315, r: 54, g: 62, b: 95 },
-  ],
-  { x: 276, y: 318 }
-);
-export const rfpageResearchComplete = new Page(
-  'rfpageResearchComplete',
-  [
-    { x: 432, y: 62, r: 24, g: 81, b: 115 },
-    { x: 326, y: 14, r: 93, g: 4, b: 16 },
-    { x: 407, y: 20, r: 104, g: 77, b: 0 },
-    { x: 419, y: 260, r: 215, g: 241, b: 157 },
-    { x: 425, y: 102, r: 247, g: 235, b: 222 },
-    { x: 354, y: 200, r: 255, g: 243, b: 0 },
-  ],
-  { x: 432, y: 62 }
-);
-export const rfpageNotEnoughAuroraItemForReserch = new Page(
-  'rfpageNotEnoughAuroraItemForReserch',
-  [
-    { x: 434, y: 96, r: 255, g: 255, b: 255 },
-    { x: 22, y: 21, r: 127, g: 108, b: 122 },
-    { x: 13, y: 11, r: 95, g: 1, b: 17 },
-    { x: 4, y: 16, r: 7, g: 0, b: 0 },
-    { x: 292, y: 235, r: 189, g: 85, b: 247 },
-    { x: 350, y: 251, r: 0, g: 182, b: 255 },
-  ],
-  { x: 434, y: 96 }
-);
-// Tools, etc
-export const rfpageNotEnoughItemsForResearch = new Page('rfpageNotEnoughItemsForResearch', [
-  { x: 435, y: 95, r: 255, g: 255, b: 255 },
-  { x: 303, y: 250, r: 8, g: 125, b: 255 },
-  { x: 287, y: 247, r: 123, g: 207, b: 16 },
-  { x: 261, y: 245, r: 222, g: 207, b: 198 },
-  { x: 305, y: 100, r: 57, g: 69, b: 107 },
-  { x: 22, y: 20, r: 127, g: 102, b: 122 },
-]);
 
 export const pageBattleDragon = [
   { x: 317, y: 18, r: 0, g: 36, b: 132 },

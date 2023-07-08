@@ -15,9 +15,12 @@ export enum TASKS {
   tropicalIslandSunbed = 'tropicalIslandSunbed',
   tropicalIslandClearBubble = 'tropicalIslandClearBubble',
   bounties = 'bounties',
-
   gnomeLab = 'gnomeLab',
-  tradeHabor = 'tradeHabor',
+
+  haborShopInSeaMarket = 'haborShopInSeaMarket',
+  haborShopInShellGallery = 'haborShopInShellGallery',
+  haborSendShip = 'haborSendShip',
+
   towerOfSweetChoas = 'towerOfSweetChoas',
   CollectCookieOdyssey = 'CollectCookieOdyssey',
   resolveGreenChecks = 'resolveGreenChecks',
