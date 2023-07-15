@@ -6,7 +6,7 @@ import { defaultConfig } from './src/defaultConfig';
 import * as PAGE from './src/pages';
 import * as CONSTANTS from './src/constants';
 import { TASK } from './src/task';
-import { executeCommands, isSameColor } from './src/utils';
+import { executeCommands, isSameColor, getColorCountInRange, isSameColorCount } from './src/utils';
 
 const VERSION_CODE: number = 15.3;
 
@@ -27,6 +27,11 @@ class MLB9I {
     isSendWaitInputEvent: false,
     lastRunningEvent: 0,
     lastUploadSession: 0,
+  };
+
+  public playState = {
+    lastCheckTimeAt: 0,
+    powerSaveGameTimeColorCount: {},
   };
 
   constructor(config: ScriptConfig) {
@@ -454,7 +459,8 @@ class MLB9I {
           }
           if (context.task.name === TASK.stayInLogin) {
             console.log('stay in login');
-            this.rerouter.goBack(PAGE.logIn);
+            keycode('BACK', 100);
+            console.log('keycode back');
             return;
           }
 
@@ -1165,17 +1171,30 @@ class MLB9I {
             break;
         }
 
-        if (!isOnPlayTask || (this.config.hasCoolFeature && this.rerouter.isPageMatch(PAGE.powerSaving))) {
+        if (!this.config.hasCoolFeature || !isOnPlayTask || this.rerouter.isPageMatch(PAGE.powerSaving)) {
           this.handlePowerSavingPage();
           return;
         }
 
-        if (context.matchDuring >= CONSTANTS.sendRunningEventInterval) {
-          console.log('check whether game is still playing with power save on');
-          this.handlePowerSavingPage();
+        const now = Date.now();
+        if (now - this.playState.lastCheckTimeAt < CONSTANTS.sendRunningEventInterval) {
           return;
         }
-        console.log('still play with power save on');
+        this.playState.lastCheckTimeAt = now;
+
+        // use time to check whether game is still playing
+        const colorCntNow = getColorCountInRange(image, { x: 331, y: 310 }, { x: 403, y: 311 });
+        const isSame = isSameColorCount(colorCntNow, this.playState.powerSaveGameTimeColorCount);
+        if (!isSame) {
+          this.playState.powerSaveGameTimeColorCount = colorCntNow;
+          console.log('game is still playing with power save on');
+          this.handleSendEventRunning();
+          return;
+        }
+
+        this.playState.lastCheckTimeAt = 0;
+        this.playState.powerSaveGameTimeColorCount = {};
+        console.log('game is stuck');
       }),
     });
     this.rerouter.addRoute({
@@ -1205,7 +1224,6 @@ class MLB9I {
         }
         this.rerouter.screen.tap({ x: 0, y: 0 });
         console.log('tap');
-        this.handleSendEventRunning();
       }),
     });
     this.rerouter.addRoute({
@@ -1384,7 +1402,7 @@ class MLB9I {
       return;
     }
 
-    this.resetSendEventState();
+    this.resetState();
     sendEvent('gameStatus', 'login-succeeded');
     console.log('send login success event');
   }
@@ -1428,13 +1446,17 @@ class MLB9I {
     console.log('upload session');
     this.uploadSession();
   }
-  public resetSendEventState() {
+  public resetState() {
     // re-init all states to send events for later re-login if happens
     this.state.isPlaying = false;
     this.state.isSendLaunchEvent = false;
     this.state.isSendWaitInputEvent = false;
     this.state.lastRunningEvent = 0;
     this.state.lastUploadSession = 0;
+    this.playState = {
+      lastCheckTimeAt: 0,
+      powerSaveGameTimeColorCount: {},
+    };
   }
 }
 
