@@ -424,12 +424,22 @@ export const rfpageInWishingTree = new Page('rfpageInWishingTree', [
   { x: 412, y: 18, r: 255, g: 190, b: 8 },
   { x: 523, y: 15, r: 0, g: 195, b: 255 },
 ]);
-export const rfpageNotEnoughForTree = new Page('rfpageNotEnoughForTree', [
-  { x: 429, y: 97, r: 56, g: 167, b: 231 },
-  { x: 407, y: 104, r: 60, g: 70, b: 105 },
-  { x: 419, y: 127, r: 243, g: 233, b: 223 },
-  { x: 352, y: 246, r: 121, g: 207, b: 12 },
-]);
+export const rfpageNotEnoughForTree = new Page(
+  'rfpageNotEnoughForTree',
+  [
+    { x: 445, y: 97, r: 57, g: 166, b: 231 },
+    { x: 437, y: 97, r: 255, g: 255, b: 255 },
+    { x: 397, y: 112, r: 57, g: 69, b: 107 },
+    { x: 252, y: 142, r: 191, g: 183, b: 174 },
+    { x: 247, y: 140, r: 80, g: 80, b: 80 },
+    { x: 253, y: 15, r: 127, g: 22, b: 61 },
+    { x: 60, y: 18, r: 41, g: 18, b: 28 },
+    { x: 64, y: 41, r: 20, g: 32, b: 66 },
+    { x: 8, y: 24, r: 49, g: 30, b: 94 },
+    { x: 524, y: 20, r: 0, g: 69, b: 127 },
+  ],
+  { x: 442, y: 97 }
+);
 
 export const rfpageCheckWishingTreeStock = new Page('rfpageCheckWishingTreeStock', [
   { x: 355, y: 302, r: 121, g: 207, b: 12 },
@@ -779,18 +789,65 @@ export const rfpageMarketItemDetail = new Page(
     { x: 521, y: 21, r: 0, g: 71, b: 126 },
     { x: 397, y: 103, r: 57, g: 69, b: 107 },
     { x: 268, y: 11, r: 103, g: 113, b: 24 },
+    { x: 339, y: 171, r: 247, g: 235, b: 222 },
   ],
   { x: 350, y: 246 }
 );
 export const rfpageNotEnoughItemToBuyThis = new Page(
   'rfpageNotEnoughItemToBuyThis',
   [
-    { x: 434, y: 95, r: 255, g: 255, b: 255 },
-    { x: 305, y: 250, r: 8, g: 125, b: 255 },
-    { x: 343, y: 160, r: 49, g: 158, b: 231 },
-    { x: 339, y: 198, r: 206, g: 195, b: 181 },
+    { x: 441, y: 95, r: 181, g: 198, b: 209 },
+    { x: 378, y: 108, r: 57, g: 69, b: 107 },
+    { x: 340, y: 159, r: 9, g: 67, b: 86 },
+    { x: 429, y: 132, r: 247, g: 235, b: 222 },
+    { x: 447, y: 126, r: 127, g: 121, b: 123 },
   ],
   { x: 434, y: 95 }
+);
+export const rfpageInShellShop = new Page('rfpageInShellShop', [
+  { x: 609, y: 22, r: 57, g: 166, b: 231 },
+  { x: 323, y: 28, r: 247, g: 181, b: 243 },
+  { x: 272, y: 28, r: 200, g: 212, b: 214 },
+  { x: 254, y: 12, r: 231, g: 199, b: 156 },
+]);
+export const rfpageConfirmBuySeaFairy = new Page(
+  'rfpageConfirmBuySeaFairy',
+  [
+    { x: 307, y: 256, r: 231, g: 240, b: 217 },
+    { x: 292, y: 241, r: 148, g: 219, b: 57 },
+    { x: 241, y: 258, r: 222, g: 207, b: 198 },
+    { x: 313, y: 77, r: 255, g: 255, b: 255 },
+    { x: 273, y: 96, r: 57, g: 69, b: 107 },
+  ],
+  { x: 307, y: 256 }
+);
+export const rfpageConfirmBuyGuildRelics = new Page(
+  'rfpageConfirmBuyGuildRelics',
+  [
+    { x: 349, y: 254, r: 123, g: 207, b: 8 },
+    { x: 335, y: 81, r: 156, g: 93, b: 41 },
+    { x: 324, y: 38, r: 83, g: 106, b: 124 },
+  ],
+  { x: 349, y: 254 }
+);
+export const rfpageConfirmBuyLegendSoulEssence = new Page(
+  'rfpageConfirmBuyLegendSoulEssence',
+  [
+    { x: 302, y: 254, r: 255, g: 186, b: 239 },
+    { x: 312, y: 69, r: 170, g: 109, b: 38 },
+    { x: 326, y: 91, r: 198, g: 251, b: 239 },
+    { x: 267, y: 100, r: 57, g: 69, b: 107 },
+  ],
+  { x: 302, y: 254 }
+);
+export const rfpageConfirmBuyEpicSoulEssence = new Page(
+  'rfpageConfirmBuyEpicSoulEssence',
+  [
+    { x: 312, y: 253, r: 247, g: 190, b: 239 },
+    { x: 315, y: 84, r: 195, g: 142, b: 60 },
+    { x: 282, y: 91, r: 57, g: 69, b: 107 },
+  ],
+  { x: 312, y: 253 }
 );
 
 export const pageAllianceReward = [
@@ -942,11 +999,119 @@ export const rfpageInTowerOfSweetChaos = new Page(
   ],
   { x: 611, y: 21 }
 );
+export const rfpageReadyToBattleToSC = new Page(
+  'rfpageReadyToBattleToSC',
+  [
+    { x: 477, y: 327, r: 123, g: 210, b: 13 },
+    { x: 491, y: 329, r: 168, g: 3, b: 44 },
+    { x: 337, y: 12, r: 82, g: 0, b: 0 },
+    { x: 72, y: 339, r: 0, g: 150, b: 214 },
+  ],
+  { x: 477, y: 327 }
+);
+
 export const rfpageBattleTowerOfSweetChaosVictory = new Page(
   'rfpageBattleTowerOfSweetChaosVictory',
   pageBattleTowerOfSweetChaosVictory,
   pageBattleTowerOfSweetChaosVictory[0]
 );
+export const rfpageInGuildLand = new Page('rfpageInGuildLand', [
+  { x: 445, y: 329, r: 74, g: 61, b: 154 },
+  { x: 212, y: 329, r: 173, g: 150, b: 198 },
+  { x: 163, y: 327, r: 107, g: 32, b: 49 },
+  { x: 144, y: 326, r: 231, g: 207, b: 214 },
+  { x: 107, y: 324, r: 225, g: 213, b: 198 },
+  { x: 41, y: 303, r: 217, g: 146, b: 99 },
+  { x: 19, y: 267, r: 206, g: 195, b: 247 },
+]);
+export const rfpageInputGuildWelcomeText = new Page(
+  'rfpageInputGuildWelcomeText',
+  [
+    { x: 434, y: 105, r: 57, g: 166, b: 231 },
+    { x: 420, y: 107, r: 57, g: 69, b: 107 },
+    { x: 439, y: 209, r: 247, g: 235, b: 222 },
+    { x: 438, y: 235, r: 222, g: 207, b: 198 },
+    { x: 358, y: 240, r: 123, g: 207, b: 8 },
+    { x: 28, y: 272, r: 86, g: 86, b: 89 },
+    { x: 26, y: 321, r: 76, g: 76, b: 76 },
+    { x: 160, y: 326, r: 25, g: 3, b: 9 },
+  ],
+  { x: 434, y: 105 }
+);
+export const rfpageInGuildBeacon = new Page(
+  'rfpageInGuildBeacon',
+  [
+    { x: 519, y: 317, r: 123, g: 207, b: 8 },
+    { x: 393, y: 86, r: 255, g: 209, b: 0 },
+    { x: 302, y: 82, r: 223, g: 223, b: 223 },
+    { x: 232, y: 291, r: 68, g: 58, b: 103 },
+    { x: 207, y: 161, r: 246, g: 238, b: 246 },
+    { x: 99, y: 105, r: 203, g: 209, b: 213 },
+    { x: 159, y: 268, r: 220, g: 223, b: 227 },
+  ],
+  { x: 516, y: 322 }
+);
+export const rfPageGuildBeaconIsClear = new Page(
+  'rfPageGuildBeaconIsClear',
+  [
+    { x: 600, y: 25, r: 255, g: 255, b: 255 },
+    { x: 365, y: 29, r: 57, g: 69, b: 107 },
+    { x: 391, y: 85, r: 255, g: 211, b: 0 },
+    { x: 435, y: 254, r: 181, g: 178, b: 198 },
+    { x: 522, y: 320, r: 120, g: 120, b: 120 },
+    { x: 559, y: 326, r: 49, g: 60, b: 90 },
+    { x: 511, y: 186, r: 255, g: 255, b: 255 },
+  ],
+  { x: 600, y: 25 }
+);
+export const rfpageBattleDragon = new Page(
+  'rfpageBattleDragon',
+  [
+    { x: 317, y: 18, r: 0, g: 36, b: 132 },
+    { x: 224, y: 19, r: 165, g: 245, b: 246 },
+    { x: 409, y: 20, r: 255, g: 204, b: 0 },
+    { x: 524, y: 20, r: 0, g: 139, b: 255 },
+  ],
+  { x: 600, y: 25 }
+);
+export const rfpageNoMoreDragonToFight = new Page('rfpageNoMoreDragonToFight', [
+  { x: 601, y: 326, r: 160, g: 160, b: 160 },
+  { x: 522, y: 13, r: 0, g: 195, b: 255 },
+  { x: 408, y: 15, r: 255, g: 239, b: 16 },
+  { x: 29, y: 115, r: 181, g: 182, b: 222 },
+]);
+export const rfpageReadyToFightDragon = new Page(
+  'rfpageReadyToFightDragon',
+  [
+    { x: 493, y: 325, r: 134, g: 233, b: 253 },
+    { x: 316, y: 19, r: 68, g: 83, b: 231 },
+    { x: 108, y: 335, r: 123, g: 207, b: 8 },
+    { x: 73, y: 333, r: 0, g: 150, b: 214 },
+  ],
+  { x: 493, y: 325 }
+);
+export const rfpageDragonAddMoreCookie = new Page('rfpageDragonAddMoreCookie', [
+  { x: 300, y: 250, r: 8, g: 166, b: 222 },
+  { x: 408, y: 250, r: 123, g: 207, b: 8 },
+  { x: 419, y: 18, r: 127, g: 95, b: 4 },
+  { x: 518, y: 18, r: 20, g: 117, b: 127 },
+]);
+export const rfpageDragonRemainHealth = new Page('rfpageDragonRemainHealth', [
+  { x: 368, y: 233, r: 132, g: 65, b: 255 },
+  { x: 153, y: 334, r: 1, g: 31, b: 41 },
+  { x: 79, y: 334, r: 42, g: 15, b: 4 },
+]);
+export const rfpageCookieAlliance = new Page(
+  'rfpageCookieAlliance',
+  [
+    { x: 333, y: 21, r: 255, g: 255, b: 255 },
+    { x: 329, y: 25, r: 66, g: 69, b: 222 },
+    { x: 73, y: 332, r: 0, g: 150, b: 214 },
+    { x: 29, y: 141, r: 151, g: 75, b: 13 },
+  ],
+  { x: 333, y: 21 }
+);
+
 export const rfpageCanEquipTopping = new Page(
   'rfpageCanEquipTopping',
   [
@@ -1096,6 +1261,10 @@ export const rfpageCannotRefillBountyAnymore = new Page(
     { x: 345, y: 244, r: 123, g: 207, b: 8 },
     { x: 192, y: 29, r: 57, g: 59, b: 46 },
     { x: 190, y: 41, r: 49, g: 30, b: 24 },
+    { x: 215, y: 14, r: 33, g: 18, b: 23 },
+    { x: 189, y: 28, r: 57, g: 58, b: 43 },
+    { x: 217, y: 51, r: 115, g: 99, b: 74 },
+    { x: 205, y: 55, r: 49, g: 30, b: 24 },
   ],
   { x: 345, y: 244 }
 );
@@ -1286,58 +1455,19 @@ export const pageInkingdomCanGotoGuild = [
 ];
 // export const rfpageInkingdomCanGotoGuild = new Page('rfpageInkingdomCanGotoGuild', pageInkingdomCanGotoGuild);
 
-export const pageInGuildLand = [
-  { x: 445, y: 329, r: 74, g: 61, b: 154 },
-  { x: 212, y: 329, r: 173, g: 150, b: 198 },
-  { x: 163, y: 327, r: 107, g: 32, b: 49 },
-  { x: 144, y: 326, r: 231, g: 207, b: 214 },
-  { x: 107, y: 324, r: 225, g: 213, b: 198 },
-  { x: 41, y: 303, r: 217, g: 146, b: 99 },
-  { x: 19, y: 267, r: 206, g: 195, b: 247 },
-];
-
-export const pageBattleDragon = [
-  { x: 317, y: 18, r: 0, g: 36, b: 132 },
-  { x: 224, y: 19, r: 165, g: 245, b: 246 },
-  { x: 409, y: 20, r: 255, g: 204, b: 0 },
-  { x: 524, y: 20, r: 0, g: 139, b: 255 },
-];
-export const pageNoMoreDragonToFight = [
-  { x: 601, y: 326, r: 160, g: 160, b: 160 },
-  { x: 522, y: 13, r: 0, g: 195, b: 255 },
-  { x: 408, y: 15, r: 255, g: 239, b: 16 },
-  { x: 29, y: 115, r: 181, g: 182, b: 222 },
-];
-export const pageReadyToFightDragon = [
-  { x: 493, y: 325, r: 134, g: 233, b: 253 },
-  { x: 316, y: 19, r: 68, g: 83, b: 231 },
-  { x: 108, y: 335, r: 123, g: 207, b: 8 },
-  { x: 73, y: 333, r: 0, g: 150, b: 214 },
-];
-export const pageDragonAddMoreCookie = [
-  { x: 300, y: 250, r: 8, g: 166, b: 222 },
-  { x: 408, y: 250, r: 123, g: 207, b: 8 },
-  { x: 419, y: 18, r: 127, g: 95, b: 4 },
-  { x: 518, y: 18, r: 20, g: 117, b: 127 },
-];
-export const pageDragonRemainHealth = [
-  { x: 368, y: 233, r: 132, g: 65, b: 255 },
-  { x: 153, y: 334, r: 1, g: 31, b: 41 },
-  { x: 79, y: 334, r: 42, g: 15, b: 4 },
-];
 export const pageDragonTotalDamage = [
   { x: 427, y: 243, r: 231, g: 215, b: 222 },
   { x: 410, y: 247, r: 156, g: 0, b: 49 },
   { x: 260, y: 268, r: 255, g: 255, b: 255 },
   { x: 555, y: 311, r: 89, g: 22, b: 45 },
 ];
+export const rfpageDragonTotalDamage = new Page('rfpageDragonTotalDamage', pageDragonTotalDamage, pageDragonTotalDamage[0]);
+
 export const pageRedValvetDragonWon = [
   { x: 289, y: 238, r: 239, g: 28, b: 57 },
   { x: 358, y: 233, r: 222, g: 16, b: 41 },
   { x: 426, y: 236, r: 231, g: 216, b: 223 },
 ];
-export const rfpageDragonRemainHealth = new Page('rfpageDragonRemainHealth', pageDragonRemainHealth, pageDragonRemainHealth[0]);
-export const rfpageDragonTotalDamage = new Page('rfpageDragonTotalDamage', pageDragonTotalDamage, pageDragonTotalDamage[0]);
 export const rfpageRedValvetDragonWon = new Page('rfpageRedValvetDragonWon', pageRedValvetDragonWon, pageRedValvetDragonWon[0]);
 export const rfpageDragonHasExtraTime = new Page(
   'rfpageDragonHasExtraTime',
@@ -1350,44 +1480,6 @@ export const rfpageDragonHasExtraTime = new Page(
   ],
   { x: 405, y: 281 }
 );
-
-export const pageCookieAlliance = [
-  { x: 333, y: 21, r: 255, g: 255, b: 255 },
-  { x: 329, y: 25, r: 66, g: 69, b: 222 },
-  { x: 73, y: 332, r: 0, g: 150, b: 214 },
-  { x: 29, y: 141, r: 151, g: 75, b: 13 },
-];
-
-export const pageInHabor = [
-  { x: 323, y: 28, r: 247, g: 181, b: 243 },
-  { x: 408, y: 20, r: 255, g: 207, b: 0 },
-  { x: 522, y: 18, r: 4, g: 135, b: 255 },
-  { x: 619, y: 263, r: 57, g: 166, b: 231 },
-];
-export const rfpageInHabor = new Page('rfpageInHabor', pageInHabor);
-
-export const pageInTowerOfSweetChaos = [
-  { x: 611, y: 21, r: 57, g: 166, b: 231 },
-  { x: 497, y: 17, r: 255, g: 207, b: 0 },
-  { x: 407, y: 15, r: 0, g: 195, b: 255 },
-  { x: 337, y: 9, r: 251, g: 213, b: 216 },
-  { x: 19, y: 59, r: 255, g: 255, b: 255 },
-];
-
-export const pageReadyToBattleToSC = [
-  { x: 477, y: 327, r: 123, g: 210, b: 13 },
-  { x: 491, y: 329, r: 168, g: 3, b: 44 },
-  { x: 337, y: 12, r: 82, g: 0, b: 0 },
-  { x: 72, y: 339, r: 0, g: 150, b: 214 },
-];
-
-export const pageToSCTreasureChest = [
-  { x: 443, y: 328, r: 198, g: 44, b: 57 },
-  { x: 388, y: 63, r: 84, g: 41, b: 114 },
-  { x: 422, y: 125, r: 118, g: 78, b: 85 },
-  { x: 407, y: 137, r: 255, g: 105, b: 156 },
-  { x: 437, y: 149, r: 33, g: 0, b: 0 },
-];
 
 export const pageToSCTeamsNotMeetRequirement = [
   { x: 343, y: 244, r: 123, g: 207, b: 8 },
@@ -1579,6 +1671,29 @@ export const messageNotifyQuit2 = {
   targetColorThreashold: 10,
 };
 
+export const messageTeamDontMatchToSCRow1 = {
+  x: 234,
+  y: 160,
+  width: 140,
+  height: 12,
+
+  targetY: 6,
+  lookingForColor: { r: 95, g: 95, b: 95 },
+  targetColorCount: 37,
+  targetColorThreashold: 8,
+};
+export const messageTeamDontMatchToSCRow2 = {
+  x: 240,
+  y: 173,
+  width: 160,
+  height: 12,
+
+  targetY: 6,
+  lookingForColor: { r: 95, g: 95, b: 95 },
+  targetColorCount: 38,
+  targetColorThreashold: 8,
+};
+
 // This window can change language
 export const pageNewDataPackAvailable = [
   { x: 358, y: 265, r: 123, g: 205, b: 8 },
@@ -1611,12 +1726,18 @@ export const rfpageNewDataPackAvaiableNoLanguage = new Page(
   pageNewDataPackAvaiableNoLanguage[0]
 );
 
-export const pageGeneralMessageWindow = [
-  { x: 424, y: 101, r: 57, g: 69, b: 107 },
-  { x: 431, y: 128, r: 243, g: 233, b: 223 },
-  { x: 429, y: 244, r: 219, g: 207, b: 199 },
-];
-export const rfpageGeneralMessageWindow = new Page('rfpageGeneralMessageWindow', pageGeneralMessageWindow, pageGeneralMessageWindow[0]);
+export const rfpageGeneralMessageWindow = new Page(
+  'rfpageGeneralMessageWindow',
+  [
+    { x: 424, y: 101, r: 57, g: 69, b: 107 },
+    { x: 431, y: 128, r: 243, g: 233, b: 223 },
+    { x: 429, y: 244, r: 219, g: 207, b: 199 },
+    { x: 380, y: 100, r: 57, g: 69, b: 107 },
+    { x: 319, y: 102, r: 57, g: 69, b: 107 },
+    { x: 292, y: 108, r: 57, g: 69, b: 107 },
+  ],
+  { x: 424, y: 101 }
+);
 
 export const pageCannotFindLoginInfo = [
   { x: 316, y: 243, r: 82, g: 136, b: 5 },
@@ -1641,6 +1762,9 @@ export const pageCanDownloadResources = [
   { x: 412, y: 103, r: 60, g: 70, b: 105 },
   { x: 219, y: 98, r: 60, g: 70, b: 105 },
   { x: 221, y: 250, r: 219, g: 207, b: 199 },
+  { x: 380, y: 100, r: 57, g: 69, b: 107 },
+  { x: 319, y: 102, r: 57, g: 69, b: 107 },
+  { x: 292, y: 108, r: 57, g: 69, b: 107 },
 ];
 // v2.0.1
 export const pageDownloadDataAndVoiceOver = [

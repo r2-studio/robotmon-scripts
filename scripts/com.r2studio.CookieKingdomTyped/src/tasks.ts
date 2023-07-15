@@ -21,11 +21,12 @@ export enum TASKS {
   haborShopInShellGallery = 'haborShopInShellGallery',
   haborSendShip = 'haborSendShip',
 
-  towerOfSweetChoas = 'towerOfSweetChoas',
-  CollectCookieOdyssey = 'CollectCookieOdyssey',
+  towerOfSweetChaos = 'towerOfSweetChaos',
+  // CollectCookieOdyssey = 'CollectCookieOdyssey',
   resolveGreenChecks = 'resolveGreenChecks',
-  // guild = 'guild',
+
   guildCheckin = 'guildCheckin',
+  guildExpandLand = 'guildExpandLand',
   guildBattleDragon = 'guildBattleDragon',
   guildBattleAlliance = 'guildBattleAlliance',
   findAndTapCandy = 'findAndTapCandy',

@@ -37,28 +37,11 @@ export function scrollLeftALot(rerouter: Rerouter, startPnt: XY) {
 }
 
 export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
-  // rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
-  // Utils.sleep(CONSTANTS.sleep);
-  // rerouter.screen.moveTo({ x: startPnt.x / 2, y: startPnt.y });
-  // Utils.sleep(CONSTANTS.sleep);
-  // rerouter.screen.moveTo({ x: 0, y: startPnt.y });
-  // Utils.sleep(CONSTANTS.sleep);
-  // rerouter.screen.moveTo({ x: -1000, y: startPnt.y });
-  // Utils.sleep(CONSTANTS.sleep);
-  // rerouter.screen.moveTo({ x: -2000, y: startPnt.y });
-  // Utils.sleep(CONSTANTS.sleep);
-  // rerouter.screen.tapUp({ x: -2000, y: startPnt.y });
-  // Utils.sleep(CONSTANTS.sleepAnimate * 3);
-
   return swipeFromToPoint(rerouter, { x: startPnt.x, y: startPnt.y }, { x: -2000, y: startPnt.y }, 5);
 }
 
 export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, steps: number, stopIfFoundPage?: Page, swipingPage?: Page) {
-  if (swipingPage === undefined) {
-    swipingPage = PAGES.rfpageInKingdomVillage;
-  }
-
-  if (!rerouter.isPageMatch(swipingPage)) {
+  if (swipingPage !== undefined && !rerouter.isPageMatch(swipingPage)) {
     // console.log('swipe from this point will get to another page, try again: ', fromPnt.x, fromPnt.y);
     keycode('BACK', 100);
     return false;
@@ -84,7 +67,7 @@ export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, ste
   tapUp(toPnt.x, toPnt.y, 40, 0);
   sleep(500);
 
-  if (!rerouter.isPageMatch(swipingPage)) {
+  if (swipingPage !== undefined && !rerouter.isPageMatch(swipingPage)) {
     console.log('swipe but page changed, failed x, y: ', fromPnt.x, fromPnt.y);
     keycode('BACK', 100);
     return false;
@@ -273,6 +256,8 @@ export function checkToSendSpecificWish(wish: Wish, records: Records, safetySotc
     rerouter.goNext(PAGES.rfpageNotEnoughForTree);
     Utils.sleep(CONSTANTS.sleepAnimate * 2);
 
+    rerouter.screen.tap(wish.refreshPnt);
+    Utils.sleep(CONSTANTS.sleep);
     wish.status = WishStatus.refresh;
     return { wish: wish, records: records };
   }
@@ -490,6 +475,7 @@ export function ocrNumberInRect(rect: RECT, icons: Icon[]): number {
   }
 }
 
+// 在市集中能正確讀出1,876
 export function ocrTextInRect(rect: RECT, icons: Icon[]) {
   var img = getScreenshot();
 
@@ -557,14 +543,14 @@ export function countBountyLevel(rerouter: Rerouter) {
 }
 
 export function bountyCheckIfGetBluePowder(rerouter: Rerouter): number[] {
-  const lastPowder = ocrTextInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+  const lastPowder = ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
   const bountyLevel = countBountyLevel(rerouter);
 
   if (bountyLevel > 6) {
     rerouter.screen.tap({ x: 40, y: 135 });
     Utils.sleep(2000);
 
-    const bluePower = ocrTextInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+    const bluePower = ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
 
     // console.log('Check if we need to get blue powder: ', bluePower, lastPowder);
     if (bluePower < lastPowder && bluePower < 350) {
@@ -722,27 +708,40 @@ function handleResearchInGnomeLab_bak(targetIconList: Icon[], threashold: number
   return false;
 }
 
-export function considerPurchaseSeasideMarket(rerouter: Rerouter, target: XY | RECT): boolean {
-  if (target as RECT) {
-    let newStock = ocrStocksInRect(target as RECT, ICONS.numberAuroraStockInTradeBird);
-    console.log('newStock', newStock);
-    if (newStock > 50) {
-      rerouter.screen.tap(target);
-      if (rerouter.waitScreenForMatchingPage(PAGES.rfpageMarketItemDetail, 2000)) {
-        var productNowHave = ocrNumberInRect({ x: 330, y: 154, w: 28, h: 14 }, ICONS.bNumbers);
-        console.log('productNowHave', productNowHave);
+export function considerPurchaseSeasideMarket(rerouter: Rerouter, target: RECT): boolean {
+  let newStock = ocrStocksInRect(target, ICONS.numberAuroraStockInTradeBird);
+  console.log('considerPurchaseSeasideMarket, newStock', newStock);
+  if (newStock > 50) {
+    rerouter.screen.tap(target);
+    if (rerouter.waitScreenForMatchingPage(PAGES.rfpageMarketItemDetail, 2000)) {
+      // let productNowHave = ocrNumberInRect({ x: 330, y: 154, w: 28, h: 14 }, ICONS.bNumbers);
+      let productNowHave = ocrTextInRect({ x: 330, y: 154, w: 28, h: 14 }, ICONS.bNumbers);
+      logs('haborShopInSeaMarket', `Considering trade ${newStock} for ${productNowHave}`);
 
-        if (newStock > productNowHave) {
-          console.log('Purchased seaside market: ', newStock, productNowHave);
-          rerouter.goNext(PAGES.rfpageMarketItemDetail);
-          sleep(2000);
-        } else {
-          console.log('NOT purchased seaside market: ', newStock, productNowHave);
-          rerouter.screen.tap({ x: 438, y: 90 }); // close the window
-        }
+      if (newStock > productNowHave) {
+        console.log('Purchased seaside market: ', newStock, productNowHave);
+        rerouter.goNext(PAGES.rfpageMarketItemDetail);
+        sleep(1000);
+      } else {
+        console.log('NOT purchased seaside market: ', newStock, productNowHave);
+        rerouter.screen.tap({ x: 438, y: 90 }); // close the window
       }
     }
   }
 
+  return false;
+}
+
+export function tapThroughAnimate(rerouter: Rerouter, targetPage: Page, tappingPoint: XY, timeInMs: number, interval?: number): boolean {
+  if (interval === undefined) {
+    interval = 500;
+  }
+
+  for (let i = 0; i < timeInMs; i += interval) {
+    if (rerouter.isPageMatch(targetPage)) {
+      return true;
+    }
+    rerouter.screen.tap(tappingPoint);
+  }
   return false;
 }
