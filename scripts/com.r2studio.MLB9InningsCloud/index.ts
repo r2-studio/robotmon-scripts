@@ -1,6 +1,6 @@
 import { default as MD5 } from 'md5';
 import { Rerouter, rerouter, Utils, RouteConfig, Page } from 'Rerouter';
-import { ScriptConfig } from './src/types';
+import { ScriptConfig, EventName, GameStatusContent } from './src/types';
 import { defaultConfig } from './src/defaultConfig';
 
 import * as PAGE from './src/pages';
@@ -22,16 +22,14 @@ class MLB9I {
   public config: ScriptConfig = defaultConfig;
   public rerouter: Rerouter;
   public state = {
-    isPlaying: false,
-    isSendLaunchEvent: false,
-    isSendWaitInputEvent: false,
+    lastGameStatusEvent: '',
     lastRunningEvent: 0,
     lastUploadSession: 0,
-  };
 
-  public playState = {
-    lastCheckTimeAt: 0,
-    powerSaveGameTimeColorCount: {},
+    powerSaveGame: {
+      lastCheckTimeAt: 0,
+      colorCount: {},
+    },
   };
 
   constructor(config: ScriptConfig) {
@@ -398,6 +396,8 @@ class MLB9I {
           Utils.sleep(CONSTANTS.sleepMedium);
           return;
         }
+
+        this.handleSendEventLaunching();
       },
     });
     this.rerouter.addRoute({
@@ -405,6 +405,7 @@ class MLB9I {
       match: PAGE.landingLoading,
       action: this.wrapRouteAction(_ => {
         console.log('landing loading...');
+        this.handleSendEventLaunching();
       }),
       afterActionDelay: CONSTANTS.sleepMedium,
     });
@@ -1177,23 +1178,24 @@ class MLB9I {
         }
 
         const now = Date.now();
-        if (now - this.playState.lastCheckTimeAt < CONSTANTS.sendRunningEventInterval) {
+        const { lastCheckTimeAt, colorCount } = this.state.powerSaveGame;
+        if (now - lastCheckTimeAt < CONSTANTS.sendRunningEventInterval) {
           return;
         }
-        this.playState.lastCheckTimeAt = now;
 
         // use time to check whether game is still playing
         const colorCntNow = getColorCountInRange(image, { x: 331, y: 310 }, { x: 403, y: 311 });
-        const isSame = isSameColorCount(colorCntNow, this.playState.powerSaveGameTimeColorCount);
+        const isSame = isSameColorCount(colorCntNow, colorCount);
+        this.state.powerSaveGame = {
+          lastCheckTimeAt: now,
+          colorCount: colorCntNow,
+        };
         if (!isSame) {
-          this.playState.powerSaveGameTimeColorCount = colorCntNow;
           console.log('game is still playing with power save on');
           this.handleSendEventRunning();
           return;
         }
 
-        this.playState.lastCheckTimeAt = 0;
-        this.playState.powerSaveGameTimeColorCount = {};
         console.log('game is stuck');
       }),
     });
@@ -1318,7 +1320,7 @@ class MLB9I {
         default:
           break;
       }
-      if (this.state.isSendWaitInputEvent) {
+      if (this.state.lastGameStatusEvent === GameStatusContent.WAIT_FOR_LOGIN_INPUT) {
         console.log('wait user input');
         return;
       }
@@ -1390,50 +1392,54 @@ class MLB9I {
   }
 
   public handleSendEventLoginInputing() {
-    if (this.state.isSendWaitInputEvent) {
-      return;
-    }
-    sendEvent('gameStatus', 'wait-for-input');
-    console.log('send wait-for-input event');
-    this.state.isSendWaitInputEvent = true;
+    const content = GameStatusContent.WAIT_FOR_LOGIN_INPUT;
+    this.handleSendGameStatusEvent(content);
   }
   public handleSendEventLoginSuccess() {
-    if (!this.state.isSendWaitInputEvent) {
+    if (this.state.lastGameStatusEvent !== GameStatusContent.WAIT_FOR_LOGIN_INPUT) {
       return;
     }
-
-    this.resetState();
-    sendEvent('gameStatus', 'login-succeeded');
-    console.log('send login success event');
+    const content = GameStatusContent.LOGIN_SUCCEEDED;
+    this.handleSendGameStatusEvent(content);
   }
   public handleSendEventLaunching() {
-    if (this.state.isSendLaunchEvent) {
+    // set to default once app is launched (first and again)
+    this.state.lastRunningEvent = 0;
+    this.state.lastUploadSession = 0;
+    this.state.powerSaveGame = {
+      lastCheckTimeAt: 0,
+      colorCount: {},
+    };
+    const content = GameStatusContent.LAUNCHING;
+    this.handleSendGameStatusEvent(content);
+  }
+
+  public handleSendEventPlaying() {
+    const content = GameStatusContent.PLAYING;
+    this.handleSendGameStatusEvent(content);
+  }
+  public handleSendGameStatusEvent(content: string) {
+    if (this.state.lastGameStatusEvent === content) {
       return;
     }
-
-    sendEvent('gameStatus', 'launching');
-    console.log('send launch event');
-    this.state.isSendLaunchEvent = true;
+    this.state.lastGameStatusEvent = content;
+    sendEvent(EventName.GAME_STATUS, content);
+    console.log(`send event: ${content}`);
+    return;
   }
+
   public handleSendEventRunning(useInterval: boolean = false) {
     const now = Date.now();
     if (useInterval && now - this.state.lastRunningEvent < CONSTANTS.sendRunningEventInterval) {
       return;
     }
     this.state.lastRunningEvent = now;
-    sendEvent('running', '');
-    console.log('send running event');
-  }
-  public handleSendEventPlaying() {
-    if (!this.state.isPlaying) {
-      this.state.isPlaying = true;
-      sendEvent('gameStatus', 'playing');
-      console.log('send playing event');
-    }
+    sendEvent(EventName.RUNNING, '');
+    console.log('send event: running');
   }
   public handleImplementUploadSession() {
     // only upload session when is playing
-    if (!this.config.isCloud || !this.state.isPlaying) {
+    if (!this.config.isCloud || this.state.lastGameStatusEvent !== GameStatusContent.PLAYING) {
       return;
     }
 
@@ -1445,18 +1451,6 @@ class MLB9I {
     this.state.lastUploadSession = now;
     console.log('upload session');
     this.uploadSession();
-  }
-  public resetState() {
-    // re-init all states to send events for later re-login if happens
-    this.state.isPlaying = false;
-    this.state.isSendLaunchEvent = false;
-    this.state.isSendWaitInputEvent = false;
-    this.state.lastRunningEvent = 0;
-    this.state.lastUploadSession = 0;
-    this.playState = {
-      lastCheckTimeAt: 0,
-      powerSaveGameTimeColorCount: {},
-    };
   }
 }
 
