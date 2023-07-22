@@ -12,4 +12,4 @@ export const duringMaxAdRetry: number = 2 * minuteInMs;
 export const switchWaitingLoginPagesInterval: number = 30 * minuteInMs;
 export const sendRunningEventInterval: number = 5 * minuteInMs;
 export const sendWaitInputEventInterval: number = 5 * minuteInMs;
-export const uploadSessionInterval: number = 1 * dayInMs;
+export const uploadSessionInterval: number = 1 * hourInMs;
