@@ -1,6 +1,6 @@
 import { GroupPage, Page } from 'rerouter';
 
-export const rfpageWoodFarm = new Page(
+const rfpageWoodFarm = new Page(
   'rfpageWoodFarm',
   [
     { x: 596, y: 118, r: 123, g: 207, b: 8 },
@@ -11,7 +11,7 @@ export const rfpageWoodFarm = new Page(
   { x: 596, y: 118 }
 );
 
-export const rfpageBeanFarm = new Page(
+const rfpageBeanFarm = new Page(
   'rfpageBeanFarm',
   [
     { x: 602, y: 122, r: 123, g: 207, b: 8 },
@@ -21,7 +21,7 @@ export const rfpageBeanFarm = new Page(
   ],
   { x: 602, y: 122 }
 );
-export const rfpageSugarFarm = new Page(
+const rfpageSugarFarm = new Page(
   'rfpageSugarFarm',
   [
     { x: 600, y: 118, r: 123, g: 207, b: 8 },
@@ -31,7 +31,7 @@ export const rfpageSugarFarm = new Page(
   ],
   { x: 600, y: 118 }
 );
-export const rfpagePowderFarm = new Page(
+const rfpagePowderFarm = new Page(
   'rfpagePowderFarm',
   [
     { x: 596, y: 120, r: 123, g: 207, b: 8 },
@@ -41,7 +41,7 @@ export const rfpagePowderFarm = new Page(
   ],
   { x: 596, y: 120 }
 );
-export const rfpageBarryFarm = new Page(
+const rfpageBarryFarm = new Page(
   'rfpageBarryFarm',
   [
     { x: 597, y: 118, r: 123, g: 207, b: 8 },
@@ -52,7 +52,7 @@ export const rfpageBarryFarm = new Page(
   { x: 597, y: 118 }
 );
 
-export const rfpageMilkFarm = new Page(
+const rfpageMilkFarm = new Page(
   'rfpageMilkFarm',
   [
     { x: 597, y: 118, r: 123, g: 207, b: 8 },
@@ -63,7 +63,7 @@ export const rfpageMilkFarm = new Page(
   { x: 597, y: 118 }
 );
 
-export const rfpageCottomFarm = new Page(
+const rfpageCottomFarm = new Page(
   'rfpageCottomFarm',
   [
     { x: 596, y: 120, r: 123, g: 207, b: 8 },
@@ -74,15 +74,14 @@ export const rfpageCottomFarm = new Page(
   { x: 596, y: 120 }
 );
 
-export const pageInKingdomVillage = [
+export const rfpageInKingdomVillage = new Page('rfpageInKingdomVillage', [
   { x: 39, y: 313, r: 255, g: 101, b: 156 },
   { x: 24, y: 321, r: 255, g: 255, b: 255 },
   { x: 55, y: 327, r: 255, g: 227, b: 247 },
   { x: 377, y: 321, r: 121, g: 52, b: 52 },
   { x: 418, y: 321, r: 132, g: 16, b: 8 },
   { x: 466, y: 318, r: 231, g: 167, b: 85 },
-];
-export const rfpageInKingdomVillage = new Page('rfpageInKingdomVillage', pageInKingdomVillage);
+]);
 
 // Check for gears in login page via pixel matching
 export const pageInLoginPageWithGearAndVideo = [
@@ -359,6 +358,8 @@ export const rfpageBallonFlyingDock = new Page(
     { x: 250, y: 51, r: 255, g: 255, b: 255 },
     { x: 269, y: 51, r: 217, g: 217, b: 217 },
     { x: 346, y: 50, r: 40, g: 6, b: 21 },
+    { x: 129, y: 23, r: 43, g: 6, b: 26 },
+    { x: 37, y: 51, r: 6, g: 14, b: 3 },
   ],
   { x: 616, y: 17 }
 );
@@ -976,8 +977,8 @@ export const rfpageAllianceResults2 = new Page('rfpageAllianceResults2', pageAll
 export const rfpageAllianceRewardGet = new Page('rfpageAllianceRewardGet', pageAllianceRewardGet, { x: 191, y: 187 });
 export const rfpageCannotRefilAllianceTicketToday = new Page(
   'rfpageCannotRefilAllianceTicketToday',
-  pageCannotRefilAllianceTicketToday,
-  pageCannotRefilAllianceTicketToday[0]
+  pageCannotRefilAllianceTicketToday
+  // pageCannotRefilAllianceTicketToday[0]
 );
 
 export const rfpageSelectStartingTeam = new Page('rfpageSelectStartingTeam', pageSelectStartingTeam, { x: 260, y: 29 });
@@ -1101,15 +1102,91 @@ export const rfpageDragonRemainHealth = new Page('rfpageDragonRemainHealth', [
   { x: 153, y: 334, r: 1, g: 31, b: 41 },
   { x: 79, y: 334, r: 42, g: 15, b: 4 },
 ]);
-export const rfpageCookieAlliance = new Page(
-  'rfpageCookieAlliance',
+export const rfpageCookieAlliance = new Page('rfpageCookieAlliance', [
+  { x: 333, y: 21, r: 255, g: 255, b: 255 },
+  { x: 329, y: 25, r: 66, g: 69, b: 222 },
+  { x: 73, y: 332, r: 0, g: 150, b: 214 },
+  { x: 29, y: 141, r: 151, g: 75, b: 13 },
+]);
+export const rfpageNoAllianceTicket = new Page('rfpageNoAllianceTicket', [
+  { x: 244, y: 252, r: 49, g: 190, b: 231 },
+  { x: 327, y: 77, r: 156, g: 144, b: 217 },
+  { x: 317, y: 100, r: 244, g: 235, b: 231 },
+  { x: 355, y: 256, r: 0, g: 198, b: 255 },
+  { x: 334, y: 22, r: 85, g: 80, b: 109 },
+]);
+export const rfpageNoAllianceTicket2 = new Page('rfpageNoAllianceTicket2', [
+  { x: 248, y: 278, r: 12, g: 167, b: 223 },
+  { x: 355, y: 282, r: 0, g: 193, b: 255 },
+  { x: 318, y: 154, r: 181, g: 169, b: 219 },
+  { x: 343, y: 126, r: 52, g: 159, b: 227 },
+]);
+export const rfpageAllianceSteupTeam = new Page('rfpageAllianceSteupTeam', [
+  { x: 619, y: 18, r: 255, g: 255, b: 255 },
+  { x: 606, y: 90, r: 247, g: 89, b: 24 },
+  { x: 603, y: 112, r: 123, g: 207, b: 8 },
+  { x: 608, y: 139, r: 0, g: 150, b: 214 },
+  { x: 610, y: 168, r: 0, g: 150, b: 214 },
+  { x: 507, y: 129, r: 134, g: 17, b: 158 },
+]);
+export const rfpageAllianceBeaconIsOff = new Page(
+  'rfpageAllianceBeaconIsOff',
   [
-    { x: 333, y: 21, r: 255, g: 255, b: 255 },
-    { x: 329, y: 25, r: 66, g: 69, b: 222 },
-    { x: 73, y: 332, r: 0, g: 150, b: 214 },
-    { x: 29, y: 141, r: 151, g: 75, b: 13 },
+    { x: 215, y: 198, r: 94, g: 102, b: 153 },
+    { x: 202, y: 201, r: 209, g: 226, b: 248 },
+    { x: 209, y: 198, r: 99, g: 109, b: 156 },
   ],
-  { x: 333, y: 21 }
+  { x: 215, y: 198 }
+);
+export const rfpageBeaconOfValor = new Page(
+  'rfpageBeaconOfValor',
+  [
+    { x: 223, y: 300, r: 255, g: 187, b: 8 },
+    { x: 178, y: 288, r: 49, g: 60, b: 90 },
+    { x: 196, y: 177, r: 49, g: 40, b: 8 },
+    { x: 182, y: 168, r: 190, g: 192, b: 208 },
+    { x: 183, y: 87, r: 247, g: 198, b: 159 },
+    { x: 464, y: 22, r: 57, g: 166, b: 231 },
+    { x: 487, y: 246, r: 88, g: 104, b: 156 },
+  ],
+  { x: 223, y: 300 }
+);
+export const rfpageCannotLightBeacon = new Page('rfpageCannotLightBeacon', [
+  { x: 436, y: 284, r: 0, g: 134, b: 189 },
+  { x: 261, y: 112, r: 114, g: 80, b: 44 },
+  { x: 261, y: 226, r: 118, g: 82, b: 50 },
+  { x: 250, y: 192, r: 83, g: 87, b: 104 },
+  { x: 197, y: 104, r: 107, g: 142, b: 198 },
+]);
+export const rfpageAllianceTimeJump = new Page('rfpageAllianceTimeJump', [
+  { x: 358, y: 277, r: 123, g: 207, b: 8 },
+  { x: 393, y: 281, r: 189, g: 170, b: 214 },
+  { x: 318, y: 32, r: 182, g: 129, b: 37 },
+]);
+export const rfpageAllianceAddMoreCookie = new Page('rfpageAllianceAddMoreCookie', [
+  { x: 304, y: 251, r: 8, g: 166, b: 222 },
+  { x: 248, y: 102, r: 57, g: 69, b: 107 },
+  { x: 341, y: 11, r: 25, g: 36, b: 54 },
+  { x: 480, y: 320, r: 23, g: 34, b: 9 },
+  { x: 497, y: 320, r: 35, g: 29, b: 35 },
+]);
+export const rfpageLightBeaconReminder = new Page('rfpageLightBeaconReminder', [
+  { x: 301, y: 250, r: 8, g: 166, b: 222 },
+  { x: 403, y: 248, r: 123, g: 207, b: 8 },
+  { x: 333, y: 19, r: 49, g: 38, b: 75 },
+  { x: 187, y: 166, r: 104, g: 111, b: 122 },
+]);
+// A very long text down below saying fight already started, cannot light beacon, need to be closed
+export const rfpageStartedFightingSoCannotStartBeacon = new Page(
+  'rfpageStartedFightingSoCannotStartBeacon',
+  [
+    { x: 473, y: 23, r: 255, g: 255, b: 255 },
+    { x: 191, y: 82, r: 227, g: 165, b: 82 },
+    { x: 197, y: 183, r: 219, g: 147, b: 77 },
+    { x: 184, y: 185, r: 242, g: 213, b: 49 },
+    { x: 179, y: 312, r: 55, g: 62, b: 96 },
+  ],
+  { x: 473, y: 23 }
 );
 
 export const rfpageCanEquipTopping = new Page(
@@ -1312,31 +1389,47 @@ export const pageInProduction = [
   { x: 26, y: 30, r: 126, g: 73, b: 41 },
 ];
 export const rfpageInProduction = new Page('rfpageInProduction', pageInProduction);
-export const pageInMagicLab = [
+export const rfpageInMagicLab = new Page('rfpageInMagicLab', [
   { x: 18, y: 46, r: 123, g: 89, b: 140 },
   { x: 81, y: 47, r: 123, g: 89, b: 140 },
   { x: 27, y: 30, r: 115, g: 85, b: 140 },
-];
-export const rfpageInMagicLab = new Page('rfpageInMagicLab', pageInMagicLab);
+]);
+export const rfpageNotEnoughStock = new Page(
+  'rfpageNotEnoughStock',
+  [
+    { x: 428, y: 98, r: 56, g: 167, b: 231 },
+    { x: 345, y: 104, r: 60, g: 70, b: 105 },
+    { x: 370, y: 176, r: 243, g: 233, b: 223 },
+    { x: 349, y: 247, r: 121, g: 207, b: 12 },
+  ],
+  { x: 428, y: 98 }
+);
 
-export const pageHasDashboard = [
+export const rfpageHasDashboard = new Page('rfpageHasDashboard', [
   { x: 38, y: 221, r: 77, g: 89, b: 123 },
   { x: 33, y: 221, r: 107, g: 44, b: 41 },
   { x: 25, y: 226, r: 222, g: 159, b: 74 },
   { x: 424, y: 20, r: 0, g: 138, b: 255 },
-];
-export const pageInCookieActivityDashboard = [
-  { x: 247, y: 331, r: 56, g: 74, b: 107 },
-  { x: 28, y: 18, r: 229, g: 158, b: 76 },
-  { x: 558, y: 339, r: 239, g: 190, b: 41 },
-];
-// export const rfpageInCookieActivityDashboard = new Page('rfpageInCookieActivityDashboard', pageInCookieActivityDashboard);
+]);
 
-export const pageInProductionDashboard = [
-  { x: 408, y: 330, r: 56, g: 74, b: 107 },
-  { x: 540, y: 341, r: 123, g: 207, b: 8 },
-  { x: 27, y: 16, r: 206, g: 32, b: 49 },
-];
+export const rfpageInCookieActivityDashboard = new Page(
+  'rfpageInCookieActivityDashboard',
+  [
+    { x: 247, y: 331, r: 56, g: 74, b: 107 },
+    { x: 28, y: 18, r: 229, g: 158, b: 76 },
+    { x: 558, y: 339, r: 239, g: 190, b: 41 },
+  ],
+  { x: 400, y: 337 }
+);
+export const rfpageInProductionDashboard = new Page(
+  'rfpageInProductionDashboard',
+  [
+    { x: 408, y: 330, r: 56, g: 74, b: 107 },
+    { x: 540, y: 341, r: 123, g: 207, b: 8 },
+    { x: 27, y: 16, r: 206, g: 32, b: 49 },
+  ],
+  { x: 14, y: 48 }
+);
 
 export const rfpageStockIsFull = new Page('rfpageStockIsFull', [
   { x: 436, y: 96, r: 255, g: 255, b: 255 },
@@ -1345,53 +1438,48 @@ export const rfpageStockIsFull = new Page('rfpageStockIsFull', [
   { x: 321, y: 108, r: 241, g: 229, b: 216 },
 ]);
 
-export const pageToolShop = [
+export const rfpageToolShop = new Page('rfpageToolShop', [
   { x: 420, y: 191, r: 178, g: 16, b: 13 },
   { x: 414, y: 75, r: 135, g: 143, b: 170 },
   { x: 413, y: 84, r: 183, g: 190, b: 211 },
-];
-export const rfpageToolShop = new Page('rfpageToolShop', pageToolShop);
+]);
 
-export const pageIsJammery = [
+export const rfpageIsJammery = new Page('rfpageIsJammery', [
   { x: 490, y: 83, r: 0, g: 178, b: 206 },
   { x: 440, y: 89, r: 19, g: 114, b: 129 },
   { x: 430, y: 88, r: 247, g: 243, b: 222 },
-];
-export const rfpageIsJammery = new Page('rfpageIsJammery', pageIsJammery);
+]);
 
-// export const pageIsCarpentryShop = [
-//   { x: 494, y: 83, r: 140, g: 86, b: 57 },
-//   { x: 517, y: 87, r: 165, g: 105, b: 66 },
-//   { x: 433, y: 73, r: 88, g: 46, b: 30 },
-//   { x: 420, y: 81, r: 214, g: 146, b: 115 },
-//   { x: 424, y: 64, r: 84, g: 3, b: 3 },
-// ];
+export const rfpageIsCarpentryShop = new Page('rfpageIsCarpentryShop', [
+  { x: 494, y: 83, r: 140, g: 86, b: 57 },
+  { x: 517, y: 87, r: 165, g: 105, b: 66 },
+  { x: 433, y: 73, r: 88, g: 46, b: 30 },
+  { x: 420, y: 81, r: 214, g: 146, b: 115 },
+  { x: 424, y: 64, r: 84, g: 3, b: 3 },
+]);
 
-export const pageIsJampieDiner = [
+export const rfpageIsJampieDiner = new Page('rfpageIsJampieDiner', [
   { x: 535, y: 84, r: 210, g: 36, b: 57 },
   { x: 493, y: 83, r: 0, g: 224, b: 231 },
   { x: 414, y: 81, r: 217, g: 48, b: 77 },
   { x: 432, y: 73, r: 220, g: 149, b: 99 },
-];
-export const rfpageIsJampieDiner = new Page('rfpageIsJampieDiner', pageIsJampieDiner);
+]);
 
-export const pageIsBakery = [
+export const rfpageIsBakery = new Page('rfpageIsBakery', [
   { x: 496, y: 82, r: 184, g: 174, b: 155 },
   { x: 539, y: 86, r: 176, g: 83, b: 11 },
   { x: 439, y: 75, r: 173, g: 82, b: 24 },
   { x: 423, y: 70, r: 198, g: 116, b: 63 },
   { x: 424, y: 99, r: 255, g: 219, b: 123 },
-];
-export const rfpageIsBakery = new Page('rfpageIsBakery', pageIsBakery);
+]);
 
-export const pageIsFlowerShop = [
+export const rfpageIsFlowerShop = new Page('rfpageIsFlowerShop', [
   { x: 418, y: 80, r: 255, g: 89, b: 165 },
   { x: 413, y: 95, r: 8, g: 150, b: 8 },
   { x: 431, y: 86, r: 214, g: 0, b: 82 },
   { x: 490, y: 86, r: 197, g: 39, b: 41 },
   { x: 538, y: 82, r: 165, g: 85, b: 41 },
-];
-export const rfpageIsFlowerShop = new Page('rfpageIsFlowerShop', pageIsFlowerShop);
+]);
 
 // Case not exist for now
 export const rfpageBountiesAt2ndSlot = new Page('rfpageBountiesAt2ndSlot', [
@@ -2064,3 +2152,39 @@ export const rfpageGameSettings = new Page(
   ],
   { x: 612, y: 19 }
 );
+
+const rfpageFirstItemEnabled = new Page('rfpageFirstItemEnabled', [{ x: 596, y: 120, r: 121, g: 207, b: 12 }], { x: 596, y: 120 });
+const rfpageSecondItemEnabled = new Page('rfpageSecondItemEnabled', [{ x: 596, y: 228, r: 121, g: 207, b: 12 }], { x: 596, y: 228 });
+const rfpageThirdItemEnabled = new Page('rfpageThirdItemEnabled', [{ x: 596, y: 333, r: 121, g: 207, b: 12 }], { x: 596, y: 333 });
+const rfpageFourthItemEnabled = new Page('rfpageFourthItemEnabled', [{ x: 599, y: 128, r: 121, g: 207, b: 12 }], { x: 599, y: 128 });
+const rfpageFifthItemEnabled = new Page('rfpageFifthItemEnabled', [{ x: 596, y: 232, r: 121, g: 207, b: 12 }], { x: 596, y: 232 });
+const rfpageSixItemEnabled = new Page('rfpageSixItemEnabled', [{ x: 597, y: 339, r: 121, g: 207, b: 12 }], { x: 597, y: 339 });
+
+export const productMapping: { [key: number]: Page } = {
+  1: rfpageFirstItemEnabled,
+  2: rfpageSecondItemEnabled,
+  3: rfpageThirdItemEnabled,
+  4: rfpageThirdItemEnabled,
+  5: rfpageFourthItemEnabled,
+  6: rfpageFifthItemEnabled,
+  7: rfpageSixItemEnabled,
+};
+
+export const groupPageMaterialProdMenu = new GroupPage('groupPageMaterialProdMenu', [
+  rfpageWoodFarm,
+  rfpageBeanFarm,
+  rfpageSugarFarm,
+  rfpagePowderFarm,
+  rfpageBarryFarm,
+  rfpageMilkFarm,
+  rfpageCottomFarm,
+]);
+
+export const groupPageGoodsProdMenu = new GroupPage('groupPageGoodsProdMenu', [
+  rfpageToolShop,
+  rfpageIsJammery,
+  rfpageIsCarpentryShop,
+  rfpageIsJampieDiner,
+  rfpageIsBakery,
+  rfpageIsFlowerShop,
+]);

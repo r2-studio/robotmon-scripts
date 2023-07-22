@@ -2,7 +2,7 @@ import { Rerouter, Utils, XYRGB, Page, XY, MessageWindow, Icon, RECT, GroupPage 
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
-import { Advanture, Advantures, Records, Wish, WishStatus } from './types';
+import { Advanture, Advantures, Records, Wish, WishStatus, productState } from './types';
 import { logs, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 
@@ -401,7 +401,7 @@ export function getMayhemScores() {
   }
 
   releaseImage(img);
-  console.log('>> ', JSON.stringify(scores));
+  // console.log('>> ', JSON.stringify(scores));
   return scores;
 }
 
@@ -461,31 +461,50 @@ export function ocrStocksInRect(rect: RECT, icons: Icon[]): number {
 }
 
 export function ocrNumberInRect(rect: RECT, icons: Icon[]): number {
-  var img = getScreenshot();
-  var croppedImage = cropImage(img, rect.x, rect.y, rect.w, rect.h);
-  releaseImage(img);
-
-  var txt = recognizeWishingTreeRequirements(icons, croppedImage, 10, 0.8, 0.5);
-  releaseImage(croppedImage);
-
-  if (txt.length === 0) {
+  const text = ocrTextInRect(rect, icons);
+  if (text === '') {
     return -1;
-  } else {
-    return +txt;
   }
+  return +text;
+
+  // var img = getScreenshot();
+  // var croppedImage = cropImage(img, rect.x, rect.y, rect.w, rect.h);
+  // releaseImage(img);
+
+  // var txt = recognizeWishingTreeRequirements(icons, croppedImage, 10, 0.8, 0.5);
+  // releaseImage(croppedImage);
+
+  // if (txt.length === 0) {
+  //   return -1;
+  // } else {
+  //   return +txt;
+  // }
+}
+
+export function ocrStockAndReqInRect(rect: RECT, icons: Icon[]): number[] {
+  const text = ocrTextInRect(rect, icons, 0.78, 8);
+  // console.log(`ocrStockAndReqInRect: ${JSON.stringify(rect)}, ${text}`);
+  const values = text.split('/');
+  if (values.length < 2) {
+    return [+text, -1];
+  }
+
+  return [+values[0], +values[1]];
 }
 
 // 在市集中能正確讀出1,876
-export function ocrTextInRect(rect: RECT, icons: Icon[]) {
+export function ocrTextInRect(rect: RECT, icons: Icon[], overrideThre?: number, overrideOverlap?: number): string {
   var img = getScreenshot();
-
   var croppedImage = cropImage(img, rect.x, rect.y, rect.w, rect.h);
   releaseImage(img);
 
   var results: { score: number; x: number; y: number; target: string }[] = [];
   for (var i in icons) {
     // numbers[i] = bgrToGray(numbers[i], 40)
-    var foundResults = findImages(croppedImage, icons[i].image, icons[i].thres, 10, true);
+    const thres = overrideThre === undefined ? icons[i].thres : overrideThre;
+    const overlap = overrideOverlap === undefined ? 10 : overrideOverlap;
+
+    var foundResults = findImages(croppedImage, icons[i].image, thres, overlap, true);
     for (var j in foundResults) {
       results.push({
         x: foundResults[j].x,
@@ -496,19 +515,15 @@ export function ocrTextInRect(rect: RECT, icons: Icon[]) {
     }
   }
   results.sort(dynamicSort('x'));
-  // console.log('=> ', JSON.stringify(results));
-
+  // console.log(`=> ocrTextInRect ${JSON.stringify(rect)}, ${icons.length},  ${JSON.stringify(results)}`);
   releaseImage(croppedImage);
-  return ocrResultToInt(results);
-}
 
-function ocrResultToInt(results: { score: number; x: number; y: number; target: string }[]) {
   if (results.length == 0) {
-    return -1;
+    return '';
   }
 
   var digit_width = 4;
-  var count = '';
+  var output = '';
   var idx = 1;
   while (idx < results.length) {
     if (results[idx].x - results[idx - 1].x < digit_width) {
@@ -523,12 +538,12 @@ function ocrResultToInt(results: { score: number; x: number; y: number; target: 
     }
     // console.log('>>', idx, JSON.stringify(results))
   }
-
   for (var i in results) {
-    count += results[i].target;
+    output += results[i].target;
   }
 
-  return parseInt(count, 10);
+  // console.log('ocrTextInRect has output: ', output);
+  return output;
 }
 
 var bountyLevelX = 20;
@@ -611,102 +626,102 @@ export function handleResearchInGnomeLab(rerouter: Rerouter, finishRound: any, t
   }
 }
 
-function handleResearchInGnomeLab_bak(targetIconList: Icon[], threashold: number) {
-  var foundResults = [];
-  for (var i = 0; i < 12; i++) {
-    for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
-      foundResults = findSpecificImageInScreen(targetIconList[imageIdx].img, threashold);
-      // console.log('>', i, JSON.stringify(foundResults), foundResults.length, foundResults.length > 0);
-      if (foundResults.length > 0) {
-        console.log('Tap gnome reserach check: ', targetIconList[imageIdx].name, JSON.stringify(foundResults));
-        for (var j = 0; j < foundResults.length; j++) {
-          qTap(foundResults[j]);
-          sleep(config.sleepAnimate * 3);
-          if (checkIsPage(pageCanTapResearch)) {
-            if (!config.autoLabUseAuroraMaterial) {
-              var hasAuroraRequirement = false;
-              for (var auroraIndex = 0; auroraIndex < auroraItems.length; auroraIndex++) {
-                if (findSpecificImageInScreen(auroraItems[auroraIndex].img, 0.92).length > 0) {
-                  console.log('lab restrict use of aurora items, skip this one');
-                  qTap(pnt(570, 31));
-                  sleep(1500);
-                  hasAuroraRequirement = true;
-                  break;
-                }
-              }
+// function handleResearchInGnomeLab_bak(targetIconList: Icon[], threashold: number) {
+//   var foundResults = [];
+//   for (var i = 0; i < 12; i++) {
+//     for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
+//       foundResults = findSpecificImageInScreen(targetIconList[imageIdx].img, threashold);
+//       // console.log('>', i, JSON.stringify(foundResults), foundResults.length, foundResults.length > 0);
+//       if (foundResults.length > 0) {
+//         console.log('Tap gnome reserach check: ', targetIconList[imageIdx].name, JSON.stringify(foundResults));
+//         for (var j = 0; j < foundResults.length; j++) {
+//           qTap(foundResults[j]);
+//           sleep(config.sleepAnimate * 3);
+//           if (checkIsPage(pageCanTapResearch)) {
+//             if (!config.autoLabUseAuroraMaterial) {
+//               var hasAuroraRequirement = false;
+//               for (var auroraIndex = 0; auroraIndex < auroraItems.length; auroraIndex++) {
+//                 if (findSpecificImageInScreen(auroraItems[auroraIndex].img, 0.92).length > 0) {
+//                   console.log('lab restrict use of aurora items, skip this one');
+//                   qTap(pnt(570, 31));
+//                   sleep(1500);
+//                   hasAuroraRequirement = true;
+//                   break;
+//                 }
+//               }
 
-              if (!hasAuroraRequirement) {
-                console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
-                qTap(pageCanTapResearch);
+//               if (!hasAuroraRequirement) {
+//                 console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
+//                 qTap(pageCanTapResearch);
 
-                // Check for not enough items for research
-                sleep(1000);
-                if (checkIsPage(pageNotEnoughAuroraItemForReserch)) {
-                  console.log('Not enough aurora items, continue');
-                  qTap(pageNotEnoughAuroraItemForReserch);
-                  sleep(1000);
-                  qTap(pnt(570, 31));
-                  sleep(1500);
-                  break;
-                } else if (checkIsPage(pageNotEnoughItemsForResearch)) {
-                  console.log('Not enough items, continue');
-                  qTap(pageNotEnoughItemsForResearch);
-                  sleep(1000);
-                  qTap(pnt(570, 31));
-                  sleep(1500);
-                  break;
-                } else {
-                  console.log('Start researching');
-                }
+//                 // Check for not enough items for research
+//                 sleep(1000);
+//                 if (checkIsPage(pageNotEnoughAuroraItemForReserch)) {
+//                   console.log('Not enough aurora items, continue');
+//                   qTap(pageNotEnoughAuroraItemForReserch);
+//                   sleep(1000);
+//                   qTap(pnt(570, 31));
+//                   sleep(1500);
+//                   break;
+//                 } else if (checkIsPage(pageNotEnoughItemsForResearch)) {
+//                   console.log('Not enough items, continue');
+//                   qTap(pageNotEnoughItemsForResearch);
+//                   sleep(1000);
+//                   qTap(pnt(570, 31));
+//                   sleep(1500);
+//                   break;
+//                 } else {
+//                   console.log('Start researching');
+//                 }
 
-                sendEvent('running', '');
-                return true;
-              }
-            } else {
-              console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
-              qTap(pageCanTapResearch);
+//                 sendEvent('running', '');
+//                 return true;
+//               }
+//             } else {
+//               console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
+//               qTap(pageCanTapResearch);
 
-              sleep(1000);
-              if (checkIsPage(pageNotEnoughItemsForResearch)) {
-                console.log('Not enough items, continue');
-                qTap(pageNotEnoughItemsForResearch);
-                sleep(1000);
-                qTap(pnt(570, 31));
-                sleep(1500);
-                break;
-              } else {
-                sendEvent('running', '');
-                console.log('Start researching');
-              }
+//               sleep(1000);
+//               if (checkIsPage(pageNotEnoughItemsForResearch)) {
+//                 console.log('Not enough items, continue');
+//                 qTap(pageNotEnoughItemsForResearch);
+//                 sleep(1000);
+//                 qTap(pnt(570, 31));
+//                 sleep(1500);
+//                 break;
+//               } else {
+//                 sendEvent('running', '');
+//                 console.log('Start researching');
+//               }
 
-              return true;
-            }
-          } else {
-            if (checkIsPage(pageInKingdomVillage)) {
-              console.log('Lab research accidentally fall back to village, return with false');
-              return false;
-            } else if (!checkIsPage(pageInGnomeLab)) {
-              console.log('Research requirement not met (btn not enabled)');
-              keycode('BACK', 1000);
-              sleep(config.sleepAnimate * 3);
-            } else {
-              console.log('Not in kingdom nor lab');
-            }
-          }
-        }
-      }
-    }
+//               return true;
+//             }
+//           } else {
+//             if (checkIsPage(pageInKingdomVillage)) {
+//               console.log('Lab research accidentally fall back to village, return with false');
+//               return false;
+//             } else if (!checkIsPage(pageInGnomeLab)) {
+//               console.log('Research requirement not met (btn not enabled)');
+//               keycode('BACK', 1000);
+//               sleep(config.sleepAnimate * 3);
+//             } else {
+//               console.log('Not in kingdom nor lab');
+//             }
+//           }
+//         }
+//       }
+//     }
 
-    if (checkIsPage(pageAlreadyResearching)) {
-      console.log('Already researching, skipping handleInGnomeLab');
-      return true;
-    }
+//     if (checkIsPage(pageAlreadyResearching)) {
+//       console.log('Already researching, skipping handleInGnomeLab');
+//       return true;
+//     }
 
-    swipeFromToPoint(pnt(600, 234), pnt(-200, 234), 5, 0, undefined, pageInGnomeLab);
-  }
+//     swipeFromToPoint(pnt(600, 234), pnt(-200, 234), 5, 0, undefined, pageInGnomeLab);
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
 export function considerPurchaseSeasideMarket(rerouter: Rerouter, target: RECT): boolean {
   let newStock = ocrStocksInRect(target, ICONS.numberAuroraStockInTradeBird);
@@ -744,4 +759,394 @@ export function tapThroughAnimate(rerouter: Rerouter, targetPage: Page, tappingP
     rerouter.screen.tap(tappingPoint);
   }
   return false;
+}
+
+export function handleNextProductionBuilding(rerouter: Rerouter, buildTowardsTheLeft: boolean) {
+  if (buildTowardsTheLeft) {
+    rerouter.screen.tap({ x: 110, y: 174 }); // to left
+  } else {
+    rerouter.screen.tap({ x: 349, y: 174 }); // to right
+  }
+}
+
+export function SwipeProductionMenuToTop(rerouter: Rerouter) {
+  return swipeFromToPoint(rerouter, { x: 430, y: 80 }, { x: 430, y: 1500 }, 4);
+}
+export function swipeDownOneItem(rerouter: Rerouter) {
+  return swipeFromToPoint(rerouter, { x: 430, y: 319 }, { x: 430, y: 176 }, 7);
+}
+export function swipeDown3Items(rerouter: Rerouter) {
+  // console.log('swipe down to 3 item as currently in:', this.config.currentProductionBuilding);
+  return swipeFromToPoint(rerouter, { x: 430, y: 350 }, { x: 430, y: -70 }, 7);
+}
+export function swipeToToolShop456(rerouter: Rerouter) {
+  return swipeFromToPoint(rerouter, { x: 430, y: 350 }, { x: 430, y: -170 }, 7);
+}
+
+function findProductRequirements(rects: RECT[]) {
+  var imgOri = getScreenshot();
+
+  var omin = 150;
+  var omax = 255;
+  var img = inRange(imgOri, omin, omin, omin, omin, omax, omax, omax, omax);
+
+  var part = [];
+  for (let i = 0; i < rects.length; i++) {
+    let rect = rects[i];
+    var line1 = '';
+    var cImg1 = cropImage(img, rect.x, rect.y, rect.w, rect.h);
+    line1 = recognizeWishingTreeRequirements(ICONS.numberImagesProdutRequirements, cImg1, 12, 0.7, 0.5);
+    releaseImage(cImg1);
+
+    line1 = line1.trim();
+    // console.log(line1);
+
+    if (line1.length === 0) {
+      // do nothing
+    } else if (line1.indexOf('/') === -1) {
+      part.push([line1.substr(0, line1.length - 1), line1.substr(line1.length - 1, 1)]);
+    } else {
+      part.push(line1.split('/'));
+    }
+  }
+
+  for (var productIdx in part) {
+    for (var reqIdx in part[productIdx]) {
+      part[productIdx][reqIdx] = Number(part[productIdx][reqIdx]);
+    }
+  }
+
+  // console.log(JSON.stringify(parts));
+  releaseImage(imgOri);
+  releaseImage(img);
+  return part;
+}
+
+function countMagicLabSlotAvailable(rerouter: Rerouter) {
+  var groupPageMagicLabSlot = new GroupPage('groupPageMagicLabSlot', [
+    new Page('firstSlot', [{ x: 55, y: 69, r: 82, g: 56, b: 107 }]),
+    new Page('secondSlot', [{ x: 53, y: 120, r: 82, g: 56, b: 107 }]),
+    new Page('thirdSlot', [{ x: 49, y: 168, r: 82, g: 56, b: 107 }]),
+    new Page('fourthSlot', [{ x: 52, y: 223, r: 82, g: 56, b: 107 }]),
+    new Page('fifthSlot', [{ x: 50, y: 264, r: 77, g: 55, b: 110 }]),
+    new Page('sixSlot', [{ x: 48, y: 314, r: 82, g: 60, b: 115 }]),
+  ]);
+  var matchedPages = rerouter.getPagesMatchImage(groupPageMagicLabSlot, rerouter.screen.getCvtDevScreenshot());
+
+  logs('countMagicLabSlotAvailable', `countMagicLabSlotAvailable: ${matchedPages.length}`);
+  return matchedPages.length;
+}
+
+export function countProductionSlotAvailable(rerouter: Rerouter) {
+  if (rerouter.isPageMatch(PAGES.rfpageInMagicLab)) {
+    return countMagicLabSlotAvailable(rerouter);
+  }
+
+  var groupPageProductionSlot = new GroupPage('groupPageProductionSlot', [
+    new Page('firstSlot', [
+      { x: 50, y: 69, r: 146, g: 88, b: 52 },
+      { x: 49, y: 68, r: 146, g: 88, b: 52 },
+      { x: 70, y: 90, r: 166, g: 104, b: 65 },
+      { x: 42, y: 86, r: 173, g: 105, b: 66 },
+    ]),
+    new Page('secondSlot', [
+      { x: 50, y: 120, r: 146, g: 88, b: 52 },
+      { x: 49, y: 111, r: 146, g: 88, b: 52 },
+      { x: 46, y: 137, r: 173, g: 105, b: 66 },
+    ]),
+    new Page('thirdSlot', [
+      { x: 50, y: 170, r: 146, g: 88, b: 52 },
+      { x: 49, y: 169, r: 146, g: 88, b: 52 },
+      { x: 46, y: 179, r: 142, g: 78, b: 44 },
+    ]),
+    new Page('fourthSlot', [
+      { x: 50, y: 219, r: 146, g: 88, b: 52 },
+      { x: 50, y: 218, r: 146, g: 88, b: 52 },
+      { x: 42, y: 236, r: 173, g: 105, b: 66 },
+    ]),
+    new Page('fifthSlot', [
+      { x: 50, y: 269, r: 146, g: 88, b: 52 },
+      { x: 50, y: 268, r: 146, g: 88, b: 52 },
+      { x: 46, y: 286, r: 157, g: 95, b: 55 },
+    ]),
+  ]);
+  var matchedPages = rerouter.getPagesMatchImage(groupPageProductionSlot, rerouter.screen.getCvtDevScreenshot());
+
+  // logs('countProductionSlotAvailable', `countProductionSlotAvailable: ${matchedPages.length}, ${JSON.stringify(matchedPages)}`);
+  return matchedPages.length;
+}
+
+export function collectProductItemInfo(
+  id: number,
+  stockRect: RECT,
+  needRect1: RECT,
+  needRect2: RECT,
+  productionTarget: number,
+  safetyStock: number
+): productState {
+  let need1 = {
+    stock: -1,
+    consume: -1,
+  };
+  let need2 = {
+    stock: -1,
+    consume: -1,
+  };
+
+  const stock = ocrNumberInRect(stockRect, ICONS.bNumbers);
+  if (stock === -1) {
+    return {
+      id: id,
+      minimumTarget: -1,
+      productionTarget: -1,
+      stockTargetFullfilledPercent: -1,
+      canProduce: false,
+      notEnoughStock: false,
+      stock: stock,
+      need: [need1, need2],
+    };
+  }
+
+  var requirements = findProductRequirements([needRect1, needRect2]);
+  need1 = {
+    stock: +requirements[0][0],
+    consume: +requirements[0][1],
+  };
+
+  let canProduce = true;
+  if (requirements.length > 1) {
+    need2 = {
+      stock: +requirements[1][0],
+      consume: +requirements[1][1],
+    };
+    canProduce = need1['stock'] - need1['consume'] > safetyStock && need2['stock'] - need2['consume'] > safetyStock;
+  } else {
+    canProduce = need1['stock'] - need1['consume'] > safetyStock;
+  }
+
+  const minimumTarget = id <= 3 ? Math.max(10, productionTarget * Math.pow(0.85, id)) : Math.max(10, productionTarget * Math.pow(0.6, id));
+  return {
+    id: id,
+    minimumTarget: minimumTarget,
+    productionTarget: productionTarget,
+    stockTargetFullfilledPercent: stock / productionTarget,
+    canProduce: canProduce,
+    notEnoughStock: false,
+    stock: stock,
+    need: requirements.length > 1 ? [need1, need2] : [need1], // Pinecone birdy toy (etc,) only need 1 material
+  };
+}
+
+export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safetyStock: number, axeStockTo400: boolean) {
+  const goodsLocation: { [key: number | string]: RECT } = {
+    1: { x: 431, y: 101, w: 22, h: 12 },
+    2: { x: 431, y: 209, w: 22, h: 12 },
+    3: { x: 431, y: 315, w: 22, h: 12 },
+    shovel: { x: 432, y: 317, w: 22, h: 16 },
+    5: { x: 431, y: 106, w: 22, h: 12 },
+    6: { x: 431, y: 213, w: 22, h: 12 },
+    7: { x: 431, y: 319, w: 22, h: 12 },
+  };
+  const productsReqY: { [key: number]: number } = {
+    1: 92,
+    2: 199,
+    3: 306,
+    4: 308,
+    5: 96,
+    6: 203,
+    7: 310,
+  };
+
+  // TODO: recognize building to reduce drop order time
+  let goodsOneStock = ocrNumberInRect(goodsLocation[1], ICONS.bNumbers);
+  if (goodsOneStock === -1) {
+    logs('makeGoodsToTarget', `OCR count failed, swipe to top`);
+
+    SwipeProductionMenuToTop(rerouter);
+    goodsOneStock = ocrNumberInRect(goodsLocation[1], ICONS.bNumbers);
+    if (goodsOneStock === -1) {
+      console.log('OCR count failed twice, skip this round');
+      return;
+    }
+  }
+
+  console.log('about to let productionState');
+  let productionState: { [key: number]: productState } = {
+    1: collectProductItemInfo(
+      1,
+      goodsLocation[1],
+      { x: 463, y: productsReqY[1], w: 50, h: 14 },
+      { x: 520, y: productsReqY[1], w: 50, h: 14 },
+      goodsTarget,
+      safetyStock
+    ),
+  };
+
+  for (let i of [2, 3]) {
+    if (!rerouter.isPageMatch(PAGES.productMapping[i])) {
+      break;
+    }
+
+    productionState[i] = collectProductItemInfo(
+      i,
+      goodsLocation[i],
+      { x: 463, y: productsReqY[i], w: 50, h: 14 },
+      { x: 520, y: productsReqY[i], w: 50, h: 14 },
+      goodsTarget,
+      safetyStock
+    );
+  }
+
+  let availableSlots = countProductionSlotAvailable(rerouter);
+  const productionPage = rerouter.getPagesMatch(PAGES.groupPageGoodsProdMenu);
+  const productionName = productionPage.length > 0 ? productionPage[0].name : 'otherGoodShop';
+  logs('makeGoodsToTarget', `> ${productionName} has ${availableSlots} available slots, productionState: ${JSON.stringify(productionState)}`);
+
+  if (productionName !== 'otherGoodShop') {
+    console.log('Special handle building:', productionName);
+    swipeDownOneItem(rerouter);
+
+    if (rerouter.isPageMatch(PAGES.productMapping[4])) {
+      productionState[4] = collectProductItemInfo(
+        4,
+        goodsLocation['shovel'],
+        { x: 463, y: 308, w: 50, h: 14 },
+        { x: 520, y: 308, w: 50, h: 14 },
+        goodsTarget,
+        safetyStock
+      );
+    }
+  }
+
+  console.log('swipping down =========');
+  swipeFromToPoint(rerouter, { x: 464, y: 340 }, { x: 464, y: -1500 }, 4); // SwipeProductionMenuToBottom()
+
+  for (let i of [5, 6, 7]) {
+    if (!rerouter.isPageMatch(PAGES.productMapping[i])) {
+      break;
+    }
+    productionState[i] = collectProductItemInfo(
+      i,
+      goodsLocation[i],
+      { x: 463, y: productsReqY[i], w: 50, h: 14 },
+      { x: 520, y: productsReqY[i], w: 50, h: 14 },
+      goodsTarget,
+      safetyStock
+    );
+  }
+
+  if (productionName === 'rfpageToolShop' && axeStockTo400) {
+    productionState[1].productionTarget = 400;
+    productionState[1].stockTargetFullfilledPercent = goodsOneStock / 400;
+  }
+
+  let itemToProduce: { [key: number]: productState } = {};
+  let itemToProduceLater: { [key: number]: productState } = {};
+
+  // check minimum req
+  for (let key in productionState) {
+    if (productionState[key].stock < productionState[key].minimumTarget) {
+      itemToProduce[key] = productionState[key];
+    }
+  }
+
+  // check user defined production target
+  for (let key in productionState) {
+    if (productionState[key].stock < goodsTarget) {
+      itemToProduceLater[key] = productionState[key];
+    }
+  }
+
+  let itemsToProduce = Object.keys(itemToProduce).map(key => itemToProduce[+key]);
+  let itemsToProduceLater = Object.keys(itemToProduceLater).map(key => itemToProduceLater[+key]);
+  itemsToProduce.sort(dynamicSort('stockTargetFullfilledPercent'));
+  itemsToProduceLater.sort(dynamicSort('stockTargetFullfilledPercent'));
+  itemsToProduce = [...itemsToProduce, ...itemsToProduceLater];
+  logs('makeGoodsToTarget', `>> ${productionName} has ${availableSlots} available slots, stocks to produce: ${JSON.stringify(itemsToProduce)}`);
+
+  const rfpageLockedGood = new Page(
+    'rfpageLockedGood',
+    [
+      { x: 351, y: 244, r: 121, g: 207, b: 12 },
+      { x: 305, y: 244, r: 121, g: 207, b: 12 },
+      { x: 425, y: 244, r: 219, g: 207, b: 199 },
+      { x: 425, y: 105, r: 60, g: 70, b: 105 },
+      { x: 417, y: 297, r: 235, g: 219, b: 207 },
+      { x: 381, y: 316, r: 237, g: 237, b: 229 },
+    ],
+    { x: 351, y: 244 }
+  );
+  for (var id in itemsToProduce) {
+    var item = itemsToProduce[id];
+
+    if (item['stock'] === -1) {
+      continue;
+    }
+
+    if (item['stockTargetFullfilledPercent'] > 1) {
+      // logs(makeGoodsToTarget, `stockTargetFullfilledPercent > 1 should should be stock OCR error `);
+      continue;
+    }
+
+    if (item['notEnoughStock']) {
+      logs('makeGoodsToTarget', `panic as found notEnoughStock `);
+      ii++;
+    }
+
+    if (!item['canProduce']) {
+      logs('makeGoodsToTarget', `skip as not having enough raw materials for #${id}`);
+      continue;
+    }
+
+    console.log('adding item', item['id'], 'from ' + item['stock'] + ' to > ', item['productionTarget'], JSON.stringify(item));
+
+    switch (item['id']) {
+      case 1:
+      case 2:
+      case 3:
+        SwipeProductionMenuToTop(rerouter);
+        SwipeProductionMenuToTop(rerouter);
+        rerouter.goNext(PAGES.productMapping[item['id']]);
+        break;
+      case 4:
+        SwipeProductionMenuToTop(rerouter);
+        SwipeProductionMenuToTop(rerouter);
+        swipeDownOneItem(rerouter);
+        rerouter.goNext(PAGES.productMapping[item['id']]);
+        break;
+      case 5:
+      case 6:
+      case 7:
+        SwipeProductionMenuToTop(rerouter);
+        SwipeProductionMenuToTop(rerouter);
+        swipeToToolShop456(rerouter);
+        rerouter.goNext(PAGES.productMapping[item['id']]);
+        break;
+    }
+
+    for (var timer = 0; timer < 4; timer++) {
+      var latestCount = countProductionSlotAvailable(rerouter);
+      if (rerouter.isPageMatch(PAGES.rfpageNotEnoughStock)) {
+        logs('makeGoodsToTarget', `PAGES.rfpageNotEnoughStock`);
+        rerouter.goNext(PAGES.rfpageNotEnoughStock);
+        itemsToProduce[id]['notEnoughStock'] = true;
+        sleep(800);
+        break;
+      } else if (rerouter.isPageMatch(rfpageLockedGood)) {
+        logs('makeGoodsToTarget', `rfpageLockedGood`);
+        rerouter.goNext(rfpageLockedGood);
+        break;
+      }
+      if (latestCount === 0) {
+        console.log('No more slots, stop at: ', item['id']);
+        return itemsToProduce;
+      }
+
+      sleep(1000);
+    }
+
+    // Add check if there are no worker cookie
+  }
+
+  return itemsToProduce;
 }

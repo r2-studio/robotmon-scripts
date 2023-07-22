@@ -14,7 +14,7 @@ export const defaultConfig = {
   materialsTarget: 2000,
   goodsTarget: 320,
   productSafetyStock: 10,
-  skipMagicLabProduction: true,
+  skipMagicLabProduction: false,
   magicLabProductIndex: 13,
   autoCollectMailIntervalInMins: 120,
   autoCollectFountainIntervalInMins: 40,

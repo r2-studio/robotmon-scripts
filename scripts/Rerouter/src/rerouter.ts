@@ -188,6 +188,26 @@ export class Rerouter {
     }
   }
 
+  public getPagesMatch(page: GroupPage): Page[] {
+    const image = this.screen.getCvtDevScreenshot();
+    const match = this.isMatchGroupPageImpl(image, page, this.defaultConfig.GroupPageThres, this.debug);
+    releaseImage(image);
+    return match;
+  }
+
+  public getPagesMatchImage(groupPage: GroupPage, image: Image): Page[] {
+    let pages: Page[] = [];
+    for (let i = 0; i < groupPage.pages.length; i++) {
+      const page = groupPage.pages[i];
+      const isPageMatch = this.isMatchPageImpl(image, page, this.defaultConfig.PageThres, this.debug);
+
+      if (isPageMatch) {
+        pages.push(page);
+      }
+    }
+    return pages;
+  }
+
   public findIcon(icon: Icon): { [idx: string]: { score: number; x: number; y: number } } {
     const image = this.screen.getCvtDevScreenshot();
     const isMatch = this.findIconInImage(icon, image);

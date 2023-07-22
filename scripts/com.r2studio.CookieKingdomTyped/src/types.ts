@@ -64,3 +64,29 @@ export const seasideStockRect: { [key: number]: RECT } = {
   3: { x: 400, y: 286, w: 60, h: 17 },
   4: { x: 508, y: 286, w: 60, h: 17 },
 };
+
+export const goodsLocationRect: { [key: string | number]: RECT } = {
+  1: { x: 431, y: 101, w: 22, h: 12 },
+  2: { x: 431, y: 209, w: 22, h: 12 },
+  3: { x: 431, y: 315, w: 22, h: 12 },
+  4: { x: 431, y: 106, w: 22, h: 12 },
+  5: { x: 431, y: 213, w: 22, h: 12 },
+  6: { x: 431, y: 319, w: 22, h: 12 },
+  shovel: { x: 432, y: 317, w: 22, h: 16 },
+};
+
+export type productState = {
+  id: number;
+  stock: number;
+  canProduce: boolean;
+  minimumTarget: number;
+  productionTarget: number;
+  stockTargetFullfilledPercent: number;
+  notEnoughStock: boolean;
+  need: {
+    [key: number]: {
+      stock: number;
+      consume: number;
+    };
+  };
+};
