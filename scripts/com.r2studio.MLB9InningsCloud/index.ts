@@ -6,9 +6,9 @@ import { defaultConfig } from './src/defaultConfig';
 import * as PAGE from './src/pages';
 import * as CONSTANTS from './src/constants';
 import { TASK } from './src/task';
-import { executeCommands, isSameColor, getColorCountInRange, isSameColorCount } from './src/utils';
+import { executeCommands, isSameColor, getColorCountInRange, isSameColorCount, arrayFind } from './src/utils';
 
-const VERSION_CODE: number = 15.3;
+const VERSION_CODE: number = 15.31;
 
 class MLB9I {
   public static packageName: string = 'com.com2us.ninepb3d.normal.freefull.google.global.android.common';
@@ -26,9 +26,11 @@ class MLB9I {
     lastRunningEvent: 0,
     lastUploadSession: 0,
 
-    powerSaveGame: {
-      lastCheckTimeAt: 0,
-      colorCount: {},
+    leagueGame: {
+      lastCheckPowerSaveAt: 0,
+      powerSaveColorCount: {},
+      tryEnterGameCnts: 0,
+      needResetProgress: false,
     },
   };
 
@@ -322,9 +324,18 @@ class MLB9I {
   public addPremiumTasks() {
     // only run once
     this.rerouter.addTask({
-      name: TASK.changeGameSettings,
+      name: TASK.settingDefault,
       // maxTaskRunTimes: 1,
       minRoundInterval: Number.POSITIVE_INFINITY,
+      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      forceStop: true,
+    });
+
+    // FIXME: this should only run when needed
+    this.rerouter.addTask({
+      name: TASK.settingResetLeagueProgress,
+      // maxTaskRunTimes: 1,
+      minRoundInterval: 1 * CONSTANTS.hourInMs,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       forceStop: true,
     });
@@ -491,22 +502,26 @@ class MLB9I {
           case TASK.stayInLogin:
             // should be inaccessible unless clear session is failed
             this.handleCloudLogOut();
-
             return;
+
+          case TASK.settingDefault:
+          case TASK.settingResetLeagueProgress:
+            this.rerouter.screen.tap(PAGE.mainBtns.settings);
+            break;
+
           case TASK.playLeagueGame:
             this.rerouter.screen.tap(PAGE.mainBtns.leagueMode);
+            this.state.leagueGame.tryEnterGameCnts++;
             break;
           case TASK.playBattleGame:
             this.rerouter.screen.tap(PAGE.mainBtns.battleMode);
             break;
-          case TASK.changeGameSettings:
-            this.rerouter.screen.tap(PAGE.mainBtns.settings);
-            break;
+
           case TASK.adReward:
             // sometimes won't trigger anything if still on cd
             if (context.matchTimes > 2) {
               console.log('ad is still on cd');
-              finishRound();
+              finishRound(true);
             } else {
               this.rerouter.screen.tap(PAGE.mainBtns.adTab);
             }
@@ -517,7 +532,9 @@ class MLB9I {
           default:
             break;
         }
-        this.handleSendEventLoginSuccess();
+
+        // sleep for send 1+ events
+        this.handleSendEventLoginSuccess() && Utils.sleep(CONSTANTS.sleepMedium);
         this.handleSendEventPlaying();
         this.handleSendEventRunning();
       }),
@@ -528,33 +545,38 @@ class MLB9I {
       path: `/${PAGE.settings.name}`,
       match: PAGE.settings,
       action: this.wrapRouteAction((context, image, matched, finishRound) => {
-        if (context.task.name !== TASK.changeGameSettings) {
-          this.rerouter.goBack(PAGE.settings);
-          return;
+        const inactiveTabColor = { r: 58, g: 65, b: 74 };
+        const tab = arrayFind(Object.keys(PAGE.settingsTabs), t => {
+          const { x, y } = PAGE.settingsTabs[t as keyof typeof PAGE.settingsTabs];
+          return !isSameColor(image, { x, y, ...inactiveTabColor });
+        });
+
+        switch (context.task.name) {
+          case TASK.settingDefault:
+            if (tab === 'graphicTab') {
+              this.rerouter.screen.tap(PAGE.settingsGraphTabBtns.powerSaveOn);
+              Utils.sleep(CONSTANTS.sleepShort);
+              finishRound(true);
+              this.handleSendEventRunning();
+            } else {
+              // go to graphicTab
+              this.rerouter.screen.tap(PAGE.settingsTabs.graphicTab);
+            }
+            break;
+          case TASK.settingResetLeagueProgress:
+            if (!this.state.leagueGame.needResetProgress) {
+              finishRound(true);
+              break;
+            }
+            // go to leagueResetDialog
+            this.rerouter.screen.tap(PAGE.settingsBtns.leagueReset);
+            this.state.leagueGame.needResetProgress = false;
+
+            break;
+          default:
+            this.rerouter.goBack(PAGE.settings);
+            break;
         }
-        if (this.rerouter.isPageMatchImage(PAGE.settingsGraphTab, image)) {
-          this.rerouter.screen.tap(PAGE.settingsGraphTabBtns.powerSaveOn);
-          Utils.sleep(CONSTANTS.sleepLong);
-          finishRound();
-          this.handleSendEventRunning();
-          return;
-        }
-        // go to graphicTab
-        this.rerouter.screen.tap(PAGE.settingsBtns.graphicTab);
-      }),
-    });
-    this.rerouter.addRoute({
-      path: `/${PAGE.settingsGraphTab.name}`,
-      match: PAGE.settingsGraphTab,
-      action: this.wrapRouteAction((context, image, matched, finishRound) => {
-        if (context.task.name !== TASK.changeGameSettings) {
-          this.rerouter.goBack(PAGE.settingsGraphTab);
-          return;
-        }
-        this.rerouter.screen.tap(PAGE.settingsGraphTabBtns.powerSaveOn);
-        Utils.sleep(CONSTANTS.sleepLong);
-        finishRound();
-        this.handleSendEventRunning();
       }),
     });
 
@@ -581,7 +603,7 @@ class MLB9I {
         this.rerouter.goNext(PAGE.adRewardRedeem);
         Utils.sleep(CONSTANTS.sleepShort);
         if (context.task.name === TASK.adReward) {
-          finishRound();
+          finishRound(true);
           this.handleSendEventRunning();
         }
       }),
@@ -643,7 +665,7 @@ class MLB9I {
             const canCollect = isSameColor(image, { x: x + dx, y: y + dy, ...canCollectColor });
             if (!canCollect) {
               console.log('wait all weekly mission complete');
-              finishRound();
+              finishRound(true);
               this.handleSendEventRunning();
               return;
             }
@@ -662,7 +684,7 @@ class MLB9I {
           this.rerouter.screen.tap(PAGE.weeklyMissionBoxBtns.receiveReward);
 
           // enter receive confirm page
-          finishRound();
+          finishRound(true);
           this.handleSendEventRunning();
         }
       }),
@@ -703,7 +725,7 @@ class MLB9I {
 
         // cannot play
         if (context.matchTimes > 5) {
-          finishRound();
+          finishRound(true);
           this.handleSendEventRunning();
           return;
         }
@@ -711,7 +733,7 @@ class MLB9I {
         // check if play is available
         const isPlayDisabled = isSameColor(image, PAGE.rankedBattlePanelBtns.disabledPlayBtn);
         if (isPlayDisabled) {
-          finishRound();
+          finishRound(true);
           this.handleSendEventRunning();
           console.log('ranked battle play disabled');
           return;
@@ -794,6 +816,9 @@ class MLB9I {
           this.rerouter.goBack(PAGE.leagueModePanel);
           return;
         }
+
+        // can play league mode
+        this.state.leagueGame.tryEnterGameCnts++;
 
         // avoid to click btn too many time for trigger next page immediately
         if (context.matchTimes < 2) {
@@ -990,20 +1015,37 @@ class MLB9I {
       action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
-      path: `/${PAGE.leagueResetDialog.name}`,
-      match: PAGE.leagueResetDialog,
+      path: `/${PAGE.leagueResetDialogYN.name}`,
+      match: PAGE.leagueResetDialogYN,
       action: this.wrapRouteAction((context, image, matched, finishRound) => {
-        console.log('handle reset league dialog');
+        console.log('handle reset league dialog with yes/no');
 
         // TODO: let user choose in config
         if (context.lastMatchedPath === `/${PAGE.selectNormalMasterLeagueModeProceed.name}`) {
           console.log('reset league mode');
-          this.rerouter.goNext(PAGE.leagueResetDialog);
+          this.rerouter.goNext(PAGE.leagueResetDialogYN);
           return;
         }
 
         // not reset
-        this.rerouter.goBack(PAGE.leagueResetDialog);
+        this.rerouter.goBack(PAGE.leagueResetDialogYN);
+        return;
+      }),
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGE.leagueResetDialog.name}`,
+      match: PAGE.leagueResetDialog,
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
+        if (context.task.name !== TASK.settingResetLeagueProgress) {
+          // cancel
+          this.rerouter.goBack(PAGE.leagueResetDialog);
+          return;
+        }
+        console.log('handle reset league dialog');
+        // TODO: let user can select specific mode and year to play
+        // reset
+        this.rerouter.goNext(PAGE.leagueResetDialog);
+        finishRound(true);
         return;
       }),
     });
@@ -1148,6 +1190,11 @@ class MLB9I {
       match: PAGE.onQuickPlayGroup,
       action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('on quick playing');
+
+        if (context.task.name === TASK.playLeagueGame) {
+          // success enter game
+          this.state.leagueGame.tryEnterGameCnts = 0;
+        }
         this.handleSendEventRunning(true);
         this.rerouter.goNext(PAGE.onQuickPlayGroup);
       }),
@@ -1178,7 +1225,7 @@ class MLB9I {
         }
 
         const now = Date.now();
-        const { lastCheckTimeAt, colorCount } = this.state.powerSaveGame;
+        const { lastCheckPowerSaveAt: lastCheckTimeAt, powerSaveColorCount: colorCount } = this.state.leagueGame;
         if (now - lastCheckTimeAt < CONSTANTS.sendRunningEventInterval) {
           return;
         }
@@ -1186,10 +1233,10 @@ class MLB9I {
         // use time to check whether game is still playing
         const colorCntNow = getColorCountInRange(image, { x: 331, y: 310 }, { x: 403, y: 311 });
         const isSame = isSameColorCount(colorCntNow, colorCount);
-        this.state.powerSaveGame = {
-          lastCheckTimeAt: now,
-          colorCount: colorCntNow,
-        };
+
+        this.state.leagueGame.lastCheckPowerSaveAt = now;
+        this.state.leagueGame.powerSaveColorCount = colorCntNow;
+
         if (!isSame) {
           console.log('game is still playing with power save on');
           this.handleSendEventRunning();
@@ -1218,6 +1265,9 @@ class MLB9I {
           Utils.sleep(CONSTANTS.sleepMedium);
           return;
         }
+
+        // success enter game
+        this.state.leagueGame.tryEnterGameCnts = 0;
 
         // TODO: handle quick switch to auto play off if was stopped
         if (this.config.hasCoolFeature) {
@@ -1270,13 +1320,44 @@ class MLB9I {
         this.handlePowerSavingPage();
       }),
     });
-    [PAGE.errorNewUpdateAvailable, PAGE.appIsNotResponding, PAGE.unexpectedError].forEach(p => {
+    [PAGE.errorNewUpdateAvailable, PAGE.appIsNotResponding].forEach(p => {
       this.rerouter.addRoute({
         path: `/${p.name}`,
         match: p,
         action: 'goNext',
         afterActionDelay: CONSTANTS.sleepWaitPageLong,
       });
+    });
+
+    this.rerouter.addRoute({
+      path: `/${PAGE.unexpectedError.name}`,
+      match: PAGE.unexpectedError,
+      action: (context, image, matched, finishRound) => {
+        switch (context.task.name) {
+          case TASK.playLeagueGame:
+            if (!this.config.hasCoolFeature) {
+              break;
+            }
+            // sometimes some unknown reason cannot enter game
+            const { tryEnterGameCnts } = this.state.leagueGame;
+            console.log('try enter game cnts', tryEnterGameCnts);
+            if (tryEnterGameCnts === 3) {
+              this.rerouter.restartApp();
+            }
+            if (tryEnterGameCnts === 4) {
+              // can only resolved by resetting league mode progress
+              console.log('handleResetLeagueModeProgress');
+              this.state.leagueGame.needResetProgress = true;
+              finishRound();
+            }
+
+            break;
+          default:
+            break;
+        }
+
+        this.rerouter.goNext(PAGE.unexpectedError);
+      },
     });
 
     [
@@ -1393,39 +1474,41 @@ class MLB9I {
 
   public handleSendEventLoginInputing() {
     const content = GameStatusContent.WAIT_FOR_LOGIN_INPUT;
-    this.handleSendGameStatusEvent(content);
+    return this.handleSendGameStatusEvent(content);
   }
   public handleSendEventLoginSuccess() {
     if (this.state.lastGameStatusEvent !== GameStatusContent.WAIT_FOR_LOGIN_INPUT) {
-      return;
+      return false;
     }
     const content = GameStatusContent.LOGIN_SUCCEEDED;
-    this.handleSendGameStatusEvent(content);
+    return this.handleSendGameStatusEvent(content);
   }
   public handleSendEventLaunching() {
     // set to default once app is launched (first and again)
     this.state.lastRunningEvent = 0;
     this.state.lastUploadSession = 0;
-    this.state.powerSaveGame = {
-      lastCheckTimeAt: 0,
-      colorCount: {},
+    this.state.leagueGame = {
+      lastCheckPowerSaveAt: 0,
+      powerSaveColorCount: {},
+      tryEnterGameCnts: 0,
+      needResetProgress: false,
     };
     const content = GameStatusContent.LAUNCHING;
-    this.handleSendGameStatusEvent(content);
+    return this.handleSendGameStatusEvent(content);
   }
 
   public handleSendEventPlaying() {
     const content = GameStatusContent.PLAYING;
-    this.handleSendGameStatusEvent(content);
+    return this.handleSendGameStatusEvent(content);
   }
-  public handleSendGameStatusEvent(content: string) {
+  public handleSendGameStatusEvent(content: string): boolean {
     if (this.state.lastGameStatusEvent === content) {
-      return;
+      return false;
     }
     this.state.lastGameStatusEvent = content;
     sendEvent(EventName.GAME_STATUS, content);
     console.log(`send event: ${content}`);
-    return;
+    return true;
   }
 
   public handleSendEventRunning(useInterval: boolean = false) {

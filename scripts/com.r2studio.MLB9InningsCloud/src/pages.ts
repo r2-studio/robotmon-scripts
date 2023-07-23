@@ -358,9 +358,12 @@ export const settings = new Page(
   { x: 41, y: 320 },
   { x: 41, y: 320 }
 );
+export const settingsTabs = {
+  soundAndLanTab: { x: 22, y: 55 },
+  graphicTab: { x: 111, y: 55 },
+};
 export const settingsBtns = {
-  soundAndLanTab: { x: 79, y: 70 },
-  graphicTab: { x: 152, y: 62 },
+  leagueReset: { x: 562, y: 217 },
 };
 
 // FIXME: add lan change pages
@@ -643,8 +646,9 @@ export const selectNormalMasterLeagueModeProceed = new Page(
   { x: 565, y: 328 }
 );
 
-export const leagueResetDialog = new Page(
-  'leagueResetDialog',
+// a dialog to confirm league reset
+export const leagueResetDialogYN = new Page(
+  'leagueResetDialogYN',
   [
     { x: 115, y: 54, r: 181, g: 186, b: 189 },
     { x: 108, y: 305, r: 214, g: 219, b: 222 },
@@ -663,6 +667,41 @@ export const leagueResetDialog = new Page(
   { x: 193, y: 300 }, // no, cancel
   { x: 371, y: 300 } // yes, reset
 );
+
+// a dialog to select year, normal or master league
+// TODO: let user can select specific mode and year to play
+export const leagueResetDialog = new Page(
+  'leagueResetDialog',
+  [
+    // bg
+    { x: 113, y: 55, r: 181, g: 186, b: 189 },
+    { x: 115, y: 301, r: 214, g: 219, b: 222 },
+    { x: 522, y: 300, r: 214, g: 219, b: 222 },
+    { x: 522, y: 87, r: 181, g: 186, b: 189 },
+
+    // year bg
+    { x: 240, y: 162, r: 74, g: 81, b: 99 },
+    { x: 399, y: 162, r: 74, g: 81, b: 99 },
+
+    // cancel btn
+    { x: 205, y: 300, r: 41, g: 77, b: 123 },
+    { x: 230, y: 303, r: 179, g: 198, b: 229 },
+    { x: 263, y: 301, r: 157, g: 178, b: 211 },
+    { x: 296, y: 300, r: 41, g: 77, b: 123 },
+
+    // reset to year XX btn bg
+    { x: 327, y: 291, r: 8, g: 125, b: 255 },
+    { x: 329, y: 315, r: 0, g: 81, b: 238 },
+    { x: 401, y: 316, r: 0, g: 81, b: 238 },
+  ],
+  { x: 371, y: 300 }, // reset to year XX
+  { x: 193, y: 300 } // cancel
+);
+
+export const leagueResetDialogBtns = {
+  normal: { x: 218, y: 105 },
+  master: { x: 402, y: 105 },
+};
 
 export const selectSeasonMode = new Page(
   'selectSeasonMode',
@@ -1001,78 +1040,6 @@ export const autoGameConfirmEnd = new Page(
 );
 
 // * LeagueModes
-// export const leagueModePanelContinue = new Page(
-//   'leagueModePanelNextSchedule', // same behaviour as gLeagueModePanelNextSchedule
-//   [
-//     // nav bar star
-//     { x: 314, y: 10, r: 231, g: 231, b: 231 },
-//     { x: 320, y: 8, r: 247, g: 243, b: 247 },
-//     { x: 392, y: 13, r: 168, g: 169, b: 168 },
-//     { x: 394, y: 9, r: 142, g: 144, b: 142 },
-//     { x: 620, y: 6, r: 214, g: 211, b: 214 },
-
-//     // button on bottom
-//     { x: 41, y: 323, r: 67, g: 71, b: 60 },
-//     { x: 81, y: 324, r: 118, g: 132, b: 156 },
-//     { x: 131, y: 325, r: 57, g: 91, b: 124 },
-//     { x: 167, y: 321, r: 122, g: 138, b: 156 },
-//     { x: 180, y: 327, r: 24, g: 69, b: 123 },
-//     { x: 254, y: 327, r: 255, g: 255, b: 255 },
-//     { x: 338, y: 322, r: 255, g: 255, b: 255 },
-//     { x: 351, y: 334, r: 24, g: 60, b: 107 },
-//   ],
-//   { x: 616, y: 336 },
-//   { x: 41, y: 320 }
-// );
-
-// export const leagueModePanelNextSchedule2 = new Page(
-//   'leagueModePanelNextSchedule',
-//   [
-//     { x: 199, y: 215, r: 0, g: 0, b: 0 },
-//     { x: 299, y: 9, r: 214, g: 215, b: 214 },
-//     { x: 312, y: 7, r: 255, g: 251, b: 255 },
-//     { x: 371, y: 12, r: 57, g: 97, b: 132 },
-//     { x: 387, y: 8, r: 221, g: 221, b: 221 },
-//     { x: 390, y: 10, r: 143, g: 141, b: 143 },
-//     { x: 393, y: 11, r: 67, g: 70, b: 67 },
-//     { x: 470, y: 12, r: 177, g: 191, b: 202 },
-//     { x: 476, y: 12, r: 177, g: 191, b: 202 },
-//     { x: 493, y: 9, r: 255, g: 246, b: 192 },
-//     { x: 496, y: 13, r: 245, g: 166, b: 8 },
-//     { x: 568, y: 13, r: 117, g: 124, b: 134 },
-//     { x: 573, y: 15, r: 74, g: 81, b: 90 },
-//     { x: 580, y: 18, r: 214, g: 211, b: 214 },
-//     { x: 597, y: 13, r: 74, g: 93, b: 123 },
-//     { x: 603, y: 15, r: 74, g: 93, b: 123 },
-//     { x: 622, y: 14, r: 214, g: 215, b: 214 },
-//     { x: 621, y: 29, r: 0, g: 56, b: 90 },
-//     { x: 600, y: 30, r: 246, g: 242, b: 246 },
-//     { x: 600, y: 30, r: 246, g: 242, b: 246 },
-//     { x: 27, y: 315, r: 214, g: 219, b: 214 },
-//     { x: 45, y: 319, r: 215, g: 219, b: 214 },
-//     { x: 37, y: 330, r: 214, g: 219, b: 214 },
-//     { x: 71, y: 316, r: 24, g: 77, b: 141 },
-//     { x: 80, y: 320, r: 144, g: 162, b: 185 },
-//     { x: 108, y: 320, r: 194, g: 214, b: 233 },
-//     { x: 174, y: 315, r: 24, g: 77, b: 148 },
-//     { x: 173, y: 320, r: 168, g: 181, b: 198 },
-//     { x: 206, y: 321, r: 214, g: 231, b: 244 },
-//     { x: 245, y: 320, r: 24, g: 73, b: 140 },
-//     { x: 251, y: 321, r: 181, g: 195, b: 214 },
-//     { x: 286, y: 323, r: 94, g: 133, b: 172 },
-//     { x: 315, y: 328, r: 24, g: 65, b: 116 },
-//     { x: 337, y: 324, r: 177, g: 193, b: 207 },
-//     { x: 376, y: 320, r: 185, g: 207, b: 227 },
-//     { x: 402, y: 330, r: 21, g: 62, b: 112 },
-//     { x: 611, y: 327, r: 194, g: 173, b: 87 },
-//     { x: 599, y: 326, r: 255, g: 255, b: 254 },
-//     { x: 561, y: 326, r: 255, g: 255, b: 255 },
-//     { x: 506, y: 324, r: 240, g: 230, b: 196 },
-//   ],
-//   { x: 616, y: 336 },
-//   { x: 41, y: 320 }
-// );
-
 export const leagueModePanel = new Page(
   'leagueModePanel',
   [
