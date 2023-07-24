@@ -30,9 +30,11 @@ export function arrayFind<T>(arr: T[], condition: (el: T) => boolean): T | undef
 
 export function isSameColor(image: Image | RGB, target: XYRGB | RGB, thres: number = 0.8): boolean {
   let imageRGB: RGB | undefined;
-  if (image.width === undefined) {
+  if ('r' in image) {
+    // image is RGB
     imageRGB = image;
   } else if ('x' in target) {
+    // image is Image, target is XYRGB
     imageRGB = getImageColor(image, target.x, target.y);
   }
 
