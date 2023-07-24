@@ -21,6 +21,7 @@ export interface XYRGB {
 }
 
 export interface MessageWindow {
+  name: string;
   x: number;
   y: number;
   width: number;

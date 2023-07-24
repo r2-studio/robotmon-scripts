@@ -58,8 +58,8 @@ export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, ste
 
   for (var i = 0; i < steps; i++) {
     moveTo(fromPnt.x + step_x * i, fromPnt.y + step_y * i, 40, 0);
-    // console.log('in pnt: ', fromPnt.x + step_x * i, fromPnt.y + step_y * i)
-    sleep(50);
+    // console.log('in pnt: ', fromPnt.x + step_x * i, fromPnt.y + step_y * i);
+    sleep(100);
   }
 
   moveTo(toPnt.x, toPnt.y, 40, 0);
@@ -773,14 +773,61 @@ export function SwipeProductionMenuToTop(rerouter: Rerouter) {
   return swipeFromToPoint(rerouter, { x: 430, y: 80 }, { x: 430, y: 1500 }, 4);
 }
 export function swipeDownOneItem(rerouter: Rerouter) {
-  return swipeFromToPoint(rerouter, { x: 430, y: 319 }, { x: 430, y: 176 }, 7);
+  tapDown(430, 319, 40, 0);
+  sleep(500);
+  moveTo(430, 319, 40, 0);
+  sleep(500);
+  moveTo(430, 280, 40, 0);
+  sleep(500);
+  moveTo(430, 230, 40, 0);
+  sleep(500);
+  moveTo(430, 200, 40, 0);
+  sleep(500);
+  moveTo(430, 176, 40, 0);
+  sleep(1600);
+  tapUp(430, 176, 40, 0);
+  sleep(2000);
+
+  // return swipeFromToPoint(rerouter, { x: 430, y: 319 }, { x: 430, y: 176 }, 5);
 }
 export function swipeDown3Items(rerouter: Rerouter) {
   // console.log('swipe down to 3 item as currently in:', this.config.currentProductionBuilding);
-  return swipeFromToPoint(rerouter, { x: 430, y: 350 }, { x: 430, y: -70 }, 7);
+  tapDown(430, 350, 40, 0);
+  sleep(500);
+  moveTo(430, 350, 40, 0);
+  sleep(500);
+  moveTo(430, 250, 40, 0);
+  sleep(500);
+  moveTo(430, 150, 40, 0);
+  sleep(500);
+  moveTo(430, 50, 40, 0);
+  sleep(500);
+  moveTo(430, -70, 40, 0);
+  sleep(1600);
+  tapUp(430, -70, 40, 0);
+  sleep(1600);
+
+  // return swipeFromToPoint(rerouter, { x: 430, y: 350 }, { x: 430, y: -70 }, 7);
 }
 export function swipeToToolShop456(rerouter: Rerouter) {
-  return swipeFromToPoint(rerouter, { x: 430, y: 350 }, { x: 430, y: -170 }, 7);
+  SwipeProductionMenuToTop(rerouter);
+  tapDown(430, 350, 40, 0);
+  sleep(500);
+  moveTo(430, 350, 40, 0);
+  sleep(500);
+  moveTo(430, 250, 40, 0);
+  sleep(500);
+  moveTo(430, 150, 40, 0);
+  sleep(500);
+  moveTo(430, 50, 40, 0);
+  sleep(500);
+  moveTo(430, -80, 40, 0);
+  sleep(500);
+  moveTo(430, -170, 40, 0);
+  sleep(1600);
+  tapUp(430, -170, 40, 0);
+  sleep(1600);
+  // return swipeFromToPoint(rerouter, { x: 430, y: 350 }, { x: 430, y: -170 }, 7);
 }
 
 function findProductRequirements(rects: RECT[]) {
@@ -1006,7 +1053,9 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
     console.log('Special handle building:', productionName);
     swipeDownOneItem(rerouter);
 
+    console.log('11:');
     if (rerouter.isPageMatch(PAGES.productMapping[4])) {
+      console.log('22:');
       productionState[4] = collectProductItemInfo(
         4,
         goodsLocation['shovel'],
@@ -1015,6 +1064,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
         goodsTarget,
         safetyStock
       );
+      console.log('33:');
     }
   }
 
@@ -1034,6 +1084,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
       safetyStock
     );
   }
+  logs('makeGoodsToTarget', `> ${productionName} has ${availableSlots} available slots, productionState: ${JSON.stringify(productionState)}`);
 
   if (productionName === 'rfpageToolShop' && axeStockTo400) {
     productionState[1].productionTarget = 400;
@@ -1061,7 +1112,12 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
   let itemsToProduceLater = Object.keys(itemToProduceLater).map(key => itemToProduceLater[+key]);
   itemsToProduce.sort(dynamicSort('stockTargetFullfilledPercent'));
   itemsToProduceLater.sort(dynamicSort('stockTargetFullfilledPercent'));
-  itemsToProduce = [...itemsToProduce, ...itemsToProduceLater];
+  for (const obj of itemsToProduceLater) {
+    const keyExists = itemsToProduce.some(element => element['id'] === obj['id']);
+    if (!keyExists) {
+      itemsToProduce.push(obj);
+    }
+  }
   logs('makeGoodsToTarget', `>> ${productionName} has ${availableSlots} available slots, stocks to produce: ${JSON.stringify(itemsToProduce)}`);
 
   const rfpageLockedGood = new Page(

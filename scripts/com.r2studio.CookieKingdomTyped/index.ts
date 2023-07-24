@@ -30,6 +30,7 @@ import {
   countProductionSlotAvailable,
   makeGoodsToTarget,
   ocrStockAndReqInRect,
+  swipeDownOneItem,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -38,6 +39,7 @@ import * as ICONS from './src/icons';
 import * as CONSTANTS from './src/constants';
 import { TASKS } from './src/tasks';
 import { iconsGnomeLabKingdom } from './src/icons';
+import * as MessageWindow from './src/messageWindow';
 
 const VERSION_CODE: number = 0.1;
 
@@ -239,173 +241,173 @@ class CookieKingdom {
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       forceStop: false,
     });
-    // this.rerouter.addTask({
-    //   name: TASKS.collectKingdomPass,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.sendFriendReward,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.getInShopFreeDailyPack,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.collectMail,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.hotAirBallon,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.train,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.wishingTree,
-    //   maxTaskDuring: 10 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.fountain,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectFountainIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // if (this.config.autoPvPPurchaseAncientCookie) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.pvpPurchaseAncientCookie,
-    //     maxTaskDuring: 12 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
-    // this.rerouter.addTask({
-    //   name: TASKS.pvp,
-    //   maxTaskDuring: 12 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.superMayhem,
-    //   maxTaskDuring: 15 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.tropicalIslandShip,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.tropicalIslandSunbed,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.tropicalIslandClearBubble,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.bounties,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // if (this.config.autoLabResearch) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.gnomeLab,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 15 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
-    // if (this.config.autoHandleTradeHabor) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.haborSendShip,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
+    this.rerouter.addTask({
+      name: TASKS.collectKingdomPass,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.sendFriendReward,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.getInShopFreeDailyPack,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.collectMail,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.hotAirBallon,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.train,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.wishingTree,
+      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.fountain,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectFountainIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    if (this.config.autoPvPPurchaseAncientCookie) {
+      this.rerouter.addTask({
+        name: TASKS.pvpPurchaseAncientCookie,
+        maxTaskDuring: 12 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    this.rerouter.addTask({
+      name: TASKS.pvp,
+      maxTaskDuring: 12 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.superMayhem,
+      maxTaskDuring: 15 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.tropicalIslandShip,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.tropicalIslandSunbed,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.tropicalIslandClearBubble,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.bounties,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    if (this.config.autoLabResearch) {
+      this.rerouter.addTask({
+        name: TASKS.gnomeLab,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 15 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoHandleTradeHabor) {
+      this.rerouter.addTask({
+        name: TASKS.haborSendShip,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 120 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
 
-    // // TODO: some crystal icon might still missing
-    // if (
-    //   this.config.autoBalanceAuroraStocks ||
-    //   this.config.autoShopInSeasideMarket ||
-    //   this.config.autoBuyCaramelStuff ||
-    //   this.config.autoBuyRadiantShardsInHabor
-    // ) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.haborShopInSeaMarket,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
-    // if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.haborShopInShellGallery,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
+    // TODO: some crystal icon might still missing
+    if (
+      this.config.autoBalanceAuroraStocks ||
+      this.config.autoShopInSeasideMarket ||
+      this.config.autoBuyCaramelStuff ||
+      this.config.autoBuyRadiantShardsInHabor
+    ) {
+      this.rerouter.addTask({
+        name: TASKS.haborShopInSeaMarket,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 120 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
+      this.rerouter.addTask({
+        name: TASKS.haborShopInShellGallery,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 120 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
 
-    // if (this.config.autoHandleTowerOfSweetChaos) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.towerOfSweetChaos,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
+    if (this.config.autoHandleTowerOfSweetChaos) {
+      this.rerouter.addTask({
+        name: TASKS.towerOfSweetChaos,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 240 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
 
-    // // ====
-    // this.rerouter.addTask({
-    //   name: TASKS.guildCheckin,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.guildBattleDragon,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.guildBattleAlliance,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
+    // ====
+    this.rerouter.addTask({
+      name: TASKS.guildCheckin,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: 180 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.guildBattleDragon,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: 180 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.guildBattleAlliance,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: 180 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
 
-    // this.rerouter.addTask({
-    //   name: TASKS.resolveGreenChecks,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
+    this.rerouter.addTask({
+      name: TASKS.resolveGreenChecks,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
   }
 
   public addRoutes() {
@@ -2107,10 +2109,10 @@ class CookieKingdom {
         swipeFromToPoint(this.rerouter, { x: 430, y: 80 }, { x: 430, y: 1500 }, 4);
 
         var productIdx = this.config.magicLabProductIndex;
+        SwipeProductionMenuToTop(this.rerouter);
         while (productIdx > 3) {
           logs(context.task.name, `Move down 3 items, now: ${productIdx}`);
 
-          SwipeProductionMenuToTop(this.rerouter);
           swipeDown3Items(this.rerouter);
           this.rerouter.screen.tap({ x: 455, y: 37 });
           productIdx -= 3;
@@ -2281,7 +2283,10 @@ class CookieKingdom {
       path: `/${PAGES.rfpageGeneralMessageWindow.name}`,
       match: PAGES.rfpageGeneralMessageWindow,
       action: (context, image, matched, finishRound) => {
-        if (checkScreenMessage(this.rerouter, PAGES.messageTeamDontMatchToSCRow1) && checkScreenMessage(this.rerouter, PAGES.messageTeamDontMatchToSCRow2)) {
+        if (
+          checkScreenMessage(this.rerouter, MessageWindow.messageTeamDontMatchToSCRow1) &&
+          checkScreenMessage(this.rerouter, MessageWindow.messageTeamDontMatchToSCRow2)
+        ) {
           logs(
             context.task.name,
             'rfpageGeneralMessageWindow confirm PAGES.messageTeamDontMatchToSCRow1 && messageTeamDontMatchToSCRow2, send back and finish round'
@@ -2293,7 +2298,7 @@ class CookieKingdom {
           Utils.sleep(this.config.sleepAnimate);
           sendKeyBack();
           return;
-        } else if (checkScreenMessage(this.rerouter, PAGES.unfinishedPVPBattleMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.unfinishedPVPBattleMessageScreen)) {
           if (context.task.name !== TASKS.pvp) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedBattleMessageScreen, skip current task');
             finishRound(true);
@@ -2303,7 +2308,7 @@ class CookieKingdom {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedBattleMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 394, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, PAGES.unfinishedSuperMayhemBattleMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.unfinishedSuperMayhemBattleMessageScreen)) {
           if (context.task.name !== TASKS.superMayhem) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedSuperMayhemBattleMessageScreen, skip current task');
             finishRound(true);
@@ -2313,7 +2318,7 @@ class CookieKingdom {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedSuperMayhemBattleMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 394, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, PAGES.messageNotifyQuit) || checkScreenMessage(this.rerouter, PAGES.messageNotifyQuit2)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit) || checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit2)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageNotifyQuit/messageNotifyQuit2, send back');
           sendKeyBack();
           return;

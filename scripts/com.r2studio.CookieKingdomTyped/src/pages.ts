@@ -152,17 +152,7 @@ export const pageTermsOfServiceWindow = [
   { x: 158, y: 243, r: 255, g: 255, b: 255 },
 ];
 export const rfpageTermsOfServiceWindow = new Page('rfpageTermsOfServiceWindow', pageTermsOfServiceWindow, pageTermsOfServiceWindow[0]);
-export const termOfServiceMessage = {
-  x: 168,
-  y: 127,
-  width: 140,
-  height: 6,
 
-  targetY: 4,
-  lookingForColor: { r: 37, g: 37, b: 37 },
-  targetColorCount: 32,
-  targetColorThreashold: 5,
-};
 export const pageTermsOfServices2 = [
   { x: 447, y: 230, r: 255, g: 255, b: 255 },
   { x: 43, y: 257, r: 96, g: 24, b: 22 },
@@ -256,28 +246,6 @@ export const pageUnfinishedBattleNeedResume = [
 //   pageUnfinishedBattleNeedResume,
 //   pageUnfinishedBattleNeedResume[0]
 // );
-export const unfinishedPVPBattleMessageScreen = {
-  x: 240,
-  y: 160,
-  width: 160,
-  height: 6,
-
-  targetY: 4,
-  lookingForColor: { r: 247, g: 235, b: 222 },
-  targetColorCount: 128,
-  targetColorThreashold: 5,
-};
-export const unfinishedSuperMayhemBattleMessageScreen = {
-  x: 240,
-  y: 166,
-  width: 160,
-  height: 12,
-
-  targetY: 6,
-  lookingForColor: { r: 227, g: 218, b: 209 },
-  targetColorCount: 84,
-  targetColorThreashold: 5,
-};
 
 export const rfpageHasUnreadMails = new Page(
   'rfpageHasUnreadMails',
@@ -1675,113 +1643,6 @@ export const pageGooglePlaystoreHasStopped = [
 ];
 export const rfpageGooglePlaystoreHasStopped = new Page('rfpageGooglePlaystoreHasStopped', pageGooglePlaystoreHasStopped, pageGooglePlaystoreHasStopped[0]);
 
-export const facebookRefreshTokenExpiredLogout = {
-  x: 220,
-  y: 135,
-  width: 196,
-  height: 14,
-
-  targetY: 4,
-  lookingForColor: { r: 140, g: 135, b: 128 },
-  targetColorCount: 16,
-  targetColorThreashold: 5,
-};
-
-export const anErrorHasOccuredMessageScreen = {
-  x: 222,
-  y: 160,
-  width: 198,
-  height: 25,
-
-  targetY: 4,
-  lookingForColor: { r: 80, g: 80, b: 80 },
-  targetColorCount: 83,
-  targetColorThreashold: 5,
-};
-
-export const theNetworkIsUnstableMessageScreen = {
-  x: 222,
-  y: 160,
-  width: 198,
-  height: 25,
-
-  targetY: 4,
-  lookingForColor: { r: 80, g: 80, b: 80 },
-  targetColorCount: 51,
-  targetColorThreashold: 5,
-};
-
-export const anUnknownErrorHasOccurMessageScreen = {
-  x: 222,
-  y: 160,
-  width: 198,
-  height: 25,
-
-  targetY: 4,
-  lookingForColor: { r: 80, g: 80, b: 80 },
-  targetColorCount: 79,
-  targetColorThreashold: 3,
-};
-
-export const theReloginIntoAnotherDeviceMessageScreen = {
-  x: 222,
-  y: 160,
-  width: 198,
-  height: 25,
-
-  targetY: 4,
-  lookingForColor: { r: 80, g: 80, b: 80 },
-  targetColorCount: 74,
-  targetColorThreashold: 1,
-};
-
-export const messageNotifyQuit = {
-  x: 220,
-  y: 162,
-  width: 196,
-  height: 12,
-
-  targetY: 4,
-  lookingForColor: { r: 95, g: 95, b: 95 },
-  targetColorCount: 42,
-  targetColorThreashold: 8,
-};
-
-export const messageNotifyQuit2 = {
-  x: 234,
-  y: 184,
-  width: 180,
-  height: 12,
-
-  targetY: 4,
-  lookingForColor: { r: 95, g: 95, b: 95 },
-  targetColorCount: 33,
-  targetColorThreashold: 10,
-};
-
-export const messageTeamDontMatchToSCRow1 = {
-  x: 234,
-  y: 160,
-  width: 140,
-  height: 12,
-
-  targetY: 6,
-  lookingForColor: { r: 95, g: 95, b: 95 },
-  targetColorCount: 37,
-  targetColorThreashold: 8,
-};
-export const messageTeamDontMatchToSCRow2 = {
-  x: 240,
-  y: 173,
-  width: 160,
-  height: 12,
-
-  targetY: 6,
-  lookingForColor: { r: 95, g: 95, b: 95 },
-  targetColorCount: 38,
-  targetColorThreashold: 8,
-};
-
 // This window can change language
 export const pageNewDataPackAvailable = [
   { x: 358, y: 265, r: 123, g: 205, b: 8 },
@@ -1928,67 +1789,6 @@ export const pageServerSelection = [
   { x: 302, y: 64, r: 117, g: 186, b: 100 },
   { x: 278, y: 81, r: 254, g: 254, b: 254 },
 ];
-
-export const incorrectEmailFormat = {
-  x: 222,
-  y: 166,
-  width: 172,
-  height: 12,
-  targetY: 6,
-  lookingForColor: { r: 226, g: 86, b: 86 },
-  targetColorCount: 44,
-  targetColorThreashold: 3,
-};
-export const needRegisterDevPlayAccount = {
-  x: 222,
-  y: 166,
-  width: 172,
-  height: 12,
-  targetY: 6,
-  lookingForColor: { r: 226, g: 86, b: 86 },
-  targetColorCount: 34,
-  targetColorThreashold: 3,
-};
-export const registerWithSocialPlatformMessageScreen = {
-  x: 225,
-  y: 162,
-  width: 75,
-  height: 13,
-  targetY: 8,
-  lookingForColor: { r: 244, g: 191, b: 191 },
-  targetColorCount: 21,
-  targetColorThreashold: 3,
-};
-export const wrongPasswordMessageScreen = {
-  x: 225,
-  y: 162,
-  width: 75,
-  height: 13,
-  targetY: 6,
-  lookingForColor: { r: 230, g: 100, b: 100 },
-  targetColorCount: 17,
-  targetColorThreashold: 2,
-};
-export const wrongPasswordMessageScreenWithLongId = {
-  x: 225,
-  y: 175,
-  width: 75,
-  height: 13,
-  targetY: 6,
-  lookingForColor: { r: 244, g: 100, b: 100 },
-  targetColorCount: 25,
-  targetColorThreashold: 2,
-};
-export const passwordTooShortMessageScreen = {
-  x: 225,
-  y: 162,
-  width: 75,
-  height: 13,
-  targetY: 4,
-  lookingForColor: { r: 244, g: 191, b: 191 },
-  targetColorCount: 2,
-  targetColorThreashold: 0,
-};
 
 export const rfpageInputAge = new Page('rfpageInputAge', pageInputAge, pageInputAge[0]);
 export const rfpageTermsOfServices2 = new Page('rfpageTermsOfServices2', pageTermsOfServices2, pageTermsOfServices2[0]);
