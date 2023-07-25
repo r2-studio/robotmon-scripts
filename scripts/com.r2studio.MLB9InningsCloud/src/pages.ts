@@ -1039,6 +1039,25 @@ export const autoGameConfirmEnd = new Page(
   { x: 390, y: 304 } // yes, end auto play
 );
 
+// TODO: not sure if it also apply to league mode
+export const rechargeBall = new Page(
+  'rechargeBall',
+  [
+    // bg
+    { x: 115, y: 46, r: 181, g: 186, b: 189 },
+    { x: 109, y: 306, r: 214, g: 219, b: 222 },
+    { x: 521, y: 305, r: 214, g: 219, b: 222 },
+    { x: 515, y: 44, r: 71, g: 70, b: 71 },
+    // btn bg
+    { x: 172, y: 307, r: 8, g: 97, b: 247 },
+    { x: 376, y: 304, r: 8, g: 105, b: 247 },
+    { x: 207, y: 298, r: 0, g: 53, b: 107 },
+    { x: 403, y: 297, r: 0, g: 53, b: 107 },
+  ],
+  { x: 518, y: 49 }, // cancel
+  { x: 518, y: 49 }
+);
+
 // * LeagueModes
 export const leagueModePanel = new Page(
   'leagueModePanel',

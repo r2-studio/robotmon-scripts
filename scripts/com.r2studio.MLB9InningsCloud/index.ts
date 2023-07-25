@@ -335,7 +335,7 @@ class MLB9I {
     this.rerouter.addTask({
       name: TASK.settingResetLeagueProgress,
       // maxTaskRunTimes: 1,
-      minRoundInterval: 1 * CONSTANTS.hourInMs,
+      // minRoundInterval: 1 * CONSTANTS.hourInMs,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       forceStop: true,
     });
@@ -803,6 +803,21 @@ class MLB9I {
           return;
         }
         this.rerouter.goNext(PAGE.rankedBattleGameInfo);
+      }),
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGE.rechargeBall.name}`,
+      match: PAGE.rechargeBall,
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
+        switch (context.task.name) {
+          case TASK.playBattleGame:
+          case TASK.playLeagueGame:
+            console.log('cannot continue: recharge ball needed');
+            finishRound(true);
+          default:
+            break;
+        }
+        this.rerouter.goBack(PAGE.rechargeBall);
       }),
     });
 
@@ -1348,7 +1363,7 @@ class MLB9I {
               // can only resolved by resetting league mode progress
               console.log('handleResetLeagueModeProgress');
               this.state.leagueGame.needResetProgress = true;
-              finishRound();
+              finishRound(true);
             }
 
             break;
@@ -1490,7 +1505,7 @@ class MLB9I {
     this.state.leagueGame = {
       lastCheckPowerSaveAt: 0,
       powerSaveColorCount: {},
-      tryEnterGameCnts: 0,
+      tryEnterGameCnts: this.state.leagueGame.tryEnterGameCnts,
       needResetProgress: false,
     };
     const content = GameStatusContent.LAUNCHING;
