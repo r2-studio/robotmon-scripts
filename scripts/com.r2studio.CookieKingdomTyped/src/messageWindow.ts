@@ -1,15 +1,27 @@
 import { GroupPage, MessageWindow, Page } from 'rerouter';
 
-export const unfinishedBattleMessageScreen: MessageWindow = {
-  name: 'unfinishedBattleMessageScreen',
-  x: 240,
-  y: 160,
-  width: 160,
-  height: 6,
+export const downloadDataNoLanguageTitle: MessageWindow = {
+  name: 'downloadDataNoLanguageTitle',
+  x: 260,
+  y: 88,
+  width: 110,
+  height: 20,
+
+  targetY: 10,
+  lookingForColor: { r: 249, g: 249, b: 250 },
+  targetColorCount: 45,
+  targetColorThreashold: 5,
+};
+export const downloadDataNoLanguage: MessageWindow = {
+  name: 'downloadDataNoLanguage',
+  x: 226,
+  y: 127,
+  width: 180,
+  height: 12,
 
   targetY: 4,
-  lookingForColor: { r: 247, g: 235, b: 222 },
-  targetColorCount: 128,
+  lookingForColor: { r: 202, g: 193, b: 183 },
+  targetColorCount: 37,
   targetColorThreashold: 5,
 };
 
@@ -231,5 +243,18 @@ export const unfinishedSuperMayhemBattleMessageScreen = {
   targetY: 6,
   lookingForColor: { r: 227, g: 218, b: 209 },
   targetColorCount: 84,
+  targetColorThreashold: 5,
+};
+// Your most recent battle was not finished due to an abnormal exit. However, the previous level's battle record was saved
+export const battleAbnormalButLastWasSavedMessageScreen = {
+  name: 'battleAbnormalButLastWasSavedMessageScreen',
+  x: 197,
+  y: 173,
+  width: 242,
+  height: 12,
+
+  targetY: 6,
+  lookingForColor: { r: 227, g: 218, b: 209 },
+  targetColorCount: 86,
   targetColorThreashold: 5,
 };

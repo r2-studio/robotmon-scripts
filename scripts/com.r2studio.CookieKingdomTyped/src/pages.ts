@@ -51,7 +51,6 @@ const rfpageBarryFarm = new Page(
   ],
   { x: 597, y: 118 }
 );
-
 const rfpageMilkFarm = new Page(
   'rfpageMilkFarm',
   [
@@ -62,7 +61,6 @@ const rfpageMilkFarm = new Page(
   ],
   { x: 597, y: 118 }
 );
-
 const rfpageCottomFarm = new Page(
   'rfpageCottomFarm',
   [
@@ -84,15 +82,14 @@ export const rfpageInKingdomVillage = new Page('rfpageInKingdomVillage', [
 ]);
 
 // Check for gears in login page via pixel matching
-export const pageInLoginPageWithGearAndVideo = [
+export const rfpageInLoginPageWithGearAndVideo = new Page('rfpageInLoginPageWithGearAndVideo', [
   { x: 621, y: 13, r: 233, g: 233, b: 235 },
   { x: 622, y: 16, r: 3, g: 4, b: 9 },
   { x: 597, y: 16, r: 233, g: 235, b: 239 },
   { x: 593, y: 16, r: 4, g: 6, b: 11 },
   { x: 590, y: 17, r: 233, g: 235, b: 239 },
   { x: 594, y: 23, r: 14, g: 14, b: 25 },
-];
-export const rfpageInLoginPageWithGearAndVideo = new Page('rfpageInLoginPageWithGearAndVideo', pageInLoginPageWithGearAndVideo);
+]);
 
 export const pageLoginFacebook = [
   { x: 186, y: 72, r: 59, g: 89, b: 152 },
@@ -260,17 +257,18 @@ export const rfpageHasUnreadMails = new Page(
 export const rfpageMailsAllClaimed = new Page(
   'rfpageMailsAllClaimed',
   [
-    { x: 615, y: 20, r: 255, g: 255, b: 255 },
-    { x: 607, y: 18, r: 66, g: 109, b: 123 },
-    { x: 362, y: 27, r: 57, g: 69, b: 107 },
-    { x: 342, y: 30, r: 52, g: 53, b: 57 },
-    { x: 333, y: 30, r: 255, g: 255, b: 255 },
-    { x: 336, y: 30, r: 9, g: 10, b: 16 },
-    { x: 488, y: 315, r: 180, g: 180, b: 180 },
-    { x: 506, y: 324, r: 160, g: 160, b: 160 },
-    { x: 462, y: 324, r: 49, g: 60, b: 90 },
+    { x: 615, y: 19, r: 41, g: 89, b: 123 },
+    { x: 373, y: 30, r: 57, g: 69, b: 107 },
+    { x: 296, y: 30, r: 255, g: 255, b: 255 },
+    { x: 606, y: 301, r: 49, g: 60, b: 90 },
+    { x: 591, y: 322, r: 160, g: 160, b: 160 },
+    { x: 486, y: 317, r: 180, g: 180, b: 180 },
+    { x: 44, y: 327, r: 41, g: 44, b: 63 },
+    { x: 30, y: 328, r: 49, g: 60, b: 90 },
+    { x: 622, y: 322, r: 9, g: 14, b: 20 },
+    { x: 18, y: 280, r: 54, g: 43, b: 26 },
   ],
-  { x: 606, y: 20 }
+  { x: 615, y: 19 }
 );
 
 export const rfpageInFountain = new Page(
@@ -442,15 +440,6 @@ export const rfpageInPVPMedalShop = new Page('rfpageInPVPMedalShop', [
   { x: 517, y: 22, r: 0, g: 91, b: 127 },
   { x: 87, y: 62, r: 225, g: 228, b: 237 },
 ]);
-export const rfpagePVPAncientCookieSoldout = new Page('rfpagePVPAncientCookieSoldout', [
-  { x: 86, y: 109, r: 206, g: 20, b: 24 },
-  { x: 38, y: 131, r: 206, g: 20, b: 24 },
-]);
-export const rfpagePVPSuperEpicCookieSoldout = new Page('rfpagePVPSuperEpicCookieSoldout', [
-  { x: 118, y: 127, r: 220, g: 23, b: 24 },
-  { x: 170, y: 112, r: 206, g: 20, b: 24 },
-  { x: 164, y: 98, r: 74, g: 76, b: 87 },
-]);
 export const rfpagePVPNotEnoughMedal = new Page(
   'rfpagePVPNotEnoughMedal',
   [
@@ -571,6 +560,21 @@ export const rfpageSuperMayhemReadyToBattle = new Page(
     { x: 304, y: 218, r: 255, g: 223, b: 24 },
   ],
   { x: 550, y: 325 }
+);
+
+export const rfpageTropicalRaids = new Page(
+  'rfpageTropicalRaids',
+  [
+    { x: 612, y: 18, r: 56, g: 167, b: 231 },
+    { x: 521, y: 16, r: 0, g: 193, b: 255 },
+    { x: 425, y: 10, r: 136, g: 204, b: 170 },
+    { x: 431, y: 17, r: 246, g: 243, b: 226 },
+    { x: 433, y: 28, r: 139, g: 207, b: 173 },
+    { x: 341, y: 20, r: 199, g: 166, b: 93 },
+    { x: 53, y: 111, r: 62, g: 38, b: 21 },
+    { x: 41, y: 115, r: 214, g: 198, b: 190 },
+  ],
+  { x: 612, y: 18 }
 );
 
 export const pageBattleFinishedWithSunbeds = [
@@ -779,25 +783,30 @@ export const rfpageInShellShop = new Page('rfpageInShellShop', [
   { x: 272, y: 28, r: 200, g: 212, b: 214 },
   { x: 254, y: 12, r: 231, g: 199, b: 156 },
 ]);
+// TODO: 驗證不同模擬器這邊是否辨識不同
 export const rfpageConfirmBuySeaFairy = new Page(
   'rfpageConfirmBuySeaFairy',
   [
-    { x: 307, y: 256, r: 231, g: 240, b: 217 },
-    { x: 292, y: 241, r: 148, g: 219, b: 57 },
-    { x: 241, y: 258, r: 222, g: 207, b: 198 },
-    { x: 313, y: 77, r: 255, g: 255, b: 255 },
-    { x: 273, y: 96, r: 57, g: 69, b: 107 },
+    { x: 304, y: 240, r: 244, g: 255, b: 203 },
+    { x: 290, y: 240, r: 121, g: 207, b: 12 },
+    { x: 453, y: 79, r: 34, g: 85, b: 119 },
+    { x: 317, y: 21, r: 115, g: 120, b: 108 },
+    { x: 85, y: 317, r: 124, g: 126, b: 99 },
+    { x: 293, y: 75, r: 29, g: 59, b: 127 },
   ],
-  { x: 307, y: 256 }
+  { x: 304, y: 240 }
 );
 export const rfpageConfirmBuyGuildRelics = new Page(
   'rfpageConfirmBuyGuildRelics',
   [
-    { x: 349, y: 254, r: 123, g: 207, b: 8 },
-    { x: 335, y: 81, r: 156, g: 93, b: 41 },
-    { x: 324, y: 38, r: 83, g: 106, b: 124 },
+    { x: 309, y: 221, r: 247, g: 252, b: 200 },
+    { x: 295, y: 220, r: 121, g: 207, b: 12 },
+    { x: 338, y: 73, r: 154, g: 94, b: 44 },
+    { x: 324, y: 75, r: 207, g: 121, b: 61 },
+    { x: 318, y: 17, r: 123, g: 101, b: 115 },
+    { x: 298, y: 24, r: 114, g: 102, b: 119 },
   ],
-  { x: 349, y: 254 }
+  { x: 309, y: 221 }
 );
 export const rfpageConfirmBuyLegendSoulEssence = new Page(
   'rfpageConfirmBuyLegendSoulEssence',
@@ -849,12 +858,6 @@ export const pageAllianceRewardGet = [
   { x: 175, y: 288, r: 53, g: 53, b: 53 },
 ];
 
-export const pageSelectStartingTeam = [
-  { x: 260, y: 29, r: 140, g: 88, b: 230 },
-  { x: 160, y: 63, r: 107, g: 101, b: 222 },
-  { x: 399, y: 107, r: 255, g: 200, b: 0 },
-  { x: 488, y: 306, r: 0, g: 150, b: 214 },
-];
 export const pageSelectNextTeam = [
   { x: 256, y: 34, r: 135, g: 87, b: 223 },
   { x: 172, y: 57, r: 49, g: 32, b: 90 },
@@ -949,7 +952,12 @@ export const rfpageCannotRefilAllianceTicketToday = new Page(
   // pageCannotRefilAllianceTicketToday[0]
 );
 
-export const rfpageSelectStartingTeam = new Page('rfpageSelectStartingTeam', pageSelectStartingTeam, { x: 260, y: 29 });
+export const rfpageSelectStartingTeam = new Page('rfpageSelectStartingTeam', [
+  { x: 260, y: 29, r: 140, g: 88, b: 230 },
+  { x: 160, y: 63, r: 107, g: 101, b: 222 },
+  { x: 399, y: 107, r: 255, g: 200, b: 0 },
+  { x: 488, y: 306, r: 0, g: 150, b: 214 },
+]);
 export const rfpageSelectNextTeam = new Page('rfpageSelectNextTeam', pageSelectNextTeam, pageSelectNextTeam[0]);
 export const rfpageKeepBattleByOrderNotCheckWhenStart = new Page(
   'rfpageKeepBattleByOrderNotCheckWhenStart',
@@ -1065,11 +1073,15 @@ export const rfpageDragonAddMoreCookie = new Page('rfpageDragonAddMoreCookie', [
   { x: 419, y: 18, r: 127, g: 95, b: 4 },
   { x: 518, y: 18, r: 20, g: 117, b: 127 },
 ]);
-export const rfpageDragonRemainHealth = new Page('rfpageDragonRemainHealth', [
-  { x: 368, y: 233, r: 132, g: 65, b: 255 },
-  { x: 153, y: 334, r: 1, g: 31, b: 41 },
-  { x: 79, y: 334, r: 42, g: 15, b: 4 },
-]);
+export const rfpageDragonRemainHealth = new Page(
+  'rfpageDragonRemainHealth',
+  [
+    { x: 368, y: 233, r: 132, g: 65, b: 255 },
+    { x: 153, y: 334, r: 1, g: 31, b: 41 },
+    { x: 79, y: 334, r: 42, g: 15, b: 4 },
+  ],
+  { x: 572, y: 330 }
+);
 export const rfpageCookieAlliance = new Page('rfpageCookieAlliance', [
   { x: 333, y: 21, r: 255, g: 255, b: 255 },
   { x: 329, y: 25, r: 66, g: 69, b: 222 },
@@ -1660,20 +1672,20 @@ export const pageNewDataPackDownloadFailed = [
 ];
 export const rfpageNewDataPackDownloadFailed = new Page('rfpageNewDataPackDownloadFailed', pageNewDataPackDownloadFailed, pageNewDataPackDownloadFailed[0]);
 
-// If already choose language in pageNewDataPackAvailable
-export const pageNewDataPackAvaiableNoLanguage = [
-  { x: 366, y: 252, r: 123, g: 205, b: 8 },
-  { x: 398, y: 254, r: 221, g: 205, b: 195 },
-  { x: 263, y: 254, r: 147, g: 217, b: 57 },
-  { x: 246, y: 254, r: 221, g: 205, b: 195 },
-  { x: 341, y: 96, r: 255, g: 255, b: 255 },
-  { x: 284, y: 99, r: 253, g: 253, b: 251 },
-];
-export const rfpageNewDataPackAvaiableNoLanguage = new Page(
-  'rfpageNewDataPackAvaiableNoLanguage',
-  pageNewDataPackAvaiableNoLanguage,
-  pageNewDataPackAvaiableNoLanguage[0]
-);
+// If already choose language in pageNewDataPackAvailable (don't use as looks like purchase stuff with diamond, read the text instead)
+// export const pageNewDataPackAvaiableNoLanguage = [
+//   { x: 366, y: 252, r: 123, g: 205, b: 8 },
+//   { x: 398, y: 254, r: 221, g: 205, b: 195 },
+//   { x: 263, y: 254, r: 147, g: 217, b: 57 },
+//   { x: 246, y: 254, r: 221, g: 205, b: 195 },
+//   { x: 341, y: 96, r: 255, g: 255, b: 255 },
+//   { x: 284, y: 99, r: 253, g: 253, b: 251 },
+// ];
+// export const rfpageNewDataPackAvaiableNoLanguage = new Page(
+//   'rfpageNewDataPackAvaiableNoLanguage',
+//   pageNewDataPackAvaiableNoLanguage,
+//   pageNewDataPackAvaiableNoLanguage[0]
+// );
 
 export const rfpageGeneralMessageWindow = new Page(
   'rfpageGeneralMessageWindow',
@@ -1897,6 +1909,8 @@ export const rfpageFriendRewardsSent = new Page(
     { x: 20, y: 89, r: 4, g: 4, b: 3 },
     { x: 214, y: 341, r: 57, g: 69, b: 107 },
     { x: 173, y: 341, r: 57, g: 69, b: 107 },
+    { x: 425, y: 21, r: 0, g: 70, b: 129 },
+    { x: 516, y: 26, r: 117, g: 80, b: 41 },
   ],
   { x: 400, y: 329 }
 );
@@ -1923,13 +1937,18 @@ export const rfpageIsDailyFreePackageNotClaimed = new Page(
   ],
   { x: 268, y: 314 }
 );
-export const rfpageIsDailyFreePackageClaimed = new Page('rfpageIsDailyFreePackageClaimed', [
-  { x: 273, y: 329, r: 125, g: 125, b: 125 },
-  { x: 180, y: 321, r: 125, g: 125, b: 125 },
-  { x: 219, y: 270, r: 198, g: 94, b: 130 },
-  { x: 192, y: 164, r: 47, g: 231, b: 255 },
-  { x: 226, y: 227, r: 255, g: 117, b: 189 },
-]);
+export const rfpageIsDailyFreePackageClaimed = new Page(
+  'rfpageIsDailyFreePackageClaimed',
+  [
+    { x: 616, y: 18, r: 221, g: 238, b: 238 },
+    { x: 273, y: 329, r: 125, g: 125, b: 125 },
+    { x: 180, y: 321, r: 125, g: 125, b: 125 },
+    { x: 219, y: 270, r: 198, g: 94, b: 130 },
+    { x: 192, y: 164, r: 47, g: 231, b: 255 },
+    { x: 226, y: 227, r: 255, g: 117, b: 189 },
+  ],
+  { x: 616, y: 18 }
+);
 export const rfpageInShop = new Page('rfpageInShop', [
   { x: 521, y: 18, r: 8, g: 125, b: 255 },
   { x: 405, y: 20, r: 255, g: 224, b: 0 },

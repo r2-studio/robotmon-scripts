@@ -8,6 +8,16 @@ export type ScriptConfig = {
   leagueYear: number; //gLeagueYearMin
 };
 
+// The state of individual tasks
+export interface TaskStatus {
+  [key: string]: any;
+}
+
+// The state of overall bot
+export interface BotStatus {
+  [key: string]: any;
+}
+
 export enum WishStatus {
   opened = 'opened',
   refresh = 'refresh',

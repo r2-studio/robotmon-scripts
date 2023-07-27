@@ -95,7 +95,8 @@ export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, p
       cnt++;
     }
   }
-  console.log('cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ', cnt, message.targetColorCount, message.targetColorThreashold);
+  logs('checkScreenMessage', `Checking ${message.name}, expecting ${cnt} points and got ${message.targetColorCount} points`)
+  // console.log('cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ', cnt, message.targetColorCount, message.targetColorThreashold);
 
   releaseImage(img);
   releaseImage(croppedImage);
@@ -1072,9 +1073,11 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
   swipeFromToPoint(rerouter, { x: 464, y: 340 }, { x: 464, y: -1500 }, 4); // SwipeProductionMenuToBottom()
 
   for (let i of [5, 6, 7]) {
+    console.log('44:');
     if (!rerouter.isPageMatch(PAGES.productMapping[i])) {
       break;
     }
+    console.log('55:');
     productionState[i] = collectProductItemInfo(
       i,
       goodsLocation[i],
@@ -1083,6 +1086,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
       goodsTarget,
       safetyStock
     );
+    console.log('66:');
   }
   logs('makeGoodsToTarget', `> ${productionName} has ${availableSlots} available slots, productionState: ${JSON.stringify(productionState)}`);
 
