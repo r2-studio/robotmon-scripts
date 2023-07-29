@@ -25,44 +25,44 @@ export const downloadDataNoLanguage: MessageWindow = {
   targetColorThreashold: 5,
 };
 
-export const termOfServiceMessage: MessageWindow = {
-  name: 'termOfServiceMessage',
-  x: 168,
-  y: 127,
-  width: 140,
-  height: 6,
+// export const termOfServiceMessage: MessageWindow = {
+//   name: 'termOfServiceMessage',
+//   x: 168,
+//   y: 127,
+//   width: 140,
+//   height: 6,
 
-  targetY: 4,
-  lookingForColor: { r: 37, g: 37, b: 37 },
-  targetColorCount: 32,
-  targetColorThreashold: 5,
-};
+//   targetY: 4,
+//   lookingForColor: { r: 37, g: 37, b: 37 },
+//   targetColorCount: 32,
+//   targetColorThreashold: 5,
+// };
 
-export const facebookRefreshTokenExpiredLogout: MessageWindow = {
-  name: 'facebookRefreshTokenExpiredLogout',
-  x: 220,
-  y: 135,
-  width: 196,
-  height: 14,
+// export const facebookRefreshTokenExpiredLogout: MessageWindow = {
+//   name: 'facebookRefreshTokenExpiredLogout',
+//   x: 220,
+//   y: 135,
+//   width: 196,
+//   height: 14,
 
-  targetY: 4,
-  lookingForColor: { r: 140, g: 135, b: 128 },
-  targetColorCount: 16,
-  targetColorThreashold: 5,
-};
+//   targetY: 4,
+//   lookingForColor: { r: 140, g: 135, b: 128 },
+//   targetColorCount: 16,
+//   targetColorThreashold: 5,
+// };
 
-export const anErrorHasOccuredMessageScreen: MessageWindow = {
-  name: 'anErrorHasOccuredMessageScreen',
-  x: 222,
-  y: 160,
-  width: 198,
-  height: 25,
+// export const anErrorHasOccuredMessageScreen: MessageWindow = {
+//   name: 'anErrorHasOccuredMessageScreen',
+//   x: 222,
+//   y: 160,
+//   width: 198,
+//   height: 25,
 
-  targetY: 4,
-  lookingForColor: { r: 80, g: 80, b: 80 },
-  targetColorCount: 83,
-  targetColorThreashold: 5,
-};
+//   targetY: 4,
+//   lookingForColor: { r: 80, g: 80, b: 80 },
+//   targetColorCount: 83,
+//   targetColorThreashold: 5,
+// };
 
 export const theNetworkIsUnstableMessageScreen: MessageWindow = {
   name: 'theNetworkIsUnstableMessageScreen',
@@ -77,18 +77,18 @@ export const theNetworkIsUnstableMessageScreen: MessageWindow = {
   targetColorThreashold: 5,
 };
 
-export const anUnknownErrorHasOccurMessageScreen: MessageWindow = {
-  name: 'anUnknownErrorHasOccurMessageScreen',
-  x: 222,
-  y: 160,
-  width: 198,
-  height: 25,
+// export const anUnknownErrorHasOccurMessageScreen: MessageWindow = {
+//   name: 'anUnknownErrorHasOccurMessageScreen',
+//   x: 222,
+//   y: 160,
+//   width: 198,
+//   height: 25,
 
-  targetY: 4,
-  lookingForColor: { r: 80, g: 80, b: 80 },
-  targetColorCount: 79,
-  targetColorThreashold: 3,
-};
+//   targetY: 4,
+//   lookingForColor: { r: 80, g: 80, b: 80 },
+//   targetColorCount: 79,
+//   targetColorThreashold: 3,
+// };
 
 export const theReloginIntoAnotherDeviceMessageScreen: MessageWindow = {
   name: 'theReloginIntoAnotherDeviceMessageScreen',
@@ -129,72 +129,72 @@ export const messageNotifyQuit2: MessageWindow = {
   targetColorThreashold: 10,
 };
 
-export const incorrectEmailFormat: MessageWindow = {
-  name: 'incorrectEmailFormat',
-  x: 222,
-  y: 166,
-  width: 172,
-  height: 12,
-  targetY: 6,
-  lookingForColor: { r: 226, g: 86, b: 86 },
-  targetColorCount: 44,
-  targetColorThreashold: 3,
-};
-export const needRegisterDevPlayAccount: MessageWindow = {
-  name: 'needRegisterDevPlayAccount',
-  x: 222,
-  y: 166,
-  width: 172,
-  height: 12,
-  targetY: 6,
-  lookingForColor: { r: 226, g: 86, b: 86 },
-  targetColorCount: 34,
-  targetColorThreashold: 3,
-};
-export const registerWithSocialPlatformMessageScreen: MessageWindow = {
-  name: 'registerWithSocialPlatformMessageScreen',
-  x: 225,
-  y: 162,
-  width: 75,
-  height: 13,
-  targetY: 8,
-  lookingForColor: { r: 244, g: 191, b: 191 },
-  targetColorCount: 21,
-  targetColorThreashold: 3,
-};
-export const wrongPasswordMessageScreen: MessageWindow = {
-  name: 'wrongPasswordMessageScreen',
-  x: 225,
-  y: 162,
-  width: 75,
-  height: 13,
-  targetY: 6,
-  lookingForColor: { r: 230, g: 100, b: 100 },
-  targetColorCount: 17,
-  targetColorThreashold: 2,
-};
-export const wrongPasswordMessageScreenWithLongId: MessageWindow = {
-  name: 'wrongPasswordMessageScreenWithLongId',
-  x: 225,
-  y: 175,
-  width: 75,
-  height: 13,
-  targetY: 6,
-  lookingForColor: { r: 244, g: 100, b: 100 },
-  targetColorCount: 25,
-  targetColorThreashold: 2,
-};
-export const passwordTooShortMessageScreen: MessageWindow = {
-  name: 'passwordTooShortMessageScreen',
-  x: 225,
-  y: 162,
-  width: 75,
-  height: 13,
-  targetY: 4,
-  lookingForColor: { r: 244, g: 191, b: 191 },
-  targetColorCount: 2,
-  targetColorThreashold: 0,
-};
+// export const incorrectEmailFormat: MessageWindow = {
+//   name: 'incorrectEmailFormat',
+//   x: 222,
+//   y: 166,
+//   width: 172,
+//   height: 12,
+//   targetY: 6,
+//   lookingForColor: { r: 226, g: 86, b: 86 },
+//   targetColorCount: 44,
+//   targetColorThreashold: 3,
+// };
+// export const needRegisterDevPlayAccount: MessageWindow = {
+//   name: 'needRegisterDevPlayAccount',
+//   x: 222,
+//   y: 166,
+//   width: 172,
+//   height: 12,
+//   targetY: 6,
+//   lookingForColor: { r: 226, g: 86, b: 86 },
+//   targetColorCount: 34,
+//   targetColorThreashold: 3,
+// };
+// export const registerWithSocialPlatformMessageScreen: MessageWindow = {
+//   name: 'registerWithSocialPlatformMessageScreen',
+//   x: 225,
+//   y: 162,
+//   width: 75,
+//   height: 13,
+//   targetY: 8,
+//   lookingForColor: { r: 244, g: 191, b: 191 },
+//   targetColorCount: 21,
+//   targetColorThreashold: 3,
+// };
+// export const wrongPasswordMessageScreen: MessageWindow = {
+//   name: 'wrongPasswordMessageScreen',
+//   x: 225,
+//   y: 162,
+//   width: 75,
+//   height: 13,
+//   targetY: 6,
+//   lookingForColor: { r: 230, g: 100, b: 100 },
+//   targetColorCount: 17,
+//   targetColorThreashold: 2,
+// };
+// export const wrongPasswordMessageScreenWithLongId: MessageWindow = {
+//   name: 'wrongPasswordMessageScreenWithLongId',
+//   x: 225,
+//   y: 175,
+//   width: 75,
+//   height: 13,
+//   targetY: 6,
+//   lookingForColor: { r: 244, g: 100, b: 100 },
+//   targetColorCount: 25,
+//   targetColorThreashold: 2,
+// };
+// export const passwordTooShortMessageScreen: MessageWindow = {
+//   name: 'passwordTooShortMessageScreen',
+//   x: 225,
+//   y: 162,
+//   width: 75,
+//   height: 13,
+//   targetY: 4,
+//   lookingForColor: { r: 244, g: 191, b: 191 },
+//   targetColorCount: 2,
+//   targetColorThreashold: 0,
+// };
 
 export const messageTeamDontMatchToSCRow1: MessageWindow = {
   name: 'messageTeamDontMatchToSCRow1',
@@ -256,5 +256,18 @@ export const battleAbnormalButLastWasSavedMessageScreen = {
   targetY: 6,
   lookingForColor: { r: 227, g: 218, b: 209 },
   targetColorCount: 86,
+  targetColorThreashold: 5,
+};
+// Your last battle was not finished properly, and the Guild Battle attempt was not used!
+export const guildBattleAttemptNotUsedMessageScreen = {
+  name: 'guildBattleAttemptNotUsedMessageScreen',
+  x: 205,
+  y: 180,
+  width: 220,
+  height: 10,
+
+  targetY: 5,
+  lookingForColor: { r: 227, g: 218, b: 209 },
+  targetColorCount: 152,
   targetColorThreashold: 5,
 };

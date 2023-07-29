@@ -68,11 +68,11 @@ export type Advanture = {
 };
 
 export const seasideStockRect: { [key: number]: RECT } = {
-  0: { x: 75, y: 286, w: 60, h: 17 },
-  1: { x: 180, y: 286, w: 60, h: 17 },
-  2: { x: 292, y: 286, w: 60, h: 17 },
-  3: { x: 400, y: 286, w: 60, h: 17 },
-  4: { x: 508, y: 286, w: 60, h: 17 },
+  0: { x: 66, y: 284, w: 60, h: 17 },
+  1: { x: 158, y: 286, w: 60, h: 17 },
+  2: { x: 253, y: 286, w: 60, h: 17 },
+  3: { x: 346, y: 286, w: 60, h: 17 },
+  4: { x: 439, y: 286, w: 60, h: 17 },
 };
 
 export const goodsLocationRect: { [key: string | number]: RECT } = {
@@ -99,4 +99,39 @@ export type productState = {
       consume: number;
     };
   };
+};
+
+export const Directions = Object.freeze({
+  NE: { x: -480, y: 245 },
+  NW: { x: 460, y: 255 },
+  SE: { x: -460, y: -255 },
+  SW: { x: 480, y: -245 },
+  S: { x: 0, y: -250 },
+  SS: { x: 0, y: -350 },
+  N: { x: 0, y: 250 },
+  NN: { x: 0, y: 350 },
+  E: { x: -460, y: 0 },
+  EE: { x: -560, y: 0 },
+  W: { x: 460, y: 0 },
+  WW: { x: 560, y: 0 },
+});
+
+export const searchHosePaths: { [key: number]: XY[] } = {
+  0: [
+    Directions.SS,
+    Directions.S,
+    Directions.EE,
+    Directions.N,
+    Directions.E,
+    Directions.E,
+    Directions.E,
+    Directions.E,
+    Directions.N,
+    Directions.W,
+    Directions.W,
+    Directions.W,
+    Directions.W,
+  ],
+  1: [Directions.EE, Directions.SS, Directions.E, Directions.W, Directions.W, Directions.W, Directions.N, Directions.E, Directions.W, Directions.W],
+  2: [Directions.EE, Directions.EE, Directions.SS, Directions.EE, Directions.S, Directions.W, Directions.W, Directions.W, Directions.N],
 };

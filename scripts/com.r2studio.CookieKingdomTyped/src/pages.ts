@@ -80,6 +80,20 @@ export const rfpageInKingdomVillage = new Page('rfpageInKingdomVillage', [
   { x: 418, y: 321, r: 132, g: 16, b: 8 },
   { x: 466, y: 318, r: 231, g: 167, b: 85 },
 ]);
+export const rfpageMovingStructures = new Page(
+  'rfpageMovingStructures',
+  [
+    { x: 615, y: 21, r: 255, g: 255, b: 255 },
+    { x: 518, y: 16, r: 241, g: 255, b: 255 },
+    { x: 406, y: 20, r: 255, g: 211, b: 0 },
+    { x: 39, y: 21, r: 99, g: 174, b: 49 },
+    { x: 23, y: 20, r: 134, g: 220, b: 80 },
+    { x: 32, y: 81, r: 255, g: 255, b: 255 },
+    { x: 16, y: 187, r: 132, g: 211, b: 33 },
+    { x: 42, y: 343, r: 74, g: 85, b: 123 },
+  ],
+  { x: 615, y: 21 }
+);
 
 // Check for gears in login page via pixel matching
 export const rfpageInLoginPageWithGearAndVideo = new Page('rfpageInLoginPageWithGearAndVideo', [
@@ -360,17 +374,20 @@ export const rfpageBallonMapEp4 = new Page(
   { x: 610, y: 230 }
 );
 
-export const rfpageInTrainStation = new Page('rfpageInTrainStation', [
-  { x: 618, y: 11, r: 56, g: 165, b: 231 },
-  { x: 411, y: 19, r: 255, g: 208, b: 2 },
-  { x: 393, y: 12, r: 93, g: 48, b: 32 },
-  { x: 10, y: 355, r: 56, g: 34, b: 28 },
-  { x: 605, y: 327, r: 130, g: 22, b: 31 },
-]);
+export const rfpageInTrainStation = new Page(
+  'rfpageInTrainStation',
+  [
+    { x: 618, y: 11, r: 56, g: 165, b: 231 },
+    { x: 411, y: 19, r: 255, g: 208, b: 2 },
+    { x: 393, y: 12, r: 93, g: 48, b: 32 },
+    { x: 10, y: 355, r: 56, g: 34, b: 28 },
+    { x: 605, y: 327, r: 130, g: 22, b: 31 },
+  ],
+  { x: 617, y: 13 }
+);
 export const rfpageTrainArrived = new Page('rfpageTrainArrived', [
-  { x: 114, y: 255, r: 245, g: 215, b: 130 },
-  { x: 117, y: 242, r: 206, g: 57, b: 55 },
-  { x: 110, y: 245, r: 49, g: 89, b: 132 },
+  { x: 121, y: 236, r: 255, g: 109, b: 107 },
+  { x: 113, y: 253, r: 255, g: 223, b: 140 },
 ]);
 export const rfpageTrainNotEnoughGoods = new Page(
   'rfpageTrainNotEnoughGoods',
@@ -434,11 +451,14 @@ export const rfpagePVPHasPageMedalShop = new Page(
   { x: 120, y: 335 }
 );
 export const rfpageInPVPMedalShop = new Page('rfpageInPVPMedalShop', [
-  { x: 510, y: 66, r: 255, g: 230, b: 0 },
-  { x: 349, y: 19, r: 96, g: 43, b: 4 },
-  { x: 441, y: 20, r: 99, g: 30, b: 4 },
-  { x: 517, y: 22, r: 0, g: 91, b: 127 },
-  { x: 87, y: 62, r: 225, g: 228, b: 237 },
+  { x: 604, y: 69, r: 255, g: 255, b: 255 },
+  { x: 516, y: 70, r: 223, g: 140, b: 21 },
+  { x: 580, y: 70, r: 28, g: 34, b: 53 },
+  { x: 444, y: 11, r: 127, g: 121, b: 70 },
+  { x: 445, y: 21, r: 94, g: 2, b: 8 },
+  { x: 356, y: 11, r: 123, g: 88, b: 0 },
+  { x: 355, y: 19, r: 127, g: 113, b: 28 },
+  { x: 521, y: 17, r: 0, g: 99, b: 127 },
 ]);
 export const rfpagePVPNotEnoughMedal = new Page(
   'rfpagePVPNotEnoughMedal',
@@ -757,14 +777,15 @@ export const rfpageNeedDiamondRefreshMarket = new Page(
 export const rfpageMarketItemDetail = new Page(
   'rfpageMarketItemDetail',
   [
-    { x: 350, y: 246, r: 123, g: 207, b: 8 },
-    { x: 411, y: 16, r: 127, g: 93, b: 8 },
-    { x: 521, y: 21, r: 0, g: 71, b: 126 },
-    { x: 397, y: 103, r: 57, g: 69, b: 107 },
-    { x: 268, y: 11, r: 103, g: 113, b: 24 },
-    { x: 339, y: 171, r: 247, g: 235, b: 222 },
+    { x: 348, y: 231, r: 123, g: 207, b: 8 },
+    { x: 376, y: 236, r: 222, g: 207, b: 198 },
+    { x: 378, y: 204, r: 247, g: 235, b: 222 },
+    { x: 366, y: 84, r: 57, g: 69, b: 107 },
+    { x: 447, y: 87, r: 57, g: 170, b: 231 },
+    { x: 261, y: 15, r: 103, g: 113, b: 24 },
+    { x: 214, y: 51, r: 90, g: 59, b: 33 },
   ],
-  { x: 350, y: 246 }
+  { x: 348, y: 231 }
 );
 export const rfpageNotEnoughItemToBuyThis = new Page(
   'rfpageNotEnoughItemToBuyThis',
@@ -787,12 +808,13 @@ export const rfpageInShellShop = new Page('rfpageInShellShop', [
 export const rfpageConfirmBuySeaFairy = new Page(
   'rfpageConfirmBuySeaFairy',
   [
-    { x: 304, y: 240, r: 244, g: 255, b: 203 },
-    { x: 290, y: 240, r: 121, g: 207, b: 12 },
-    { x: 453, y: 79, r: 34, g: 85, b: 119 },
-    { x: 317, y: 21, r: 115, g: 120, b: 108 },
-    { x: 85, y: 317, r: 124, g: 126, b: 99 },
-    { x: 293, y: 75, r: 29, g: 59, b: 127 },
+    { x: 351, y: 233, r: 123, g: 207, b: 8 },
+    { x: 245, y: 86, r: 57, g: 69, b: 107 },
+    { x: 235, y: 242, r: 222, g: 207, b: 198 },
+    { x: 318, y: 15, r: 125, g: 103, b: 117 },
+    { x: 410, y: 19, r: 127, g: 95, b: 4 },
+    { x: 287, y: 16, r: 119, g: 111, b: 117 },
+    { x: 271, y: 30, r: 99, g: 105, b: 103 },
   ],
   { x: 304, y: 240 }
 );
@@ -1362,13 +1384,41 @@ export const pageInTowerOfRecords = [
   { x: 4, y: 18, r: 35, g: 34, b: 33 },
 ];
 
+export const rfpageInCandyHouse = new Page('rfpageInCandyHouse', [
+  { x: 268, y: 240, r: 127, g: 241, b: 205 },
+  { x: 316, y: 236, r: 212, g: 212, b: 212 },
+  { x: 316, y: 239, r: 58, g: 58, b: 58 },
+]);
+// export const rfpageCanUpgradeCandyMansion = new Page('rfpageCanUpgradeCandyMansion', [
+//   { x: 268, y: 240, r: 127, g: 241, b: 205 },
+//   { x: 316, y: 236, r: 212, g: 212, b: 212 },
+//   { x: 316, y: 239, r: 58, g: 58, b: 58 },
+// ]);
+// var pageCanUpgradeCandyMansion = [{ x: 303, y: 289, r: 123, g: 207, b: 8 }];
+// var pageCanUpgradeCandyHouse = [{ x: 243, y: 287, r: 151, g: 218, b: 55 }];
+// var pageCookieMansionUpgradeRequirement = [
+//   { x: 351, y: 320, r: 123, g: 207, b: 8 },
+//   { x: 282, y: 322, r: 148, g: 219, b: 57 },
+//   { x: 199, y: 199, r: 118, g: 234, b: 231 },
+// ];
+// var pageCookieHouseUpgradeRequirement = [
+//   { x: 356, y: 314, r: 123, g: 207, b: 8 },
+//   { x: 330, y: 120, r: 68, g: 67, b: 66 },
+//   { x: 425, y: 20, r: 0, g: 50, b: 92 },
+// ];
+// var pageNotEnoughGnomeBuilders = [
+//   { x: 381, y: 319, r: 190, g: 1, b: 36 },
+//   { x: 381, y: 325, r: 254, g: 254, b: 253 },
+//   { x: 386, y: 327, r: 255, g: 221, b: 240 },
+//   { x: 465, y: 79, r: 58, g: 165, b: 231 },
+// ];
+
 //rgb(166,104,65)
-export const pageInProduction = [
+export const rfpageInProduction = new Page('rfpageInProduction', [
   { x: 17, y: 44, r: 165, g: 105, b: 66 },
   { x: 84, y: 42, r: 178, g: 103, b: 66 },
   { x: 26, y: 30, r: 126, g: 73, b: 41 },
-];
-export const rfpageInProduction = new Page('rfpageInProduction', pageInProduction);
+]);
 export const rfpageInMagicLab = new Page('rfpageInMagicLab', [
   { x: 18, y: 46, r: 123, g: 89, b: 140 },
   { x: 81, y: 47, r: 123, g: 89, b: 140 },

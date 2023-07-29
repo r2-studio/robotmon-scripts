@@ -40,7 +40,7 @@ export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
   return swipeFromToPoint(rerouter, { x: startPnt.x, y: startPnt.y }, { x: -2000, y: startPnt.y }, 5);
 }
 
-export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, steps: number, stopIfFoundPage?: Page, swipingPage?: Page) {
+export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, steps: number, stopIfFoundPage?: Page | null, swipingPage?: Page) {
   if (swipingPage !== undefined && !rerouter.isPageMatch(swipingPage)) {
     // console.log('swipe from this point will get to another page, try again: ', fromPnt.x, fromPnt.y);
     keycode('BACK', 100);
@@ -95,7 +95,7 @@ export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, p
       cnt++;
     }
   }
-  logs('checkScreenMessage', `Checking ${message.name}, expecting ${cnt} points and got ${message.targetColorCount} points`)
+  logs('checkScreenMessage', `Checking ${message.name}, expecting ${message.targetColorCount} points and got ${cnt} points`);
   // console.log('cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ', cnt, message.targetColorCount, message.targetColorThreashold);
 
   releaseImage(img);
@@ -406,24 +406,38 @@ export function getMayhemScores() {
   return scores;
 }
 
-export function findSpecificIconInScreen(target: Icon, isDev?: boolean): { [idx: string]: { score: number; x: number; y: number } } {
+export function findSpecificIconInScreen(target: Icon, targetArea?: RECT, isDev?: boolean): { [idx: string]: { score: number; x: number; y: number } } {
   if (target.image === undefined) {
     target.loadImage();
   }
-  return findSpecificImageInScreen(target.image, target.thres, isDev);
+  return findSpecificImageInScreen(target.image, target.thres, targetArea, isDev);
 }
 
-export function findSpecificImageInScreen(target: Image, threashold?: number, isDev?: boolean): { [idx: string]: { score: number; x: number; y: number } } {
+export function findSpecificImageInScreen(
+  target: Image,
+  threashold?: number,
+  targetArea?: RECT,
+  isDev?: boolean
+): { [idx: string]: { score: number; x: number; y: number } } {
   if (threashold === undefined) {
     threashold = 0.95;
   }
 
-  var img = getScreenshot();
-  var foundResults = findImages(img, target, threashold, 10, true);
-  if (isDev) {
-    console.log('findSpecificImageInScreen, found target icon at: ', JSON.stringify(foundResults));
+  const img = getScreenshot();
+  let croppedImage;
+  let foundResults;
+  if (targetArea !== undefined) {
+    croppedImage = cropImage(img, targetArea.x, targetArea.y, targetArea.w, targetArea.h);
+    foundResults = findImages(croppedImage, target, threashold, 10, true);
+    releaseImage(croppedImage);
+  } else {
+    foundResults = findImages(img, target, threashold, 10, true);
   }
   releaseImage(img);
+
+  // if (isDev) {
+    console.log('findSpecificImageInScreen, found target icon at: ', JSON.stringify(foundResults));
+  // }
   return foundResults;
 }
 
@@ -627,106 +641,10 @@ export function handleResearchInGnomeLab(rerouter: Rerouter, finishRound: any, t
   }
 }
 
-// function handleResearchInGnomeLab_bak(targetIconList: Icon[], threashold: number) {
-//   var foundResults = [];
-//   for (var i = 0; i < 12; i++) {
-//     for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
-//       foundResults = findSpecificImageInScreen(targetIconList[imageIdx].img, threashold);
-//       // console.log('>', i, JSON.stringify(foundResults), foundResults.length, foundResults.length > 0);
-//       if (foundResults.length > 0) {
-//         console.log('Tap gnome reserach check: ', targetIconList[imageIdx].name, JSON.stringify(foundResults));
-//         for (var j = 0; j < foundResults.length; j++) {
-//           qTap(foundResults[j]);
-//           sleep(config.sleepAnimate * 3);
-//           if (checkIsPage(pageCanTapResearch)) {
-//             if (!config.autoLabUseAuroraMaterial) {
-//               var hasAuroraRequirement = false;
-//               for (var auroraIndex = 0; auroraIndex < auroraItems.length; auroraIndex++) {
-//                 if (findSpecificImageInScreen(auroraItems[auroraIndex].img, 0.92).length > 0) {
-//                   console.log('lab restrict use of aurora items, skip this one');
-//                   qTap(pnt(570, 31));
-//                   sleep(1500);
-//                   hasAuroraRequirement = true;
-//                   break;
-//                 }
-//               }
-
-//               if (!hasAuroraRequirement) {
-//                 console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
-//                 qTap(pageCanTapResearch);
-
-//                 // Check for not enough items for research
-//                 sleep(1000);
-//                 if (checkIsPage(pageNotEnoughAuroraItemForReserch)) {
-//                   console.log('Not enough aurora items, continue');
-//                   qTap(pageNotEnoughAuroraItemForReserch);
-//                   sleep(1000);
-//                   qTap(pnt(570, 31));
-//                   sleep(1500);
-//                   break;
-//                 } else if (checkIsPage(pageNotEnoughItemsForResearch)) {
-//                   console.log('Not enough items, continue');
-//                   qTap(pageNotEnoughItemsForResearch);
-//                   sleep(1000);
-//                   qTap(pnt(570, 31));
-//                   sleep(1500);
-//                   break;
-//                 } else {
-//                   console.log('Start researching');
-//                 }
-
-//                 sendEvent('running', '');
-//                 return true;
-//               }
-//             } else {
-//               console.log('About to researching without Aurora item: ', JSON.stringify(foundResults[j]));
-//               qTap(pageCanTapResearch);
-
-//               sleep(1000);
-//               if (checkIsPage(pageNotEnoughItemsForResearch)) {
-//                 console.log('Not enough items, continue');
-//                 qTap(pageNotEnoughItemsForResearch);
-//                 sleep(1000);
-//                 qTap(pnt(570, 31));
-//                 sleep(1500);
-//                 break;
-//               } else {
-//                 sendEvent('running', '');
-//                 console.log('Start researching');
-//               }
-
-//               return true;
-//             }
-//           } else {
-//             if (checkIsPage(pageInKingdomVillage)) {
-//               console.log('Lab research accidentally fall back to village, return with false');
-//               return false;
-//             } else if (!checkIsPage(pageInGnomeLab)) {
-//               console.log('Research requirement not met (btn not enabled)');
-//               keycode('BACK', 1000);
-//               sleep(config.sleepAnimate * 3);
-//             } else {
-//               console.log('Not in kingdom nor lab');
-//             }
-//           }
-//         }
-//       }
-//     }
-
-//     if (checkIsPage(pageAlreadyResearching)) {
-//       console.log('Already researching, skipping handleInGnomeLab');
-//       return true;
-//     }
-
-//     swipeFromToPoint(pnt(600, 234), pnt(-200, 234), 5, 0, undefined, pageInGnomeLab);
-//   }
-
-//   return false;
-// }
-
 export function considerPurchaseSeasideMarket(rerouter: Rerouter, target: RECT): boolean {
   let newStock = ocrStocksInRect(target, ICONS.numberAuroraStockInTradeBird);
-  console.log('considerPurchaseSeasideMarket, newStock', newStock);
+  console.log('considerPurchaseSeasideMarket, newStock', newStock, JSON.stringify(target));
+  // TODO: 兩千多會讀不出來，確定幾百可以
   if (newStock > 50) {
     rerouter.screen.tap(target);
     if (rerouter.waitScreenForMatchingPage(PAGES.rfpageMarketItemDetail, 2000)) {
@@ -1209,4 +1127,34 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
   }
 
   return itemsToProduce;
+}
+
+export function swipeDirection(rerouter: Rerouter, direction: XY, targetPage: Page | null, swippingPage: Page) {
+  var tapableArea = {
+    fromPnt: { x: 165, y: 90 },
+    endPnt: { x: 566, y: 285 },
+  };
+
+  if (targetPage !== null && rerouter.isPageMatch(targetPage)) {
+    logs('swipeDirection', `Already in page ${targetPage.name}, skip swipping`);
+    return true;
+  }
+
+  var x = tapableArea.fromPnt.x + Math.random() * (tapableArea.endPnt.x - tapableArea.fromPnt.x);
+  var y = tapableArea.fromPnt.y + Math.random() * (tapableArea.endPnt.y - tapableArea.fromPnt.y);
+
+  var fromPnt = { x: x, y: y };
+  var toPnt = { x: x + direction.x, y: y + direction.y };
+  var steps = 8;
+
+  if (swipeFromToPoint(rerouter, fromPnt, toPnt, steps, targetPage, swippingPage)) {
+    console.log('swip successfully, idx:');
+    return true;
+  } else if (rerouter.isPageMatch(PAGES.rfpageInTradeHabor)) {
+    console.log('swipeDirection skip to go to head and start over');
+    return false;
+  } else {
+    console.log('pickup house, try again');
+  }
+  return false;
 }
