@@ -1,12 +1,18 @@
-import { Page } from 'Rerouter';
+import { Page, Utils } from 'Rerouter';
 import { BotStatus } from './types';
 import * as CONSTANTS from './constants';
 
+function padZero(num: number) {
+  return num < 10 ? `0${num}` : `${num}`;
+}
+
 export function logs(activity: any, message: string) {
-  // console.log(
-  //     `${new Date().toLocaleString()}, ${activity}, ${Array.prototype.slice.call(arguments, 1).join(',')}`
-  // );
-  console.log(`${new Date().toLocaleString()}, ${activity}, ${message}`);
+  const date = new Date(Utils.getTaiwanTime());
+  console.log(
+    `[${padZero(date.getMonth() + 1)}-${padZero(date.getDate())}T${padZero(date.getHours())}:${padZero(date.getMinutes())}:${padZero(
+      date.getSeconds()
+    )}], ${activity}, ${message}`
+  );
 }
 
 export function getCurrentApp(): [string, string] {

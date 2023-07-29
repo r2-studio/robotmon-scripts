@@ -1274,3 +1274,12 @@ export function searchForCandyHouse(rerouter: Rerouter): boolean {
   console.log('Finish search for upgradable candy house');
   return false;
 }
+
+export function saveImageToDisk(filename?: string) {
+  if (filename === undefined) {
+    filename = new Date.now().toLocaleString() + '-crash-img';
+  }
+  var img = getScreenshot();
+  saveImage(img, filename + '.jpg');
+  releaseImage(img);
+}

@@ -30,6 +30,7 @@ import {
   swipeDownOneItem,
   swipeDirection,
   searchForCandyHouse,
+  saveImageToDisk,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -238,68 +239,68 @@ class CookieKingdom {
   }
 
   public addTasks() {
-    // this.rerouter.addTask({
-    //   name: TASKS.collectKingdomPass,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.sendFriendReward,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.getInShopFreeDailyPack,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.collectMail,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.hotAirBallon,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.train,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.wishingTree,
-    //   maxTaskDuring: 10 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.fountain,
-    //   maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectFountainIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // if (this.config.autoPvPPurchaseAncientCookie) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.pvpPurchaseAncientCookie,
-    //     maxTaskDuring: 12 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
-    // this.rerouter.addTask({
-    //   name: TASKS.pvp,
-    //   maxTaskDuring: 12 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
+    this.rerouter.addTask({
+      name: TASKS.collectKingdomPass,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.sendFriendReward,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.getInShopFreeDailyPack,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.collectMail,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.hotAirBallon,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.train,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.wishingTree,
+      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.fountain,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectFountainIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    if (this.config.autoPvPPurchaseAncientCookie) {
+      this.rerouter.addTask({
+        name: TASKS.pvpPurchaseAncientCookie,
+        maxTaskDuring: 12 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    this.rerouter.addTask({
+      name: TASKS.pvp,
+      maxTaskDuring: 12 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
     // TODO: no super mayhem for now
     // this.rerouter.addTask({
     //   name: TASKS.superMayhem,
@@ -307,98 +308,98 @@ class CookieKingdom {
     //   minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
     //   forceStop: false,
     // });
-    // this.rerouter.addTask({
-    //   name: TASKS.tropicalIslandShip,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.tropicalIslandSunbed,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.tropicalIslandClearBubble,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.bounties,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // if (this.config.autoLabResearch) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.gnomeLab,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 15 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
-    // if (this.config.autoHandleTradeHabor) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.haborSendShip,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
+    this.rerouter.addTask({
+      name: TASKS.tropicalIslandShip,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.tropicalIslandSunbed,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.tropicalIslandClearBubble,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.bounties,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    if (this.config.autoLabResearch) {
+      this.rerouter.addTask({
+        name: TASKS.gnomeLab,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 15 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoHandleTradeHabor) {
+      this.rerouter.addTask({
+        name: TASKS.haborSendShip,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 120 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
 
     // TODO: some additional icons might still missing
-    // if (
-    //   this.config.autoBalanceAuroraStocks ||
-    //   this.config.autoShopInSeasideMarket ||
-    //   this.config.autoBuyCaramelStuff ||
-    //   this.config.autoBuyRadiantShardsInHabor
-    // ) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.haborShopInSeaMarket,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
+    if (
+      this.config.autoBalanceAuroraStocks ||
+      this.config.autoShopInSeasideMarket ||
+      this.config.autoBuyCaramelStuff ||
+      this.config.autoBuyRadiantShardsInHabor
+    ) {
+      this.rerouter.addTask({
+        name: TASKS.haborShopInSeaMarket,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 120 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
     // TODO: 不同模擬器疑似辨識不同
-    // if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.haborShopInShellGallery,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
+    if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
+      this.rerouter.addTask({
+        name: TASKS.haborShopInShellGallery,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 120 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
 
-    // if (this.config.autoHandleTowerOfSweetChaos) {
-    //   this.rerouter.addTask({
-    //     name: TASKS.towerOfSweetChaos,
-    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //     minRoundInterval: 240 * CONSTANTS.minuteInMs,
-    //     forceStop: false,
-    //   });
-    // }
+    if (this.config.autoHandleTowerOfSweetChaos) {
+      this.rerouter.addTask({
+        name: TASKS.towerOfSweetChaos,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 240 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
 
-    // this.rerouter.addTask({
-    //   name: TASKS.guildCheckin,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.guildBattleDragon,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    // this.rerouter.addTask({
-    //   name: TASKS.guildBattleAlliance,
-    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
+    this.rerouter.addTask({
+      name: TASKS.guildCheckin,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: 180 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.guildBattleDragon,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: 180 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+    this.rerouter.addTask({
+      name: TASKS.guildBattleAlliance,
+      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      minRoundInterval: 180 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
 
     this.rerouter.addTask({
       name: TASKS.findAndTapCandy,
@@ -1888,7 +1889,8 @@ class CookieKingdom {
           default:
             // TODO: will fail when resume battle
             console.log('I am rfpageInGuildLand, panic and donno what to do');
-            ii++;
+            saveImageToDisk();
+          // ii++;
         }
       },
     });
@@ -2060,9 +2062,11 @@ class CookieKingdom {
             Utils.sleep(5000);
             break;
           default:
-            // TODO: will fail when resume battle
-            console.log('I am rfpageBattlePaused, panic and donno what to do');
-            ii++;
+            logs(context.task.name, `Not sure why in battle, check again in 5 secs`);
+            Utils.sleep(5000);
+          // TODO: will fail when resume battle
+          // console.log('I am rfpageBattlePaused, panic and donno what to do');
+          // ii++;
         }
       },
     });
@@ -2533,6 +2537,7 @@ class CookieKingdom {
         }
 
         logs(context.task.name, 'rfpageGeneralMessageWindow crash the script');
+        saveImageToDisk();
         ii++;
       },
     });
@@ -2933,10 +2938,6 @@ export function stop() {
 // (window as any).rerouter = rerouter;
 
 sendEvent('running', '');
-defaultConfig.autoBuySeaFairy = true;
-defaultConfig.autoBuyEpicSoulEssence = true;
-defaultConfig.autoBuyLegendSoulEssence = true;
-defaultConfig.autoBuyGuildRelic = true;
 
 start();
 console.log('jobs done');

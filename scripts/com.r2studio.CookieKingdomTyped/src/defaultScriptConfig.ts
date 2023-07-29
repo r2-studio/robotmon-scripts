@@ -7,10 +7,8 @@ export const defaultConfig = {
 
   // Sample TEST long ID
   // account: 'moonminv35moonminv35moonminv35moonminv35moonminv35moonminv35moonminv35@gmail.com',
-  // account: 'default_xrobotmon_account@gmail.com',
-  // password: '',
-  account: 'moonminv2@gmail.com',
-  password: '12qwaszx',
+  account: 'default_xrobotmon_account@gmail.com',
+  password: '',
   materialsTarget: 2000,
   goodsTarget: 320,
   productSafetyStock: 10,
