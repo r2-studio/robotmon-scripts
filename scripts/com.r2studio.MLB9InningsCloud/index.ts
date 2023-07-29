@@ -334,9 +334,14 @@ class MLB9I {
     // FIXME: this should only run when needed
     this.rerouter.addTask({
       name: TASK.settingResetLeagueProgress,
-      // maxTaskRunTimes: 1,
-      // minRoundInterval: 1 * CONSTANTS.hourInMs,
+      minRoundInterval: 1 * CONSTANTS.minuteInMs,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      beforeRoute: task => {
+        const { needResetProgress } = this.state.leagueGame;
+        if (!needResetProgress) {
+          return 'skipRouteLoop';
+        }
+      },
       forceStop: true,
     });
 
@@ -1060,6 +1065,7 @@ class MLB9I {
         // TODO: let user can select specific mode and year to play
         // reset
         this.rerouter.goNext(PAGE.leagueResetDialog);
+        this.state.leagueGame.needResetProgress = false;
         finishRound(true);
         return;
       }),
@@ -1362,6 +1368,7 @@ class MLB9I {
             if (tryEnterGameCnts === 4) {
               // can only resolved by resetting league mode progress
               console.log('handleResetLeagueModeProgress');
+
               this.state.leagueGame.needResetProgress = true;
               finishRound(true);
             }
@@ -1472,6 +1479,7 @@ class MLB9I {
     }
 
     return (context, image, matched, finishRound) => {
+      console.log('wrapRouteAction', context.task.name, matched[0].name);
       if (typeof action === 'function') {
         action(context, image, matched, finishRound);
       }
