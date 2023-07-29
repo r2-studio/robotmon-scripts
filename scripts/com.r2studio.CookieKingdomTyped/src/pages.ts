@@ -949,6 +949,21 @@ export const rfpageKingdomDecorating = new Page(
   ],
   { x: 619, y: 12 }
 );
+export const rfpageKingdomDecoratingExpand = new Page(
+  'rfpageKingdomDecoratingExpand',
+  [
+    { x: 622, y: 18, r: 255, g: 255, b: 255 },
+    { x: 517, y: 22, r: 0, g: 182, b: 255 },
+    { x: 405, y: 19, r: 255, g: 211, b: 0 },
+    { x: 39, y: 27, r: 92, g: 166, b: 43 },
+    { x: 48, y: 181, r: 140, g: 211, b: 33 },
+    { x: 25, y: 238, r: 57, g: 69, b: 107 },
+    { x: 5, y: 348, r: 47, g: 52, b: 75 },
+    { x: 565, y: 336, r: 255, g: 255, b: 255 },
+  ],
+  { x: 622, y: 18 }
+);
+
 export const rfpageBattleFinishedWithNextLv = new Page('rfpageBattleFinishedWithNextLv', pageBattleFinishedWithNextLv, {
   x: 589,
   y: 333,
@@ -1389,29 +1404,13 @@ export const rfpageInCandyHouse = new Page('rfpageInCandyHouse', [
   { x: 316, y: 236, r: 212, g: 212, b: 212 },
   { x: 316, y: 239, r: 58, g: 58, b: 58 },
 ]);
-// export const rfpageCanUpgradeCandyMansion = new Page('rfpageCanUpgradeCandyMansion', [
-//   { x: 268, y: 240, r: 127, g: 241, b: 205 },
-//   { x: 316, y: 236, r: 212, g: 212, b: 212 },
-//   { x: 316, y: 239, r: 58, g: 58, b: 58 },
-// ]);
-// var pageCanUpgradeCandyMansion = [{ x: 303, y: 289, r: 123, g: 207, b: 8 }];
-// var pageCanUpgradeCandyHouse = [{ x: 243, y: 287, r: 151, g: 218, b: 55 }];
-// var pageCookieMansionUpgradeRequirement = [
-//   { x: 351, y: 320, r: 123, g: 207, b: 8 },
-//   { x: 282, y: 322, r: 148, g: 219, b: 57 },
-//   { x: 199, y: 199, r: 118, g: 234, b: 231 },
-// ];
-// var pageCookieHouseUpgradeRequirement = [
-//   { x: 356, y: 314, r: 123, g: 207, b: 8 },
-//   { x: 330, y: 120, r: 68, g: 67, b: 66 },
-//   { x: 425, y: 20, r: 0, g: 50, b: 92 },
-// ];
-// var pageNotEnoughGnomeBuilders = [
-//   { x: 381, y: 319, r: 190, g: 1, b: 36 },
-//   { x: 381, y: 325, r: 254, g: 254, b: 253 },
-//   { x: 386, y: 327, r: 255, g: 221, b: 240 },
-//   { x: 465, y: 79, r: 58, g: 165, b: 231 },
-// ];
+
+export const rfpageNotEnoughGnomeBuilders = new Page('rfpageNotEnoughGnomeBuilders', [
+  { x: 381, y: 319, r: 190, g: 1, b: 36 },
+  { x: 381, y: 325, r: 254, g: 254, b: 253 },
+  { x: 386, y: 327, r: 255, g: 221, b: 240 },
+  { x: 465, y: 79, r: 58, g: 165, b: 231 },
+]);
 
 //rgb(166,104,65)
 export const rfpageInProduction = new Page('rfpageInProduction', [
@@ -1420,6 +1419,8 @@ export const rfpageInProduction = new Page('rfpageInProduction', [
   { x: 26, y: 30, r: 126, g: 73, b: 41 },
 ]);
 export const rfpageInMagicLab = new Page('rfpageInMagicLab', [
+  { x: 409, y: 16, r: 255, g: 203, b: 0 },
+  { x: 527, y: 19, r: 0, g: 134, b: 255 },
   { x: 18, y: 46, r: 123, g: 89, b: 140 },
   { x: 81, y: 47, r: 123, g: 89, b: 140 },
   { x: 27, y: 30, r: 115, g: 85, b: 140 },

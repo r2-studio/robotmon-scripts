@@ -29,6 +29,7 @@ import {
   ocrStockAndReqInRect,
   swipeDownOneItem,
   swipeDirection,
+  searchForCandyHouse,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -348,56 +349,56 @@ class CookieKingdom {
     // }
 
     // TODO: some additional icons might still missing
-    if (
-      this.config.autoBalanceAuroraStocks ||
-      this.config.autoShopInSeasideMarket ||
-      this.config.autoBuyCaramelStuff ||
-      this.config.autoBuyRadiantShardsInHabor
-    ) {
-      this.rerouter.addTask({
-        name: TASKS.haborShopInSeaMarket,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-        minRoundInterval: 120 * CONSTANTS.minuteInMs,
-        forceStop: false,
-      });
-    }
+    // if (
+    //   this.config.autoBalanceAuroraStocks ||
+    //   this.config.autoShopInSeasideMarket ||
+    //   this.config.autoBuyCaramelStuff ||
+    //   this.config.autoBuyRadiantShardsInHabor
+    // ) {
+    //   this.rerouter.addTask({
+    //     name: TASKS.haborShopInSeaMarket,
+    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
+    //     forceStop: false,
+    //   });
+    // }
     // TODO: 不同模擬器疑似辨識不同
-    if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
-      this.rerouter.addTask({
-        name: TASKS.haborShopInShellGallery,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-        minRoundInterval: 120 * CONSTANTS.minuteInMs,
-        forceStop: false,
-      });
-    }
+    // if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
+    //   this.rerouter.addTask({
+    //     name: TASKS.haborShopInShellGallery,
+    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //     minRoundInterval: 120 * CONSTANTS.minuteInMs,
+    //     forceStop: false,
+    //   });
+    // }
 
-    if (this.config.autoHandleTowerOfSweetChaos) {
-      this.rerouter.addTask({
-        name: TASKS.towerOfSweetChaos,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-        minRoundInterval: 240 * CONSTANTS.minuteInMs,
-        forceStop: false,
-      });
-    }
+    // if (this.config.autoHandleTowerOfSweetChaos) {
+    //   this.rerouter.addTask({
+    //     name: TASKS.towerOfSweetChaos,
+    //     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //     minRoundInterval: 240 * CONSTANTS.minuteInMs,
+    //     forceStop: false,
+    //   });
+    // }
 
-    this.rerouter.addTask({
-      name: TASKS.guildCheckin,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: 180 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.guildBattleDragon,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: 180 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.guildBattleAlliance,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: 180 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
+    // this.rerouter.addTask({
+    //   name: TASKS.guildCheckin,
+    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+    // this.rerouter.addTask({
+    //   name: TASKS.guildBattleDragon,
+    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
+    // this.rerouter.addTask({
+    //   name: TASKS.guildBattleAlliance,
+    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: 180 * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
 
     this.rerouter.addTask({
       name: TASKS.findAndTapCandy,
@@ -2136,11 +2137,6 @@ class CookieKingdom {
           return;
         }
 
-        if (context.task.name === TASKS.findAndTapCandy) {
-          logs(context.task.name, `rfpageInProduction, leave leave and keep looking for candy houses`);
-          return;
-        }
-
         const rfpageProducing = new Page('rfpageProducing', [
           { x: 76, y: 86, r: 134, g: 231, b: 0 },
           { x: 61, y: 89, r: 123, g: 228, b: 0 },
@@ -2234,7 +2230,7 @@ class CookieKingdom {
           }
 
           if (countProductionSlotAvailable(this.rerouter) !== emptySlots) {
-            sendEvent('running', '');
+            sendEventRunning(this.botStatus);
           }
         }
 
@@ -2304,6 +2300,13 @@ class CookieKingdom {
         let advantureSetting = AdvanturesBountiesAt3rd;
         if (this.rerouter.isPageMatchImage(PAGES.rfpageBountiesAt2ndSlot, image)) {
           advantureSetting = AdvanturesBountiesAt2nd;
+        }
+
+        if (advantureSetting[context.task.name] === undefined) {
+          logs(context.task.name, `rfpageSelectAdvanture but this task does not need advanture, send back`);
+          sendKeyBack();
+          Utils.sleep(this.config.sleepAnimate);
+          return;
         }
 
         if (advantureSetting[context.task.name].backward) {
@@ -2638,7 +2641,17 @@ class CookieKingdom {
               return;
             }
 
+            searchForCandyHouse(this.rerouter);
+            return;
+
+            // 要去頭以前先原地掃一次
             if (searchHouseState.needGotoHead) {
+              console.log(123);
+              if (searchForCandyHouse(this.rerouter)) {
+                logs(context.task.name, 'Found rfpageInCandyHouse, return and let rfpageInCandyHouse handle it');
+                return;
+              }
+
               this.rerouter.screen.tap({ x: 25, y: 25 }); // goto head
               Utils.sleep(this.config.sleepAnimate);
               searchHouseState.needGotoHead = false;
@@ -2646,9 +2659,9 @@ class CookieKingdom {
             }
 
             console.log(
-              `${searchHouseState.searchHousePathIdx}, ${searchHouseState.searchHouseIdx}, ${
+              `${searchHouseState.searchHousePathIdx}, ${searchHouseState.searchHouseIdx}, ${JSON.stringify(
                 searchHosePaths[searchHouseState.searchHousePathIdx][searchHouseState.searchHouseIdx]
-              }`
+              )}`
             );
             swipeDirection(
               this.rerouter,
@@ -2656,54 +2669,99 @@ class CookieKingdom {
               null,
               PAGES.rfpageInKingdomVillage
             );
-            if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageMovingStructures, 1000)) {
-              this.rerouter.goNext(PAGES.rfpageMovingStructures);
-            }
             searchHouseState.searchHouseIdx++;
-
-            // iiii++;
-
-            foundResults = findSpecificIconInScreen(ICONS.iconCandy);
-            if (Object.keys(foundResults).length === 0) {
-              logs(context.task.name, 'findAndTapCandy did not see any candy > 0.95, skipping');
-              searchHouseState.searchHouseIdx++;
+            if (
+              this.rerouter.waitScreenForMatchingPage(
+                new GroupPage('groupPageDecoration', [PAGES.rfpageMovingStructures, PAGES.rfpageKingdomDecoratingExpand]),
+                1000
+              )
+            ) {
+              this.rerouter.goNext(PAGES.rfpageMovingStructures);
+              logs(context.task.name, 'groupPageDecoration, return to try again');
               return;
-            } else {
-              for (let i in Object.keys(foundResults)) {
-                // if (foundResults[i] === undefined) {
-                //   console.log('No more candies to collect, i: ', i);
-                //   break;
-                // }
+            }
 
-                if (foundResults[i].x < 50 || foundResults[i].x > 575 || foundResults[i].y < 37 || foundResults[i].y > 300) {
-                  logs(context.task.name, `Skipped as this point exceed feasible area: (${foundResults[i].x}, ${foundResults[i].y}) (50<x<575, 37<y<300)`);
-                  continue;
-                }
-
-                logs(context.task.name, `tapping: (${foundResults[i].x}, ${foundResults[i].y}) of ${JSON.stringify(foundResults)}`);
-                this.rerouter.screen.tap({ x: foundResults[i].x + 5, y: foundResults[i].y + 5 });
-
-                if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInCandyHouse, 2000)) {
-                  logs(context.task.name, `rfpageInCandyHouse, successfully collected candy`);
-                  finishRound(true);
-                  return;
-                }
-
-                // iiii++;
-
-                foundResults = findSpecificIconInScreen(ICONS.iconCandy);
-                logs(context.task.name, `candies left > ${i}, ${JSON.stringify(foundResults)}`);
-                if (Object.keys(foundResults).length === 0 || foundResults[i + 1] === undefined) {
-                  logs(context.task.name, `Candy collected successfully due to candies are gone: ${i}`);
-                  break;
-                }
-              }
+            if (searchForCandyHouse(this.rerouter)) {
+              logs(context.task.name, 'Found rfpageInCandyHouse, return and let rfpageInCandyHouse handle it');
+              return;
             }
 
             break;
           default:
             logs(context.task.name, 'Unknown task in rfpageInKingdomVillage');
             break;
+        }
+      },
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInCandyHouse.name}`,
+      match: PAGES.rfpageInCandyHouse,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.findAndTapCandy) {
+          logs(context.task.name, `rfpageInCandyHouse, leave because current task is not findAndTapCandy, but: ${context.task.name}`);
+          sendKeyBack();
+          return;
+        }
+
+        const rfpageCanUpgradeCandyMansion = new Page('rfpageCanUpgradeCandyMansion', [{ x: 303, y: 289, r: 123, g: 207, b: 8 }], { x: 303, y: 289 });
+        const rfpageCanUpgradeCandyHouse = new Page('rfpageCanUpgradeCandyHouse', [{ x: 243, y: 287, r: 151, g: 218, b: 55 }], { x: 243, y: 287 });
+        const groupPageCanUpgradeCandy = new GroupPage('groupPageCanUpgradeCandy', [rfpageCanUpgradeCandyHouse, rfpageCanUpgradeCandyMansion]);
+
+        const rfpageCookieMansionUpgradeRequirement = new Page(
+          'rfpageCookieMansionUpgradeRequirement',
+          [
+            { x: 351, y: 320, r: 123, g: 207, b: 8 },
+            { x: 282, y: 322, r: 148, g: 219, b: 57 },
+            { x: 199, y: 199, r: 118, g: 234, b: 231 },
+          ],
+          { x: 351, y: 320 }
+        );
+        const rfpageCookieHouseUpgradeRequirement = new Page(
+          'rfpageCookieHouseUpgradeRequirement',
+          [
+            { x: 356, y: 314, r: 123, g: 207, b: 8 },
+            { x: 330, y: 120, r: 68, g: 67, b: 66 },
+            { x: 425, y: 20, r: 0, g: 50, b: 92 },
+          ],
+          { x: 356, y: 314 }
+        );
+        const groupPageUpgradeRequirements = new GroupPage('groupPageUpgradeRequirements', [
+          rfpageCookieMansionUpgradeRequirement,
+          rfpageCookieHouseUpgradeRequirement,
+        ]);
+
+        if (!this.config.autoUpgradeCandyHouse) {
+          logs(context.task.name, `rfpageInCandyHouse, findAndTapCandy successful so finish round`);
+          finishRound(true);
+          sendEventRunning(this.botStatus);
+          sendKeyBack();
+          return;
+        }
+
+        if (this.rerouter.isPageMatchImage(groupPageCanUpgradeCandy, image)) {
+          logs(context.task.name, `Found upgradeable candyhouse and tap it`);
+          this.rerouter.goNext(rfpageCanUpgradeCandyHouse);
+          Utils.sleep(this.config.sleepAnimate * 2);
+
+          if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughGnomeBuilders, 2000)) {
+            logs(context.task.name, `Not enough gnome builder, skipping upgrade cookie houses and finish task`);
+            finishRound(true);
+            sendKeyBack();
+            return;
+          }
+
+          if (this.rerouter.waitScreenForMatchingPage(groupPageUpgradeRequirements, 2000)) {
+            logs(context.task.name, `groupPageUpgradeRequirements, tap: {x: 357, y:321}`);
+            this.rerouter.screen.tap({ x: 357, y: 321 });
+
+            finishRound(true);
+            sendKeyBack();
+            sendEventRunning(this.botStatus);
+            return;
+          }
+        } else {
+          logs(context.task.name, `rfpageInCandyHouse, this house is fully upgraded, send back`);
+          sendKeyBack();
         }
       },
     });

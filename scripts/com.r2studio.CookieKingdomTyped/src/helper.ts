@@ -2,7 +2,7 @@ import { Rerouter, Utils, XYRGB, Page, XY, MessageWindow, Icon, RECT, GroupPage 
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
-import { Advanture, Advantures, Records, Wish, WishStatus, productState } from './types';
+import { Advanture, Advantures, Point, Records, Wish, WishStatus, productState } from './types';
 import { logs, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 
@@ -406,19 +406,14 @@ export function getMayhemScores() {
   return scores;
 }
 
-export function findSpecificIconInScreen(target: Icon, targetArea?: RECT, isDev?: boolean): { [idx: string]: { score: number; x: number; y: number } } {
+export function findSpecificIconInScreen(target: Icon, targetArea?: RECT, isDev?: boolean): Point[] {
   if (target.image === undefined) {
     target.loadImage();
   }
   return findSpecificImageInScreen(target.image, target.thres, targetArea, isDev);
 }
 
-export function findSpecificImageInScreen(
-  target: Image,
-  threashold?: number,
-  targetArea?: RECT,
-  isDev?: boolean
-): { [idx: string]: { score: number; x: number; y: number } } {
+export function findSpecificImageInScreen(target: Image, threashold?: number, targetArea?: RECT, isDev?: boolean): Point[] {
   if (threashold === undefined) {
     threashold = 0.95;
   }
@@ -435,10 +430,15 @@ export function findSpecificImageInScreen(
   }
   releaseImage(img);
 
-  // if (isDev) {
+  if (isDev) {
     console.log('findSpecificImageInScreen, found target icon at: ', JSON.stringify(foundResults));
-  // }
-  return foundResults;
+  }
+
+  let rtn: Point[] = [];
+  for (let key in foundResults) {
+    rtn.push(foundResults[key]);
+  }
+  return rtn;
 }
 
 export function dynamicSort(property: any) {
@@ -1145,10 +1145,10 @@ export function swipeDirection(rerouter: Rerouter, direction: XY, targetPage: Pa
 
   var fromPnt = { x: x, y: y };
   var toPnt = { x: x + direction.x, y: y + direction.y };
-  var steps = 8;
+  var steps = 4;
 
   if (swipeFromToPoint(rerouter, fromPnt, toPnt, steps, targetPage, swippingPage)) {
-    console.log('swip successfully, idx:');
+    // console.log('swipe successfully');
     return true;
   } else if (rerouter.isPageMatch(PAGES.rfpageInTradeHabor)) {
     console.log('swipeDirection skip to go to head and start over');
@@ -1156,5 +1156,121 @@ export function swipeDirection(rerouter: Rerouter, direction: XY, targetPage: Pa
   } else {
     console.log('pickup house, try again');
   }
+  return false;
+}
+
+function distance(p1: Point, p2: Point) {
+  return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+}
+
+function filterFindIconResults(points: Point[], minDistance: number, debug?: boolean): Point[] {
+  let result: Point[] = [];
+  points.sort((a, b) => b.score - a.score);
+
+  for (let point of points) {
+    let isTooClose = result.some(p => {
+      let distance = Math.sqrt(Math.pow(point.x - p.x, 2) + Math.pow(point.y - p.y, 2));
+      let tooClose = distance < minDistance;
+      if (tooClose && debug) {
+        console.log(`Point ${JSON.stringify(point)} is too close to ${JSON.stringify(p)}`);
+      }
+      return tooClose;
+    });
+
+    if (!isTooClose) {
+      result.push(point);
+    }
+  }
+
+  return result;
+}
+
+function difference(array1: Point[], array2: Point[]): Point[] {
+  let onlyInArray1 = array1.filter(a => !array2.some(b => a.x === b.x && a.y === b.y));
+  let onlyInArray2 = array2.filter(a => !array1.some(b => a.x === b.x && a.y === b.y));
+  return [...onlyInArray1, ...onlyInArray2];
+}
+
+// 1. searchForCandyHouse
+// 2. if !1, swipe directinos
+export function searchForCandyHouse(rerouter: Rerouter): boolean {
+  // 1. find and tap candy
+  let foundResults = findSpecificIconInScreen(ICONS.iconCandy);
+  let filteredResults = filterFindIconResults(foundResults, 15);
+  // console.log(filteredResults.length, JSON.stringify(filteredResults), filteredResults.length, JSON.stringify(filteredResults));
+
+  if (Object.keys(filteredResults).length === 0) {
+    logs('searchForCandyHouse', 'findAndTapCandy did not see any candy > 0.95, skipping');
+  } else {
+    // Tap at most 5 possible candies
+    let i = 0;
+    while (i < Math.min(5, Object.keys(filteredResults).length)) {
+      if (filteredResults[i].x < 93 || filteredResults[i].x > 575 || filteredResults[i].y < 37 || filteredResults[i].y > 300) {
+        logs('searchForCandyHouse', `Skipped as this point exceed feasible area: (${filteredResults[i].x}, ${filteredResults[i].y}) (93<x<575, 37<y<300)`);
+        i++;
+        continue;
+      }
+
+      logs('searchForCandyHouse', `tapping: (${filteredResults[i].x}, ${filteredResults[i].y}) of ${JSON.stringify(filteredResults)}`);
+      rerouter.screen.tap({ x: filteredResults[i].x + 5, y: filteredResults[i].y + 5 });
+
+      if (rerouter.waitScreenForMatchingPage(PAGES.rfpageInCandyHouse, 2000)) {
+        logs('searchForCandyHouse', `rfpageInCandyHouse, return and let rfpageInCandyHouse page handle it`);
+        return true;
+      }
+
+      filteredResults = findSpecificIconInScreen(ICONS.iconCandy);
+      logs('searchForCandyHouse', `candies left > ${i}, ${JSON.stringify(filteredResults)}`);
+      i++;
+    }
+  }
+
+  // 2. find and tap house, the arrow will move, so check multiple times
+  for (let i = 0; i < 3; i++) {
+    filteredResults = filterFindIconResults(findSpecificIconInScreen(ICONS.iconCandyHouseUpgradeArrow), 15);
+    if (Object.keys(filteredResults).length > 0) {
+      console.log('Found it via candyHouseUpgradeArrow:', JSON.stringify(filteredResults));
+      break;
+    }
+    filteredResults = filterFindIconResults(findSpecificIconInScreen(ICONS.iconCandyHouseUpgradeArrow2), 15);
+    if (Object.keys(filteredResults).length > 0) {
+      console.log('Found it via candyHouseUpgradeArrow2:', JSON.stringify(filteredResults));
+      break;
+    }
+    sleep(500);
+  }
+  if (Object.keys(filteredResults).length === 0) {
+    logs('searchForCandyHouse', 'findAndTapCandy did not see any candy house upgrade arrow > 0.95, skipping');
+    return false;
+  }
+
+  let i = 0;
+  while (i < Object.keys(filteredResults).length) {
+    if (filteredResults[i].x < 93 || filteredResults[i].x > 575 || filteredResults[i].y < 37 || filteredResults[i].y > 300) {
+      logs(
+        'searchForCandyHouse',
+        `Skipped upgrade house as this point exceed feasible area: (${filteredResults[i].x}, ${filteredResults[i].y}) (93<x<575, 37<y<300)`
+      );
+      i++;
+      continue;
+    }
+
+    logs(
+      'searchForCandyHouse',
+      `Tap candy house green upgrade at: (${filteredResults[i].x}, ${filteredResults[i].y + 25}) of ${JSON.stringify(filteredResults)}`
+    );
+    rerouter.screen.tap({ x: filteredResults[i].x, y: filteredResults[i].y + 25 });
+
+    if (rerouter.waitScreenForMatchingPage(PAGES.rfpageInCandyHouse, 2000)) {
+      logs(
+        'searchForCandyHouse',
+        `Found upgradeable candyhouse at ${filteredResults[i].x}, ${filteredResults[i].y + 25}, return and let candy house handle this`
+      );
+      return true;
+    }
+    i++;
+  }
+
+  console.log('Finish search for upgradable candy house');
   return false;
 }

@@ -18,6 +18,12 @@ export interface BotStatus {
   [key: string]: any;
 }
 
+export interface Point {
+  score: number;
+  x: number;
+  y: number;
+}
+
 export enum WishStatus {
   opened = 'opened',
   refresh = 'refresh',
