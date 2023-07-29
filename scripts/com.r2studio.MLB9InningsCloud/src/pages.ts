@@ -333,34 +333,42 @@ export const mainBtns = {
 export const settings = new Page(
   'settings',
   [
-    { x: 22, y: 92, r: 231, g: 235, b: 239 },
-    { x: 20, y: 178, r: 206, g: 211, b: 222 },
-    { x: 19, y: 290, r: 206, g: 211, b: 222 },
-    { x: 457, y: 292, r: 206, g: 211, b: 222 },
-    { x: 457, y: 90, r: 231, g: 235, b: 239 },
-    { x: 480, y: 86, r: 33, g: 44, b: 49 },
-    { x: 485, y: 287, r: 41, g: 44, b: 49 },
-    { x: 498, y: 108, r: 56, g: 85, b: 117 },
-    { x: 501, y: 169, r: 16, g: 118, b: 255 },
-    { x: 499, y: 158, r: 32, g: 46, b: 54 },
-    { x: 504, y: 217, r: 160, g: 159, b: 164 },
-    { x: 499, y: 274, r: 74, g: 121, b: 181 },
-    { x: 25, y: 313, r: 214, g: 218, b: 214 },
-    { x: 41, y: 321, r: 110, g: 120, b: 110 },
-    { x: 30, y: 330, r: 214, g: 219, b: 214 },
-    { x: 295, y: 9, r: 214, g: 211, b: 214 },
-    { x: 314, y: 8, r: 247, g: 243, b: 247 },
-    { x: 388, y: 7, r: 232, g: 233, b: 232 },
-    { x: 474, y: 16, r: 74, g: 81, b: 90 },
-    { x: 492, y: 12, r: 59, g: 50, b: 43 },
-    { x: 623, y: 12, r: 214, g: 211, b: 214 },
+    // navi in right
+    // { x: 625, y: 7, r: 214, g: 210, b: 214 },
+    // { x: 593, y: 14, r: 74, g: 93, b: 123 },
+    // { x: 590, y: 14, r: 74, g: 93, b: 123 },
+    // { x: 487, y: 15, r: 214, g: 210, b: 214 },
+    // { x: 481, y: 15, r: 77, g: 86, b: 93 },
+    // { x: 391, y: 11, r: 79, g: 80, b: 79 },
+    // { x: 378, y: 16, r: 133, g: 150, b: 169 },
+    // { x: 313, y: 11, r: 178, g: 178, b: 179 },
+
+    // bg of right section
+    { x: 478, y: 119, r: 41, g: 45, b: 58 },
+    { x: 476, y: 175, r: 36, g: 40, b: 44 },
+    { x: 476, y: 228, r: 107, g: 97, b: 90 },
+    { x: 474, y: 283, r: 66, g: 77, b: 58 },
+    { x: 609, y: 293, r: 41, g: 45, b: 58 },
+    { x: 608, y: 234, r: 41, g: 45, b: 58 },
+    { x: 605, y: 178, r: 41, g: 45, b: 58 },
+    { x: 608, y: 122, r: 41, g: 45, b: 58 },
+
+    // google play game icon in right section
+    { x: 490, y: 115, r: 35, g: 38, b: 51 },
+
+    // back
+    { x: 25, y: 312, r: 193, g: 198, b: 191 },
+    { x: 39, y: 322, r: 58, g: 69, b: 49 },
   ],
   { x: 41, y: 320 },
   { x: 41, y: 320 }
 );
+export const settingsTabs = {
+  soundAndLanTab: { x: 22, y: 55 },
+  graphicTab: { x: 111, y: 55 },
+};
 export const settingsBtns = {
-  soundAndLanTab: { x: 79, y: 70 },
-  graphicTab: { x: 152, y: 62 },
+  leagueReset: { x: 562, y: 217 },
 };
 
 // FIXME: add lan change pages
@@ -486,19 +494,23 @@ export const settingsGraphTabBtns = {
 export const newSeason = new Page(
   'newSeason',
   [
-    { x: 153, y: 21, r: 0, g: 89, b: 165 },
-    { x: 294, y: 50, r: 154, g: 182, b: 203 },
-    { x: 316, y: 58, r: 226, g: 234, b: 240 },
-    { x: 443, y: 55, r: 0, g: 65, b: 117 },
-    { x: 425, y: 55, r: 255, g: 255, b: 255 },
-    { x: 537, y: 13, r: 0, g: 93, b: 181 },
-    { x: 272, y: 301, r: 0, g: 113, b: 247 },
-    { x: 311, y: 302, r: 101, g: 158, b: 235 },
-    { x: 324, y: 296, r: 252, g: 253, b: 255 },
-    { x: 367, y: 305, r: 8, g: 109, b: 254 },
+    // bg bottom
+    { x: 53, y: 334, r: 16, g: 16, b: 8 },
+    { x: 613, y: 334, r: 16, g: 20, b: 16 },
+
+    // next or ok btn bg
+    { x: 254, y: 292, r: 0, g: 117, b: 247 },
+    { x: 255, y: 311, r: 8, g: 102, b: 247 },
+    { x: 376, y: 292, r: 0, g: 117, b: 247 },
+    { x: 376, y: 313, r: 16, g: 101, b: 254 },
+
+    // logo in center right
+    { x: 354, y: 147, r: 0, g: 28, b: 66 },
+    { x: 374, y: 158, r: 255, g: 255, b: 255 },
+    { x: 386, y: 149, r: 192, g: 20, b: 65 },
   ],
-  { x: 292, y: 297 },
-  { x: 292, y: 297 }
+  { x: 324, y: 305 },
+  { x: 324, y: 305 }
 );
 
 // check there might be many diff titles for end season
@@ -508,10 +520,10 @@ export const endSeason = new Page(
     // x
     { x: 518, y: 47, r: 71, g: 73, b: 72 },
 
-    // logo on center
-    { x: 290, y: 132, r: 8, g: 28, b: 66 },
-    { x: 325, y: 150, r: 255, g: 255, b: 255 },
-    { x: 357, y: 133, r: 189, g: 0, b: 33 },
+    // logo on center right
+    { x: 357, y: 144, r: 0, g: 28, b: 66 },
+    { x: 369, y: 150, r: 255, g: 255, b: 255 },
+    { x: 385, y: 140, r: 189, g: 14, b: 58 },
 
     // next
     { x: 280, y: 301, r: 8, g: 113, b: 247 },
@@ -576,33 +588,26 @@ export const selectNormalMasterLeagueMode = new Page(
   'selectNormalMasterLeagueMode',
   [
     // bg
-    { x: 26, y: 16, r: 0, g: 93, b: 173 },
-    { x: 628, y: 12, r: 0, g: 97, b: 181 },
-    { x: 16, y: 350, r: 16, g: 20, b: 16 },
-    { x: 628, y: 350, r: 8, g: 16, b: 8 },
-    { x: 9, y: 198, r: 45, g: 44, b: 41 },
-    { x: 316, y: 188, r: 29, g: 27, b: 29 },
-    { x: 621, y: 196, r: 25, g: 26, b: 25 },
-
-    // selection bg
-    { x: 54, y: 84, r: 181, g: 186, b: 189 },
-    { x: 50, y: 282, r: 181, g: 186, b: 189 },
-    { x: 292, y: 84, r: 181, g: 186, b: 189 },
-    { x: 294, y: 287, r: 181, g: 186, b: 189 },
-    { x: 333, y: 83, r: 181, g: 186, b: 189 },
-    { x: 341, y: 279, r: 181, g: 186, b: 189 },
-    { x: 585, y: 79, r: 181, g: 186, b: 189 },
-    { x: 583, y: 281, r: 181, g: 186, b: 189 },
-    { x: 95, y: 266, r: 8, g: 130, b: 255 },
-    { x: 388, y: 262, r: 8, g: 133, b: 255 },
-    { x: 241, y: 282, r: 0, g: 89, b: 238 },
-    { x: 536, y: 279, r: 8, g: 93, b: 247 },
+    { x: 16, y: 19, r: 0, g: 93, b: 173 },
+    { x: 19, y: 337, r: 16, g: 20, b: 16 },
+    { x: 623, y: 22, r: 0, g: 89, b: 164 },
+    { x: 619, y: 232, r: 16, g: 24, b: 16 },
 
     // NORMAL LEAGUE
-    { x: 144, y: 162, r: 41, g: 105, b: 25 },
+    { x: 125, y: 164, r: 214, g: 220, b: 221 },
+    { x: 143, y: 165, r: 41, g: 105, b: 28 },
 
-    // MASTER LEAGUE
-    { x: 453, y: 169, r: 164, g: 28, b: 238 },
+    // mode bg
+    { x: 46, y: 87, r: 230, g: 231, b: 238 },
+    { x: 47, y: 288, r: 230, g: 231, b: 238 },
+    { x: 337, y: 79, r: 58, g: 57, b: 66 },
+    { x: 342, y: 284, r: 58, g: 57, b: 66 },
+
+    // reward info in both
+    { x: 138, y: 270, r: 8, g: 117, b: 255 },
+    { x: 106, y: 272, r: 65, g: 147, b: 249 },
+    { x: 395, y: 273, r: 195, g: 221, b: 253 },
+    { x: 421, y: 276, r: 8, g: 102, b: 247 },
   ],
   { x: 565, y: 328 },
   { x: 565, y: 328 }
@@ -623,28 +628,23 @@ export const selectNormalMasterLeagueModeProceed = new Page(
   'selectNormalMasterLeagueModeProceed',
   [
     // bg
-    { x: 26, y: 16, r: 0, g: 93, b: 173 },
-    { x: 628, y: 12, r: 0, g: 97, b: 181 },
-    { x: 16, y: 350, r: 16, g: 20, b: 16 },
-    { x: 628, y: 350, r: 8, g: 16, b: 8 },
-    { x: 9, y: 198, r: 45, g: 44, b: 41 },
-    { x: 316, y: 188, r: 29, g: 27, b: 29 },
-    { x: 621, y: 196, r: 25, g: 26, b: 25 },
+    { x: 16, y: 19, r: 0, g: 93, b: 173 },
+    { x: 19, y: 337, r: 16, g: 20, b: 16 },
+    { x: 623, y: 22, r: 0, g: 89, b: 164 },
+    { x: 619, y: 232, r: 16, g: 24, b: 16 },
 
     // ok
-    { x: 234, y: 276, r: 8, g: 105, b: 247 },
-    { x: 528, y: 272, r: 8, g: 114, b: 247 },
-    { x: 531, y: 322, r: 0, g: 117, b: 247 },
-    { x: 560, y: 323, r: 13, g: 123, b: 244 },
-    { x: 584, y: 324, r: 7, g: 114, b: 247 },
-    { x: 618, y: 326, r: 8, g: 113, b: 247 },
+    { x: 535, y: 326, r: 8, g: 113, b: 247 },
+    { x: 570, y: 330, r: 255, g: 255, b: 255 },
+    { x: 605, y: 328, r: 8, g: 113, b: 247 },
   ],
   { x: 565, y: 328 },
   { x: 565, y: 328 }
 );
 
-export const leagueResetDialog = new Page(
-  'leagueResetDialog',
+// a dialog to confirm league reset
+export const leagueResetDialogYN = new Page(
+  'leagueResetDialogYN',
   [
     { x: 115, y: 54, r: 181, g: 186, b: 189 },
     { x: 108, y: 305, r: 214, g: 219, b: 222 },
@@ -663,6 +663,41 @@ export const leagueResetDialog = new Page(
   { x: 193, y: 300 }, // no, cancel
   { x: 371, y: 300 } // yes, reset
 );
+
+// a dialog to select year, normal or master league
+// TODO: let user can select specific mode and year to play
+export const leagueResetDialog = new Page(
+  'leagueResetDialog',
+  [
+    // bg
+    { x: 113, y: 55, r: 181, g: 186, b: 189 },
+    { x: 115, y: 301, r: 214, g: 219, b: 222 },
+    { x: 522, y: 300, r: 214, g: 219, b: 222 },
+    { x: 522, y: 87, r: 181, g: 186, b: 189 },
+
+    // year bg
+    { x: 240, y: 162, r: 74, g: 81, b: 99 },
+    { x: 399, y: 162, r: 74, g: 81, b: 99 },
+
+    // cancel btn
+    { x: 205, y: 300, r: 41, g: 77, b: 123 },
+    { x: 230, y: 303, r: 179, g: 198, b: 229 },
+    { x: 263, y: 301, r: 157, g: 178, b: 211 },
+    { x: 296, y: 300, r: 41, g: 77, b: 123 },
+
+    // reset to year XX btn bg
+    { x: 327, y: 291, r: 8, g: 125, b: 255 },
+    { x: 329, y: 315, r: 0, g: 81, b: 238 },
+    { x: 401, y: 316, r: 0, g: 81, b: 238 },
+  ],
+  { x: 371, y: 300 }, // reset to year XX
+  { x: 193, y: 300 } // cancel
+);
+
+export const leagueResetDialogBtns = {
+  normal: { x: 218, y: 105 },
+  master: { x: 402, y: 105 },
+};
 
 export const selectSeasonMode = new Page(
   'selectSeasonMode',
@@ -686,22 +721,28 @@ export const selectSeasonMode = new Page(
 export const selectLeagueGameAmount = new Page(
   'selectLeagueGameAmount',
   [
-    { x: 625, y: 8, r: 206, g: 215, b: 222 },
-    { x: 603, y: 15, r: 66, g: 93, b: 123 },
-    { x: 597, y: 14, r: 66, g: 93, b: 123 },
-    { x: 494, y: 11, r: 249, g: 194, b: 26 },
-    { x: 391, y: 11, r: 79, g: 80, b: 79 },
-    { x: 313, y: 10, r: 229, g: 229, b: 229 },
-    { x: 162, y: 58, r: 5, g: 68, b: 122 },
-    { x: 187, y: 60, r: 21, g: 77, b: 128 },
-    { x: 25, y: 87, r: 231, g: 231, b: 239 },
-    { x: 191, y: 88, r: 231, g: 231, b: 239 },
-    { x: 346, y: 88, r: 231, g: 231, b: 239 },
-    { x: 492, y: 91, r: 231, g: 231, b: 239 },
-    { x: 610, y: 286, r: 41, g: 52, b: 57 },
-    { x: 449, y: 279, r: 41, g: 52, b: 57 },
-    { x: 298, y: 282, r: 41, g: 52, b: 57 },
-    { x: 141, y: 284, r: 41, g: 52, b: 57 },
+    // title
+    { x: 179, y: 60, r: 8, g: 65, b: 115 },
+    { x: 195, y: 59, r: 52, g: 99, b: 141 },
+    { x: 245, y: 56, r: 177, g: 198, b: 212 },
+    { x: 361, y: 57, r: 5, g: 66, b: 115 },
+    { x: 439, y: 56, r: 194, g: 208, b: 221 },
+    { x: 483, y: 56, r: 0, g: 65, b: 115 },
+
+    // amount title bg
+    { x: 30, y: 104, r: 230, g: 227, b: 230 },
+    { x: 70, y: 100, r: 228, g: 228, b: 228 },
+    { x: 116, y: 100, r: 197, g: 198, b: 197 },
+    { x: 209, y: 102, r: 41, g: 49, b: 58 },
+    { x: 244, y: 102, r: 114, g: 121, b: 128 },
+    { x: 276, y: 102, r: 44, g: 54, b: 66 },
+    { x: 361, y: 98, r: 54, g: 60, b: 70 },
+    { x: 409, y: 102, r: 74, g: 79, b: 87 },
+    { x: 456, y: 99, r: 230, g: 231, b: 230 },
+    { x: 496, y: 97, r: 230, g: 231, b: 230 },
+    { x: 537, y: 101, r: 92, g: 98, b: 106 },
+    { x: 582, y: 99, r: 200, g: 204, b: 207 },
+    { x: 598, y: 99, r: 230, g: 231, b: 230 },
   ],
   { x: 39, y: 314 },
   { x: 39, y: 314 }
@@ -802,15 +843,12 @@ export const rankedBattlePanel = new Page(
     { x: 490, y: 89, r: 247, g: 243, b: 247 },
     { x: 615, y: 88, r: 247, g: 243, b: 247 },
 
-    // bg of win/lose ratio in bottom
+    // bg of win/lose ratio in bottom left
     { x: 150, y: 279, r: 66, g: 65, b: 66 },
-    { x: 369, y: 284, r: 66, g: 69, b: 66 },
 
     // energy (ball) in bottom
-    { x: 436, y: 325, r: 255, g: 254, b: 255 },
-    { x: 436, y: 325, r: 255, g: 254, b: 255 },
-    { x: 427, y: 325, r: 255, g: 253, b: 255 },
-    { x: 426, y: 323, r: 156, g: 158, b: 165 },
+    { x: 424, y: 325, r: 51, g: 58, b: 51 },
+    { x: 428, y: 326, r: 253, g: 251, b: 253 },
 
     // back
     { x: 24, y: 313, r: 200, g: 201, b: 198 },
@@ -1000,79 +1038,26 @@ export const autoGameConfirmEnd = new Page(
   { x: 390, y: 304 } // yes, end auto play
 );
 
+// TODO: not sure if it also apply to league mode
+export const rechargeBall = new Page(
+  'rechargeBall',
+  [
+    // bg
+    { x: 115, y: 46, r: 181, g: 186, b: 189 },
+    { x: 109, y: 306, r: 214, g: 219, b: 222 },
+    { x: 521, y: 305, r: 214, g: 219, b: 222 },
+    { x: 515, y: 44, r: 71, g: 70, b: 71 },
+    // btn bg
+    { x: 172, y: 307, r: 8, g: 97, b: 247 },
+    { x: 376, y: 304, r: 8, g: 105, b: 247 },
+    { x: 207, y: 298, r: 0, g: 53, b: 107 },
+    { x: 403, y: 297, r: 0, g: 53, b: 107 },
+  ],
+  { x: 518, y: 49 }, // cancel
+  { x: 518, y: 49 }
+);
+
 // * LeagueModes
-// export const leagueModePanelContinue = new Page(
-//   'leagueModePanelNextSchedule', // same behaviour as gLeagueModePanelNextSchedule
-//   [
-//     // nav bar star
-//     { x: 314, y: 10, r: 231, g: 231, b: 231 },
-//     { x: 320, y: 8, r: 247, g: 243, b: 247 },
-//     { x: 392, y: 13, r: 168, g: 169, b: 168 },
-//     { x: 394, y: 9, r: 142, g: 144, b: 142 },
-//     { x: 620, y: 6, r: 214, g: 211, b: 214 },
-
-//     // button on bottom
-//     { x: 41, y: 323, r: 67, g: 71, b: 60 },
-//     { x: 81, y: 324, r: 118, g: 132, b: 156 },
-//     { x: 131, y: 325, r: 57, g: 91, b: 124 },
-//     { x: 167, y: 321, r: 122, g: 138, b: 156 },
-//     { x: 180, y: 327, r: 24, g: 69, b: 123 },
-//     { x: 254, y: 327, r: 255, g: 255, b: 255 },
-//     { x: 338, y: 322, r: 255, g: 255, b: 255 },
-//     { x: 351, y: 334, r: 24, g: 60, b: 107 },
-//   ],
-//   { x: 616, y: 336 },
-//   { x: 41, y: 320 }
-// );
-
-// export const leagueModePanelNextSchedule2 = new Page(
-//   'leagueModePanelNextSchedule',
-//   [
-//     { x: 199, y: 215, r: 0, g: 0, b: 0 },
-//     { x: 299, y: 9, r: 214, g: 215, b: 214 },
-//     { x: 312, y: 7, r: 255, g: 251, b: 255 },
-//     { x: 371, y: 12, r: 57, g: 97, b: 132 },
-//     { x: 387, y: 8, r: 221, g: 221, b: 221 },
-//     { x: 390, y: 10, r: 143, g: 141, b: 143 },
-//     { x: 393, y: 11, r: 67, g: 70, b: 67 },
-//     { x: 470, y: 12, r: 177, g: 191, b: 202 },
-//     { x: 476, y: 12, r: 177, g: 191, b: 202 },
-//     { x: 493, y: 9, r: 255, g: 246, b: 192 },
-//     { x: 496, y: 13, r: 245, g: 166, b: 8 },
-//     { x: 568, y: 13, r: 117, g: 124, b: 134 },
-//     { x: 573, y: 15, r: 74, g: 81, b: 90 },
-//     { x: 580, y: 18, r: 214, g: 211, b: 214 },
-//     { x: 597, y: 13, r: 74, g: 93, b: 123 },
-//     { x: 603, y: 15, r: 74, g: 93, b: 123 },
-//     { x: 622, y: 14, r: 214, g: 215, b: 214 },
-//     { x: 621, y: 29, r: 0, g: 56, b: 90 },
-//     { x: 600, y: 30, r: 246, g: 242, b: 246 },
-//     { x: 600, y: 30, r: 246, g: 242, b: 246 },
-//     { x: 27, y: 315, r: 214, g: 219, b: 214 },
-//     { x: 45, y: 319, r: 215, g: 219, b: 214 },
-//     { x: 37, y: 330, r: 214, g: 219, b: 214 },
-//     { x: 71, y: 316, r: 24, g: 77, b: 141 },
-//     { x: 80, y: 320, r: 144, g: 162, b: 185 },
-//     { x: 108, y: 320, r: 194, g: 214, b: 233 },
-//     { x: 174, y: 315, r: 24, g: 77, b: 148 },
-//     { x: 173, y: 320, r: 168, g: 181, b: 198 },
-//     { x: 206, y: 321, r: 214, g: 231, b: 244 },
-//     { x: 245, y: 320, r: 24, g: 73, b: 140 },
-//     { x: 251, y: 321, r: 181, g: 195, b: 214 },
-//     { x: 286, y: 323, r: 94, g: 133, b: 172 },
-//     { x: 315, y: 328, r: 24, g: 65, b: 116 },
-//     { x: 337, y: 324, r: 177, g: 193, b: 207 },
-//     { x: 376, y: 320, r: 185, g: 207, b: 227 },
-//     { x: 402, y: 330, r: 21, g: 62, b: 112 },
-//     { x: 611, y: 327, r: 194, g: 173, b: 87 },
-//     { x: 599, y: 326, r: 255, g: 255, b: 254 },
-//     { x: 561, y: 326, r: 255, g: 255, b: 255 },
-//     { x: 506, y: 324, r: 240, g: 230, b: 196 },
-//   ],
-//   { x: 616, y: 336 },
-//   { x: 41, y: 320 }
-// );
-
 export const leagueModePanel = new Page(
   'leagueModePanel',
   [
@@ -1683,6 +1668,7 @@ export const leagueRewardAchievementGrade = new Page(
   { x: 600, y: 45 },
   { x: 600, y: 45 }
 );
+// r
 
 export const leagueRewardAchievementGradeBonusPlayer = new Page(
   'leagueRewardAchievementGradeBonusPlayer',
@@ -1791,24 +1777,27 @@ export const playerCardColorToRank: { [k: string]: number } = {
 export const adReward = new Page(
   'adReward',
   [
-    // title
-    { x: 248, y: 41, r: 181, g: 186, b: 189 },
-    { x: 278, y: 48, r: 16, g: 24, b: 24 },
-    { x: 307, y: 49, r: 20, g: 26, b: 28 },
-    { x: 357, y: 49, r: 155, g: 161, b: 164 },
-    { x: 397, y: 41, r: 181, g: 186, b: 189 },
+    // bg
+    { x: 28, y: 45, r: 222, g: 219, b: 222 },
+    { x: 36, y: 267, r: 181, g: 186, b: 197 },
+    { x: 32, y: 307, r: 238, g: 243, b: 238 },
+    { x: 605, y: 52, r: 222, g: 219, b: 222 },
+    { x: 611, y: 244, r: 181, g: 186, b: 197 },
+    { x: 607, y: 319, r: 238, g: 243, b: 238 },
 
-    // watch ad
-    { x: 342, y: 299, r: 49, g: 166, b: 90 },
-    { x: 365, y: 303, r: 211, g: 236, b: 241 },
-    { x: 413, y: 305, r: 255, g: 255, b: 255 },
-    { x: 448, y: 305, r: 49, g: 158, b: 90 },
-    { x: 466, y: 312, r: 41, g: 150, b: 82 },
+    // watch ad icon & btn bg
+    { x: 344, y: 300, r: 49, g: 162, b: 90 },
+    { x: 490, y: 318, r: 41, g: 142, b: 82 },
+    { x: 361, y: 308, r: 0, g: 147, b: 141 },
+    { x: 375, y: 316, r: 0, g: 110, b: 107 },
 
     // cancel
-    { x: 187, y: 304, r: 8, g: 114, b: 255 },
-    { x: 232, y: 303, r: 197, g: 223, b: 255 },
-    { x: 280, y: 308, r: 8, g: 109, b: 247 },
+    { x: 190, y: 310, r: 8, g: 109, b: 247 },
+    { x: 204, y: 310, r: 8, g: 109, b: 247 },
+    { x: 219, y: 310, r: 242, g: 246, b: 253 },
+    { x: 232, y: 310, r: 8, g: 109, b: 247 },
+    { x: 247, y: 310, r: 8, g: 109, b: 247 },
+    { x: 258, y: 310, r: 8, g: 109, b: 247 },
   ],
   { x: 404, y: 310 },
   { x: 117, y: 308 }
@@ -1817,12 +1806,21 @@ export const adReward = new Page(
 export const adRewardRedeem = new Page(
   'adRewardRedeem',
   [
-    // title
-    { x: 248, y: 41, r: 181, g: 186, b: 189 },
-    { x: 278, y: 48, r: 16, g: 24, b: 24 },
-    { x: 307, y: 49, r: 20, g: 26, b: 28 },
-    { x: 357, y: 49, r: 155, g: 161, b: 164 },
-    { x: 397, y: 41, r: 181, g: 186, b: 189 },
+    // ad reward title
+    { x: 274, y: 51, r: 222, g: 219, b: 222 },
+    { x: 302, y: 49, r: 16, g: 24, b: 33 },
+    { x: 334, y: 51, r: 16, g: 24, b: 33 },
+    { x: 356, y: 52, r: 90, g: 94, b: 102 },
+
+    // bg
+    { x: 25, y: 46, r: 222, g: 219, b: 222 },
+    { x: 36, y: 307, r: 238, g: 243, b: 238 },
+    { x: 601, y: 42, r: 123, g: 118, b: 123 },
+    { x: 591, y: 318, r: 238, g: 243, b: 238 },
+    { x: 21, y: 273, r: 181, g: 186, b: 197 },
+    { x: 18, y: 81, r: 181, g: 186, b: 197 },
+    { x: 616, y: 85, r: 181, g: 186, b: 197 },
+    { x: 608, y: 269, r: 181, g: 186, b: 197 },
 
     // ok
     { x: 301, y: 310, r: 8, g: 109, b: 247 },
@@ -1863,33 +1861,19 @@ export const adGroup = new GroupPage('adPages', [adReward, adRewardRedeem, adRew
 export const achivementMission = new Page(
   'achivementMission',
   [
-    // nav bar right part (p, star ...)
-    { x: 299, y: 13, r: 214, g: 214, b: 214 },
-    { x: 318, y: 9, r: 238, g: 234, b: 238 },
-    { x: 313, y: 9, r: 238, g: 234, b: 238 },
-    { x: 392, y: 9, r: 232, g: 229, b: 232 },
-    { x: 385, y: 2, r: 214, g: 214, b: 214 },
-    { x: 496, y: 13, r: 238, g: 166, b: 16 },
-    { x: 483, y: 4, r: 214, g: 219, b: 216 },
-    { x: 597, y: 10, r: 213, g: 226, b: 238 },
-    { x: 628, y: 14, r: 214, g: 211, b: 214 },
+    // today mission bg
+    { x: 235, y: 55, r: 247, g: 247, b: 247 },
+    { x: 231, y: 71, r: 247, g: 247, b: 247 },
+    { x: 588, y: 72, r: 247, g: 247, b: 247 },
 
-    // today's mission
-    { x: 236, y: 65, r: 214, g: 214, b: 222 },
-    { x: 246, y: 63, r: 214, g: 214, b: 222 },
-    { x: 295, y: 64, r: 66, g: 71, b: 82 },
-    { x: 343, y: 63, r: 214, g: 214, b: 222 },
+    // left section world record bg left bottom
+    { x: 16, y: 293, r: 25, g: 40, b: 74 },
 
-    // complete weekly mission box
-    { x: 233, y: 262, r: 230, g: 231, b: 230 },
-    { x: 247, y: 269, r: 41, g: 51, b: 63 },
-    { x: 257, y: 284, r: 181, g: 182, b: 189 },
-    { x: 510, y: 290, r: 230, g: 231, b: 238 },
+    // player head
+    { x: 75, y: 88, r: 66, g: 59, b: 90 },
 
-    // back btn
-    { x: 24, y: 314, r: 214, g: 214, b: 214 },
-    { x: 42, y: 317, r: 214, g: 219, b: 214 },
-    { x: 31, y: 331, r: 214, g: 219, b: 214 },
+    // back
+    { x: 31, y: 316, r: 214, g: 219, b: 214 },
   ],
   { x: 580, y: 278 }, // complete weekly mission box
   { x: 41, y: 320 }
@@ -2397,103 +2381,3 @@ export const quitApp1 = new Page(
   { x: 213, y: 307 }, // not to quit
   { x: 213, y: 307 }
 );
-
-// export const allPages = [
-//   // TODO: handle follow pages
-//   logo,
-//   landing,
-
-//   // speical pages
-//   logIn,
-//   TOS,
-
-//   // TODO: handle more task
-//   gMain,
-//   gSettings,
-
-//   // BattleMode pages
-//   gBattleModePanel,
-//   gRankedBattlePanel,
-//   gRankedBattleResult,
-//   gRankedBattleGameInfo,
-//   gAutoGameConfirm,
-//   gAutoGameConfirmEnd,
-
-//   // start new LeagueMode pages
-//   gLeagueModePanelContinue,
-//   gLeagueModePanelNextSchedule,
-//   gLeagueModePanelNextSchedule2,
-//   gLeagueModeGameInfo,
-
-//   // play process pages
-//   gSelectPlayRole,
-//   gSelectYear,
-//   gSelectSeasonMode,
-//   gSelectLeagueGameAmount,
-//   gEndSeason,
-//   gNewSeason,
-//   gGameLineUp,
-//   gMvp,
-//   gPlayerGrowthComplete,
-//   gPicherOfTheMonth,
-//   gGameResult,
-//   gGameResultAquired,
-//   gGameResultOther,
-//   gGameResultWorldChampion,
-
-//   // game reward pages
-//   gGameReward,
-//   gSelectRewardPlayer,
-//   gLeagueRewardAchievementGrade,
-//   gBestPositionAwardBonus,
-//   gBestPositionAwardBonus2,
-//   gBonusGrantedByTeamRecord,
-//   gPostSeasonAwardBonus,
-
-//   // on play pages
-//   gOnQuickPlay,
-//   gOnQuickPlay1,
-//   gOnQuickPlayPause,
-//   gOnPlayPowerSaveOn,
-//   gLeagueOnPlayPowerSaveOff,
-//   gLeagueOnPlayPowerSaveOffStopped,
-//   gLeagueOnPlayPowerSaveOffMid,
-//   gLeagueOnPlayPowerSaveOffMid1,
-//   gLeagueOnPlayAutoOff,
-//   gLeagueOnPlayAutoOff1,
-//   gLeagueOnPlayPause,
-//   gLeagueContinuePlaying,
-
-//   // adReward pages
-//   gAdReward,
-//   gAdRewardRedeem,
-//   gAdRewardOnCD,
-
-//   // weekly mission pages
-//   gAchivementMission,
-//   gWeeklyMissionBox,
-//   gWeeklyMissionBoxConfirm,
-//   gWeeklyMissionBoxRecieved,
-
-//   // general pages
-//   gPowerSaving,
-//   gReviewApp,
-//   gDownloadData,
-
-//   // gBackBtn,
-//   gPromotion1,
-//   gPromotion2,
-//   gPromotion3,
-//   gRechargePromotion,
-//   gTeamSupportPackagePromotion,
-//   gEvent,
-//   gOk,
-//   gNext,
-//   gNext2,
-//   gConfirmWithYS,
-//   gErrorNewUpdateAvailable,
-//   gUnexpectedError,
-//   gQuitApp,
-//   gQuitApp1,
-// ];
-// export const allsGroup = new Group('alls', gAlls);

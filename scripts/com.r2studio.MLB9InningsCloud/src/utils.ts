@@ -19,9 +19,30 @@ export function endsWith(str: string, suffix: string): boolean {
   return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
 
-export function isSameColor(image: Image, xyrgb: XYRGB, thres: number = 0.8): boolean {
-  const rgb = getImageColor(image, xyrgb.x, xyrgb.y);
-  const score = Utils.identityColor(rgb, xyrgb);
+export function arrayFind<T>(arr: T[], condition: (el: T) => boolean): T | undefined {
+  for (const el of arr) {
+    if (condition(el)) {
+      return el;
+    }
+  }
+  return undefined;
+}
+
+export function isSameColor(image: Image | RGB, target: XYRGB | RGB, thres: number = 0.8): boolean {
+  let imageRGB: RGB | undefined;
+  if ('r' in image) {
+    // image is RGB
+    imageRGB = image;
+  } else if ('x' in target) {
+    // image is Image, target is XYRGB
+    imageRGB = getImageColor(image, target.x, target.y);
+  }
+
+  if (imageRGB === undefined) {
+    throw new Error('target is not XYRGB');
+  }
+
+  const score = Utils.identityColor(imageRGB, target);
   return score > thres;
 }
 
