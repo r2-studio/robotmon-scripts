@@ -11,3 +11,15 @@ export type ScriptConfig = {
   leagueSeasonMode: 'full' | 'half' | 'quarter' | 'postSeason';
   leagueYear: number; //gLeagueYearMin
 };
+
+export enum EventName {
+  RUNNING = 'running',
+  GAME_STATUS = 'gameStatus',
+}
+
+export enum GameStatusContent {
+  WAIT_FOR_LOGIN_INPUT = 'wait-for-input',
+  LOGIN_SUCCEEDED = 'login-succeeded',
+  LAUNCHING = 'launching',
+  PLAYING = 'playing',
+}

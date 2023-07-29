@@ -1,6 +1,7 @@
 export enum TASK {
   restartAppPerDay = 'restartAppPerDay',
-  changeGameSettings = 'changeGameSettings',
+  settingDefault = 'settingDefault',
+  settingResetLeagueProgress = 'settingResetLeagueProgress',
   playLeagueGame = 'playLeagueGame',
   playBattleGame = 'playBattleGame',
   adReward = 'adReward',
