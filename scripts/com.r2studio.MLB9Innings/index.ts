@@ -1,14 +1,14 @@
 import { default as MD5 } from 'md5';
-import { Rerouter, rerouter, Utils, RouteConfig } from 'Rerouter';
-import { ScriptConfig } from './src/types';
+import { Rerouter, rerouter, Utils, RouteConfig, Page } from 'Rerouter';
+import { ScriptConfig, EventName, GameStatusContent } from './src/types';
 import { defaultConfig } from './src/defaultConfig';
 
 import * as PAGE from './src/pages';
 import * as CONSTANTS from './src/constants';
 import { TASK } from './src/task';
-import { executeCommands, isSameColor } from './src/utils';
+import { executeCommands, isSameColor, getColorCountInRange, isSameColorCount, arrayFind } from './src/utils';
 
-const VERSION_CODE: number = 15.2;
+const VERSION_CODE: number = 15.31;
 
 class MLB9I {
   public static packageName: string = 'com.com2us.ninepb3d.normal.freefull.google.global.android.common';
@@ -22,11 +22,16 @@ class MLB9I {
   public config: ScriptConfig = defaultConfig;
   public rerouter: Rerouter;
   public state = {
-    isPlaying: false,
-    lastSendLaunchEvent: 0,
-    lastWaitInputEvent: 0,
+    lastGameStatusEvent: '',
     lastRunningEvent: 0,
     lastUploadSession: 0,
+
+    leagueGame: {
+      lastCheckPowerSaveAt: 0,
+      powerSaveColorCount: {},
+      tryEnterGameCnts: 0,
+      needResetProgress: false,
+    },
   };
 
   constructor(config: ScriptConfig) {
@@ -66,14 +71,14 @@ class MLB9I {
 
     this.addRoutes();
     this.handleUnknown();
-    // this.rerouter.debugCurrentMatch();
+    // this.rerouter.getCurrentMatchNames();
 
-    if (!this.config.hasCoolFeature) {
+    if (this.config.isLocalPaid) {
+      this.addPremiumTasks();
       this.addBasicTasks();
       return;
     }
-    if (this.config.isLocalPaid) {
-      this.addPremiumTasks();
+    if (!this.config.isCloud) {
       this.addBasicTasks();
       return;
     }
@@ -115,6 +120,7 @@ class MLB9I {
     writeFile(MLB9I.licenseFilePath, currentLicenseId);
 
     console.log(`lastLicenseId: ${lastLicenseId}, currentLicenseId: ${currentLicenseId}`);
+    this.handleSendEventLaunching();
 
     // lastLicenseId === '' means already logout
     if (lastLicenseId !== '' && currentLicenseId !== lastLicenseId) {
@@ -123,7 +129,6 @@ class MLB9I {
     }
 
     const hasCloudSession = this.fetchSession();
-    console.log('hasCloudSession', hasCloudSession);
     if (hasCloudSession) {
       this.handleCloudLogIn();
       sleep(3000);
@@ -132,11 +137,9 @@ class MLB9I {
     // restart app
     let isInApp = this.rerouter.checkInApp();
     while (!isInApp) {
-      console.log('startApp1');
       this.rerouter.startApp();
       sleep(3000);
       isInApp = this.rerouter.checkInApp();
-      console.log('startApp2', isInApp);
     }
     sleep(3000);
   }
@@ -321,10 +324,24 @@ class MLB9I {
   public addPremiumTasks() {
     // only run once
     this.rerouter.addTask({
-      name: TASK.changeGameSettings,
+      name: TASK.settingDefault,
       // maxTaskRunTimes: 1,
       minRoundInterval: Number.POSITIVE_INFINITY,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      forceStop: true,
+    });
+
+    // FIXME: this should only run when needed
+    this.rerouter.addTask({
+      name: TASK.settingResetLeagueProgress,
+      minRoundInterval: 1 * CONSTANTS.minuteInMs,
+      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      beforeRoute: task => {
+        const { needResetProgress } = this.state.leagueGame;
+        if (!needResetProgress) {
+          return 'skipRouteLoop';
+        }
+      },
       forceStop: true,
     });
 
@@ -402,28 +419,17 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.landingLoading.name}`,
       match: PAGE.landingLoading,
-      action: this.wrapRouteActionRunning(_ => {
+      action: this.wrapRouteAction(_ => {
         console.log('landing loading...');
         this.handleSendEventLaunching();
       }),
       afterActionDelay: CONSTANTS.sleepMedium,
     });
-    this.rerouter.addRoute({
-      path: `/${PAGE.landing.name}`,
-      match: PAGE.landing,
-      action: this.wrapRouteActionRunning(_ => {
-        this.handleSendEventLaunching();
-        this.rerouter.goNext(PAGE.landing);
-      }),
-    });
     [PAGE.downloadData, PAGE.progressBarRunning].forEach(p => {
       this.rerouter.addRoute({
         path: `/${p.name}`,
         match: p,
-        action: this.wrapRouteActionRunning(_ => {
-          this.handleSendEventLaunching();
-          this.rerouter.goNext(p);
-        }),
+        action: this.wrapRouteAction('goNext'),
         afterActionDelay: CONSTANTS.sleepLong,
       });
     });
@@ -431,14 +437,34 @@ class MLB9I {
       this.rerouter.addRoute({
         path: `/${p.name}`,
         match: p,
-        action: this.wrapRouteActionRunning(_ => {
-          this.handleSendEventLaunching();
-          this.rerouter.goNext(p);
-        }),
+        action: this.wrapRouteAction('goNext'),
       });
     });
 
     // ** login pages
+    this.rerouter.addRoute({
+      path: `/${PAGE.landing.name}`,
+      match: PAGE.landing,
+      action: context => {
+        if (!this.config.isCloud) {
+          console.log('stay in login');
+          return;
+        }
+
+        // use interval
+        this.handleSendEventRunning(true);
+        if (context.task.name === TASK.stayInLogin) {
+          console.log('stay in login');
+          if (context.matchDuring < CONSTANTS.switchWaitingLoginPagesInterval) {
+            return;
+          }
+          console.log('click hive login for avoid app crush');
+        }
+
+        this.rerouter.goNext(PAGE.landing);
+      },
+    });
+
     [PAGE.logIn, PAGE.logIn90].forEach(p => {
       this.rerouter.addRoute({
         path: `/${p.name}`,
@@ -448,21 +474,15 @@ class MLB9I {
             console.log('stay in login');
             return;
           }
-
-          this.handleSendEventRunning();
           if (context.task.name === TASK.stayInLogin) {
             console.log('stay in login');
+            keycode('BACK', 100);
+            console.log('keycode back');
             return;
           }
 
-          // sometimes game will automatically logout during playing
-          // so reset all states in order to send event properly
-          this.state.isPlaying = false;
-          this.state.lastSendLaunchEvent = 0;
-          this.state.lastWaitInputEvent = 0;
-          this.state.lastRunningEvent = 0;
-          this.state.lastUploadSession = 0;
-
+          // use interval
+          this.handleSendEventRunning(true);
           this.handleSendEventLoginInputing();
         },
       });
@@ -479,7 +499,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.main.name}`,
       match: PAGE.main,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         const task = context.task.name;
         console.log(task);
 
@@ -487,22 +507,26 @@ class MLB9I {
           case TASK.stayInLogin:
             // should be inaccessible unless clear session is failed
             this.handleCloudLogOut();
-
             return;
+
+          case TASK.settingDefault:
+          case TASK.settingResetLeagueProgress:
+            this.rerouter.screen.tap(PAGE.mainBtns.settings);
+            break;
+
           case TASK.playLeagueGame:
             this.rerouter.screen.tap(PAGE.mainBtns.leagueMode);
+            this.state.leagueGame.tryEnterGameCnts++;
             break;
           case TASK.playBattleGame:
             this.rerouter.screen.tap(PAGE.mainBtns.battleMode);
             break;
-          case TASK.changeGameSettings:
-            this.rerouter.screen.tap(PAGE.mainBtns.settings);
-            break;
+
           case TASK.adReward:
             // sometimes won't trigger anything if still on cd
             if (context.matchTimes > 2) {
               console.log('ad is still on cd');
-              finishRound();
+              finishRound(true);
             } else {
               this.rerouter.screen.tap(PAGE.mainBtns.adTab);
             }
@@ -513,7 +537,11 @@ class MLB9I {
           default:
             break;
         }
+
+        // sleep for send 1+ events
+        this.handleSendEventLoginSuccess() && Utils.sleep(CONSTANTS.sleepMedium);
         this.handleSendEventPlaying();
+        this.handleSendEventRunning();
       }),
     });
 
@@ -521,32 +549,39 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.settings.name}`,
       match: PAGE.settings,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
-        if (context.task.name !== TASK.changeGameSettings) {
-          this.rerouter.goBack(PAGE.settings);
-          return;
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
+        const inactiveTabColor = { r: 58, g: 65, b: 74 };
+        const tab = arrayFind(Object.keys(PAGE.settingsTabs), t => {
+          const { x, y } = PAGE.settingsTabs[t as keyof typeof PAGE.settingsTabs];
+          return !isSameColor(image, { x, y, ...inactiveTabColor });
+        });
+
+        switch (context.task.name) {
+          case TASK.settingDefault:
+            if (tab === 'graphicTab') {
+              this.rerouter.screen.tap(PAGE.settingsGraphTabBtns.powerSaveOn);
+              Utils.sleep(CONSTANTS.sleepShort);
+              finishRound(true);
+              this.handleSendEventRunning();
+            } else {
+              // go to graphicTab
+              this.rerouter.screen.tap(PAGE.settingsTabs.graphicTab);
+            }
+            break;
+          case TASK.settingResetLeagueProgress:
+            if (!this.state.leagueGame.needResetProgress) {
+              finishRound(true);
+              break;
+            }
+            // go to leagueResetDialog
+            this.rerouter.screen.tap(PAGE.settingsBtns.leagueReset);
+            this.state.leagueGame.needResetProgress = false;
+
+            break;
+          default:
+            this.rerouter.goBack(PAGE.settings);
+            break;
         }
-        if (this.rerouter.isPageMatchImage(PAGE.settingsGraphTab, image)) {
-          this.rerouter.screen.tap(PAGE.settingsGraphTabBtns.powerSaveOn);
-          Utils.sleep(CONSTANTS.sleepLong);
-          finishRound();
-          return;
-        }
-        // go to graphicTab
-        this.rerouter.screen.tap(PAGE.settingsBtns.graphicTab);
-      }),
-    });
-    this.rerouter.addRoute({
-      path: `/${PAGE.settingsGraphTab.name}`,
-      match: PAGE.settingsGraphTab,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
-        if (context.task.name !== TASK.changeGameSettings) {
-          this.rerouter.goBack(PAGE.settingsGraphTab);
-          return;
-        }
-        this.rerouter.screen.tap(PAGE.settingsGraphTabBtns.powerSaveOn);
-        Utils.sleep(CONSTANTS.sleepLong);
-        finishRound();
       }),
     });
 
@@ -554,7 +589,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.adReward.name}`,
       match: PAGE.adReward,
-      action: this.wrapRouteActionRunning(context => {
+      action: this.wrapRouteAction(context => {
         if (context.task.name !== TASK.adReward) {
           this.rerouter.goBack(PAGE.adReward);
           return;
@@ -568,24 +603,26 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.adRewardRedeem.name}`,
       match: PAGE.adRewardRedeem,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('ad reward get');
         this.rerouter.goNext(PAGE.adRewardRedeem);
         Utils.sleep(CONSTANTS.sleepShort);
         if (context.task.name === TASK.adReward) {
-          finishRound();
+          finishRound(true);
+          this.handleSendEventRunning();
         }
       }),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.adRewardOnCD.name}`,
       match: PAGE.adRewardOnCD,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('ad is still cd');
         this.rerouter.goBack(PAGE.adRewardOnCD);
         Utils.sleep(CONSTANTS.sleepShort);
         if (context.task.name === TASK.adReward) {
           finishRound(true);
+          this.handleSendEventRunning();
         }
       }),
     });
@@ -594,7 +631,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.achivementMission.name}`,
       match: PAGE.achivementMission,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.weeklyMission) {
           this.rerouter.goBack(PAGE.achivementMission);
           return;
@@ -617,7 +654,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.weeklyMissionBox.name}`,
       match: PAGE.weeklyMissionBox,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.weeklyMission) {
           this.rerouter.goBack(PAGE.weeklyMissionBox);
           return;
@@ -633,7 +670,8 @@ class MLB9I {
             const canCollect = isSameColor(image, { x: x + dx, y: y + dy, ...canCollectColor });
             if (!canCollect) {
               console.log('wait all weekly mission complete');
-              finishRound();
+              finishRound(true);
+              this.handleSendEventRunning();
               return;
             }
           }
@@ -651,26 +689,27 @@ class MLB9I {
           this.rerouter.screen.tap(PAGE.weeklyMissionBoxBtns.receiveReward);
 
           // enter receive confirm page
-          finishRound();
+          finishRound(true);
+          this.handleSendEventRunning();
         }
       }),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.weeklyMissionBoxConfirm.name}`,
       match: PAGE.weeklyMissionBoxConfirm,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.weeklyMissionBoxReceived.name}`,
       match: PAGE.weeklyMissionBoxReceived,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
 
     // ** playBattleGame
     this.rerouter.addRoute({
       path: `/${PAGE.battleModePanel.name}`,
       match: PAGE.battleModePanel,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playBattleGame) {
           this.rerouter.goBack(PAGE.battleModePanel);
           return;
@@ -683,7 +722,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.rankedBattlePanel.name}`,
       match: PAGE.rankedBattlePanel,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playBattleGame) {
           this.rerouter.goBack(PAGE.rankedBattlePanel);
           return;
@@ -691,14 +730,16 @@ class MLB9I {
 
         // cannot play
         if (context.matchTimes > 5) {
-          finishRound();
+          finishRound(true);
+          this.handleSendEventRunning();
           return;
         }
 
         // check if play is available
         const isPlayDisabled = isSameColor(image, PAGE.rankedBattlePanelBtns.disabledPlayBtn);
         if (isPlayDisabled) {
-          finishRound();
+          finishRound(true);
+          this.handleSendEventRunning();
           console.log('ranked battle play disabled');
           return;
         }
@@ -711,10 +752,11 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.rankedBattleWaitToRefresh.name}`,
       match: PAGE.rankedBattleWaitToRefresh,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name === TASK.playBattleGame) {
           console.log('play rank game disabled');
           finishRound(true);
+          this.handleSendEventRunning();
         }
         this.rerouter.goBack(PAGE.rankedBattleWaitToRefresh);
       }),
@@ -722,7 +764,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.rankedBattleGameInfo.name}`,
       match: PAGE.rankedBattleGameInfo,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playBattleGame) {
           this.rerouter.goBack(PAGE.rankedBattleGameInfo);
           return;
@@ -733,12 +775,12 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.rankedBattleResult.name}`,
       match: PAGE.rankedBattleResult,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.autoGameConfirm.name}`,
       match: PAGE.autoGameConfirm,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playBattleGame) {
           this.rerouter.goBack(PAGE.autoGameConfirm);
           return;
@@ -749,7 +791,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.autoGameConfirmEnd.name}`,
       match: PAGE.autoGameConfirmEnd,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playBattleGame) {
           this.rerouter.goBack(PAGE.autoGameConfirmEnd);
           return;
@@ -760,12 +802,27 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.rankedBattleGameInfo.name}`,
       match: PAGE.rankedBattleGameInfo,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playBattleGame) {
           this.rerouter.goBack(PAGE.rankedBattleGameInfo);
           return;
         }
         this.rerouter.goNext(PAGE.rankedBattleGameInfo);
+      }),
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGE.rechargeBall.name}`,
+      match: PAGE.rechargeBall,
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
+        switch (context.task.name) {
+          case TASK.playBattleGame:
+          case TASK.playLeagueGame:
+            console.log('cannot continue: recharge ball needed');
+            finishRound(true);
+          default:
+            break;
+        }
+        this.rerouter.goBack(PAGE.rechargeBall);
       }),
     });
 
@@ -774,11 +831,14 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.leagueModePanel.name}`,
       match: PAGE.leagueModePanel,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playLeagueGame) {
           this.rerouter.goBack(PAGE.leagueModePanel);
           return;
         }
+
+        // can play league mode
+        this.state.leagueGame.tryEnterGameCnts++;
 
         // avoid to click btn too many time for trigger next page immediately
         if (context.matchTimes < 2) {
@@ -790,7 +850,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.leagueModeGameInfo.name}`,
       match: PAGE.leagueModeGameInfo,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playLeagueGame) {
           this.rerouter.goBack(PAGE.leagueModeGameInfo);
           return;
@@ -802,6 +862,7 @@ class MLB9I {
         if (hasEnergy0) {
           console.log('no energy');
           finishRound(true);
+          this.handleSendEventRunning();
           return;
         }
 
@@ -835,7 +896,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.selectPlayRole.name}`,
       match: PAGE.selectPlayRole,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('handle select play role');
         this.rerouter.goNext(PAGE.selectPlayRole);
       }),
@@ -843,7 +904,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.selectYear.name}`,
       match: PAGE.selectYear,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('handle select year page');
         this.rerouter.goNext(PAGE.selectYear);
 
@@ -877,7 +938,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.selectSeasonMode.name}`,
       match: PAGE.selectSeasonMode,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('handle select season page');
         this.rerouter.goNext(PAGE.selectSeasonMode);
         Utils.sleep(CONSTANTS.sleepMedium);
@@ -891,7 +952,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.selectLeagueGameAmount.name}`,
       match: PAGE.selectLeagueGameAmount,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('handle select league game amount page');
         // use config user setted to select which they want to play
         // TODO: handle the half, quarter, full has 2 next page
@@ -932,17 +993,17 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.newSeason.name}`,
       match: PAGE.newSeason,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.endSeason.name}`,
       match: PAGE.endSeason,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.endSeasonProceed.name}`,
       match: PAGE.endSeasonProceed,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('handle end season proceed');
         this.rerouter.screen.tap({ x: 182, y: 178 }); // tap new season of left
         // will go to endSeasonProceedSelected
@@ -951,12 +1012,12 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.endSeasonProceedSelected.name}`,
       match: PAGE.endSeasonProceedSelected,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.selectNormalMasterLeagueMode.name}`,
       match: PAGE.selectNormalMasterLeagueMode,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('handle select normal / master mode');
 
         // if cannot select master mode, at least select normal mode
@@ -971,23 +1032,41 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.selectNormalMasterLeagueModeProceed.name}`,
       match: PAGE.selectNormalMasterLeagueModeProceed,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
-      path: `/${PAGE.leagueResetDialog.name}`,
-      match: PAGE.leagueResetDialog,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
-        console.log('handle reset league dialog');
+      path: `/${PAGE.leagueResetDialogYN.name}`,
+      match: PAGE.leagueResetDialogYN,
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
+        console.log('handle reset league dialog with yes/no');
 
         // TODO: let user choose in config
         if (context.lastMatchedPath === `/${PAGE.selectNormalMasterLeagueModeProceed.name}`) {
           console.log('reset league mode');
-          this.rerouter.goNext(PAGE.leagueResetDialog);
+          this.rerouter.goNext(PAGE.leagueResetDialogYN);
           return;
         }
 
         // not reset
-        this.rerouter.goBack(PAGE.leagueResetDialog);
+        this.rerouter.goBack(PAGE.leagueResetDialogYN);
+        return;
+      }),
+    });
+    this.rerouter.addRoute({
+      path: `/${PAGE.leagueResetDialog.name}`,
+      match: PAGE.leagueResetDialog,
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
+        if (context.task.name !== TASK.settingResetLeagueProgress) {
+          // cancel
+          this.rerouter.goBack(PAGE.leagueResetDialog);
+          return;
+        }
+        console.log('handle reset league dialog');
+        // TODO: let user can select specific mode and year to play
+        // reset
+        this.rerouter.goNext(PAGE.leagueResetDialog);
+        this.state.leagueGame.needResetProgress = false;
+        finishRound(true);
         return;
       }),
     });
@@ -996,22 +1075,22 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.gameLineUp.name}`,
       match: PAGE.gameLineUp,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.playerGrowthComplete.name}`,
       match: PAGE.playerGrowthComplete,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.pitcherOfTheMonth.name}`,
       match: PAGE.pitcherOfTheMonth,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.mvp.name}`,
       match: PAGE.mvp,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('handleMvpPage');
         const okBtn = { x: 568, y: 320, r: 52, g: 120, b: 210 };
         let isOkBtnOnScreen = this.rerouter.screen.isSameColor(okBtn);
@@ -1034,12 +1113,13 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.gameResult.name}`,
       match: PAGE.gameResult,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         switch (context.task.name) {
           case TASK.playBattleGame:
           case TASK.playLeagueGame:
             console.log('complete a game');
             finishRound();
+            this.handleSendEventRunning();
             break;
           default:
             break;
@@ -1050,17 +1130,17 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.gameResultAquired.name}`,
       match: PAGE.gameResultAquired,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.gameResultWorldChampion.name}`,
       match: PAGE.gameResultWorldChampion,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.gameResultOther.name}`,
       match: PAGE.gameResultOther,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         this.rerouter.screen.tap({ x: 0, y: 0 });
         console.log('tap');
       }),
@@ -1070,37 +1150,37 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.gameReward.name}`,
       match: PAGE.gameReward,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.leagueRewardAchievementGrade.name}`,
       match: PAGE.leagueRewardAchievementGrade,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.leagueRewardAchievementGradeBonusPlayer.name}`,
       match: PAGE.leagueRewardAchievementGradeBonusPlayer,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.bestPositionAwardBonusGroup.name}`,
       match: PAGE.bestPositionAwardBonusGroup,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.bonusGrantedByTeamRecord.name}`,
       match: PAGE.bonusGrantedByTeamRecord,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.postSeasonAwardBonus.name}`,
       match: PAGE.postSeasonAwardBonus,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.selectRewardPlayer.name}`,
       match: PAGE.selectRewardPlayer,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         console.log('handleSelectRewardPlayer');
         let bestCardRank = -1;
         let bestCardPos = PAGE.selectRewardPlayerBtns[0];
@@ -1129,17 +1209,26 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.onQuickPlayGroup.name}`,
       match: PAGE.onQuickPlayGroup,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
+        console.log('on quick playing');
+
+        if (context.task.name === TASK.playLeagueGame) {
+          // success enter game
+          this.state.leagueGame.tryEnterGameCnts = 0;
+        }
+        this.handleSendEventRunning(true);
+        this.rerouter.goNext(PAGE.onQuickPlayGroup);
+      }),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.onQuickPlayPause.name}`,
       match: PAGE.onQuickPlayPause,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.onPlayPowerSaveOn.name}`,
       match: PAGE.onPlayPowerSaveOn,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         // this is share between all mode
         let isOnPlayTask = false;
         switch (context.task.name) {
@@ -1150,17 +1239,38 @@ class MLB9I {
           default:
             break;
         }
-        if (isOnPlayTask && this.config.hasCoolFeature && !this.rerouter.isPageMatch(PAGE.powerSaving)) {
-          console.log('still play with power save on');
-        } else {
+
+        if (!this.config.hasCoolFeature || !isOnPlayTask || this.rerouter.isPageMatch(PAGE.powerSaving)) {
           this.handlePowerSavingPage();
+          return;
         }
+
+        const now = Date.now();
+        const { lastCheckPowerSaveAt: lastCheckTimeAt, powerSaveColorCount: colorCount } = this.state.leagueGame;
+        if (now - lastCheckTimeAt < CONSTANTS.sendRunningEventInterval) {
+          return;
+        }
+
+        // use time to check whether game is still playing
+        const colorCntNow = getColorCountInRange(image, { x: 331, y: 310 }, { x: 403, y: 311 });
+        const isSame = isSameColorCount(colorCntNow, colorCount);
+
+        this.state.leagueGame.lastCheckPowerSaveAt = now;
+        this.state.leagueGame.powerSaveColorCount = colorCntNow;
+
+        if (!isSame) {
+          console.log('game is still playing with power save on');
+          this.handleSendEventRunning();
+          return;
+        }
+
+        console.log('game is stuck');
       }),
     });
     this.rerouter.addRoute({
       path: `/${PAGE.leagueOnPlayPowerSaveOffGroups.name}`,
       match: PAGE.leagueOnPlayPowerSaveOffGroups,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         // page will be stopped here in any tasks
         // need to handle immediately if match
         for (const pageOrGroup of matched) {
@@ -1177,6 +1287,9 @@ class MLB9I {
           return;
         }
 
+        // success enter game
+        this.state.leagueGame.tryEnterGameCnts = 0;
+
         // TODO: handle quick switch to auto play off if was stopped
         if (this.config.hasCoolFeature) {
           console.log('turn on power save play');
@@ -1189,7 +1302,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.leagueOnPlayAutoOffGroup.name}`,
       match: PAGE.leagueOnPlayAutoOffGroup,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playLeagueGame) {
           // open pause panel
           keycode('KEYCODE_BACK', 100);
@@ -1203,7 +1316,7 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.leagueOnPlayPause.name}`,
       match: PAGE.leagueOnPlayPause,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         if (context.task.name !== TASK.playLeagueGame) {
           // open pause panel
           this.rerouter.goBack(PAGE.leagueOnPlayPause);
@@ -1217,25 +1330,58 @@ class MLB9I {
     this.rerouter.addRoute({
       path: `/${PAGE.leagueContinuePlaying.name}`,
       match: PAGE.leagueContinuePlaying,
-      action: this.wrapRouteActionRunning('goNext'),
+      action: this.wrapRouteAction('goNext'),
     });
 
     // ** general pages
     this.rerouter.addRoute({
       path: `/${PAGE.powerSaving.name}`,
       match: PAGE.powerSaving,
-      action: this.wrapRouteActionRunning((context, image, matched, finishRound) => {
+      action: this.wrapRouteAction((context, image, matched, finishRound) => {
         this.handlePowerSavingPage();
       }),
     });
-    [PAGE.errorNewUpdateAvailable, PAGE.unexpectedError].forEach(p => {
+    [PAGE.errorNewUpdateAvailable, PAGE.appIsNotResponding].forEach(p => {
       this.rerouter.addRoute({
         path: `/${p.name}`,
         match: p,
-        action: this.wrapRouteActionRunning('goNext'),
+        action: 'goNext',
         afterActionDelay: CONSTANTS.sleepWaitPageLong,
       });
     });
+
+    this.rerouter.addRoute({
+      path: `/${PAGE.unexpectedError.name}`,
+      match: PAGE.unexpectedError,
+      action: (context, image, matched, finishRound) => {
+        switch (context.task.name) {
+          case TASK.playLeagueGame:
+            if (!this.config.hasCoolFeature) {
+              break;
+            }
+            // sometimes some unknown reason cannot enter game
+            const { tryEnterGameCnts } = this.state.leagueGame;
+            console.log('try enter game cnts', tryEnterGameCnts);
+            if (tryEnterGameCnts === 3) {
+              this.rerouter.restartApp();
+            }
+            if (tryEnterGameCnts === 4) {
+              // can only resolved by resetting league mode progress
+              console.log('handleResetLeagueModeProgress');
+
+              this.state.leagueGame.needResetProgress = true;
+              finishRound(true);
+            }
+
+            break;
+          default:
+            break;
+        }
+
+        this.rerouter.goNext(PAGE.unexpectedError);
+      },
+    });
+
     [
       PAGE.reviewApp,
       PAGE.promotion1,
@@ -1253,7 +1399,7 @@ class MLB9I {
       this.rerouter.addRoute({
         path: `/${p.name}`,
         match: p,
-        action: this.wrapRouteActionRunning('goNext'),
+        action: this.wrapRouteAction('goNext'),
       });
     });
   }
@@ -1277,15 +1423,14 @@ class MLB9I {
         default:
           break;
       }
-      if (this.state.lastWaitInputEvent !== 0) {
-        return this.handleSendEventLoginInputing();
+      if (this.state.lastGameStatusEvent === GameStatusContent.WAIT_FOR_LOGIN_INPUT) {
+        console.log('wait user input');
+        return;
       }
 
       this.rerouter.screen.tap({ x: 0, y: 0 });
       console.log('tap');
 
-      // if in app, still send running
-      this.handleSendEventRunning();
       if (context.matchTimes % 11 === 0) {
         keycode('KEYCODE_BACK', 100);
         Utils.log('keycode back for unknown');
@@ -1328,12 +1473,13 @@ class MLB9I {
     Utils.sleep(CONSTANTS.sleepMedium);
   }
 
-  public wrapRouteActionRunning(action: RouteConfig['action']): RouteConfig['action'] {
+  public wrapRouteAction(action: RouteConfig['action']): RouteConfig['action'] {
     if (!this.config.isCloud) {
       return action;
     }
 
     return (context, image, matched, finishRound) => {
+      console.log('wrapRouteAction', context.task.name, matched[0].name);
       if (typeof action === 'function') {
         action(context, image, matched, finishRound);
       }
@@ -1344,80 +1490,62 @@ class MLB9I {
         this.rerouter.goBack(matched[0]);
       }
 
-      this.handleSendEventRunning();
-
-      // after login, any page could show up
-      this.handleSendEventLoginSuccess();
-
       // upload session if needed
       this.handleImplementUploadSession();
     };
   }
 
   public handleSendEventLoginInputing() {
-    if (!this.config.isCloud) {
-      return;
-    }
-    console.log('wait user input');
-    const now = Date.now();
-    if (now - this.state.lastWaitInputEvent >= CONSTANTS.sendWaitInputEventInterval) {
-      this.state.lastWaitInputEvent = now;
-      sendEvent('gameStatus', 'wait-for-input');
-    }
+    const content = GameStatusContent.WAIT_FOR_LOGIN_INPUT;
+    return this.handleSendGameStatusEvent(content);
   }
   public handleSendEventLoginSuccess() {
-    if (!this.config.isCloud) {
-      return;
+    if (this.state.lastGameStatusEvent !== GameStatusContent.WAIT_FOR_LOGIN_INPUT) {
+      return false;
     }
-    if (this.state.lastWaitInputEvent !== 0) {
-      // re-init all states to send events if it's after re-login
-      this.state.isPlaying = false;
-      this.state.lastSendLaunchEvent = 0;
-      this.state.lastWaitInputEvent = 0;
-      this.state.lastRunningEvent = 0;
-      this.state.lastUploadSession = 0;
-
-      sendEvent('gameStatus', 'login-succeeded');
-      console.log('send login success event');
-    }
+    const content = GameStatusContent.LOGIN_SUCCEEDED;
+    return this.handleSendGameStatusEvent(content);
   }
   public handleSendEventLaunching() {
-    if (!this.config.isCloud) {
-      return;
-    }
-    const now = Date.now();
-    if (now - this.state.lastSendLaunchEvent < CONSTANTS.sendRunningEventInterval) {
-      return;
-    }
-    this.state.lastSendLaunchEvent = now;
-    sendEvent('gameStatus', 'launching');
-    console.log('send launch event');
+    // set to default once app is launched (first and again)
+    this.state.lastRunningEvent = 0;
+    this.state.lastUploadSession = 0;
+    this.state.leagueGame = {
+      lastCheckPowerSaveAt: 0,
+      powerSaveColorCount: {},
+      tryEnterGameCnts: this.state.leagueGame.tryEnterGameCnts,
+      needResetProgress: false,
+    };
+    const content = GameStatusContent.LAUNCHING;
+    return this.handleSendGameStatusEvent(content);
   }
-  public handleSendEventRunning() {
-    if (!this.config.isCloud) {
-      return;
+
+  public handleSendEventPlaying() {
+    const content = GameStatusContent.PLAYING;
+    return this.handleSendGameStatusEvent(content);
+  }
+  public handleSendGameStatusEvent(content: string): boolean {
+    if (this.state.lastGameStatusEvent === content) {
+      return false;
     }
+    this.state.lastGameStatusEvent = content;
+    sendEvent(EventName.GAME_STATUS, content);
+    console.log(`send event: ${content}`);
+    return true;
+  }
+
+  public handleSendEventRunning(useInterval: boolean = false) {
     const now = Date.now();
-    if (now - this.state.lastRunningEvent < CONSTANTS.sendRunningEventInterval) {
+    if (useInterval && now - this.state.lastRunningEvent < CONSTANTS.sendRunningEventInterval) {
       return;
     }
     this.state.lastRunningEvent = now;
-    sendEvent('running', '');
-    console.log('send running event');
-  }
-  public handleSendEventPlaying() {
-    if (!this.config.isCloud) {
-      return;
-    }
-    if (!this.state.isPlaying) {
-      this.state.isPlaying = true;
-      sendEvent('gameStatus', 'playing');
-      console.log('send playing event');
-    }
+    sendEvent(EventName.RUNNING, '');
+    console.log('send event: running');
   }
   public handleImplementUploadSession() {
     // only upload session when is playing
-    if (!this.config.isCloud || !this.state.isPlaying) {
+    if (!this.config.isCloud || this.state.lastGameStatusEvent !== GameStatusContent.PLAYING) {
       return;
     }
 
