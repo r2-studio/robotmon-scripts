@@ -1,4 +1,4 @@
-import { Icon } from 'rerouter';
+import { Icon } from "./types";
 
 // In train page
 export const iconSendAll = new Icon(

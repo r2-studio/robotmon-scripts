@@ -1,4 +1,5 @@
-import { GroupPage, MessageWindow, Page } from 'rerouter';
+import { GroupPage, Page } from 'rerouter';
+import { MessageWindow } from './types';
 
 export const downloadDataNoLanguageTitle: MessageWindow = {
   name: 'downloadDataNoLanguageTitle',
@@ -21,7 +22,7 @@ export const downloadDataNoLanguage: MessageWindow = {
 
   targetY: 4,
   lookingForColor: { r: 202, g: 193, b: 183 },
-  targetColorCount: 37,
+  targetColorCount: 40,
   targetColorThreashold: 5,
 };
 
@@ -196,6 +197,18 @@ export const messageNotifyQuit2: MessageWindow = {
 //   targetColorThreashold: 0,
 // };
 
+export const messageCookieDryingOnSunbed: MessageWindow = {
+  name: 'messageCookieDryingOnSunbed',
+  x: 201,
+  y: 172,
+  width: 226,
+  height: 12,
+
+  targetY: 6,
+  lookingForColor: { r: 172, g: 165, b: 158 },
+  targetColorCount: 68,
+  targetColorThreashold: 8,
+};
 export const messageTeamDontMatchToSCRow1: MessageWindow = {
   name: 'messageTeamDontMatchToSCRow1',
   x: 234,
@@ -205,7 +218,7 @@ export const messageTeamDontMatchToSCRow1: MessageWindow = {
 
   targetY: 6,
   lookingForColor: { r: 95, g: 95, b: 95 },
-  targetColorCount: 37,
+  targetColorCount: 45,
   targetColorThreashold: 8,
 };
 export const messageTeamDontMatchToSCRow2: MessageWindow = {

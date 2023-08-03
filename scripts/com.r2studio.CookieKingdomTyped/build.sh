@@ -1,8 +1,7 @@
 #!/bin/bash
 rm -r ./dist
-rm ./index.js
 
-echo "var window = window || {};\n" >> ./index.js
+echo "var window = window || {};\n" > ./index.js
 webpack --entry ./index.ts && rbm run --file=dist/index.js
 cat ./dist/index.js >> ./index.js
 echo "\nfunction start(jsonConfig){window.start(jsonConfig);}\nfunction stop(){window.stop();}\n" >> ./index.js

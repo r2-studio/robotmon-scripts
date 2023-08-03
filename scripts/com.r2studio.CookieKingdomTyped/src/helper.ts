@@ -1,8 +1,8 @@
-import { Rerouter, Utils, XYRGB, Page, XY, MessageWindow, Icon, RECT, GroupPage } from 'Rerouter';
+import { Rerouter, Utils, XYRGB, Page, XY, RECT, GroupPage } from 'Rerouter';
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
-import { Advanture, Advantures, Point, Records, Wish, WishStatus, productState } from './types';
+import { Advanture, Advantures, Icon, MessageWindow, Point, Records, Wish, WishStatus, productState } from './types';
 import { logs, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 
@@ -463,6 +463,7 @@ export function ocrStocksInRect(rect: RECT, icons: Icon[]): number {
   releaseImage(img);
 
   var txt = recognizeWishingTreeRequirements(icons, croppedImage, 10, 0.8, 0.5);
+  console.log('>>', txt);
   releaseImage(croppedImage);
 
   if (txt.length === 0) {
@@ -643,6 +644,7 @@ export function handleResearchInGnomeLab(rerouter: Rerouter, finishRound: any, t
 
 export function considerPurchaseSeasideMarket(rerouter: Rerouter, target: RECT): boolean {
   let newStock = ocrStocksInRect(target, ICONS.numberAuroraStockInTradeBird);
+  // let newStock = ocrStockAndReqInRect(target, ICONS.numberAuroraStockInTradeBird);
   console.log('considerPurchaseSeasideMarket, newStock', newStock, JSON.stringify(target));
   // TODO: 兩千多會讀不出來，確定幾百可以
   if (newStock > 50) {
@@ -1277,9 +1279,58 @@ export function searchForCandyHouse(rerouter: Rerouter): boolean {
 
 export function saveImageToDisk(filename?: string) {
   if (filename === undefined) {
-    filename = new Date.now().toLocaleString() + '-crash-img';
+    filename = '/data/robotmon/' + Date.now().toLocaleString() + '-crash-img.jpg';
   }
   var img = getScreenshot();
-  saveImage(img, filename + '.jpg');
+  saveImage(img, filename);
+  console.log(`Write to file: ${filename}`);
   releaseImage(img);
+}
+
+export function configSharePref() {
+  var rtn = execute('ls /data/data/com.devsisters.ck/shared_prefs');
+  if (rtn === 'exit status 1') {
+    console.log('Did not find shared_pref, removing all related dirs');
+    execute('rm -r /data/data/com.devsisters.ck/app_payload_lib');
+    execute('rm -r /data/data/com.devsisters.ck/cache');
+    execute('rm -r /data/data/com.devsisters.ck/code_cache');
+    execute('rm -r /data/data/com.devsisters.ck/.sealing_reports');
+    execute('rm -r /data/data/com.devsisters.ck/files');
+  }
+
+  var lines = readFile('/data/data/com.devsisters.ck/shared_prefs/com.devsisters.ck.v2.playerprefs.xml').split('\n');
+  for (var idx in lines) {
+    if (lines[idx].indexOf('OPTION_MUTE_BGM') !== -1) {
+      console.log(lines[idx]);
+      lines[idx] = '<int name="OPTION_MUTE_BGM" value="1" />';
+    } else if (lines[idx].indexOf('OPTION_MUTE_SE') !== -1) {
+      console.log(lines[idx]);
+      lines[idx] = '<int name="OPTION_MUTE_SE" value="1" />';
+    } else if (lines[idx].indexOf('OPTION_MUTE_VOICE') !== -1) {
+      console.log(lines[idx]);
+      lines[idx] = '<int name="OPTION_MUTE_VOICE" value="1" />';
+    } else if (lines[idx].indexOf('OPTION_USE_LIGHT_SAFE_FILTER') !== -1) {
+      console.log(lines[idx]);
+      lines[idx] = '<int name="OPTION_USE_LIGHT_SAFE_FILTER" value="1" />';
+    } else if (lines[idx].indexOf('OPTION_HIDE_SKILL_EFFECT') !== -1) {
+      console.log(lines[idx]);
+      lines[idx] = '<int name="OPTION_HIDE_SKILL_EFFECT" value="1" />';
+    }
+  }
+
+  var rtn = writeFile('/data/data/com.devsisters.ck/shared_prefs/com.devsisters.ck.v2.playerprefs.xml', lines.join('\n'));
+  console.log('Write file return: ', rtn);
+}
+
+export function mergeObject(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        // console.log('merge type: ', key, source[key], typeof(source[key]))
+        target[key] = source[key];
+      }
+    }
+  }
+  return target;
 }

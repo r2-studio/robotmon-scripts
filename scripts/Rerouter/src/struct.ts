@@ -20,44 +20,6 @@ export interface XYRGB {
   thres?: number;
 }
 
-export interface MessageWindow {
-  name: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-
-  targetY: number;
-  lookingForColor: { r: number; g: number; b: number };
-  targetColorCount: number;
-  targetColorThreashold: number;
-}
-
-export class Icon {
-  public name: string;
-  public base64String: string;
-  public image: Image;
-  public thres: number;
-  public next?: XY;
-  public back?: XY;
-
-  public constructor(name: string, base64String: string, thres: number | undefined = 0.9, next: XY | undefined = undefined, back: XY | undefined = undefined) {
-    this.name = name;
-    this.base64String = base64String;
-    this.thres = thres;
-    this.next = next;
-    this.back = back;
-  }
-
-  public loadImage() {
-    this.image = getImageFromBase64(this.base64String);
-  }
-
-  public releaseImage() {
-    releaseImage(this.image);
-  }
-}
-
 export class Page {
   public name: string;
   public points: XYRGB[];

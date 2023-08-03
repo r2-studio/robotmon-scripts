@@ -8,6 +8,44 @@ export type ScriptConfig = {
   leagueYear: number; //gLeagueYearMin
 };
 
+export interface MessageWindow {
+  name: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+
+  targetY: number;
+  lookingForColor: { r: number; g: number; b: number };
+  targetColorCount: number;
+  targetColorThreashold: number;
+}
+
+export class Icon {
+  public name: string;
+  public base64String: string;
+  public image: Image;
+  public thres: number;
+  public next?: XY;
+  public back?: XY;
+
+  public constructor(name: string, base64String: string, thres: number | undefined = 0.9, next: XY | undefined = undefined, back: XY | undefined = undefined) {
+    this.name = name;
+    this.base64String = base64String;
+    this.thres = thres;
+    this.next = next;
+    this.back = back;
+  }
+
+  public loadImage() {
+    this.image = getImageFromBase64(this.base64String);
+  }
+
+  public releaseImage() {
+    releaseImage(this.image);
+  }
+}
+
 // The state of individual tasks
 export interface TaskStatus {
   [key: string]: any;
@@ -74,11 +112,11 @@ export type Advanture = {
 };
 
 export const seasideStockRect: { [key: number]: RECT } = {
-  0: { x: 66, y: 284, w: 60, h: 17 },
-  1: { x: 158, y: 286, w: 60, h: 17 },
-  2: { x: 253, y: 286, w: 60, h: 17 },
-  3: { x: 346, y: 286, w: 60, h: 17 },
-  4: { x: 439, y: 286, w: 60, h: 17 },
+  0: { x: 66, y: 282, w: 60, h: 18 },
+  1: { x: 158, y: 282, w: 60, h: 18 },
+  2: { x: 253, y: 282, w: 60, h: 18 },
+  3: { x: 346, y: 282, w: 60, h: 18 },
+  4: { x: 439, y: 282, w: 60, h: 18 },
 };
 
 export const goodsLocationRect: { [key: string | number]: RECT } = {
