@@ -8,7 +8,7 @@ import * as CONSTANTS from './src/constants';
 import { TASK } from './src/task';
 import { executeCommands, isSameColor, getColorCountInRange, isSameColorCount, arrayFind } from './src/utils';
 
-const VERSION_CODE: number = 15.31;
+const VERSION_CODE: number = 15.32;
 
 class MLB9I {
   public static packageName: string = 'com.com2us.ninepb3d.normal.freefull.google.global.android.common';
@@ -810,21 +810,23 @@ class MLB9I {
         this.rerouter.goNext(PAGE.rankedBattleGameInfo);
       }),
     });
-    this.rerouter.addRoute({
-      path: `/${PAGE.rechargeBall.name}`,
-      match: PAGE.rechargeBall,
-      action: this.wrapRouteAction((context, image, matched, finishRound) => {
-        switch (context.task.name) {
-          case TASK.playBattleGame:
-          case TASK.playLeagueGame:
-            console.log('cannot continue: recharge ball needed');
-            finishRound(true);
-          default:
-            break;
-        }
-        this.rerouter.goBack(PAGE.rechargeBall);
-      }),
-    });
+    [PAGE.rechargeBallRankMode, PAGE.rechargeBallLeagueMode].forEach(p =>
+      this.rerouter.addRoute({
+        path: `/${p.name}`,
+        match: p,
+        action: this.wrapRouteAction((context, image, matched, finishRound) => {
+          switch (context.task.name) {
+            case TASK.playBattleGame:
+            case TASK.playLeagueGame:
+              console.log('cannot continue: recharge ball needed');
+              finishRound(true);
+            default:
+              break;
+          }
+          this.rerouter.goBack(p);
+        }),
+      })
+    );
 
     // ** playLeagueMode
     // enter game info
