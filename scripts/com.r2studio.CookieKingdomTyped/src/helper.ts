@@ -2,8 +2,8 @@ import { Rerouter, Utils, XYRGB, Page, XY, RECT, GroupPage } from 'Rerouter';
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
-import { Advanture, Advantures, Icon, MessageWindow, Point, Records, Wish, WishStatus, productState } from './types';
-import { logs, sendKeyBack } from './utils';
+import { Advanture, Advantures, BotStatus, Icon, MessageWindow, Point, Records, Wish, WishStatus, productState } from './types';
+import { logs, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 
 export function scrollDownALot(rerouter: Rerouter, startPnt: XY) {
@@ -1336,7 +1336,7 @@ export function mergeObject(target: any) {
   return target;
 }
 
-export function checkIfInBattle(rerouter: Rerouter): boolean {
+export function checkIfInBattle(rerouter: Rerouter, task: string, botStatus: BotStatus): boolean {
   // read the life bar of both players
   const rfpagePvPBattling = new Page('rfpageBattling', [
     // From PVP
@@ -1351,20 +1351,30 @@ export function checkIfInBattle(rerouter: Rerouter): boolean {
     { x: 454, y: 21, r: 82, g: 209, b: 0 },
     { x: 591, y: 10, r: 255, g: 255, b: 255 },
   ]);
-  // const rfpageTOSCBattle = new Page('rfpageTOSCBattle', []);
-  const rfpageInIslandBattle = new Page('rfpageInIslandBattle', [
-    { x: 160, y: 338, r: 199, g: 253, b: 139 },
-    { x: 227, y: 338, r: 126, g: 247, b: 51 },
-    { x: 297, y: 337, r: 199, g: 253, b: 139 },
+  const rfpageTOSCBattle = new Page('rfpageTOSCBattle', [
+    { x: 608, y: 41, r: 47, g: 35, b: 38 },
+    { x: 616, y: 17, r: 205, g: 205, b: 203 },
   ]);
-  // const rfpageCookieAllianceBattle = new Page('rfpageCookieAlliance', []);
-  // const rfpageGuildDragonBattle = new Page('rfpageGuildDragonBattle', []);
+  const rfpageInIslandBattle = new Page('rfpageInIslandBattle', [
+    { x: 594, y: 12, r: 249, g: 37, b: 38 },
+    { x: 590, y: 20, r: 24, g: 24, b: 24 },
+    { x: 453, y: 21, r: 85, g: 211, b: 2 },
+  ]);
+  const rfpageCookieAllianceBattle = new Page('rfpageCookieAlliance', [
+    { x: 442, y: 20, r: 85, g: 215, b: 2 },
+    { x: 36, y: 21, r: 51, g: 227, b: 255 },
+  ]);
+  const rfpageGuildDragonBattle = new Page('rfpageGuildDragonBattle', [
+    { x: 556, y: 12, r: 90, g: 27, b: 175 },
+    { x: 158, y: 338, r: 126, g: 247, b: 51 },
+  ]);
 
   const rfpageAutoUseSkillEnabled = new Page('rfpageAutoUseSkillEnabled', [{ x: 28, y: 291, r: 223, g: 221, b: 1 }], { x: 41, y: 289 });
   const rfpageAutoUseSkillNotEnabled = new Page('rfpageAutoUseSkillNotEnabled', [{ x: 41, y: 289, r: 203, g: 203, b: 203 }], { x: 41, y: 289 });
   const rfpageAutoUseSkillNotEnabled2 = new Page('rfpageAutoUseSkillNotEnabled2', [{ x: 41, y: 289, r: 197, g: 193, b: 195 }], { x: 41, y: 289 });
 
   const rfpageSpeedBoostEnabled = new Page('rfpageSpeedBoostEnabled', [{ x: 32, y: 331, r: 161, g: 159, b: 8 }]);
+  const rfpageSpeedBoost25Enabled = new Page('rfpageSpeedBoost25Enabled', [{ x: 36, y: 334, r: 153, g: 151, b: 8 }]);
   const rfpageSpeedBoostNotEnabled = new Page('rfpageSpeedBoostNotEnabled', [{ x: 33, y: 319, r: 203, g: 203, b: 203 }], { x: 33, y: 319 });
   const rfpageSpeed1_2x = new Page(
     'rfpageSpeed1_2x',
@@ -1378,17 +1388,17 @@ export function checkIfInBattle(rerouter: Rerouter): boolean {
   const gpInBattle = new GroupPage('gpInBattle', [
     rfpagePvPBattling,
     rfpageBountyBattle,
-    // rfpageTOSCBattle,
+    rfpageTOSCBattle,
     rfpageInIslandBattle,
-    // rfpageCookieAllianceBattle,
-    // rfpageCookieAllianceBattle,
-    // rfpageGuildDragonBattle,
+    rfpageCookieAllianceBattle,
+    rfpageGuildDragonBattle,
 
     rfpageAutoUseSkillEnabled,
     rfpageAutoUseSkillNotEnabled,
     rfpageAutoUseSkillNotEnabled2,
 
     rfpageSpeedBoostEnabled,
+    rfpageSpeedBoost25Enabled,
     rfpageSpeedBoostNotEnabled,
     rfpageSpeed1_2x,
   ]);
@@ -1399,7 +1409,7 @@ export function checkIfInBattle(rerouter: Rerouter): boolean {
     return false;
   }
 
-  if (!matchedBattlePages.some(element => element.name === 'rfpageAutoUseSkillEnabled')) {
+  if (matchedBattlePages.some(element => element.name === 'rfpageAutoUseSkillEnabled')) {
     logs('checkIfInBattle', `Auto skill correctly enabled`);
   } else if (matchedBattlePages.some(element => element.name === 'rfpageAutoUseSkillNotEnabled' || element.name === 'rfpageAutoUseSkillNotEnabled2')) {
     rerouter.goNext(rfpageAutoUseSkillNotEnabled);
@@ -1407,7 +1417,7 @@ export function checkIfInBattle(rerouter: Rerouter): boolean {
     logs('checkIfInBattle', `Tap auto skill enable 1 time for rfpageAutoUseSkillNotEnabled`);
   }
 
-  if (!matchedBattlePages.some(element => element.name === 'rfpageSpeedBoostEnabled')) {
+  if (matchedBattlePages.some(element => element.name === 'rfpageSpeedBoostEnabled' || element.name === 'rfpageSpeedBoost25Enabled')) {
     logs('checkIfInBattle', `Speed boost correctly enabled`);
   } else if (matchedBattlePages.some(element => element.name === 'rfpageSpeedBoostNotEnabled')) {
     rerouter.goNext(rfpageSpeedBoostNotEnabled);
@@ -1421,13 +1431,32 @@ export function checkIfInBattle(rerouter: Rerouter): boolean {
     logs('checkIfInBattle', `Tap speed boost 1 time for rfpageSpeed1_2x`);
   }
 
-  // TODO: 如果打太久要停
-  // if (
-  //   (rerouter.isPageMatch(rfpageAutoUseSkillEnabled) || rerouter.isPageMatch(rfpageSpeedBoostEnabled)) &&
-  //   Date.now() - this.lastBattleChecked < 20 * CONSTANTS.minuteInMs
-  // ) {
-  //   this.lastBattleChecked = Date.now();
-  // }
+  // 如果打太久要停
+  let maxBattleTimeInMins;
+  switch (task) {
+    case TASKS.tropicalIslandClearBubble:
+      maxBattleTimeInMins = 10;
+      break;
+    case TASKS.guildBattleAlliance:
+      maxBattleTimeInMins = 40;
+      break;
+    default:
+      maxBattleTimeInMins = 3;
+  }
 
+  if (botStatus.battleStarted === 0) {
+    logs('checkIfInBattle', `battle started`);
+    botStatus.battleStarted = Date.now();
+  } else if (Date.now() - botStatus.battleStarted > maxBattleTimeInMins * CONSTANTS.minuteInMs) {
+    logs('checkIfInBattle', `Max battle time reached (${Date.now() - botStatus.battleStarted > maxBattleTimeInMins * CONSTANTS.minuteInMs}), force stop`);
+    rerouter.screen.tap({ x: 615, y: 19 });
+    Utils.sleep(1500);
+    rerouter.screen.tap({ x: 321, y: 198 });
+    return true;
+  } else if (Date.now() - botStatus.battleStarted < 10 * CONSTANTS.minuteInMs) {
+    logs('checkIfInBattle', `battle last: ${(Date.now() - botStatus.battleStarted) / CONSTANTS.minuteInMs} mins`);
+  }
+
+  sendEventRunning(botStatus);
   return true;
 }

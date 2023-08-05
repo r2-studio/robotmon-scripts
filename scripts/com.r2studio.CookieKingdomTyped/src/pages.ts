@@ -248,16 +248,6 @@ export const pageKingdomHaveNoCookieIcon = [
 ];
 export const rfpageKingdomHaveNoCookieIcon = new Page('rfpageKingdomHaveNoCookieIcon', pageKingdomHaveNoCookieIcon, pageKingdomHaveNoCookieIcon[0]);
 
-export const pageUnfinishedBattleNeedResume = [
-  { x: 400, y: 251, r: 123, g: 207, b: 8 },
-  { x: 294, y: 251, r: 8, g: 166, b: 222 },
-];
-// export const rfpageUnfinishedBattleNeedResume = new Page(
-//   'rfpageUnfinishedBattleNeedResume',
-//   pageUnfinishedBattleNeedResume,
-//   pageUnfinishedBattleNeedResume[0]
-// );
-
 export const rfpageHasUnreadMails = new Page(
   'rfpageHasUnreadMails',
   [

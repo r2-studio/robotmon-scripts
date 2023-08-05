@@ -174,6 +174,11 @@ export class CookieKingdom {
   }
 
   public initTaskStatus() {
+    this.botStatus = {
+      lastSendRunning: Date.now(),
+      battleStarted: Date.now(),
+    };
+
     this.taskStatus[TASKS.getInShopFreeDailyPack] = {
       trials: 0,
     };
@@ -253,12 +258,12 @@ export class CookieKingdom {
 
   public addTasks() {
     this.rerouter.addTask({
-      name: TASKS.towerOfSweetChaos,
+      name: TASKS.tropicalIslandClearBubble,
       maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
+      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
       forceStop: false,
     });
-    return;
+    // return;
 
     // this.rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
@@ -1135,11 +1140,12 @@ export class CookieKingdom {
 
           case TASKS.tropicalIslandSunbed:
             logs(context.task.name, `check sunbed`);
-            const rfpageSunbeds = new Page(
-              'rfpageSunbeds',
+            const rfpageSunbedsWithFinishedCookies = new Page(
+              'rfpageSunbedsWithFinishedCookies',
               [
                 { x: 52, y: 323, r: 238, g: 68, b: 119 },
                 { x: 61, y: 336, r: 44, g: 77, b: 110 },
+                { x: 61, y: 303, r: 255, g: 0, b: 0 },
               ],
               { x: 52, y: 323 }
             );
@@ -1157,21 +1163,20 @@ export class CookieKingdom {
               { x: 422, y: 132, r: 44, g: 46, b: 60 },
             ]);
 
-            this.rerouter.goNext(rfpageSunbeds);
-            if (
-              this.rerouter.waitScreenForMatchingPage(
-                new GroupPage('groupInSunbed', [rfpageFreeAllCrispyCookie, rfpageHasNoCrispyCookie, PAGES.rfpageEmptySunbedsListInMiddle]),
-                6000
-              )
-            ) {
-              if (this.rerouter.isPageMatch(PAGES.rfpageEmptySunbedsListInMiddle)) {
-                logs(context.task.name, `sun bed cookie list is empty`);
-              } else if (this.rerouter.isPageMatch(rfpageFreeAllCrispyCookie)) {
+            this.rerouter.goNext(rfpageSunbedsWithFinishedCookies);
+
+            // Waiting is equired, as the cookie list shows up with a delay
+            if (this.rerouter.waitScreenForMatchingPage(new GroupPage('groupInSunbed', [rfpageFreeAllCrispyCookie, rfpageHasNoCrispyCookie]), 5000)) {
+              if (this.rerouter.isPageMatch(rfpageFreeAllCrispyCookie)) {
                 this.rerouter.goNext(rfpageFreeAllCrispyCookie);
                 Utils.sleep(this.config.sleepAnimate);
                 logs(context.task.name, `successfully collect sunbed cookies`);
               }
+            } else if (this.rerouter.isPageMatch(PAGES.rfpageEmptySunbedsListInMiddle)) {
+              logs(context.task.name, `sun bed cookie list is empty`);
+              this.rerouter.goNext(PAGES.rfpageEmptySunbedsListInMiddle);
             }
+
             logs(context.task.name, `finish collecting cookies`);
             finishRound(true);
             sendEventRunning(this.botStatus);
@@ -2567,6 +2572,15 @@ export class CookieKingdom {
         }
       },
     });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageBattleFinished.name}`,
+      match: PAGES.rfpageBattleFinished,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, 'rfpageBattleFinished, tap it and reset botStatus.battleStarted to 0');
+        this.rerouter.goNext(PAGES.rfpageBattleFinished);
+        this.botStatus.battleStarted = 0;
+      },
+    });
 
     // this.rerouter.addRoute({
     //   path: `/${PAGES.AAAAAAAAA.name}`,
@@ -2683,6 +2697,9 @@ export class CookieKingdom {
       match: PAGES.rfpageInKingdomVillage,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, `in ${context.path}`);
+
+        // In case game crashed during battle
+        this.botStatus.battleStarted = 0;
 
         switch (context.task.name) {
           case TASKS.production:
@@ -2943,29 +2960,13 @@ export class CookieKingdom {
         return;
       }
 
-      if (checkIfInBattle(this.rerouter)) {
+      if (checkIfInBattle(this.rerouter, context.task.name, this.botStatus)) {
         logs('handleUnknown', 'In battle so continue monitor');
         context.matchTimes = 0;
-
         return;
       }
 
       let unknownTarget = 4;
-      switch (context.task.name) {
-        case TASKS.pvp:
-        case TASKS.superMayhem:
-        case TASKS.bounties:
-        case TASKS.towerOfSweetChaos:
-        case TASKS.guildBattleDragon:
-        case TASKS.guildBattleAlliance:
-          unknownTarget = 60;
-          if (context.matchTimes % 10 === 0 && Date.now() - this.lastBattleChecked < 20 * CONSTANTS.minuteInMs) {
-            Utils.log('unknown but found found skill/speed boost enabled within 20 secs so send running');
-            sendEvent('running', '');
-          }
-        default:
-      }
-
       if (context.matchTimes % unknownTarget === 0) {
         keycode('KEYCODE_BACK', 100);
         Utils.log('keycode back for unknown');
@@ -3024,12 +3025,12 @@ if (window === undefined) {
 (window as any).stop = stop;
 (window as any).rerouter = rerouter;
 
-sendEvent('running', '');
-// ! following is only for dev
-function run() {
-  const cookieKingdom = new CookieKingdom(defaultConfig);
-  cookieKingdom.start();
-}
+// sendEvent('running', '');
+// // ! following is only for dev
+// function run() {
+//   const cookieKingdom = new CookieKingdom(defaultConfig);
+//   cookieKingdom.start();
+// }
 
-run();
-console.log('jobs done');
+// run();
+// console.log('jobs done');

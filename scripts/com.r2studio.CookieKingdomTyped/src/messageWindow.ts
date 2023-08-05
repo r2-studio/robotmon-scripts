@@ -125,8 +125,8 @@ export const messageNotifyQuit2: MessageWindow = {
   height: 12,
 
   targetY: 4,
-  lookingForColor: { r: 95, g: 95, b: 95 },
-  targetColorCount: 33,
+  lookingForColor: { r: 168, g: 162, b: 155 },
+  targetColorCount: 36,
   targetColorThreashold: 10,
 };
 
