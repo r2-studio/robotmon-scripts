@@ -258,12 +258,11 @@ export class CookieKingdom {
 
   public addTasks() {
     this.rerouter.addTask({
-      name: TASKS.tropicalIslandClearBubble,
+      name: TASKS.guildCheckin,
       maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+      minRoundInterval: 180 * CONSTANTS.minuteInMs,
       forceStop: false,
     });
-    // return;
 
     // this.rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
@@ -544,9 +543,8 @@ export class CookieKingdom {
       path: `/${PAGES.rfpageAnnouncement.name}`,
       match: PAGES.rfpageAnnouncement,
       action: (context, image, matched, finishRound) => {
-        logs(context.task.name, 'send login-success as saw rfpageAnnouncement');
-
         if (this.config.needToSendLoginSuccess) {
+          logs(context.task.name, 'have not send login-success, send it');
           sendEvent('gameStatus', 'login-succeeded');
           this.config.needToSendLoginSuccess = false;
         }
@@ -1260,7 +1258,6 @@ export class CookieKingdom {
         if (context.task.name !== TASKS.tropicalIslandClearBubble) {
           logs(context.task.name, `in rfpageBattleToClearSodaIsland, send back as this is not my task`);
           sendKeyBack();
-          finishRound(true);
           return;
         }
 
@@ -2679,6 +2676,7 @@ export class CookieKingdom {
         } else if (checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit) || checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit2)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageNotifyQuit/messageNotifyQuit2, send back');
           sendKeyBack();
+          Utils.sleep(this.config.sleepAnimate);
           return;
         }
 
@@ -2955,7 +2953,7 @@ export class CookieKingdom {
   public handleUnknown() {
     this.rerouter.addUnknownAction((context, image, finishRound) => {
       // this.rerouter.getCurrentMatchNames();
-      Utils.log(`unknown count ${context.matchTimes}, during ${context.matchDuring}, last matched: ${context.lastMatchedPath}`);
+      Utils.log(`unknown count ${context.matchTimes}, task: ${context.task.name},during ${context.matchDuring}, last matched: ${context.lastMatchedPath}`);
       if (this.rerouter.checkAndStartApp()) {
         return;
       }
@@ -3025,12 +3023,12 @@ if (window === undefined) {
 (window as any).stop = stop;
 (window as any).rerouter = rerouter;
 
-// sendEvent('running', '');
-// // ! following is only for dev
-// function run() {
-//   const cookieKingdom = new CookieKingdom(defaultConfig);
-//   cookieKingdom.start();
-// }
+// ! following is only for dev
+function run() {
+  const cookieKingdom = new CookieKingdom(defaultConfig);
+  cookieKingdom.start();
+}
 
-// run();
-// console.log('jobs done');
+sendEvent('running', '');
+run();
+console.log('jobs done');

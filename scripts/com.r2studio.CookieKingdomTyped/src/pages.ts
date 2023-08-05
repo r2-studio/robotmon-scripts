@@ -1074,6 +1074,19 @@ export const rfpageInGuildBeacon = new Page(
   ],
   { x: 516, y: 322 }
 );
+export const rfpageGuildBeaconLevelUp = new Page(
+  'rfpageGuildBeaconLevelUp',
+  [
+    { x: 525, y: 320, r: 123, g: 207, b: 8 },
+    { x: 608, y: 319, r: 49, g: 60, b: 90 },
+    { x: 380, y: 261, r: 107, g: 198, b: 247 },
+    { x: 347, y: 290, r: 222, g: 223, b: 231 },
+    { x: 391, y: 86, r: 255, g: 211, b: 0 },
+    { x: 569, y: 88, r: 74, g: 75, b: 77 },
+    { x: 215, y: 279, r: 216, g: 219, b: 223 },
+  ],
+  { x: 477, y: 321 }
+);
 export const rfPageGuildBeaconIsClear = new Page(
   'rfPageGuildBeaconIsClear',
   [

@@ -199,7 +199,6 @@ export class Rerouter {
     let pages: Page[] = [];
     const thres = groupPage.thres ?? parentThres ?? this.defaultConfig.PageThres;
 
-    console.log('getPagesMatchImage: ', groupPage.name);
     for (let i = 0; i < groupPage.pages.length; i++) {
       const page = groupPage.pages[i];
       const isPageMatch = this.isMatchPageImpl(image, page, thres, this.debug);

@@ -1404,11 +1404,11 @@ export function checkIfInBattle(rerouter: Rerouter, task: string, botStatus: Bot
   ]);
 
   const matchedBattlePages = rerouter.getPagesMatch(gpInBattle);
-  logs('checkIfInBattle', `Found matched battle page: ${JSON.stringify(matchedBattlePages)}`);
   if (matchedBattlePages.length === 0) {
     return false;
   }
 
+  logs('checkIfInBattle', `Found matched battle page: ${JSON.stringify(matchedBattlePages)}`);
   if (matchedBattlePages.some(element => element.name === 'rfpageAutoUseSkillEnabled')) {
     logs('checkIfInBattle', `Auto skill correctly enabled`);
   } else if (matchedBattlePages.some(element => element.name === 'rfpageAutoUseSkillNotEnabled' || element.name === 'rfpageAutoUseSkillNotEnabled2')) {
