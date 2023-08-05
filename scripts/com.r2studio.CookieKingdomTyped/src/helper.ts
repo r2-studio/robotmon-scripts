@@ -1279,10 +1279,11 @@ export function searchForCandyHouse(rerouter: Rerouter): boolean {
 
 export function saveImageToDisk(filename?: string) {
   if (filename === undefined) {
-    filename = '/data/robotmon/' + Date.now().toLocaleString() + '-crash-img.jpg';
+    filename = Date.now().toLocaleString() + '-crash-img.jpg';
   }
+
   var img = getScreenshot();
-  saveImage(img, filename);
+  saveImage(img, '/sdcard/Pictures/Screenshots/robotmon/' + filename);
   console.log(`Write to file: ${filename}`);
   releaseImage(img);
 }
@@ -1318,11 +1319,11 @@ export function configSharePref() {
     }
   }
 
-  var rtn = writeFile('/data/data/com.devsisters.ck/shared_prefs/com.devsisters.ck.v2.playerprefs.xml', lines.join('\n'));
+  rtn = writeFile('/data/data/com.devsisters.ck/shared_prefs/com.devsisters.ck.v2.playerprefs.xml', lines.join('\n'));
   console.log('Write file return: ', rtn);
 }
 
-export function mergeObject(target) {
+export function mergeObject(target: any) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
     for (var key in source) {
@@ -1333,4 +1334,100 @@ export function mergeObject(target) {
     }
   }
   return target;
+}
+
+export function checkIfInBattle(rerouter: Rerouter): boolean {
+  // read the life bar of both players
+  const rfpagePvPBattling = new Page('rfpageBattling', [
+    // From PVP
+    // { x: 284, y: 17, r: 145, g: 219, b: 143 },
+    // { x: 351, y: 16, r: 77, g: 32, b: 12 },
+
+    // From Super mayhem
+    { x: 354, y: 14, r: 125, g: 12, b: 251 },
+    { x: 285, y: 15, r: 65, g: 205, b: 12 },
+  ]);
+  const rfpageBountyBattle = new Page('rfpageBountyBattle', [
+    { x: 454, y: 21, r: 82, g: 209, b: 0 },
+    { x: 591, y: 10, r: 255, g: 255, b: 255 },
+  ]);
+  // const rfpageTOSCBattle = new Page('rfpageTOSCBattle', []);
+  const rfpageInIslandBattle = new Page('rfpageInIslandBattle', [
+    { x: 160, y: 338, r: 199, g: 253, b: 139 },
+    { x: 227, y: 338, r: 126, g: 247, b: 51 },
+    { x: 297, y: 337, r: 199, g: 253, b: 139 },
+  ]);
+  // const rfpageCookieAllianceBattle = new Page('rfpageCookieAlliance', []);
+  // const rfpageGuildDragonBattle = new Page('rfpageGuildDragonBattle', []);
+
+  const rfpageAutoUseSkillEnabled = new Page('rfpageAutoUseSkillEnabled', [{ x: 28, y: 291, r: 223, g: 221, b: 1 }], { x: 41, y: 289 });
+  const rfpageAutoUseSkillNotEnabled = new Page('rfpageAutoUseSkillNotEnabled', [{ x: 41, y: 289, r: 203, g: 203, b: 203 }], { x: 41, y: 289 });
+  const rfpageAutoUseSkillNotEnabled2 = new Page('rfpageAutoUseSkillNotEnabled2', [{ x: 41, y: 289, r: 197, g: 193, b: 195 }], { x: 41, y: 289 });
+
+  const rfpageSpeedBoostEnabled = new Page('rfpageSpeedBoostEnabled', [{ x: 32, y: 331, r: 161, g: 159, b: 8 }]);
+  const rfpageSpeedBoostNotEnabled = new Page('rfpageSpeedBoostNotEnabled', [{ x: 33, y: 319, r: 203, g: 203, b: 203 }], { x: 33, y: 319 });
+  const rfpageSpeed1_2x = new Page(
+    'rfpageSpeed1_2x',
+    [
+      { x: 20, y: 333, r: 211, g: 209, b: 2 },
+      { x: 32, y: 334, r: 161, g: 159, b: 8 },
+    ],
+    { x: 20, y: 333 }
+  );
+
+  const gpInBattle = new GroupPage('gpInBattle', [
+    rfpagePvPBattling,
+    rfpageBountyBattle,
+    // rfpageTOSCBattle,
+    rfpageInIslandBattle,
+    // rfpageCookieAllianceBattle,
+    // rfpageCookieAllianceBattle,
+    // rfpageGuildDragonBattle,
+
+    rfpageAutoUseSkillEnabled,
+    rfpageAutoUseSkillNotEnabled,
+    rfpageAutoUseSkillNotEnabled2,
+
+    rfpageSpeedBoostEnabled,
+    rfpageSpeedBoostNotEnabled,
+    rfpageSpeed1_2x,
+  ]);
+
+  const matchedBattlePages = rerouter.getPagesMatch(gpInBattle);
+  logs('checkIfInBattle', `Found matched battle page: ${JSON.stringify(matchedBattlePages)}`);
+  if (matchedBattlePages.length === 0) {
+    return false;
+  }
+
+  if (!matchedBattlePages.some(element => element.name === 'rfpageAutoUseSkillEnabled')) {
+    logs('checkIfInBattle', `Auto skill correctly enabled`);
+  } else if (matchedBattlePages.some(element => element.name === 'rfpageAutoUseSkillNotEnabled' || element.name === 'rfpageAutoUseSkillNotEnabled2')) {
+    rerouter.goNext(rfpageAutoUseSkillNotEnabled);
+    Utils.sleep(1500);
+    logs('checkIfInBattle', `Tap auto skill enable 1 time for rfpageAutoUseSkillNotEnabled`);
+  }
+
+  if (!matchedBattlePages.some(element => element.name === 'rfpageSpeedBoostEnabled')) {
+    logs('checkIfInBattle', `Speed boost correctly enabled`);
+  } else if (matchedBattlePages.some(element => element.name === 'rfpageSpeedBoostNotEnabled')) {
+    rerouter.goNext(rfpageSpeedBoostNotEnabled);
+    Utils.sleep(1500);
+    rerouter.goNext(rfpageSpeedBoostNotEnabled);
+    Utils.sleep(1500);
+    logs('checkIfInBattle', `Tap speed boost 2 times for rfpageSpeedBoostNotEnabled`);
+  } else if (matchedBattlePages.some(element => element.name === 'rfpageSpeed1_2x')) {
+    rerouter.goNext(rfpageSpeedBoostNotEnabled);
+    Utils.sleep(1500);
+    logs('checkIfInBattle', `Tap speed boost 1 time for rfpageSpeed1_2x`);
+  }
+
+  // TODO: 如果打太久要停
+  // if (
+  //   (rerouter.isPageMatch(rfpageAutoUseSkillEnabled) || rerouter.isPageMatch(rfpageSpeedBoostEnabled)) &&
+  //   Date.now() - this.lastBattleChecked < 20 * CONSTANTS.minuteInMs
+  // ) {
+  //   this.lastBattleChecked = Date.now();
+  // }
+
+  return true;
 }

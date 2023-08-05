@@ -33,6 +33,7 @@ import {
   saveImageToDisk,
   configSharePref,
   mergeObject,
+  checkIfInBattle,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -44,7 +45,7 @@ import * as MessageWindow from './src/messageWindow';
 
 const VERSION_CODE: number = 0.1;
 
-class CookieKingdom {
+export class CookieKingdom {
   public packageName: string = 'com.devsisters.ck';
   public rerouter: Rerouter;
 
@@ -252,62 +253,82 @@ class CookieKingdom {
 
   public addTasks() {
     this.rerouter.addTask({
-      name: TASKS.haborShopInSeaMarket,
+      name: TASKS.towerOfSweetChaos,
       maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: 120 * CONSTANTS.minuteInMs,
+      minRoundInterval: 240 * CONSTANTS.minuteInMs,
       forceStop: false,
     });
+    return;
+
+    // this.rerouter.addTask({
+    //   name: TASKS.haborShopInSeaMarket,
+    //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    //   minRoundInterval: 120 * CONSTANTS.minuteInMs,
+    //   forceStop: false,
+    // });
     // TODO: FIX aurora OCR
     // return;
 
-    this.rerouter.addTask({
-      name: TASKS.collectKingdomPass,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.sendFriendReward,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.getInShopFreeDailyPack,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.collectMail,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 240 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.hotAirBallon,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.train,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.wishingTree,
-      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.fountain,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoCollectFountainIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
+    if (this.config.autoCollectDailyReward) {
+      this.rerouter.addTask({
+        name: TASKS.collectKingdomPass,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+        minRoundInterval: 240 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+      this.rerouter.addTask({
+        name: TASKS.sendFriendReward,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+        minRoundInterval: 240 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+      this.rerouter.addTask({
+        name: TASKS.getInShopFreeDailyPack,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+        minRoundInterval: 240 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoCollectMailIntervalInMins > 0) {
+      this.rerouter.addTask({
+        name: TASKS.collectMail,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+        minRoundInterval: 240 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoSendHotAirBallonIntervalInMins > 0) {
+      this.rerouter.addTask({
+        name: TASKS.hotAirBallon,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoCollectTrainIntervalInMins > 0) {
+      this.rerouter.addTask({
+        name: TASKS.train,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoFulfillWishesIntervalInMins > 0) {
+      this.rerouter.addTask({
+        name: TASKS.wishingTree,
+        maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoCollectFountainIntervalInMins > 0) {
+      this.rerouter.addTask({
+        name: TASKS.fountain,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoCollectFountainIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
     if (this.config.autoPvPPurchaseAncientCookie) {
       this.rerouter.addTask({
         name: TASKS.pvpPurchaseAncientCookie,
@@ -316,43 +337,51 @@ class CookieKingdom {
         forceStop: false,
       });
     }
-    this.rerouter.addTask({
-      name: TASKS.pvp,
-      maxTaskDuring: 12 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
+    if (this.config.autoPvPIntervalInMins > 0) {
+      this.rerouter.addTask({
+        name: TASKS.pvp,
+        maxTaskDuring: 12 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
     // TODO: no super mayhem for now
-    // this.rerouter.addTask({
-    //   name: TASKS.superMayhem,
-    //   maxTaskDuring: 15 * CONSTANTS.minuteInMs,
-    //   minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
-    //   forceStop: false,
-    // });
-    this.rerouter.addTask({
-      name: TASKS.tropicalIslandShip,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.tropicalIslandSunbed,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.tropicalIslandClearBubble,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.bounties,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
+    // if (this.config.autoSuperMayhemIntervalInMins > 0) {
+    //   this.rerouter.addTask({
+    //     name: TASKS.superMayhem,
+    //     maxTaskDuring: 15 * CONSTANTS.minuteInMs,
+    //     minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
+    //     forceStop: false,
+    //   });
+    // }
+    if (this.config.autoCollectTropicalIslandsIntervalInMins > 0) {
+      this.rerouter.addTask({
+        name: TASKS.tropicalIslandShip,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+      this.rerouter.addTask({
+        name: TASKS.tropicalIslandSunbed,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+      this.rerouter.addTask({
+        name: TASKS.tropicalIslandClearBubble,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoHandleBountiesIntervalInMins > 0) {
+      this.rerouter.addTask({
+        name: TASKS.bounties,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
     if (this.config.autoLabResearch) {
       this.rerouter.addTask({
         name: TASKS.gnomeLab,
@@ -409,18 +438,22 @@ class CookieKingdom {
       minRoundInterval: 180 * CONSTANTS.minuteInMs,
       forceStop: false,
     });
-    this.rerouter.addTask({
-      name: TASKS.guildBattleDragon,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: 180 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-    this.rerouter.addTask({
-      name: TASKS.guildBattleAlliance,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: 180 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
+    if (this.config.autoGuildBattleDragon) {
+      this.rerouter.addTask({
+        name: TASKS.guildBattleDragon,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 180 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
+    if (this.config.autoGuildAllianceBattle) {
+      this.rerouter.addTask({
+        name: TASKS.guildBattleAlliance,
+        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        minRoundInterval: 180 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+    }
 
     this.rerouter.addTask({
       name: TASKS.findAndTapCandy,
@@ -1222,6 +1255,7 @@ class CookieKingdom {
         if (context.task.name !== TASKS.tropicalIslandClearBubble) {
           logs(context.task.name, `in rfpageBattleToClearSodaIsland, send back as this is not my task`);
           sendKeyBack();
+          finishRound(true);
           return;
         }
 
@@ -1275,8 +1309,8 @@ class CookieKingdom {
       },
     });
     this.rerouter.addRoute({
-      path: `/${PAGES.rfpageInOneOfTheBounty.name}`,
-      match: PAGES.rfpageInOneOfTheBounty,
+      path: `/${PAGES.rfpageInOneOfTheBounties.name}`,
+      match: PAGES.rfpageInOneOfTheBounties,
       action: (context, image, matched, finishRound) => {
         if (context.task.name !== TASKS.bounties) {
           sendKeyBack();
@@ -1324,7 +1358,7 @@ class CookieKingdom {
           return bounty.level === bounties[0].level;
         });
         bounties.sort(dynamicSort('powderStock'));
-        logs(context.task.name, `sorted & filtered level bounties: ${JSON.stringify(bounties, ['index', 'level', 'powderStock'])}`);
+        logs(context.task.name, `rfpageInOneOfTheBounties sorted & filtered level bounties: ${JSON.stringify(bounties, ['index', 'level', 'powderStock'])}`);
 
         if (bounties.length === 0) {
           logs(context.task.name, `No bounties can be run, skipping, bounties: ${JSON.stringify(bounties)}`);
@@ -1858,6 +1892,24 @@ class CookieKingdom {
         logs(context.task.name, `${context.path}, about to start handleTowerOfSweetChaos, send running`);
         sendEvent('running', '');
 
+        const rfpageHasTrayJump = new Page(
+          'rfpageHasTrayJump',
+          [
+            { x: 338, y: 15, r: 82, g: 0, b: 0 },
+            { x: 409, y: 18, r: 0, g: 131, b: 255 },
+            { x: 43, y: 323, r: 214, g: 89, b: 247 },
+            { x: 32, y: 319, r: 95, g: 20, b: 27 },
+            { x: 30, y: 330, r: 33, g: 8, b: 8 },
+          ],
+          { x: 30, y: 326 }
+        );
+
+        if (this.rerouter.isPageMatchImage(rfpageHasTrayJump, image)) {
+          logs(context.task.name, `Found rfpageHasTrayJump so tap it`);
+          this.rerouter.goNext(rfpageHasTrayJump);
+          return;
+        }
+
         var downArrow = findSpecificIconInScreen(ICONS.iconTowerOfSweetChoasDownArrow);
         if (Object.keys(downArrow).length > 0) {
           this.rerouter.screen.tap(downArrow[0]);
@@ -1884,7 +1936,7 @@ class CookieKingdom {
           Utils.sleep(2000);
 
           if (!tapThroughAnimate(this.rerouter, PAGES.rfpageInTowerOfSweetChaos, PAGES.rfpageInTowerOfSweetChaos.next as XY, 7000)) {
-            logs(context.task.name, `${context.path}, Cannot return from collect treasure chest, come back later`);
+            logs(context.task.name, `${context.path}, Cannot return from collect treasure chest, finish round`);
             sendKeyBack();
             finishRound(true);
             return;
@@ -2861,7 +2913,7 @@ class CookieKingdom {
         path: `/${page.name}`,
         match: page,
         action: (context, image, matched, finishRound) => {
-          console.log('findPath', context.path);
+          console.log(`findPath, task: ${context.task.name}, path: ${context.path}`);
           this.rerouter.goNext(page);
         },
       });
@@ -2884,62 +2936,10 @@ class CookieKingdom {
         return;
       }
 
-      // ready the life bar of both players
-      const rfpageBattling = new Page('rfpageBattling', [
-        // From PVP
-        // { x: 284, y: 17, r: 145, g: 219, b: 143 },
-        // { x: 351, y: 16, r: 77, g: 32, b: 12 },
-
-        // From Super mayhem
-        { x: 354, y: 14, r: 125, g: 12, b: 251 },
-        { x: 285, y: 15, r: 65, g: 205, b: 12 },
-      ]);
-      const rfpageInIslandBattle = new Page('rfpageInIslandBattle', [
-        { x: 160, y: 338, r: 199, g: 253, b: 139 },
-        { x: 227, y: 338, r: 126, g: 247, b: 51 },
-        { x: 297, y: 337, r: 199, g: 253, b: 139 },
-      ]);
-
-      const rfpageAutoUseSkillNotEnabled = new Page('rfpageAutoUseSkillNotEnabled', [{ x: 41, y: 289, r: 203, g: 203, b: 203 }], { x: 41, y: 289 });
-      const rfpageAutoUseSkillNotEnabled2 = new Page('rfpageAutoUseSkillNotEnabled2', [{ x: 41, y: 289, r: 197, g: 193, b: 195 }], { x: 41, y: 289 });
-      const rfpageSpeedBoostNotEnabled = new Page('rfpageSpeedBoostNotEnabled', [{ x: 33, y: 319, r: 203, g: 203, b: 203 }], { x: 33, y: 319 });
-      const rfpageSpeed1_2x = new Page(
-        'rfpageSpeed1_2x',
-        [
-          { x: 20, y: 333, r: 211, g: 209, b: 2 },
-          { x: 32, y: 334, r: 161, g: 159, b: 8 },
-        ],
-        { x: 20, y: 333 }
-      );
-      if (this.rerouter.isPageMatchImage(rfpageBattling, image) || this.rerouter.isPageMatchImage(rfpageInIslandBattle, image)) {
-        logs(context.task.name, 'unknown but should be rfpageBattling so continue');
+      if (checkIfInBattle(this.rerouter)) {
+        logs('handleUnknown', 'In battle so continue monitor');
         context.matchTimes = 0;
 
-        if (!this.rerouter.isPageMatchImage(rfpageAutoUseSkillNotEnabled, image) || !this.rerouter.isPageMatchImage(rfpageAutoUseSkillNotEnabled2, image)) {
-          this.rerouter.goNext(rfpageAutoUseSkillNotEnabled);
-          Utils.sleep(this.config.sleepAnimate);
-          logs(context.task.name, `Tap auto skill enable 1 time for rfpageAutoUseSkillNotEnabled`);
-        } else if (!this.rerouter.isPageMatchImage(rfpageSpeedBoostNotEnabled, image)) {
-          this.rerouter.goNext(rfpageSpeedBoostNotEnabled);
-          Utils.sleep(this.config.sleepAnimate * 2);
-          this.rerouter.goNext(rfpageSpeedBoostNotEnabled);
-          Utils.sleep(this.config.sleepAnimate * 2);
-          logs(context.task.name, `Tap speed boost 2 times for rfpageSpeedBoostNotEnabled`);
-        } else if (!this.rerouter.isPageMatchImage(rfpageSpeed1_2x, image)) {
-          this.rerouter.goNext(rfpageSpeedBoostNotEnabled);
-          Utils.sleep(this.config.sleepAnimate * 2);
-          logs(context.task.name, `Tap speed boost 1 time for rfpageSpeed1_2x`);
-        }
-        return;
-      }
-
-      const rfpageAutoUseSkillEnabled = new Page('rfpageAutoUseSkillEnabled', [{ x: 10, y: 292, r: 249, g: 233, b: 17 }]);
-      const rfpageSpeedBoostEnabled = new Page('rfpageSpeedBoostEnabled', [{ x: 10, y: 332, r: 255, g: 237, b: 0 }]);
-      if (
-        (this.rerouter.isPageMatch(rfpageAutoUseSkillEnabled) || this.rerouter.isPageMatch(rfpageSpeedBoostEnabled)) &&
-        Date.now() - this.lastBattleChecked < 20 * CONSTANTS.minuteInMs
-      ) {
-        this.lastBattleChecked = Date.now();
         return;
       }
 
@@ -3022,7 +3022,6 @@ sendEvent('running', '');
 function run() {
   const cookieKingdom = new CookieKingdom(defaultConfig);
   cookieKingdom.start();
-  // saveImageToDisk()
 }
 
 run();

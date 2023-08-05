@@ -874,11 +874,6 @@ export const pageAllianceResults2 = [
   { x: 25, y: 19, r: 241, g: 242, b: 241 },
   { x: 560, y: 333, r: 8, g: 166, b: 222 },
 ];
-export const pageAllianceRewardGet = [
-  { x: 191, y: 187, r: 49, g: 34, b: 21 },
-  { x: 401, y: 213, r: 55, g: 45, b: 27 },
-  { x: 175, y: 288, r: 53, g: 53, b: 53 },
-];
 
 export const pageSelectNextTeam = [
   { x: 256, y: 34, r: 135, g: 87, b: 223 },
@@ -982,7 +977,17 @@ export const rfpageNeedRefillBounties2 = new Page('rfpageNeedRefillBounties2', p
 export const rfpageAllianceReward = new Page('rfpageAllianceReward', pageAllianceReward, { x: 397, y: 243 });
 export const rfpageAllianceResults = new Page('rfpageAllianceResults', pageAllianceResults, { x: 612, y: 333 });
 export const rfpageAllianceResults2 = new Page('rfpageAllianceResults2', pageAllianceResults2, { x: 310, y: 29 });
-export const rfpageAllianceRewardGet = new Page('rfpageAllianceRewardGet', pageAllianceRewardGet, { x: 191, y: 187 });
+
+// TODO: [10:40:51.527] > rfpageBattlePaused,rfpageAllianceRewardGet
+export const rfpageAllianceRewardGet = new Page(
+  'rfpageAllianceRewardGet',
+  [
+    { x: 191, y: 187, r: 49, g: 34, b: 21 },
+    { x: 401, y: 213, r: 55, g: 45, b: 27 },
+    { x: 175, y: 288, r: 53, g: 53, b: 53 },
+  ],
+  { x: 191, y: 187 }
+);
 export const rfpageCannotRefilAllianceTicketToday = new Page(
   'rfpageCannotRefilAllianceTicketToday',
   pageCannotRefilAllianceTicketToday
@@ -1013,6 +1018,20 @@ export const rfpageInTowerOfSweetChaos = new Page(
   ],
   { x: 611, y: 21 }
 );
+export const rfpageConfirmTrayJump = new Page(
+  'rfpageConfirmTrayJump',
+  [
+    { x: 352, y: 312, r: 123, g: 207, b: 8 },
+    { x: 498, y: 13, r: 119, g: 85, b: 3 },
+    { x: 472, y: 20, r: 57, g: 166, b: 239 },
+    { x: 408, y: 21, r: 132, g: 32, b: 49 },
+    { x: 442, y: 311, r: 231, g: 186, b: 189 },
+    { x: 26, y: 325, r: 41, g: 10, b: 4 },
+    { x: 42, y: 323, r: 111, g: 46, b: 123 },
+  ],
+  { x: 347, y: 311 }
+);
+
 export const rfpageReadyToBattleToSC = new Page(
   'rfpageReadyToBattleToSC',
   [
@@ -1320,11 +1339,12 @@ export const rfpageInBounties = new Page('rfpageInBounties', [
   { x: 456, y: 26, r: 70, g: 50, b: 37 },
   { x: 416, y: 5, r: 122, g: 84, b: 95 },
 ]);
-export const rfpageInOneOfTheBounty = new Page('rfpageInOneOfTheBounty', [
+export const rfpageInOneOfTheBounties = new Page('rfpageInOneOfTheBounty', [
   { x: 533, y: 327, r: 121, g: 207, b: 12 },
   { x: 622, y: 329, r: 207, g: 237, b: 255 },
   { x: 614, y: 314, r: 227, g: 155, b: 65 },
   { x: 171, y: 39, r: 174, g: 167, b: 152 },
+  { x: 627, y: 305, r: 231, g: 154, b: 66 },
 ]);
 export const rfpageReadyToBattleBounty = new Page(
   'rfpageReadyToBattleBounty',

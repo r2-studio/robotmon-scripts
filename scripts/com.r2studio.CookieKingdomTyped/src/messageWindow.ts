@@ -217,9 +217,9 @@ export const messageTeamDontMatchToSCRow1: MessageWindow = {
   height: 12,
 
   targetY: 6,
-  lookingForColor: { r: 95, g: 95, b: 95 },
-  targetColorCount: 45,
-  targetColorThreashold: 8,
+  lookingForColor: { r: 155, g: 150, b: 144 },
+  targetColorCount: 42,
+  targetColorThreashold: 5,
 };
 export const messageTeamDontMatchToSCRow2: MessageWindow = {
   name: 'messageTeamDontMatchToSCRow2',
