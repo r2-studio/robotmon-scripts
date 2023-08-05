@@ -1201,6 +1201,12 @@ export function searchForCandyHouse(rerouter: Rerouter): boolean {
   let filteredResults = filterFindIconResults(foundResults, 15);
   // console.log(filteredResults.length, JSON.stringify(filteredResults), filteredResults.length, JSON.stringify(filteredResults));
 
+  if (rerouter.isPageMatch(PAGES.rfpageInProduction)) {
+    logs('searchForCandyHouse', 'Found in production so hit back then search for it');
+    sendKeyBack();
+    Utils.sleep(1500);
+  }
+
   if (Object.keys(filteredResults).length === 0) {
     logs('searchForCandyHouse', 'findAndTapCandy did not see any candy > 0.95, skipping');
   } else {

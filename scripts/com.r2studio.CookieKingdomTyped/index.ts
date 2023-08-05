@@ -257,13 +257,6 @@ export class CookieKingdom {
   }
 
   public addTasks() {
-    this.rerouter.addTask({
-      name: TASKS.guildCheckin,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-      minRoundInterval: 180 * CONSTANTS.minuteInMs,
-      forceStop: false,
-    });
-
     // this.rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
     //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
@@ -2797,8 +2790,7 @@ export class CookieKingdom {
               return;
             }
 
-            searchForCandyHouse(this.rerouter);
-            return;
+            // searchForCandyHouse(this.rerouter);
 
             // 要去頭以前先原地掃一次
             if (searchHouseState.needGotoHead) {

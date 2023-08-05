@@ -1297,6 +1297,8 @@ export const rfpageBattleToClearSodaIsland = new Page(
     { x: 623, y: 313, r: 60, g: 70, b: 105 },
     { x: 573, y: 84, r: 254, g: 253, b: 251 },
     { x: 165, y: 335, r: 121, g: 207, b: 12 },
+    { x: 297, y: 83, r: 82, g: 215, b: 0 },
+    { x: 426, y: 74, r: 255, g: 36, b: 33 },
   ],
   { x: 601, y: 326 }
 );
@@ -1358,6 +1360,8 @@ export const rfpageReadyToBattleBounty = new Page(
     { x: 407, y: 19, r: 255, g: 209, b: 0 },
     { x: 159, y: 331, r: 121, g: 207, b: 12 },
     { x: 71, y: 329, r: 12, g: 167, b: 223 },
+    { x: 60, y: 23, r: 255, g: 255, b: 255 },
+    { x: 13, y: 20, r: 95, g: 56, b: 43 },
   ],
   { x: 612, y: 321 }
 );
