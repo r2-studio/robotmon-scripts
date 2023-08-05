@@ -284,3 +284,16 @@ export const guildBattleAttemptNotUsedMessageScreen = {
   targetColorCount: 152,
   targetColorThreashold: 5,
 };
+// Your last battle was not finished prperly, and the Searing Leys were not used!
+export const TOSCsearingKeysNotUsedMessageScreen = {
+  name: 'TOSCsearingKeysNotUsedMessageScreen',
+  x: 198,
+  y: 180,
+  width: 240,
+  height: 9,
+
+  targetY: 5,
+  lookingForColor: { r: 227, g: 218, b: 209 },
+  targetColorCount: 190,
+  targetColorThreashold: 5,
+};

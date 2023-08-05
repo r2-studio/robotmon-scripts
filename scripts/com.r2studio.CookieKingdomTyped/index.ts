@@ -2658,16 +2658,23 @@ export class CookieKingdom {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm guildBattleAttemptNotUsedMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 317, y: 253 });
           return;
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.TOSCsearingKeysNotUsedMessageScreen)) {
+          logs(context.task.name, 'rfpageGeneralMessageWindow confirm TOSCsearingKeysNotUsedMessageScreen, tap it');
+          this.rerouter.screen.tap({ x: 317, y: 253 });
+          return;
         } else if (checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit) || checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit2)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageNotifyQuit/messageNotifyQuit2, send back');
           sendKeyBack();
           return;
         }
 
-        // TODO: check won't get here
-        logs(context.task.name, 'rfpageGeneralMessageWindow crash the script');
         saveImageToDisk();
-        ii++;
+        if (this.config.account === 'default_xrobotmon_account@gmail.com') {
+          logs(context.task.name, 'rfpageGeneralMessageWindow, saved the problematic screen and crash the script');
+          ii++;
+        } else {
+          logs(context.task.name, 'rfpageGeneralMessageWindow, saved the problematic screen');
+        }
       },
     });
 
