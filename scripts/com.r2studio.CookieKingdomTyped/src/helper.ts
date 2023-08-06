@@ -784,7 +784,7 @@ function findProductRequirements(rects: RECT[]) {
     }
   }
 
-  // console.log(JSON.stringify(parts));
+  // console.log('part:', JSON.stringify(part));
   releaseImage(imgOri);
   releaseImage(img);
   return part;
@@ -852,6 +852,8 @@ export function collectProductItemInfo(
   productionTarget: number,
   safetyStock: number
 ): productState {
+  const minimumTarget = id <= 3 ? Math.max(10, productionTarget * Math.pow(0.85, id)) : Math.max(10, productionTarget * Math.pow(0.6, id));
+  let canProduce = false;
   let need1 = {
     stock: -1,
     consume: -1,
@@ -865,10 +867,10 @@ export function collectProductItemInfo(
   if (stock === -1) {
     return {
       id: id,
-      minimumTarget: -1,
-      productionTarget: -1,
+      minimumTarget: minimumTarget,
+      productionTarget: productionTarget,
       stockTargetFullfilledPercent: -1,
-      canProduce: false,
+      canProduce: canProduce,
       notEnoughStock: false,
       stock: stock,
       need: [need1, need2],
@@ -876,12 +878,25 @@ export function collectProductItemInfo(
   }
 
   var requirements = findProductRequirements([needRect1, needRect2]);
+  // console.log(`requirements: "${requirements}"`); // TODO: to remove
+  if (requirements.length === 0) {
+    return {
+      id: id,
+      minimumTarget: minimumTarget,
+      productionTarget: productionTarget,
+      stockTargetFullfilledPercent: stock / productionTarget,
+      canProduce: canProduce,
+      notEnoughStock: false,
+      stock: stock,
+      need: [need1, need2],
+    };
+  }
+
   need1 = {
     stock: +requirements[0][0],
     consume: +requirements[0][1],
   };
 
-  let canProduce = true;
   if (requirements.length > 1) {
     need2 = {
       stock: +requirements[1][0],
@@ -892,7 +907,6 @@ export function collectProductItemInfo(
     canProduce = need1['stock'] - need1['consume'] > safetyStock;
   }
 
-  const minimumTarget = id <= 3 ? Math.max(10, productionTarget * Math.pow(0.85, id)) : Math.max(10, productionTarget * Math.pow(0.6, id));
   return {
     id: id,
     minimumTarget: minimumTarget,
@@ -992,12 +1006,12 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
   console.log('swipping down =========');
   swipeFromToPoint(rerouter, { x: 464, y: 340 }, { x: 464, y: -1500 }, 4); // SwipeProductionMenuToBottom()
 
+  console.log('44, productionState:', JSON.stringify(productionState));
   for (let i of [5, 6, 7]) {
-    console.log('44:');
     if (!rerouter.isPageMatch(PAGES.productMapping[i])) {
       break;
     }
-    console.log('55:');
+    console.log('55:', i);
     productionState[i] = collectProductItemInfo(
       i,
       goodsLocation[i],

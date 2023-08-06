@@ -45,7 +45,7 @@ export function sendKeyBack() {
 }
 
 export function sendEventRunning(state: BotStatus) {
-  if (state.lastSendRunning - Date.now() < CONSTANTS.minuteInMs) {
+  if (Date.now() - state.lastSendRunning < CONSTANTS.minuteInMs) {
     return;
   }
   sendEvent('running', '');

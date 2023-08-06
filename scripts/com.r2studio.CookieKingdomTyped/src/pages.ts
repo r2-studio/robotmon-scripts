@@ -968,16 +968,6 @@ export const rfpageAllianceReward = new Page('rfpageAllianceReward', pageAllianc
 export const rfpageAllianceResults = new Page('rfpageAllianceResults', pageAllianceResults, { x: 612, y: 333 });
 export const rfpageAllianceResults2 = new Page('rfpageAllianceResults2', pageAllianceResults2, { x: 310, y: 29 });
 
-// TODO: [10:40:51.527] > rfpageBattlePaused,rfpageAllianceRewardGet
-export const rfpageAllianceRewardGet = new Page(
-  'rfpageAllianceRewardGet',
-  [
-    { x: 191, y: 187, r: 49, g: 34, b: 21 },
-    { x: 401, y: 213, r: 55, g: 45, b: 27 },
-    { x: 175, y: 288, r: 53, g: 53, b: 53 },
-  ],
-  { x: 191, y: 187 }
-);
 export const rfpageCannotRefilAllianceTicketToday = new Page(
   'rfpageCannotRefilAllianceTicketToday',
   pageCannotRefilAllianceTicketToday

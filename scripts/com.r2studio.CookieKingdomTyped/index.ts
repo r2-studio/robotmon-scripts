@@ -252,11 +252,19 @@ export class CookieKingdom {
       needGotoHead: true,
     };
     this.taskStatus[TASKS.production] = {
+      lastProductionBuilding: '',
       stocks: {},
     };
   }
 
   public addTasks() {
+    this.rerouter.addTask({
+      name: TASKS.production,
+      // maxTaskRunTimes: 2,
+      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      forceStop: false,
+    });
+
     // this.rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
     //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
@@ -2314,6 +2322,12 @@ export class CookieKingdom {
           const materialType = this.rerouter.getPagesMatchImage(PAGES.groupPageMaterialProdMenu, image)[0];
           this.taskStatus[TASKS.production]['stocks'][materialType.name] = materialCount;
 
+          if (this.taskStatus[TASKS.production].lastProductionBuilding !== materialType.name) {
+            logs(context.task.name, `material building changed, send running`);
+            this.taskStatus[TASKS.production].lastProductionBuilding = materialType.name;
+            sendEventRunning(this.botStatus);
+          }
+
           switch (materialType.name) {
             case 'rfpageWoodFarm':
             case 'rfpageBeanFarm':
@@ -2345,6 +2359,7 @@ export class CookieKingdom {
           }
 
           if (countProductionSlotAvailable(this.rerouter) !== emptySlots) {
+            logs(context.task.name, `slots count changed, send running`);
             sendEventRunning(this.botStatus);
           }
         }
