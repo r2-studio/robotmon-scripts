@@ -3030,12 +3030,12 @@ if (window === undefined) {
 (window as any).stop = stop;
 (window as any).rerouter = rerouter;
 
-// ! following is only for dev
-function run() {
-  const cookieKingdom = new CookieKingdom(defaultConfig);
-  cookieKingdom.start();
-}
+// // ! following is only for dev
+// function run() {
+//   const cookieKingdom = new CookieKingdom(defaultConfig);
+//   cookieKingdom.start();
+// }
 
-sendEvent('running', '');
-run();
-console.log('jobs done');
+// sendEvent('running', '');
+// run();
+// console.log('jobs done');
