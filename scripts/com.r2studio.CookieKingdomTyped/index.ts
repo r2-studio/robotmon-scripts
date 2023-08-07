@@ -2806,6 +2806,7 @@ export class CookieKingdom {
           case TASKS.production:
             if (this.rerouter.isPageMatchImage(PAGES.rfpageHasDashboard, image)) {
               this.rerouter.screen.tap({ x: 38, y: 221 }); // Tap production dashboard
+              Utils.sleep(this.config.sleepAnimate);
             }
             // TODO: no dashboard cannot go
             break;
@@ -3074,6 +3075,20 @@ export class CookieKingdom {
       if (context.matchTimes % 7 === 0) {
         this.rerouter.screen.tap({ x: 575, y: 22 });
         Utils.log('Unknown count 7, could be in tap to login, tapping (575, 22) until the game start');
+      }
+
+      if (context.matchTimes > 50) {
+        logs('handleUnknown', `Save screenshots and restart game as unknown max reached: ${context.matchTimes}`);
+        saveImageToDisk(undefined, 'unknown-reached');
+        context.matchTimes = 0;
+        var rtn = execute('am force-stop com.devsisters.ck');
+        if (rtn == 'signal: aborted') {
+          // MEmu
+          execute(
+            'ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop com.devsisters.ck'
+          );
+        }
+        sleep(15000);
       }
     });
   }

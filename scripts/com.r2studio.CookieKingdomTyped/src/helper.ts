@@ -23,7 +23,7 @@ export function checkLoginFailedMaxReached(loginStatus: TaskStatus, loginRetryMa
         'ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop com.devsisters.ck'
       );
     }
-    sleep(3000);
+    sleep(15000);
     return false;
   }
 }
@@ -1361,12 +1361,13 @@ export function searchForCandyHouse(rerouter: Rerouter): boolean {
   return false;
 }
 
-export function saveImageToDisk(filename?: string) {
+export function saveImageToDisk(filename?: string, crashType?: string) {
+  crashType = crashType === undefined ? 'crash-img' : crashType;
   if (filename === undefined) {
     const date = new Date(Utils.getTaiwanTime());
     filename = `${padZero(date.getMonth() + 1)}-${padZero(date.getDate())}T${padZero(date.getHours())}.${padZero(date.getMinutes())}.${padZero(
       date.getSeconds()
-    )}-crash-img.jpg`;
+    )}-${crashType}.jpg`;
   }
 
   var img = getScreenshot();
