@@ -1891,12 +1891,12 @@ export class CookieKingdom {
       path: `/${PAGES.rfpageNotEnoughItemToBuyThis.name}`,
       match: PAGES.rfpageNotEnoughItemToBuyThis,
       action: (context, image, matched, finishRound) => {
-        logs(context.task.name, `in rfpageNotEnoughItemToBuyThis, handle it by go back to in seaside market`);
+        logs(context.task.name, `in rfpageNotEnoughItemToBuyThis, send back twice`);
 
-        while (!this.rerouter.isPageMatch(PAGES.rfpageInSeasideMarket)) {
-          sendKeyBack();
-          Utils.sleep(1000);
-        }
+        sendKeyBack();
+        Utils.sleep(1500);
+        sendKeyBack();
+        Utils.sleep(1500);
       },
     });
 
