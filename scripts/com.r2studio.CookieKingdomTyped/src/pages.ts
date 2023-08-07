@@ -375,10 +375,6 @@ export const rfpageInTrainStation = new Page(
   ],
   { x: 617, y: 13 }
 );
-export const rfpageTrainArrived = new Page('rfpageTrainArrived', [
-  { x: 121, y: 236, r: 255, g: 109, b: 107 },
-  { x: 113, y: 253, r: 255, g: 223, b: 140 },
-]);
 export const rfpageTrainNotEnoughGoods = new Page(
   'rfpageTrainNotEnoughGoods',
   [
@@ -733,7 +729,7 @@ export const rfpageCanLoadThisItem = new Page(
     { x: 414, y: 242, r: 222, g: 207, b: 198 },
     { x: 433, y: 309, r: 57, g: 69, b: 107 },
   ],
-  { x: 424, y: 201 }
+  { x: 434, y: 50 }
 );
 export const rfpageLoadTooMuchWarning = new Page('rfpageLoadTooMuchWarning', [
   { x: 400, y: 252, r: 123, g: 207, b: 8 },

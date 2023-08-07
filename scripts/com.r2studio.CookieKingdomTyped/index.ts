@@ -1661,7 +1661,7 @@ export class CookieKingdom {
 
                 if (this.rerouter.isPageMatch(PAGES.rfpageCanLoadThisItem)) {
                   logs(context.task.name, `can load the item at x: ${xPixel}`);
-                  this.rerouter.goNext(PAGES.rfpageCanLoadThisItem); // tap Max
+                  this.rerouter.screen.tap({ x: 408, y: 202 }); // tap Max
                   Utils.sleep(this.config.sleep);
 
                   this.rerouter.screen.tap({ x: 342, y: 240 }); // tap load
@@ -2575,14 +2575,7 @@ export class CookieKingdom {
             this.rerouter.screen.tap({ x: 103, y: 203 });
             return;
           case TASKS.train:
-            if (this.rerouter.isPageMatchImage(PAGES.rfpageTrainArrived, image)) {
-              this.rerouter.screen.tap({ x: 103, y: 252 });
-              logs(context.task.name, `rfpageTrainArrived, goto handle train`);
-            } else {
-              logs(context.task.name, `no rfpageTrainArrived, no train can be send/collected, skipp this round`);
-              this.rerouter.screen.tap({ x: 103, y: 336 }); // fold affairs page
-              finishRound(true);
-            }
+            this.rerouter.screen.tap({ x: 103, y: 252 });
             return;
           case TASKS.wishingTree:
             logs(context.task.name, `about to send wishing tree`);
