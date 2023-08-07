@@ -343,7 +343,7 @@ export class CookieKingdom {
     if (this.config.autoPvPPurchaseAncientCookie) {
       this.rerouter.addTask({
         name: TASKS.pvpPurchaseAncientCookie,
-        maxTaskDuring: 12 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 4 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -368,13 +368,13 @@ export class CookieKingdom {
     if (this.config.autoCollectTropicalIslandsIntervalInMins > 0) {
       this.rerouter.addTask({
         name: TASKS.tropicalIslandShip,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
         forceStop: false,
       });
       this.rerouter.addTask({
         name: TASKS.tropicalIslandSunbed,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -388,7 +388,7 @@ export class CookieKingdom {
     if (this.config.autoHandleBountiesIntervalInMins > 0) {
       this.rerouter.addTask({
         name: TASKS.bounties,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -396,7 +396,7 @@ export class CookieKingdom {
     if (this.config.autoLabResearch) {
       this.rerouter.addTask({
         name: TASKS.gnomeLab,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: 15 * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -404,7 +404,7 @@ export class CookieKingdom {
     if (this.config.autoHandleTradeHabor) {
       this.rerouter.addTask({
         name: TASKS.haborSendShip,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -419,7 +419,7 @@ export class CookieKingdom {
     ) {
       this.rerouter.addTask({
         name: TASKS.haborShopInSeaMarket,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -427,7 +427,7 @@ export class CookieKingdom {
     if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
       this.rerouter.addTask({
         name: TASKS.haborShopInShellGallery,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -436,7 +436,7 @@ export class CookieKingdom {
     if (this.config.autoHandleTowerOfSweetChaos) {
       this.rerouter.addTask({
         name: TASKS.towerOfSweetChaos,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -444,14 +444,14 @@ export class CookieKingdom {
 
     this.rerouter.addTask({
       name: TASKS.guildCheckin,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
       minRoundInterval: 180 * CONSTANTS.minuteInMs,
       forceStop: false,
     });
     if (this.config.autoGuildBattleDragon) {
       this.rerouter.addTask({
         name: TASKS.guildBattleDragon,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: 180 * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -459,7 +459,7 @@ export class CookieKingdom {
     if (this.config.autoGuildAllianceBattle) {
       this.rerouter.addTask({
         name: TASKS.guildBattleAlliance,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 40 * CONSTANTS.minuteInMs,
         minRoundInterval: 180 * CONSTANTS.minuteInMs,
         forceStop: false,
       });
@@ -480,7 +480,7 @@ export class CookieKingdom {
 
     this.rerouter.addTask({
       name: TASKS.resolveGreenChecks,
-      maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       minRoundInterval: 240 * CONSTANTS.minuteInMs,
       forceStop: false,
     });
