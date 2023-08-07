@@ -65,19 +65,6 @@ export const downloadDataNoLanguage: MessageWindow = {
 //   targetColorThreashold: 5,
 // };
 
-export const theNetworkIsUnstableMessageScreen: MessageWindow = {
-  name: 'theNetworkIsUnstableMessageScreen',
-  x: 222,
-  y: 160,
-  width: 198,
-  height: 25,
-
-  targetY: 4,
-  lookingForColor: { r: 80, g: 80, b: 80 },
-  targetColorCount: 51,
-  targetColorThreashold: 5,
-};
-
 // export const anUnknownErrorHasOccurMessageScreen: MessageWindow = {
 //   name: 'anUnknownErrorHasOccurMessageScreen',
 //   x: 222,
@@ -90,6 +77,19 @@ export const theNetworkIsUnstableMessageScreen: MessageWindow = {
 //   targetColorCount: 79,
 //   targetColorThreashold: 3,
 // };
+
+export const theNetworkIsUnstableMessageScreen: MessageWindow = {
+  name: 'theNetworkIsUnstableMessageScreen',
+  x: 222,
+  y: 160,
+  width: 198,
+  height: 25,
+
+  targetY: 4,
+  lookingForColor: { r: 80, g: 80, b: 80 },
+  targetColorCount: 51,
+  targetColorThreashold: 5,
+};
 
 export const theReloginIntoAnotherDeviceMessageScreen: MessageWindow = {
   name: 'theReloginIntoAnotherDeviceMessageScreen',
@@ -129,40 +129,6 @@ export const messageNotifyQuit2: MessageWindow = {
   targetColorCount: 36,
   targetColorThreashold: 10,
 };
-
-// export const wrongPasswordMessageScreen: MessageWindow = {
-//   name: 'wrongPasswordMessageScreen',
-//   x: 225,
-//   y: 162,
-//   width: 75,
-//   height: 13,
-//   targetY: 6,
-//   lookingForColor: { r: 230, g: 100, b: 100 },
-//   targetColorCount: 17,
-//   targetColorThreashold: 2,
-// };
-// export const wrongPasswordMessageScreenWithLongId: MessageWindow = {
-//   name: 'wrongPasswordMessageScreenWithLongId',
-//   x: 225,
-//   y: 175,
-//   width: 75,
-//   height: 13,
-//   targetY: 6,
-//   lookingForColor: { r: 244, g: 100, b: 100 },
-//   targetColorCount: 25,
-//   targetColorThreashold: 2,
-// };
-// export const passwordTooShortMessageScreen: MessageWindow = {
-//   name: 'passwordTooShortMessageScreen',
-//   x: 225,
-//   y: 162,
-//   width: 75,
-//   height: 13,
-//   targetY: 4,
-//   lookingForColor: { r: 244, g: 191, b: 191 },
-//   targetColorCount: 2,
-//   targetColorThreashold: 0,
-// };
 
 export const messageCookieDryingOnSunbed: MessageWindow = {
   name: 'messageCookieDryingOnSunbed',

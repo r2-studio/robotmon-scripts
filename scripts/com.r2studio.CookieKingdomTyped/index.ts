@@ -266,7 +266,7 @@ export class CookieKingdom {
   public addTasks() {
     this.rerouter.addTask({
       name: TASKS.production,
-      // maxTaskRunTimes: 2,
+      maxTaskRunTimes: 1,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       forceStop: false,
     });
@@ -552,13 +552,14 @@ export class CookieKingdom {
           targetColorCount: 21,
           targetColorThreashold: 3,
         };
-        if (checkScreenMessage(this.rerouter, incorrectEmailFormat)) {
+        if (checkScreenMessage(this.rerouter, incorrectEmailFormat, PAGES.rfpageEnterEmail, image)) {
+          logs(context.task.name, 'reported incorrectEmailFormat so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
-        }
-        if (checkScreenMessage(this.rerouter, needRegisterDevPlayAccount)) {
+        } else if (checkScreenMessage(this.rerouter, needRegisterDevPlayAccount, PAGES.rfpageEnterEmail, image)) {
+          logs(context.task.name, 'reported needRegisterDevPlayAccount so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
-        }
-        if (checkScreenMessage(this.rerouter, registerWithSocialPlatformMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, registerWithSocialPlatformMessageScreen, PAGES.rfpageEnterEmail, image)) {
+          logs(context.task.name, 'reported registerWithSocialPlatformMessageScreen so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
         }
       },
@@ -576,6 +577,52 @@ export class CookieKingdom {
         typing('\n', 500);
         Utils.sleep(CONSTANTS.sleepAnimate);
         this.rerouter.screen.tap({ x: 370, y: 190 });
+
+        const wrongPasswordMessageScreen = {
+          name: 'wrongPasswordMessageScreen',
+          x: 225,
+          y: 162,
+          width: 75,
+          height: 13,
+          targetY: 6,
+          lookingForColor: { r: 230, g: 100, b: 100 },
+          targetColorCount: 17,
+          targetColorThreashold: 2,
+        };
+        const wrongPasswordMessageScreenWithLongId = {
+          name: 'wrongPasswordMessageScreenWithLongId',
+          x: 225,
+          y: 175,
+          width: 75,
+          height: 13,
+          targetY: 6,
+          lookingForColor: { r: 244, g: 100, b: 100 },
+          targetColorCount: 25,
+          targetColorThreashold: 2,
+        };
+        const passwordTooShortMessageScreen = {
+          name: 'passwordTooShortMessageScreen',
+          x: 225,
+          y: 162,
+          width: 75,
+          height: 13,
+          targetY: 4,
+          lookingForColor: { r: 244, g: 191, b: 191 },
+          targetColorCount: 2,
+          targetColorThreashold: 0,
+        };
+        if (checkScreenMessage(this.rerouter, wrongPasswordMessageScreen, PAGES.rfpageEnterpassword, image)) {
+          logs(context.task.name, 'reported wrongPasswordMessageScreen so handle it');
+          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
+        }
+        if (checkScreenMessage(this.rerouter, wrongPasswordMessageScreenWithLongId, PAGES.rfpageEnterPasswordLongId, image)) {
+          logs(context.task.name, 'reported wrongPasswordMessageScreenWithLongId so handle it');
+          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
+        }
+        if (checkScreenMessage(this.rerouter, passwordTooShortMessageScreen, PAGES.rfpageEnterpassword, image)) {
+          logs(context.task.name, 'reported passwordTooShortMessageScreen so handle it');
+          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
+        }
       },
     });
     this.rerouter.addRoute({
@@ -2638,11 +2685,11 @@ export class CookieKingdom {
       path: `/${PAGES.rfpageGeneralMessageWindow.name}`,
       match: PAGES.rfpageGeneralMessageWindow,
       action: (context, image, matched, finishRound) => {
-        if (checkScreenMessage(this.rerouter, MessageWindow.theNetworkIsUnstableMessageScreen)) {
+        if (checkScreenMessage(this.rerouter, MessageWindow.theNetworkIsUnstableMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm theNetworkIsUnstableMessageScreen, tap OK');
           this.rerouter.screen.tap({ x: 316, y: 250 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.theReloginIntoAnotherDeviceMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.theReloginIntoAnotherDeviceMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm theReloginIntoAnotherDeviceMessageScreen, wait for it');
           keycode('BACK', 1000);
           for (var i = 0; i < this.config.sleepWhenDoubleLoginInMinutes; i++) {
@@ -2654,8 +2701,8 @@ export class CookieKingdom {
         }
 
         if (
-          checkScreenMessage(this.rerouter, MessageWindow.messageTeamDontMatchToSCRow1) &&
-          checkScreenMessage(this.rerouter, MessageWindow.messageTeamDontMatchToSCRow2)
+          checkScreenMessage(this.rerouter, MessageWindow.messageTeamDontMatchToSCRow1, PAGES.rfpageGeneralMessageWindow, image) &&
+          checkScreenMessage(this.rerouter, MessageWindow.messageTeamDontMatchToSCRow2, PAGES.rfpageGeneralMessageWindow, image)
         ) {
           logs(
             context.task.name,
@@ -2668,7 +2715,7 @@ export class CookieKingdom {
           Utils.sleep(this.config.sleepAnimate);
           sendKeyBack();
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.unfinishedPVPBattleMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.unfinishedPVPBattleMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           if (context.task.name !== TASKS.pvp) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedPVPBattleMessageScreen, skip current task');
             finishRound(true);
@@ -2678,7 +2725,7 @@ export class CookieKingdom {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedPVPBattleMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 394, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.messageCookieDryingOnSunbed)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.messageCookieDryingOnSunbed, PAGES.rfpageGeneralMessageWindow, image)) {
           if (context.task.name !== TASKS.tropicalIslandClearBubble) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageCookieDryingOnSunbed, end current task');
             // this.rerouter.screen.tap({ x: 320, y: 253 });
@@ -2690,7 +2737,7 @@ export class CookieKingdom {
           this.rerouter.screen.tap({ x: 320, y: 253 });
           finishRound(true);
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.unfinishedSuperMayhemBattleMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.unfinishedSuperMayhemBattleMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           if (context.task.name !== TASKS.superMayhem) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedSuperMayhemBattleMessageScreen, skip current task');
             finishRound(true);
@@ -2701,25 +2748,28 @@ export class CookieKingdom {
           this.rerouter.screen.tap({ x: 394, y: 253 });
           return;
         } else if (
-          checkScreenMessage(this.rerouter, MessageWindow.downloadDataNoLanguageTitle) &&
-          checkScreenMessage(this.rerouter, MessageWindow.downloadDataNoLanguage)
+          checkScreenMessage(this.rerouter, MessageWindow.downloadDataNoLanguageTitle, PAGES.rfpageGeneralMessageWindow, image) &&
+          checkScreenMessage(this.rerouter, MessageWindow.downloadDataNoLanguage, PAGES.rfpageGeneralMessageWindow, image)
         ) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm downloadDataNoLanguage, tap download');
           this.rerouter.screen.tap({ x: 320, y: 255 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.battleAbnormalButLastWasSavedMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.battleAbnormalButLastWasSavedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm battleAbnormalButLastWasSavedMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 318, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.guildBattleAttemptNotUsedMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.guildBattleAttemptNotUsedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm guildBattleAttemptNotUsedMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 317, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.TOSCsearingKeysNotUsedMessageScreen)) {
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.TOSCsearingKeysNotUsedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm TOSCsearingKeysNotUsedMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 317, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit) || checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit2)) {
+        } else if (
+          checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit, PAGES.rfpageGeneralMessageWindow, image) ||
+          checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit2, PAGES.rfpageGeneralMessageWindow, image)
+        ) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageNotifyQuit/messageNotifyQuit2, send back');
           sendKeyBack();
           Utils.sleep(this.config.sleepAnimate);

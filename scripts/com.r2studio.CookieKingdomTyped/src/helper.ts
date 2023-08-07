@@ -97,20 +97,22 @@ export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, ste
   return true;
 }
 
-export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, pageMessageWindow?: Page) {
+export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, pageMessageWindow?: Page, img?: Image) {
+  let needReleaseImg = false;
+  if (img === undefined) {
+    needReleaseImg = true;
+    var img = getScreenshot();
+  }
+
   if (pageMessageWindow === undefined) {
     pageMessageWindow = PAGES.rfpageGeneralMessageWindow;
   }
-
-  if (!rerouter.isPageMatch(pageMessageWindow)) {
+  if (!rerouter.isPageMatchImage(pageMessageWindow, img)) {
     return false;
   }
 
-  var img = getScreenshot();
-  var croppedImage = cropImage(img, message.x, message.y, message.width, message.height);
-
+  let croppedImage = cropImage(img, message.x, message.y, message.width, message.height);
   var whSize = getImageSize(croppedImage);
-
   var cnt = 0;
   for (var i = 0; i < whSize.width; i++) {
     if (isSameColor(getImageColor(croppedImage, i, message.targetY), message.lookingForColor)) {
@@ -118,9 +120,10 @@ export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, p
     }
   }
   logs('checkScreenMessage', `Checking ${message.name}, expecting ${message.targetColorCount} points and got ${cnt} points`);
-  // console.log('cnt vs messageScreen.targetColorCount vs messageScreen.targetColorThreashold: ', cnt, message.targetColorCount, message.targetColorThreashold);
 
-  releaseImage(img);
+  if (needReleaseImg) {
+    releaseImage(img);
+  }
   releaseImage(croppedImage);
   return Math.abs(message.targetColorCount - cnt) < message.targetColorThreashold ? true : false;
 }
