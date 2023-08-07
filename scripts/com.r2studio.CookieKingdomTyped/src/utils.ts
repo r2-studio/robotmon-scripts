@@ -2,7 +2,7 @@ import { Page, Utils } from 'Rerouter';
 import { BotStatus } from './types';
 import * as CONSTANTS from './constants';
 
-function padZero(num: number) {
+export function padZero(num: number) {
   return num < 10 ? `0${num}` : `${num}`;
 }
 

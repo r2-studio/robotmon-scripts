@@ -3,7 +3,7 @@ import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
 import { Advanture, Advantures, BotStatus, Icon, MessageWindow, Point, Records, Wish, WishStatus, productState } from './types';
-import { logs, sendEventRunning, sendKeyBack } from './utils';
+import { logs, padZero, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 
 export function scrollDownALot(rerouter: Rerouter, startPnt: XY) {
@@ -1338,7 +1338,10 @@ export function searchForCandyHouse(rerouter: Rerouter): boolean {
 
 export function saveImageToDisk(filename?: string) {
   if (filename === undefined) {
-    filename = Date.now().toLocaleString() + '-crash-img.jpg';
+    const date = new Date(Utils.getTaiwanTime());
+    filename = `${padZero(date.getMonth() + 1)}-${padZero(date.getDate())}T${padZero(date.getHours())}.${padZero(date.getMinutes())}.${padZero(
+      date.getSeconds()
+    )}-crash-img.jpg`;
   }
 
   var img = getScreenshot();
