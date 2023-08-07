@@ -267,8 +267,8 @@ export class CookieKingdom {
     this.rerouter.addTask({
       name: TASKS.production,
       maxTaskRunTimes: 1,
-      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
-      forceStop: false,
+      maxTaskDuring: 5 * CONSTANTS.minuteInMs,
+      forceStop: true,
     });
 
     // this.rerouter.addTask({
@@ -285,19 +285,19 @@ export class CookieKingdom {
         name: TASKS.collectKingdomPass,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
       this.rerouter.addTask({
         name: TASKS.sendFriendReward,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
       this.rerouter.addTask({
         name: TASKS.getInShopFreeDailyPack,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoCollectMailIntervalInMins > 0) {
@@ -305,7 +305,7 @@ export class CookieKingdom {
         name: TASKS.collectMail,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoSendHotAirBallonIntervalInMins > 0) {
@@ -313,7 +313,7 @@ export class CookieKingdom {
         name: TASKS.hotAirBallon,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoCollectTrainIntervalInMins > 0) {
@@ -321,7 +321,7 @@ export class CookieKingdom {
         name: TASKS.train,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoFulfillWishesIntervalInMins > 0) {
@@ -329,7 +329,7 @@ export class CookieKingdom {
         name: TASKS.wishingTree,
         maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoCollectFountainIntervalInMins > 0) {
@@ -337,7 +337,7 @@ export class CookieKingdom {
         name: TASKS.fountain,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectFountainIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoPvPPurchaseAncientCookie) {
@@ -345,7 +345,7 @@ export class CookieKingdom {
         name: TASKS.pvpPurchaseAncientCookie,
         maxTaskDuring: 4 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoPvPIntervalInMins > 0) {
@@ -353,7 +353,7 @@ export class CookieKingdom {
         name: TASKS.pvp,
         maxTaskDuring: 12 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     // TODO: no super mayhem for now
@@ -370,19 +370,19 @@ export class CookieKingdom {
         name: TASKS.tropicalIslandShip,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
       this.rerouter.addTask({
         name: TASKS.tropicalIslandSunbed,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
       this.rerouter.addTask({
         name: TASKS.tropicalIslandClearBubble,
         maxTaskDuring: 30 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoHandleBountiesIntervalInMins > 0) {
@@ -390,7 +390,7 @@ export class CookieKingdom {
         name: TASKS.bounties,
         maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoLabResearch) {
@@ -398,7 +398,7 @@ export class CookieKingdom {
         name: TASKS.gnomeLab,
         maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: 15 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoHandleTradeHabor) {
@@ -406,7 +406,7 @@ export class CookieKingdom {
         name: TASKS.haborSendShip,
         maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
 
@@ -421,7 +421,7 @@ export class CookieKingdom {
         name: TASKS.haborShopInSeaMarket,
         maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
@@ -429,7 +429,7 @@ export class CookieKingdom {
         name: TASKS.haborShopInShellGallery,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
 
@@ -438,7 +438,7 @@ export class CookieKingdom {
         name: TASKS.towerOfSweetChaos,
         maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
 
@@ -446,14 +446,14 @@ export class CookieKingdom {
       name: TASKS.guildCheckin,
       maxTaskDuring: 3 * CONSTANTS.minuteInMs,
       minRoundInterval: 180 * CONSTANTS.minuteInMs,
-      forceStop: false,
+      forceStop: true,
     });
     if (this.config.autoGuildBattleDragon) {
       this.rerouter.addTask({
         name: TASKS.guildBattleDragon,
         maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: 180 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
     if (this.config.autoGuildAllianceBattle) {
@@ -461,7 +461,7 @@ export class CookieKingdom {
         name: TASKS.guildBattleAlliance,
         maxTaskDuring: 40 * CONSTANTS.minuteInMs,
         minRoundInterval: 180 * CONSTANTS.minuteInMs,
-        forceStop: false,
+        forceStop: true,
       });
     }
 
@@ -469,20 +469,19 @@ export class CookieKingdom {
       name: TASKS.findAndTapCandy,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
-      forceStop: false,
+      forceStop: true,
     });
     this.rerouter.addTask({
       name: TASKS.production,
-      // maxTaskRunTimes: 2,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
-      forceStop: false,
+      forceStop: true,
     });
 
     this.rerouter.addTask({
       name: TASKS.resolveGreenChecks,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       minRoundInterval: 240 * CONSTANTS.minuteInMs,
-      forceStop: false,
+      forceStop: true,
     });
   }
 
@@ -2368,6 +2367,9 @@ export class CookieKingdom {
           logs(context.task.name, `rfpageInProductionDashboard, swipe to the top `);
         }
         this.rerouter.goNext(PAGES.rfpageInProductionDashboard);
+        this.config.buildTowardsTheLeft = !this.config.buildTowardsTheLeft;
+        logs(context.task.name, `reverse buildTowardsTheLeft, it is now ${this.config.buildTowardsTheLeft}`);
+        sleep(this.config.sleepAnimate);
       },
     });
     this.rerouter.addRoute({

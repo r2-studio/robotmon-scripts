@@ -10,7 +10,6 @@ import {
   GroupPage,
   DefaultRerouterConfig,
   DefaultScreenConfig,
-  Icon,
 } from './struct';
 import { Screen } from './screen';
 import { Utils } from './utils';
