@@ -259,6 +259,7 @@ export class CookieKingdom {
     };
     this.taskStatus[TASKS.production] = {
       lastProductionBuilding: '',
+      productionBuildingChecked: 0,
       stocks: {},
     };
   }
@@ -268,7 +269,7 @@ export class CookieKingdom {
       name: TASKS.production,
       maxTaskRunTimes: 1,
       maxTaskDuring: 5 * CONSTANTS.minuteInMs,
-      forceStop: true,
+      forceStop: false,
     });
 
     // this.rerouter.addTask({
@@ -2368,6 +2369,7 @@ export class CookieKingdom {
         }
         this.rerouter.goNext(PAGES.rfpageInProductionDashboard);
         this.config.buildTowardsTheLeft = !this.config.buildTowardsTheLeft;
+        this.taskStatus[TASKS.production].productionBuildingChecked = 0;
         logs(context.task.name, `reverse buildTowardsTheLeft, it is now ${this.config.buildTowardsTheLeft}`);
         sleep(this.config.sleepAnimate);
       },
@@ -2419,6 +2421,11 @@ export class CookieKingdom {
             case 'rfpageWoodFarm':
             case 'rfpageBeanFarm':
             case 'rfpageSugarFarm':
+              if (materialCount < Math.min(200, this.config.materialsTarget)) {
+                logs(context.task.name, `${materialType.name}, set the productionBuildingChecked back to 0 as stock to few: ${materialCount} (< 200)`);
+                this.taskStatus[TASKS.production].productionBuildingChecked = 0;
+              }
+
             case 'rfpagePowderFarm':
             case 'rfpageBarryFarm':
               if (this.rerouter.isPageMatch(PAGES.productMapping[2])) {
@@ -2451,8 +2458,13 @@ export class CookieKingdom {
           }
         }
 
+        this.taskStatus[TASKS.production].productionBuildingChecked++;
+        if (this.taskStatus[TASKS.production].productionBuildingChecked > 30) {
+          logs(context.task.name, `finish producing as productionBuildingChecked: ${this.taskStatus[TASKS.production].productionBuildingChecked}`);
+          finishRound(true);
+        }
+
         handleNextProductionBuilding(this.rerouter, this.config.buildTowardsTheLeft);
-        this.config.productionBuildingChecked++;
       },
     });
     this.rerouter.addRoute({
@@ -2466,8 +2478,8 @@ export class CookieKingdom {
         }
         if (this.config.magicLabProductIndex === 0 || this.config.skipMagicLabProduction) {
           handleNextProductionBuilding(this.rerouter, this.config.buildTowardsTheLeft);
-          this.config.productionBuildingChecked++;
-          logs(context.task.name, `skip rfpageInMagicLab, productionBuildingChecked: ${this.config.productionBuildingChecked}`);
+          this.taskStatus[TASKS.production].productionBuildingChecked++;
+          logs(context.task.name, `skip rfpageInMagicLab, productionBuildingChecked: ${this.taskStatus[TASKS.production].productionBuildingChecked}`);
           return;
         }
 
@@ -2491,8 +2503,8 @@ export class CookieKingdom {
         logs(context.task.name, `Produce item: ${this.config.magicLabProductIndex}, current stock: ${stock}, ${JSON.stringify(stockAndReq)}`);
 
         handleNextProductionBuilding(this.rerouter, this.config.buildTowardsTheLeft);
-        this.config.productionBuildingChecked++;
-        logs(context.task.name, `rfpageInMagicLab, productionBuildingChecked: ${this.config.productionBuildingChecked}`);
+        this.taskStatus[TASKS.production].productionBuildingChecked++;
+        logs(context.task.name, `rfpageInMagicLab, productionBuildingChecked: ${this.taskStatus[TASKS.production].productionBuildingChecked}`);
         return;
       },
     });
