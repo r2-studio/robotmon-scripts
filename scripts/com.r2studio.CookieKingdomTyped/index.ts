@@ -34,6 +34,7 @@ import {
   configSharePref,
   mergeObject,
   checkIfInBattle,
+  collectFinishedGoods,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -513,6 +514,47 @@ export class CookieKingdom {
         Utils.sleep(4000); // sleep must equal to typing
         typing('\n', 500);
         Utils.sleep(500);
+
+        const incorrectEmailFormat = {
+          name: 'incorrectEmailFormat',
+          x: 222,
+          y: 166,
+          width: 172,
+          height: 12,
+          targetY: 6,
+          lookingForColor: { r: 226, g: 86, b: 86 },
+          targetColorCount: 44,
+          targetColorThreashold: 3,
+        };
+        const needRegisterDevPlayAccount = {
+          name: 'needRegisterDevPlayAccount',
+          x: 222,
+          y: 166,
+          width: 172,
+          height: 12,
+          targetY: 6,
+          lookingForColor: { r: 226, g: 86, b: 86 },
+          targetColorCount: 34,
+          targetColorThreashold: 3,
+        };
+        const registerWithSocialPlatformMessageScreen = {
+          name: 'registerWithSocialPlatformMessageScreen',
+          x: 225,
+          y: 162,
+          width: 75,
+          height: 13,
+          targetY: 8,
+          lookingForColor: { r: 244, g: 191, b: 191 },
+          targetColorCount: 21,
+          targetColorThreashold: 3,
+        };
+        // TODO： handleLoginFailed()
+        if (checkScreenMessage(this.rerouter, incorrectEmailFormat)) {
+        }
+        if (checkScreenMessage(this.rerouter, needRegisterDevPlayAccount)) {
+        }
+        if (checkScreenMessage(this.rerouter, registerWithSocialPlatformMessageScreen)) {
+        }
       },
     });
     this.rerouter.addRoute({
@@ -2251,6 +2293,31 @@ export class CookieKingdom {
     });
 
     this.rerouter.addRoute({
+      path: `/${PAGES.rfpageInProductionDashboard.name}`,
+      match: PAGES.rfpageInProductionDashboard,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.production) {
+          logs(context.task.name, `rfpageInProductionDashboard, leave because current task is not production, but: ${context.task.name}`);
+          sendKeyBack();
+          return;
+        }
+
+        if (
+          !this.rerouter.isPageMatchImage(
+            new Page('rfpageListIsAtTop', [
+              { x: 27, y: 47, r: 49, g: 158, b: 231 },
+              { x: 26, y: 114, r: 49, g: 158, b: 231 },
+            ]),
+            image
+          )
+        ) {
+          swipeFromToPoint(this.rerouter, { x: 140, y: 80 }, { x: 149, y: 270 }, 5);
+          logs(context.task.name, `rfpageInProductionDashboard, swipe to the top `);
+        }
+        this.rerouter.goNext(PAGES.rfpageInProductionDashboard);
+      },
+    });
+    this.rerouter.addRoute({
       path: `/${PAGES.rfpageInProduction.name}`,
       match: PAGES.rfpageInProduction,
       action: (context, image, matched, finishRound) => {
@@ -2260,42 +2327,7 @@ export class CookieKingdom {
           return;
         }
 
-        const rfpageProducing = new Page('rfpageProducing', [
-          { x: 76, y: 86, r: 134, g: 231, b: 0 },
-          { x: 61, y: 89, r: 123, g: 228, b: 0 },
-          { x: 38, y: 32, r: 203, g: 235, b: 236 },
-        ]);
-        const rfpageCancelProduction = new Page(
-          'rfpageCancelProduction',
-          [
-            { x: 443, y: 97, r: 57, g: 166, b: 231 },
-            { x: 436, y: 97, r: 255, g: 255, b: 255 },
-            { x: 390, y: 105, r: 57, g: 69, b: 107 },
-            { x: 408, y: 241, r: 8, g: 166, b: 222 },
-            { x: 296, y: 243, r: 8, g: 166, b: 222 },
-          ],
-          { x: 443, y: 97 }
-        );
-        const rfpageCancelMultipleProduction = new Page(
-          'rfpageCancelMultipleProduction',
-          [
-            { x: 442, y: 94, r: 34, g: 85, b: 115 },
-            { x: 404, y: 244, r: 8, g: 166, b: 222 },
-            { x: 303, y: 246, r: 8, g: 166, b: 222 },
-            { x: 430, y: 238, r: 222, g: 207, b: 198 },
-          ],
-          { x: 442, y: 94 }
-        );
-
-        // Try to collect finished goods
-        if (!this.rerouter.isPageMatchImage(rfpageProducing, image)) {
-          this.rerouter.screen.tap({ x: 51, y: 66 });
-
-          if (this.rerouter.waitScreenForMatchingPage(new GroupPage('groupPageCancel', [rfpageCancelProduction, rfpageCancelMultipleProduction]), 2000)) {
-            this.rerouter.goNext(rfpageCancelProduction);
-            logs(context.task.name, 'Found ask to cancel dialog in production, close it');
-          }
-        }
+        collectFinishedGoods(this.rerouter);
 
         var emptySlots = countProductionSlotAvailable(this.rerouter);
         if (emptySlots === 0) {
@@ -2397,7 +2429,7 @@ export class CookieKingdom {
         }
 
         this.rerouter.goNext(PAGES.productMapping[productIdx]);
-        Utils.sleep(this.config.sleepAnimate);
+        Utils.sleep(this.config.sleepAnimate * 2);
 
         const stockAndReq = ocrStockAndReqInRect(goodsLocationRect[productIdx], ICONS.bNumbers);
         const stock = stockAndReq[0];

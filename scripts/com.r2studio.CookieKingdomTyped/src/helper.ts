@@ -790,6 +790,45 @@ function findProductRequirements(rects: RECT[]) {
   return part;
 }
 
+export function collectFinishedGoods(rerouter: Rerouter) {
+  const rfpageProducing = new Page('rfpageProducing', [
+    { x: 76, y: 86, r: 134, g: 231, b: 0 },
+    { x: 61, y: 89, r: 123, g: 228, b: 0 },
+    { x: 38, y: 32, r: 203, g: 235, b: 236 },
+  ]);
+  const rfpageCancelProduction = new Page(
+    'rfpageCancelProduction',
+    [
+      { x: 443, y: 97, r: 57, g: 166, b: 231 },
+      { x: 436, y: 97, r: 255, g: 255, b: 255 },
+      { x: 390, y: 105, r: 57, g: 69, b: 107 },
+      { x: 408, y: 241, r: 8, g: 166, b: 222 },
+      { x: 296, y: 243, r: 8, g: 166, b: 222 },
+    ],
+    { x: 443, y: 97 }
+  );
+  const rfpageCancelMultipleProduction = new Page(
+    'rfpageCancelMultipleProduction',
+    [
+      { x: 442, y: 94, r: 34, g: 85, b: 115 },
+      { x: 404, y: 244, r: 8, g: 166, b: 222 },
+      { x: 303, y: 246, r: 8, g: 166, b: 222 },
+      { x: 430, y: 238, r: 222, g: 207, b: 198 },
+    ],
+    { x: 442, y: 94 }
+  );
+
+  // Try to collect finished goods
+  if (!rerouter.isPageMatch(rfpageProducing)) {
+    rerouter.screen.tap({ x: 51, y: 66 });
+
+    if (rerouter.waitScreenForMatchingPage(new GroupPage('groupPageCancel', [rfpageCancelProduction, rfpageCancelMultipleProduction]), 2000)) {
+      rerouter.goNext(rfpageCancelProduction);
+      logs('collectFinishedGoods', 'Found ask to cancel dialog in production, close it');
+    }
+  }
+}
+
 function countMagicLabSlotAvailable(rerouter: Rerouter) {
   var groupPageMagicLabSlot = new GroupPage('groupPageMagicLabSlot', [
     new Page('firstSlot', [{ x: 55, y: 69, r: 82, g: 56, b: 107 }]),

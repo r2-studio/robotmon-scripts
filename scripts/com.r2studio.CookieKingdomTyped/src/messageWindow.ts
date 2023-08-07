@@ -130,39 +130,6 @@ export const messageNotifyQuit2: MessageWindow = {
   targetColorThreashold: 10,
 };
 
-// export const incorrectEmailFormat: MessageWindow = {
-//   name: 'incorrectEmailFormat',
-//   x: 222,
-//   y: 166,
-//   width: 172,
-//   height: 12,
-//   targetY: 6,
-//   lookingForColor: { r: 226, g: 86, b: 86 },
-//   targetColorCount: 44,
-//   targetColorThreashold: 3,
-// };
-// export const needRegisterDevPlayAccount: MessageWindow = {
-//   name: 'needRegisterDevPlayAccount',
-//   x: 222,
-//   y: 166,
-//   width: 172,
-//   height: 12,
-//   targetY: 6,
-//   lookingForColor: { r: 226, g: 86, b: 86 },
-//   targetColorCount: 34,
-//   targetColorThreashold: 3,
-// };
-// export const registerWithSocialPlatformMessageScreen: MessageWindow = {
-//   name: 'registerWithSocialPlatformMessageScreen',
-//   x: 225,
-//   y: 162,
-//   width: 75,
-//   height: 13,
-//   targetY: 8,
-//   lookingForColor: { r: 244, g: 191, b: 191 },
-//   targetColorCount: 21,
-//   targetColorThreashold: 3,
-// };
 // export const wrongPasswordMessageScreen: MessageWindow = {
 //   name: 'wrongPasswordMessageScreen',
 //   x: 225,
