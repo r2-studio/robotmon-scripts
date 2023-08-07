@@ -1248,18 +1248,15 @@ export const rfpageCanEquipTopping3 = new Page(
   ],
   { x: 407, y: 275 }
 );
-export const rfpagePVPPromoted = new Page(
-  'rfpagePVPPromoted',
-  [
-    { x: 354, y: 18, r: 43, g: 29, b: 6 },
-    { x: 447, y: 23, r: 28, g: 11, b: 3 },
-    { x: 523, y: 22, r: 11, g: 18, b: 18 },
-    { x: 27, y: 196, r: 42, g: 29, b: 17 },
-    { x: 177, y: 307, r: 22, g: 33, b: 39 },
-    { x: 177, y: 258, r: 19, g: 28, b: 30 },
-  ],
-  { x: 318, y: 327 }
-);
+// TODO: need to add more points as mischeck with kingdom pass ads
+export const rfpagePVPPromoted = new Page('rfpagePVPPromoted', [
+  { x: 354, y: 18, r: 43, g: 29, b: 6 },
+  { x: 447, y: 23, r: 28, g: 11, b: 3 },
+  { x: 523, y: 22, r: 11, g: 18, b: 18 },
+  { x: 27, y: 196, r: 42, g: 29, b: 17 },
+  { x: 177, y: 307, r: 22, g: 33, b: 39 },
+  { x: 177, y: 258, r: 19, g: 28, b: 30 },
+]);
 
 export const rfpageInTropicalIsland = new Page('rfpageInTropicalIsland', [
   { x: 38, y: 333, r: 255, g: 97, b: 173 },

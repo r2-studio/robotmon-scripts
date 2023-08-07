@@ -1157,6 +1157,14 @@ export class CookieKingdom {
         this.rerouter.goNext(PAGES.rfpagePVPArenaReadyToBattlePage);
       },
     });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpagePVPPromoted.name}`,
+      match: PAGES.rfpagePVPPromoted,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, `in rfpagePVPPromoted, send back`);
+        sendKeyBack();
+      },
+    });
 
     // Super Mayhem
     this.rerouter.addRoute({
