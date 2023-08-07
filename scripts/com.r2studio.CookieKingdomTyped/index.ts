@@ -251,6 +251,9 @@ export class CookieKingdom {
     this.taskStatus[TASKS.guildBattleDragon] = {
       bossIdx: 0,
     };
+    this.taskStatus[TASKS.guildBattleAlliance] = {
+      needIgniteBeacon: true,
+    };
 
     this.taskStatus[TASKS.findAndTapCandy] = {
       searchHousePathIdx: 0, // There are 3 paths, each with differert steps
@@ -2199,6 +2202,20 @@ export class CookieKingdom {
       },
     });
     this.rerouter.addRoute({
+      path: `/${PAGES.rfpageStartedFightingSoCannotStartBeacon.name}`,
+      match: PAGES.rfpageStartedFightingSoCannotStartBeacon,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name !== TASKS.guildBattleAlliance) {
+          sendKeyBack();
+          return;
+        }
+
+        logs(context.task.name, `rfpageStartedFightingSoCannotStartBeacon, stop trying to ignite beacon`);
+        this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon = false;
+        this.rerouter.goNext(PAGES.rfpageStartedFightingSoCannotStartBeacon);
+      },
+    });
+    this.rerouter.addRoute({
       path: `/${PAGES.rfpageCookieAlliance.name}`,
       match: PAGES.rfpageCookieAlliance,
       action: (context, image, matched, finishRound) => {
@@ -2208,7 +2225,8 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `start guild alliance battle`);
-        if (this.rerouter.isPageMatchImage(PAGES.rfpageAllianceBeaconIsOff, image)) {
+
+        if (this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon && this.rerouter.isPageMatchImage(PAGES.rfpageAllianceBeaconIsOff, image)) {
           this.rerouter.goNext(PAGES.rfpageAllianceBeaconIsOff);
           return;
         }
@@ -2884,6 +2902,7 @@ export class CookieKingdom {
           case TASKS.guildExpandLand:
           case TASKS.guildBattleDragon:
           case TASKS.guildBattleAlliance:
+            this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon = true;
             this.rerouter.screen.tap({ x: 317, y: 325 }); // goto Guild
             break;
           case TASKS.findAndTapCandy:
