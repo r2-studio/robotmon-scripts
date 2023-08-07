@@ -1,4 +1,5 @@
 export enum TASKS {
+  login = 'login',
   production = 'production',
   collectMail = 'collectMail',
   collectKingdomPass = 'collectKingdomPass',

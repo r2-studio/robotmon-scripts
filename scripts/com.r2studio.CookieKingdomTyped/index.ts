@@ -35,6 +35,7 @@ import {
   mergeObject,
   checkIfInBattle,
   collectFinishedGoods,
+  checkLoginFailedMaxReached,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -178,6 +179,10 @@ export class CookieKingdom {
     this.botStatus = {
       lastSendRunning: Date.now(),
       battleStarted: Date.now(),
+    };
+
+    this.taskStatus[TASKS.login] = {
+      loginRetryCount: 0,
     };
 
     this.taskStatus[TASKS.getInShopFreeDailyPack] = {
@@ -419,7 +424,6 @@ export class CookieKingdom {
         forceStop: false,
       });
     }
-    // TODO: 不同模擬器疑似辨識不同
     if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
       this.rerouter.addTask({
         name: TASKS.haborShopInShellGallery,
@@ -513,7 +517,7 @@ export class CookieKingdom {
         typing(this.config.account, 1000);
         Utils.sleep(4000); // sleep must equal to typing
         typing('\n', 500);
-        Utils.sleep(500);
+        Utils.sleep(1000);
 
         const incorrectEmailFormat = {
           name: 'incorrectEmailFormat',
@@ -548,12 +552,14 @@ export class CookieKingdom {
           targetColorCount: 21,
           targetColorThreashold: 3,
         };
-        // TODO： handleLoginFailed()
         if (checkScreenMessage(this.rerouter, incorrectEmailFormat)) {
+          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
         }
         if (checkScreenMessage(this.rerouter, needRegisterDevPlayAccount)) {
+          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
         }
         if (checkScreenMessage(this.rerouter, registerWithSocialPlatformMessageScreen)) {
+          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
         }
       },
     });
@@ -3013,18 +3019,6 @@ export class CookieKingdom {
         Utils.log('Unknown count 7, could be in tap to login, tapping (575, 22) until the game start');
       }
     });
-  }
-
-  public handleLogIn() {
-    // TODO: handle log in
-    console.log('wait for log in');
-    Utils.sleep(CONSTANTS.sleep);
-  }
-
-  public isSameColor(image: Image, xyrgb: XYRGB, thres: number = 0.8): boolean {
-    const rgb = getImageColor(image, xyrgb.x, xyrgb.y);
-    const score = Utils.identityColor(rgb, xyrgb);
-    return score > thres;
   }
 }
 

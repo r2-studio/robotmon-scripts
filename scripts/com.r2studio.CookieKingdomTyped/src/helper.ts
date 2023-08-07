@@ -2,9 +2,31 @@ import { Rerouter, Utils, XYRGB, Page, XY, RECT, GroupPage } from 'Rerouter';
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
-import { Advanture, Advantures, BotStatus, Icon, MessageWindow, Point, Records, Wish, WishStatus, productState } from './types';
+import { Advanture, Advantures, BotStatus, Icon, MessageWindow, Point, Records, TaskStatus, Wish, WishStatus, productState } from './types';
 import { logs, padZero, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
+import { CookieKingdom } from '..';
+
+export function checkLoginFailedMaxReached(loginStatus: TaskStatus, loginRetryMaxTimes: number, cookieKingdom: CookieKingdom) {
+  if (loginStatus.loginRetryCount > loginRetryMaxTimes) {
+    cookieKingdom.stop();
+    sendEvent('gameStatus', 'login-failed');
+    logs('checkLoginFailedMaxReached', `Max retry count reached, login failed`);
+    return true;
+  } else {
+    loginStatus.loginRetryCount++;
+    logs('checkLoginFailedMaxReached', `Restart game as not inputing login info correctly: ${loginStatus.loginRetryCount}`);
+    var rtn = execute('am force-stop com.devsisters.ck');
+    if (rtn == 'signal: aborted') {
+      // MEmu
+      execute(
+        'ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop com.devsisters.ck'
+      );
+    }
+    sleep(3000);
+    return false;
+  }
+}
 
 export function scrollDownALot(rerouter: Rerouter, startPnt: XY) {
   rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
