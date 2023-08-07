@@ -269,14 +269,14 @@ export class CookieKingdom {
       name: TASKS.production,
       maxTaskRunTimes: 1,
       maxTaskDuring: 5 * CONSTANTS.minuteInMs,
-      forceStop: false,
+      forceStop: true,
     });
 
     // this.rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
     //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
     //   minRoundInterval: 120 * CONSTANTS.minuteInMs,
-    //   forceStop: false,
+    //   forceStop: true,
     // });
     // TODO: FIX aurora OCR
     // return;
@@ -363,7 +363,7 @@ export class CookieKingdom {
     //     name: TASKS.superMayhem,
     //     maxTaskDuring: 15 * CONSTANTS.minuteInMs,
     //     minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
-    //     forceStop: false,
+    //     forceStop: true,
     //   });
     // }
     if (this.config.autoCollectTropicalIslandsIntervalInMins > 0) {
