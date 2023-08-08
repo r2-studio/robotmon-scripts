@@ -994,28 +994,43 @@ export const rfpageInTowerOfSweetChaos = new Page(
   ],
   { x: 611, y: 21 }
 );
-export const rfpageConfirmTrayJump = new Page(
-  'rfpageConfirmTrayJump',
+export const rfpageToSCConfirmTrayJump = new Page(
+  'rfpageToSCConfirmTrayJump',
   [
-    { x: 352, y: 312, r: 123, g: 207, b: 8 },
-    { x: 498, y: 13, r: 119, g: 85, b: 3 },
-    { x: 472, y: 20, r: 57, g: 166, b: 239 },
-    { x: 408, y: 21, r: 132, g: 32, b: 49 },
-    { x: 442, y: 311, r: 231, g: 186, b: 189 },
-    { x: 26, y: 325, r: 41, g: 10, b: 4 },
-    { x: 42, y: 323, r: 111, g: 46, b: 123 },
+    { x: 435, y: 70, r: 57, g: 170, b: 231 },
+    { x: 323, y: 70, r: 240, g: 203, b: 30 },
+    { x: 298, y: 60, r: 176, g: 111, b: 1 },
+    { x: 336, y: 19, r: 33, g: 5, b: 5 },
+    { x: 305, y: 153, r: 255, g: 255, b: 255 },
+    { x: 425, y: 240, r: 66, g: 207, b: 0 },
+    { x: 363, y: 284, r: 123, g: 207, b: 8 },
+    { x: 387, y: 286, r: 222, g: 207, b: 198 },
   ],
-  { x: 347, y: 311 }
+  { x: 435, y: 70 }
 );
 export const rfpageReadyToBattleToSC = new Page(
   'rfpageReadyToBattleToSC',
   [
-    { x: 487, y: 327, r: 247, g: 219, b: 49 },
-    { x: 491, y: 329, r: 168, g: 3, b: 44 },
-    { x: 337, y: 12, r: 82, g: 0, b: 0 },
-    { x: 72, y: 339, r: 0, g: 150, b: 214 },
+    { x: 491, y: 330, r: 165, g: 4, b: 41 },
+    { x: 518, y: 334, r: 123, g: 207, b: 8 },
+    { x: 606, y: 321, r: 123, g: 207, b: 8 },
+    { x: 338, y: 17, r: 175, g: 32, b: 66 },
+    { x: 423, y: 127, r: 151, g: 47, b: 79 },
+    { x: 426, y: 191, r: 89, g: 51, b: 56 },
   ],
-  { x: 477, y: 327 }
+  { x: 590, y: 327 }
+);
+export const rfpageReadyToBattleToSCTimeJump = new Page(
+  'rfpageReadyToBattleToSCTimeJump',
+  [
+    { x: 614, y: 325, r: 123, g: 207, b: 8 },
+    { x: 489, y: 325, r: 247, g: 219, b: 49 },
+    { x: 624, y: 307, r: 57, g: 69, b: 107 },
+    { x: 338, y: 12, r: 88, g: 0, b: 8 },
+    { x: 432, y: 221, r: 82, g: 48, b: 57 },
+    { x: 421, y: 116, r: 84, g: 27, b: 42 },
+  ],
+  { x: 590, y: 327 }
 );
 
 export const rfpageBattleTowerOfSweetChaosVictory = new Page(
@@ -1892,16 +1907,17 @@ export const groupPageEnterPassword = new GroupPage(
 export const rfpageServerSelection = new Page('rfpageServerSelection', pageServerSelection, pageServerSelection[0]);
 export const rfpageNotifyQuitWindow = new Page('rfpageNotifyQuitWindow', pageNotifyQuitWindow, pageNotifyQuitWindow[0]);
 
-export const rfpageKingdomPassAds = new Page(
-  'rfpageKingdomPassAds',
-  [
-    { x: 349, y: 286, r: 123, g: 207, b: 8 },
-    { x: 250, y: 15, r: 42, g: 8, b: 15 },
-    { x: 323, y: 18, r: 45, g: 33, b: 1 },
-    { x: 427, y: 19, r: 0, g: 23, b: 45 },
-  ],
-  { x: 349, y: 286 }
-);
+// Seems outdated, and confused with timejump in tosc
+// export const rfpageKingdomPassAds = new Page(
+//   'rfpageKingdomPassAds',
+//   [
+//     { x: 349, y: 286, r: 123, g: 207, b: 8 },
+//     { x: 250, y: 15, r: 42, g: 8, b: 15 },
+//     { x: 323, y: 18, r: 45, g: 33, b: 1 },
+//     { x: 427, y: 19, r: 0, g: 23, b: 45 },
+//   ],
+//   { x: 349, y: 286 }
+// );
 export const rfpageInKingdomPass = new Page(
   'rfpageInKingdomPass',
   [

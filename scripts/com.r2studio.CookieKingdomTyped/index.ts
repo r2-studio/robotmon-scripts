@@ -94,7 +94,7 @@ export class CookieKingdom {
     this.initTaskStatus();
 
     console.log('>', this.rerouter.getCurrentMatchNames());
-    // console.log('>>', checkIfMatchPage(this.rerouter, PAGES.rfpageReadyToBattleToSC));
+    // console.log('>>', checkIfMatchPage(this.rerouter, PAGES.rfpageToSCConfirmTrayJump));
     // return;
 
     this.rerouter.start(this.packageName);
@@ -270,13 +270,6 @@ export class CookieKingdom {
   }
 
   public addTasks() {
-    this.rerouter.addTask({
-      name: TASKS.towerOfSweetChaos,
-      maxTaskRunTimes: 1,
-      maxTaskDuring: 5 * CONSTANTS.minuteInMs,
-      forceStop: true,
-    });
-    return;
     this.rerouter.addTask({
       name: TASKS.production,
       maxTaskRunTimes: 1,
@@ -2021,7 +2014,6 @@ export class CookieKingdom {
           ],
           { x: 30, y: 326 }
         );
-
         if (this.rerouter.isPageMatchImage(rfpageHasTrayJump, image)) {
           logs(context.task.name, `Found rfpageHasTrayJump so tap it`);
           this.rerouter.goNext(rfpageHasTrayJump);
@@ -2034,7 +2026,9 @@ export class CookieKingdom {
           Utils.sleep(5000);
         }
 
-        this.rerouter.screen.tap({ x: 180, y: 133 }); // Go to the top tray
+        this.rerouter.screen.tap({ x: 180, y: 30 }); // Tap up arrow
+        Utils.sleep(this.config.sleepAnimate * 2);
+        this.rerouter.screen.tap({ x: 180, y: 130 }); // Go to the top tray
         Utils.sleep(this.config.sleepAnimate);
 
         // 在甜點塔有可能會是戰鬥或要開寶箱
