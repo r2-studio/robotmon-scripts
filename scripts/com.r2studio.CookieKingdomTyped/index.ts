@@ -36,6 +36,7 @@ import {
   checkIfInBattle,
   collectFinishedGoods,
   checkLoginFailedMaxReached,
+  checkIfMatchPage,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -93,6 +94,7 @@ export class CookieKingdom {
     this.initTaskStatus();
 
     console.log('>', this.rerouter.getCurrentMatchNames());
+    // console.log('>>', checkIfMatchPage(this.rerouter, PAGES.rfpageReadyToBattleToSC));
     // return;
 
     this.rerouter.start(this.packageName);
@@ -268,6 +270,13 @@ export class CookieKingdom {
   }
 
   public addTasks() {
+    this.rerouter.addTask({
+      name: TASKS.towerOfSweetChaos,
+      maxTaskRunTimes: 1,
+      maxTaskDuring: 5 * CONSTANTS.minuteInMs,
+      forceStop: true,
+    });
+    return;
     this.rerouter.addTask({
       name: TASKS.production,
       maxTaskRunTimes: 1,
@@ -3085,6 +3094,7 @@ export class CookieKingdom {
       // this.rerouter.getCurrentMatchNames();
       Utils.log(`unknown count ${context.matchTimes}, task: ${context.task.name},during ${context.matchDuring}, last matched: ${context.lastMatchedPath}`);
       if (this.rerouter.checkAndStartApp()) {
+        logs('handleUnknown', 'checkAndStartApp()');
         return;
       }
 

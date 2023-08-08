@@ -1007,11 +1007,10 @@ export const rfpageConfirmTrayJump = new Page(
   ],
   { x: 347, y: 311 }
 );
-
 export const rfpageReadyToBattleToSC = new Page(
   'rfpageReadyToBattleToSC',
   [
-    { x: 477, y: 327, r: 123, g: 210, b: 13 },
+    { x: 487, y: 327, r: 247, g: 219, b: 49 },
     { x: 491, y: 329, r: 168, g: 3, b: 44 },
     { x: 337, y: 12, r: 82, g: 0, b: 0 },
     { x: 72, y: 339, r: 0, g: 150, b: 214 },

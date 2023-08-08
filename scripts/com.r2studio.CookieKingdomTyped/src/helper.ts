@@ -7,6 +7,23 @@ import { logs, padZero, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 import { CookieKingdom } from '..';
 
+export function checkIfMatchPage(rerouter: Rerouter, page: Page) {
+  let img = getScreenshot();
+
+  var isPage = true;
+  for (var i in page.points) {
+    var cbtn = page.points[i];
+    var color = getImageColor(img, cbtn.x, cbtn.y);
+    if (!isSameColor(cbtn, color, 10)) {
+      console.log('pixel violation, ask for: ', JSON.stringify(cbtn), ', but get: ', JSON.stringify(color));
+      isPage = false;
+      break;
+    }
+  }
+  console.log('matching finished: ', page.name);
+  releaseImage(img);
+}
+
 export function checkLoginFailedMaxReached(loginStatus: TaskStatus, loginRetryMaxTimes: number, cookieKingdom: CookieKingdom) {
   if (loginStatus.loginRetryCount > loginRetryMaxTimes) {
     cookieKingdom.stop();
