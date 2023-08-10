@@ -202,6 +202,15 @@ export class CookieKingdom {
         goldenAndSkip: 0,
       },
     };
+    this.taskStatus[TASKS.pvp] = {
+      battled: {
+        0: false,
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+      },
+    };
     this.taskStatus[TASKS.tropicalIslandClearBubble] = {
       iconRedExclamationCount: 0,
     };
@@ -271,11 +280,23 @@ export class CookieKingdom {
 
   public addTasks() {
     this.rerouter.addTask({
-      name: TASKS.production,
+      name: TASKS.pvp,
       maxTaskRunTimes: 1,
       maxTaskDuring: 5 * CONSTANTS.minuteInMs,
       forceStop: true,
+      beforeRoute: () => {
+        this.taskStatus[TASKS.pvp] = {
+          battled: {
+            0: false,
+            1: false,
+            2: false,
+            3: false,
+            4: false,
+          },
+        };
+      },
     });
+    return;
 
     // this.rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
@@ -1089,7 +1110,20 @@ export class CookieKingdom {
 
         switch (context.task.name) {
           case TASKS.pvp:
+            for (let i in this.taskStatus[TASKS.pvp].battled) {
+              // if (!)
+            }
+
             const battleY = [100, 150, 215, 275];
+            // const battleX = {
+            //   0: {x:270, y:, w:. h:},
+            //   1: {x:400, y:, w:. h:},
+            //   2: {x:528, y:, w:. h:},
+            //   3: {x:410, y:, w:. h:},
+            //   4: {x:542, y:, w:. h:},
+            // };
+
+            // ii++
 
             var ces = getCEs();
             for (let i = 0; i < ces.length; i++) {
@@ -1122,7 +1156,7 @@ export class CookieKingdom {
 
             break;
           case TASKS.pvpPurchaseAncientCookie:
-            this.rerouter.goNext(PAGES.rfpagePVPHasPageMedalShop);
+            this.rerouter.screen.tap({ x: 178, y: 118 });
             break;
           default:
             logs(context.task.name, `rfpageInPVPArena, leave because current task is not pvp related, but: ${context.task.name}`);
@@ -2537,14 +2571,14 @@ export class CookieKingdom {
         return;
       },
     });
-    this.rerouter.addRoute({
-      path: `/${PAGES.rfpageSelectAdvantureFirstIsKingdom.name}`,
-      match: PAGES.rfpageSelectAdvantureFirstIsKingdom,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, `rfpageSelectAdvantureFirstIsKingdom, tap the 1st one to back to kingdom`);
-        this.rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
-      },
-    });
+    // this.rerouter.addRoute({
+    //   path: `/${PAGES.rfpageSelectAdvantureFirstIsKingdom.name}`,
+    //   match: PAGES.rfpageSelectAdvantureFirstIsKingdom,
+    //   action: (context, image, matched, finishRound) => {
+    //     logs(context.task.name, `rfpageSelectAdvantureFirstIsKingdom, tap the 1st one to back to kingdom`);
+    //     this.rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
+    //   },
+    // });
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageSelectAdvanture.name}`,
       match: PAGES.rfpageSelectAdvanture,
@@ -2623,6 +2657,11 @@ export class CookieKingdom {
           default:
             logs(context.task.name, `nothing matched, closing the list`);
             this.rerouter.screen.tap({ x: 106, y: 335 });
+            Utils.sleep(3000);
+            if (this.rerouter.isPageMatch(PAGES.rfpageUncollapsedAffairs)) {
+              logs(context.task.name, `nothing matched, the list is still open, go to wishing tree to force close it`);
+              this.rerouter.screen.tap({ x: 103, y: 306 });
+            }
         }
       },
     });

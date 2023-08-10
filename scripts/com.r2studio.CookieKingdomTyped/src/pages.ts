@@ -420,31 +420,23 @@ export const rfpageCheckWishingTreeStock = new Page('rfpageCheckWishingTreeStock
 ]);
 
 export const rfpageInPVPArena = new Page('rfpageInPVPArena', [
-  { x: 181, y: 267, r: 56, g: 167, b: 231 },
-  { x: 181, y: 306, r: 56, g: 167, b: 231 },
-  { x: 182, y: 335, r: 48, g: 76, b: 109 },
-  { x: 373, y: 327, r: 41, g: 35, b: 33 },
-  { x: 296, y: 70, r: 65, g: 58, b: 56 },
+  { x: 628, y: 22, r: 55, g: 167, b: 231 },
+  { x: 522, y: 18, r: 5, g: 128, b: 254 },
+  { x: 458, y: 14, r: 228, g: 148, b: 40 },
+  { x: 448, y: 22, r: 120, g: 38, b: 30 },
+  { x: 356, y: 20, r: 239, g: 174, b: 20 },
+  { x: 180, y: 119, r: 221, g: 128, b: 0 },
+  { x: 129, y: 340, r: 255, g: 217, b: 1 },
+  { x: 126, y: 342, r: 184, g: 234, b: 234 },
 ]);
-export const rfpagePVPHasPageMedalShop = new Page(
-  'rfpagePVPHasPageMedalShop',
-  [
-    { x: 120, y: 335, r: 255, g: 223, b: 24 },
-    { x: 353, y: 20, r: 227, g: 166, b: 22 },
-    { x: 448, y: 21, r: 230, g: 177, b: 49 },
-    { x: 521, y: 19, r: 0, g: 130, b: 255 },
-  ],
-  { x: 120, y: 335 }
-);
 export const rfpageInPVPMedalShop = new Page('rfpageInPVPMedalShop', [
-  { x: 604, y: 69, r: 255, g: 255, b: 255 },
-  { x: 516, y: 70, r: 223, g: 140, b: 21 },
-  { x: 580, y: 70, r: 28, g: 34, b: 53 },
-  { x: 444, y: 11, r: 127, g: 121, b: 70 },
-  { x: 445, y: 21, r: 94, g: 2, b: 8 },
-  { x: 356, y: 11, r: 123, g: 88, b: 0 },
-  { x: 355, y: 19, r: 127, g: 113, b: 28 },
-  { x: 521, y: 17, r: 0, g: 99, b: 127 },
+  { x: 520, y: 23, r: 0, g: 179, b: 255 },
+  { x: 449, y: 20, r: 210, g: 160, b: 27 },
+  { x: 357, y: 17, r: 235, g: 159, b: 5 },
+  { x: 92, y: 63, r: 255, g: 255, b: 255 },
+  { x: 4, y: 54, r: 95, g: 91, b: 109 },
+  { x: 17, y: 345, r: 28, g: 83, b: 115 },
+  { x: 148, y: 315, r: 54, g: 62, b: 95 },
 ]);
 export const rfpagePVPNotEnoughMedal = new Page(
   'rfpagePVPNotEnoughMedal',
@@ -458,13 +450,17 @@ export const rfpagePVPNotEnoughMedal = new Page(
 export const rfpagePVPArenaReadyToBattlePage = new Page(
   'rfpagePVPArenaReadyToBattlePage',
   [
-    { x: 500, y: 337, r: 233, g: 125, b: 43 },
-    { x: 548, y: 328, r: 123, g: 207, b: 8 },
-    { x: 558, y: 330, r: 123, g: 207, b: 8 },
-    { x: 164, y: 332, r: 123, g: 207, b: 8 },
-    { x: 78, y: 330, r: 0, g: 150, b: 214 },
+    { x: 529, y: 14, r: 0, g: 196, b: 255 },
+    { x: 449, y: 11, r: 242, g: 208, b: 106 },
+    { x: 445, y: 24, r: 243, g: 199, b: 98 },
+    { x: 359, y: 14, r: 252, g: 192, b: 32 },
+    { x: 507, y: 330, r: 125, g: 69, b: 14 },
+    { x: 543, y: 337, r: 121, g: 207, b: 12 },
+    { x: 160, y: 334, r: 121, g: 207, b: 12 },
+    { x: 76, y: 336, r: 12, g: 167, b: 223 },
+    { x: 26, y: 81, r: 240, g: 175, b: 0 },
   ],
-  { x: 550, y: 320 }
+  { x: 502, y: 326 }
 );
 export const rfpagePvPCrystaisRefresh = new Page(
   'rfpagePvPCrystaisRefresh',
@@ -1570,15 +1566,15 @@ export const rfpageSelectAdvanture = new Page('rfpageSelectAdvanture', pageSelec
 export const rfpageSelectAdvantureFirstIsKingdom = new Page(
   'rfpageSelectAdvantureFirstIsKingdom',
   [
-    { x: 51, y: 55, r: 41, g: 81, b: 57 },
-    { x: 107, y: 68, r: 255, g: 255, b: 255 },
-    { x: 308, y: 19, r: 255, g: 211, b: 0 },
-    { x: 422, y: 18, r: 8, g: 125, b: 255 },
-    { x: 22, y: 16, r: 255, g: 255, b: 255 },
-    { x: 40, y: 9, r: 29, g: 63, b: 96 },
-    { x: 40, y: 23, r: 150, g: 150, b: 150 },
+    { x: 628, y: 20, r: 55, g: 166, b: 231 },
+    { x: 422, y: 19, r: 5, g: 130, b: 254 },
+    { x: 308, y: 19, r: 254, g: 210, b: 0 },
+    { x: 56, y: 8, r: 27, g: 57, b: 90 },
+    { x: 24, y: 13, r: 255, g: 255, b: 255 },
+    { x: 35, y: 54, r: 49, g: 96, b: 66 },
+    { x: 44, y: 335, r: 0, g: 73, b: 41 },
   ],
-  { x: 51, y: 55 }
+  { x: 86, y: 198 }
 );
 
 export const pageChooseAdvanture = [
@@ -2037,13 +2033,14 @@ export const rfpageInShop = new Page('rfpageInShop', [
 export const rfpageGameSettings = new Page(
   'rfpageGameSettings',
   [
-    { x: 602, y: 15, r: 28, g: 39, b: 51 },
-    { x: 574, y: 22, r: 247, g: 211, b: 107 },
-    { x: 543, y: 15, r: 255, g: 235, b: 198 },
-    { x: 510, y: 23, r: 239, g: 166, b: 90 },
-    { x: 488, y: 69, r: 40, g: 55, b: 73 },
-    { x: 488, y: 101, r: 40, g: 55, b: 73 },
-    { x: 488, y: 86, r: 40, g: 55, b: 73 },
+    { x: 494, y: 267, r: 255, g: 255, b: 255 },
+    { x: 494, y: 269, r: 35, g: 48, b: 63 },
+    { x: 581, y: 18, r: 0, g: 0, b: 0 },
+    { x: 549, y: 16, r: 244, g: 233, b: 211 },
+    { x: 515, y: 21, r: 233, g: 163, b: 90 },
+    { x: 610, y: 11, r: 163, g: 198, b: 235 },
+    { x: 495, y: 131, r: 40, g: 55, b: 73 },
+    { x: 494, y: 142, r: 255, g: 255, b: 255 },
   ],
   { x: 612, y: 19 }
 );
