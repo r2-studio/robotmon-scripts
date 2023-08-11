@@ -2049,6 +2049,21 @@ export const rfpageGameSettings = new Page(
   { x: 612, y: 19 }
 );
 
+// Introduced in Aug 9 2023 update
+export const rfpageTrialGroundIntro = new Page(
+  'rfpageTrialGroundIntro',
+  [
+    { x: 613, y: 22, r: 2, g: 6, b: 8 },
+    { x: 549, y: 159, r: 121, g: 207, b: 12 },
+    { x: 549, y: 249, r: 121, g: 207, b: 12 },
+    { x: 18, y: 337, r: 16, g: 48, b: 59 },
+    { x: 53, y: 323, r: 67, g: 65, b: 63 },
+    { x: 88, y: 331, r: 3, g: 44, b: 59 },
+    { x: 599, y: 288, r: 19, g: 33, b: 62 },
+  ],
+  { x: 615, y: 22 }
+);
+
 const rfpageFirstItemEnabled = new Page('rfpageFirstItemEnabled', [{ x: 596, y: 120, r: 121, g: 207, b: 12 }], { x: 596, y: 120 });
 const rfpageSecondItemEnabled = new Page('rfpageSecondItemEnabled', [{ x: 596, y: 228, r: 121, g: 207, b: 12 }], { x: 596, y: 228 });
 const rfpageThirdItemEnabled = new Page('rfpageThirdItemEnabled', [{ x: 596, y: 333, r: 121, g: 207, b: 12 }], { x: 596, y: 333 });
