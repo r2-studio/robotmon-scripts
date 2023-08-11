@@ -266,7 +266,7 @@ export class CookieKingdom {
 
     this.taskStatus[TASKS.towerOfSweetChaos] = {
       tryCount: 0,
-      tryLimit: this.config.autoHandleTowerOfSweetChaos ? 5 : 0,
+      tryLimit: this.config.autoHandleTowerOfSweetChaos ? 4 : 0,
     };
 
     this.taskStatus[TASKS.guildBattleDragon] = {
@@ -2157,8 +2157,7 @@ export class CookieKingdom {
           sendEventRunning(this.botStatus);
           finishRound(true);
           return;
-        }
-        if (toscState.tryCount < toscState.tryLimit) {
+        } else {
           this.rerouter.screen.tap({ x: 571, y: 327 });
           toscState.tryCount++;
         }
