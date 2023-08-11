@@ -981,7 +981,7 @@ export class CookieKingdom {
 
         const foundResults = findSpecificIconInScreen(ICONS.iconSendAll);
         for (let i in foundResults) {
-          var sendTrainBtn = foundResults[i];
+          let sendTrainBtn = foundResults[i];
           sendTrainBtn.x += 30;
           sendTrainBtn.y += 15;
           this.rerouter.screen.tap(foundResults[i]);
@@ -990,9 +990,20 @@ export class CookieKingdom {
           Utils.sleep(CONSTANTS.sleepAnimate);
         }
 
+        const foundResultsSmall = findSpecificIconInScreen(ICONS.iconSendAllSmall);
+        for (let i in foundResultsSmall) {
+          let sendTrainBtn = foundResultsSmall[i];
+          sendTrainBtn.x += 30;
+          sendTrainBtn.y += 15;
+          this.rerouter.screen.tap(foundResultsSmall[i]);
+          Utils.sleep(CONSTANTS.sleepAnimate);
+          this.rerouter.screen.tap(foundResultsSmall[i]);
+          Utils.sleep(CONSTANTS.sleepAnimate);
+        }
+
         this.rerouter.goNext(PAGES.rfpageInTrainStation);
         Utils.sleep(CONSTANTS.sleepAnimate);
-        logs(context.task.name, `Tried to sent ${foundResults.length} trains`);
+        logs(context.task.name, `Tried to sent ${foundResults.length + foundResultsSmall.length} trains`);
         finishRound(true);
       },
     });
