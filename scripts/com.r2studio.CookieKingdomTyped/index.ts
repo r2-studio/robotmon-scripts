@@ -36,6 +36,7 @@ import {
   collectFinishedGoods,
   checkLoginFailedMaxReached,
   findUnmatchInPage,
+  checkIfTrainRequirementMet,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -945,8 +946,9 @@ export class CookieKingdom {
           this.rerouter.screen.tap({ x: 210, y: 110 });
           Utils.sleep(CONSTANTS.sleepAnimate);
           this.rerouter.screen.tap({ x: 170, y: 110 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
 
-          this.checkIfTrainRequirementMet();
+          checkIfTrainRequirementMet(this.rerouter);
         }
         if (!this.rerouter.isPageMatchImage(rfpageSecondTrainOut, image)) {
           this.rerouter.screen.tap({ x: 255, y: 208 });
@@ -954,8 +956,9 @@ export class CookieKingdom {
           this.rerouter.screen.tap({ x: 210, y: 208 });
           Utils.sleep(CONSTANTS.sleepAnimate);
           this.rerouter.screen.tap({ x: 170, y: 208 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
 
-          this.checkIfTrainRequirementMet();
+          checkIfTrainRequirementMet(this.rerouter);
         }
         if (!this.rerouter.isPageMatchImage(rfpageThirdTrainOut, image)) {
           this.rerouter.screen.tap({ x: 255, y: 307 });
@@ -963,8 +966,9 @@ export class CookieKingdom {
           this.rerouter.screen.tap({ x: 210, y: 307 });
           Utils.sleep(CONSTANTS.sleepAnimate);
           this.rerouter.screen.tap({ x: 170, y: 307 });
+          Utils.sleep(CONSTANTS.sleepAnimate);
 
-          this.checkIfTrainRequirementMet();
+          checkIfTrainRequirementMet(this.rerouter);
         }
 
         if (this.config.autoCollectTrainIntervalInMins == 0) {
@@ -973,7 +977,7 @@ export class CookieKingdom {
           return;
         }
 
-        Utils.sleep(9000);
+        Utils.sleep(8000);
 
         const foundResults = findSpecificIconInScreen(ICONS.iconSendAll);
         for (let i in foundResults) {
@@ -2311,8 +2315,8 @@ export class CookieKingdom {
       },
     });
     this.rerouter.addRoute({
-      path: `/${PAGES.rfpageCookieAlliance.name}`,
-      match: PAGES.rfpageCookieAlliance,
+      path: `/${PAGES.rfpageInCookieAlliance.name}`,
+      match: PAGES.rfpageInCookieAlliance,
       action: (context, image, matched, finishRound) => {
         if (context.task.name !== TASKS.guildBattleAlliance) {
           sendKeyBack();
@@ -2327,6 +2331,7 @@ export class CookieKingdom {
         }
 
         this.rerouter.screen.tap({ x: 515, y: 324 });
+        Utils.sleep(this.config.sleepAnimate);
       },
     });
     this.rerouter.addRoute({
@@ -3178,14 +3183,6 @@ export class CookieKingdom {
     }
   }
 
-  checkIfTrainRequirementMet() {
-    // TODO: or isMessageWindowWithDiamond()
-    if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageTrainNotEnoughGoods, 2000)) {
-      this.rerouter.goNext(PAGES.rfpageTrainNotEnoughGoods);
-      return false;
-    }
-  }
-
   public handleUnknown() {
     this.rerouter.addUnknownAction((context, image, finishRound) => {
       // this.rerouter.getCurrentMatchNames();
@@ -3201,7 +3198,7 @@ export class CookieKingdom {
         return;
       }
 
-      let unknownTarget = 4;
+      let unknownTarget = 3;
       if (context.matchTimes % unknownTarget === 0) {
         keycode('KEYCODE_BACK', 100);
         Utils.log('keycode back for unknown');

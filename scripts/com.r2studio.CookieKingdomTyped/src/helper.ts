@@ -168,6 +168,14 @@ export function isSameColorAtPnt(point: XY, c2: RGB, diff?: number) {
   return true;
 }
 
+export function checkIfTrainRequirementMet(rerouter: Rerouter) {
+  // TODO: or isMessageWindowWithDiamond()
+  if (rerouter.waitScreenForMatchingPage(PAGES.rfpageTrainNotEnoughGoods, 2000)) {
+    sendKeyBack();
+    return false;
+  }
+}
+
 export function getStatusOfGivenWish(wish: Wish, records: Records, refreshGolden: boolean, rerouter: Rerouter): { wish: Wish; records: Records } {
   if (isSameColorAtPnt(wish.refreshPnt, { r: 255, g: 249, b: 203 })) {
     wish.status = WishStatus.opened;

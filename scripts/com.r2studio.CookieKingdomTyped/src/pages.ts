@@ -377,17 +377,13 @@ export const rfpageInTrainStation = new Page(
   ],
   { x: 617, y: 13 }
 );
-export const rfpageTrainNotEnoughGoods = new Page(
-  'rfpageTrainNotEnoughGoods',
-  [
-    { x: 477, y: 28, r: 55, g: 163, b: 229 },
-    { x: 221, y: 40, r: 60, g: 70, b: 105 },
-    { x: 222, y: 100, r: 243, g: 233, b: 223 },
-    { x: 211, y: 300, r: 219, g: 207, b: 199 },
-    { x: 357, y: 300, r: 121, g: 207, b: 12 },
-  ],
-  { x: 477, y: 28 }
-);
+export const rfpageTrainNotEnoughGoods = new Page('rfpageTrainNotEnoughGoods', [
+  { x: 160, y: 51, r: 60, g: 70, b: 105 },
+  { x: 486, y: 153, r: 52, g: 158, b: 228 },
+  { x: 30, y: 35, r: 88, g: 24, b: 29 },
+  { x: 10, y: 44, r: 66, g: 37, b: 25 },
+  { x: 6, y: 72, r: 86, g: 96, b: 78 },
+]);
 
 export const rfpageInWishingTree = new Page('rfpageInWishingTree', [
   { x: 157, y: 29, r: 107, g: 56, b: 82 },
@@ -1159,7 +1155,7 @@ export const rfpageDragonRemainHealth = new Page(
   ],
   { x: 572, y: 330 }
 );
-export const rfpageCookieAlliance = new Page('rfpageCookieAlliance', [
+export const rfpageInCookieAlliance = new Page('rfpageInCookieAlliance', [
   { x: 602, y: 323, r: 121, g: 207, b: 12 },
   { x: 552, y: 336, r: 121, g: 207, b: 12 },
   { x: 487, y: 329, r: 247, g: 217, b: 50 },
