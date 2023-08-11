@@ -989,7 +989,7 @@ export function collectProductItemInfo(
   };
 }
 
-export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safetyStock: number, axeStockTo400: boolean) {
+export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safetyStock: number, axeStockTo400: boolean): number {
   const goodsLocation: { [key: number | string]: RECT } = {
     1: { x: 431, y: 101, w: 22, h: 12 },
     2: { x: 431, y: 209, w: 22, h: 12 },
@@ -1018,11 +1018,10 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
     goodsOneStock = ocrNumberInRect(goodsLocation[1], ICONS.bNumbers);
     if (goodsOneStock === -1) {
       console.log('OCR count failed twice, skip this round');
-      return;
+      return -1;
     }
   }
 
-  console.log('about to let productionState');
   let productionState: { [key: number]: productState } = {
     1: collectProductItemInfo(
       1,
@@ -1055,12 +1054,11 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
   logs('makeGoodsToTarget', `> ${productionName} has ${availableSlots} available slots, productionState: ${JSON.stringify(productionState)}`);
 
   if (productionName !== 'otherGoodShop') {
-    console.log('Special handle building:', productionName);
+    logs('makeGoodsToTarget', `Special handle building: ${productionName}`);
+
     swipeDownOneItem(rerouter);
 
-    console.log('11:');
     if (rerouter.isPageMatch(PAGES.productMapping[4])) {
-      console.log('22:');
       productionState[4] = collectProductItemInfo(
         4,
         goodsLocation['shovel'],
@@ -1069,7 +1067,6 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
         goodsTarget,
         safetyStock
       );
-      console.log('33:');
     }
   }
 
@@ -1081,7 +1078,6 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
     if (!rerouter.isPageMatch(PAGES.productMapping[i])) {
       break;
     }
-    console.log('55:', i);
     productionState[i] = collectProductItemInfo(
       i,
       goodsLocation[i],
@@ -1090,7 +1086,6 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
       goodsTarget,
       safetyStock
     );
-    console.log('66:');
   }
   logs('makeGoodsToTarget', `> ${productionName} has ${availableSlots} available slots, productionState: ${JSON.stringify(productionState)}`);
 
@@ -1153,8 +1148,8 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
     }
 
     if (item['notEnoughStock']) {
-      logs('makeGoodsToTarget', `panic as found notEnoughStock `);
-      ii++;
+      logs('makeGoodsToTarget', `should panic as found notEnoughStock `);
+      // ii++;
     }
 
     if (!item['canProduce']) {
@@ -1162,7 +1157,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
       continue;
     }
 
-    console.log('adding item', item['id'], 'from ' + item['stock'] + ' to > ', item['productionTarget'], JSON.stringify(item));
+    logs('makeGoodsToTarget', `adding item ${item['id']} from ${item['stock']} to ${item['productionTarget']}, ${JSON.stringify(item)}`);
 
     switch (item['id']) {
       case 1:
@@ -1202,8 +1197,8 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
         break;
       }
       if (latestCount === 0) {
-        console.log('No more slots, stop at: ', item['id']);
-        return itemsToProduce;
+        logs('makeGoodsToTarget', `No more slots, stop at: ${item['id']}`);
+        return latestCount;
       }
 
       sleep(1000);
@@ -1212,7 +1207,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
     // Add check if there are no worker cookie
   }
 
-  return itemsToProduce;
+  return countProductionSlotAvailable(rerouter);
 }
 
 export function swipeDirection(rerouter: Rerouter, direction: XY, targetPage: Page | null, swippingPage: Page) {
@@ -1363,7 +1358,7 @@ export function searchForCandyHouse(rerouter: Rerouter): boolean {
     i++;
   }
 
-  console.log('Finish search for upgradable candy house');
+  logs('searchForCandyHouse', `Finish searching for upgradable candy house`);
   return false;
 }
 

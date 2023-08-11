@@ -288,6 +288,12 @@ export class CookieKingdom {
   }
 
   public addTasks() {
+    this.rerouter.addTask({
+      name: TASKS.production,
+      maxTaskDuring: 5 * CONSTANTS.minuteInMs,
+      forceStop: true,
+    });
+
     // this.rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
     //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
@@ -495,7 +501,7 @@ export class CookieKingdom {
 
     this.rerouter.addTask({
       name: TASKS.findAndTapCandy,
-      maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+      maxTaskDuring: 7 * CONSTANTS.minuteInMs,
       minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
       forceStop: true,
     });
@@ -2436,7 +2442,7 @@ export class CookieKingdom {
         this.config.buildTowardsTheLeft = !this.config.buildTowardsTheLeft;
         this.taskStatus[TASKS.production].productionBuildingChecked = 0;
         logs(context.task.name, `reverse buildTowardsTheLeft, it is now ${this.config.buildTowardsTheLeft}`);
-        sleep(this.config.sleepAnimate);
+        sleep(this.config.sleepAnimate * 2);
       },
     });
     this.rerouter.addRoute({
@@ -2468,7 +2474,12 @@ export class CookieKingdom {
 
         if (materialCount == -1) {
           logs(context.task.name, 'This is not a material production');
-          makeGoodsToTarget(rerouter, this.config.goodsTarget, this.config.productSafetyStock, this.config.axeStockTo400);
+
+          let newSlots = makeGoodsToTarget(rerouter, this.config.goodsTarget, this.config.productSafetyStock, this.config.axeStockTo400);
+          if (newSlots !== -1 && newSlots !== emptySlots) {
+            logs(context.task.name, `emptySlots count changed after makeGoodsToTarget (${emptySlots} => ${newSlots}), send running`);
+            sendEventRunning(this.botStatus);
+          }
         } else if (materialCount >= this.config.materialsTarget) {
           logs(context.task.name, `Skip as stock enough: ${materialCount}`);
         } else {
@@ -2977,7 +2988,6 @@ export class CookieKingdom {
 
             // 要去頭以前先原地掃一次
             if (searchHouseState.needGotoHead) {
-              console.log(123);
               if (searchForCandyHouse(this.rerouter)) {
                 logs(context.task.name, 'Found rfpageInCandyHouse, return and let rfpageInCandyHouse handle it');
                 return;
@@ -3034,6 +3044,9 @@ export class CookieKingdom {
           return;
         }
 
+        sendEventRunning(this.botStatus);
+        logs(context.task.name, `rfpageInCandyHouse, send running`);
+
         const rfpageCanUpgradeCandyMansion = new Page('rfpageCanUpgradeCandyMansion', [{ x: 303, y: 289, r: 123, g: 207, b: 8 }], { x: 303, y: 289 });
         const rfpageCanUpgradeCandyHouse = new Page('rfpageCanUpgradeCandyHouse', [{ x: 243, y: 287, r: 151, g: 218, b: 55 }], { x: 243, y: 287 });
         const groupPageCanUpgradeCandy = new GroupPage('groupPageCanUpgradeCandy', [rfpageCanUpgradeCandyHouse, rfpageCanUpgradeCandyMansion]);
@@ -3087,7 +3100,6 @@ export class CookieKingdom {
 
             finishRound(true);
             sendKeyBack();
-            sendEventRunning(this.botStatus);
             return;
           }
         } else {
