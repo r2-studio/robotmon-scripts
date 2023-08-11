@@ -2270,9 +2270,14 @@ export class CookieKingdom {
           return;
         }
 
-        logs(context.task.name, `rfpageStartedFightingSoCannotStartBeacon, stop trying to ignite beacon`);
-        this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon = false;
-        this.rerouter.goNext(PAGES.rfpageStartedFightingSoCannotStartBeacon);
+        this.rerouter.screen.tap({ x: 372, y: 287 });
+        Utils.sleep(2000);
+
+        if (this.rerouter.isPageMatch(PAGES.rfpageStartedFightingSoCannotStartBeacon)) {
+          logs(context.task.name, `rfpageStartedFightingSoCannotStartBeacon, stop trying to ignite beacon`);
+          this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon = false;
+          this.rerouter.goNext(PAGES.rfpageStartedFightingSoCannotStartBeacon);
+        }
       },
     });
     this.rerouter.addRoute({

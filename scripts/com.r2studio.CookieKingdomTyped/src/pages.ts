@@ -927,6 +927,19 @@ export const rfpageKingdomDecorating = new Page(
   ],
   { x: 619, y: 12 }
 );
+export const rfpageGuildDecorShop = new Page(
+  'rfpageGuildDecorShop',
+  [
+    { x: 30, y: 25, r: 162, g: 101, b: 59 },
+    { x: 93, y: 22, r: 255, g: 255, b: 255 },
+    { x: 5, y: 50, r: 170, g: 163, b: 194 },
+    { x: 10, y: 68, r: 243, g: 245, b: 255 },
+    { x: 71, y: 339, r: 135, g: 124, b: 160 },
+    { x: 554, y: 338, r: 74, g: 63, b: 87 },
+    { x: 553, y: 329, r: 78, g: 62, b: 98 },
+  ],
+  { x: 619, y: 12 }
+);
 export const rfpageKingdomDecoratingExpand = new Page(
   'rfpageKingdomDecoratingExpand',
   [
@@ -1100,10 +1113,11 @@ export const rfPageGuildBeaconIsClear = new Page(
 export const rfpageBattleDragon = new Page(
   'rfpageBattleDragon',
   [
-    { x: 317, y: 18, r: 0, g: 36, b: 132 },
-    { x: 224, y: 19, r: 165, g: 245, b: 246 },
     { x: 409, y: 20, r: 255, g: 204, b: 0 },
     { x: 524, y: 20, r: 0, g: 139, b: 255 },
+    { x: 317, y: 22, r: 218, g: 227, b: 240 },
+    { x: 223, y: 29, r: 192, g: 201, b: 237 },
+    { x: 37, y: 103, r: 171, g: 153, b: 220 },
   ],
   { x: 600, y: 25 }
 );
@@ -1117,9 +1131,10 @@ export const rfpageReadyToFightDragon = new Page(
   'rfpageReadyToFightDragon',
   [
     { x: 493, y: 325, r: 134, g: 233, b: 253 },
-    { x: 316, y: 19, r: 68, g: 83, b: 231 },
     { x: 108, y: 335, r: 123, g: 207, b: 8 },
-    { x: 73, y: 333, r: 0, g: 150, b: 214 },
+    { x: 323, y: 12, r: 233, g: 156, b: 244 },
+    { x: 41, y: 195, r: 251, g: 226, b: 237 },
+    { x: 610, y: 194, r: 12, g: 167, b: 223 },
   ],
   { x: 493, y: 325 }
 );
@@ -1139,10 +1154,13 @@ export const rfpageDragonRemainHealth = new Page(
   { x: 572, y: 330 }
 );
 export const rfpageCookieAlliance = new Page('rfpageCookieAlliance', [
-  { x: 333, y: 21, r: 255, g: 255, b: 255 },
-  { x: 329, y: 25, r: 66, g: 69, b: 222 },
-  { x: 73, y: 332, r: 0, g: 150, b: 214 },
-  { x: 29, y: 141, r: 151, g: 75, b: 13 },
+  { x: 516, y: 327, r: 179, g: 169, b: 222 },
+  { x: 552, y: 336, r: 121, g: 207, b: 12 },
+  { x: 487, y: 329, r: 247, g: 217, b: 50 },
+  { x: 334, y: 22, r: 176, g: 166, b: 222 },
+  { x: 37, y: 143, r: 183, g: 101, b: 26 },
+  { x: 27, y: 202, r: 251, g: 207, b: 160 },
+  { x: 73, y: 339, r: 12, g: 167, b: 223 },
 ]);
 export const rfpageNoAllianceTicket = new Page('rfpageNoAllianceTicket', [
   { x: 244, y: 252, r: 49, g: 190, b: 231 },
