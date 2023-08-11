@@ -2938,7 +2938,7 @@ export class CookieKingdom {
           case TASKS.production:
             if (this.rerouter.isPageMatchImage(PAGES.rfpageHasDashboard, image)) {
               this.rerouter.screen.tap({ x: 38, y: 221 }); // Tap production dashboard
-              Utils.sleep(this.config.sleepAnimate);
+              Utils.sleep(this.config.sleepAnimate * 2);
             }
             // TODO: no dashboard cannot go
             break;

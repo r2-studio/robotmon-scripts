@@ -1290,6 +1290,23 @@ export const rfpageInTropicalIsland = new Page('rfpageInTropicalIsland', [
   { x: 49, y: 323, r: 239, g: 77, b: 140 },
   { x: 62, y: 341, r: 44, g: 81, b: 118 },
 ]);
+export const rfpageNotSelectTeamLeader = new Page(
+  'rfpageNotSelectTeamLeader',
+  [
+    { x: 318, y: 49, r: 255, g: 212, b: 0 },
+    { x: 306, y: 64, r: 255, g: 209, b: 0 },
+    { x: 329, y: 63, r: 239, g: 165, b: 4 },
+    { x: 306, y: 85, r: 223, g: 145, b: 69 },
+    { x: 327, y: 85, r: 223, g: 144, b: 70 },
+    { x: 344, y: 86, r: 36, g: 46, b: 64 },
+    { x: 370, y: 86, r: 60, g: 70, b: 105 },
+    { x: 407, y: 234, r: 219, g: 207, b: 199 },
+    { x: 403, y: 274, r: 121, g: 207, b: 12 },
+    { x: 294, y: 273, r: 12, g: 167, b: 223 },
+  ],
+  { x: 369, y: 275 }
+);
+
 export const rfpageReadyToClearRedSword = new Page(
   'rfpageReadyToClearRedSword',
   [
