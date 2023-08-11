@@ -830,6 +830,17 @@ export const rfpageConfirmBuyEpicSoulEssence = new Page(
   ],
   { x: 312, y: 253 }
 );
+export const rfpageShellShopNotEnoughShell = new Page('rfpageShellShopNotEnoughShell', [
+  { x: 351, y: 243, r: 121, g: 207, b: 12 },
+  { x: 320, y: 180, r: 246, g: 200, b: 229 },
+  { x: 327, y: 194, r: 248, g: 180, b: 243 },
+  { x: 337, y: 183, r: 207, g: 193, b: 182 },
+  { x: 342, y: 158, r: 52, g: 158, b: 228 },
+  { x: 318, y: 107, r: 60, g: 70, b: 105 },
+  { x: 271, y: 32, r: 102, g: 103, b: 95 },
+  { x: 257, y: 14, r: 113, g: 98, b: 76 },
+  { x: 38, y: 7, r: 109, g: 78, b: 94 },
+]);
 
 export const pageAllianceReward = [
   { x: 397, y: 243, r: 189, g: 150, b: 82 },

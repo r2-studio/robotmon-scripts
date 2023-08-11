@@ -862,8 +862,9 @@ export function collectFinishedGoods(rerouter: Rerouter) {
     rerouter.screen.tap({ x: 51, y: 66 });
 
     if (rerouter.waitScreenForMatchingPage(new GroupPage('groupPageCancel', [rfpageCancelProduction, rfpageCancelMultipleProduction]), 2000)) {
+      logs('collectFinishedGoods', 'Found ask to cancel dialog in production, close it and wait 2secs for rfpageInProduction');
       rerouter.goNext(rfpageCancelProduction);
-      logs('collectFinishedGoods', 'Found ask to cancel dialog in production, close it');
+      rerouter.waitScreenForMatchingPage(PAGES.rfpageInProduction, 2000);
     }
   }
 }
@@ -908,6 +909,7 @@ export function countProductionSlotAvailable(rerouter: Rerouter) {
     new Page('fourthSlot', [
       { x: 50, y: 219, r: 146, g: 88, b: 52 },
       { x: 50, y: 218, r: 146, g: 88, b: 52 },
+      { x: 48, y: 229, r: 144, g: 88, b: 52 },
       { x: 42, y: 236, r: 173, g: 105, b: 66 },
     ]),
     new Page('fifthSlot', [

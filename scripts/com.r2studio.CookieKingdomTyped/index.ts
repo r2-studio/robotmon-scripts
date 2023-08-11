@@ -301,6 +301,7 @@ export class CookieKingdom {
     this.rerouter.addTask({
       name: TASKS.production,
       maxTaskDuring: 5 * CONSTANTS.minuteInMs,
+      minRoundInterval: 360 * CONSTANTS.minuteInMs,
       forceStop: true,
     });
 
@@ -480,7 +481,7 @@ export class CookieKingdom {
     if (this.config.autoHandleTowerOfSweetChaos) {
       this.rerouter.addTask({
         name: TASKS.towerOfSweetChaos,
-        maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 7 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
         forceStop: true,
       });
@@ -2832,6 +2833,15 @@ export class CookieKingdom {
       path: `/${PAGES.rfpageGeneralMessageWindow.name}`,
       match: PAGES.rfpageGeneralMessageWindow,
       action: (context, image, matched, finishRound) => {
+        // Some popups are classified as message windows (but can be resolved as page)
+        if (this.rerouter.isPageMatchImage(PAGES.rfpageShellShopNotEnoughShell, image)) {
+          sendKeyBack();
+          Utils.sleep(this.config.sleepAnimate);
+          sendKeyBack();
+          Utils.sleep(this.config.sleepAnimate);
+          return;
+        }
+
         if (checkScreenMessage(this.rerouter, MessageWindow.theNetworkIsUnstableMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm theNetworkIsUnstableMessageScreen, tap OK');
           this.rerouter.screen.tap({ x: 316, y: 250 });
