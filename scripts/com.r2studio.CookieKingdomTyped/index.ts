@@ -677,6 +677,13 @@ export class CookieKingdom {
           sendEvent('gameStatus', 'login-succeeded');
           this.config.needToSendLoginSuccess = false;
         }
+        if (this.config.needToSendPlaying) {
+          Utils.sleep(3000);
+          logs(context.task.name, 'have not send needToSendPlaying, send it');
+          sendEvent('gameStatus', 'login-succeeded');
+          this.config.needToSendPlaying = false;
+        }
+
         this.rerouter.goNext(PAGES.rfpageAnnouncement);
       },
     });

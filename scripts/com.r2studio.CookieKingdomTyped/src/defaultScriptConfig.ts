@@ -106,6 +106,7 @@ export const defaultConfig = {
   tryRestartGameCount: 0,
   tryRestartGameLimit: 5,
   needToSendLoginSuccess: true,
+  needToSendPlaying: true,
 
   stock_axe: 60,
   stock_pickaxe: 60,
