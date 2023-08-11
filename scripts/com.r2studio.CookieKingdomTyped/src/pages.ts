@@ -426,8 +426,9 @@ export const rfpageInPVPArena = new Page('rfpageInPVPArena', [
   { x: 448, y: 22, r: 120, g: 38, b: 30 },
   { x: 356, y: 20, r: 239, g: 174, b: 20 },
   { x: 180, y: 119, r: 221, g: 128, b: 0 },
-  { x: 129, y: 340, r: 255, g: 217, b: 1 },
-  { x: 126, y: 342, r: 184, g: 234, b: 234 },
+  { x: 22, y: 112, r: 232, g: 198, b: 132 },
+  { x: 33, y: 115, r: 238, g: 190, b: 120 },
+  { x: 24, y: 74, r: 255, g: 226, b: 0 },
 ]);
 export const rfpageInPVPMedalShop = new Page('rfpageInPVPMedalShop', [
   { x: 520, y: 23, r: 0, g: 179, b: 255 },
@@ -985,7 +986,7 @@ export const rfpageInTowerOfSweetChaos = new Page(
     { x: 611, y: 21, r: 57, g: 166, b: 231 },
     { x: 497, y: 17, r: 255, g: 207, b: 0 },
     { x: 407, y: 15, r: 0, g: 195, b: 255 },
-    { x: 337, y: 9, r: 251, g: 213, b: 216 },
+    { x: 340, y: 18, r: 253, g: 63, b: 115 },
     { x: 19, y: 59, r: 255, g: 255, b: 255 },
   ],
   { x: 611, y: 21 }
@@ -1331,11 +1332,14 @@ export const rfpageEmptySunbedsListInMiddle = new Page(
 );
 
 export const rfpageInBounties = new Page('rfpageInBounties', [
-  { x: 616, y: 341, r: 49, g: 77, b: 107 },
-  { x: 634, y: 337, r: 54, g: 32, b: 22 },
-  { x: 479, y: 19, r: 40, g: 32, b: 23 },
-  { x: 456, y: 26, r: 70, g: 50, b: 37 },
-  { x: 416, y: 5, r: 122, g: 84, b: 95 },
+  { x: 591, y: 11, r: 41, g: 16, b: 21 },
+  { x: 205, y: 5, r: 126, g: 84, b: 98 },
+  { x: 19, y: 21, r: 222, g: 222, b: 222 },
+  { x: 81, y: 24, r: 250, g: 250, b: 250 },
+  { x: 165, y: 20, r: 92, g: 70, b: 57 },
+  { x: 561, y: 336, r: 47, g: 76, b: 109 },
+  { x: 515, y: 340, r: 70, g: 48, b: 35 },
+  { x: 8, y: 276, r: 217, g: 211, b: 108 },
 ]);
 export const rfpageInOneOfTheBounties = new Page('rfpageInOneOfTheBounty', [
   { x: 533, y: 327, r: 121, g: 207, b: 12 },

@@ -10,7 +10,6 @@ import {
   AdvanturesBountiesAt3rd,
   getCEs,
   checkScreenMessage,
-  AdvanturesBountiesAt2nd,
   getMayhemScores,
   findSpecificIconInScreen,
   dynamicSort,
@@ -36,7 +35,7 @@ import {
   checkIfInBattle,
   collectFinishedGoods,
   checkLoginFailedMaxReached,
-  checkIfMatchPage,
+  findUnmatchInPage,
 } from './src/helper';
 import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
 
@@ -94,7 +93,7 @@ export class CookieKingdom {
     this.initTaskStatus();
 
     console.log('>', this.rerouter.getCurrentMatchNames());
-    // console.log('>>', checkIfMatchPage(this.rerouter, PAGES.rfpageToSCConfirmTrayJump));
+    // console.log('>>', findUnmatchInPage(this.rerouter, PAGES.rfpageInPVPArena));
     // return;
 
     this.rerouter.start(this.packageName);
@@ -117,9 +116,14 @@ export class CookieKingdom {
         ICONS.numberImagesProdutRequirements[idx].releaseImage();
       }
     }
-    for (let idx in ICONS.numberImagesPVP) {
-      if (ICONS.numberImagesPVP[idx].image !== undefined) {
-        ICONS.numberImagesPVP[idx].releaseImage();
+    for (let idx in ICONS.numberImagesPvP) {
+      if (ICONS.numberImagesPvP[idx].image !== undefined) {
+        ICONS.numberImagesPvP[idx].releaseImage();
+      }
+    }
+    for (let idx in ICONS.numberImagesSuperMayhem) {
+      if (ICONS.numberImagesSuperMayhem[idx].image !== undefined) {
+        ICONS.numberImagesSuperMayhem[idx].releaseImage();
       }
     }
     for (let idx in ICONS.numberImagesWishingTree) {
@@ -144,9 +148,14 @@ export class CookieKingdom {
         ICONS.numberImagesProdutRequirements[idx].loadImage();
       }
     }
-    for (let idx in ICONS.numberImagesPVP) {
-      if (ICONS.numberImagesPVP[idx].image === undefined) {
-        ICONS.numberImagesPVP[idx].loadImage();
+    for (let idx in ICONS.numberImagesPvP) {
+      if (ICONS.numberImagesPvP[idx].image === undefined) {
+        ICONS.numberImagesPvP[idx].loadImage();
+      }
+    }
+    for (let idx in ICONS.numberImagesSuperMayhem) {
+      if (ICONS.numberImagesSuperMayhem[idx].image === undefined) {
+        ICONS.numberImagesSuperMayhem[idx].loadImage();
       }
     }
     for (let idx in ICONS.numberImagesWishingTree) {
@@ -279,25 +288,6 @@ export class CookieKingdom {
   }
 
   public addTasks() {
-    this.rerouter.addTask({
-      name: TASKS.pvp,
-      maxTaskRunTimes: 1,
-      maxTaskDuring: 5 * CONSTANTS.minuteInMs,
-      forceStop: true,
-      beforeRoute: () => {
-        this.taskStatus[TASKS.pvp] = {
-          battled: {
-            0: false,
-            1: false,
-            2: false,
-            3: false,
-            4: false,
-          },
-        };
-      },
-    });
-    return;
-
     // this.rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
     //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
@@ -378,16 +368,27 @@ export class CookieKingdom {
     if (this.config.autoPvPIntervalInMins > 0) {
       this.rerouter.addTask({
         name: TASKS.pvp,
-        maxTaskDuring: 12 * CONSTANTS.minuteInMs,
-        minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
+        maxTaskRunTimes: 1,
+        maxTaskDuring: 9 * CONSTANTS.minuteInMs,
         forceStop: true,
+        beforeRoute: () => {
+          this.taskStatus[TASKS.pvp] = {
+            battled: {
+              0: false,
+              1: false,
+              2: false,
+              3: false,
+              4: false,
+            },
+          };
+        },
       });
     }
     // TODO: no super mayhem for now
     // if (this.config.autoSuperMayhemIntervalInMins > 0) {
     //   this.rerouter.addTask({
     //     name: TASKS.superMayhem,
-    //     maxTaskDuring: 15 * CONSTANTS.minuteInMs,
+    //     maxTaskDuring: 9 * CONSTANTS.minuteInMs,
     //     minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
     //     forceStop: true,
     //   });
@@ -463,7 +464,7 @@ export class CookieKingdom {
     if (this.config.autoHandleTowerOfSweetChaos) {
       this.rerouter.addTask({
         name: TASKS.towerOfSweetChaos,
-        maxTaskDuring: 15 * CONSTANTS.minuteInMs,
+        maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
         forceStop: true,
       });
@@ -1108,45 +1109,36 @@ export class CookieKingdom {
 
         logs(context.task.name, `in rfpageInPVPArena`);
 
+        const tartgetXY: {
+          [key: number]: XY;
+        } = {
+          0: { x: 288, y: 176 },
+          1: { x: 418, y: 176 },
+          2: { x: 548, y: 176 },
+          3: { x: 430, y: 176 },
+          4: { x: 560, y: 176 },
+        };
+
         switch (context.task.name) {
           case TASKS.pvp:
             for (let i in this.taskStatus[TASKS.pvp].battled) {
-              // if (!)
-            }
-
-            const battleY = [100, 150, 215, 275];
-            // const battleX = {
-            //   0: {x:270, y:, w:. h:},
-            //   1: {x:400, y:, w:. h:},
-            //   2: {x:528, y:, w:. h:},
-            //   3: {x:410, y:, w:. h:},
-            //   4: {x:542, y:, w:. h:},
-            // };
-
-            // ii++
-
-            var ces = getCEs();
-            for (let i = 0; i < ces.length; i++) {
-              var ce = ces[i];
-              if (ce < this.config.autoPvPTargetScoreLimit && ce !== 0) {
-                if (!this.rerouter.screen.isSameColor({ x: 590, y: battleY[i], r: 121, g: 207, b: 16 })) {
-                  logs(context.task.name, `Already Battled with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
-                  continue;
+              logs(context.task.name, `rfpageInPVPArena, checking ${i} so tap ${JSON.stringify(tartgetXY[i])} and ${this.taskStatus[TASKS.pvp].battled[i]}`);
+              if (!this.taskStatus[TASKS.pvp].battled[i]) {
+                if (i > 2) {
+                  swipeFromToPoint(this.rerouter, { x: 600, y: 182 }, { x: 0, y: 182 }, 6);
                 }
-
-                logs(context.task.name, `Battle with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
-                this.rerouter.screen.tap({ x: 590, y: battleY[i] }); // tap Battle
-                if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpagePVPArenaReadyToBattlePage, 2000)) {
-                  return;
-                }
-              } else {
-                logs(context.task.name, `Not to battle with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
+                this.rerouter.screen.tap(tartgetXY[i]);
+                this.taskStatus[TASKS.pvp].battled[i] = true;
+                Utils.sleep(this.config.sleepAnimate);
+                return;
               }
             }
 
             if (this.rerouter.isPageMatch(PAGES.rfpageBattleTargetCanRefresh)) {
               logs(context.task.name, `Tap PVP refresh`);
               this.rerouter.screen.tap({ x: 532, y: 329 });
+              Utils.sleep(this.config.sleepAnimate);
+              return;
             } else {
               logs(context.task.name, `Cannot tap PVP refresh, job done`);
               sendEventRunning(this.botStatus);
@@ -1154,7 +1146,6 @@ export class CookieKingdom {
               return;
             }
 
-            break;
           case TASKS.pvpPurchaseAncientCookie:
             this.rerouter.screen.tap({ x: 178, y: 118 });
             break;
@@ -1190,7 +1181,18 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `in rfpagePVPArenaReadyToBattlePage, tap it`);
-        this.rerouter.goNext(PAGES.rfpagePVPArenaReadyToBattlePage);
+
+        var ce = getCEs({ x: 496, y: 72, w: 70, h: 16 });
+        if (ce < this.config.autoPvPTargetScoreLimit && ce !== 0) {
+          logs(context.task.name, `Battle with ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
+          this.rerouter.goNext(PAGES.rfpagePVPArenaReadyToBattlePage); // tap Battle
+          if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpagePVPArenaReadyToBattlePage, 2000)) {
+            return;
+          }
+        } else {
+          logs(context.task.name, `Not to battle with ce ${ce}, target exceed limit: ${this.config.autoPvPTargetScoreLimit}`);
+          sendKeyBack();
+        }
       },
     });
     this.rerouter.addRoute({
@@ -2590,9 +2592,9 @@ export class CookieKingdom {
         }
 
         let advantureSetting = AdvanturesBountiesAt3rd;
-        if (this.rerouter.isPageMatchImage(PAGES.rfpageBountiesAt2ndSlot, image)) {
-          advantureSetting = AdvanturesBountiesAt2nd;
-        }
+        // if (this.rerouter.isPageMatchImage(PAGES.rfpageBountiesAt2ndSlot, image)) {
+        //   advantureSetting = AdvanturesBountiesAt2nd;
+        // }
 
         if (advantureSetting[context.task.name] === undefined) {
           logs(context.task.name, `rfpageSelectAdvanture but this task does not need advanture, send back`);
@@ -2706,6 +2708,7 @@ export class CookieKingdom {
             }
 
             this.rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name.substring(0, 3)].pnt);
+            Utils.sleep(this.config.sleepAnimate);
             return;
           case TASKS.tropicalIslandShip:
           case TASKS.tropicalIslandSunbed:

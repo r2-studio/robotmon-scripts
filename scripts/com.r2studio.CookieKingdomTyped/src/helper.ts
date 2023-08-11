@@ -7,7 +7,7 @@ import { logs, padZero, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 import { CookieKingdom } from '..';
 
-export function checkIfMatchPage(rerouter: Rerouter, page: Page) {
+export function findUnmatchInPage(rerouter: Rerouter, page: Page) {
   let img = getScreenshot();
 
   for (var i in page.points) {
@@ -354,17 +354,18 @@ export function GenAdvanture(pnt: XY, fromHead: boolean, backward: boolean) {
 }
 
 // When there are NO timed event
-export const AdvanturesBountiesAt2nd: { [key: string]: Advanture } = {
-  pvp: GenAdvanture({ x: 123, y: 230 }, true, false),
-  towerOfSweetChaos: GenAdvanture({ x: 214, y: 230 }, true, false),
-  tropicalIsland: GenAdvanture({ x: 300, y: 230 }, true, false),
-  cookieAlliance: GenAdvanture({ x: 392, y: 230 }, true, false),
+// export const AdvanturesBountiesAt2nd: { [key: string]: Advanture } = {
+//   pvp: GenAdvanture({ x: 123, y: 230 }, true, false),
+//   towerOfSweetChaos: GenAdvanture({ x: 214, y: 230 }, true, false),
+//   tropicalIsland: GenAdvanture({ x: 300, y: 230 }, true, false),
+//   cookieAlliance: GenAdvanture({ x: 392, y: 230 }, true, false),
 
-  superMayhem: GenAdvanture({ x: 500, y: 150 }, false, false),
-  bounties: GenAdvanture({ x: 300, y: 100 }, false, false),
-  guild: GenAdvanture({ x: 10, y: 100 }, false, true),
-};
+//   superMayhem: GenAdvanture({ x: 500, y: 150 }, false, false),
+//   bounties: GenAdvanture({ x: 300, y: 100 }, false, false),
+//   guild: GenAdvanture({ x: 10, y: 100 }, false, true),
+// };
 
+// CRK released Aug 9, 2023
 export const AdvanturesBountiesAt3rd: { [key: string]: Advanture } = {
   pvp: GenAdvanture({ x: 123, y: 230 }, true, false),
   towerOfSweetChaos: GenAdvanture({ x: 214, y: 230 }, true, false),
@@ -376,35 +377,26 @@ export const AdvanturesBountiesAt3rd: { [key: string]: Advanture } = {
   guild: GenAdvanture({ x: 320, y: 100 }, false, true),
 };
 
-export const AdvanturesBountiesAt4th: { [key: string]: Advanture } = {
-  pvp: GenAdvanture({ x: 123, y: 230 }, true, false),
-  towerOfSweetChaos: GenAdvanture({ x: 214, y: 230 }, true, false),
-  tropicalIsland: GenAdvanture({ x: 300, y: 230 }, true, false),
-  cookieAlliance: GenAdvanture({ x: 392, y: 230 }, true, false),
+// export const AdvanturesBountiesAt4th: { [key: string]: Advanture } = {
+//   pvp: GenAdvanture({ x: 123, y: 230 }, true, false),
+//   towerOfSweetChaos: GenAdvanture({ x: 214, y: 230 }, true, false),
+//   tropicalIsland: GenAdvanture({ x: 300, y: 230 }, true, false),
+//   cookieAlliance: GenAdvanture({ x: 392, y: 230 }, true, false),
 
-  superMayhem: GenAdvanture({ x: 500, y: 150 }, false, false),
-  bounties: GenAdvanture({ x: 100, y: 100 }, false, true),
-  guild: GenAdvanture({ x: 320, y: 100 }, false, true),
-};
+//   superMayhem: GenAdvanture({ x: 500, y: 150 }, false, false),
+//   bounties: GenAdvanture({ x: 100, y: 100 }, false, true),
+//   guild: GenAdvanture({ x: 320, y: 100 }, false, true),
+// };
 
-export function getCEs(): number[] {
+export function getCEs(rect: RECT): number {
   var img = getScreenshot();
-  var croppedImage1 = cropImage(img, 430, 88, 46, 10);
-  var croppedImage2 = cropImage(img, 430, 148, 46, 10);
-  var croppedImage3 = cropImage(img, 430, 208, 46, 10);
-  var croppedImage4 = cropImage(img, 430, 266, 46, 12);
+  var croppedImage1 = cropImage(img, rect.x, rect.y, rect.w, rect.h);
 
-  var value1 = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage1, 7, 0.75, 0.7) || 0;
-  var value2 = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage2, 7, 0.75, 0.7) || 0;
-  var value3 = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage3, 7, 0.75, 0.7) || 0;
-  var value4 = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage4, 7, 0.75, 0.7) || 0;
+  var value1 = +recognizeWishingTreeRequirements(ICONS.numberImagesPvP, croppedImage1, 7, 0.75, 0.7) || 0;
 
   releaseImage(croppedImage1);
-  releaseImage(croppedImage2);
-  releaseImage(croppedImage3);
-  releaseImage(croppedImage4);
   releaseImage(img);
-  return [value1, value2, value3, value4];
+  return value1;
 }
 
 export function getMayhemScores() {
@@ -431,7 +423,7 @@ export function getMayhemScores() {
     for (var teamIdx = 0; teamIdx < imagesLocation[mayhemIdx].length; teamIdx++) {
       var tImage = imagesLocation[mayhemIdx][teamIdx];
       var croppedImage = cropImage(img, tImage.x, tImage.y, tImage.w, tImage.h);
-      var value = +recognizeWishingTreeRequirements(ICONS.numberImagesPVP, croppedImage, 7, 0.7, 0.7) || 0;
+      var value = +recognizeWishingTreeRequirements(ICONS.numberImagesSuperMayhem, croppedImage, 7, 0.7, 0.7) || 0;
       releaseImage(croppedImage);
 
       if (value > scores[mayhemIdx]) {
