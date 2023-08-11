@@ -1156,7 +1156,7 @@ export const rfpageDragonRemainHealth = new Page(
   { x: 572, y: 330 }
 );
 export const rfpageCookieAlliance = new Page('rfpageCookieAlliance', [
-  { x: 516, y: 327, r: 179, g: 169, b: 222 },
+  { x: 602, y: 323, r: 121, g: 207, b: 12 },
   { x: 552, y: 336, r: 121, g: 207, b: 12 },
   { x: 487, y: 329, r: 247, g: 217, b: 50 },
   { x: 334, y: 22, r: 176, g: 166, b: 222 },
@@ -1185,15 +1185,11 @@ export const rfpageAllianceSteupTeam = new Page('rfpageAllianceSteupTeam', [
   { x: 610, y: 168, r: 0, g: 150, b: 214 },
   { x: 507, y: 129, r: 134, g: 17, b: 158 },
 ]);
-export const rfpageAllianceBeaconIsOff = new Page(
-  'rfpageAllianceBeaconIsOff',
-  [
-    { x: 215, y: 198, r: 94, g: 102, b: 153 },
-    { x: 202, y: 201, r: 209, g: 226, b: 248 },
-    { x: 209, y: 198, r: 99, g: 109, b: 156 },
-  ],
-  { x: 215, y: 198 }
-);
+export const rfpageAllianceBeaconIsOff = new Page('rfpageAllianceBeaconIsOff', [
+  { x: 215, y: 198, r: 94, g: 102, b: 153 },
+  { x: 202, y: 201, r: 209, g: 226, b: 248 },
+  { x: 209, y: 198, r: 99, g: 109, b: 156 },
+]);
 export const rfpageBeaconOfValor = new Page(
   'rfpageBeaconOfValor',
   [

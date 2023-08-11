@@ -2322,7 +2322,7 @@ export class CookieKingdom {
         logs(context.task.name, `start guild alliance battle`);
 
         if (this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon && this.rerouter.isPageMatchImage(PAGES.rfpageAllianceBeaconIsOff, image)) {
-          this.rerouter.goNext(PAGES.rfpageAllianceBeaconIsOff);
+          this.rerouter.screen.tap({ x: 215, y: 198 });
           return;
         }
 
@@ -3164,6 +3164,10 @@ export class CookieKingdom {
         path: `/${page.name}`,
         match: page,
         action: (context, image, matched, finishRound) => {
+          if (page.next === undefined) {
+            console.log(`findPath, task: ${context.task.name}, path: ${context.path} but does not have next page to go`);
+            return;
+          }
           console.log(`findPath, task: ${context.task.name}, path: ${context.path}`);
           this.rerouter.goNext(page);
         },
