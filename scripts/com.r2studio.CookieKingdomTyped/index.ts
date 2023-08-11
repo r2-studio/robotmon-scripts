@@ -288,6 +288,15 @@ export class CookieKingdom {
   }
 
   public addTasks() {
+    if (this.config.isMaintainanceMode) {
+      this.rerouter.addTask({
+        name: TASKS.maintainanceMode,
+        maxTaskDuring: 10 * CONSTANTS.minuteInMs,
+        forceStop: false,
+      });
+      return;
+    }
+
     this.rerouter.addTask({
       name: TASKS.production,
       maxTaskDuring: 5 * CONSTANTS.minuteInMs,
@@ -536,11 +545,32 @@ export class CookieKingdom {
         Utils.sleep(CONSTANTS.sleepAnimate);
       },
     });
+    this.rerouter.addRoute({
+      path: `/${PAGES.rfpageChooseLoginMethod.name}`,
+      match: PAGES.rfpageChooseLoginMethod,
+      action: (context, image, matched, finishRound) => {
+        if (context.task.name === TASKS.maintainanceMode) {
+          logs(context.task.name, 'maintainanceMode, do nothing and sleep 60s');
+          Utils.sleep(60000);
+          return;
+        }
+
+        logs(context.task.name, 'input rfpageChooseLoginMethod');
+        this.rerouter.goNext(PAGES.rfpageChooseLoginMethod);
+        Utils.sleep(CONSTANTS.sleepAnimate);
+      },
+    });
 
     this.rerouter.addRoute({
       path: `/${PAGES.rfpageEnterEmail.name}`,
       match: PAGES.rfpageEnterEmail,
       action: (context, image, matched, finishRound) => {
+        if (context.task.name === TASKS.maintainanceMode) {
+          logs(context.task.name, 'maintainanceMode, do nothing and sleep 60s');
+          Utils.sleep(60000);
+          return;
+        }
+
         logs(context.task.name, 'input email');
 
         this.rerouter.screen.tap({ x: 370, y: 150 });
@@ -3201,7 +3231,13 @@ export function start(jsonConfig: any) {
   if (typeof jsonConfig === 'string') {
     jsonConfig = JSON.parse(jsonConfig);
   }
+
   const config = mergeObject(defaultConfig, jsonConfig);
+
+  if (config.licenseId === '') {
+    logs('start', 'config.licenseId is empty thus goto maintainance mode');
+    config.isMaintainanceMode = true;
+  }
 
   cookieKingdom = new CookieKingdom(config);
   cookieKingdom.start();

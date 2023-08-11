@@ -1,4 +1,6 @@
 export enum TASKS {
+  maintainanceMode = 'maintainanceMode',
+
   login = 'login',
   production = 'production',
   collectMail = 'collectMail',

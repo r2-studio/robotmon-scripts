@@ -150,7 +150,9 @@ export const pageChooseLoginMethod2 = [
   { x: 347, y: 162, r: 177, g: 204, b: 58 },
   { x: 342, y: 195, r: 59, g: 89, b: 152 },
 ];
+// Bigger icons (Android 5)
 export const rfpageChooseLoginMethod = new Page('rfpageChooseLoginMethod', pageChooseLoginMethod, pageChooseLoginMethod[0]);
+// Smaller icons (Android 7), not updated for 5 options
 export const rfpageChooseLoginMethod2 = new Page('rfpageChooseLoginMethod2', pageChooseLoginMethod2, pageChooseLoginMethod2[0]);
 
 // TOS page will change when login page change
