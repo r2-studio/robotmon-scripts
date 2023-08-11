@@ -52,18 +52,18 @@ export const downloadDataNoLanguage: MessageWindow = {
 //   targetColorThreashold: 5,
 // };
 
-// export const anErrorHasOccuredMessageScreen: MessageWindow = {
-//   name: 'anErrorHasOccuredMessageScreen',
-//   x: 222,
-//   y: 160,
-//   width: 198,
-//   height: 25,
+export const anErrorHasOccuredMessageScreen: MessageWindow = {
+  name: 'anErrorHasOccuredMessageScreen',
+  x: 194,
+  y: 176,
+  width: 236,
+  height: 7,
 
-//   targetY: 4,
-//   lookingForColor: { r: 80, g: 80, b: 80 },
-//   targetColorCount: 83,
-//   targetColorThreashold: 5,
-// };
+  targetY: 4,
+  lookingForColor: { r: 80, g: 80, b: 80 },
+  targetColorCount: 28,
+  targetColorThreashold: 5,
+};
 
 // export const anUnknownErrorHasOccurMessageScreen: MessageWindow = {
 //   name: 'anUnknownErrorHasOccurMessageScreen',

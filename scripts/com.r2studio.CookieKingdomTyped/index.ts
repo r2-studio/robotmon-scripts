@@ -2859,8 +2859,7 @@ export class CookieKingdom {
         } else if (checkScreenMessage(this.rerouter, MessageWindow.messageCookieDryingOnSunbed, PAGES.rfpageGeneralMessageWindow, image)) {
           if (context.task.name !== TASKS.tropicalIslandClearBubble) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageCookieDryingOnSunbed, end current task');
-            // this.rerouter.screen.tap({ x: 320, y: 253 });
-            // sendKeyBack();
+            this.rerouter.screen.tap({ x: 320, y: 253 });
             return;
           }
 
@@ -2895,6 +2894,10 @@ export class CookieKingdom {
           return;
         } else if (checkScreenMessage(this.rerouter, MessageWindow.TOSCsearingKeysNotUsedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm TOSCsearingKeysNotUsedMessageScreen, tap it');
+          this.rerouter.screen.tap({ x: 317, y: 253 });
+          return;
+        } else if (checkScreenMessage(this.rerouter, MessageWindow.anErrorHasOccuredMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+          logs(context.task.name, 'rfpageGeneralMessageWindow confirm anErrorHasOccuredMessageScreen, tap it');
           this.rerouter.screen.tap({ x: 317, y: 253 });
           return;
         } else if (

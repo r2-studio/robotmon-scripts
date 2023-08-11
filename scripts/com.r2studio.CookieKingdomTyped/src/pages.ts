@@ -1009,17 +1009,21 @@ export const rfpageInTowerOfSweetChaos = new Page(
 export const rfpageToSCConfirmTrayJump = new Page(
   'rfpageToSCConfirmTrayJump',
   [
-    { x: 435, y: 70, r: 57, g: 170, b: 231 },
-    { x: 323, y: 70, r: 240, g: 203, b: 30 },
-    { x: 298, y: 60, r: 176, g: 111, b: 1 },
-    { x: 336, y: 19, r: 33, g: 5, b: 5 },
-    { x: 305, y: 153, r: 255, g: 255, b: 255 },
-    { x: 425, y: 240, r: 66, g: 207, b: 0 },
-    { x: 363, y: 284, r: 123, g: 207, b: 8 },
-    { x: 387, y: 286, r: 222, g: 207, b: 198 },
+    { x: 44, y: 325, r: 109, g: 64, b: 122 },
+    { x: 36, y: 318, r: 110, g: 23, b: 36 },
+    { x: 32, y: 323, r: 110, g: 9, b: 25 },
+    { x: 359, y: 313, r: 121, g: 207, b: 12 },
+    { x: 386, y: 317, r: 231, g: 185, b: 190 },
+    { x: 463, y: 11, r: 55, g: 166, b: 231 },
+    { x: 463, y: 16, r: 255, g: 255, b: 255 },
+    { x: 436, y: 25, r: 134, g: 35, b: 51 },
+    { x: 349, y: 31, r: 255, g: 255, b: 255 },
+    { x: 296, y: 164, r: 211, g: 175, b: 22 },
+    { x: 435, y: 216, r: 219, g: 163, b: 170 },
   ],
-  { x: 435, y: 70 }
+  { x: 351, y: 314 }
 );
+
 export const rfpageReadyToBattleToSC = new Page(
   'rfpageReadyToBattleToSC',
   [
