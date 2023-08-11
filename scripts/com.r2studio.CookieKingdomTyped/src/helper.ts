@@ -629,7 +629,7 @@ export function bountyCheckIfGetBluePowder(rerouter: Rerouter): number[] {
 
 export function handleResearchInGnomeLab(rerouter: Rerouter, finishRound: any, targetIconList: Icon[], threashold: number) {
   for (var i = 0; i < 12; i++) {
-    for (var imageIdx = 0; imageIdx < ICONS.iconsGnomeLabKingdom.length; imageIdx++) {
+    for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
       let foundResults = findSpecificIconInScreen(targetIconList[imageIdx]);
       console.log('>', i, imageIdx, targetIconList[imageIdx].name, JSON.stringify(foundResults));
 
