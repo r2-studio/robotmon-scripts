@@ -1167,7 +1167,7 @@ export const rfpageDragonRemainHealth = new Page(
   { x: 572, y: 330 }
 );
 export const rfpageInCookieAlliance = new Page('rfpageInCookieAlliance', [
-  { x: 602, y: 323, r: 121, g: 207, b: 12 },
+  { x: 582, y: 334, r: 121, g: 207, b: 12 },
   { x: 552, y: 336, r: 121, g: 207, b: 12 },
   { x: 487, y: 329, r: 247, g: 217, b: 50 },
   { x: 334, y: 22, r: 176, g: 166, b: 222 },
