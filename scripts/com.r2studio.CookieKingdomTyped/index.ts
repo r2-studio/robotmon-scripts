@@ -2838,6 +2838,11 @@ export class CookieKingdom {
           Utils.sleep(this.config.sleepAnimate);
           sendKeyBack();
           Utils.sleep(this.config.sleepAnimate);
+
+          if (context.task.name === TASKS.haborShopInShellGallery) {
+            logs(context.task.name, 'rfpageGeneralMessageWindow confirm rfpageShellShopNotEnoughShell, send back twice and finish round');
+            finishRound(true);
+          }
           return;
         }
 
