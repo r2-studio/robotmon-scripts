@@ -433,7 +433,7 @@ class MLB9I {
         afterActionDelay: CONSTANTS.sleepLong,
       });
     });
-    [PAGE.TOS, PAGE.TOS90].forEach(p => {
+    [PAGE.TOS, PAGE.TOS90, PAGE.TOS90v2].forEach(p => {
       this.rerouter.addRoute({
         path: `/${p.name}`,
         match: p,
