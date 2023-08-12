@@ -10,13 +10,20 @@ import { CookieKingdom } from '..';
 export function findUnmatchInPage(rerouter: Rerouter, page: Page) {
   let img = getScreenshot();
 
-  for (var i in page.points) {
-    var cbtn = page.points[i];
-    var color = getImageColor(img, cbtn.x, cbtn.y);
-    if (!isSameColor(cbtn, color, 10)) {
-      console.log('pixel violation, ask for: ', JSON.stringify(cbtn), ', but get: ', JSON.stringify(color));
+  for (let i = 0; i < page.points.length; i++) {
+    const point = page.points[i];
+    const color = getImageColor(img, point.x, point.y);
+    const score = Utils.identityColor(point, color);
+    const isPointColorMatch = score >= 0.9;
+    if (!isPointColorMatch) {
+      console.log(
+        `point[${i}] match false: score: ${score}, thres: ${0.9}\n`,
+        `expect: ${Utils.formatXYRGB(point)}\n`,
+        `   get: ${Utils.formatXYRGB({ ...color, x: point.x, y: point.y })}`
+      );
     }
   }
+
   console.log('matching finished: ', page.name);
   releaseImage(img);
 }
