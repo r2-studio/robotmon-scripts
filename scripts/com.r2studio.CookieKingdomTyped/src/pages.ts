@@ -1226,13 +1226,21 @@ export const rfpageAllianceTimeJump = new Page('rfpageAllianceTimeJump', [
   { x: 393, y: 281, r: 189, g: 170, b: 214 },
   { x: 318, y: 32, r: 182, g: 129, b: 37 },
 ]);
-export const rfpageAllianceAddMoreCookie = new Page('rfpageAllianceAddMoreCookie', [
-  { x: 304, y: 251, r: 8, g: 166, b: 222 },
-  { x: 248, y: 102, r: 57, g: 69, b: 107 },
-  { x: 341, y: 11, r: 25, g: 36, b: 54 },
-  { x: 480, y: 320, r: 23, g: 34, b: 9 },
-  { x: 497, y: 320, r: 35, g: 29, b: 35 },
-]);
+export const rfpageAllianceAddMoreCookie = new Page(
+  'rfpageAllianceAddMoreCookie',
+  [
+    { x: 407, y: 250, r: 121, g: 207, b: 12 },
+    { x: 297, y: 253, r: 12, g: 167, b: 223 },
+    { x: 275, y: 136, r: 110, g: 107, b: 104 },
+    { x: 252, y: 135, r: 46, g: 46, b: 46 },
+    { x: 335, y: 23, r: 41, g: 41, b: 66 },
+    { x: 603, y: 311, r: 26, g: 45, b: 3 },
+    { x: 488, y: 328, r: 36, g: 32, b: 7 },
+    { x: 37, y: 144, r: 57, g: 22, b: 0 },
+    { x: 17, y: 157, r: 50, g: 41, b: 85 },
+  ],
+  { x: 297, y: 25 }
+);
 export const rfpageLightBeaconReminder = new Page('rfpageLightBeaconReminder', [
   { x: 301, y: 250, r: 8, g: 166, b: 222 },
   { x: 403, y: 248, r: 123, g: 207, b: 8 },
