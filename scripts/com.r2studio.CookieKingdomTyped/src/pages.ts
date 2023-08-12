@@ -964,6 +964,7 @@ export const rfpageBattleFinishedWithMVPCookieWithExit = new Page(
   pageBattleFinishedWithMVPCookieWithExit[0]
 );
 
+// Choose the 2nd alliance reward, need to add tap ({x: 620, y: 22}) when not enough tickets
 export const rfpageAllianceReward = new Page('rfpageAllianceReward', pageAllianceReward, { x: 397, y: 243 });
 export const rfpageAllianceResults = new Page('rfpageAllianceResults', pageAllianceResults, { x: 612, y: 333 });
 export const rfpageAllianceResults2 = new Page('rfpageAllianceResults2', pageAllianceResults2, { x: 310, y: 29 });

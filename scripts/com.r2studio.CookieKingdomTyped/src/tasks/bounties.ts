@@ -2,7 +2,7 @@ import { Page, Utils, rerouter } from 'Rerouter';
 import * as ICONS from '../icons';
 import { TASKS } from '../tasks';
 import { logs, sendEventRunning, sendKeyBack } from '../utils';
-import { bountyCheckIfGetBluePowder, countBountyLevel, dynamicSort, findSpecificIconInScreen, ocrNumberInRect, passiveAddRoute, assign } from '../helper';
+import { dynamicSort, findSpecificIconInScreen, ocrNumberInRect, passiveAddRoute, assign } from '../helper';
 import { BountyInfo } from '../types';
 import * as CONSTANTS from '../constants';
 import { config } from '../scriptConfig';
@@ -256,4 +256,38 @@ export function addBountiesTask() {
       });
     },
   });
+}
+
+var bountyLevelX = 20;
+var bountyLevelYRange = [60, 84, 119, 158, 190, 230, 260, 296, 333];
+function countBountyLevel() {
+  for (var j = 0; j < bountyLevelYRange.length; j++) {
+    if (rerouter.screen.isSameColor({ x: bountyLevelX, y: bountyLevelYRange[j], r: 205, g: 66, b: 36 })) {
+      return j + 4; // first one in list is Lv.4
+    }
+  }
+  return -1;
+}
+
+function bountyCheckIfGetBluePowder(): number[] {
+  const lastPowder = ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+  const bountyLevel = countBountyLevel();
+
+  if (bountyLevel > 6) {
+    rerouter.screen.tap({ x: 40, y: 135 });
+    Utils.sleep(2000);
+
+    const bluePower = ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
+
+    // console.log('Check if we need to get blue powder: ', bluePower, lastPowder);
+    if (bluePower < lastPowder && bluePower < 350) {
+      return [bluePower, 6];
+    }
+  }
+
+  for (var j = 0; j < bountyLevelYRange.length; j++) {
+    rerouter.screen.tap({ x: bountyLevelX, y: bountyLevelYRange[j] });
+    Utils.sleep(300);
+  }
+  return [lastPowder, bountyLevel];
 }

@@ -13,8 +13,6 @@ import {
   getMayhemScores,
   findSpecificIconInScreen,
   dynamicSort,
-  bountyCheckIfGetBluePowder,
-  countBountyLevel,
   swipeFromToPoint,
   handleResearchInGnomeLab,
   ocrNumberInRect,
