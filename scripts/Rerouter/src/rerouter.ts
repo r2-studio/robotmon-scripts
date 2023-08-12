@@ -111,7 +111,10 @@ export class Rerouter {
 
   public checkInApp(): boolean {
     const [packageName] = Utils.getCurrentApp();
-    return packageName === this.rerouterConfig.packageName;
+    if (packageName === this.rerouterConfig.packageName) {
+      return true;
+    }
+    return Utils.isAppOnTop(this.rerouterConfig.packageName);
   }
 
   public checkAndStartApp(): boolean {
