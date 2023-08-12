@@ -139,7 +139,7 @@ export function addBountiesRoutes() {
       }
 
       logs(context.task.name, `about to start handleBounties, send running`);
-      sendEvent('running', '');
+      sendEventRunning();
       let i = 0;
 
       const bountyCount = bountyStatus['bountyCount'];
