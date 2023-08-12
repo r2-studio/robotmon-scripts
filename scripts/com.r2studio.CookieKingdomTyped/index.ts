@@ -3235,7 +3235,8 @@ export class CookieKingdom {
 }
 
 // * =========== entry point ===========
-let cookieKingdom: CookieKingdom | undefined;
+export let cookieKingdom: CookieKingdom;
+
 export function start(jsonConfig: any) {
   console.log('typed inputConfig: ', jsonConfig);
 
@@ -3276,7 +3277,7 @@ if (window === undefined) {
 
 // ! following is only for dev
 function run() {
-  const cookieKingdom = new CookieKingdom(defaultConfig);
+  cookieKingdom = new CookieKingdom(defaultConfig);
   cookieKingdom.start();
 }
 

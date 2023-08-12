@@ -5,7 +5,7 @@ import * as CONSTANTS from './constants';
 import { Advanture, Advantures, BotStatus, Icon, MessageWindow, Point, Records, TaskStatus, Wish, WishStatus, productState } from './types';
 import { logs, padZero, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
-import { CookieKingdom } from '..';
+import { cookieKingdom } from '../index';
 
 export function findUnmatchInPage(page: Page) {
   let img = getScreenshot();
@@ -28,7 +28,7 @@ export function findUnmatchInPage(page: Page) {
   releaseImage(img);
 }
 
-export function checkLoginFailedMaxReached(loginStatus: TaskStatus, loginRetryMaxTimes: number, cookieKingdom: CookieKingdom) {
+export function checkLoginFailedMaxReached(loginStatus: TaskStatus, loginRetryMaxTimes: number) {
   if (loginStatus.loginRetryCount > loginRetryMaxTimes) {
     cookieKingdom.stop();
     sendEvent('gameStatus', 'login-failed');
