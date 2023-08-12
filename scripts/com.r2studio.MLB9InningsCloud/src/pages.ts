@@ -111,6 +111,30 @@ export const TOS90 = new Page(
   { x: 321, y: 321 }
 );
 
+// for dgi90 and navi bar is smaller
+export const TOS90v2 = new Page(
+  'TOS90v2',
+  [
+    // bg
+    { x: 2, y: 23, r: 255, g: 255, b: 255 },
+    { x: 1, y: 42, r: 232, g: 232, b: 232 },
+    { x: 1, y: 325, r: 232, g: 232, b: 232 },
+    { x: 7, y: 348, r: 255, g: 255, b: 255 },
+    { x: 631, y: 350, r: 255, g: 255, b: 255 },
+    { x: 628, y: 321, r: 255, g: 255, b: 255 },
+    { x: 633, y: 292, r: 213, g: 213, b: 213 },
+    { x: 630, y: 40, r: 232, g: 232, b: 232 },
+    { x: 628, y: 21, r: 255, g: 255, b: 255 },
+
+    // logo
+    { x: 296, y: 21, r: 248, g: 192, b: 199 },
+    { x: 316, y: 24, r: 227, g: 6, b: 33 },
+    { x: 340, y: 22, r: 239, g: 115, b: 130 },
+  ],
+  { x: 321, y: 321 },
+  { x: 321, y: 321 }
+);
+
 // like landing but has progress bar
 export const landingLoading = new Page(
   'landingLoading',
