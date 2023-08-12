@@ -1,4 +1,4 @@
-import { Rerouter, rerouter, Utils, XYRGB, Page, Task, XY, GroupPage, log } from 'Rerouter';
+import { rerouter, Utils, XYRGB, Page, Task, XY, GroupPage, log } from 'Rerouter';
 import { BountyInfo, seasideStockRect, goodsLocationRect, TaskStatus, BotStatus, searchHosePaths, Icon } from './src/types';
 import { logs, sendKeyBack, sendEventRunning } from './src/utils';
 import {
@@ -22,7 +22,6 @@ import {
   tapThroughAnimate,
   handleNextProductionBuilding,
   swipeDown3Items,
-  SwipeProductionMenuToTop,
   countProductionSlotAvailable,
   makeGoodsToTarget,
   ocrStockAndReqInRect,
@@ -50,7 +49,6 @@ const VERSION_CODE: number = 0.1;
 
 export class CookieKingdom {
   public packageName: string = 'com.devsisters.ck';
-  public rerouter: Rerouter;
 
   public config = defaultConfig;
   wishes = defaultWishes;
@@ -73,19 +71,13 @@ export class CookieKingdom {
 
     this.config = config;
 
-    // rerouter setups
-    this.rerouter = rerouter;
-
-    this.rerouter.defaultConfig.TaskConfigAutoStop = true;
-    this.rerouter.defaultConfig.RouteConfigDebug = true;
-
-    this.rerouter.rerouterConfig.startAppDelay = 15 * 1000;
-
-    this.rerouter.screenConfig.rotation = 'horizontal';
-    this.rerouter.screenConfig.devHeight = 360;
-    this.rerouter.screenConfig.devWidth = 640;
-
-    this.rerouter.debug = false;
+    rerouter.defaultConfig.TaskConfigAutoStop = true;
+    rerouter.defaultConfig.RouteConfigDebug = true;
+    rerouter.rerouterConfig.startAppDelay = 15 * 1000;
+    rerouter.screenConfig.rotation = 'horizontal';
+    rerouter.screenConfig.devHeight = 360;
+    rerouter.screenConfig.devWidth = 640;
+    rerouter.debug = false;
 
     console.log(`script version ${VERSION_CODE}`);
   }
@@ -93,11 +85,11 @@ export class CookieKingdom {
     this.init();
     this.initTaskStatus();
 
-    console.log('>', this.rerouter.getCurrentMatchNames());
-    // console.log('>>', findUnmatchInPage(this.rerouter, PAGES.rfpageInPVPArena));
+    console.log('>', rerouter.getCurrentMatchNames());
+    // console.log('>>', findUnmatchInPage(PAGES.rfpageInPVPArena));
     // return;
 
-    this.rerouter.start(this.packageName);
+    rerouter.start(this.packageName);
   }
   public stop() {
     // TODO: seems not working
@@ -133,7 +125,7 @@ export class CookieKingdom {
       }
     }
 
-    this.rerouter.stop();
+    rerouter.stop();
   }
 
   public init() {
@@ -142,7 +134,7 @@ export class CookieKingdom {
     this.handleUnknown();
 
     // show current page
-    // this.rerouter.getCurrentMatchNames();
+    // rerouter.getCurrentMatchNames();
 
     for (let idx in ICONS.numberImagesProdutRequirements) {
       if (ICONS.numberImagesProdutRequirements[idx].image === undefined) {
@@ -290,7 +282,7 @@ export class CookieKingdom {
 
   public addTasks() {
     if (this.config.isMaintainanceMode) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.maintainanceMode,
         maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         forceStop: false,
@@ -298,14 +290,14 @@ export class CookieKingdom {
       return;
     }
 
-    this.rerouter.addTask({
+    rerouter.addTask({
       name: TASKS.production,
       maxTaskDuring: 5 * CONSTANTS.minuteInMs,
       minRoundInterval: 360 * CONSTANTS.minuteInMs,
       forceStop: true,
     });
 
-    // this.rerouter.addTask({
+    // rerouter.addTask({
     //   name: TASKS.haborShopInSeaMarket,
     //   maxTaskDuring: 30 * CONSTANTS.minuteInMs,
     //   minRoundInterval: 120 * CONSTANTS.minuteInMs,
@@ -315,19 +307,19 @@ export class CookieKingdom {
     // return;
 
     if (this.config.autoCollectDailyReward) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.collectKingdomPass,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
         forceStop: true,
       });
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.sendFriendReward,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
         forceStop: true,
       });
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.getInShopFreeDailyPack,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
@@ -335,7 +327,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoCollectMailIntervalInMins > 0) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.collectMail,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
@@ -343,7 +335,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoSendHotAirBallonIntervalInMins > 0) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.hotAirBallon,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
@@ -351,7 +343,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoCollectTrainIntervalInMins > 0) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.train,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTrainIntervalInMins * CONSTANTS.minuteInMs,
@@ -359,7 +351,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoFulfillWishesIntervalInMins > 0) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.wishingTree,
         maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
@@ -367,7 +359,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoCollectFountainIntervalInMins > 0) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.fountain,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectFountainIntervalInMins * CONSTANTS.minuteInMs,
@@ -375,7 +367,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoPvPPurchaseAncientCookie) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.pvpPurchaseAncientCookie,
         maxTaskDuring: 4 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
@@ -383,7 +375,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoPvPIntervalInMins > 0) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.pvp,
         maxTaskRunTimes: 1,
         maxTaskDuring: 9 * CONSTANTS.minuteInMs,
@@ -403,7 +395,7 @@ export class CookieKingdom {
     }
     // TODO: no super mayhem for now
     // if (this.config.autoSuperMayhemIntervalInMins > 0) {
-    //   this.rerouter.addTask({
+    //   rerouter.addTask({
     //     name: TASKS.superMayhem,
     //     maxTaskDuring: 9 * CONSTANTS.minuteInMs,
     //     minRoundInterval: this.config.autoSuperMayhemIntervalInMins * CONSTANTS.minuteInMs,
@@ -411,19 +403,19 @@ export class CookieKingdom {
     //   });
     // }
     if (this.config.autoCollectTropicalIslandsIntervalInMins > 0) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.tropicalIslandShip,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
         forceStop: true,
       });
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.tropicalIslandSunbed,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
         forceStop: true,
       });
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.tropicalIslandClearBubble,
         maxTaskDuring: 30 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
@@ -431,7 +423,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoHandleBountiesIntervalInMins > 0) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.bounties,
         maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
@@ -439,7 +431,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoLabResearch) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.gnomeLab,
         maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: 15 * CONSTANTS.minuteInMs,
@@ -447,7 +439,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoHandleTradeHabor) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.haborSendShip,
         maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
@@ -462,7 +454,7 @@ export class CookieKingdom {
       this.config.autoBuyCaramelStuff ||
       this.config.autoBuyRadiantShardsInHabor
     ) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.haborShopInSeaMarket,
         maxTaskDuring: 15 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
@@ -470,7 +462,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoBuySeaFairy || this.config.autoBuyEpicSoulEssence || this.config.autoBuyLegendSoulEssence || this.config.autoBuyGuildRelic) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.haborShopInShellGallery,
         maxTaskDuring: 3 * CONSTANTS.minuteInMs,
         minRoundInterval: 120 * CONSTANTS.minuteInMs,
@@ -479,7 +471,7 @@ export class CookieKingdom {
     }
 
     if (this.config.autoHandleTowerOfSweetChaos) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.towerOfSweetChaos,
         maxTaskDuring: 7 * CONSTANTS.minuteInMs,
         minRoundInterval: 240 * CONSTANTS.minuteInMs,
@@ -487,14 +479,14 @@ export class CookieKingdom {
       });
     }
 
-    this.rerouter.addTask({
+    rerouter.addTask({
       name: TASKS.guildCheckin,
       maxTaskDuring: 3 * CONSTANTS.minuteInMs,
       minRoundInterval: 180 * CONSTANTS.minuteInMs,
       forceStop: true,
     });
     if (this.config.autoGuildBattleDragon) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.guildBattleDragon,
         maxTaskDuring: 10 * CONSTANTS.minuteInMs,
         minRoundInterval: 180 * CONSTANTS.minuteInMs,
@@ -502,7 +494,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoGuildAllianceBattle) {
-      this.rerouter.addTask({
+      rerouter.addTask({
         name: TASKS.guildBattleAlliance,
         maxTaskDuring: 40 * CONSTANTS.minuteInMs,
         minRoundInterval: 180 * CONSTANTS.minuteInMs,
@@ -510,19 +502,19 @@ export class CookieKingdom {
       });
     }
 
-    this.rerouter.addTask({
+    rerouter.addTask({
       name: TASKS.findAndTapCandy,
       maxTaskDuring: 7 * CONSTANTS.minuteInMs,
       minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
       forceStop: true,
     });
-    this.rerouter.addTask({
+    rerouter.addTask({
       name: TASKS.production,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       forceStop: true,
     });
 
-    this.rerouter.addTask({
+    rerouter.addTask({
       name: TASKS.resolveGreenChecks,
       maxTaskDuring: 10 * CONSTANTS.minuteInMs,
       minRoundInterval: 240 * CONSTANTS.minuteInMs,
@@ -532,22 +524,22 @@ export class CookieKingdom {
 
   public addRoutes() {
     // Login pages
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInputAge.name}`,
       match: PAGES.rfpageInputAge,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, 'input rfpageInputAge');
 
-        this.rerouter.screen.tap({ x: 285 + Math.random() * 35, y: 213 });
+        rerouter.screen.tap({ x: 285 + Math.random() * 35, y: 213 });
         Utils.sleep(this.config.sleep);
-        this.rerouter.goNext(PAGES.rfpageInputAge);
+        rerouter.goNext(PAGES.rfpageInputAge);
         Utils.sleep(this.config.sleep);
 
-        this.rerouter.screen.tap({ x: 370, y: 150 });
+        rerouter.screen.tap({ x: 370, y: 150 });
         Utils.sleep(CONSTANTS.sleepAnimate);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageChooseLoginMethod.name}`,
       match: PAGES.rfpageChooseLoginMethod,
       action: (context, image, matched, finishRound) => {
@@ -558,12 +550,12 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, 'input rfpageChooseLoginMethod');
-        this.rerouter.goNext(PAGES.rfpageChooseLoginMethod);
+        rerouter.goNext(PAGES.rfpageChooseLoginMethod);
         Utils.sleep(CONSTANTS.sleepAnimate);
       },
     });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageEnterEmail.name}`,
       match: PAGES.rfpageEnterEmail,
       action: (context, image, matched, finishRound) => {
@@ -575,7 +567,7 @@ export class CookieKingdom {
 
         logs(context.task.name, 'input email');
 
-        this.rerouter.screen.tap({ x: 370, y: 150 });
+        rerouter.screen.tap({ x: 370, y: 150 });
         Utils.sleep(CONSTANTS.sleepAnimate);
         logs(context.task.name, `typing email ${this.config.account}`);
 
@@ -617,31 +609,31 @@ export class CookieKingdom {
           targetColorCount: 21,
           targetColorThreashold: 3,
         };
-        if (checkScreenMessage(this.rerouter, incorrectEmailFormat, PAGES.rfpageEnterEmail, image)) {
+        if (checkScreenMessage(incorrectEmailFormat, PAGES.rfpageEnterEmail, image)) {
           logs(context.task.name, 'reported incorrectEmailFormat so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
-        } else if (checkScreenMessage(this.rerouter, needRegisterDevPlayAccount, PAGES.rfpageEnterEmail, image)) {
+        } else if (checkScreenMessage(needRegisterDevPlayAccount, PAGES.rfpageEnterEmail, image)) {
           logs(context.task.name, 'reported needRegisterDevPlayAccount so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
-        } else if (checkScreenMessage(this.rerouter, registerWithSocialPlatformMessageScreen, PAGES.rfpageEnterEmail, image)) {
+        } else if (checkScreenMessage(registerWithSocialPlatformMessageScreen, PAGES.rfpageEnterEmail, image)) {
           logs(context.task.name, 'reported registerWithSocialPlatformMessageScreen so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.groupPageEnterPassword.name}`,
       match: PAGES.groupPageEnterPassword,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, 'input password');
 
-        this.rerouter.goNext(PAGES.rfpageEnterPasswordLongId);
+        rerouter.goNext(PAGES.rfpageEnterPasswordLongId);
         Utils.sleep(CONSTANTS.sleepAnimate);
         typing(this.config.password, 1000);
         Utils.sleep(CONSTANTS.sleepAnimate);
         typing('\n', 500);
         Utils.sleep(CONSTANTS.sleepAnimate);
-        this.rerouter.screen.tap({ x: 370, y: 190 });
+        rerouter.screen.tap({ x: 370, y: 190 });
 
         const wrongPasswordMessageScreen = {
           name: 'wrongPasswordMessageScreen',
@@ -676,31 +668,31 @@ export class CookieKingdom {
           targetColorCount: 2,
           targetColorThreashold: 0,
         };
-        if (checkScreenMessage(this.rerouter, wrongPasswordMessageScreen, PAGES.rfpageEnterpassword, image)) {
+        if (checkScreenMessage(wrongPasswordMessageScreen, PAGES.rfpageEnterpassword, image)) {
           logs(context.task.name, 'reported wrongPasswordMessageScreen so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
         }
-        if (checkScreenMessage(this.rerouter, wrongPasswordMessageScreenWithLongId, PAGES.rfpageEnterPasswordLongId, image)) {
+        if (checkScreenMessage(wrongPasswordMessageScreenWithLongId, PAGES.rfpageEnterPasswordLongId, image)) {
           logs(context.task.name, 'reported wrongPasswordMessageScreenWithLongId so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
         }
-        if (checkScreenMessage(this.rerouter, passwordTooShortMessageScreen, PAGES.rfpageEnterpassword, image)) {
+        if (checkScreenMessage(passwordTooShortMessageScreen, PAGES.rfpageEnterpassword, image)) {
           logs(context.task.name, 'reported passwordTooShortMessageScreen so handle it');
           checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes, this);
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInLoginPageWithGearAndVideo.name}`,
       match: PAGES.rfpageInLoginPageWithGearAndVideo,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, 'tapping (575, 22) until the game start every 3 secs');
 
-        this.rerouter.screen.tap({ x: 575, y: 22 });
+        rerouter.screen.tap({ x: 575, y: 22 });
         Utils.sleep(3000);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageAnnouncement.name}`,
       match: PAGES.rfpageAnnouncement,
       action: (context, image, matched, finishRound) => {
@@ -716,12 +708,12 @@ export class CookieKingdom {
           this.config.needToSendPlaying = false;
         }
 
-        this.rerouter.goNext(PAGES.rfpageAnnouncement);
+        rerouter.goNext(PAGES.rfpageAnnouncement);
       },
     });
 
     // Daily tasks
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfkingdomPassItemCollected.name}`,
       match: PAGES.rfkingdomPassItemCollected,
       action: (context, image, matched, finishRound) => {
@@ -731,12 +723,12 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, 'rfkingdomPassItemCollected, task finished');
-        this.rerouter.goNext(PAGES.rfkingdomPassItemCollected);
+        rerouter.goNext(PAGES.rfkingdomPassItemCollected);
         sendEventRunning(this.botStatus);
         finishRound(true);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageMailsAllClaimed.name}`,
       match: PAGES.rfpageMailsAllClaimed,
       action: (context, image, matched, finishRound) => {
@@ -746,13 +738,13 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, 'rfpageMailsAllClaimed, task finished');
-        this.rerouter.goNext(PAGES.rfkingdomPassItemCollected);
+        rerouter.goNext(PAGES.rfkingdomPassItemCollected);
         sendEventRunning(this.botStatus);
         finishRound(true);
       },
     });
     // TODO: double verify friend reward is sent
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInFriendsList.name}`,
       match: PAGES.rfpageInFriendsList,
       action: (context, image, matched, finishRound) => {
@@ -762,13 +754,13 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, 'rfpageInFriendsList, task finished');
-        this.rerouter.goNext(PAGES.rfpageFriendRewardsSent);
+        rerouter.goNext(PAGES.rfpageFriendRewardsSent);
         sendKeyBack();
         sendEventRunning(this.botStatus);
         finishRound(true);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInShop.name}`,
       match: PAGES.rfpageInShop,
       action: (context, image, matched, finishRound) => {
@@ -786,27 +778,27 @@ export class CookieKingdom {
         let y = rfpageNecessitiesPnt.y;
         for (let i = 0; i < 5; i++) {
           y = rfpageNecessitiesPnt.y + i * 20;
-          this.rerouter.screen.tap({ x, y });
+          rerouter.screen.tap({ x, y });
           Utils.sleep(this.config.sleepAnimate);
           logs(context.task.name, `rfpageInShop, scroll down to daily gift, trial: #${trial}, tapping (${x}, ${y})`);
 
-          if (this.rerouter.isPageMatch(PAGES.rfpageIsDailyFreePackageClaimed)) {
+          if (rerouter.isPageMatch(PAGES.rfpageIsDailyFreePackageClaimed)) {
             logs(context.task.name, 'rfpageIsDailyFreePackageClaimed, task finished');
-            this.rerouter.goNext(PAGES.rfpageIsDailyFreePackageClaimed);
+            rerouter.goNext(PAGES.rfpageIsDailyFreePackageClaimed);
             finishRound(true);
             return;
-          } else if (this.rerouter.isPageMatch(PAGES.rfpageIsDailyFreePackageNotClaimed)) {
+          } else if (rerouter.isPageMatch(PAGES.rfpageIsDailyFreePackageNotClaimed)) {
             logs(context.task.name, 'rfpageIsDailyFreePackageNotClaimed, tap it');
-            this.rerouter.goNext(PAGES.rfpageIsDailyFreePackageNotClaimed);
+            rerouter.goNext(PAGES.rfpageIsDailyFreePackageNotClaimed);
             return;
           }
         }
 
         if (trial < 7) {
-          scrollDownALot(rerouter, { x: 60, y: 300 });
+          scrollDownALot({ x: 60, y: 300 });
 
           if (trial > 3) {
-            swipeFromToPoint(rerouter, { x: 60, y: 71 }, { x: 60, y: 210 }, 5);
+            swipeFromToPoint({ x: 60, y: 71 }, { x: 60, y: 210 }, 5);
           }
           // Shop menu swipe up
           Utils.sleep(CONSTANTS.sleepAnimate);
@@ -816,7 +808,7 @@ export class CookieKingdom {
           });
           Utils.sleep(CONSTANTS.sleepAnimate * 2);
           // items swipe to left most
-          scrollLeftALot(rerouter, { x: 137, y: 268 });
+          scrollLeftALot({ x: 137, y: 268 });
           Utils.sleep(CONSTANTS.sleepAnimate);
 
           this.taskStatus[TASKS.getInShopFreeDailyPack]['trials']++;
@@ -829,7 +821,7 @@ export class CookieKingdom {
     });
 
     // Hot air ballon pages
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInHotAirBallon.name}`,
       match: PAGES.rfpageInHotAirBallon,
       action: (context, image, matched, finishRound) => {
@@ -840,31 +832,31 @@ export class CookieKingdom {
 
         logs(context.task.name, 'rfpageInHotAirBallon, choose next step');
         if (this.taskStatus[TASKS.hotAirBallon]['changeMapFinished']) {
-          this.rerouter.screen.tap({ x: 258, y: 330 }); // tap Auto
+          rerouter.screen.tap({ x: 258, y: 330 }); // tap Auto
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap({ x: 575, y: 330 }); // tap Start
+          rerouter.screen.tap({ x: 575, y: 330 }); // tap Start
           logs(context.task.name, `rfpageInHotAirBallon, start new ballon trip, ep4: ${this.config.isHotAirBallonGotoEp4}`);
           finishRound(true);
         } else {
-          this.rerouter.screen.tap({ x: 412, y: 330 }); // tap Change
+          rerouter.screen.tap({ x: 412, y: 330 }); // tap Change
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageBallonFlyingDock.name}`,
       match: PAGES.rfpageBallonFlyingDock,
       action: (context, image, matched, finishRound) => {
         if (context.task.name !== TASKS.hotAirBallon) {
-          this.rerouter.screen.tap({ x: 616, y: 17 });
+          rerouter.screen.tap({ x: 616, y: 17 });
           return;
         }
 
         logs(context.task.name, 'rfpageBallonFlyingDock, ballon is flying, finish task');
-        this.rerouter.goNext(PAGES.rfpageBallonFlyingDock); // close this screen
+        rerouter.goNext(PAGES.rfpageBallonFlyingDock); // close this screen
         finishRound(true);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageChooseBallonDestination.name}`,
       match: PAGES.rfpageChooseBallonDestination,
       action: (context, image, matched, finishRound) => {
@@ -874,26 +866,26 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `rfpageChooseBallonDestination, goto ep4: ${this.config.isHotAirBallonGotoEp4}`);
-        scrollLeftALot(rerouter, { x: 618, y: 151 });
-        if (this.config.isHotAirBallonGotoEp4 && this.rerouter.isPageMatchImage(PAGES.rfpageBallonMapEp4, image)) {
-          this.rerouter.goNext(PAGES.rfpageBallonMapEp4); // tap EP4 map
+        scrollLeftALot({ x: 618, y: 151 });
+        if (this.config.isHotAirBallonGotoEp4 && rerouter.isPageMatchImage(PAGES.rfpageBallonMapEp4, image)) {
+          rerouter.goNext(PAGES.rfpageBallonMapEp4); // tap EP4 map
           this.taskStatus[TASKS.hotAirBallon]['changeMapFinished'] = true;
           return;
         } else {
           // scroll to right most and find the last map
-          scrollRightALot(rerouter, { x: 618, y: 151 });
+          scrollRightALot({ x: 618, y: 151 });
           console.log('scrolled');
-          scrollRightALot(rerouter, { x: 618, y: 151 });
+          scrollRightALot({ x: 618, y: 151 });
           console.log('scrolled');
-          scrollRightALot(rerouter, { x: 618, y: 151 });
+          scrollRightALot({ x: 618, y: 151 });
           console.log('scrolled');
 
           for (let i = 0; i < 4; i++) {
             for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
               for (var yLocation = 140; yLocation <= 260; yLocation += 120) {
-                this.rerouter.screen.tap({ x: xLocation, y: yLocation });
+                rerouter.screen.tap({ x: xLocation, y: yLocation });
 
-                if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInHotAirBallon, 2000)) {
+                if (rerouter.waitScreenForMatchingPage(PAGES.rfpageInHotAirBallon, 2000)) {
                   this.taskStatus[TASKS.hotAirBallon]['changeMapFinished'] = true;
                   logs(context.task.name, `ballon destination choosed successfully, i, x, y = ${i}, ${xLocation}, ${yLocation}`);
                   return;
@@ -916,13 +908,13 @@ export class CookieKingdom {
 
     // Train pages
     // TODO: NG！ 用鑽買東西的頁面會被判斷成 rfpageNewDataPackDownloadFailed，會自動按下花鑽石買東西
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInTrainStation.name}`,
       match: PAGES.rfpageInTrainStation,
       action: (context, image, matched, finishRound) => {
         if (context.task.name !== TASKS.train) {
           logs(context.task.name, `rfpageInTrainStation, leave because current task is not wishing tree, but: ${context.task.name}`);
-          this.rerouter.screen.tap({ x: 618, y: 28 }); // tap X
+          rerouter.screen.tap({ x: 618, y: 28 }); // tap X
           return;
         }
 
@@ -941,35 +933,35 @@ export class CookieKingdom {
           { x: 455, y: 301, r: 231, g: 138, b: 82 },
         ]);
 
-        if (!this.rerouter.isPageMatchImage(rfpageFirstTrainOut, image)) {
-          this.rerouter.screen.tap({ x: 255, y: 110 });
+        if (!rerouter.isPageMatchImage(rfpageFirstTrainOut, image)) {
+          rerouter.screen.tap({ x: 255, y: 110 });
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap({ x: 210, y: 110 });
+          rerouter.screen.tap({ x: 210, y: 110 });
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap({ x: 170, y: 110 });
+          rerouter.screen.tap({ x: 170, y: 110 });
           Utils.sleep(CONSTANTS.sleepAnimate);
 
-          checkIfTrainRequirementMet(this.rerouter);
+          checkIfTrainRequirementMet();
         }
-        if (!this.rerouter.isPageMatchImage(rfpageSecondTrainOut, image)) {
-          this.rerouter.screen.tap({ x: 255, y: 208 });
+        if (!rerouter.isPageMatchImage(rfpageSecondTrainOut, image)) {
+          rerouter.screen.tap({ x: 255, y: 208 });
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap({ x: 210, y: 208 });
+          rerouter.screen.tap({ x: 210, y: 208 });
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap({ x: 170, y: 208 });
+          rerouter.screen.tap({ x: 170, y: 208 });
           Utils.sleep(CONSTANTS.sleepAnimate);
 
-          checkIfTrainRequirementMet(this.rerouter);
+          checkIfTrainRequirementMet();
         }
-        if (!this.rerouter.isPageMatchImage(rfpageThirdTrainOut, image)) {
-          this.rerouter.screen.tap({ x: 255, y: 307 });
+        if (!rerouter.isPageMatchImage(rfpageThirdTrainOut, image)) {
+          rerouter.screen.tap({ x: 255, y: 307 });
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap({ x: 210, y: 307 });
+          rerouter.screen.tap({ x: 210, y: 307 });
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap({ x: 170, y: 307 });
+          rerouter.screen.tap({ x: 170, y: 307 });
           Utils.sleep(CONSTANTS.sleepAnimate);
 
-          checkIfTrainRequirementMet(this.rerouter);
+          checkIfTrainRequirementMet();
         }
 
         if (this.config.autoCollectTrainIntervalInMins == 0) {
@@ -985,9 +977,9 @@ export class CookieKingdom {
           let sendTrainBtn = foundResults[i];
           sendTrainBtn.x += 30;
           sendTrainBtn.y += 15;
-          this.rerouter.screen.tap(foundResults[i]);
+          rerouter.screen.tap(foundResults[i]);
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap(foundResults[i]);
+          rerouter.screen.tap(foundResults[i]);
           Utils.sleep(CONSTANTS.sleepAnimate);
         }
 
@@ -996,13 +988,13 @@ export class CookieKingdom {
           let sendTrainBtn = foundResultsSmall[i];
           sendTrainBtn.x += 30;
           sendTrainBtn.y += 15;
-          this.rerouter.screen.tap(foundResultsSmall[i]);
+          rerouter.screen.tap(foundResultsSmall[i]);
           Utils.sleep(CONSTANTS.sleepAnimate);
-          this.rerouter.screen.tap(foundResultsSmall[i]);
+          rerouter.screen.tap(foundResultsSmall[i]);
           Utils.sleep(CONSTANTS.sleepAnimate);
         }
 
-        this.rerouter.goNext(PAGES.rfpageInTrainStation);
+        rerouter.goNext(PAGES.rfpageInTrainStation);
         Utils.sleep(CONSTANTS.sleepAnimate);
         logs(context.task.name, `Tried to sent ${foundResults.length + foundResultsSmall.length} trains`);
         finishRound(true);
@@ -1010,13 +1002,13 @@ export class CookieKingdom {
     });
 
     // Wishing trees
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInWishingTree.name}`,
       match: PAGES.rfpageInWishingTree,
       action: (context, image, matched, finishRound) => {
         if (context.task.name !== TASKS.wishingTree) {
           logs(context.task.name, `rfpageInWishingTree, leave because current task is not wishing tree, but: ${context.task.name}`);
-          this.rerouter.screen.tap({ x: 618, y: 20 }); // tap X
+          rerouter.screen.tap({ x: 618, y: 20 }); // tap X
           return;
         }
 
@@ -1027,11 +1019,11 @@ export class CookieKingdom {
           { x: 60, y: 256, r: 138, g: 138, b: 138 },
         ]);
 
-        if (this.rerouter.isPageMatchImage(rfpageAllWishingDailyRewardCollected, image) && !this.config.alwaysFulfillWishes) {
+        if (rerouter.isPageMatchImage(rfpageAllWishingDailyRewardCollected, image) && !this.config.alwaysFulfillWishes) {
           logs(context.task.name, `rfpageInWishingTree, All wish fulfilled, skipping and send running`);
           // sendEvent('running', '');
           sendEventRunning(this.botStatus);
-          this.rerouter.screen.tap({ x: 618, y: 20 }); // tap X
+          rerouter.screen.tap({ x: 618, y: 20 }); // tap X
           finishRound(true);
           return;
         }
@@ -1062,12 +1054,12 @@ export class CookieKingdom {
         console.log('>>> Wising tree records', JSON.stringify(this.taskStatus[TASKS.wishingTree].records));
 
         var rfpageCollectTreeReward = new Page('rfpageCollectTreeReward', [{ x: 85, y: 289, r: 44, g: 203, b: 8 }]);
-        if (this.rerouter.isPageMatch(rfpageCollectTreeReward)) {
+        if (rerouter.isPageMatch(rfpageCollectTreeReward)) {
           console.log('Daily reward collected');
-          this.rerouter.screen.tap({ x: 60, y: 255 });
+          rerouter.screen.tap({ x: 60, y: 255 });
           Utils.sleep(2000);
 
-          this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInWishingTree, 8000);
+          rerouter.waitScreenForMatchingPage(PAGES.rfpageInWishingTree, 8000);
           // waitUntilSeePage(pageInWishingTree, 8, pageCollectTreeReward);
         }
 
@@ -1090,7 +1082,7 @@ export class CookieKingdom {
     });
 
     // Fountain
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInCookieCastle.name}`,
       match: PAGES.rfpageInCookieCastle,
       action: (context, image, matched, finishRound) => {
@@ -1104,7 +1096,7 @@ export class CookieKingdom {
         logs(context.task.name, 'tap back to leave rfpageInCookieCastle');
         sendKeyBack();
 
-        if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInKingdomVillage, 3000)) {
+        if (rerouter.waitScreenForMatchingPage(PAGES.rfpageInKingdomVillage, 3000)) {
           logs(context.task.name, 'try goto fountain');
 
           var img = getScreenshot();
@@ -1118,20 +1110,20 @@ export class CookieKingdom {
 
           if (Object.keys(foundResults).length > 0) {
             console.log('Fount fountain full check icon, tap it');
-            this.rerouter.screen.tap({ x: foundResults[0].x + 10, y: foundResults[0].y + 10 });
+            rerouter.screen.tap({ x: foundResults[0].x + 10, y: foundResults[0].y + 10 });
           } else {
             console.log("Can't find fountain full image, try to tap it");
-            this.rerouter.screen.tap({ x: 490, y: 359 });
+            rerouter.screen.tap({ x: 490, y: 359 });
             Utils.sleep(this.config.sleepAnimate);
-            this.rerouter.screen.tap({ x: 490, y: 295 });
+            rerouter.screen.tap({ x: 490, y: 295 });
             Utils.sleep(this.config.sleepAnimate);
-            this.rerouter.screen.tap({ x: 540, y: 295 });
+            rerouter.screen.tap({ x: 540, y: 295 });
             Utils.sleep(this.config.sleepAnimate);
           }
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInFountain.name}`,
       match: PAGES.rfpageInFountain,
       action: (context, image, matched, finishRound) => {
@@ -1141,23 +1133,23 @@ export class CookieKingdom {
         }
 
         // 3rd raw is empty, fountain is pretty clean
-        if (this.rerouter.isPageMatchImage(PAGES.rfpageFountain3rdRawEmpty, image)) {
+        if (rerouter.isPageMatchImage(PAGES.rfpageFountain3rdRawEmpty, image)) {
           logs(context.task.name, 'rfpageFountain3rdRawEmpty 3rd raw empty, set task complete');
-          this.rerouter.screen.tap({ x: 500, y: 310 }); // tap Claim
+          rerouter.screen.tap({ x: 500, y: 310 }); // tap Claim
           sendEventRunning(this.botStatus);
           finishRound(true);
           return;
         }
 
         logs(context.task.name, 'rfpageInFountain and collect it');
-        this.rerouter.screen.tap({ x: 500, y: 310 }); // tap Claim
+        rerouter.screen.tap({ x: 500, y: 310 }); // tap Claim
         sendEventRunning(this.botStatus);
         finishRound(true); // 如果可以正確辨識收成功，這個可以刪除，否則是用水池偏空當作有收成功
       },
     });
 
     // PVP
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInPVPArena.name}`,
       match: PAGES.rfpageInPVPArena,
       action: (context, image, matched, finishRound) => {
@@ -1184,18 +1176,18 @@ export class CookieKingdom {
               logs(context.task.name, `rfpageInPVPArena, checking ${i} so tap ${JSON.stringify(tartgetXY[i])} and ${this.taskStatus[TASKS.pvp].battled[i]}`);
               if (!this.taskStatus[TASKS.pvp].battled[i]) {
                 if (i > 2) {
-                  swipeFromToPoint(this.rerouter, { x: 600, y: 182 }, { x: 0, y: 182 }, 6);
+                  swipeFromToPoint({ x: 600, y: 182 }, { x: 0, y: 182 }, 6);
                 }
-                this.rerouter.screen.tap(tartgetXY[i]);
+                rerouter.screen.tap(tartgetXY[i]);
                 this.taskStatus[TASKS.pvp].battled[i] = true;
                 Utils.sleep(this.config.sleepAnimate);
                 return;
               }
             }
 
-            if (this.rerouter.isPageMatch(PAGES.rfpageBattleTargetCanRefresh)) {
+            if (rerouter.isPageMatch(PAGES.rfpageBattleTargetCanRefresh)) {
               logs(context.task.name, `Tap PVP refresh`);
-              this.rerouter.screen.tap({ x: 532, y: 329 });
+              rerouter.screen.tap({ x: 532, y: 329 });
               Utils.sleep(this.config.sleepAnimate);
               return;
             } else {
@@ -1206,7 +1198,7 @@ export class CookieKingdom {
             }
 
           case TASKS.pvpPurchaseAncientCookie:
-            this.rerouter.screen.tap({ x: 178, y: 118 });
+            rerouter.screen.tap({ x: 178, y: 118 });
             break;
           default:
             logs(context.task.name, `rfpageInPVPArena, leave because current task is not pvp related, but: ${context.task.name}`);
@@ -1215,7 +1207,7 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpagePvPNoArenaTicket.name}`,
       match: PAGES.rfpagePvPNoArenaTicket,
       action: (context, image, matched, finishRound) => {
@@ -1230,7 +1222,7 @@ export class CookieKingdom {
         finishRound(true);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpagePVPArenaReadyToBattlePage.name}`,
       match: PAGES.rfpagePVPArenaReadyToBattlePage,
       action: (context, image, matched, finishRound) => {
@@ -1244,8 +1236,8 @@ export class CookieKingdom {
         var ce = getCEs({ x: 496, y: 72, w: 70, h: 16 });
         if (ce < this.config.autoPvPTargetScoreLimit && ce !== 0) {
           logs(context.task.name, `Battle with ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
-          this.rerouter.goNext(PAGES.rfpagePVPArenaReadyToBattlePage); // tap Battle
-          if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpagePVPArenaReadyToBattlePage, 2000)) {
+          rerouter.goNext(PAGES.rfpagePVPArenaReadyToBattlePage); // tap Battle
+          if (rerouter.waitScreenForMatchingPage(PAGES.rfpagePVPArenaReadyToBattlePage, 2000)) {
             return;
           }
         } else {
@@ -1254,7 +1246,7 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpagePVPPromoted.name}`,
       match: PAGES.rfpagePVPPromoted,
       action: (context, image, matched, finishRound) => {
@@ -1264,7 +1256,7 @@ export class CookieKingdom {
     });
 
     // Super Mayhem
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInSuperMayhem.name}`,
       match: PAGES.rfpageInSuperMayhem,
       action: (context, image, matched, finishRound) => {
@@ -1281,14 +1273,14 @@ export class CookieKingdom {
         for (let i = 0; i < scores.length; i++) {
           var ce = scores[i];
           if (ce < this.config.autoPvPTargetScoreLimit && ce !== 0) {
-            if (!this.rerouter.screen.isSameColor({ x: 590, y: battleY[i], r: 121, g: 207, b: 16 })) {
+            if (!rerouter.screen.isSameColor({ x: 590, y: battleY[i], r: 121, g: 207, b: 16 })) {
               logs(context.task.name, `Already Battled with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
               continue;
             }
 
             logs(context.task.name, `Battle with ${i}, ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
-            this.rerouter.screen.tap({ x: 590, y: battleY[i] }); // tap Battle
-            if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageSuperMayhemReadyToBattle, 2000)) {
+            rerouter.screen.tap({ x: 590, y: battleY[i] }); // tap Battle
+            if (rerouter.waitScreenForMatchingPage(PAGES.rfpageSuperMayhemReadyToBattle, 2000)) {
               return;
             }
           } else {
@@ -1296,9 +1288,9 @@ export class CookieKingdom {
           }
         }
 
-        if (this.rerouter.isPageMatch(PAGES.rfpageBattleTargetCanRefresh)) {
+        if (rerouter.isPageMatch(PAGES.rfpageBattleTargetCanRefresh)) {
           logs(context.task.name, `Tap Super mayhem refresh`);
-          this.rerouter.screen.tap({ x: 532, y: 329 });
+          rerouter.screen.tap({ x: 532, y: 329 });
         } else {
           logs(context.task.name, `Cannot tap Super mayhem refresh, job done`);
           sendEventRunning(this.botStatus);
@@ -1309,7 +1301,7 @@ export class CookieKingdom {
     });
 
     // Tropical Island
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInTropicalIsland.name}`,
       match: PAGES.rfpageInTropicalIsland,
       action: (context, image, matched, finishRound) => {
@@ -1330,8 +1322,8 @@ export class CookieKingdom {
               ],
               { x: 360, y: 333 }
             );
-            if (this.rerouter.isPageMatchImage(rfpageCanClaimResource, image)) {
-              this.rerouter.goNext(rfpageCanClaimResource);
+            if (rerouter.isPageMatchImage(rfpageCanClaimResource, image)) {
+              rerouter.goNext(rfpageCanClaimResource);
               logs(context.task.name, `successfully collected island resource`);
             } else {
               logs(context.task.name, `more resources are on the way`);
@@ -1365,18 +1357,18 @@ export class CookieKingdom {
               { x: 422, y: 132, r: 44, g: 46, b: 60 },
             ]);
 
-            this.rerouter.goNext(rfpageSunbedsWithFinishedCookies);
+            rerouter.goNext(rfpageSunbedsWithFinishedCookies);
 
             // Waiting is equired, as the cookie list shows up with a delay
-            if (this.rerouter.waitScreenForMatchingPage(new GroupPage('groupInSunbed', [rfpageFreeAllCrispyCookie, rfpageHasNoCrispyCookie]), 5000)) {
-              if (this.rerouter.isPageMatch(rfpageFreeAllCrispyCookie)) {
-                this.rerouter.goNext(rfpageFreeAllCrispyCookie);
+            if (rerouter.waitScreenForMatchingPage(new GroupPage('groupInSunbed', [rfpageFreeAllCrispyCookie, rfpageHasNoCrispyCookie]), 5000)) {
+              if (rerouter.isPageMatch(rfpageFreeAllCrispyCookie)) {
+                rerouter.goNext(rfpageFreeAllCrispyCookie);
                 Utils.sleep(this.config.sleepAnimate);
                 logs(context.task.name, `successfully collect sunbed cookies`);
               }
-            } else if (this.rerouter.isPageMatch(PAGES.rfpageEmptySunbedsListInMiddle)) {
+            } else if (rerouter.isPageMatch(PAGES.rfpageEmptySunbedsListInMiddle)) {
               logs(context.task.name, `sun bed cookie list is empty`);
-              this.rerouter.goNext(PAGES.rfpageEmptySunbedsListInMiddle);
+              rerouter.goNext(PAGES.rfpageEmptySunbedsListInMiddle);
             }
 
             logs(context.task.name, `finish collecting cookies`);
@@ -1391,7 +1383,7 @@ export class CookieKingdom {
             logs(context.task.name, `handle iconGreenCheckedWhiteBackground, found ${Object.keys(foundResults).length} of them`);
             if (Object.keys(foundResults).length > 0) {
               for (i = 0; i < Object.keys(foundResults).length; i++) {
-                this.rerouter.screen.tap(foundResults[i]);
+                rerouter.screen.tap(foundResults[i]);
                 Utils.sleep(this.config.sleepAnimate);
               }
             }
@@ -1402,9 +1394,9 @@ export class CookieKingdom {
               logs(context.task.name, `handle iconRedExclamation, found ${Object.keys(foundResults).length} of them`);
               if (Object.keys(foundResults).length > 0) {
                 for (i = 0; i < Object.keys(foundResults).length; i++) {
-                  this.rerouter.screen.tap(foundResults[i]);
+                  rerouter.screen.tap(foundResults[i]);
                   Utils.sleep(this.config.sleepAnimate);
-                  this.rerouter.screen.tap(foundResults[i]);
+                  rerouter.screen.tap(foundResults[i]);
                   Utils.sleep(this.config.sleepAnimate);
                   clearBubbleState['iconRedExclamationCount']++;
                   return;
@@ -1417,11 +1409,11 @@ export class CookieKingdom {
             logs(context.task.name, `handle iconIslandHammer, found ${Object.keys(foundResults).length} of them`);
             if (Object.keys(foundResults).length > 0) {
               for (i = 0; i < Object.keys(foundResults).length; i++) {
-                this.rerouter.screen.tap(foundResults[i]);
+                rerouter.screen.tap(foundResults[i]);
                 Utils.sleep(this.config.sleepAnimate * 3);
-                this.rerouter.screen.tap({ x: 324, y: 263 }); // Tab build
+                rerouter.screen.tap({ x: 324, y: 263 }); // Tab build
 
-                if (!this.rerouter.waitScreenForMatchingPage(PAGES.rfpageInTropicalIsland, 4000)) {
+                if (!rerouter.waitScreenForMatchingPage(PAGES.rfpageInTropicalIsland, 4000)) {
                   logs(context.task.name, `Not enough resource to build island, skipping`);
                   sendKeyBack();
                   sendKeyBack();
@@ -1436,15 +1428,15 @@ export class CookieKingdom {
             logs(context.task.name, `handle iconRedSword, found ${Object.keys(foundResults).length} of them`);
             if (Object.keys(foundResults).length > 0) {
               sendEventRunning(this.botStatus);
-              this.rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
+              rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
               return;
             }
 
             foundResults = findSpecificIconInScreen(ICONS.iconWhiteSword);
             logs(context.task.name, `handle iconWhiteSword, found ${Object.keys(foundResults).length} of them`);
             if (Object.keys(foundResults).length > 0) {
-              // this.rerouter.screen.tap(foundResults[i]);
-              this.rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
+              // rerouter.screen.tap(foundResults[i]);
+              rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
               return;
             }
 
@@ -1455,7 +1447,7 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageBattleToClearSodaIsland.name}`,
       match: PAGES.rfpageBattleToClearSodaIsland,
       action: (context, image, matched, finishRound) => {
@@ -1466,16 +1458,16 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `in rfpageBattleToClearSodaIsland, start battle`);
-        this.rerouter.goNext(PAGES.rfpageBattleToClearSodaIsland);
+        rerouter.goNext(PAGES.rfpageBattleToClearSodaIsland);
         return;
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageAddMoreCookies.name}`,
       match: PAGES.rfpageAddMoreCookies,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, `in rfpageAddMoreCookies, cannot start battle so finish current task`);
-        this.rerouter.goNext(PAGES.rfpageAddMoreCookies);
+        rerouter.goNext(PAGES.rfpageAddMoreCookies);
         sendKeyBack();
         sendEventRunning(this.botStatus);
         finishRound(true);
@@ -1483,7 +1475,7 @@ export class CookieKingdom {
     });
 
     // Bounties
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInBounties.name}`,
       match: PAGES.rfpageInBounties,
       action: (context, image, matched, finishRound) => {
@@ -1510,11 +1502,11 @@ export class CookieKingdom {
         }
 
         this.taskStatus[context.task.name]['bountyCount'] = bountyCount;
-        this.rerouter.screen.tap({ x: foundResults[0].x + 40, y: foundResults[0].y + 10 });
+        rerouter.screen.tap({ x: foundResults[0].x + 40, y: foundResults[0].y + 10 });
         return;
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInOneOfTheBounties.name}`,
       match: PAGES.rfpageInOneOfTheBounties,
       action: (context, image, matched, finishRound) => {
@@ -1536,10 +1528,10 @@ export class CookieKingdom {
         for (var bountyIdx = 0; bountyIdx < bountyCount; bountyIdx++) {
           // When there are only one bounty (Sunday), it gets all types of powder thus nothing to OCR
           var powder = bountyCount === 1 ? 0 : ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
-          var bountyLevel = bountyCount === 1 ? 12 : countBountyLevel(this.rerouter);
+          var bountyLevel = bountyCount === 1 ? 12 : countBountyLevel();
 
           if (bountyCount !== 1 && this.config.autoBountiesCheckBluePowder) {
-            var rtn = bountyCheckIfGetBluePowder(this.rerouter);
+            var rtn = bountyCheckIfGetBluePowder();
             powder = rtn[0];
             bountyLevel = rtn[1];
           }
@@ -1553,7 +1545,7 @@ export class CookieKingdom {
             });
           }
 
-          this.rerouter.screen.tap({ x: 435, y: 178 }); // Goto right bounty
+          rerouter.screen.tap({ x: 435, y: 178 }); // Goto right bounty
           Utils.sleep(1500);
         }
 
@@ -1576,27 +1568,27 @@ export class CookieKingdom {
         var targetBounty = bounties[0];
         for (i = 0; i < bountyCount; i++) {
           if (targetBounty['level'] === 6) {
-            this.rerouter.screen.tap({ x: 40, y: 135 }); // Goto left bounty
+            rerouter.screen.tap({ x: 40, y: 135 }); // Goto left bounty
             Utils.sleep(this.config.sleepAnimate * 2);
           }
-          var gotBountyLevel = countBountyLevel(this.rerouter);
+          var gotBountyLevel = countBountyLevel();
           var gotMaterialStock = bountyCount === 1 ? 0 : ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
           if (gotBountyLevel === targetBounty.level && gotMaterialStock === targetBounty.powderStock) {
             logs(context.task.name, `found it, level, stock: ${gotBountyLevel}, ${gotMaterialStock}`);
-            this.rerouter.screen.tap({ x: 530, y: 330 });
+            rerouter.screen.tap({ x: 530, y: 330 });
             break;
           } else {
             logs(
               context.task.name,
               `wrong, ${gotBountyLevel}, ${gotMaterialStock}, ${gotBountyLevel === targetBounty.level}, ${gotMaterialStock === targetBounty.powderStock}`
             );
-            this.rerouter.screen.tap({ x: 435, y: 178 });
+            rerouter.screen.tap({ x: 435, y: 178 });
             Utils.sleep(1500);
           }
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageNeedRefillBounty.name}`,
       match: PAGES.rfpageNeedRefillBounty,
       action: (context, image, matched, finishRound) => {
@@ -1606,12 +1598,12 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `rfpageNeedRefillBounty, cannot battle bounty as no more runs left so finishRound`);
-        this.rerouter.goNext(PAGES.rfpageNeedRefillBounty);
+        rerouter.goNext(PAGES.rfpageNeedRefillBounty);
         sendEventRunning(this.botStatus);
         finishRound(true);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageCannotRefillBountyAnymore.name}`,
       match: PAGES.rfpageCannotRefillBountyAnymore,
       action: (context, image, matched, finishRound) => {
@@ -1621,14 +1613,14 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `rfpageCannotRefillBountyAnymore, cannot battle bounty as no more runs left so finishRound`);
-        this.rerouter.goNext(PAGES.rfpageCannotRefillBountyAnymore);
+        rerouter.goNext(PAGES.rfpageCannotRefillBountyAnymore);
         sendEventRunning(this.botStatus);
         finishRound(true);
       },
     });
 
     // Gnome lab
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInGnomeLab.name}`,
       match: PAGES.rfpageInGnomeLab,
       action: (context, image, matched, finishRound) => {
@@ -1642,7 +1634,7 @@ export class CookieKingdom {
           { x: 47, y: 69, r: 237, g: 237, b: 229 },
           { x: 159, y: 67, r: 117, g: 223, b: 0 },
         ]);
-        if (this.rerouter.isPageMatchImage(rfpageAlreadyResearching, image)) {
+        if (rerouter.isPageMatchImage(rfpageAlreadyResearching, image)) {
           logs(context.task.name, `rfpageInGnomeLab, Already researching, skipping handleInGnomeLab`);
           sendKeyBack();
           sendEventRunning(this.botStatus);
@@ -1662,18 +1654,18 @@ export class CookieKingdom {
 
         // TODO： 極光產品檢查還沒做
         if (this.config.autoResearchKingdom) {
-          this.rerouter.screen.tap({ x: 200, y: 340 });
-          handleResearchInGnomeLab(this.rerouter, finishRound, ICONS.iconsGnomeLabKingdom, 0.94);
+          rerouter.screen.tap({ x: 200, y: 340 });
+          handleResearchInGnomeLab(finishRound, ICONS.iconsGnomeLabKingdom, 0.94);
         }
         if (this.config.autoResearchCookies) {
-          this.rerouter.screen.tap({ x: 310, y: 340 });
-          handleResearchInGnomeLab(this.rerouter, finishRound, ICONS.iconsGnomeLabCookies, 0.9);
+          rerouter.screen.tap({ x: 310, y: 340 });
+          handleResearchInGnomeLab(finishRound, ICONS.iconsGnomeLabCookies, 0.9);
         }
 
         return;
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageCanTapResearch.name}`,
       match: PAGES.rfpageCanTapResearch,
       action: (context, image, matched, finishRound) => {
@@ -1684,9 +1676,9 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `rfpageCanTapResearch, start researching and finishRound`);
-        this.rerouter.goNext(PAGES.rfpageCanTapResearch);
+        rerouter.goNext(PAGES.rfpageCanTapResearch);
 
-        if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughAuroraItemForReserch, 2000)) {
+        if (rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughAuroraItemForReserch, 2000)) {
           logs(context.task.name, `rfpageNotEnoughAuroraItemForReserch, cannot research this one`);
           sendKeyBack();
           Utils.sleep(this.config.sleep);
@@ -1699,7 +1691,7 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageNotEnoughAuroraItemForReserch.name}`,
       match: PAGES.rfpageNotEnoughAuroraItemForReserch,
       action: (context, image, matched, finishRound) => {
@@ -1710,12 +1702,12 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `rfpageNotEnoughAuroraItemForReserch, skip and finishRound`);
-        this.rerouter.goNext(PAGES.rfpageNotEnoughAuroraItemForReserch);
+        rerouter.goNext(PAGES.rfpageNotEnoughAuroraItemForReserch);
         sendKeyBack();
         finishRound(true);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageNotEnoughItemsForResearch.name}`,
       match: PAGES.rfpageNotEnoughItemsForResearch,
       action: (context, image, matched, finishRound) => {
@@ -1726,14 +1718,14 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `rfpageNotEnoughItemsForResearch, skip and finishRound`);
-        this.rerouter.goNext(PAGES.rfpageNotEnoughItemsForResearch);
+        rerouter.goNext(PAGES.rfpageNotEnoughItemsForResearch);
         sendKeyBack();
         finishRound(true);
       },
     });
 
     // Trade habor
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInTradeHabor.name}`,
       match: PAGES.rfpageInTradeHabor,
       action: (context, image, matched, finishRound) => {
@@ -1752,7 +1744,7 @@ export class CookieKingdom {
 
         switch (context.task.name) {
           case TASKS.haborSendShip:
-            if (this.rerouter.isPageMatchImage(PAGES.rfpageNoShipInHabor, image)) {
+            if (rerouter.isPageMatchImage(PAGES.rfpageNoShipInHabor, image)) {
               logs(context.task.name, `No ship in habor, finish ${context.task.name}`);
               sendEventRunning(this.botStatus);
               finishRound(true);
@@ -1764,54 +1756,54 @@ export class CookieKingdom {
             var shipInHabor = true;
             for (i = 0; i < 5 && shipInHabor; i++) {
               for (var xPixel = i === 0 ? 55 : 200; xPixel < 620; xPixel += 60) {
-                this.rerouter.screen.tap({ x: xPixel, y: 318 });
+                rerouter.screen.tap({ x: xPixel, y: 318 });
                 Utils.sleep(this.config.sleepAnimate * 2);
 
-                if (this.rerouter.isPageMatch(PAGES.rfpageCanLoadThisItem)) {
+                if (rerouter.isPageMatch(PAGES.rfpageCanLoadThisItem)) {
                   logs(context.task.name, `can load the item at x: ${xPixel}`);
-                  this.rerouter.screen.tap({ x: 408, y: 202 }); // tap Max
+                  rerouter.screen.tap({ x: 408, y: 202 }); // tap Max
                   Utils.sleep(this.config.sleep);
 
-                  this.rerouter.screen.tap({ x: 342, y: 240 }); // tap load
+                  rerouter.screen.tap({ x: 342, y: 240 }); // tap load
                   Utils.sleep(this.config.sleepAnimate);
                 }
-                if (this.rerouter.isPageMatch(PAGES.rfpageLoadTooMuchWarning)) {
-                  this.rerouter.screen.tap({ x: 270, y: 252 }); // Cancel ship confirm
+                if (rerouter.isPageMatch(PAGES.rfpageLoadTooMuchWarning)) {
+                  rerouter.screen.tap({ x: 270, y: 252 }); // Cancel ship confirm
                   Utils.sleep(this.config.sleepAnimate);
-                  this.rerouter.screen.tap({ x: 270, y: 200 }); // tap minus icon
+                  rerouter.screen.tap({ x: 270, y: 200 }); // tap minus icon
                   Utils.sleep(this.config.sleepAnimate);
-                  this.rerouter.screen.tap({ x: 320, y: 240 }); // tap load
+                  rerouter.screen.tap({ x: 320, y: 240 }); // tap load
                   Utils.sleep(this.config.sleepAnimate);
                 }
-                if (this.rerouter.isPageMatch(PAGES.rfpageLoadTooMuchWarning)) {
+                if (rerouter.isPageMatch(PAGES.rfpageLoadTooMuchWarning)) {
                   //Even one item is too much
-                  this.rerouter.screen.tap({ x: 270, y: 252 }); // Cancel ship confirm
+                  rerouter.screen.tap({ x: 270, y: 252 }); // Cancel ship confirm
                   Utils.sleep(this.config.sleepAnimate);
-                  this.rerouter.screen.tap({ x: 434, y: 50 }); // tap close icon
+                  rerouter.screen.tap({ x: 434, y: 50 }); // tap close icon
                   Utils.sleep(this.config.sleepAnimate);
-                  this.rerouter.screen.tap({ x: 320, y: 240 }); // tap load
+                  rerouter.screen.tap({ x: 320, y: 240 }); // tap load
                   Utils.sleep(this.config.sleepAnimate * 2);
                 }
 
-                if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNoShipInHabor, 3000)) {
+                if (rerouter.waitScreenForMatchingPage(PAGES.rfpageNoShipInHabor, 3000)) {
                   logs(context.task.name, `Send the ship successfully`);
                   shipInHabor = false;
                   break;
                 }
               }
 
-              if (this.rerouter.isPageMatch(PAGES.rfpageNoShipInHabor)) {
+              if (rerouter.isPageMatch(PAGES.rfpageNoShipInHabor)) {
                 break;
               }
-              swipeFromToPoint(this.rerouter, { x: 629, y: 319 }, { x: 200, y: 319 }, 5);
+              swipeFromToPoint({ x: 629, y: 319 }, { x: 200, y: 319 }, 5);
             }
 
             return;
           case TASKS.haborShopInSeaMarket:
-            this.rerouter.screen.tap({ x: 95, y: 230 });
+            rerouter.screen.tap({ x: 95, y: 230 });
             return;
           case TASKS.haborShopInShellGallery:
-            this.rerouter.screen.tap({ x: 32, y: 226 });
+            rerouter.screen.tap({ x: 32, y: 226 });
             return;
           default:
             console.log('donno what to do in rfpageInTradeHabor, send back');
@@ -1819,7 +1811,7 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInSeasideMarket.name}`,
       match: PAGES.rfpageInSeasideMarket,
       action: (context, image, matched, finishRound) => {
@@ -1834,17 +1826,17 @@ export class CookieKingdom {
 
         const marketSearchArea = { x: 0, y: 180, w: 630, h: 140 };
         let seamarketState = this.taskStatus[TASKS.haborShopInSeaMarket];
-        if (this.rerouter.isPageMatch(PAGES.rfpageFreeRefreshSeasideMarket)) {
-          this.rerouter.screen.tap({ x: 543, y: 336 }); // market free refresh, no need to pull to the head of the list as refresh will reset the list
+        if (rerouter.isPageMatch(PAGES.rfpageFreeRefreshSeasideMarket)) {
+          rerouter.screen.tap({ x: 543, y: 336 }); // market free refresh, no need to pull to the head of the list as refresh will reset the list
           Utils.sleep(this.config.sleepAnimate);
 
-          if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNeedDiamondRefreshMarket, 3000)) {
-            this.rerouter.goNext(PAGES.rfpageNeedDiamondRefreshMarket);
+          if (rerouter.waitScreenForMatchingPage(PAGES.rfpageNeedDiamondRefreshMarket, 3000)) {
+            rerouter.goNext(PAGES.rfpageNeedDiamondRefreshMarket);
             Utils.sleep(this.config.sleepAnimate);
           }
         } else if (seamarketState.needPullToRightHead) {
           // swipe to start of the list
-          swipeFromToPoint(this.rerouter, { x: 0, y: 234 }, { x: 4000, y: 234 }, 6, undefined, PAGES.rfpageInSeasideMarket);
+          swipeFromToPoint({ x: 0, y: 234 }, { x: 4000, y: 234 }, 6, undefined, PAGES.rfpageInSeasideMarket);
           seamarketState.needPullToRightHead = false;
         }
 
@@ -1864,39 +1856,36 @@ export class CookieKingdom {
 
         // Remove sold out aurora items
         if (this.config.autoBalanceAuroraStocks && seamarketState.rareItems.length > 0) {
-          if (this.rerouter.isPageMatchImage(rfpage1stAuroraSoldOut, image)) {
+          if (rerouter.isPageMatchImage(rfpage1stAuroraSoldOut, image)) {
             seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 66);
           }
-          if (this.rerouter.isPageMatchImage(rfpage2ndAuroraSoldOut, image)) {
+          if (rerouter.isPageMatchImage(rfpage2ndAuroraSoldOut, image)) {
             seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 158);
           }
-          if (this.rerouter.isPageMatchImage(rfpage3rdAuroraSoldOut, image)) {
+          if (rerouter.isPageMatchImage(rfpage3rdAuroraSoldOut, image)) {
             seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 253);
           }
         }
 
         // Market will remove Carmel map/scope back from the shopping list if it is fulled
         if (this.config.autoBuyCaramelStuff && seamarketState.rareItems.length > 0) {
-          if (this.rerouter.isPageMatchImage(rfpageCarmelMapMax, image)) {
+          if (rerouter.isPageMatchImage(rfpageCarmelMapMax, image)) {
             seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 346);
           }
-          if (this.rerouter.isPageMatchImage(rfpageCarmeScopeMax, image)) {
+          if (rerouter.isPageMatchImage(rfpageCarmeScopeMax, image)) {
             seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 439);
           }
         }
 
         if (this.taskStatus[TASKS.haborShopInSeaMarket].rareItems.length > 0) {
-          console.log(
-            '>> considerPurchaseSeasideMarket:',
-            considerPurchaseSeasideMarket(this.rerouter, this.taskStatus[TASKS.haborShopInSeaMarket].rareItems.shift())
-          );
+          console.log('>> considerPurchaseSeasideMarket:', considerPurchaseSeasideMarket(this.taskStatus[TASKS.haborShopInSeaMarket].rareItems.shift()));
           return;
         }
         if (this.taskStatus[TASKS.haborShopInSeaMarket].needToBuyRadiantShard) {
           logs(context.task.name, 'Purchasing radiant shard');
-          this.rerouter.screen.tap({ x: 540, y: 270 });
+          rerouter.screen.tap({ x: 540, y: 270 });
           Utils.sleep(this.config.sleepAnimate);
-          this.rerouter.screen.tap({ x: 315, y: 247 });
+          rerouter.screen.tap({ x: 315, y: 247 });
           Utils.sleep(2000);
           this.taskStatus[TASKS.haborShopInSeaMarket].needToBuyRadiantShard = false;
         }
@@ -1917,7 +1906,7 @@ export class CookieKingdom {
         if (this.taskStatus[TASKS.haborShopInSeaMarket].purchaseIndex >= Object.keys(ICONS.iconSeasideMarketItems).length) {
           seamarketState.rightSlideCount++;
           seamarketState.purchaseIndex = 0;
-          swipeFromToPoint(this.rerouter, { x: 600, y: 234 }, { x: 0, y: 234 }, 6, undefined, PAGES.rfpageInSeasideMarket);
+          swipeFromToPoint({ x: 600, y: 234 }, { x: 0, y: 234 }, 6, undefined, PAGES.rfpageInSeasideMarket);
           sleep(2000);
           seamarketState.foundResult = undefined;
           return;
@@ -1951,7 +1940,7 @@ export class CookieKingdom {
 
         console.log(`>> 4 decided to purchase ${ICONS.iconSeasideMarketItems[seamarketState.purchaseIndex].name}, state: ${JSON.stringify(seamarketState)}`);
         // iii++;
-        this.rerouter.screen.tap({
+        rerouter.screen.tap({
           x: marketSearchArea.x + seamarketState.foundResults[seamarketState.foundIndex].x,
           y: marketSearchArea.y + seamarketState.foundResults[seamarketState.foundIndex].y,
         });
@@ -1959,7 +1948,7 @@ export class CookieKingdom {
         seamarketState.foundIndex++;
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageMarketItemDetail.name}`,
       match: PAGES.rfpageMarketItemDetail,
       action: (context, image, matched, finishRound) => {
@@ -1987,7 +1976,7 @@ export class CookieKingdom {
               ICONS.iconSeasideMarketItems[this.taskStatus[TASKS.haborShopInSeaMarket].purchaseIndex].name
             } in seaside market due to having ${productNowHave}, less than target ${this.config.materialsTarget}`
           );
-          this.rerouter.goNext(PAGES.rfpageMarketItemDetail);
+          rerouter.goNext(PAGES.rfpageMarketItemDetail);
           sleep(2000);
         } else {
           logs(context.task.name, `Not purchase seaside market so send back due to having ${productNowHave}, more than target ${this.config.materialsTarget}`);
@@ -1995,7 +1984,7 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageNotEnoughItemToBuyThis.name}`,
       match: PAGES.rfpageNotEnoughItemToBuyThis,
       action: (context, image, matched, finishRound) => {
@@ -2008,7 +1997,7 @@ export class CookieKingdom {
       },
     });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInShellShop.name}`,
       match: PAGES.rfpageInShellShop,
       action: (context, image, matched, finishRound) => {
@@ -2024,12 +2013,12 @@ export class CookieKingdom {
           { x: 82, y: 199, r: 239, g: 24, b: 24 },
         ]);
         if (galleryState.autoBuySeaFairy) {
-          if (this.rerouter.isPageMatchImage(rfpageLegendarySoldOut, image)) {
+          if (rerouter.isPageMatchImage(rfpageLegendarySoldOut, image)) {
             logs(context.task.name, `Purchased legendary cookie successfully`);
             galleryState.autoBuySeaFairy = false;
           } else {
             logs(context.task.name, `Purchasing legendary cookie`);
-            this.rerouter.screen.tap({ x: 80, y: 313 });
+            rerouter.screen.tap({ x: 80, y: 313 });
             return;
           }
         }
@@ -2039,12 +2028,12 @@ export class CookieKingdom {
           { x: 387, y: 229, r: 198, g: 121, b: 57 },
         ]);
         if (galleryState.autoBuyGuildRelic) {
-          if (this.rerouter.isPageMatchImage(rfpageRelicSoldOut, image)) {
+          if (rerouter.isPageMatchImage(rfpageRelicSoldOut, image)) {
             logs(context.task.name, `Purchased guild relic successfully`);
             galleryState.autoBuyGuildRelic = false;
           } else {
             logs(context.task.name, `Purchasing guild relic`);
-            this.rerouter.screen.tap({ x: 360, y: 313 });
+            rerouter.screen.tap({ x: 360, y: 313 });
             return;
           }
         }
@@ -2054,12 +2043,12 @@ export class CookieKingdom {
           { x: 277, y: 140, r: 246, g: 255, b: 255 },
         ]);
         if (galleryState.autoBuyLegendSoulEssence) {
-          if (this.rerouter.isPageMatchImage(rfpageLegendSoulEssenceSoldOut, image)) {
+          if (rerouter.isPageMatchImage(rfpageLegendSoulEssenceSoldOut, image)) {
             logs(context.task.name, `Purchased legend soul essence successfully`);
             galleryState.autoBuyLegendSoulEssence = false;
           } else {
             logs(context.task.name, `Purchasing legend soul essence`);
-            this.rerouter.screen.tap({ x: 270, y: 192 });
+            rerouter.screen.tap({ x: 270, y: 192 });
             return;
           }
         }
@@ -2069,12 +2058,12 @@ export class CookieKingdom {
           { x: 274, y: 263, r: 247, g: 138, b: 247 },
         ]);
         if (galleryState.autoBuyEpicSoulEssence) {
-          if (this.rerouter.isPageMatchImage(rfpageEpicSoulEssenceSoldOut, image)) {
+          if (rerouter.isPageMatchImage(rfpageEpicSoulEssenceSoldOut, image)) {
             logs(context.task.name, `Purchased epic soul essence successfully`);
             galleryState.autoBuyEpicSoulEssence = false;
           } else {
             logs(context.task.name, `Purchasing epic soul essence`);
-            this.rerouter.screen.tap({ x: 270, y: 318 });
+            rerouter.screen.tap({ x: 270, y: 318 });
             return;
           }
         }
@@ -2085,7 +2074,7 @@ export class CookieKingdom {
         logs(context.task.name, `${context.path} finishRound`);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInTowerOfSweetChaos.name}`,
       match: PAGES.rfpageInTowerOfSweetChaos,
       action: (context, image, matched, finishRound) => {
@@ -2109,21 +2098,21 @@ export class CookieKingdom {
           ],
           { x: 30, y: 326 }
         );
-        if (this.rerouter.isPageMatchImage(rfpageHasTrayJump, image)) {
+        if (rerouter.isPageMatchImage(rfpageHasTrayJump, image)) {
           logs(context.task.name, `Found rfpageHasTrayJump so tap it`);
-          this.rerouter.goNext(rfpageHasTrayJump);
+          rerouter.goNext(rfpageHasTrayJump);
           return;
         }
 
         var downArrow = findSpecificIconInScreen(ICONS.iconTowerOfSweetChoasDownArrow);
         if (Object.keys(downArrow).length > 0) {
-          this.rerouter.screen.tap(downArrow[0]);
+          rerouter.screen.tap(downArrow[0]);
           Utils.sleep(5000);
         }
 
-        this.rerouter.screen.tap({ x: 180, y: 30 }); // Tap up arrow
+        rerouter.screen.tap({ x: 180, y: 30 }); // Tap up arrow
         Utils.sleep(this.config.sleepAnimate * 2);
-        this.rerouter.screen.tap({ x: 180, y: 130 }); // Go to the top tray
+        rerouter.screen.tap({ x: 180, y: 130 }); // Go to the top tray
         Utils.sleep(this.config.sleepAnimate);
 
         // 在甜點塔有可能會是戰鬥或要開寶箱
@@ -2138,11 +2127,11 @@ export class CookieKingdom {
           ],
           { x: 443, y: 328 }
         );
-        if (this.rerouter.isPageMatchImage(rfpageToSCTreasureChest, image)) {
-          this.rerouter.goNext(rfpageToSCTreasureChest);
+        if (rerouter.isPageMatchImage(rfpageToSCTreasureChest, image)) {
+          rerouter.goNext(rfpageToSCTreasureChest);
           Utils.sleep(2000);
 
-          if (!tapThroughAnimate(this.rerouter, PAGES.rfpageInTowerOfSweetChaos, PAGES.rfpageInTowerOfSweetChaos.next as XY, 7000)) {
+          if (!tapThroughAnimate(PAGES.rfpageInTowerOfSweetChaos, PAGES.rfpageInTowerOfSweetChaos.next as XY, 7000)) {
             logs(context.task.name, `${context.path}, Cannot return from collect treasure chest, finish round`);
             sendKeyBack();
             finishRound(true);
@@ -2158,12 +2147,12 @@ export class CookieKingdom {
           finishRound(true);
           return;
         } else {
-          this.rerouter.screen.tap({ x: 571, y: 327 });
+          rerouter.screen.tap({ x: 571, y: 327 });
           toscState.tryCount++;
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageReadyToBattleToSC.name}`,
       match: PAGES.rfpageReadyToBattleToSC,
       action: (context, image, matched, finishRound) => {
@@ -2174,11 +2163,11 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `${context.path}, tap battle`);
-        this.rerouter.goNext(PAGES.rfpageReadyToBattleToSC);
+        rerouter.goNext(PAGES.rfpageReadyToBattleToSC);
       },
     });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInGuildLand.name}`,
       match: PAGES.rfpageInGuildLand,
       action: (context, image, matched, finishRound) => {
@@ -2191,19 +2180,19 @@ export class CookieKingdom {
 
         switch (context.task.name) {
           case TASKS.guildCheckin:
-            this.rerouter.screen.tap({ x: 315, y: 217 }); // tap center guild level up trophy
+            rerouter.screen.tap({ x: 315, y: 217 }); // tap center guild level up trophy
             Utils.sleep(2000);
             break;
           case TASKS.guildExpandLand:
-            // this.rerouter.screen.tap({ x: 315, y: 217 });
+            // rerouter.screen.tap({ x: 315, y: 217 });
             // Utils.sleep(2000);
             break;
           case TASKS.guildBattleDragon:
-            this.rerouter.screen.tap({ x: 150, y: 328 }); // tap dragon icon
+            rerouter.screen.tap({ x: 150, y: 328 }); // tap dragon icon
             Utils.sleep(2000);
             break;
           case TASKS.guildBattleAlliance:
-            this.rerouter.screen.tap({ x: 200, y: 330 }); // tap alliance icon
+            rerouter.screen.tap({ x: 200, y: 330 }); // tap alliance icon
             Utils.sleep(5000);
             break;
           default:
@@ -2214,33 +2203,33 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInGuildBeacon.name}`,
       match: PAGES.rfpageInGuildBeacon,
       action: (context, image, matched, finishRound) => {
         if (context.task.name === TASKS.guildCheckin) {
           logs(context.task.name, `in rfpageInGuildBeacon, finishRound`);
-          this.rerouter.goNext(PAGES.rfpageInGuildBeacon);
+          rerouter.goNext(PAGES.rfpageInGuildBeacon);
           sendEventRunning(this.botStatus);
           finishRound(true);
         }
         sendKeyBack();
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfPageGuildBeaconIsClear.name}`,
       match: PAGES.rfPageGuildBeaconIsClear,
       action: (context, image, matched, finishRound) => {
         if (context.task.name === TASKS.guildCheckin) {
           logs(context.task.name, `in rfPageGuildBeaconIsClear, finishRound`);
-          this.rerouter.goNext(PAGES.rfPageGuildBeaconIsClear);
+          rerouter.goNext(PAGES.rfPageGuildBeaconIsClear);
           sendEventRunning(this.botStatus);
           finishRound(true);
         }
         sendKeyBack();
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageBattleDragon.name}`,
       match: PAGES.rfpageBattleDragon,
       action: (context, image, matched, finishRound) => {
@@ -2264,13 +2253,13 @@ export class CookieKingdom {
 
         logs(context.task.name, `Try to fight boss: ${dragonStatus.bossIdx}`);
         let bossEntryPoint: XYRGB = guildBossesEntryPoints[dragonStatus.bossIdx];
-        this.rerouter.screen.tap(bossEntryPoint);
+        rerouter.screen.tap(bossEntryPoint);
 
         dragonStatus.bossIdx++;
         return;
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageDragonAddMoreCookie.name}`,
       match: PAGES.rfpageDragonAddMoreCookie,
       action: (context, image, matched, finishRound) => {
@@ -2286,7 +2275,7 @@ export class CookieKingdom {
         return;
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageReadyToFightDragon.name}`,
       match: PAGES.rfpageReadyToFightDragon,
       action: (context, image, matched, finishRound) => {
@@ -2295,10 +2284,10 @@ export class CookieKingdom {
           return;
         }
 
-        this.rerouter.goNext(PAGES.rfpageReadyToFightDragon);
+        rerouter.goNext(PAGES.rfpageReadyToFightDragon);
         Utils.sleep(6000);
 
-        if (this.rerouter.isPageMatch(PAGES.rfpageReadyToFightDragon)) {
+        if (rerouter.isPageMatch(PAGES.rfpageReadyToFightDragon)) {
           logs(context.task.name, `Still in rfpageReadyToFightDragon 6 secs after tapped Battle!, no more dragon ticket, finish round`);
           sendEventRunning(this.botStatus);
           finishRound(true);
@@ -2306,7 +2295,7 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageStartedFightingSoCannotStartBeacon.name}`,
       match: PAGES.rfpageStartedFightingSoCannotStartBeacon,
       action: (context, image, matched, finishRound) => {
@@ -2315,17 +2304,17 @@ export class CookieKingdom {
           return;
         }
 
-        this.rerouter.screen.tap({ x: 372, y: 287 });
+        rerouter.screen.tap({ x: 372, y: 287 });
         Utils.sleep(2000);
 
-        if (this.rerouter.isPageMatch(PAGES.rfpageStartedFightingSoCannotStartBeacon)) {
+        if (rerouter.isPageMatch(PAGES.rfpageStartedFightingSoCannotStartBeacon)) {
           logs(context.task.name, `rfpageStartedFightingSoCannotStartBeacon, stop trying to ignite beacon`);
           this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon = false;
-          this.rerouter.goNext(PAGES.rfpageStartedFightingSoCannotStartBeacon);
+          rerouter.goNext(PAGES.rfpageStartedFightingSoCannotStartBeacon);
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInCookieAlliance.name}`,
       match: PAGES.rfpageInCookieAlliance,
       action: (context, image, matched, finishRound) => {
@@ -2336,16 +2325,16 @@ export class CookieKingdom {
 
         logs(context.task.name, `start guild alliance battle`);
 
-        if (this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon && this.rerouter.isPageMatchImage(PAGES.rfpageAllianceBeaconIsOff, image)) {
-          this.rerouter.screen.tap({ x: 215, y: 198 });
+        if (this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon && rerouter.isPageMatchImage(PAGES.rfpageAllianceBeaconIsOff, image)) {
+          rerouter.screen.tap({ x: 215, y: 198 });
           return;
         }
 
-        this.rerouter.screen.tap({ x: 515, y: 324 });
+        rerouter.screen.tap({ x: 515, y: 324 });
         Utils.sleep(this.config.sleepAnimate);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageSelectStartingTeam.name}`,
       match: PAGES.rfpageSelectStartingTeam,
       action: (context, image, matched, finishRound) => {
@@ -2355,20 +2344,20 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `found rfpageSelectStartingTeam, tap all from top`);
-        this.rerouter.screen.tap({ x: 470, y: 70 });
+        rerouter.screen.tap({ x: 470, y: 70 });
         Utils.sleep(this.config.sleep);
-        this.rerouter.screen.tap({ x: 470, y: 113 });
+        rerouter.screen.tap({ x: 470, y: 113 });
         Utils.sleep(this.config.sleep);
-        this.rerouter.screen.tap({ x: 470, y: 165 });
+        rerouter.screen.tap({ x: 470, y: 165 });
         Utils.sleep(this.config.sleep);
-        this.rerouter.screen.tap({ x: 470, y: 215 });
+        rerouter.screen.tap({ x: 470, y: 215 });
         Utils.sleep(this.config.sleep);
-        this.rerouter.screen.tap({ x: 470, y: 267 });
+        rerouter.screen.tap({ x: 470, y: 267 });
         Utils.sleep(this.config.sleep);
         return;
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageCannotRefilAllianceTicketToday.name}`,
       match: PAGES.rfpageCannotRefilAllianceTicketToday,
       action: (context, image, matched, finishRound) => {
@@ -2378,14 +2367,14 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `found rfpageCannotRefilAllianceTicketToday, finish round`);
-        this.rerouter.screen.tap({ x: 282, y: 276 });
+        rerouter.screen.tap({ x: 282, y: 276 });
         sendEventRunning(this.botStatus);
         finishRound(true);
       },
     });
 
     // Battle handling
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageBattlePaused.name}`,
       match: PAGES.rfpageBattlePaused,
       action: (context, image, matched, finishRound) => {
@@ -2398,13 +2387,13 @@ export class CookieKingdom {
           case TASKS.towerOfSweetChaos:
           case TASKS.guildBattleDragon:
           case TASKS.guildBattleAlliance:
-            this.rerouter.screen.tap({ x: 315, y: 159 });
+            rerouter.screen.tap({ x: 315, y: 159 });
             this.lastBattleChecked = Date.now();
             Utils.sleep(5000);
             break;
           default:
             logs(context.task.name, `Not sure why in battle, tap continue again in 5 secs`);
-            this.rerouter.screen.tap({ x: 315, y: 159 });
+            rerouter.screen.tap({ x: 315, y: 159 });
             this.lastBattleChecked = Date.now();
             Utils.sleep(5000);
           // TODO: will fail when resume battle
@@ -2414,7 +2403,7 @@ export class CookieKingdom {
       },
     });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInPVPMedalShop.name}`,
       match: PAGES.rfpageInPVPMedalShop,
       action: (context, image, matched, finishRound) => {
@@ -2435,20 +2424,20 @@ export class CookieKingdom {
           { x: 164, y: 98, r: 74, g: 76, b: 87 },
         ]);
 
-        if (!this.rerouter.isPageMatchImage(rfpagePVPAncientCookieSoldout, image)) {
-          this.rerouter.screen.tap({ x: 57, y: 125 });
+        if (!rerouter.isPageMatchImage(rfpagePVPAncientCookieSoldout, image)) {
+          rerouter.screen.tap({ x: 57, y: 125 });
           Utils.sleep(1000);
-          this.rerouter.screen.tap({ x: 317, y: 245 });
+          rerouter.screen.tap({ x: 317, y: 245 });
           Utils.sleep(2000);
           logs(context.task.name, `Purchased ancient cookie successfully`);
         } else {
           logs(context.task.name, `ancient cookie already sold out`);
         }
 
-        if (!this.rerouter.isPageMatchImage(rfpagePVPSuperEpicCookieSoldout, image)) {
-          this.rerouter.screen.tap({ x: 145, y: 125 });
+        if (!rerouter.isPageMatchImage(rfpagePVPSuperEpicCookieSoldout, image)) {
+          rerouter.screen.tap({ x: 145, y: 125 });
           Utils.sleep(1000);
-          this.rerouter.screen.tap({ x: 317, y: 245 });
+          rerouter.screen.tap({ x: 317, y: 245 });
           Utils.sleep(2000);
           logs(context.task.name, `Purchased super epic cookie successfully`);
         } else {
@@ -2459,7 +2448,7 @@ export class CookieKingdom {
         finishRound(true);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpagePVPNotEnoughMedal.name}`,
       match: PAGES.rfpagePVPNotEnoughMedal,
       action: (context, image, matched, finishRound) => {
@@ -2469,12 +2458,12 @@ export class CookieKingdom {
         }
 
         logs(context.task.name, `in rfpagePVPNotEnoughMedal, Need more medals, skipping`);
-        this.rerouter.goNext(PAGES.rfpagePVPNotEnoughMedal);
+        rerouter.goNext(PAGES.rfpagePVPNotEnoughMedal);
         finishRound(true);
       },
     });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInProductionDashboard.name}`,
       match: PAGES.rfpageInProductionDashboard,
       action: (context, image, matched, finishRound) => {
@@ -2485,7 +2474,7 @@ export class CookieKingdom {
         }
 
         if (
-          !this.rerouter.isPageMatchImage(
+          !rerouter.isPageMatchImage(
             new Page('rfpageListIsAtTop', [
               { x: 27, y: 47, r: 49, g: 158, b: 231 },
               { x: 26, y: 114, r: 49, g: 158, b: 231 },
@@ -2493,17 +2482,17 @@ export class CookieKingdom {
             image
           )
         ) {
-          swipeFromToPoint(this.rerouter, { x: 140, y: 80 }, { x: 149, y: 270 }, 5);
+          swipeFromToPoint({ x: 140, y: 80 }, { x: 149, y: 270 }, 5);
           logs(context.task.name, `rfpageInProductionDashboard, swipe to the top `);
         }
-        this.rerouter.goNext(PAGES.rfpageInProductionDashboard);
+        rerouter.goNext(PAGES.rfpageInProductionDashboard);
         this.config.buildTowardsTheLeft = !this.config.buildTowardsTheLeft;
         this.taskStatus[TASKS.production].productionBuildingChecked = 0;
         logs(context.task.name, `reverse buildTowardsTheLeft, it is now ${this.config.buildTowardsTheLeft}`);
         sleep(this.config.sleepAnimate * 2);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInProduction.name}`,
       match: PAGES.rfpageInProduction,
       action: (context, image, matched, finishRound) => {
@@ -2513,27 +2502,27 @@ export class CookieKingdom {
           return;
         }
 
-        collectFinishedGoods(this.rerouter);
+        collectFinishedGoods();
 
-        var emptySlots = countProductionSlotAvailable(this.rerouter);
+        var emptySlots = countProductionSlotAvailable();
         if (emptySlots === 0) {
           logs(context.task.name, 'No available production slot, skip this production');
-          handleNextProductionBuilding(this.rerouter, this.config.buildTowardsTheLeft);
+          handleNextProductionBuilding(this.config.buildTowardsTheLeft);
           return true;
         }
         logs(context.task.name, `emptySlots: ${emptySlots}`);
 
         var materialCount = ocrNumberInRect({ x: 355, y: 10, w: 35, h: 18 }, ICONS.wNumbers);
 
-        const materialType = this.rerouter.getPagesMatchImage(PAGES.groupPageMaterialProdMenu, image)[0];
-        // this.rerouter.getCurrentMatchNames();
+        const materialType = rerouter.getPagesMatchImage(PAGES.groupPageMaterialProdMenu, image)[0];
+        // rerouter.getCurrentMatchNames();
         // console.log('>> ', JSON.stringify(materialType));
         // iii++;
 
         if (materialCount == -1) {
           logs(context.task.name, 'This is not a material production');
 
-          let newSlots = makeGoodsToTarget(rerouter, this.config.goodsTarget, this.config.productSafetyStock, this.config.axeStockTo400);
+          let newSlots = makeGoodsToTarget(this.config.goodsTarget, this.config.productSafetyStock, this.config.axeStockTo400);
           if (newSlots !== -1 && newSlots !== emptySlots) {
             logs(context.task.name, `emptySlots count changed after makeGoodsToTarget (${emptySlots} => ${newSlots}), send running`);
             sendEventRunning(this.botStatus);
@@ -2542,7 +2531,7 @@ export class CookieKingdom {
           logs(context.task.name, `Skip as stock enough: ${materialCount}`);
         } else {
           logs(context.task.name, `Material tsock: ${materialCount}, target: ${this.config.materialsTarget}`);
-          const materialType = this.rerouter.getPagesMatchImage(PAGES.groupPageMaterialProdMenu, image)[0];
+          const materialType = rerouter.getPagesMatchImage(PAGES.groupPageMaterialProdMenu, image)[0];
           this.taskStatus[TASKS.production]['stocks'][materialType.name] = materialCount;
 
           if (this.taskStatus[TASKS.production].lastProductionBuilding !== materialType.name) {
@@ -2562,31 +2551,31 @@ export class CookieKingdom {
 
             case 'rfpagePowderFarm':
             case 'rfpageBarryFarm':
-              if (this.rerouter.isPageMatch(PAGES.productMapping[2])) {
+              if (rerouter.isPageMatch(PAGES.productMapping[2])) {
                 logs(context.task.name, `${materialType.name}, order 2nd item`);
-                this.rerouter.goNext(PAGES.productMapping[2]);
+                rerouter.goNext(PAGES.productMapping[2]);
                 Utils.sleep(this.config.sleepAnimate);
-                this.rerouter.goNext(PAGES.productMapping[2]);
+                rerouter.goNext(PAGES.productMapping[2]);
                 Utils.sleep(this.config.sleepAnimate);
               } else {
                 logs(context.task.name, `${materialType.name}, order 1st item`);
-                this.rerouter.goNext(PAGES.productMapping[1]);
+                rerouter.goNext(PAGES.productMapping[1]);
                 Utils.sleep(this.config.sleepAnimate);
-                this.rerouter.goNext(PAGES.productMapping[1]);
+                rerouter.goNext(PAGES.productMapping[1]);
                 Utils.sleep(this.config.sleepAnimate);
               }
               break;
             case 'rfpageMilkFarm':
             case 'rfpageCottomFarm':
               logs(context.task.name, `${materialType.name}, order 1st item`);
-              this.rerouter.goNext(PAGES.productMapping[1]);
+              rerouter.goNext(PAGES.productMapping[1]);
               Utils.sleep(this.config.sleepAnimate);
-              this.rerouter.goNext(PAGES.productMapping[1]);
+              rerouter.goNext(PAGES.productMapping[1]);
               Utils.sleep(this.config.sleepAnimate);
               break;
           }
 
-          if (countProductionSlotAvailable(this.rerouter) !== emptySlots) {
+          if (countProductionSlotAvailable() !== emptySlots) {
             logs(context.task.name, `slots count changed, send running`);
             sendEventRunning(this.botStatus);
           }
@@ -2598,10 +2587,10 @@ export class CookieKingdom {
           finishRound(true);
         }
 
-        handleNextProductionBuilding(this.rerouter, this.config.buildTowardsTheLeft);
+        handleNextProductionBuilding(this.config.buildTowardsTheLeft);
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInMagicLab.name}`,
       match: PAGES.rfpageInMagicLab,
       action: (context, image, matched, finishRound) => {
@@ -2611,57 +2600,57 @@ export class CookieKingdom {
           return;
         }
         if (this.config.magicLabProductIndex === 0 || this.config.skipMagicLabProduction) {
-          handleNextProductionBuilding(this.rerouter, this.config.buildTowardsTheLeft);
+          handleNextProductionBuilding(this.config.buildTowardsTheLeft);
           this.taskStatus[TASKS.production].productionBuildingChecked++;
           logs(context.task.name, `skip rfpageInMagicLab, productionBuildingChecked: ${this.taskStatus[TASKS.production].productionBuildingChecked}`);
           return;
         }
 
         logs(context.task.name, `Its magic lab, build selected ${this.config.magicLabProductIndex}th item`);
-        swipeFromToPoint(this.rerouter, { x: 430, y: 80 }, { x: 430, y: 3000 }, 4); // SwipeProductionMenuToTop(this.rerouter);
+        swipeFromToPoint({ x: 430, y: 80 }, { x: 430, y: 3000 }, 4);
 
         var productIdx = this.config.magicLabProductIndex;
         while (productIdx > 3) {
           logs(context.task.name, `Move down 3 items, now: ${productIdx}`);
 
-          swipeDown3Items(this.rerouter);
-          this.rerouter.screen.tap({ x: 455, y: 37 });
+          swipeDown3Items();
+          rerouter.screen.tap({ x: 455, y: 37 });
           productIdx -= 3;
         }
 
-        this.rerouter.goNext(PAGES.productMapping[productIdx]);
+        rerouter.goNext(PAGES.productMapping[productIdx]);
         Utils.sleep(this.config.sleepAnimate * 2);
 
         const stockAndReq = ocrStockAndReqInRect(goodsLocationRect[productIdx], ICONS.bNumbers);
         const stock = stockAndReq[0];
         logs(context.task.name, `Produce item: ${this.config.magicLabProductIndex}, current stock: ${stock}, ${JSON.stringify(stockAndReq)}`);
 
-        handleNextProductionBuilding(this.rerouter, this.config.buildTowardsTheLeft);
+        handleNextProductionBuilding(this.config.buildTowardsTheLeft);
         this.taskStatus[TASKS.production].productionBuildingChecked++;
         logs(context.task.name, `rfpageInMagicLab, productionBuildingChecked: ${this.taskStatus[TASKS.production].productionBuildingChecked}`);
         return;
       },
     });
-    // this.rerouter.addRoute({
+    // rerouter.addRoute({
     //   path: `/${PAGES.rfpageSelectAdvantureFirstIsKingdom.name}`,
     //   match: PAGES.rfpageSelectAdvantureFirstIsKingdom,
     //   action: (context, image, matched, finishRound) => {
     //     logs(context.task.name, `rfpageSelectAdvantureFirstIsKingdom, tap the 1st one to back to kingdom`);
-    //     this.rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
+    //     rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
     //   },
     // });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageSelectAdvanture.name}`,
       match: PAGES.rfpageSelectAdvanture,
       action: (context, image, matched, finishRound) => {
-        if (this.rerouter.isPageMatchImage(PAGES.rfpageSelectAdvantureFirstIsKingdom, image)) {
+        if (rerouter.isPageMatchImage(PAGES.rfpageSelectAdvantureFirstIsKingdom, image)) {
           logs(context.task.name, `rfpageSelectAdvantureFirstIsKingdom, go back to "My Kingdom"`);
-          this.rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
+          rerouter.goNext(PAGES.rfpageSelectAdvantureFirstIsKingdom);
           return;
         }
 
         let advantureSetting = AdvanturesBountiesAt3rd;
-        // if (this.rerouter.isPageMatchImage(PAGES.rfpageBountiesAt2ndSlot, image)) {
+        // if (rerouter.isPageMatchImage(PAGES.rfpageBountiesAt2ndSlot, image)) {
         //   advantureSetting = AdvanturesBountiesAt2nd;
         // }
 
@@ -2673,19 +2662,19 @@ export class CookieKingdom {
         }
 
         if (advantureSetting[context.task.name].backward) {
-          scrollRightALot(this.rerouter, { x: 600, y: 180 });
-          scrollRightALot(this.rerouter, { x: 600, y: 180 });
+          scrollRightALot({ x: 600, y: 180 });
+          scrollRightALot({ x: 600, y: 180 });
         }
 
         switch (context.task.name) {
           case TASKS.superMayhem:
             logs(context.task.name, `rfpageSelectAdvanture goto superMayhem`);
-            this.rerouter.screen.tap(advantureSetting[context.task.name].pnt);
+            rerouter.screen.tap(advantureSetting[context.task.name].pnt);
             break;
           case TASKS.bounties:
             logs(context.task.name, `rfpageSelectAdvanture goto bounties`);
             this.taskStatus['bounties'].hasBountiesLeft = true;
-            this.rerouter.screen.tap(advantureSetting[context.task.name].pnt);
+            rerouter.screen.tap(advantureSetting[context.task.name].pnt);
             break;
           case TASKS.towerOfSweetChaos:
             logs(context.task.name, `rfpageSelectAdvanture, send back`);
@@ -2699,45 +2688,45 @@ export class CookieKingdom {
       },
     });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageUncollapsedAffairs.name}`,
       match: PAGES.rfpageUncollapsedAffairs,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, `rfpageUncollapsedAffairs, going to task related affair: ${context.task.name}`);
         switch (context.task.name) {
           case TASKS.hotAirBallon:
-            this.rerouter.screen.tap({ x: 103, y: 203 });
+            rerouter.screen.tap({ x: 103, y: 203 });
             return;
           case TASKS.train:
-            this.rerouter.screen.tap({ x: 103, y: 252 });
+            rerouter.screen.tap({ x: 103, y: 252 });
             return;
           case TASKS.wishingTree:
             logs(context.task.name, `about to send wishing tree`);
-            this.rerouter.screen.tap({ x: 103, y: 306 });
+            rerouter.screen.tap({ x: 103, y: 306 });
             return;
           case TASKS.gnomeLab:
             logs(context.task.name, `about to goto gnome lab`);
-            this.rerouter.screen.tap({ x: 103, y: 150 });
+            rerouter.screen.tap({ x: 103, y: 150 });
             return;
           case TASKS.haborSendShip:
           case TASKS.haborShopInSeaMarket:
           case TASKS.haborShopInShellGallery:
             logs(context.task.name, `about to goto trade habor`);
-            this.rerouter.screen.tap({ x: 103, y: 53 });
+            rerouter.screen.tap({ x: 103, y: 53 });
             return;
           default:
             logs(context.task.name, `nothing matched, closing the list`);
-            this.rerouter.screen.tap({ x: 106, y: 335 });
+            rerouter.screen.tap({ x: 106, y: 335 });
             Utils.sleep(3000);
-            if (this.rerouter.isPageMatch(PAGES.rfpageUncollapsedAffairs)) {
+            if (rerouter.isPageMatch(PAGES.rfpageUncollapsedAffairs)) {
               logs(context.task.name, `nothing matched, the list is still open, go to wishing tree to force close it`);
-              this.rerouter.screen.tap({ x: 103, y: 306 });
+              rerouter.screen.tap({ x: 103, y: 306 });
             }
         }
       },
     });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInCookieHead.name}`,
       match: PAGES.rfpageInCookieHead,
       action: (context, image, matched, finishRound) => {
@@ -2758,50 +2747,50 @@ export class CookieKingdom {
         switch (context.task.name) {
           case TASKS.fountain:
           case TASKS.findAndTapCandy:
-            if (!this.rerouter.isPageMatchImage(rfpageStartOfList, image)) {
-              scrollLeftALot(this.rerouter, { x: 116, y: 180 });
+            if (!rerouter.isPageMatchImage(rfpageStartOfList, image)) {
+              scrollLeftALot({ x: 116, y: 180 });
             }
-            if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageFistItemIsCastle, 3000)) {
+            if (rerouter.waitScreenForMatchingPage(PAGES.rfpageFistItemIsCastle, 3000)) {
               logs(context.task.name, 'tap goto castle');
-              this.rerouter.screen.tap({ x: 260, y: 224 });
+              rerouter.screen.tap({ x: 260, y: 224 });
               return;
             }
             return;
           case TASKS.pvp:
           case TASKS.pvpPurchaseAncientCookie:
-            scrollRightALot(this.rerouter, { x: 560, y: 186 });
+            scrollRightALot({ x: 560, y: 186 });
             Utils.sleep(CONSTANTS.sleepAnimate);
-            if (!this.rerouter.isPageMatch(rfpageEndOfList)) {
-              scrollRightALot(this.rerouter, { x: 560, y: 186 });
+            if (!rerouter.isPageMatch(rfpageEndOfList)) {
+              scrollRightALot({ x: 560, y: 186 });
               Utils.sleep(CONSTANTS.sleepAnimate);
             }
 
-            this.rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name.substring(0, 3)].pnt);
+            rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name.substring(0, 3)].pnt);
             Utils.sleep(this.config.sleepAnimate);
             return;
           case TASKS.tropicalIslandShip:
           case TASKS.tropicalIslandSunbed:
           case TASKS.tropicalIslandClearBubble:
-            scrollRightALot(this.rerouter, { x: 560, y: 186 });
+            scrollRightALot({ x: 560, y: 186 });
             Utils.sleep(CONSTANTS.sleepAnimate);
-            if (!this.rerouter.isPageMatch(rfpageEndOfList)) {
-              scrollRightALot(this.rerouter, { x: 560, y: 186 });
+            if (!rerouter.isPageMatch(rfpageEndOfList)) {
+              scrollRightALot({ x: 560, y: 186 });
               Utils.sleep(CONSTANTS.sleepAnimate);
             }
 
-            this.rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name.substring(0, 14)].pnt);
+            rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name.substring(0, 14)].pnt);
             return;
           case TASKS.towerOfSweetChaos:
             logs(context.task.name, `${context.path} goto tower of sweet choas`);
 
-            scrollRightALot(this.rerouter, { x: 560, y: 186 });
+            scrollRightALot({ x: 560, y: 186 });
             Utils.sleep(CONSTANTS.sleepAnimate);
-            if (!this.rerouter.isPageMatch(rfpageEndOfList)) {
-              scrollRightALot(this.rerouter, { x: 560, y: 186 });
+            if (!rerouter.isPageMatch(rfpageEndOfList)) {
+              scrollRightALot({ x: 560, y: 186 });
               Utils.sleep(CONSTANTS.sleepAnimate);
             }
 
-            this.rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name].pnt);
+            rerouter.screen.tap(AdvanturesBountiesAt3rd[context.task.name].pnt);
             return;
           default:
             sendKeyBack();
@@ -2809,17 +2798,17 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageBattleFinished.name}`,
       match: PAGES.rfpageBattleFinished,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, 'rfpageBattleFinished, tap it and reset botStatus.battleStarted to 0');
-        this.rerouter.goNext(PAGES.rfpageBattleFinished);
+        rerouter.goNext(PAGES.rfpageBattleFinished);
         this.botStatus.battleStarted = 0;
       },
     });
 
-    // this.rerouter.addRoute({
+    // rerouter.addRoute({
     //   path: `/${PAGES.AAAAAAAAA.name}`,
     //   match: PAGES.AAAAAAAAA,
     //   action: (context, image, matched, finishRound) => {
@@ -2828,12 +2817,12 @@ export class CookieKingdom {
     //   },
     // });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageGeneralMessageWindow.name}`,
       match: PAGES.rfpageGeneralMessageWindow,
       action: (context, image, matched, finishRound) => {
         // Some popups are classified as message windows (but can be resolved as page)
-        if (this.rerouter.isPageMatchImage(PAGES.rfpageShellShopNotEnoughShell, image)) {
+        if (rerouter.isPageMatchImage(PAGES.rfpageShellShopNotEnoughShell, image)) {
           sendKeyBack();
           Utils.sleep(this.config.sleepAnimate);
           sendKeyBack();
@@ -2846,11 +2835,11 @@ export class CookieKingdom {
           return;
         }
 
-        if (checkScreenMessage(this.rerouter, MessageWindow.theNetworkIsUnstableMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+        if (checkScreenMessage(MessageWindow.theNetworkIsUnstableMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm theNetworkIsUnstableMessageScreen, tap OK');
-          this.rerouter.screen.tap({ x: 316, y: 250 });
+          rerouter.screen.tap({ x: 316, y: 250 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.theReloginIntoAnotherDeviceMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+        } else if (checkScreenMessage(MessageWindow.theReloginIntoAnotherDeviceMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm theReloginIntoAnotherDeviceMessageScreen, wait for it');
           keycode('BACK', 1000);
           for (var i = 0; i < this.config.sleepWhenDoubleLoginInMinutes; i++) {
@@ -2862,8 +2851,8 @@ export class CookieKingdom {
         }
 
         if (
-          checkScreenMessage(this.rerouter, MessageWindow.messageTeamDontMatchToSCRow1, PAGES.rfpageGeneralMessageWindow, image) &&
-          checkScreenMessage(this.rerouter, MessageWindow.messageTeamDontMatchToSCRow2, PAGES.rfpageGeneralMessageWindow, image)
+          checkScreenMessage(MessageWindow.messageTeamDontMatchToSCRow1, PAGES.rfpageGeneralMessageWindow, image) &&
+          checkScreenMessage(MessageWindow.messageTeamDontMatchToSCRow2, PAGES.rfpageGeneralMessageWindow, image)
         ) {
           logs(
             context.task.name,
@@ -2876,7 +2865,7 @@ export class CookieKingdom {
           Utils.sleep(this.config.sleepAnimate);
           sendKeyBack();
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.unfinishedPVPBattleMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+        } else if (checkScreenMessage(MessageWindow.unfinishedPVPBattleMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           if (context.task.name !== TASKS.pvp) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedPVPBattleMessageScreen, skip current task');
             finishRound(true);
@@ -2884,20 +2873,20 @@ export class CookieKingdom {
           }
 
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedPVPBattleMessageScreen, tap it');
-          this.rerouter.screen.tap({ x: 394, y: 253 });
+          rerouter.screen.tap({ x: 394, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.messageCookieDryingOnSunbed, PAGES.rfpageGeneralMessageWindow, image)) {
+        } else if (checkScreenMessage(MessageWindow.messageCookieDryingOnSunbed, PAGES.rfpageGeneralMessageWindow, image)) {
           if (context.task.name !== TASKS.tropicalIslandClearBubble) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageCookieDryingOnSunbed, end current task');
-            this.rerouter.screen.tap({ x: 320, y: 253 });
+            rerouter.screen.tap({ x: 320, y: 253 });
             return;
           }
 
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageCookieDryingOnSunbed, tap to close and skip current task');
-          this.rerouter.screen.tap({ x: 320, y: 253 });
+          rerouter.screen.tap({ x: 320, y: 253 });
           finishRound(true);
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.unfinishedSuperMayhemBattleMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+        } else if (checkScreenMessage(MessageWindow.unfinishedSuperMayhemBattleMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           if (context.task.name !== TASKS.superMayhem) {
             logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedSuperMayhemBattleMessageScreen, skip current task');
             finishRound(true);
@@ -2905,34 +2894,34 @@ export class CookieKingdom {
           }
 
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm unfinishedSuperMayhemBattleMessageScreen, tap it');
-          this.rerouter.screen.tap({ x: 394, y: 253 });
+          rerouter.screen.tap({ x: 394, y: 253 });
           return;
         } else if (
-          checkScreenMessage(this.rerouter, MessageWindow.downloadDataNoLanguageTitle, PAGES.rfpageGeneralMessageWindow, image) &&
-          checkScreenMessage(this.rerouter, MessageWindow.downloadDataNoLanguage, PAGES.rfpageGeneralMessageWindow, image)
+          checkScreenMessage(MessageWindow.downloadDataNoLanguageTitle, PAGES.rfpageGeneralMessageWindow, image) &&
+          checkScreenMessage(MessageWindow.downloadDataNoLanguage, PAGES.rfpageGeneralMessageWindow, image)
         ) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm downloadDataNoLanguage, tap download');
-          this.rerouter.screen.tap({ x: 320, y: 255 });
+          rerouter.screen.tap({ x: 320, y: 255 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.battleAbnormalButLastWasSavedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+        } else if (checkScreenMessage(MessageWindow.battleAbnormalButLastWasSavedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm battleAbnormalButLastWasSavedMessageScreen, tap it');
-          this.rerouter.screen.tap({ x: 318, y: 253 });
+          rerouter.screen.tap({ x: 318, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.guildBattleAttemptNotUsedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+        } else if (checkScreenMessage(MessageWindow.guildBattleAttemptNotUsedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm guildBattleAttemptNotUsedMessageScreen, tap it');
-          this.rerouter.screen.tap({ x: 317, y: 253 });
+          rerouter.screen.tap({ x: 317, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.TOSCsearingKeysNotUsedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+        } else if (checkScreenMessage(MessageWindow.TOSCsearingKeysNotUsedMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm TOSCsearingKeysNotUsedMessageScreen, tap it');
-          this.rerouter.screen.tap({ x: 317, y: 253 });
+          rerouter.screen.tap({ x: 317, y: 253 });
           return;
-        } else if (checkScreenMessage(this.rerouter, MessageWindow.anErrorHasOccuredMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
+        } else if (checkScreenMessage(MessageWindow.anErrorHasOccuredMessageScreen, PAGES.rfpageGeneralMessageWindow, image)) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm anErrorHasOccuredMessageScreen, tap it');
-          this.rerouter.screen.tap({ x: 317, y: 253 });
+          rerouter.screen.tap({ x: 317, y: 253 });
           return;
         } else if (
-          checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit, PAGES.rfpageGeneralMessageWindow, image) ||
-          checkScreenMessage(this.rerouter, MessageWindow.messageNotifyQuit2, PAGES.rfpageGeneralMessageWindow, image)
+          checkScreenMessage(MessageWindow.messageNotifyQuit, PAGES.rfpageGeneralMessageWindow, image) ||
+          checkScreenMessage(MessageWindow.messageNotifyQuit2, PAGES.rfpageGeneralMessageWindow, image)
         ) {
           logs(context.task.name, 'rfpageGeneralMessageWindow confirm messageNotifyQuit/messageNotifyQuit2, send back');
           sendKeyBack();
@@ -2950,7 +2939,7 @@ export class CookieKingdom {
       },
     });
 
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInKingdomVillage.name}`,
       match: PAGES.rfpageInKingdomVillage,
       action: (context, image, matched, finishRound) => {
@@ -2961,36 +2950,36 @@ export class CookieKingdom {
 
         switch (context.task.name) {
           case TASKS.production:
-            if (this.rerouter.isPageMatchImage(PAGES.rfpageHasDashboard, image)) {
-              this.rerouter.screen.tap({ x: 38, y: 221 }); // Tap production dashboard
+            if (rerouter.isPageMatchImage(PAGES.rfpageHasDashboard, image)) {
+              rerouter.screen.tap({ x: 38, y: 221 }); // Tap production dashboard
               Utils.sleep(this.config.sleepAnimate * 2);
             }
             // TODO: no dashboard cannot go
             break;
           case TASKS.collectMail:
-            this.rerouter.screen.tap({ x: 550, y: 20 });
+            rerouter.screen.tap({ x: 550, y: 20 });
             break;
           case TASKS.collectKingdomPass:
-            this.rerouter.screen.tap({ x: 600, y: 85 });
+            rerouter.screen.tap({ x: 600, y: 85 });
             break;
           case TASKS.sendFriendReward:
-            this.rerouter.screen.tap({ x: 512, y: 20 });
+            rerouter.screen.tap({ x: 512, y: 20 });
             break;
           case TASKS.getInShopFreeDailyPack:
-            this.rerouter.screen.tap({ x: 26, y: 86 });
+            rerouter.screen.tap({ x: 26, y: 86 });
             break;
           case TASKS.resolveGreenChecks:
             let foundResults = findSpecificIconInScreen(ICONS.iconGreenCheckedWithGiftBox);
             if (Object.keys(foundResults).length > 0) {
               logs(context.task.name, `Fount iconGreenCheckedWithGiftBox, tap it: ${JSON.stringify(foundResults)}`);
-              this.rerouter.screen.tap({ x: foundResults[0].x + 12, y: foundResults[0].y + 12 });
+              rerouter.screen.tap({ x: foundResults[0].x + 12, y: foundResults[0].y + 12 });
               Utils.sleep(1500);
               return;
             }
             foundResults = findSpecificIconInScreen(ICONS.iconGreenCheckedGreenBackground);
             if (Object.keys(foundResults).length > 0) {
               logs(context.task.name, `Fount iconGreenCheckedWithGiftBox, tap it: ${JSON.stringify(foundResults)}`);
-              this.rerouter.screen.tap({ x: foundResults[0].x + 12, y: foundResults[0].y + 12 });
+              rerouter.screen.tap({ x: foundResults[0].x + 12, y: foundResults[0].y + 12 });
               Utils.sleep(1500);
               return;
             }
@@ -2998,7 +2987,7 @@ export class CookieKingdom {
             foundResults = findSpecificIconInScreen(ICONS.iconSunbedGreenCheck);
             if (Object.keys(foundResults).length > 0) {
               logs(context.task.name, `Fount iconSunbedGreenCheck, tap it: ${JSON.stringify(foundResults)}`);
-              this.rerouter.screen.tap({ x: foundResults[0].x + 7, y: foundResults[0].y + 7 });
+              rerouter.screen.tap({ x: foundResults[0].x + 7, y: foundResults[0].y + 7 });
               Utils.sleep(1500);
               return;
             }
@@ -3007,7 +2996,7 @@ export class CookieKingdom {
             foundResults = findSpecificIconInScreen(ICONS.iconGreenCheckedWhiteBackground);
             if (Object.keys(foundResults).length > 0) {
               logs(context.task.name, `Fount iconGreenCheckedWhiteBackground, tap it: ${JSON.stringify(foundResults)}`);
-              this.rerouter.screen.tap({ x: foundResults[0].x + 7, y: foundResults[0].y + 7 });
+              rerouter.screen.tap({ x: foundResults[0].x + 7, y: foundResults[0].y + 7 });
               Utils.sleep(1500);
               return;
             }
@@ -3022,7 +3011,7 @@ export class CookieKingdom {
           case TASKS.haborSendShip:
           case TASKS.haborShopInSeaMarket:
           case TASKS.haborShopInShellGallery:
-            this.rerouter.screen.tap({ x: 105, y: 330 });
+            rerouter.screen.tap({ x: 105, y: 330 });
             break;
           case TASKS.fountain:
           case TASKS.pvp:
@@ -3031,18 +3020,18 @@ export class CookieKingdom {
           case TASKS.tropicalIslandSunbed:
           case TASKS.tropicalIslandClearBubble:
           case TASKS.towerOfSweetChaos:
-            this.rerouter.screen.tap({ x: 25, y: 25 }); // goto head
+            rerouter.screen.tap({ x: 25, y: 25 }); // goto head
             break;
           case TASKS.superMayhem:
           case TASKS.bounties:
-            this.rerouter.screen.tap({ x: 560, y: 325 }); // goto PLAY!
+            rerouter.screen.tap({ x: 560, y: 325 }); // goto PLAY!
             break;
           case TASKS.guildCheckin:
           case TASKS.guildExpandLand:
           case TASKS.guildBattleDragon:
           case TASKS.guildBattleAlliance:
             this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon = true;
-            this.rerouter.screen.tap({ x: 317, y: 325 }); // goto Guild
+            rerouter.screen.tap({ x: 317, y: 325 }); // goto Guild
             break;
           case TASKS.findAndTapCandy:
             let searchHouseState = this.taskStatus[TASKS.findAndTapCandy];
@@ -3059,16 +3048,16 @@ export class CookieKingdom {
               return;
             }
 
-            // searchForCandyHouse(this.rerouter);
+            // searchForCandyHouse();
 
             // 要去頭以前先原地掃一次
             if (searchHouseState.needGotoHead) {
-              if (searchForCandyHouse(this.rerouter)) {
+              if (searchForCandyHouse()) {
                 logs(context.task.name, 'Found rfpageInCandyHouse, return and let rfpageInCandyHouse handle it');
                 return;
               }
 
-              this.rerouter.screen.tap({ x: 25, y: 25 }); // goto head
+              rerouter.screen.tap({ x: 25, y: 25 }); // goto head
               Utils.sleep(this.config.sleepAnimate);
               searchHouseState.needGotoHead = false;
               return;
@@ -3079,25 +3068,20 @@ export class CookieKingdom {
                 searchHosePaths[searchHouseState.searchHousePathIdx][searchHouseState.searchHouseIdx]
               )}`
             );
-            swipeDirection(
-              this.rerouter,
-              searchHosePaths[searchHouseState.searchHousePathIdx][searchHouseState.searchHouseIdx],
-              null,
-              PAGES.rfpageInKingdomVillage
-            );
+            swipeDirection(searchHosePaths[searchHouseState.searchHousePathIdx][searchHouseState.searchHouseIdx], null, PAGES.rfpageInKingdomVillage);
             searchHouseState.searchHouseIdx++;
             if (
-              this.rerouter.waitScreenForMatchingPage(
+              rerouter.waitScreenForMatchingPage(
                 new GroupPage('groupPageDecoration', [PAGES.rfpageMovingStructures, PAGES.rfpageKingdomDecoratingExpand]),
                 1000
               )
             ) {
-              this.rerouter.goNext(PAGES.rfpageMovingStructures);
+              rerouter.goNext(PAGES.rfpageMovingStructures);
               logs(context.task.name, 'groupPageDecoration, return to try again');
               return;
             }
 
-            if (searchForCandyHouse(this.rerouter)) {
+            if (searchForCandyHouse()) {
               logs(context.task.name, 'Found rfpageInCandyHouse, return and let rfpageInCandyHouse handle it');
               return;
             }
@@ -3109,7 +3093,7 @@ export class CookieKingdom {
         }
       },
     });
-    this.rerouter.addRoute({
+    rerouter.addRoute({
       path: `/${PAGES.rfpageInCandyHouse.name}`,
       match: PAGES.rfpageInCandyHouse,
       action: (context, image, matched, finishRound) => {
@@ -3157,21 +3141,21 @@ export class CookieKingdom {
           return;
         }
 
-        if (this.rerouter.isPageMatchImage(groupPageCanUpgradeCandy, image)) {
+        if (rerouter.isPageMatchImage(groupPageCanUpgradeCandy, image)) {
           logs(context.task.name, `Found upgradeable candyhouse and tap it`);
-          this.rerouter.goNext(rfpageCanUpgradeCandyHouse);
+          rerouter.goNext(rfpageCanUpgradeCandyHouse);
           Utils.sleep(this.config.sleepAnimate * 2);
 
-          if (this.rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughGnomeBuilders, 2000)) {
+          if (rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughGnomeBuilders, 2000)) {
             logs(context.task.name, `Not enough gnome builder, skipping upgrade cookie houses and finish task`);
             finishRound(true);
             sendKeyBack();
             return;
           }
 
-          if (this.rerouter.waitScreenForMatchingPage(groupPageUpgradeRequirements, 2000)) {
+          if (rerouter.waitScreenForMatchingPage(groupPageUpgradeRequirements, 2000)) {
             logs(context.task.name, `groupPageUpgradeRequirements, tap: {x: 357, y:321}`);
-            this.rerouter.screen.tap({ x: 357, y: 321 });
+            rerouter.screen.tap({ x: 357, y: 321 });
 
             finishRound(true);
             sendKeyBack();
@@ -3190,10 +3174,10 @@ export class CookieKingdom {
       if (!(page instanceof Page)) {
         continue;
       }
-      if (this.rerouter.getPageByName(page.name) !== null) {
+      if (rerouter.getPageByName(page.name) !== null) {
         continue;
       }
-      this.rerouter.addRoute({
+      rerouter.addRoute({
         path: `/${page.name}`,
         match: page,
         action: (context, image, matched, finishRound) => {
@@ -3202,22 +3186,22 @@ export class CookieKingdom {
             return;
           }
           console.log(`findPath, task: ${context.task.name}, path: ${context.path}`);
-          this.rerouter.goNext(page);
+          rerouter.goNext(page);
         },
       });
     }
   }
 
   public handleUnknown() {
-    this.rerouter.addUnknownAction((context, image, finishRound) => {
-      // this.rerouter.getCurrentMatchNames();
+    rerouter.addUnknownAction((context, image, finishRound) => {
+      // rerouter.getCurrentMatchNames();
       Utils.log(`unknown count ${context.matchTimes}, task: ${context.task.name},during ${context.matchDuring}, last matched: ${context.lastMatchedPath}`);
-      if (this.rerouter.checkAndStartApp()) {
+      if (rerouter.checkAndStartApp()) {
         logs('handleUnknown', 'checkAndStartApp()');
         return;
       }
 
-      if (checkIfInBattle(this.rerouter, context.task.name, this.botStatus)) {
+      if (checkIfInBattle(context.task.name, this.botStatus)) {
         logs('handleUnknown', 'In battle so continue monitor');
         context.matchTimes = 0;
         return;
@@ -3229,7 +3213,7 @@ export class CookieKingdom {
         Utils.log('keycode back for unknown');
       }
       if (context.matchTimes % 7 === 0) {
-        this.rerouter.screen.tap({ x: 575, y: 22 });
+        rerouter.screen.tap({ x: 575, y: 22 });
         Utils.log('Unknown count 7, could be in tap to login, tapping (575, 22) until the game start');
       }
 
@@ -3290,12 +3274,12 @@ if (window === undefined) {
 (window as any).stop = stop;
 (window as any).rerouter = rerouter;
 
-// // ! following is only for dev
-// function run() {
-//   const cookieKingdom = new CookieKingdom(defaultConfig);
-//   cookieKingdom.start();
-// }
+// ! following is only for dev
+function run() {
+  const cookieKingdom = new CookieKingdom(defaultConfig);
+  cookieKingdom.start();
+}
 
-// sendEvent('running', '');
-// run();
-// console.log('jobs done');
+sendEvent('running', '');
+run();
+console.log('jobs done');

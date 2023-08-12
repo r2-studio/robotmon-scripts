@@ -1,4 +1,4 @@
-import { Rerouter, Utils, XYRGB, Page, XY, RECT, GroupPage } from 'Rerouter';
+import { rerouter, Utils, XYRGB, Page, XY, RECT, GroupPage } from 'Rerouter';
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
@@ -7,7 +7,7 @@ import { logs, padZero, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 import { CookieKingdom } from '..';
 
-export function findUnmatchInPage(rerouter: Rerouter, page: Page) {
+export function findUnmatchInPage(page: Page) {
   let img = getScreenshot();
 
   for (let i = 0; i < page.points.length; i++) {
@@ -49,7 +49,7 @@ export function checkLoginFailedMaxReached(loginStatus: TaskStatus, loginRetryMa
   }
 }
 
-export function scrollDownALot(rerouter: Rerouter, startPnt: XY) {
+export function scrollDownALot(startPnt: XY) {
   rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
   Utils.sleep(CONSTANTS.sleep);
   rerouter.screen.moveTo({ x: startPnt.x, y: startPnt.y });
@@ -64,7 +64,7 @@ export function scrollDownALot(rerouter: Rerouter, startPnt: XY) {
   Utils.sleep(CONSTANTS.sleepAnimate * 3);
 }
 
-export function scrollLeftALot(rerouter: Rerouter, startPnt: XY) {
+export function scrollLeftALot(startPnt: XY) {
   rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
   Utils.sleep(CONSTANTS.sleep);
   rerouter.screen.moveTo({ x: startPnt.x * 2, y: startPnt.y });
@@ -79,11 +79,11 @@ export function scrollLeftALot(rerouter: Rerouter, startPnt: XY) {
   Utils.sleep(CONSTANTS.sleepAnimate * 3);
 }
 
-export function scrollRightALot(rerouter: Rerouter, startPnt: XY) {
-  return swipeFromToPoint(rerouter, { x: startPnt.x, y: startPnt.y }, { x: -2000, y: startPnt.y }, 5);
+export function scrollRightALot(startPnt: XY) {
+  return swipeFromToPoint({ x: startPnt.x, y: startPnt.y }, { x: -2000, y: startPnt.y }, 5);
 }
 
-export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, steps: number, stopIfFoundPage?: Page | null, swipingPage?: Page) {
+export function swipeFromToPoint(fromPnt: XY, toPnt: XY, steps: number, stopIfFoundPage?: Page | null, swipingPage?: Page) {
   if (swipingPage !== undefined && !rerouter.isPageMatch(swipingPage)) {
     // console.log('swipe from this point will get to another page, try again: ', fromPnt.x, fromPnt.y);
     keycode('BACK', 100);
@@ -118,7 +118,7 @@ export function swipeFromToPoint(rerouter: Rerouter, fromPnt: XY, toPnt: XY, ste
   return true;
 }
 
-export function checkScreenMessage(rerouter: Rerouter, message: MessageWindow, pageMessageWindow?: Page, img?: Image) {
+export function checkScreenMessage(message: MessageWindow, pageMessageWindow?: Page, img?: Image) {
   let needReleaseImg = false;
   if (img === undefined) {
     needReleaseImg = true;
@@ -175,7 +175,7 @@ export function isSameColorAtPnt(point: XY, c2: RGB, diff?: number) {
   return true;
 }
 
-export function checkIfTrainRequirementMet(rerouter: Rerouter) {
+export function checkIfTrainRequirementMet() {
   // TODO: or isMessageWindowWithDiamond()
   if (rerouter.waitScreenForMatchingPage(PAGES.rfpageTrainNotEnoughGoods, 2000)) {
     sendKeyBack();
@@ -183,7 +183,7 @@ export function checkIfTrainRequirementMet(rerouter: Rerouter) {
   }
 }
 
-export function getStatusOfGivenWish(wish: Wish, records: Records, refreshGolden: boolean, rerouter: Rerouter): { wish: Wish; records: Records } {
+export function getStatusOfGivenWish(wish: Wish, records: Records, refreshGolden: boolean): { wish: Wish; records: Records } {
   if (isSameColorAtPnt(wish.refreshPnt, { r: 255, g: 249, b: 203 })) {
     wish.status = WishStatus.opened;
   } else if (isSameColorAtPnt(wish.refreshPnt, { r: 246, g: 210, b: 135 }, 15)) {
@@ -227,7 +227,7 @@ export function getStatusOfGivenWish(wish: Wish, records: Records, refreshGolden
   return { wish: wish, records: records };
 }
 
-export function checkToSendSpecificWish(wish: Wish, records: Records, safetySotck: number, rerouter: Rerouter) {
+export function checkToSendSpecificWish(wish: Wish, records: Records, safetySotck: number) {
   if (rerouter.isPageMatch(PAGES.rfpageNotEnoughForTree)) {
     logs(TASKS.wishingTree, `checkToSendSpecificWish found pageNotEnoughForTree, tap to close that`);
     rerouter.goNext(PAGES.rfpageNotEnoughForTree);
@@ -610,7 +610,7 @@ export function ocrTextInRect(rect: RECT, icons: Icon[], overrideThre?: number, 
 
 var bountyLevelX = 20;
 var bountyLevelYRange = [60, 84, 119, 158, 190, 230, 260, 296, 333];
-export function countBountyLevel(rerouter: Rerouter) {
+export function countBountyLevel() {
   for (var j = 0; j < bountyLevelYRange.length; j++) {
     if (rerouter.screen.isSameColor({ x: bountyLevelX, y: bountyLevelYRange[j], r: 205, g: 66, b: 36 })) {
       return j + 4; // first one in list is Lv.4
@@ -619,9 +619,9 @@ export function countBountyLevel(rerouter: Rerouter) {
   return -1;
 }
 
-export function bountyCheckIfGetBluePowder(rerouter: Rerouter): number[] {
+export function bountyCheckIfGetBluePowder(): number[] {
   const lastPowder = ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
-  const bountyLevel = countBountyLevel(rerouter);
+  const bountyLevel = countBountyLevel();
 
   if (bountyLevel > 6) {
     rerouter.screen.tap({ x: 40, y: 135 });
@@ -642,7 +642,7 @@ export function bountyCheckIfGetBluePowder(rerouter: Rerouter): number[] {
   return [lastPowder, bountyLevel];
 }
 
-export function handleResearchInGnomeLab(rerouter: Rerouter, finishRound: any, targetIconList: Icon[], threashold: number) {
+export function handleResearchInGnomeLab(finishRound: any, targetIconList: Icon[], threashold: number) {
   for (var i = 0; i < 12; i++) {
     for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
       let foundResults = findSpecificIconInScreen(targetIconList[imageIdx]);
@@ -684,11 +684,11 @@ export function handleResearchInGnomeLab(rerouter: Rerouter, finishRound: any, t
       }
     }
 
-    swipeFromToPoint(rerouter, { x: 600, y: 234 }, { x: -200, y: 234 }, 5, undefined, PAGES.rfpageInGnomeLab);
+    swipeFromToPoint({ x: 600, y: 234 }, { x: -200, y: 234 }, 5, undefined, PAGES.rfpageInGnomeLab);
   }
 }
 
-export function considerPurchaseSeasideMarket(rerouter: Rerouter, target: RECT): boolean {
+export function considerPurchaseSeasideMarket(target: RECT): boolean {
   let newStock = ocrStocksInRect(target, ICONS.numberAuroraStockInTradeBird);
   // let newStock = ocrStockAndReqInRect(target, ICONS.numberAuroraStockInTradeBird);
   console.log('considerPurchaseSeasideMarket, newStock', newStock, JSON.stringify(target));
@@ -714,7 +714,7 @@ export function considerPurchaseSeasideMarket(rerouter: Rerouter, target: RECT):
   return false;
 }
 
-export function tapThroughAnimate(rerouter: Rerouter, targetPage: Page, tappingPoint: XY, timeInMs: number, interval?: number): boolean {
+export function tapThroughAnimate(targetPage: Page, tappingPoint: XY, timeInMs: number, interval?: number): boolean {
   if (interval === undefined) {
     interval = 500;
   }
@@ -728,7 +728,7 @@ export function tapThroughAnimate(rerouter: Rerouter, targetPage: Page, tappingP
   return false;
 }
 
-export function handleNextProductionBuilding(rerouter: Rerouter, buildTowardsTheLeft: boolean) {
+export function handleNextProductionBuilding(buildTowardsTheLeft: boolean) {
   if (buildTowardsTheLeft) {
     rerouter.screen.tap({ x: 110, y: 174 }); // to left
   } else {
@@ -736,10 +736,10 @@ export function handleNextProductionBuilding(rerouter: Rerouter, buildTowardsThe
   }
 }
 
-export function SwipeProductionMenuToTop(rerouter: Rerouter) {
-  return swipeFromToPoint(rerouter, { x: 430, y: 80 }, { x: 430, y: 1500 }, 4);
+export function SwipeProductionMenuToTop() {
+  return swipeFromToPoint({ x: 430, y: 80 }, { x: 430, y: 1500 }, 4);
 }
-export function swipeDownOneItem(rerouter: Rerouter) {
+export function swipeDownOneItem() {
   tapDown(430, 319, 40, 0);
   sleep(500);
   moveTo(430, 319, 40, 0);
@@ -755,9 +755,9 @@ export function swipeDownOneItem(rerouter: Rerouter) {
   tapUp(430, 176, 40, 0);
   sleep(2000);
 
-  // return swipeFromToPoint(rerouter, { x: 430, y: 319 }, { x: 430, y: 176 }, 5);
+  // return swipeFromToPoint({ x: 430, y: 319 }, { x: 430, y: 176 }, 5);
 }
-export function swipeDown3Items(rerouter: Rerouter) {
+export function swipeDown3Items() {
   // console.log('swipe down to 3 item as currently in:', this.config.currentProductionBuilding);
   tapDown(430, 350, 40, 0);
   sleep(500);
@@ -774,10 +774,10 @@ export function swipeDown3Items(rerouter: Rerouter) {
   tapUp(430, -70, 40, 0);
   sleep(1600);
 
-  // return swipeFromToPoint(rerouter, { x: 430, y: 350 }, { x: 430, y: -70 }, 7);
+  // return swipeFromToPoint({ x: 430, y: 350 }, { x: 430, y: -70 }, 7);
 }
-export function swipeToToolShop456(rerouter: Rerouter) {
-  SwipeProductionMenuToTop(rerouter);
+export function swipeToToolShop456() {
+  SwipeProductionMenuToTop();
   tapDown(430, 350, 40, 0);
   sleep(500);
   moveTo(430, 350, 40, 0);
@@ -794,7 +794,7 @@ export function swipeToToolShop456(rerouter: Rerouter) {
   sleep(1600);
   tapUp(430, -170, 40, 0);
   sleep(1600);
-  // return swipeFromToPoint(rerouter, { x: 430, y: 350 }, { x: 430, y: -170 }, 7);
+  // return swipeFromToPoint({ x: 430, y: 350 }, { x: 430, y: -170 }, 7);
 }
 
 function findProductRequirements(rects: RECT[]) {
@@ -836,7 +836,7 @@ function findProductRequirements(rects: RECT[]) {
   return part;
 }
 
-export function collectFinishedGoods(rerouter: Rerouter) {
+export function collectFinishedGoods() {
   const rfpageProducing = new Page('rfpageProducing', [
     { x: 76, y: 86, r: 134, g: 231, b: 0 },
     { x: 61, y: 89, r: 123, g: 228, b: 0 },
@@ -876,7 +876,7 @@ export function collectFinishedGoods(rerouter: Rerouter) {
   }
 }
 
-function countMagicLabSlotAvailable(rerouter: Rerouter) {
+function countMagicLabSlotAvailable() {
   var groupPageMagicLabSlot = new GroupPage('groupPageMagicLabSlot', [
     new Page('firstSlot', [{ x: 55, y: 69, r: 82, g: 56, b: 107 }]),
     new Page('secondSlot', [{ x: 53, y: 120, r: 82, g: 56, b: 107 }]),
@@ -891,9 +891,9 @@ function countMagicLabSlotAvailable(rerouter: Rerouter) {
   return matchedPages.length;
 }
 
-export function countProductionSlotAvailable(rerouter: Rerouter) {
+export function countProductionSlotAvailable() {
   if (rerouter.isPageMatch(PAGES.rfpageInMagicLab)) {
-    return countMagicLabSlotAvailable(rerouter);
+    return countMagicLabSlotAvailable();
   }
 
   var groupPageProductionSlot = new GroupPage('groupPageProductionSlot', [
@@ -1006,7 +1006,7 @@ export function collectProductItemInfo(
   };
 }
 
-export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safetyStock: number, axeStockTo400: boolean): number {
+export function makeGoodsToTarget(goodsTarget: number, safetyStock: number, axeStockTo400: boolean): number {
   const goodsLocation: { [key: number | string]: RECT } = {
     1: { x: 431, y: 101, w: 22, h: 12 },
     2: { x: 431, y: 209, w: 22, h: 12 },
@@ -1031,7 +1031,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
   if (goodsOneStock === -1) {
     logs('makeGoodsToTarget', `OCR count failed, swipe to top`);
 
-    SwipeProductionMenuToTop(rerouter);
+    SwipeProductionMenuToTop();
     goodsOneStock = ocrNumberInRect(goodsLocation[1], ICONS.bNumbers);
     if (goodsOneStock === -1) {
       console.log('OCR count failed twice, skip this round');
@@ -1065,7 +1065,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
     );
   }
 
-  let availableSlots = countProductionSlotAvailable(rerouter);
+  let availableSlots = countProductionSlotAvailable();
   const productionPage = rerouter.getPagesMatch(PAGES.groupPageGoodsProdMenu);
   const productionName = productionPage.length > 0 ? productionPage[0].name : 'otherGoodShop';
   logs('makeGoodsToTarget', `> ${productionName} has ${availableSlots} available slots, productionState: ${JSON.stringify(productionState)}`);
@@ -1073,7 +1073,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
   if (productionName !== 'otherGoodShop') {
     logs('makeGoodsToTarget', `Special handle building: ${productionName}`);
 
-    swipeDownOneItem(rerouter);
+    swipeDownOneItem();
 
     if (rerouter.isPageMatch(PAGES.productMapping[4])) {
       productionState[4] = collectProductItemInfo(
@@ -1088,7 +1088,7 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
   }
 
   console.log('swipping down =========');
-  swipeFromToPoint(rerouter, { x: 464, y: 340 }, { x: 464, y: -1500 }, 4); // SwipeProductionMenuToBottom()
+  swipeFromToPoint({ x: 464, y: 340 }, { x: 464, y: -1500 }, 4); // SwipeProductionMenuToBottom()
 
   console.log('44, productionState:', JSON.stringify(productionState));
   for (let i of [5, 6, 7]) {
@@ -1180,28 +1180,28 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
       case 1:
       case 2:
       case 3:
-        SwipeProductionMenuToTop(rerouter);
-        SwipeProductionMenuToTop(rerouter);
+        SwipeProductionMenuToTop();
+        SwipeProductionMenuToTop();
         rerouter.goNext(PAGES.productMapping[item['id']]);
         break;
       case 4:
-        SwipeProductionMenuToTop(rerouter);
-        SwipeProductionMenuToTop(rerouter);
-        swipeDownOneItem(rerouter);
+        SwipeProductionMenuToTop();
+        SwipeProductionMenuToTop();
+        swipeDownOneItem();
         rerouter.goNext(PAGES.productMapping[item['id']]);
         break;
       case 5:
       case 6:
       case 7:
-        SwipeProductionMenuToTop(rerouter);
-        SwipeProductionMenuToTop(rerouter);
-        swipeToToolShop456(rerouter);
+        SwipeProductionMenuToTop();
+        SwipeProductionMenuToTop();
+        swipeToToolShop456();
         rerouter.goNext(PAGES.productMapping[item['id']]);
         break;
     }
 
     for (var timer = 0; timer < 4; timer++) {
-      var latestCount = countProductionSlotAvailable(rerouter);
+      var latestCount = countProductionSlotAvailable();
       if (rerouter.isPageMatch(PAGES.rfpageNotEnoughStock)) {
         logs('makeGoodsToTarget', `PAGES.rfpageNotEnoughStock`);
         rerouter.goNext(PAGES.rfpageNotEnoughStock);
@@ -1224,10 +1224,10 @@ export function makeGoodsToTarget(rerouter: Rerouter, goodsTarget: number, safet
     // Add check if there are no worker cookie
   }
 
-  return countProductionSlotAvailable(rerouter);
+  return countProductionSlotAvailable();
 }
 
-export function swipeDirection(rerouter: Rerouter, direction: XY, targetPage: Page | null, swippingPage: Page) {
+export function swipeDirection(direction: XY, targetPage: Page | null, swippingPage: Page) {
   var tapableArea = {
     fromPnt: { x: 165, y: 90 },
     endPnt: { x: 566, y: 285 },
@@ -1245,7 +1245,7 @@ export function swipeDirection(rerouter: Rerouter, direction: XY, targetPage: Pa
   var toPnt = { x: x + direction.x, y: y + direction.y };
   var steps = 4;
 
-  if (swipeFromToPoint(rerouter, fromPnt, toPnt, steps, targetPage, swippingPage)) {
+  if (swipeFromToPoint(fromPnt, toPnt, steps, targetPage, swippingPage)) {
     // console.log('swipe successfully');
     return true;
   } else if (rerouter.isPageMatch(PAGES.rfpageInTradeHabor)) {
@@ -1291,7 +1291,7 @@ function difference(array1: Point[], array2: Point[]): Point[] {
 
 // 1. searchForCandyHouse
 // 2. if !1, swipe directinos
-export function searchForCandyHouse(rerouter: Rerouter): boolean {
+export function searchForCandyHouse(): boolean {
   // 1. find and tap candy
   let foundResults = findSpecificIconInScreen(ICONS.iconCandy);
   let filteredResults = filterFindIconResults(foundResults, 15);
@@ -1442,7 +1442,7 @@ export function mergeObject(target: any) {
   return target;
 }
 
-export function checkIfInBattle(rerouter: Rerouter, task: string, botStatus: BotStatus): boolean {
+export function checkIfInBattle(task: string, botStatus: BotStatus): boolean {
   // read the life bar of both players
   const rfpagePvPBattling = new Page('rfpageBattling', [
     // From PVP
