@@ -1,3 +1,5 @@
+export const packageName: string = 'com.com2us.ninepb3d.normal.freefull.google.global.android.common';
+
 export const leagueYearMin: number = 2023;
 export const sleepShort: number = 1500;
 export const sleepMedium: number = 3000;
