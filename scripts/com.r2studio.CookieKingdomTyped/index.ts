@@ -12,7 +12,6 @@ import {
   checkScreenMessage,
   getMayhemScores,
   findSpecificIconInScreen,
-  dynamicSort,
   swipeFromToPoint,
   handleResearchInGnomeLab,
   ocrNumberInRect,
@@ -44,6 +43,7 @@ import * as CONSTANTS from './src/constants';
 import { TASKS } from './src/tasks';
 import * as MessageWindow from './src/messageWindow';
 import { addBountiesRoutes, addBountiesTask } from './src/tasks/bounties';
+import { addHotAirBallonRoutes, addHotAirBallonTask } from './src/tasks/hotAirBallon';
 
 const VERSION_CODE: number = 0.1;
 
@@ -192,9 +192,6 @@ export class CookieKingdom {
     this.taskStatus[TASKS.getInShopFreeDailyPack] = {
       trials: 0,
     };
-    this.taskStatus[TASKS.hotAirBallon] = {
-      changeMapFinished: false,
-    };
     this.taskStatus[TASKS.wishingTree] = {
       records: {
         opened: 0,
@@ -287,8 +284,8 @@ export class CookieKingdom {
     }
 
     // In dev:
-    if (this.config.autoHandleBountiesIntervalInMins > 0) {
-      addBountiesTask();
+    if (this.config.autoSendHotAirBallonIntervalInMins > 0) {
+      addHotAirBallonTask();
     }
     return;
 
@@ -337,12 +334,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoSendHotAirBallonIntervalInMins > 0) {
-      rerouter.addTask({
-        name: TASKS.hotAirBallon,
-        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-        minRoundInterval: this.config.autoSendHotAirBallonIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+      addHotAirBallonTask();
     }
     if (this.config.autoCollectTrainIntervalInMins > 0) {
       rerouter.addTask({
@@ -723,7 +715,7 @@ export class CookieKingdom {
 
         logs(context.task.name, 'rfkingdomPassItemCollected, task finished');
         rerouter.goNext(PAGES.rfkingdomPassItemCollected);
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true);
       },
     });
@@ -738,7 +730,7 @@ export class CookieKingdom {
 
         logs(context.task.name, 'rfpageMailsAllClaimed, task finished');
         rerouter.goNext(PAGES.rfkingdomPassItemCollected);
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true);
       },
     });
@@ -755,7 +747,7 @@ export class CookieKingdom {
         logs(context.task.name, 'rfpageInFriendsList, task finished');
         rerouter.goNext(PAGES.rfpageFriendRewardsSent);
         sendKeyBack();
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true);
       },
     });
@@ -820,91 +812,7 @@ export class CookieKingdom {
     });
 
     // Hot air ballon pages
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInHotAirBallon.name}`,
-      match: PAGES.rfpageInHotAirBallon,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.hotAirBallon) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, 'rfpageInHotAirBallon, choose next step');
-        if (this.taskStatus[TASKS.hotAirBallon]['changeMapFinished']) {
-          rerouter.screen.tap({ x: 258, y: 330 }); // tap Auto
-          Utils.sleep(CONSTANTS.sleepAnimate);
-          rerouter.screen.tap({ x: 575, y: 330 }); // tap Start
-          logs(context.task.name, `rfpageInHotAirBallon, start new ballon trip, ep4: ${this.config.isHotAirBallonGotoEp4}`);
-          finishRound(true);
-        } else {
-          rerouter.screen.tap({ x: 412, y: 330 }); // tap Change
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageBallonFlyingDock.name}`,
-      match: PAGES.rfpageBallonFlyingDock,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.hotAirBallon) {
-          rerouter.screen.tap({ x: 616, y: 17 });
-          return;
-        }
-
-        logs(context.task.name, 'rfpageBallonFlyingDock, ballon is flying, finish task');
-        rerouter.goNext(PAGES.rfpageBallonFlyingDock); // close this screen
-        finishRound(true);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageChooseBallonDestination.name}`,
-      match: PAGES.rfpageChooseBallonDestination,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.hotAirBallon) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `rfpageChooseBallonDestination, goto ep4: ${this.config.isHotAirBallonGotoEp4}`);
-        scrollLeftALot({ x: 618, y: 151 });
-        if (this.config.isHotAirBallonGotoEp4 && rerouter.isPageMatchImage(PAGES.rfpageBallonMapEp4, image)) {
-          rerouter.goNext(PAGES.rfpageBallonMapEp4); // tap EP4 map
-          this.taskStatus[TASKS.hotAirBallon]['changeMapFinished'] = true;
-          return;
-        } else {
-          // scroll to right most and find the last map
-          scrollRightALot({ x: 618, y: 151 });
-          console.log('scrolled');
-          scrollRightALot({ x: 618, y: 151 });
-          console.log('scrolled');
-          scrollRightALot({ x: 618, y: 151 });
-          console.log('scrolled');
-
-          for (let i = 0; i < 4; i++) {
-            for (var xLocation = 550; xLocation >= 100; xLocation -= 125) {
-              for (var yLocation = 140; yLocation <= 260; yLocation += 120) {
-                rerouter.screen.tap({ x: xLocation, y: yLocation });
-
-                if (rerouter.waitScreenForMatchingPage(PAGES.rfpageInHotAirBallon, 2000)) {
-                  this.taskStatus[TASKS.hotAirBallon]['changeMapFinished'] = true;
-                  logs(context.task.name, `ballon destination choosed successfully, i, x, y = ${i}, ${xLocation}, ${yLocation}`);
-                  return;
-                }
-              }
-            }
-
-            tapDown(30, 268, 40, 0);
-            Utils.sleep(CONSTANTS.sleep);
-            moveTo(250, 268, 40, 0);
-            Utils.sleep(CONSTANTS.sleep);
-            moveTo(620, 268, 40, 0);
-            Utils.sleep(CONSTANTS.sleepAnimate);
-            tapUp(620, 268, 40, 0);
-            Utils.sleep(CONSTANTS.sleepAnimate * 3);
-          }
-        }
-      },
-    });
-
+    addHotAirBallonRoutes();
     // Train pages
     // TODO: NG！ 用鑽買東西的頁面會被判斷成 rfpageNewDataPackDownloadFailed，會自動按下花鑽石買東西
     rerouter.addRoute({
@@ -1021,7 +929,7 @@ export class CookieKingdom {
         if (rerouter.isPageMatchImage(rfpageAllWishingDailyRewardCollected, image) && !this.config.alwaysFulfillWishes) {
           logs(context.task.name, `rfpageInWishingTree, All wish fulfilled, skipping and send running`);
           // sendEvent('running', '');
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           rerouter.screen.tap({ x: 618, y: 20 }); // tap X
           finishRound(true);
           return;
@@ -1074,7 +982,7 @@ export class CookieKingdom {
         // }
 
         // console.log('Run wishing tree for ', (Date.now() - wishingTreeStartTime) / 60000, ' mins, ending this task');
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true);
         return true;
       },
@@ -1135,14 +1043,14 @@ export class CookieKingdom {
         if (rerouter.isPageMatchImage(PAGES.rfpageFountain3rdRawEmpty, image)) {
           logs(context.task.name, 'rfpageFountain3rdRawEmpty 3rd raw empty, set task complete');
           rerouter.screen.tap({ x: 500, y: 310 }); // tap Claim
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
           return;
         }
 
         logs(context.task.name, 'rfpageInFountain and collect it');
         rerouter.screen.tap({ x: 500, y: 310 }); // tap Claim
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true); // 如果可以正確辨識收成功，這個可以刪除，否則是用水池偏空當作有收成功
       },
     });
@@ -1191,7 +1099,7 @@ export class CookieKingdom {
               return;
             } else {
               logs(context.task.name, `Cannot tap PVP refresh, job done`);
-              sendEventRunning(this.botStatus);
+              sendEventRunning();
               finishRound(true);
               return;
             }
@@ -1217,7 +1125,7 @@ export class CookieKingdom {
 
         logs(context.task.name, `in rfpagePvPNoArenaTicket, job done`);
         sendKeyBack();
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true);
       },
     });
@@ -1292,7 +1200,7 @@ export class CookieKingdom {
           rerouter.screen.tap({ x: 532, y: 329 });
         } else {
           logs(context.task.name, `Cannot tap Super mayhem refresh, job done`);
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
           return;
         }
@@ -1328,7 +1236,7 @@ export class CookieKingdom {
               logs(context.task.name, `more resources are on the way`);
             }
             finishRound(true);
-            sendEventRunning(this.botStatus);
+            sendEventRunning();
             return;
 
           case TASKS.tropicalIslandSunbed:
@@ -1372,7 +1280,7 @@ export class CookieKingdom {
 
             logs(context.task.name, `finish collecting cookies`);
             finishRound(true);
-            sendEventRunning(this.botStatus);
+            sendEventRunning();
             return;
 
           case TASKS.tropicalIslandClearBubble:
@@ -1426,7 +1334,7 @@ export class CookieKingdom {
             foundResults = findSpecificIconInScreen(ICONS.iconRedSword);
             logs(context.task.name, `handle iconRedSword, found ${Object.keys(foundResults).length} of them`);
             if (Object.keys(foundResults).length > 0) {
-              sendEventRunning(this.botStatus);
+              sendEventRunning();
               rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
               return;
             }
@@ -1441,7 +1349,7 @@ export class CookieKingdom {
 
             logs(context.task.name, `Finish tropical island`);
             sendKeyBack();
-            sendEventRunning(this.botStatus);
+            sendEventRunning();
             finishRound(true);
         }
       },
@@ -1468,7 +1376,7 @@ export class CookieKingdom {
         logs(context.task.name, `in rfpageAddMoreCookies, cannot start battle so finish current task`);
         rerouter.goNext(PAGES.rfpageAddMoreCookies);
         sendKeyBack();
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true);
       },
     });
@@ -1494,7 +1402,7 @@ export class CookieKingdom {
         if (rerouter.isPageMatchImage(rfpageAlreadyResearching, image)) {
           logs(context.task.name, `rfpageInGnomeLab, Already researching, skipping handleInGnomeLab`);
           sendKeyBack();
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
           return;
         }
@@ -1543,7 +1451,7 @@ export class CookieKingdom {
         } else {
           logs(context.task.name, `start researching and finish round`);
           sendKeyBack();
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
         }
       },
@@ -1603,7 +1511,7 @@ export class CookieKingdom {
           case TASKS.haborSendShip:
             if (rerouter.isPageMatchImage(PAGES.rfpageNoShipInHabor, image)) {
               logs(context.task.name, `No ship in habor, finish ${context.task.name}`);
-              sendEventRunning(this.botStatus);
+              sendEventRunning();
               finishRound(true);
               return;
             }
@@ -1754,7 +1662,7 @@ export class CookieKingdom {
         if (this.taskStatus[TASKS.haborShopInSeaMarket].rightSlideCount >= this.taskStatus[TASKS.haborShopInSeaMarket].rightSlideLimit) {
           logs(context.task.name, `Jobs finish`);
           sendKeyBack();
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
           return;
         }
@@ -1927,7 +1835,7 @@ export class CookieKingdom {
 
         finishRound(true);
         sendKeyBack();
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         logs(context.task.name, `${context.path} finishRound`);
       },
     });
@@ -2000,7 +1908,7 @@ export class CookieKingdom {
         if (toscState.tryCount > toscState.tryLimit) {
           logs(context.task.name, `${context.path}, maximum battle count reached ${toscState.tryLimit}, finish round`);
           sendKeyBack();
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
           return;
         } else {
@@ -2067,7 +1975,7 @@ export class CookieKingdom {
         if (context.task.name === TASKS.guildCheckin) {
           logs(context.task.name, `in rfpageInGuildBeacon, finishRound`);
           rerouter.goNext(PAGES.rfpageInGuildBeacon);
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
         }
         sendKeyBack();
@@ -2080,7 +1988,7 @@ export class CookieKingdom {
         if (context.task.name === TASKS.guildCheckin) {
           logs(context.task.name, `in rfPageGuildBeaconIsClear, finishRound`);
           rerouter.goNext(PAGES.rfPageGuildBeaconIsClear);
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
         }
         sendKeyBack();
@@ -2127,7 +2035,7 @@ export class CookieKingdom {
 
         sendKeyBack();
         logs(context.task.name, `rfpageDragonAddMoreCookie, skip and finish round`);
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true);
         return;
       },
@@ -2146,7 +2054,7 @@ export class CookieKingdom {
 
         if (rerouter.isPageMatch(PAGES.rfpageReadyToFightDragon)) {
           logs(context.task.name, `Still in rfpageReadyToFightDragon 6 secs after tapped Battle!, no more dragon ticket, finish round`);
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           finishRound(true);
           return;
         }
@@ -2225,7 +2133,7 @@ export class CookieKingdom {
 
         logs(context.task.name, `found rfpageCannotRefilAllianceTicketToday, finish round`);
         rerouter.screen.tap({ x: 282, y: 276 });
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         finishRound(true);
       },
     });
@@ -2382,7 +2290,7 @@ export class CookieKingdom {
           let newSlots = makeGoodsToTarget(this.config.goodsTarget, this.config.productSafetyStock, this.config.axeStockTo400);
           if (newSlots !== -1 && newSlots !== emptySlots) {
             logs(context.task.name, `emptySlots count changed after makeGoodsToTarget (${emptySlots} => ${newSlots}), send running`);
-            sendEventRunning(this.botStatus);
+            sendEventRunning();
           }
         } else if (materialCount >= this.config.materialsTarget) {
           logs(context.task.name, `Skip as stock enough: ${materialCount}`);
@@ -2394,7 +2302,7 @@ export class CookieKingdom {
           if (this.taskStatus[TASKS.production].lastProductionBuilding !== materialType.name) {
             logs(context.task.name, `material building changed, send running`);
             this.taskStatus[TASKS.production].lastProductionBuilding = materialType.name;
-            sendEventRunning(this.botStatus);
+            sendEventRunning();
           }
 
           switch (materialType.name) {
@@ -2434,7 +2342,7 @@ export class CookieKingdom {
 
           if (countProductionSlotAvailable() !== emptySlots) {
             logs(context.task.name, `slots count changed, send running`);
-            sendEventRunning(this.botStatus);
+            sendEventRunning();
           }
         }
 
@@ -2959,7 +2867,7 @@ export class CookieKingdom {
           return;
         }
 
-        sendEventRunning(this.botStatus);
+        sendEventRunning();
         logs(context.task.name, `rfpageInCandyHouse, send running`);
 
         const rfpageCanUpgradeCandyMansion = new Page('rfpageCanUpgradeCandyMansion', [{ x: 303, y: 289, r: 123, g: 207, b: 8 }], { x: 303, y: 289 });
@@ -2992,7 +2900,7 @@ export class CookieKingdom {
         if (!this.config.autoUpgradeCandyHouse) {
           logs(context.task.name, `rfpageInCandyHouse, findAndTapCandy successful so finish round`);
           finishRound(true);
-          sendEventRunning(this.botStatus);
+          sendEventRunning();
           sendKeyBack();
           return;
         }

@@ -101,6 +101,7 @@ export function addBountiesRoutes() {
         sendKeyBack();
         return;
       }
+
       logs(context.task.name, `in rfpageInBounties`);
 
       if (!bountyStatus['hasBountiesLeft']) {

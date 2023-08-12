@@ -322,50 +322,6 @@ export const rfpageUncollapsedAffairs = new Page(
   { x: 115, y: 330 }
 );
 
-export const rfpageBallonFlyingDock = new Page(
-  'rfpageBallonFlyingDock',
-  [
-    { x: 611, y: 17, r: 57, g: 166, b: 231 },
-    { x: 213, y: 15, r: 50, g: 21, b: 37 },
-    { x: 250, y: 51, r: 255, g: 255, b: 255 },
-    { x: 269, y: 51, r: 217, g: 217, b: 217 },
-    { x: 346, y: 50, r: 40, g: 6, b: 21 },
-    { x: 129, y: 23, r: 43, g: 6, b: 26 },
-    { x: 37, y: 51, r: 6, g: 14, b: 3 },
-  ],
-  { x: 616, y: 17 }
-);
-
-export const pageInHotAirBallon = [
-  { x: 270, y: 330, r: 255, g: 211, b: 0 },
-  { x: 158, y: 331, r: 12, g: 167, b: 223 },
-  { x: 184, y: 312, r: 223, g: 175, b: 97 },
-  { x: 331, y: 312, r: 142, g: 88, b: 65 },
-  { x: 565, y: 84, r: 255, g: 251, b: 235 },
-];
-export const rfpageInHotAirBallon = new Page('rfpageInHotAirBallon', [
-  { x: 270, y: 330, r: 255, g: 211, b: 0 },
-  { x: 158, y: 331, r: 12, g: 167, b: 223 },
-  { x: 184, y: 312, r: 223, g: 175, b: 97 },
-  { x: 331, y: 312, r: 142, g: 88, b: 65 },
-  { x: 565, y: 84, r: 255, g: 251, b: 235 },
-]);
-export const rfpageChooseBallonDestination = new Page('rfpageChooseBallonDestination', [
-  { x: 285, y: 15, r: 208, g: 161, b: 89 },
-  { x: 319, y: 7, r: 91, g: 61, b: 45 },
-  { x: 352, y: 18, r: 210, g: 162, b: 89 },
-  { x: 616, y: 15, r: 56, g: 165, b: 231 },
-]);
-export const rfpageBallonMapEp4 = new Page(
-  'rfpageBallonMapEp4',
-  [
-    { x: 611, y: 204, r: 236, g: 228, b: 255 },
-    { x: 9, y: 37, r: 56, g: 33, b: 19 },
-    { x: 40, y: 120, r: 129, g: 229, b: 81 },
-  ],
-  { x: 610, y: 230 }
-);
-
 export const rfpageInTrainStation = new Page(
   'rfpageInTrainStation',
   [
