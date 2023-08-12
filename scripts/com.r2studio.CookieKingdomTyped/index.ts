@@ -36,8 +36,9 @@ import {
   checkLoginFailedMaxReached,
   findUnmatchInPage,
   checkIfTrainRequirementMet,
+  assign,
 } from './src/helper';
-import { defaultConfig, defaultWishes } from './src/defaultScriptConfig';
+import { config, defaultConfig, defaultWishes } from './src/scriptConfig';
 
 import * as PAGES from './src/pages';
 import * as ICONS from './src/icons';
@@ -2531,7 +2532,6 @@ export class CookieKingdom {
             break;
           case TASKS.bounties:
             logs(context.task.name, `rfpageSelectAdvanture goto bounties`);
-            this.taskStatus['bounties'].hasBountiesLeft = true;
             rerouter.screen.tap(advantureSetting[context.task.name].pnt);
             break;
           case TASKS.towerOfSweetChaos:
@@ -3093,7 +3093,7 @@ export class CookieKingdom {
 }
 
 // * =========== entry point ===========
-export let cookieKingdom: CookieKingdom;
+export let cookieKingdom: CookieKingdom | undefined;
 
 export function start(jsonConfig: any) {
   console.log('typed inputConfig: ', jsonConfig);
@@ -3104,7 +3104,7 @@ export function start(jsonConfig: any) {
     jsonConfig = JSON.parse(jsonConfig);
   }
 
-  const config = mergeObject(defaultConfig, jsonConfig);
+  assign(config, mergeObject(defaultConfig, jsonConfig));
 
   if (config.licenseId === '') {
     logs('start', 'config.licenseId is empty thus goto maintainance mode');

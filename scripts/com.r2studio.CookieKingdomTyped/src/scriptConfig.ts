@@ -107,6 +107,7 @@ export const defaultConfig = {
   tryRestartGameLimit: 5,
   needToSendLoginSuccess: true,
   needToSendPlaying: true,
+  licenseId: ''
 
   stock_axe: 60,
   stock_pickaxe: 60,
@@ -165,6 +166,8 @@ export const defaultConfig = {
   stock_rubyberryBrooch: 40,
   stock_bearJellyCrown: 40,
 };
+
+export let config = defaultConfig;
 
 export const defaultWishes = [
   {

@@ -1,12 +1,11 @@
 import { Page, Utils, rerouter } from 'Rerouter';
-import * as PAGES from '../pages';
 import * as ICONS from '../icons';
 import { TASKS } from '../tasks';
 import { logs, sendEventRunning, sendKeyBack } from '../utils';
-import { cookieKingdom } from '../../index';
-import { bountyCheckIfGetBluePowder, countBountyLevel, dynamicSort, findSpecificIconInScreen, ocrNumberInRect, passiveAddRoute } from '../helper';
+import { bountyCheckIfGetBluePowder, countBountyLevel, dynamicSort, findSpecificIconInScreen, ocrNumberInRect, passiveAddRoute, assign } from '../helper';
 import { BountyInfo } from '../types';
 import * as CONSTANTS from '../constants';
+import { config } from '../scriptConfig';
 
 const rfpageInBounties = new Page('rfpageInBounties', [
   { x: 591, y: 11, r: 41, g: 16, b: 21 },
@@ -88,6 +87,11 @@ const rfpageNeedRefillBounties2 = new Page(
   { x: 442, y: 82 }
 );
 
+let bountyStatus = {
+  hasBountiesLeft: true,
+  bountyCount: 0,
+};
+
 export function addBountiesRoutes() {
   rerouter.addRoute({
     path: `/${rfpageInBounties.name}`,
@@ -99,9 +103,9 @@ export function addBountiesRoutes() {
       }
       logs(context.task.name, `in rfpageInBounties`);
 
-      if (!cookieKingdom.taskStatus[context.task.name]['hasBountiesLeft']) {
+      if (!bountyStatus['hasBountiesLeft']) {
         logs(context.task.name, `bounty finished`);
-        sendEventRunning(cookieKingdom.botStatus);
+        sendEventRunning();
         finishRound(true);
       }
 
@@ -115,7 +119,7 @@ export function addBountiesRoutes() {
         finishRound(true);
       }
 
-      cookieKingdom.taskStatus[context.task.name]['bountyCount'] = bountyCount;
+      bountyStatus['bountyCount'] = bountyCount;
       rerouter.screen.tap({ x: foundResults[0].x + 40, y: foundResults[0].y + 10 });
       return;
     },
@@ -129,7 +133,7 @@ export function addBountiesRoutes() {
         sendKeyBack();
         return;
       }
-      if (!cookieKingdom.taskStatus[context.task.name]['hasBountiesLeft']) {
+      if (!bountyStatus['hasBountiesLeft']) {
         // logs(context.task.name, `bounty finished, leave this page`);
         sendKeyBack();
       }
@@ -138,14 +142,14 @@ export function addBountiesRoutes() {
       sendEvent('running', '');
       let i = 0;
 
-      const bountyCount = cookieKingdom.taskStatus[context.task.name]['bountyCount'];
+      const bountyCount = bountyStatus['bountyCount'];
       let bounties: BountyInfo[] = [];
       for (var bountyIdx = 0; bountyIdx < bountyCount; bountyIdx++) {
         // When there are only one bounty (Sunday), it gets all types of powder thus nothing to OCR
         var powder = bountyCount === 1 ? 0 : ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
         var bountyLevel = bountyCount === 1 ? 12 : countBountyLevel();
 
-        if (bountyCount !== 1 && cookieKingdom.config.autoBountiesCheckBluePowder) {
+        if (bountyCount !== 1 && config.autoBountiesCheckBluePowder) {
           var rtn = bountyCheckIfGetBluePowder();
           powder = rtn[0];
           bountyLevel = rtn[1];
@@ -176,7 +180,7 @@ export function addBountiesRoutes() {
       if (bounties.length === 0) {
         logs(context.task.name, `No bounties can be run, skipping, bounties: ${JSON.stringify(bounties)}`);
         sendKeyBack();
-        sendEventRunning(cookieKingdom.botStatus);
+        sendEventRunning();
         finishRound(true);
       }
 
@@ -184,7 +188,7 @@ export function addBountiesRoutes() {
       for (i = 0; i < bountyCount; i++) {
         if (targetBounty['level'] === 6) {
           rerouter.screen.tap({ x: 40, y: 135 }); // Goto left bounty
-          Utils.sleep(cookieKingdom.config.sleepAnimate * 2);
+          Utils.sleep(config.sleepAnimate * 2);
         }
         var gotBountyLevel = countBountyLevel();
         var gotMaterialStock = bountyCount === 1 ? 0 : ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
@@ -215,7 +219,7 @@ export function addBountiesRoutes() {
 
       logs(context.task.name, `rfpageNeedRefillBounty, cannot battle bounty as no more runs left so finishRound`);
       rerouter.goNext(rfpageNeedRefillBounty);
-      sendEventRunning(cookieKingdom.botStatus);
+      sendEventRunning();
       finishRound(true);
     },
   });
@@ -231,7 +235,7 @@ export function addBountiesRoutes() {
 
       logs(context.task.name, `rfpageCannotRefillBountyAnymore, cannot battle bounty as no more runs left so finishRound`);
       rerouter.goNext(rfpageCannotRefillBountyAnymore);
-      sendEventRunning(cookieKingdom.botStatus);
+      sendEventRunning();
       finishRound(true);
     },
   });
@@ -243,13 +247,13 @@ export function addBountiesTask() {
   rerouter.addTask({
     name: TASKS.bounties,
     maxTaskDuring: 15 * CONSTANTS.minuteInMs,
-    minRoundInterval: cookieKingdom.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
+    minRoundInterval: config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
     forceStop: true,
     beforeRoute: () => {
-      cookieKingdom.taskStatus[TASKS.bounties] = {
+      assign(bountyStatus, {
         hasBountiesLeft: true,
         bountyCount: 0,
-      };
+      });
     },
   });
 }

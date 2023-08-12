@@ -44,10 +44,6 @@ export function sendKeyBack() {
   keycode('KEYCODE_BACK', 100);
 }
 
-export function sendEventRunning(state: BotStatus) {
-  if (Date.now() - state.lastSendRunning < CONSTANTS.minuteInMs) {
-    return;
-  }
+export function sendEventRunning() {
   sendEvent('running', '');
-  state.lastSendRunning = Date.now();
 }
