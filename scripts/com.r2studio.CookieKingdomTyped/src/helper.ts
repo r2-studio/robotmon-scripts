@@ -1566,3 +1566,27 @@ export function checkIfInBattle(task: string, botStatus: BotStatus): boolean {
   sendEventRunning(botStatus);
   return true;
 }
+
+export function passiveAddRoute(pages: Page[]) {
+  for (const pageIdx in pages) {
+    const page = pages[pageIdx];
+    if (!(page instanceof Page)) {
+      continue;
+    }
+    if (rerouter.getPageByName(page.name) !== null) {
+      continue;
+    }
+    rerouter.addRoute({
+      path: `/${page.name}`,
+      match: page,
+      action: (context, image, matched, finishRound) => {
+        if (page.next === undefined) {
+          console.log(`findPath, task: ${context.task.name}, path: ${context.path} but does not have next page to go`);
+          return;
+        }
+        console.log(`findPath, task: ${context.task.name}, path: ${context.path}`);
+        rerouter.goNext(page);
+      },
+    });
+  }
+}

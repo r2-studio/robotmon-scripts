@@ -44,6 +44,7 @@ import * as ICONS from './src/icons';
 import * as CONSTANTS from './src/constants';
 import { TASKS } from './src/tasks';
 import * as MessageWindow from './src/messageWindow';
+import { addBountiesRoutes, addBountiesTask } from './src/tasks/bounties';
 
 const VERSION_CODE: number = 0.1;
 
@@ -216,10 +217,6 @@ export class CookieKingdom {
     this.taskStatus[TASKS.tropicalIslandClearBubble] = {
       iconRedExclamationCount: 0,
     };
-    this.taskStatus[TASKS.bounties] = {
-      hasBountiesLeft: true,
-      bountyCount: 0,
-    };
     this.taskStatus[TASKS.gnomeLab] = {
       kingdomSearchCount: 0,
       cookieSearchCount: 0,
@@ -289,6 +286,12 @@ export class CookieKingdom {
       });
       return;
     }
+
+    // In dev:
+    if (this.config.autoHandleBountiesIntervalInMins > 0) {
+      addBountiesTask();
+    }
+    return;
 
     rerouter.addTask({
       name: TASKS.production,
@@ -422,14 +425,11 @@ export class CookieKingdom {
         forceStop: true,
       });
     }
+
     if (this.config.autoHandleBountiesIntervalInMins > 0) {
-      rerouter.addTask({
-        name: TASKS.bounties,
-        maxTaskDuring: 15 * CONSTANTS.minuteInMs,
-        minRoundInterval: this.config.autoHandleBountiesIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+      addBountiesTask();
     }
+
     if (this.config.autoLabResearch) {
       rerouter.addTask({
         name: TASKS.gnomeLab,
@@ -1475,149 +1475,7 @@ export class CookieKingdom {
     });
 
     // Bounties
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInBounties.name}`,
-      match: PAGES.rfpageInBounties,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.bounties) {
-          sendKeyBack();
-          return;
-        }
-        logs(context.task.name, `in rfpageInBounties`);
-
-        if (!this.taskStatus[context.task.name]['hasBountiesLeft']) {
-          logs(context.task.name, `bounty finished`);
-          sendEventRunning(this.botStatus);
-          finishRound(true);
-        }
-
-        let foundResults = findSpecificIconInScreen(ICONS.iconBountiesGreenEnter);
-        foundResults.sort(dynamicSort('x'));
-
-        const bountyCount = Object.keys(foundResults).length > 2 ? 4 : Object.keys(foundResults).length;
-        if (bountyCount === 0) {
-          logs(context.task.name, `cannot find bounty entry button, skipping task`);
-          sendKeyBack();
-          finishRound(true);
-        }
-
-        this.taskStatus[context.task.name]['bountyCount'] = bountyCount;
-        rerouter.screen.tap({ x: foundResults[0].x + 40, y: foundResults[0].y + 10 });
-        return;
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInOneOfTheBounties.name}`,
-      match: PAGES.rfpageInOneOfTheBounties,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.bounties) {
-          sendKeyBack();
-          return;
-        }
-        if (!this.taskStatus[context.task.name]['hasBountiesLeft']) {
-          // logs(context.task.name, `bounty finished, leave this page`);
-          sendKeyBack();
-        }
-
-        logs(context.task.name, `about to start handleBounties, send running`);
-        sendEvent('running', '');
-        let i = 0;
-
-        const bountyCount = this.taskStatus[context.task.name]['bountyCount'];
-        let bounties: BountyInfo[] = [];
-        for (var bountyIdx = 0; bountyIdx < bountyCount; bountyIdx++) {
-          // When there are only one bounty (Sunday), it gets all types of powder thus nothing to OCR
-          var powder = bountyCount === 1 ? 0 : ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
-          var bountyLevel = bountyCount === 1 ? 12 : countBountyLevel();
-
-          if (bountyCount !== 1 && this.config.autoBountiesCheckBluePowder) {
-            var rtn = bountyCheckIfGetBluePowder();
-            powder = rtn[0];
-            bountyLevel = rtn[1];
-          }
-
-          if (powder !== -1) {
-            bounties.push({
-              index: bountyIdx,
-              // entryPnt: bountyEntryPnt,
-              powderStock: powder,
-              level: bountyLevel,
-            });
-          }
-
-          rerouter.screen.tap({ x: 435, y: 178 }); // Goto right bounty
-          Utils.sleep(1500);
-        }
-
-        bounties.sort(dynamicSort('level'));
-        // console.log('sorted level bounties: ', JSON.stringify(bounties, ['index', 'level', 'powderStock']));
-
-        bounties = bounties.filter(function (bounty) {
-          return bounty.level === bounties[0].level;
-        });
-        bounties.sort(dynamicSort('powderStock'));
-        logs(context.task.name, `rfpageInOneOfTheBounties sorted & filtered level bounties: ${JSON.stringify(bounties, ['index', 'level', 'powderStock'])}`);
-
-        if (bounties.length === 0) {
-          logs(context.task.name, `No bounties can be run, skipping, bounties: ${JSON.stringify(bounties)}`);
-          sendKeyBack();
-          sendEventRunning(this.botStatus);
-          finishRound(true);
-        }
-
-        var targetBounty = bounties[0];
-        for (i = 0; i < bountyCount; i++) {
-          if (targetBounty['level'] === 6) {
-            rerouter.screen.tap({ x: 40, y: 135 }); // Goto left bounty
-            Utils.sleep(this.config.sleepAnimate * 2);
-          }
-          var gotBountyLevel = countBountyLevel();
-          var gotMaterialStock = bountyCount === 1 ? 0 : ocrNumberInRect({ x: 454, y: 10, w: 50, h: 18 }, ICONS.wNumbers);
-          if (gotBountyLevel === targetBounty.level && gotMaterialStock === targetBounty.powderStock) {
-            logs(context.task.name, `found it, level, stock: ${gotBountyLevel}, ${gotMaterialStock}`);
-            rerouter.screen.tap({ x: 530, y: 330 });
-            break;
-          } else {
-            logs(
-              context.task.name,
-              `wrong, ${gotBountyLevel}, ${gotMaterialStock}, ${gotBountyLevel === targetBounty.level}, ${gotMaterialStock === targetBounty.powderStock}`
-            );
-            rerouter.screen.tap({ x: 435, y: 178 });
-            Utils.sleep(1500);
-          }
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageNeedRefillBounty.name}`,
-      match: PAGES.rfpageNeedRefillBounty,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.bounties) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `rfpageNeedRefillBounty, cannot battle bounty as no more runs left so finishRound`);
-        rerouter.goNext(PAGES.rfpageNeedRefillBounty);
-        sendEventRunning(this.botStatus);
-        finishRound(true);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageCannotRefillBountyAnymore.name}`,
-      match: PAGES.rfpageCannotRefillBountyAnymore,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.bounties) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `rfpageCannotRefillBountyAnymore, cannot battle bounty as no more runs left so finishRound`);
-        rerouter.goNext(PAGES.rfpageCannotRefillBountyAnymore);
-        sendEventRunning(this.botStatus);
-        finishRound(true);
-      },
-    });
+    addBountiesRoutes();
 
     // Gnome lab
     rerouter.addRoute({
