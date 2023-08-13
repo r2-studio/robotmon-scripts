@@ -1,5 +1,5 @@
-import { rerouter, Utils, XYRGB, Page, Task, XY, GroupPage, log } from 'Rerouter';
-import { BountyInfo, seasideStockRect, goodsLocationRect, TaskStatus, BotStatus, searchHosePaths, Icon } from './src/types';
+import { rerouter, Utils, XYRGB, Page, XY, GroupPage } from 'Rerouter';
+import { seasideStockRect, goodsLocationRect, TaskStatus, searchHosePaths, Icon } from './src/types';
 import { logs, sendKeyBack, sendEventRunning } from './src/utils';
 import {
   scrollDownALot,
@@ -8,7 +8,6 @@ import {
   getStatusOfGivenWish,
   checkToSendSpecificWish,
   AdvanturesBountiesAt3rd,
-  getCEs,
   checkScreenMessage,
   getMayhemScores,
   findSpecificIconInScreen,
@@ -42,8 +41,10 @@ import * as ICONS from './src/icons';
 import * as CONSTANTS from './src/constants';
 import { TASKS } from './src/tasks';
 import * as MessageWindow from './src/messageWindow';
+import { globalStorage } from './src/storage';
 import { addBountiesRoutes, addBountiesTask } from './src/tasks/bounties';
 import { addHotAirBallonRoutes, addHotAirBallonTask } from './src/tasks/hotAirBallon';
+import { addPvpArenaRoutes, addPvpArenaTask, addPvpPurchaseTask } from './src/tasks/pvpArena';
 
 const VERSION_CODE: number = 0.1;
 
@@ -53,7 +54,6 @@ export class CookieKingdom {
   public config = defaultConfig;
   wishes = defaultWishes;
   taskStatus: TaskStatus = {};
-  botStatus: BotStatus = {};
   lastBattleChecked: number = 0;
 
   constructor(config: any) {
@@ -180,11 +180,6 @@ export class CookieKingdom {
   }
 
   public initTaskStatus() {
-    this.botStatus = {
-      lastSendRunning: Date.now(),
-      battleStarted: Date.now(),
-    };
-
     this.taskStatus[TASKS.login] = {
       loginRetryCount: 0,
     };
@@ -201,15 +196,7 @@ export class CookieKingdom {
         goldenAndSkip: 0,
       },
     };
-    this.taskStatus[TASKS.pvp] = {
-      battled: {
-        0: false,
-        1: false,
-        2: false,
-        3: false,
-        4: false,
-      },
-    };
+
     this.taskStatus[TASKS.tropicalIslandClearBubble] = {
       iconRedExclamationCount: 0,
     };
@@ -284,8 +271,12 @@ export class CookieKingdom {
     }
 
     // In dev:
-    if (this.config.autoSendHotAirBallonIntervalInMins > 0) {
-      addHotAirBallonTask();
+    if (this.config.autoPvPPurchaseAncientCookie) {
+      addPvpPurchaseTask();
+    }
+    this.config.autoPvPIntervalInMins = 10;
+    if (this.config.autoPvPIntervalInMins > 0) {
+      addPvpArenaTask();
     }
     return;
 
@@ -361,31 +352,10 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoPvPPurchaseAncientCookie) {
-      rerouter.addTask({
-        name: TASKS.pvpPurchaseAncientCookie,
-        maxTaskDuring: 4 * CONSTANTS.minuteInMs,
-        minRoundInterval: this.config.autoPvPIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+      addPvpArenaTask();
     }
     if (this.config.autoPvPIntervalInMins > 0) {
-      rerouter.addTask({
-        name: TASKS.pvp,
-        maxTaskRunTimes: 1,
-        maxTaskDuring: 9 * CONSTANTS.minuteInMs,
-        forceStop: true,
-        beforeRoute: () => {
-          this.taskStatus[TASKS.pvp] = {
-            battled: {
-              0: false,
-              1: false,
-              2: false,
-              3: false,
-              4: false,
-            },
-          };
-        },
-      });
+      addPvpArenaTask();
     }
     // TODO: no super mayhem for now
     // if (this.config.autoSuperMayhemIntervalInMins > 0) {
@@ -813,6 +783,7 @@ export class CookieKingdom {
 
     // Hot air ballon pages
     addHotAirBallonRoutes();
+
     // Train pages
     // TODO: NG！ 用鑽買東西的頁面會被判斷成 rfpageNewDataPackDownloadFailed，會自動按下花鑽石買東西
     rerouter.addRoute({
@@ -1056,111 +1027,7 @@ export class CookieKingdom {
     });
 
     // PVP
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInPVPArena.name}`,
-      match: PAGES.rfpageInPVPArena,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name.substring(0, 3) !== TASKS.pvp) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `in rfpageInPVPArena`);
-
-        const tartgetXY: {
-          [key: number]: XY;
-        } = {
-          0: { x: 288, y: 176 },
-          1: { x: 418, y: 176 },
-          2: { x: 548, y: 176 },
-          3: { x: 430, y: 176 },
-          4: { x: 560, y: 176 },
-        };
-
-        switch (context.task.name) {
-          case TASKS.pvp:
-            for (let i in this.taskStatus[TASKS.pvp].battled) {
-              logs(context.task.name, `rfpageInPVPArena, checking ${i} so tap ${JSON.stringify(tartgetXY[i])} and ${this.taskStatus[TASKS.pvp].battled[i]}`);
-              if (!this.taskStatus[TASKS.pvp].battled[i]) {
-                if (i > 2) {
-                  swipeFromToPoint({ x: 600, y: 182 }, { x: 0, y: 182 }, 6);
-                }
-                rerouter.screen.tap(tartgetXY[i]);
-                this.taskStatus[TASKS.pvp].battled[i] = true;
-                Utils.sleep(this.config.sleepAnimate);
-                return;
-              }
-            }
-
-            if (rerouter.isPageMatch(PAGES.rfpageBattleTargetCanRefresh)) {
-              logs(context.task.name, `Tap PVP refresh`);
-              rerouter.screen.tap({ x: 532, y: 329 });
-              Utils.sleep(this.config.sleepAnimate);
-              return;
-            } else {
-              logs(context.task.name, `Cannot tap PVP refresh, job done`);
-              sendEventRunning();
-              finishRound(true);
-              return;
-            }
-
-          case TASKS.pvpPurchaseAncientCookie:
-            rerouter.screen.tap({ x: 178, y: 118 });
-            break;
-          default:
-            logs(context.task.name, `rfpageInPVPArena, leave because current task is not pvp related, but: ${context.task.name}`);
-            sendKeyBack();
-            return;
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpagePvPNoArenaTicket.name}`,
-      match: PAGES.rfpagePvPNoArenaTicket,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.pvp) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `in rfpagePvPNoArenaTicket, job done`);
-        sendKeyBack();
-        sendEventRunning();
-        finishRound(true);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpagePVPArenaReadyToBattlePage.name}`,
-      match: PAGES.rfpagePVPArenaReadyToBattlePage,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.pvp) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `in rfpagePVPArenaReadyToBattlePage, tap it`);
-
-        var ce = getCEs({ x: 496, y: 72, w: 70, h: 16 });
-        if (ce < this.config.autoPvPTargetScoreLimit && ce !== 0) {
-          logs(context.task.name, `Battle with ce ${ce}, target limit: ${this.config.autoPvPTargetScoreLimit}`);
-          rerouter.goNext(PAGES.rfpagePVPArenaReadyToBattlePage); // tap Battle
-          if (rerouter.waitScreenForMatchingPage(PAGES.rfpagePVPArenaReadyToBattlePage, 2000)) {
-            return;
-          }
-        } else {
-          logs(context.task.name, `Not to battle with ce ${ce}, target exceed limit: ${this.config.autoPvPTargetScoreLimit}`);
-          sendKeyBack();
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpagePVPPromoted.name}`,
-      match: PAGES.rfpagePVPPromoted,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, `in rfpagePVPPromoted, send back`);
-        sendKeyBack();
-      },
-    });
+    addPvpArenaRoutes();
 
     // Super Mayhem
     rerouter.addRoute({
@@ -2169,66 +2036,6 @@ export class CookieKingdom {
     });
 
     rerouter.addRoute({
-      path: `/${PAGES.rfpageInPVPMedalShop.name}`,
-      match: PAGES.rfpageInPVPMedalShop,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, `in rfpageInPVPMedalShop`);
-        if (context.task.name !== TASKS.pvpPurchaseAncientCookie) {
-          sendKeyBack();
-          return;
-        }
-
-        // Part of the rfpageInPVPMedalShop page
-        const rfpagePVPAncientCookieSoldout = new Page('rfpagePVPAncientCookieSoldout', [
-          { x: 86, y: 109, r: 206, g: 20, b: 24 },
-          { x: 38, y: 131, r: 206, g: 20, b: 24 },
-        ]);
-        const rfpagePVPSuperEpicCookieSoldout = new Page('rfpagePVPSuperEpicCookieSoldout', [
-          { x: 118, y: 127, r: 220, g: 23, b: 24 },
-          { x: 170, y: 112, r: 206, g: 20, b: 24 },
-          { x: 164, y: 98, r: 74, g: 76, b: 87 },
-        ]);
-
-        if (!rerouter.isPageMatchImage(rfpagePVPAncientCookieSoldout, image)) {
-          rerouter.screen.tap({ x: 57, y: 125 });
-          Utils.sleep(1000);
-          rerouter.screen.tap({ x: 317, y: 245 });
-          Utils.sleep(2000);
-          logs(context.task.name, `Purchased ancient cookie successfully`);
-        } else {
-          logs(context.task.name, `ancient cookie already sold out`);
-        }
-
-        if (!rerouter.isPageMatchImage(rfpagePVPSuperEpicCookieSoldout, image)) {
-          rerouter.screen.tap({ x: 145, y: 125 });
-          Utils.sleep(1000);
-          rerouter.screen.tap({ x: 317, y: 245 });
-          Utils.sleep(2000);
-          logs(context.task.name, `Purchased super epic cookie successfully`);
-        } else {
-          logs(context.task.name, `super epic cookie already sold out`);
-        }
-
-        sendKeyBack();
-        finishRound(true);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpagePVPNotEnoughMedal.name}`,
-      match: PAGES.rfpagePVPNotEnoughMedal,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.pvpPurchaseAncientCookie) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `in rfpagePVPNotEnoughMedal, Need more medals, skipping`);
-        rerouter.goNext(PAGES.rfpagePVPNotEnoughMedal);
-        finishRound(true);
-      },
-    });
-
-    rerouter.addRoute({
       path: `/${PAGES.rfpageInProductionDashboard.name}`,
       match: PAGES.rfpageInProductionDashboard,
       action: (context, image, matched, finishRound) => {
@@ -2567,8 +2374,8 @@ export class CookieKingdom {
       match: PAGES.rfpageBattleFinished,
       action: (context, image, matched, finishRound) => {
         logs(context.task.name, 'rfpageBattleFinished, tap it and reset botStatus.battleStarted to 0');
+        globalStorage.botStatus.battleStarted = 0;
         rerouter.goNext(PAGES.rfpageBattleFinished);
-        this.botStatus.battleStarted = 0;
       },
     });
 
@@ -2710,7 +2517,7 @@ export class CookieKingdom {
         logs(context.task.name, `in ${context.path}`);
 
         // In case game crashed during battle
-        this.botStatus.battleStarted = 0;
+        globalStorage.botStatus.battleStarted = 0;
 
         switch (context.task.name) {
           case TASKS.production:
@@ -2965,7 +2772,7 @@ export class CookieKingdom {
         return;
       }
 
-      if (checkIfInBattle(context.task.name, this.botStatus)) {
+      if (checkIfInBattle(context.task.name)) {
         logs('handleUnknown', 'In battle so continue monitor');
         context.matchTimes = 0;
         return;

@@ -5,14 +5,14 @@ import * as CONSTANTS from '../constants';
 import { config } from '../scriptConfig';
 import { assign, scrollLeftALot, scrollRightALot } from '../helper';
 
-export const rfpageInHotAirBallon = new Page('rfpageInHotAirBallon', [
+const rfpageInHotAirBallon = new Page('rfpageInHotAirBallon', [
   { x: 270, y: 330, r: 255, g: 211, b: 0 },
   { x: 158, y: 331, r: 12, g: 167, b: 223 },
   { x: 184, y: 312, r: 223, g: 175, b: 97 },
   { x: 331, y: 312, r: 142, g: 88, b: 65 },
   { x: 565, y: 84, r: 255, g: 251, b: 235 },
 ]);
-export const rfpageBallonFlyingDock = new Page(
+const rfpageBallonFlyingDock = new Page(
   'rfpageBallonFlyingDock',
   [
     { x: 611, y: 17, r: 57, g: 166, b: 231 },
@@ -25,13 +25,13 @@ export const rfpageBallonFlyingDock = new Page(
   ],
   { x: 616, y: 17 }
 );
-export const rfpageChooseBallonDestination = new Page('rfpageChooseBallonDestination', [
+const rfpageChooseBallonDestination = new Page('rfpageChooseBallonDestination', [
   { x: 285, y: 15, r: 208, g: 161, b: 89 },
   { x: 319, y: 7, r: 91, g: 61, b: 45 },
   { x: 352, y: 18, r: 210, g: 162, b: 89 },
   { x: 616, y: 15, r: 56, g: 165, b: 231 },
 ]);
-export const rfpageBallonMapEp4 = new Page(
+const rfpageBallonMapEp4 = new Page(
   'rfpageBallonMapEp4',
   [
     { x: 611, y: 204, r: 236, g: 228, b: 255 },

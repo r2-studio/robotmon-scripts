@@ -373,79 +373,6 @@ export const rfpageCheckWishingTreeStock = new Page('rfpageCheckWishingTreeStock
   { x: 6, y: 25, r: 50, g: 31, b: 93 },
 ]);
 
-export const rfpageInPVPArena = new Page('rfpageInPVPArena', [
-  { x: 628, y: 22, r: 55, g: 167, b: 231 },
-  { x: 522, y: 18, r: 5, g: 128, b: 254 },
-  { x: 458, y: 14, r: 228, g: 148, b: 40 },
-  { x: 448, y: 22, r: 120, g: 38, b: 30 },
-  { x: 356, y: 20, r: 239, g: 174, b: 20 },
-  { x: 180, y: 119, r: 221, g: 128, b: 0 },
-  { x: 22, y: 112, r: 232, g: 198, b: 132 },
-  { x: 33, y: 115, r: 238, g: 190, b: 120 },
-  { x: 24, y: 74, r: 255, g: 226, b: 0 },
-]);
-export const rfpageInPVPMedalShop = new Page('rfpageInPVPMedalShop', [
-  { x: 520, y: 23, r: 0, g: 179, b: 255 },
-  { x: 449, y: 20, r: 210, g: 160, b: 27 },
-  { x: 357, y: 17, r: 235, g: 159, b: 5 },
-  { x: 92, y: 63, r: 255, g: 255, b: 255 },
-  { x: 4, y: 54, r: 95, g: 91, b: 109 },
-  { x: 17, y: 345, r: 28, g: 83, b: 115 },
-  { x: 148, y: 315, r: 54, g: 62, b: 95 },
-]);
-export const rfpagePVPNotEnoughMedal = new Page(
-  'rfpagePVPNotEnoughMedal',
-  [
-    { x: 292, y: 248, r: 123, g: 207, b: 8 },
-    { x: 320, y: 185, r: 250, g: 210, b: 8 },
-    { x: 338, y: 243, r: 123, g: 207, b: 8 },
-  ],
-  { x: 292, y: 248 }
-);
-export const rfpagePVPArenaReadyToBattlePage = new Page(
-  'rfpagePVPArenaReadyToBattlePage',
-  [
-    { x: 529, y: 14, r: 0, g: 196, b: 255 },
-    { x: 449, y: 11, r: 242, g: 208, b: 106 },
-    { x: 445, y: 24, r: 243, g: 199, b: 98 },
-    { x: 359, y: 14, r: 252, g: 192, b: 32 },
-    { x: 507, y: 330, r: 125, g: 69, b: 14 },
-    { x: 543, y: 337, r: 121, g: 207, b: 12 },
-    { x: 160, y: 334, r: 121, g: 207, b: 12 },
-    { x: 76, y: 336, r: 12, g: 167, b: 223 },
-    { x: 26, y: 81, r: 240, g: 175, b: 0 },
-  ],
-  { x: 502, y: 326 }
-);
-export const rfpagePvPCrystaisRefresh = new Page(
-  'rfpagePvPCrystaisRefresh',
-  [
-    { x: 243, y: 100, r: 57, g: 69, b: 107 },
-    { x: 324, y: 78, r: 255, g: 255, b: 255 },
-    { x: 443, y: 92, r: 57, g: 166, b: 231 },
-    { x: 402, y: 134, r: 247, g: 235, b: 222 },
-    { x: 351, y: 250, r: 123, g: 207, b: 8 },
-    { x: 408, y: 251, r: 222, g: 207, b: 198 },
-  ],
-  { x: 436, y: 90 }
-);
-export const rfpagePvPNoArenaTicket = new Page('rfpagePvPNoArenaTicket', [
-  { x: 496, y: 27, r: 255, g: 255, b: 255 },
-  { x: 484, y: 26, r: 56, g: 167, b: 231 },
-  { x: 317, y: 84, r: 243, g: 157, b: 69 },
-  { x: 454, y: 161, r: 4, g: 151, b: 211 },
-  { x: 457, y: 231, r: 4, g: 151, b: 211 },
-  { x: 458, y: 303, r: 219, g: 207, b: 199 },
-]);
-export const rfpageBattleTargetCanRefresh = new Page('rfpageBattleTargetCanRefresh', [
-  { x: 532, y: 329, r: 117, g: 113, b: 111 },
-  { x: 513, y: 327, r: 88, g: 85, b: 84 },
-  { x: 519, y: 334, r: 255, g: 255, b: 255 },
-  { x: 516, y: 332, r: 117, g: 113, b: 111 },
-  { x: 608, y: 331, r: 117, g: 113, b: 111 },
-  { x: 522, y: 17, r: 0, g: 195, b: 255 },
-]);
-
 export const rfpageBattleVictoryButNeedTap = new Page(
   'rfpageBattleVictoryButNeedTap',
   [
@@ -1236,15 +1163,6 @@ export const rfpageCanEquipTopping3 = new Page(
   ],
   { x: 407, y: 275 }
 );
-// TODO: need to add more points as mischeck with kingdom pass ads
-export const rfpagePVPPromoted = new Page('rfpagePVPPromoted', [
-  { x: 354, y: 18, r: 43, g: 29, b: 6 },
-  { x: 447, y: 23, r: 28, g: 11, b: 3 },
-  { x: 523, y: 22, r: 11, g: 18, b: 18 },
-  { x: 27, y: 196, r: 42, g: 29, b: 17 },
-  { x: 177, y: 307, r: 22, g: 33, b: 39 },
-  { x: 177, y: 258, r: 19, g: 28, b: 30 },
-]);
 
 export const rfpageInTropicalIsland = new Page('rfpageInTropicalIsland', [
   { x: 38, y: 333, r: 255, g: 97, b: 173 },

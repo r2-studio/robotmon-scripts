@@ -1,5 +1,5 @@
 export const globalStorage = {
   botStatus: {
-    battleStarted: Date.now(),
+    battleStarted: 0,
   },
 };

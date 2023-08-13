@@ -51,11 +51,6 @@ export interface TaskStatus {
   [key: string]: any;
 }
 
-// The state of overall bot
-export interface BotStatus {
-  [key: string]: any;
-}
-
 export interface Point {
   score: number;
   x: number;

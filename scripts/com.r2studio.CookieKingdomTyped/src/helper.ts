@@ -2,10 +2,11 @@ import { rerouter, Utils, XYRGB, Page, XY, RECT, GroupPage } from 'Rerouter';
 import * as PAGES from './pages';
 import * as ICONS from './icons';
 import * as CONSTANTS from './constants';
-import { Advanture, Advantures, BotStatus, Icon, MessageWindow, Point, Records, TaskStatus, Wish, WishStatus, productState } from './types';
+import { Advanture, Advantures, Icon, MessageWindow, Point, Records, TaskStatus, Wish, WishStatus, productState } from './types';
 import { logs, padZero, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 import { cookieKingdom } from '../index';
+import { globalStorage } from './storage';
 
 export function findUnmatchInPage(page: Page) {
   let img = getScreenshot();
@@ -30,7 +31,7 @@ export function findUnmatchInPage(page: Page) {
 
 export function checkLoginFailedMaxReached(loginStatus: TaskStatus, loginRetryMaxTimes: number) {
   if (loginStatus.loginRetryCount > loginRetryMaxTimes) {
-    cookieKingdom.stop();
+    cookieKingdom!.stop();
     sendEvent('gameStatus', 'login-failed');
     logs('checkLoginFailedMaxReached', `Max retry count reached, login failed`);
     return true;
@@ -403,17 +404,6 @@ export const AdvanturesBountiesAt3rd: { [key: string]: Advanture } = {
 //   guild: GenAdvanture({ x: 320, y: 100 }, false, true),
 // };
 
-export function getCEs(rect: RECT): number {
-  var img = getScreenshot();
-  var croppedImage1 = cropImage(img, rect.x, rect.y, rect.w, rect.h);
-
-  var value1 = +recognizeWishingTreeRequirements(ICONS.numberImagesPvP, croppedImage1, 7, 0.75, 0.7) || 0;
-
-  releaseImage(croppedImage1);
-  releaseImage(img);
-  return value1;
-}
-
 export function getMayhemScores() {
   var img = getScreenshot();
   var scores = [0, 0, 0];
@@ -607,7 +597,6 @@ export function ocrTextInRect(rect: RECT, icons: Icon[], overrideThre?: number, 
   // console.log('ocrTextInRect has output: ', output);
   return output;
 }
-
 
 export function handleResearchInGnomeLab(finishRound: any, targetIconList: Icon[], threashold: number) {
   for (var i = 0; i < 12; i++) {
@@ -1409,7 +1398,7 @@ export function mergeObject(target: any) {
   return target;
 }
 
-export function checkIfInBattle(task: string, botStatus: BotStatus): boolean {
+export function checkIfInBattle(task: string): boolean {
   // read the life bar of both players
   const rfpagePvPBattling = new Page('rfpageBattling', [
     // From PVP
@@ -1517,20 +1506,23 @@ export function checkIfInBattle(task: string, botStatus: BotStatus): boolean {
       maxBattleTimeInMins = 3;
   }
 
-  if (botStatus.battleStarted === 0) {
+  if (globalStorage.botStatus.battleStarted === 0) {
     logs('checkIfInBattle', `battle started`);
-    botStatus.battleStarted = Date.now();
-  } else if (Date.now() - botStatus.battleStarted > maxBattleTimeInMins * CONSTANTS.minuteInMs) {
-    logs('checkIfInBattle', `Max battle time reached (${Date.now() - botStatus.battleStarted > maxBattleTimeInMins * CONSTANTS.minuteInMs}), force stop`);
+    globalStorage.botStatus.battleStarted = Date.now();
+  } else if (Date.now() - globalStorage.botStatus.battleStarted > maxBattleTimeInMins * CONSTANTS.minuteInMs) {
+    logs(
+      'checkIfInBattle',
+      `Max battle time reached (${Date.now() - globalStorage.botStatus.battleStarted > maxBattleTimeInMins * CONSTANTS.minuteInMs}), force stop`
+    );
     rerouter.screen.tap({ x: 615, y: 19 });
     Utils.sleep(1500);
     rerouter.screen.tap({ x: 321, y: 198 });
     return true;
-  } else if (Date.now() - botStatus.battleStarted < 10 * CONSTANTS.minuteInMs) {
-    logs('checkIfInBattle', `battle last: ${(Date.now() - botStatus.battleStarted) / CONSTANTS.minuteInMs} mins`);
+  } else if (Date.now() - globalStorage.botStatus.battleStarted < 10 * CONSTANTS.minuteInMs) {
+    logs('checkIfInBattle', `battle last: ${(Date.now() - globalStorage.botStatus.battleStarted) / CONSTANTS.minuteInMs} mins`);
   }
 
-  sendEventRunning(botStatus);
+  sendEventRunning();
   return true;
 }
 
