@@ -1,13 +1,12 @@
-import { default as MD5 } from 'md5';
 import { Utils, RouteConfig } from 'Rerouter';
-import { rerouter, Config } from './src/modules';
+import { rerouter, Config, Session } from './src/modules';
 
 import { EventName, GameStatusContent } from './src/types';
 
 import * as PAGE from './src/pages';
 import * as CONSTANTS from './src/constants';
 import { TASK } from './src/task';
-import { executeCommands, isSameColor, getColorCountInRange, isSameColorCount, arrayFind } from './src/utils';
+import { isSameColor, getColorCountInRange, isSameColorCount, arrayFind } from './src/utils';
 
 const VERSION_CODE: number = 15.32;
 
@@ -77,7 +76,7 @@ class MLB9I {
 
   public start() {
     if (Config.config.isCloud) {
-      this.handleCloudState();
+      Session.initSession();
     }
     this.init();
 
@@ -88,213 +87,7 @@ class MLB9I {
     if (!Config.config.isCloud) {
       return;
     }
-    if (Config.config.licenseId) {
-      this.handleCloudLogOut();
-      sleep(3000);
-      console.log('==== stop script: has licenseId; close app and clear session');
-    } else {
-      console.log('==== stop script: no licenseId; not to close app for let new user login');
-    }
-  }
-
-  public handleCloudState() {
-    const lastLicenseId = readFile(MLB9I.licenseFilePath) || '';
-    const currentLicenseId = Config.config.licenseId || '';
-    writeFile(MLB9I.licenseFilePath, currentLicenseId);
-
-    console.log(`lastLicenseId: ${lastLicenseId}, currentLicenseId: ${currentLicenseId}`);
-    this.handleSendEventLaunching();
-
-    // lastLicenseId === '' means already logout
-    if (lastLicenseId !== '' && currentLicenseId !== lastLicenseId) {
-      this.handleCloudLogOut();
-      sleep(3000);
-    }
-
-    const hasCloudSession = this.fetchSession();
-    if (hasCloudSession) {
-      this.handleCloudLogIn();
-      sleep(3000);
-    }
-
-    // restart app
-    let isInApp = rerouter.checkInApp();
-    while (!isInApp) {
-      rerouter.startApp();
-      sleep(3000);
-      isInApp = rerouter.checkInApp();
-    }
-    sleep(3000);
-  }
-  public handleCloudLogOut() {
-    console.log(`do logout`);
-    let isInApp = rerouter.checkInApp();
-    while (isInApp) {
-      rerouter.stopApp();
-      sleep(3000);
-      isInApp = rerouter.checkInApp();
-    }
-    console.log('app is stopped, clear session start');
-    this.clearSession();
-    writeFile(MLB9I.licenseFilePath, '');
-  }
-  public handleCloudLogIn() {
-    console.log(`do login`);
-    let isInApp = rerouter.checkInApp();
-    while (isInApp) {
-      rerouter.stopApp();
-      sleep(3000);
-      isInApp = rerouter.checkInApp();
-    }
-    console.log('app is stopped, set session start');
-    this.setSession();
-  }
-
-  public fetchSession(): boolean {
-    const { xrobotmonS3Key, xrobotmonS3Token, licenseId } = Config.config;
-    if (!(xrobotmonS3Key && xrobotmonS3Token && licenseId)) {
-      console.log('xrobotmonS3Key or xrobotmonS3Token is empty');
-      return false;
-    }
-
-    console.log(`fetchSession start ${licenseId}`);
-    const { scriptCacheRoot, endpoint, bucket } = MLB9I;
-    const now = Date.now();
-
-    executeCommands(
-      // remove old files
-      `rm -rf ${scriptCacheRoot}`,
-      `rm -f ${scriptCacheRoot}.gz`,
-
-      // create tmp file root
-      `mkdir -p ${scriptCacheRoot}`
-    );
-
-    const sessionFileName = `loginCache/${licenseId}.gz`;
-    const resultOrError = s3DownloadFile(`${scriptCacheRoot}.gz`, sessionFileName, endpoint, bucket, xrobotmonS3Key, xrobotmonS3Token, '', false);
-    if (resultOrError !== true) {
-      console.log(`fetchSession failed ${resultOrError}`);
-      return false;
-    }
-    console.log(`Download session from ${endpoint} finish. usedTime`, Date.now() - now, licenseId, resultOrError);
-    return true;
-  }
-  public setSession() {
-    const { scriptCacheRoot, appSessionRoot, appRecordRoot } = MLB9I;
-
-    // clear app session to avoid cannot overwrite
-    const gameRecordFileName = this.getGameRecordFileName() || 'NOT_EXIST_RECORD';
-    executeCommands(`rm -rf ${appSessionRoot}/files`, `rm -rf ${appSessionRoot}/shared_prefs`, `rm -rf ${appRecordRoot}/${gameRecordFileName}`);
-
-    // untargz cloud session and overwrite app session
-    console.log(`set session start`);
-    untargz(`${scriptCacheRoot}.gz`);
-    executeCommands(
-      `cp -r ${scriptCacheRoot}/files ${appSessionRoot}/`,
-      `cp -r ${scriptCacheRoot}/shared_prefs ${appSessionRoot}/`,
-      `cp -r ${scriptCacheRoot}/gameRecord/* ${appRecordRoot}/`,
-
-      `chmod -R 777 ${appSessionRoot}/files`,
-      `chmod -R 777 ${appSessionRoot}/shared_prefs`,
-      `chmod -R 777 ${appRecordRoot}`
-    );
-    this.setAndroidId('cloud');
-
-    console.log('set session done');
-    sleep(2000);
-  }
-  public uploadSession() {
-    const { xrobotmonS3Key, xrobotmonS3Token, licenseId } = Config.config;
-    if (!(xrobotmonS3Key && xrobotmonS3Token && licenseId)) {
-      console.log('failed upload; required key is empty');
-      return false;
-    }
-
-    console.log(`upload session ${licenseId} start`);
-    const { scriptCacheRoot, appSessionRoot, endpoint, bucket } = MLB9I;
-    executeCommands(
-      // remove tmp file root
-      `rm -rf ${scriptCacheRoot}`,
-      `rm -f ${scriptCacheRoot}.gz`,
-
-      // copy local session to tmp file root
-      `mkdir -p ${scriptCacheRoot}/`,
-      `cp -r ${appSessionRoot}/files ${scriptCacheRoot}/`,
-      `cp -r ${appSessionRoot}/shared_prefs ${scriptCacheRoot}/`
-    );
-    this.copyGameRecordToCache();
-
-    // copy current android id to tmp file root
-    const androidId = execute('ANDROID_DATA=/data settings get secure android_id');
-    console.log(`upload androidId: ${androidId}`);
-    writeFile(`${scriptCacheRoot}/android_id.txt`, androidId);
-
-    targz(`${scriptCacheRoot}.gz`, `${scriptCacheRoot}`);
-
-    // upload session
-    const now = Date.now();
-    const sessionFileName = `loginCache/${licenseId}.gz`;
-    const sizeOrError = s3UploadFile(
-      `${scriptCacheRoot}.gz`,
-      sessionFileName,
-      'application/octet-stream',
-      endpoint,
-      bucket,
-      xrobotmonS3Key,
-      xrobotmonS3Token,
-      '',
-      false
-    );
-    console.log(`upload session to ${endpoint} finish. sizeOrError ${sizeOrError}; usedTime ${Date.now() - now}`);
-
-    // remove tmp file root
-    executeCommands(`rm -rf ${scriptCacheRoot}`, `rm -f ${scriptCacheRoot}.gz`);
-  }
-  public clearSession() {
-    this.setAndroidId('random');
-    const { scriptCacheRoot, appSessionRoot, appRecordRoot } = MLB9I;
-    const gameRecordFileName = this.getGameRecordFileName() || 'NOT_EXIST_RECORD';
-    executeCommands(
-      `rm -rf ${scriptCacheRoot}.gz`,
-      `rm -rf ${scriptCacheRoot}`,
-
-      `rm -rf ${appSessionRoot}/files`,
-      `rm -rf ${appSessionRoot}/shared_prefs`,
-      `rm -rf ${appRecordRoot}/${gameRecordFileName}`
-    );
-
-    console.log('clear session done');
-    sleep(2000);
-  }
-  public setAndroidId(source: 'random' | 'cloud') {
-    let [oriAndroidId] = executeCommands('ANDROID_DATA=/data settings get secure android_id');
-    let androidId = MD5(`${Date.now()}${oriAndroidId}`).substring(0, 16);
-    if (source === 'cloud') {
-      androidId = readFile(`${MLB9I.scriptCacheRoot}/android_id.txt`) || androidId;
-    }
-    executeCommands('ANDROID_DATA=/data settings put secure android_id ' + androidId);
-    console.log('oriAndroidId', oriAndroidId);
-    console.log('setAndroidId', androidId);
-  }
-  public copyGameRecordToCache() {
-    const { scriptCacheRoot, appRecordRoot } = MLB9I;
-    const fileName = this.getGameRecordFileName();
-    if (!fileName) {
-      return;
-    }
-    executeCommands(`mkdir -p ${scriptCacheRoot}/gameRecord`, `cp -r ${appRecordRoot}/${fileName} ${scriptCacheRoot}/gameRecord/${fileName}/`);
-  }
-  public getGameRecordFileName() {
-    const { appRecordRoot } = MLB9I;
-    const files = executeCommands(`ls ${appRecordRoot}`)[0].split('\n');
-    for (let fileName of files) {
-      if (fileName.length === 32) {
-        fileName = fileName.trim();
-        console.log(`game record ${fileName}`);
-        return fileName;
-      }
-    }
-    return '';
+    Session.endSession();
   }
 
   public addBasicTasks() {
@@ -490,7 +283,7 @@ class MLB9I {
         switch (task) {
           case TASK.stayInLogin:
             // should be inaccessible unless clear session is failed
-            this.handleCloudLogOut();
+            Session.endSession();
             return;
 
           case TASK.settingDefault:
@@ -1542,7 +1335,7 @@ class MLB9I {
 
     this.state.lastUploadSession = now;
     console.log('upload session');
-    this.uploadSession();
+    Session.uploadSession();
   }
 }
 
