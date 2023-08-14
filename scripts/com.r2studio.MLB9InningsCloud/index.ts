@@ -212,7 +212,8 @@ class MLB9I {
       `cp -r ${scriptCacheRoot}/gameRecord/* ${appRecordRoot}/`,
 
       `chmod -R 777 ${appSessionRoot}/files`,
-      `chmod -R 777 ${appSessionRoot}/shared_prefs`
+      `chmod -R 777 ${appSessionRoot}/shared_prefs`,
+      `chmod -R 777 ${appRecordRoot}`
     );
     this.setAndroidId('cloud');
 
