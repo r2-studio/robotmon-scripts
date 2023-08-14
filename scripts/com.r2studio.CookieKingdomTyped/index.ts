@@ -12,7 +12,6 @@ import {
   getMayhemScores,
   findSpecificIconInScreen,
   swipeFromToPoint,
-  handleResearchInGnomeLab,
   ocrNumberInRect,
   considerPurchaseSeasideMarket,
   tapThroughAnimate,

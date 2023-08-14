@@ -50,32 +50,6 @@ let tropicalIslandStatus = {
   iconRedExclamationCount: 0,
 };
 
-export function addTropicalIslandTasks() {
-  rerouter.addTask({
-    name: TASKS.tropicalIslandShip,
-    maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    forceStop: true,
-  });
-  rerouter.addTask({
-    name: TASKS.tropicalIslandSunbed,
-    maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    forceStop: true,
-  });
-  rerouter.addTask({
-    name: TASKS.tropicalIslandClearBubble,
-    maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-    forceStop: true,
-    beforeRoute: () => {
-      assign(tropicalIslandStatus, {
-        iconRedExclamationCount: 0,
-      });
-    },
-  });
-}
-
 export function addTropicalIslandRoutes() {
   rerouter.addRoute({
     path: `/${rfpageInTropicalIsland.name}`,
@@ -240,4 +214,30 @@ export function addTropicalIslandRoutes() {
   });
 
   passiveAddRoute([rfpageReadyToClearRedSword, rfpageEmptySunbedsListInMiddle]);
+}
+
+export function addTropicalIslandTasks() {
+  rerouter.addTask({
+    name: TASKS.tropicalIslandShip,
+    maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    forceStop: true,
+  });
+  rerouter.addTask({
+    name: TASKS.tropicalIslandSunbed,
+    maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    forceStop: true,
+  });
+  rerouter.addTask({
+    name: TASKS.tropicalIslandClearBubble,
+    maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    forceStop: true,
+    beforeRoute: () => {
+      assign(tropicalIslandStatus, {
+        iconRedExclamationCount: 0,
+      });
+    },
+  });
 }

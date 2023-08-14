@@ -66,25 +66,6 @@ let gnomeLabStatus = {
   needResearchCookie: config.autoResearchCookies,
 };
 
-export function addGnomeLabTasks() {
-  rerouter.addTask({
-    name: TASKS.gnomeLab,
-    maxTaskDuring: 15 * CONSTANTS.minuteInMs,
-    minRoundInterval: 15 * CONSTANTS.minuteInMs,
-    forceStop: true,
-    beforeRoute: () => {
-      assign(gnomeLabStatus, {
-        kingdomSearchCount: 0,
-        cookieSearchCount: 0,
-        searchLimit: 12,
-        targetImageIndex: 0,
-        needResearchKingdom: config.autoResearchKingdom,
-        needResearchCookie: config.autoResearchCookies,
-      });
-    },
-  });
-}
-
 export function addGnomeLabRoutes() {
   rerouter.addRoute({
     path: `/${rfpageInGnomeLab.name}`,
@@ -189,7 +170,26 @@ export function addGnomeLabRoutes() {
   });
 }
 
-export function handleResearchInGnomeLab(finishRound: any, targetIconList: Icon[], threashold: number) {
+export function addGnomeLabTasks() {
+  rerouter.addTask({
+    name: TASKS.gnomeLab,
+    maxTaskDuring: 15 * CONSTANTS.minuteInMs,
+    minRoundInterval: 15 * CONSTANTS.minuteInMs,
+    forceStop: true,
+    beforeRoute: () => {
+      assign(gnomeLabStatus, {
+        kingdomSearchCount: 0,
+        cookieSearchCount: 0,
+        searchLimit: 12,
+        targetImageIndex: 0,
+        needResearchKingdom: config.autoResearchKingdom,
+        needResearchCookie: config.autoResearchCookies,
+      });
+    },
+  });
+}
+
+function handleResearchInGnomeLab(finishRound: any, targetIconList: Icon[], threashold: number) {
   for (var i = 0; i < 12; i++) {
     for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
       let foundResults = findSpecificIconInScreen(targetIconList[imageIdx]);
