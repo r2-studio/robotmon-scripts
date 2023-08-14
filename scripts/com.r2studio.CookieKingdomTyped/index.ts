@@ -349,7 +349,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoPvPPurchaseAncientCookie) {
-      addPvpArenaTask();
+      addPvpPurchaseTask();
     }
     if (this.config.autoPvPIntervalInMins > 0) {
       addPvpArenaTask();

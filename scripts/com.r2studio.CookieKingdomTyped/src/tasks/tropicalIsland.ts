@@ -51,24 +51,24 @@ let tropicalIslandStatus = {
 };
 
 export function addTropicalIslandTasks() {
-    rerouter.addTask({
-        name: TASKS.tropicalIslandShip,
-        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-        minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
-      rerouter.addTask({
-        name: TASKS.tropicalIslandSunbed,
-        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-        minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
-      rerouter.addTask({
-        name: TASKS.tropicalIslandClearBubble,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-        minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+  rerouter.addTask({
+    name: TASKS.tropicalIslandShip,
+    maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    forceStop: true,
+  });
+  rerouter.addTask({
+    name: TASKS.tropicalIslandSunbed,
+    maxTaskDuring: 3 * CONSTANTS.minuteInMs,
+    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    forceStop: true,
+  });
+  rerouter.addTask({
+    name: TASKS.tropicalIslandClearBubble,
+    maxTaskDuring: 30 * CONSTANTS.minuteInMs,
+    minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
+    forceStop: true,
+  });
 }
 
 export function addTropicalIslandRoutes() {
@@ -128,10 +128,11 @@ export function addTropicalIslandRoutes() {
             { x: 422, y: 132, r: 44, g: 46, b: 60 },
           ]);
 
+          logs(context.task.name, `collecting sunbed cookies, this will wait 4 secs for the cookie list to show up`);
           rerouter.goNext(rfpageSunbedsWithFinishedCookies);
 
-          // Waiting is equired, as the cookie list shows up with a delay
-          if (rerouter.waitScreenForMatchingPage(new GroupPage('groupInSunbed', [rfpageFreeAllCrispyCookie, rfpageHasNoCrispyCookie]), 5000)) {
+          // Waiting is required, as the cookie list shows up with a delay
+          if (rerouter.waitScreenForMatchingPage(new GroupPage('groupInSunbed', [rfpageFreeAllCrispyCookie, rfpageHasNoCrispyCookie]), 4000)) {
             if (rerouter.isPageMatch(rfpageFreeAllCrispyCookie)) {
               rerouter.goNext(rfpageFreeAllCrispyCookie);
               Utils.sleep(config.sleepAnimate);
@@ -233,5 +234,5 @@ export function addTropicalIslandRoutes() {
     },
   });
 
-  passiveAddRoute([rfpageReadyToClearRedSword]);
+  passiveAddRoute([rfpageReadyToClearRedSword, rfpageEmptySunbedsListInMiddle]);
 }
