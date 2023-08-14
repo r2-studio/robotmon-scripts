@@ -1,9 +1,8 @@
 import { default as MD5 } from 'md5';
 import { Utils, RouteConfig } from 'Rerouter';
-import { rerouter } from './src/modules';
+import { rerouter, Config } from './src/modules';
 
-import { ScriptConfig, EventName, GameStatusContent } from './src/types';
-import { defaultConfig } from './src/defaultConfig';
+import { EventName, GameStatusContent } from './src/types';
 
 import * as PAGE from './src/pages';
 import * as CONSTANTS from './src/constants';
@@ -21,7 +20,6 @@ class MLB9I {
   public static endpoint = 's3.robotmon.app:9000';
   public static bucket = 'mlb-record';
 
-  public config: ScriptConfig = defaultConfig;
   public state = {
     lastGameStatusEvent: '',
     lastRunningEvent: 0,
@@ -35,19 +33,17 @@ class MLB9I {
     },
   };
 
-  constructor(config: ScriptConfig) {
+  constructor(jsonConfig: any) {
     console.log('############ new MLB9I ############');
-    this.config = config;
-
-    this.config.hasCoolFeature = this.config.hasCoolFeature || this.config.isCloud || this.config.isLocalPaid;
+    Config.set(jsonConfig);
 
     // rerouter setups
-    rerouter.rerouterConfig.autoLaunchApp = this.config.hasCoolFeature;
+    rerouter.rerouterConfig.autoLaunchApp = Config.config.hasCoolFeature || false;
     console.log(`script version ${VERSION_CODE}`);
   }
 
   public init() {
-    if (this.config.isLocalPaid) {
+    if (Config.config.isLocalPaid) {
       var plan = getUserPlan();
       if (plan != 'user_plan_mlb9i') {
         console.log('user plan id: ', JSON.stringify(plan));
@@ -60,16 +56,16 @@ class MLB9I {
     this.handleUnknown();
     // rerouter.getCurrentMatchNames();
 
-    if (this.config.isLocalPaid) {
+    if (Config.config.isLocalPaid) {
       this.addPremiumTasks();
       this.addBasicTasks();
       return;
     }
-    if (!this.config.isCloud) {
+    if (!Config.config.isCloud) {
       this.addBasicTasks();
       return;
     }
-    if (!this.config.licenseId) {
+    if (!Config.config.licenseId) {
       console.log('no license id');
       this.addStayInLoginTasks();
       return;
@@ -80,7 +76,7 @@ class MLB9I {
   }
 
   public start() {
-    if (this.config.isCloud) {
+    if (Config.config.isCloud) {
       this.handleCloudState();
     }
     this.init();
@@ -89,10 +85,10 @@ class MLB9I {
   }
   public stop() {
     rerouter.stop();
-    if (!this.config.isCloud) {
+    if (!Config.config.isCloud) {
       return;
     }
-    if (this.config.licenseId) {
+    if (Config.config.licenseId) {
       this.handleCloudLogOut();
       sleep(3000);
       console.log('==== stop script: has licenseId; close app and clear session');
@@ -103,7 +99,7 @@ class MLB9I {
 
   public handleCloudState() {
     const lastLicenseId = readFile(MLB9I.licenseFilePath) || '';
-    const currentLicenseId = this.config.licenseId || '';
+    const currentLicenseId = Config.config.licenseId || '';
     writeFile(MLB9I.licenseFilePath, currentLicenseId);
 
     console.log(`lastLicenseId: ${lastLicenseId}, currentLicenseId: ${currentLicenseId}`);
@@ -155,7 +151,7 @@ class MLB9I {
   }
 
   public fetchSession(): boolean {
-    const { xrobotmonS3Key, xrobotmonS3Token, licenseId } = this.config;
+    const { xrobotmonS3Key, xrobotmonS3Token, licenseId } = Config.config;
     if (!(xrobotmonS3Key && xrobotmonS3Token && licenseId)) {
       console.log('xrobotmonS3Key or xrobotmonS3Token is empty');
       return false;
@@ -208,7 +204,7 @@ class MLB9I {
     sleep(2000);
   }
   public uploadSession() {
-    const { xrobotmonS3Key, xrobotmonS3Token, licenseId } = this.config;
+    const { xrobotmonS3Key, xrobotmonS3Token, licenseId } = Config.config;
     if (!(xrobotmonS3Key && xrobotmonS3Token && licenseId)) {
       console.log('failed upload; required key is empty');
       return false;
@@ -388,7 +384,7 @@ class MLB9I {
       action: context => {
         console.log('wait app loading ...');
         Utils.sleep(CONSTANTS.sleepMedium);
-        if (!this.config.hasCoolFeature) {
+        if (!Config.config.hasCoolFeature) {
           return;
         }
 
@@ -434,7 +430,7 @@ class MLB9I {
       path: `/${PAGE.landing.name}`,
       match: PAGE.landing,
       action: context => {
-        if (!this.config.isCloud) {
+        if (!Config.config.isCloud) {
           console.log('stay in login');
           return;
         }
@@ -458,7 +454,7 @@ class MLB9I {
         path: `/${p.name}`,
         match: p,
         action: context => {
-          if (!this.config.isCloud) {
+          if (!Config.config.isCloud) {
             console.log('stay in login');
             return;
           }
@@ -915,7 +911,7 @@ class MLB9I {
         }
 
         // check the diff, return to prev year
-        for (var yearDiff = this.config.leagueYear - CONSTANTS.leagueYearMin; yearDiff > 0; yearDiff--) {
+        for (var yearDiff = Config.config.leagueYear - CONSTANTS.leagueYearMin; yearDiff > 0; yearDiff--) {
           rerouter.screen.tap(PAGE.selectYearBtns.nextYear);
           Utils.sleep(CONSTANTS.sleepShort);
         }
@@ -946,7 +942,7 @@ class MLB9I {
         console.log('handle select league game amount page');
         // use config user setted to select which they want to play
         // TODO: handle the half, quarter, full has 2 next page
-        switch (this.config.leagueSeasonMode) {
+        switch (Config.config.leagueSeasonMode) {
           case 'full':
             console.log('select full league');
             rerouter.screen.tap(PAGE.selectLeagueGameAmountBtns.full);
@@ -1230,7 +1226,7 @@ class MLB9I {
             break;
         }
 
-        if (!this.config.hasCoolFeature || !isOnPlayTask || rerouter.isPageMatch(PAGE.powerSaving)) {
+        if (!Config.config.hasCoolFeature || !isOnPlayTask || rerouter.isPageMatch(PAGE.powerSaving)) {
           this.handlePowerSavingPage();
           return;
         }
@@ -1281,7 +1277,7 @@ class MLB9I {
         this.state.leagueGame.tryEnterGameCnts = 0;
 
         // TODO: handle quick switch to auto play off if was stopped
-        if (this.config.hasCoolFeature) {
+        if (Config.config.hasCoolFeature) {
           console.log('turn on power save play');
           rerouter.goNext(PAGE.leagueOnPlayPowerSaveOff);
         }
@@ -1346,7 +1342,7 @@ class MLB9I {
       action: (context, image, matched, finishRound) => {
         switch (context.task.name) {
           case TASK.playLeagueGame:
-            if (!this.config.hasCoolFeature) {
+            if (!Config.config.hasCoolFeature) {
               break;
             }
             // sometimes some unknown reason cannot enter game
@@ -1401,7 +1397,7 @@ class MLB9I {
       const isInApp = rerouter.checkInApp();
       if (!isInApp) {
         console.log('not in app');
-        if (this.config.hasCoolFeature) {
+        if (Config.config.hasCoolFeature) {
           rerouter.restartApp();
         }
         return;
@@ -1427,7 +1423,7 @@ class MLB9I {
       }
       if (context.matchDuring > CONSTANTS.minuteInMs * 30) {
         console.log('stuck in unknown page more than 30 min');
-        this.config.hasCoolFeature && rerouter.restartApp();
+        Config.config.hasCoolFeature && rerouter.restartApp();
       }
     });
   }
@@ -1464,7 +1460,7 @@ class MLB9I {
   }
 
   public wrapRouteAction(action: RouteConfig['action']): RouteConfig['action'] {
-    if (!this.config.isCloud) {
+    if (!Config.config.isCloud) {
       return action;
     }
 
@@ -1535,7 +1531,7 @@ class MLB9I {
   }
   public handleImplementUploadSession() {
     // only upload session when is playing
-    if (!this.config.isCloud || this.state.lastGameStatusEvent !== GameStatusContent.PLAYING) {
+    if (!Config.config.isCloud || this.state.lastGameStatusEvent !== GameStatusContent.PLAYING) {
       return;
     }
 
@@ -1553,20 +1549,7 @@ class MLB9I {
 // * =========== entry point ===========
 let mlb9i: MLB9I | undefined;
 export function start(jsonConfig: any) {
-  const config = defaultConfig;
-  if (typeof jsonConfig === 'string') {
-    jsonConfig = JSON.parse(jsonConfig);
-
-    config.leagueSeasonMode = jsonConfig.leagueSeasonMode ?? config.leagueSeasonMode;
-    config.leagueYear = jsonConfig.leagueYear ?? config.leagueYear;
-
-    config.xrobotmonS3Key = jsonConfig.xrobotmonS3Key ?? config.xrobotmonS3Key;
-    config.xrobotmonS3Token = jsonConfig.xrobotmonS3Token ?? config.xrobotmonS3Token;
-    config.amazonawsS3Key = jsonConfig.amazonawsS3Key ?? config.amazonawsS3Key;
-    config.amazonawsS3Token = jsonConfig.amazonawsS3Token ?? config.amazonawsS3Token;
-    config.licenseId = jsonConfig.licenseId ?? config.licenseId;
-  }
-  mlb9i = new MLB9I(config);
+  mlb9i = new MLB9I(jsonConfig);
   mlb9i.start();
 }
 export function stop() {
