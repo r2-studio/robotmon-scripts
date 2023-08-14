@@ -514,56 +514,6 @@ export const pageBattleFinishedWithMVPCookieWithExit = [
   { x: 409, y: 67, r: 54, g: 139, b: 214 },
 ];
 
-// Gnome lab
-export const rfpageInGnomeLab = new Page('rfpageInGnomeLab', [
-  { x: 15, y: 11, r: 211, g: 9, b: 35 },
-  { x: 25, y: 21, r: 255, g: 223, b: 244 },
-  { x: 328, y: 15, r: 169, g: 8, b: 36 },
-  { x: 308, y: 28, r: 16, g: 12, b: 8 },
-]);
-export const rfpageCanTapResearch = new Page(
-  'rfpageCanTapResearch',
-  [
-    { x: 276, y: 318, r: 121, g: 207, b: 12 },
-    { x: 220, y: 317, r: 54, g: 62, b: 95 },
-    { x: 398, y: 315, r: 54, g: 62, b: 95 },
-  ],
-  { x: 276, y: 318 }
-);
-export const rfpageResearchComplete = new Page(
-  'rfpageResearchComplete',
-  [
-    { x: 432, y: 62, r: 24, g: 81, b: 115 },
-    { x: 326, y: 14, r: 93, g: 4, b: 16 },
-    { x: 407, y: 20, r: 104, g: 77, b: 0 },
-    { x: 419, y: 260, r: 215, g: 241, b: 157 },
-    { x: 425, y: 102, r: 247, g: 235, b: 222 },
-    { x: 354, y: 200, r: 255, g: 243, b: 0 },
-  ],
-  { x: 432, y: 62 }
-);
-export const rfpageNotEnoughAuroraItemForReserch = new Page(
-  'rfpageNotEnoughAuroraItemForReserch',
-  [
-    { x: 434, y: 96, r: 255, g: 255, b: 255 },
-    { x: 22, y: 21, r: 127, g: 108, b: 122 },
-    { x: 13, y: 11, r: 95, g: 1, b: 17 },
-    { x: 4, y: 16, r: 7, g: 0, b: 0 },
-    { x: 292, y: 235, r: 189, g: 85, b: 247 },
-    { x: 350, y: 251, r: 0, g: 182, b: 255 },
-  ],
-  { x: 434, y: 96 }
-);
-// Tools, etc
-export const rfpageNotEnoughItemsForResearch = new Page('rfpageNotEnoughItemsForResearch', [
-  { x: 435, y: 95, r: 255, g: 255, b: 255 },
-  { x: 303, y: 250, r: 8, g: 125, b: 255 },
-  { x: 287, y: 247, r: 123, g: 207, b: 16 },
-  { x: 261, y: 245, r: 222, g: 207, b: 198 },
-  { x: 305, y: 100, r: 57, g: 69, b: 107 },
-  { x: 22, y: 20, r: 127, g: 102, b: 122 },
-]);
-
 // Habor
 export const rfpageInTradeHabor = new Page('rfpageInTradeHabor', [
   { x: 314, y: 18, r: 247, g: 254, b: 203 },
@@ -1164,7 +1114,6 @@ export const rfpageCanEquipTopping3 = new Page(
   { x: 407, y: 275 }
 );
 
-
 export const rfpageNotSelectTeamLeader = new Page(
   'rfpageNotSelectTeamLeader',
   [
@@ -1181,7 +1130,6 @@ export const rfpageNotSelectTeamLeader = new Page(
   ],
   { x: 369, y: 275 }
 );
-
 
 export const rfpageAddMoreCookies = new Page(
   'rfpageAddMoreCookies',

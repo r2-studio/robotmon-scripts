@@ -46,6 +46,7 @@ import { addBountiesRoutes, addBountiesTask } from './src/tasks/bounties';
 import { addHotAirBallonRoutes, addHotAirBallonTask } from './src/tasks/hotAirBallon';
 import { addPvpArenaRoutes, addPvpArenaTask, addPvpPurchaseTask } from './src/tasks/pvpArena';
 import { addTropicalIslandRoutes, addTropicalIslandTasks } from './src/tasks/tropicalIsland';
+import { addGnomeLabRoutes, addGnomeLabTasks } from './src/tasks/gnomeLab';
 
 const VERSION_CODE: number = 0.1;
 
@@ -198,17 +199,6 @@ export class CookieKingdom {
       },
     };
 
-    this.taskStatus[TASKS.tropicalIslandClearBubble] = {
-      iconRedExclamationCount: 0,
-    };
-    this.taskStatus[TASKS.gnomeLab] = {
-      kingdomSearchCount: 0,
-      cookieSearchCount: 0,
-      searchLimit: 12,
-      targetImageIndex: 0,
-      needResearchKingdom: this.config.autoResearchKingdom,
-      needResearchCookie: this.config.autoResearchCookies,
-    };
 
     this.taskStatus[TASKS.haborShopInSeaMarket] = {
       needPullToRightHead: true,
@@ -272,8 +262,8 @@ export class CookieKingdom {
     }
 
     // In dev:
-    if (this.config.autoCollectTropicalIslandsIntervalInMins > 0) {
-      addTropicalIslandTasks();
+    if (this.config.autoLabResearch) {
+      addGnomeLabTasks();
     }
     return;
 
@@ -372,13 +362,9 @@ export class CookieKingdom {
     }
 
     if (this.config.autoLabResearch) {
-      rerouter.addTask({
-        name: TASKS.gnomeLab,
-        maxTaskDuring: 15 * CONSTANTS.minuteInMs,
-        minRoundInterval: 15 * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+      addGnomeLabTasks();
     }
+
     if (this.config.autoHandleTradeHabor) {
       rerouter.addTask({
         name: TASKS.haborSendShip,
@@ -1061,109 +1047,7 @@ export class CookieKingdom {
     addBountiesRoutes();
 
     // Gnome lab
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInGnomeLab.name}`,
-      match: PAGES.rfpageInGnomeLab,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.gnomeLab) {
-          logs(context.task.name, `rfpageInGnomeLab, but current task is ${context.task.name}, skipping`);
-          sendKeyBack();
-          return;
-        }
-
-        const rfpageAlreadyResearching = new Page('rfpageAlreadyResearching', [
-          { x: 47, y: 69, r: 237, g: 237, b: 229 },
-          { x: 159, y: 67, r: 117, g: 223, b: 0 },
-        ]);
-        if (rerouter.isPageMatchImage(rfpageAlreadyResearching, image)) {
-          logs(context.task.name, `rfpageInGnomeLab, Already researching, skipping handleInGnomeLab`);
-          sendKeyBack();
-          sendEventRunning();
-          finishRound(true);
-          return;
-        }
-
-        logs(context.task.name, `rfpageInGnomeLab, handleInGnomeLab in gnome lab, send running`);
-        sendEvent('running', '');
-
-        logs(
-          context.task.name,
-          `rfpageInGnomeLab, kingdomSearchCount: ${this.taskStatus[context.task.name].kingdomSearchCount}, targetImageInde: ${
-            this.taskStatus[context.task.name].targetImageIndex
-          }`
-        );
-
-        // TODO： 極光產品檢查還沒做
-        if (this.config.autoResearchKingdom) {
-          rerouter.screen.tap({ x: 200, y: 340 });
-          handleResearchInGnomeLab(finishRound, ICONS.iconsGnomeLabKingdom, 0.94);
-        }
-        if (this.config.autoResearchCookies) {
-          rerouter.screen.tap({ x: 310, y: 340 });
-          handleResearchInGnomeLab(finishRound, ICONS.iconsGnomeLabCookies, 0.9);
-        }
-
-        return;
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageCanTapResearch.name}`,
-      match: PAGES.rfpageCanTapResearch,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.gnomeLab) {
-          logs(context.task.name, `rfpageCanTapResearch, but current task is ${context.task.name}, skipping`);
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `rfpageCanTapResearch, start researching and finishRound`);
-        rerouter.goNext(PAGES.rfpageCanTapResearch);
-
-        if (rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughAuroraItemForReserch, 2000)) {
-          logs(context.task.name, `rfpageNotEnoughAuroraItemForReserch, cannot research this one`);
-          sendKeyBack();
-          Utils.sleep(this.config.sleep);
-          sendKeyBack();
-        } else {
-          logs(context.task.name, `start researching and finish round`);
-          sendKeyBack();
-          sendEventRunning();
-          finishRound(true);
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageNotEnoughAuroraItemForReserch.name}`,
-      match: PAGES.rfpageNotEnoughAuroraItemForReserch,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.gnomeLab) {
-          logs(context.task.name, `rfpageCanTapResearch, but current task is ${context.task.name}, skipping`);
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `rfpageNotEnoughAuroraItemForReserch, skip and finishRound`);
-        rerouter.goNext(PAGES.rfpageNotEnoughAuroraItemForReserch);
-        sendKeyBack();
-        finishRound(true);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageNotEnoughItemsForResearch.name}`,
-      match: PAGES.rfpageNotEnoughItemsForResearch,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.gnomeLab) {
-          logs(context.task.name, `rfpageCanTapResearch, but current task is ${context.task.name}, skipping`);
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `rfpageNotEnoughItemsForResearch, skip and finishRound`);
-        rerouter.goNext(PAGES.rfpageNotEnoughItemsForResearch);
-        sendKeyBack();
-        finishRound(true);
-      },
-    });
+    addGnomeLabRoutes();
 
     // Trade habor
     rerouter.addRoute({

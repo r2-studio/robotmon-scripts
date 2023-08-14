@@ -598,52 +598,6 @@ export function ocrTextInRect(rect: RECT, icons: Icon[], overrideThre?: number, 
   return output;
 }
 
-export function handleResearchInGnomeLab(finishRound: any, targetIconList: Icon[], threashold: number) {
-  for (var i = 0; i < 12; i++) {
-    for (var imageIdx = 0; imageIdx < targetIconList.length; imageIdx++) {
-      let foundResults = findSpecificIconInScreen(targetIconList[imageIdx]);
-      console.log('>', i, imageIdx, targetIconList[imageIdx].name, JSON.stringify(foundResults));
-
-      for (let j = 0; j < Object.keys(foundResults).length; j++) {
-        rerouter.screen.tap(foundResults[j]);
-        if (
-          rerouter.waitScreenForMatchingPage(
-            new GroupPage('groupPageLabResult', [
-              PAGES.rfpageCanTapResearch,
-              PAGES.rfpageNotEnoughAuroraItemForReserch,
-              PAGES.rfpageNotEnoughItemsForResearch,
-              PAGES.rfpageResearchComplete,
-            ]),
-            3000
-          )
-        ) {
-          if (rerouter.isPageMatch(PAGES.rfpageCanTapResearch)) {
-            logs(TASKS.gnomeLab, `rfpageCanTapResearch, tap it`);
-            rerouter.goNext(PAGES.rfpageCanTapResearch);
-
-            if (rerouter.waitScreenForMatchingPage(PAGES.rfpageNotEnoughAuroraItemForReserch, 3000)) {
-              logs(TASKS.gnomeLab, `rfpageNotEnoughAuroraItemForReserch, back`);
-              sendKeyBack();
-              Utils.sleep(1000);
-              sendKeyBack();
-            } else {
-              sendKeyBack();
-              finishRound(true);
-            }
-            return;
-          } else {
-            logs(TASKS.gnomeLab, `rfpageInGnomeLab, cannot tap this one, continue: ${rerouter.getCurrentMatchNames()}`);
-            sendKeyBack();
-            rerouter.waitScreenForMatchingPage(PAGES.rfpageInGnomeLab, 2000);
-          }
-        }
-      }
-    }
-
-    swipeFromToPoint({ x: 600, y: 234 }, { x: -200, y: 234 }, 5, undefined, PAGES.rfpageInGnomeLab);
-  }
-}
-
 export function considerPurchaseSeasideMarket(target: RECT): boolean {
   let newStock = ocrStocksInRect(target, ICONS.numberAuroraStockInTradeBird);
   // let newStock = ocrStockAndReqInRect(target, ICONS.numberAuroraStockInTradeBird);
