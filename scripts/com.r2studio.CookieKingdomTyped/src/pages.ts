@@ -1164,11 +1164,7 @@ export const rfpageCanEquipTopping3 = new Page(
   { x: 407, y: 275 }
 );
 
-export const rfpageInTropicalIsland = new Page('rfpageInTropicalIsland', [
-  { x: 38, y: 333, r: 255, g: 97, b: 173 },
-  { x: 49, y: 323, r: 239, g: 77, b: 140 },
-  { x: 62, y: 341, r: 44, g: 81, b: 118 },
-]);
+
 export const rfpageNotSelectTeamLeader = new Page(
   'rfpageNotSelectTeamLeader',
   [
@@ -1186,38 +1182,7 @@ export const rfpageNotSelectTeamLeader = new Page(
   { x: 369, y: 275 }
 );
 
-export const rfpageReadyToClearRedSword = new Page(
-  'rfpageReadyToClearRedSword',
-  [
-    { x: 531, y: 324, r: 121, g: 207, b: 12 },
-    { x: 456, y: 28, r: 241, g: 53, b: 60 },
-    { x: 494, y: 23, r: 252, g: 246, b: 216 },
-    { x: 572, y: 327, r: 60, g: 70, b: 105 },
-  ],
-  { x: 531, y: 324 }
-);
-export const rfpageBattleToClearSodaIsland = new Page(
-  'rfpageBattleToClearSodaIsland',
-  [
-    { x: 601, y: 326, r: 121, g: 207, b: 12 },
-    { x: 623, y: 313, r: 60, g: 70, b: 105 },
-    { x: 573, y: 84, r: 254, g: 253, b: 251 },
-    { x: 165, y: 335, r: 121, g: 207, b: 12 },
-    { x: 297, y: 83, r: 82, g: 215, b: 0 },
-    { x: 426, y: 74, r: 255, g: 36, b: 33 },
-  ],
-  { x: 601, y: 326 }
-);
-// TODO: 這頁會跟懸賞打完的頁面混淆
-// export const rfpageBattleHasWetCookieCannotStart = new Page(
-//   'rfpageBattleHasWetCookieCannotStart',
-//   [
-//     { x: 350, y: 250, r: 123, g: 207, b: 8 },
-//     { x: 420, y: 200, r: 247, g: 235, b: 222 },
-//     { x: 400, y: 100, r: 57, g: 69, b: 107 },
-//   ],
-//   { x: 350, y: 250 }
-// );
+
 export const rfpageAddMoreCookies = new Page(
   'rfpageAddMoreCookies',
   [
@@ -1229,18 +1194,6 @@ export const rfpageAddMoreCookies = new Page(
     { x: 176, y: 242, r: 97, g: 75, b: 33 },
   ],
   { x: 304, y: 253 }
-);
-export const rfpageEmptySunbedsListInMiddle = new Page(
-  'rfpageEmptySunbedsListInMiddle',
-  [
-    { x: 217, y: 60, r: 133, g: 231, b: 74 },
-    { x: 229, y: 132, r: 44, g: 46, b: 60 },
-    { x: 247, y: 52, r: 57, g: 69, b: 107 },
-    { x: 226, y: 82, r: 165, g: 60, b: 90 },
-    { x: 428, y: 19, r: 2, g: 67, b: 127 },
-    { x: 47, y: 328, r: 119, g: 40, b: 67 },
-  ],
-  { x: 437, y: 57 }
 );
 
 export const pageNotifyQuitWindow = [

@@ -45,6 +45,7 @@ import { globalStorage } from './src/storage';
 import { addBountiesRoutes, addBountiesTask } from './src/tasks/bounties';
 import { addHotAirBallonRoutes, addHotAirBallonTask } from './src/tasks/hotAirBallon';
 import { addPvpArenaRoutes, addPvpArenaTask, addPvpPurchaseTask } from './src/tasks/pvpArena';
+import { addTropicalIslandRoutes, addTropicalIslandTasks } from './src/tasks/tropicalIsland';
 
 const VERSION_CODE: number = 0.1;
 
@@ -271,12 +272,8 @@ export class CookieKingdom {
     }
 
     // In dev:
-    if (this.config.autoPvPPurchaseAncientCookie) {
-      addPvpPurchaseTask();
-    }
-    this.config.autoPvPIntervalInMins = 10;
-    if (this.config.autoPvPIntervalInMins > 0) {
-      addPvpArenaTask();
+    if (this.config.autoCollectTropicalIslandsIntervalInMins > 0) {
+      addTropicalIslandTasks();
     }
     return;
 
@@ -367,24 +364,7 @@ export class CookieKingdom {
     //   });
     // }
     if (this.config.autoCollectTropicalIslandsIntervalInMins > 0) {
-      rerouter.addTask({
-        name: TASKS.tropicalIslandShip,
-        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-        minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
-      rerouter.addTask({
-        name: TASKS.tropicalIslandSunbed,
-        maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-        minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
-      rerouter.addTask({
-        name: TASKS.tropicalIslandClearBubble,
-        maxTaskDuring: 30 * CONSTANTS.minuteInMs,
-        minRoundInterval: this.config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+      addTropicalIslandTasks();
     }
 
     if (this.config.autoHandleBountiesIntervalInMins > 0) {
@@ -1075,178 +1055,7 @@ export class CookieKingdom {
     });
 
     // Tropical Island
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInTropicalIsland.name}`,
-      match: PAGES.rfpageInTropicalIsland,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name.substring(0, 14) !== 'tropicalIsland') {
-          sendKeyBack();
-          return;
-        }
-
-        switch (context.task.name) {
-          case TASKS.tropicalIslandShip:
-            logs(context.task.name, `in rfpageInTropicalIsland, check the ship status`);
-            const rfpageCanClaimResource = new Page(
-              'rfpageCanClaimResource',
-              [
-                { x: 307, y: 333, r: 123, g: 207, b: 8 },
-                { x: 363, y: 331, r: 123, g: 207, b: 8 },
-                { x: 33, y: 332, r: 255, g: 100, b: 176 },
-              ],
-              { x: 360, y: 333 }
-            );
-            if (rerouter.isPageMatchImage(rfpageCanClaimResource, image)) {
-              rerouter.goNext(rfpageCanClaimResource);
-              logs(context.task.name, `successfully collected island resource`);
-            } else {
-              logs(context.task.name, `more resources are on the way`);
-            }
-            finishRound(true);
-            sendEventRunning();
-            return;
-
-          case TASKS.tropicalIslandSunbed:
-            logs(context.task.name, `check sunbed`);
-            const rfpageSunbedsWithFinishedCookies = new Page(
-              'rfpageSunbedsWithFinishedCookies',
-              [
-                { x: 52, y: 323, r: 238, g: 68, b: 119 },
-                { x: 61, y: 336, r: 44, g: 77, b: 110 },
-                { x: 61, y: 303, r: 255, g: 0, b: 0 },
-              ],
-              { x: 52, y: 323 }
-            );
-            const rfpageFreeAllCrispyCookie = new Page(
-              'rfpageFreeAllCrispyCookie',
-              [
-                { x: 341, y: 316, r: 123, g: 207, b: 8 },
-                { x: 376, y: 313, r: 49, g: 60, b: 90 },
-                { x: 223, y: 85, r: 255, g: 101, b: 173 },
-              ],
-              { x: 341, y: 316 }
-            );
-            const rfpageHasNoCrispyCookie = new Page('rfpageHasNoCrispyCookie', [
-              { x: 425, y: 111, r: 44, g: 46, b: 60 },
-              { x: 422, y: 132, r: 44, g: 46, b: 60 },
-            ]);
-
-            rerouter.goNext(rfpageSunbedsWithFinishedCookies);
-
-            // Waiting is equired, as the cookie list shows up with a delay
-            if (rerouter.waitScreenForMatchingPage(new GroupPage('groupInSunbed', [rfpageFreeAllCrispyCookie, rfpageHasNoCrispyCookie]), 5000)) {
-              if (rerouter.isPageMatch(rfpageFreeAllCrispyCookie)) {
-                rerouter.goNext(rfpageFreeAllCrispyCookie);
-                Utils.sleep(this.config.sleepAnimate);
-                logs(context.task.name, `successfully collect sunbed cookies`);
-              }
-            } else if (rerouter.isPageMatch(PAGES.rfpageEmptySunbedsListInMiddle)) {
-              logs(context.task.name, `sun bed cookie list is empty`);
-              rerouter.goNext(PAGES.rfpageEmptySunbedsListInMiddle);
-            }
-
-            logs(context.task.name, `finish collecting cookies`);
-            finishRound(true);
-            sendEventRunning();
-            return;
-
-          case TASKS.tropicalIslandClearBubble:
-            let foundResults;
-            let i = 0;
-            foundResults = findSpecificIconInScreen(ICONS.iconGreenCheckedWhiteBackground);
-            logs(context.task.name, `handle iconGreenCheckedWhiteBackground, found ${Object.keys(foundResults).length} of them`);
-            if (Object.keys(foundResults).length > 0) {
-              for (i = 0; i < Object.keys(foundResults).length; i++) {
-                rerouter.screen.tap(foundResults[i]);
-                Utils.sleep(this.config.sleepAnimate);
-              }
-            }
-
-            let clearBubbleState = this.taskStatus[context.task.name];
-            foundResults = findSpecificIconInScreen(ICONS.iconRedExclamation);
-            if (clearBubbleState['iconRedExclamationCount'] < Object.keys(foundResults).length) {
-              logs(context.task.name, `handle iconRedExclamation, found ${Object.keys(foundResults).length} of them`);
-              if (Object.keys(foundResults).length > 0) {
-                for (i = 0; i < Object.keys(foundResults).length; i++) {
-                  rerouter.screen.tap(foundResults[i]);
-                  Utils.sleep(this.config.sleepAnimate);
-                  rerouter.screen.tap(foundResults[i]);
-                  Utils.sleep(this.config.sleepAnimate);
-                  clearBubbleState['iconRedExclamationCount']++;
-                  return;
-                }
-              }
-            }
-
-            // Clear hammers
-            foundResults = findSpecificIconInScreen(ICONS.iconIslandHammer);
-            logs(context.task.name, `handle iconIslandHammer, found ${Object.keys(foundResults).length} of them`);
-            if (Object.keys(foundResults).length > 0) {
-              for (i = 0; i < Object.keys(foundResults).length; i++) {
-                rerouter.screen.tap(foundResults[i]);
-                Utils.sleep(this.config.sleepAnimate * 3);
-                rerouter.screen.tap({ x: 324, y: 263 }); // Tab build
-
-                if (!rerouter.waitScreenForMatchingPage(PAGES.rfpageInTropicalIsland, 4000)) {
-                  logs(context.task.name, `Not enough resource to build island, skipping`);
-                  sendKeyBack();
-                  sendKeyBack();
-                } else {
-                  logs(context.task.name, `Build hammer successfully`);
-                }
-              }
-            }
-
-            // Clear battles
-            foundResults = findSpecificIconInScreen(ICONS.iconRedSword);
-            logs(context.task.name, `handle iconRedSword, found ${Object.keys(foundResults).length} of them`);
-            if (Object.keys(foundResults).length > 0) {
-              sendEventRunning();
-              rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
-              return;
-            }
-
-            foundResults = findSpecificIconInScreen(ICONS.iconWhiteSword);
-            logs(context.task.name, `handle iconWhiteSword, found ${Object.keys(foundResults).length} of them`);
-            if (Object.keys(foundResults).length > 0) {
-              // rerouter.screen.tap(foundResults[i]);
-              rerouter.screen.tap({ x: foundResults[i].x + 10, y: foundResults[i].y + 10 });
-              return;
-            }
-
-            logs(context.task.name, `Finish tropical island`);
-            sendKeyBack();
-            sendEventRunning();
-            finishRound(true);
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageBattleToClearSodaIsland.name}`,
-      match: PAGES.rfpageBattleToClearSodaIsland,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.tropicalIslandClearBubble) {
-          logs(context.task.name, `in rfpageBattleToClearSodaIsland, send back as this is not my task`);
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `in rfpageBattleToClearSodaIsland, start battle`);
-        rerouter.goNext(PAGES.rfpageBattleToClearSodaIsland);
-        return;
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageAddMoreCookies.name}`,
-      match: PAGES.rfpageAddMoreCookies,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, `in rfpageAddMoreCookies, cannot start battle so finish current task`);
-        rerouter.goNext(PAGES.rfpageAddMoreCookies);
-        sendKeyBack();
-        sendEventRunning();
-        finishRound(true);
-      },
-    });
+    addTropicalIslandRoutes();
 
     // Bounties
     addBountiesRoutes();
@@ -2203,6 +2012,18 @@ export class CookieKingdom {
         return;
       },
     });
+    rerouter.addRoute({
+      path: `/${PAGES.rfpageAddMoreCookies.name}`,
+      match: PAGES.rfpageAddMoreCookies,
+      action: (context, image, matched, finishRound) => {
+        logs(context.task.name, `in rfpageAddMoreCookies, cannot start battle so finish current task`);
+        rerouter.goNext(PAGES.rfpageAddMoreCookies);
+        sendKeyBack();
+        sendEventRunning();
+        finishRound(true);
+      },
+    });
+
     // rerouter.addRoute({
     //   path: `/${PAGES.rfpageSelectAdvantureFirstIsKingdom.name}`,
     //   match: PAGES.rfpageSelectAdvantureFirstIsKingdom,
