@@ -4,7 +4,7 @@ import { TASKS } from '../tasks';
 import { config } from '../scriptConfig';
 import * as CONSTANTS from '../constants';
 import * as ICONS from '../icons';
-import { findSpecificIconInScreen, passiveAddRoute } from '../helper';
+import { assign, findSpecificIconInScreen, passiveAddRoute } from '../helper';
 
 const rfpageInTropicalIsland = new Page('rfpageInTropicalIsland', [
   { x: 38, y: 333, r: 255, g: 97, b: 173 },
@@ -68,6 +68,11 @@ export function addTropicalIslandTasks() {
     maxTaskDuring: 30 * CONSTANTS.minuteInMs,
     minRoundInterval: config.autoCollectTropicalIslandsIntervalInMins * CONSTANTS.minuteInMs,
     forceStop: true,
+    beforeRoute: () => {
+      assign(tropicalIslandStatus, {
+        iconRedExclamationCount: 0,
+      });
+    },
   });
 }
 
