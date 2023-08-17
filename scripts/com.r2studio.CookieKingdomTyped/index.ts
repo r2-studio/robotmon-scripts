@@ -1,4 +1,4 @@
-import { rerouter, Utils, Page, XY, GroupPage } from 'Rerouter';
+import { rerouter, Utils, Page, XY, GroupPage, RECT } from 'Rerouter';
 import { seasideStockRect, goodsLocationRect, TaskStatus, searchHosePaths, Icon } from './src/types';
 import { logs, sendKeyBack, sendEventRunning } from './src/utils';
 import {
@@ -1155,25 +1155,29 @@ export class CookieKingdom {
         ]);
 
         // Remove sold out aurora items
+        // TODO: double confirm
         if (this.config.autoBalanceAuroraStocks && seamarketState.rareItems.length > 0) {
           if (rerouter.isPageMatchImage(rfpage1stAuroraSoldOut, image)) {
-            seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 66);
+            seamarketState.rareItems = seamarketState.rareItems.filter((obj: RECT) => obj.x !== 66);
           }
           if (rerouter.isPageMatchImage(rfpage2ndAuroraSoldOut, image)) {
-            seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 158);
+            seamarketState.rareItems = seamarketState.rareItems.filter((obj: RECT) => obj.x !== 158);
           }
           if (rerouter.isPageMatchImage(rfpage3rdAuroraSoldOut, image)) {
-            seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 253);
+            seamarketState.rareItems = seamarketState.rareItems.filter((obj: RECT) => obj.x !== 253);
+            // seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 253);
           }
         }
 
         // Market will remove Carmel map/scope back from the shopping list if it is fulled
         if (this.config.autoBuyCaramelStuff && seamarketState.rareItems.length > 0) {
           if (rerouter.isPageMatchImage(rfpageCarmelMapMax, image)) {
-            seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 346);
+            // seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 346);
+            seamarketState.rareItems = seamarketState.rareItems.filter((obj: RECT) => obj.x !== 346);
           }
           if (rerouter.isPageMatchImage(rfpageCarmeScopeMax, image)) {
-            seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 439);
+            // seamarketState.rareItems = seamarketState.rareItems.filter(obj => obj.x !== 439);
+            seamarketState.rareItems = seamarketState.rareItems.filter((obj: RECT) => obj.x !== 439);
           }
         }
 
