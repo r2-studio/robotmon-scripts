@@ -97,12 +97,6 @@ const rfpageReadyToFightDragon = new Page(
   ],
   { x: 493, y: 325 }
 );
-const rfpageDragonAddMoreCookie = new Page('rfpageDragonAddMoreCookie', [
-  { x: 300, y: 250, r: 8, g: 166, b: 222 },
-  { x: 408, y: 250, r: 123, g: 207, b: 8 },
-  { x: 419, y: 18, r: 127, g: 95, b: 4 },
-  { x: 518, y: 18, r: 20, g: 117, b: 127 },
-]);
 const rfpageDragonRemainHealth = new Page(
   'rfpageDragonRemainHealth',
   [
@@ -387,22 +381,7 @@ export function addGuildRoutes() {
       return;
     },
   });
-  rerouter.addRoute({
-    path: `/${rfpageDragonAddMoreCookie.name}`,
-    match: rfpageDragonAddMoreCookie,
-    action: (context, image, matched, finishRound) => {
-      if (context.task.name !== TASKS.guildBattleDragon) {
-        sendKeyBack();
-        return;
-      }
 
-      sendKeyBack();
-      logs(context.task.name, `rfpageDragonAddMoreCookie, skip and finish round`);
-      sendEventRunning();
-      finishRound(true);
-      return;
-    },
-  });
   rerouter.addRoute({
     path: `/${rfpageReadyToFightDragon.name}`,
     match: rfpageReadyToFightDragon,
@@ -501,6 +480,23 @@ export function addGuildRoutes() {
       finishRound(true);
     },
   });
+  rerouter.addRoute({
+    path: `/${rfpageAllianceAddMoreCookie.name}`,
+    match: rfpageAllianceAddMoreCookie,
+    action: (context, image, matched, finishRound) => {
+      if (context.task.name !== TASKS.guildBattleAlliance) {
+        logs(context.task.name, `found rfpageAllianceAddMoreCookie, tap cancel`);
+        rerouter.screen.tap({ x: 264, y: 250 });
+        return;
+      }
+
+      logs(context.task.name, `found rfpageAllianceAddMoreCookie, skip and finish round`);
+      rerouter.screen.tap({ x: 264, y: 250 });
+      sendEventRunning();
+      finishRound(true);
+    },
+  });
+
   rerouter.addRoute({
     path: `/${rfpageAllianceReward.name}`,
     match: rfpageAllianceReward,

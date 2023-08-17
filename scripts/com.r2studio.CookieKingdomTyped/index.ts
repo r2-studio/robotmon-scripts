@@ -46,7 +46,7 @@ import { addPvpArenaRoutes, addPvpArenaTask, addPvpPurchaseTask } from './src/ta
 import { addTropicalIslandRoutes, addTropicalIslandTasks } from './src/tasks/tropicalIsland';
 import { addGnomeLabRoutes, addGnomeLabTasks } from './src/tasks/gnomeLab';
 import { addGuildBattleAllianceTask, addGuildBattleDragonTask, addGuildCheckinTask, addGuildRoutes } from './src/tasks/guild';
-import { addLoginRoutes, addLoginTask } from './src/tasks/login';
+import { addLoginRoutes } from './src/tasks/login';
 
 const VERSION_CODE: number = 0.1;
 
@@ -2133,13 +2133,13 @@ if (window === undefined) {
 (window as any).stop = stop;
 (window as any).rerouter = rerouter;
 
-// ! following is only for dev
-function run() {
-  cookieKingdom = new CookieKingdom(defaultConfig);
-  cookieKingdom.stop();
-  cookieKingdom.start();
-}
+// // ! following is only for dev
+// function run() {
+//   cookieKingdom = new CookieKingdom(defaultConfig);
+//   cookieKingdom.stop();
+//   cookieKingdom.start();
+// }
 
-sendEventRunning();
-run();
-console.log('jobs done');
+// sendEventRunning();
+// run();
+// console.log('jobs done');
