@@ -291,6 +291,7 @@ let guildBattleDragonStatus = {
 };
 let guildBattleAllianceStatus = {
   needIgniteBeacon: true,
+  collectGuildRewardCount: 0,
 };
 
 export function addGuildRoutes() {
@@ -500,13 +501,31 @@ export function addGuildRoutes() {
       finishRound(true);
     },
   });
+  rerouter.addRoute({
+    path: `/${rfpageAllianceReward.name}`,
+    match: rfpageAllianceReward,
+    action: (context, image, matched, finishRound) => {
+      if (guildBattleAllianceStatus.collectGuildRewardCount > 10) {
+        logs(context.task.name, `found rfpageAllianceReward, tap close as collectGuildRewardCount: ${guildBattleAllianceStatus.collectGuildRewardCount}`);
+        rerouter.screen.tap({ x: 620, y: 20 });
+        sendEventRunning();
+        finishRound(true);
+        return;
+      }
+
+      guildBattleAllianceStatus.collectGuildRewardCount++;
+      logs(context.task.name, `found rfpageAllianceReward, tap it and collectGuildRewardCount: ${guildBattleAllianceStatus.collectGuildRewardCount}`);
+      rerouter.screen.tap({ x: 282, y: 276 });
+      sendEventRunning();
+      finishRound(true);
+    },
+  });
 
   passiveAddRoute([
     rfpageInputGuildWelcomeText,
     rfpageGuildBeaconLevelUp,
     rfpageNoMoreDragonToFight,
     rfpageDragonRemainHealth,
-    rfpageAllianceReward,
     rfpageAllianceResults,
     rfpageAllianceResults2,
     rfpageSelectNextTeam,
@@ -547,6 +566,7 @@ export function addGuildBattleAllianceTask() {
     beforeRoute: () => {
       assign(guildBattleAllianceStatus, {
         needIgniteBeacon: true,
+        collectGuildRewardCount: 0,
       });
     },
   });

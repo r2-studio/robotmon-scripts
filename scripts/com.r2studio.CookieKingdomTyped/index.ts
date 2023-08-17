@@ -28,7 +28,6 @@ import {
   mergeObject,
   checkIfInBattle,
   collectFinishedGoods,
-  checkLoginFailedMaxReached,
   findUnmatchInPage,
   checkIfTrainRequirementMet,
   assign,
@@ -47,6 +46,7 @@ import { addPvpArenaRoutes, addPvpArenaTask, addPvpPurchaseTask } from './src/ta
 import { addTropicalIslandRoutes, addTropicalIslandTasks } from './src/tasks/tropicalIsland';
 import { addGnomeLabRoutes, addGnomeLabTasks } from './src/tasks/gnomeLab';
 import { addGuildBattleAllianceTask, addGuildBattleDragonTask, addGuildCheckinTask, addGuildRoutes } from './src/tasks/guild';
+import { addLoginRoutes, addLoginTask } from './src/tasks/login';
 
 const VERSION_CODE: number = 0.1;
 
@@ -254,11 +254,11 @@ export class CookieKingdom {
     }
 
     // In dev:
-    addGuildCheckinTask();
-    if (this.config.autoGuildBattleDragon) {
-      addGuildBattleDragonTask();
-    }
-    return;
+    // addPvpArenaTask();
+    // if (this.config.autoGuildBattleDragon) {
+    //   addGuildBattleDragonTask();
+    // }
+    // return;
 
     rerouter.addTask({
       name: TASKS.production,
@@ -429,192 +429,7 @@ export class CookieKingdom {
 
   public addRoutes() {
     // Login pages
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInputAge.name}`,
-      match: PAGES.rfpageInputAge,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, 'input rfpageInputAge');
-
-        rerouter.screen.tap({ x: 285 + Math.random() * 35, y: 213 });
-        Utils.sleep(this.config.sleep);
-        rerouter.goNext(PAGES.rfpageInputAge);
-        Utils.sleep(this.config.sleep);
-
-        rerouter.screen.tap({ x: 370, y: 150 });
-        Utils.sleep(CONSTANTS.sleepAnimate);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageChooseLoginMethod.name}`,
-      match: PAGES.rfpageChooseLoginMethod,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name === TASKS.maintainanceMode) {
-          logs(context.task.name, 'maintainanceMode, do nothing and sleep 60s');
-          Utils.sleep(60000);
-          return;
-        }
-
-        logs(context.task.name, 'input rfpageChooseLoginMethod');
-        rerouter.goNext(PAGES.rfpageChooseLoginMethod);
-        Utils.sleep(CONSTANTS.sleepAnimate);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageEnterEmail.name}`,
-      match: PAGES.rfpageEnterEmail,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name === TASKS.maintainanceMode) {
-          logs(context.task.name, 'maintainanceMode, do nothing and sleep 60s');
-          Utils.sleep(60000);
-          return;
-        }
-
-        logs(context.task.name, 'input email');
-
-        rerouter.screen.tap({ x: 370, y: 150 });
-        Utils.sleep(CONSTANTS.sleepAnimate);
-        logs(context.task.name, `typing email ${this.config.account}`);
-
-        typing(this.config.account, 1000);
-        Utils.sleep(4000); // sleep must equal to typing
-        typing('\n', 500);
-        Utils.sleep(1000);
-
-        const incorrectEmailFormat = {
-          name: 'incorrectEmailFormat',
-          x: 222,
-          y: 166,
-          width: 172,
-          height: 12,
-          targetY: 6,
-          lookingForColor: { r: 226, g: 86, b: 86 },
-          targetColorCount: 44,
-          targetColorThreashold: 3,
-        };
-        const needRegisterDevPlayAccount = {
-          name: 'needRegisterDevPlayAccount',
-          x: 222,
-          y: 166,
-          width: 172,
-          height: 12,
-          targetY: 6,
-          lookingForColor: { r: 226, g: 86, b: 86 },
-          targetColorCount: 34,
-          targetColorThreashold: 3,
-        };
-        const registerWithSocialPlatformMessageScreen = {
-          name: 'registerWithSocialPlatformMessageScreen',
-          x: 225,
-          y: 162,
-          width: 75,
-          height: 13,
-          targetY: 8,
-          lookingForColor: { r: 244, g: 191, b: 191 },
-          targetColorCount: 21,
-          targetColorThreashold: 3,
-        };
-        if (checkScreenMessage(incorrectEmailFormat, PAGES.rfpageEnterEmail, image)) {
-          logs(context.task.name, 'reported incorrectEmailFormat so handle it');
-          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes);
-        } else if (checkScreenMessage(needRegisterDevPlayAccount, PAGES.rfpageEnterEmail, image)) {
-          logs(context.task.name, 'reported needRegisterDevPlayAccount so handle it');
-          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes);
-        } else if (checkScreenMessage(registerWithSocialPlatformMessageScreen, PAGES.rfpageEnterEmail, image)) {
-          logs(context.task.name, 'reported registerWithSocialPlatformMessageScreen so handle it');
-          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes);
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.groupPageEnterPassword.name}`,
-      match: PAGES.groupPageEnterPassword,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, 'input password');
-
-        rerouter.goNext(PAGES.rfpageEnterPasswordLongId);
-        Utils.sleep(CONSTANTS.sleepAnimate);
-        typing(this.config.password, 1000);
-        Utils.sleep(CONSTANTS.sleepAnimate);
-        typing('\n', 500);
-        Utils.sleep(CONSTANTS.sleepAnimate);
-        rerouter.screen.tap({ x: 370, y: 190 });
-
-        const wrongPasswordMessageScreen = {
-          name: 'wrongPasswordMessageScreen',
-          x: 225,
-          y: 162,
-          width: 75,
-          height: 13,
-          targetY: 6,
-          lookingForColor: { r: 230, g: 100, b: 100 },
-          targetColorCount: 17,
-          targetColorThreashold: 2,
-        };
-        const wrongPasswordMessageScreenWithLongId = {
-          name: 'wrongPasswordMessageScreenWithLongId',
-          x: 225,
-          y: 175,
-          width: 75,
-          height: 13,
-          targetY: 6,
-          lookingForColor: { r: 244, g: 100, b: 100 },
-          targetColorCount: 25,
-          targetColorThreashold: 2,
-        };
-        const passwordTooShortMessageScreen = {
-          name: 'passwordTooShortMessageScreen',
-          x: 225,
-          y: 162,
-          width: 75,
-          height: 13,
-          targetY: 4,
-          lookingForColor: { r: 244, g: 191, b: 191 },
-          targetColorCount: 2,
-          targetColorThreashold: 0,
-        };
-        if (checkScreenMessage(wrongPasswordMessageScreen, PAGES.rfpageEnterpassword, image)) {
-          logs(context.task.name, 'reported wrongPasswordMessageScreen so handle it');
-          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes);
-        }
-        if (checkScreenMessage(wrongPasswordMessageScreenWithLongId, PAGES.rfpageEnterPasswordLongId, image)) {
-          logs(context.task.name, 'reported wrongPasswordMessageScreenWithLongId so handle it');
-          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes);
-        }
-        if (checkScreenMessage(passwordTooShortMessageScreen, PAGES.rfpageEnterpassword, image)) {
-          logs(context.task.name, 'reported passwordTooShortMessageScreen so handle it');
-          checkLoginFailedMaxReached(this.taskStatus[TASKS.login], this.config.loginRetryMaxTimes);
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInLoginPageWithGearAndVideo.name}`,
-      match: PAGES.rfpageInLoginPageWithGearAndVideo,
-      action: (context, image, matched, finishRound) => {
-        logs(context.task.name, 'tapping (575, 22) until the game start every 3 secs');
-
-        rerouter.screen.tap({ x: 575, y: 22 });
-        Utils.sleep(3000);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageAnnouncement.name}`,
-      match: PAGES.rfpageAnnouncement,
-      action: (context, image, matched, finishRound) => {
-        if (this.config.needToSendLoginSuccess) {
-          logs(context.task.name, 'have not send login-success, send it');
-          sendEvent('gameStatus', 'login-succeeded');
-          this.config.needToSendLoginSuccess = false;
-        }
-        if (this.config.needToSendPlaying) {
-          Utils.sleep(3000);
-          logs(context.task.name, 'have not send needToSendPlaying, send it');
-          sendEvent('gameStatus', 'login-succeeded');
-          this.config.needToSendPlaying = false;
-        }
-
-        rerouter.goNext(PAGES.rfpageAnnouncement);
-      },
-    });
+    addLoginRoutes();
 
     // Daily tasks
     rerouter.addRoute({
@@ -1736,8 +1551,8 @@ export class CookieKingdom {
             sendKeyBack();
             return;
           default:
-            logs(context.task.name, `rfpageSelectAdvanture don't know what to do, crash it`);
-            ii++;
+            logs(context.task.name, `rfpageSelectAdvanture don't know what to do, try scroll left a lot to get to the head of the list`);
+            scrollLeftALot({ x: 50, y: 180 });
             sendKeyBack();
         }
       },
@@ -1803,7 +1618,7 @@ export class CookieKingdom {
             if (!rerouter.isPageMatchImage(rfpageStartOfList, image)) {
               scrollLeftALot({ x: 116, y: 180 });
             }
-            if (rerouter.waitScreenForMatchingPage(PAGES.rfpageFistItemIsCastle, 3000)) {
+            if (rerouter.waitScreenForMatchingPage(rfpageStartOfList, 3000)) {
               logs(context.task.name, 'tap goto castle');
               rerouter.screen.tap({ x: 260, y: 224 });
               return;
@@ -2238,7 +2053,7 @@ export class CookieKingdom {
   public handleUnknown() {
     rerouter.addUnknownAction((context, image, finishRound) => {
       // rerouter.getCurrentMatchNames();
-      Utils.log(`unknown count ${context.matchTimes}, task: ${context.task.name},during ${context.matchDuring}, last matched: ${context.lastMatchedPath}`);
+      Utils.log(`unknown count ${context.matchTimes}, task: ${context.task.name}, during ${context.matchDuring}, last matched: ${context.lastMatchedPath}`);
       if (rerouter.checkAndStartApp()) {
         logs('handleUnknown', 'checkAndStartApp()');
         return;

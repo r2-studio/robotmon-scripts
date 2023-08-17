@@ -29,27 +29,6 @@ export function findUnmatchInPage(page: Page) {
   releaseImage(img);
 }
 
-export function checkLoginFailedMaxReached(loginStatus: TaskStatus, loginRetryMaxTimes: number) {
-  if (loginStatus.loginRetryCount > loginRetryMaxTimes) {
-    cookieKingdom!.stop();
-    sendEvent('gameStatus', 'login-failed');
-    logs('checkLoginFailedMaxReached', `Max retry count reached, login failed`);
-    return true;
-  } else {
-    loginStatus.loginRetryCount++;
-    logs('checkLoginFailedMaxReached', `Restart game as not inputing login info correctly: ${loginStatus.loginRetryCount}`);
-    var rtn = execute('am force-stop com.devsisters.ck');
-    if (rtn == 'signal: aborted') {
-      // MEmu
-      execute(
-        'ANDROID_DATA=/data BOOTCLASSPATH=/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/apache-xml.jar:/system/framework/org.apache.http.legacy.boot.jar am force-stop com.devsisters.ck'
-      );
-    }
-    sleep(15000);
-    return false;
-  }
-}
-
 export function scrollDownALot(startPnt: XY) {
   rerouter.screen.tapDown({ x: startPnt.x, y: startPnt.y });
   Utils.sleep(CONSTANTS.sleep);

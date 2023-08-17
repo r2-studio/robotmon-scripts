@@ -95,16 +95,6 @@ export const rfpageMovingStructures = new Page(
   { x: 615, y: 21 }
 );
 
-// Check for gears in login page via pixel matching
-export const rfpageInLoginPageWithGearAndVideo = new Page('rfpageInLoginPageWithGearAndVideo', [
-  { x: 621, y: 13, r: 233, g: 233, b: 235 },
-  { x: 622, y: 16, r: 3, g: 4, b: 9 },
-  { x: 597, y: 16, r: 233, g: 235, b: 239 },
-  { x: 593, y: 16, r: 4, g: 6, b: 11 },
-  { x: 590, y: 17, r: 233, g: 235, b: 239 },
-  { x: 594, y: 23, r: 14, g: 14, b: 25 },
-]);
-
 export const pageLoginFacebook = [
   { x: 186, y: 72, r: 59, g: 89, b: 152 },
   { x: 484, y: 71, r: 59, g: 89, b: 152 },
@@ -122,89 +112,6 @@ export const pageInCookieGacha = [
   { x: 418, y: 21, r: 239, g: 195, b: 2 },
   { x: 524, y: 20, r: 0, g: 139, b: 255 },
 ];
-
-export const pageInputAge = [
-  { x: 366, y: 278, r: 254, g: 94, b: 0 },
-  { x: 320, y: 154, r: 50, g: 50, b: 50 },
-  { x: 319, y: 161, r: 255, g: 255, b: 255 },
-  { x: 287, y: 69, r: 60, g: 60, b: 60 },
-  { x: 335, y: 66, r: 99, g: 99, b: 99 },
-  { x: 253, y: 213, r: 254, g: 94, b: 0 },
-  { x: 252, y: 231, r: 255, g: 255, b: 255 },
-];
-
-// Bigger icons (Android 5)
-export const pageChooseLoginMethod = [
-  { x: 139, y: 233, r: 255, g: 95, b: 0 },
-  { x: 165, y: 197, r: 0, g: 0, b: 0 },
-  { x: 148, y: 153, r: 244, g: 154, b: 25 },
-  { x: 347, y: 166, r: 177, g: 204, b: 58 },
-  { x: 356, y: 196, r: 59, g: 89, b: 152 },
-  { x: 126, y: 234, r: 255, g: 255, b: 255 },
-];
-// Smaller icons (Android 7), not updated for 5 options
-export const pageChooseLoginMethod2 = [
-  { x: 138, y: 229, r: 255, g: 95, b: 0 },
-  { x: 138, y: 198, r: 0, g: 0, b: 0 },
-  { x: 138, y: 155, r: 234, g: 89, b: 77 },
-  { x: 347, y: 162, r: 177, g: 204, b: 58 },
-  { x: 342, y: 195, r: 59, g: 89, b: 152 },
-];
-// Bigger icons (Android 5)
-export const rfpageChooseLoginMethod = new Page('rfpageChooseLoginMethod', pageChooseLoginMethod, pageChooseLoginMethod[0]);
-// Smaller icons (Android 7), not updated for 5 options
-export const rfpageChooseLoginMethod2 = new Page('rfpageChooseLoginMethod2', pageChooseLoginMethod2, pageChooseLoginMethod2[0]);
-
-// TOS page will change when login page change
-// Nox: cookie v1.15
-export const pageTermsOfServiceWindow = [
-  { x: 448, y: 230, r: 171, g: 220, b: 216 },
-  { x: 469, y: 240, r: 255, g: 255, b: 255 },
-  { x: 159, y: 116, r: 255, g: 255, b: 255 },
-  { x: 471, y: 116, r: 255, g: 255, b: 255 },
-  { x: 158, y: 243, r: 255, g: 255, b: 255 },
-];
-export const rfpageTermsOfServiceWindow = new Page('rfpageTermsOfServiceWindow', pageTermsOfServiceWindow, pageTermsOfServiceWindow[0]);
-
-export const pageTermsOfServices2 = [
-  { x: 447, y: 230, r: 255, g: 255, b: 255 },
-  { x: 43, y: 257, r: 96, g: 24, b: 22 },
-  { x: 181, y: 257, r: 95, g: 24, b: 22 },
-  { x: 31, y: 289, r: 92, g: 67, b: 18 },
-  { x: 203, y: 285, r: 90, g: 65, b: 16 },
-  { x: 161, y: 329, r: 37, g: 8, b: 13 },
-  { x: 246, y: 230, r: 255, g: 255, b: 255 },
-  { x: 179, y: 132, r: 255, g: 255, b: 255 },
-];
-// Memu: cookie v1.16
-export const pageTermsOfServicesMemu = [
-  { x: 479, y: 238, r: 66, g: 66, b: 66 },
-  { x: 482, y: 238, r: 107, g: 158, b: 153 },
-  { x: 484, y: 222, r: 66, g: 66, b: 66 },
-  { x: 486, y: 110, r: 66, g: 66, b: 66 },
-  { x: 148, y: 123, r: 66, g: 66, b: 66 },
-  { x: 171, y: 117, r: 255, g: 255, b: 255 },
-  { x: 172, y: 205, r: 66, g: 66, b: 66 },
-  { x: 229, y: 206, r: 254, g: 254, b: 254 },
-];
-export const pageTermsOfServicesHitBack = [
-  { x: 305, y: 218, r: 255, g: 255, b: 255 },
-  { x: 320, y: 218, r: 255, g: 255, b: 255 },
-  { x: 334, y: 217, r: 254, g: 94, b: 0 },
-  { x: 350, y: 163, r: 255, g: 255, b: 255 },
-  { x: 356, y: 163, r: 255, g: 255, b: 255 },
-  { x: 148, y: 123, r: 26, g: 26, b: 26 },
-];
-export const pageAnnouncement = [
-  { x: 610, y: 19, r: 56, g: 167, b: 231 },
-  { x: 619, y: 19, r: 255, g: 255, b: 255 },
-  { x: 628, y: 18, r: 56, g: 167, b: 231 },
-  { x: 59, y: 219, r: 54, g: 64, b: 87 },
-  { x: 71, y: 317, r: 54, g: 64, b: 87 },
-  { x: 19, y: 114, r: 63, g: 0, b: 9 },
-  { x: 25, y: 321, r: 75, g: 75, b: 75 },
-];
-export const rfpageAnnouncement = new Page('rfpageAnnouncement', pageAnnouncement, pageAnnouncement[0]);
 
 export const pageNameYourKingdom = [
   { x: 362, y: 247, r: 160, g: 160, b: 160 },
@@ -1162,11 +1069,6 @@ export const rfpageInCookieHead = new Page('rfpageInCookieHead', [
   { x: 12, y: 20, r: 141, g: 150, b: 167 },
   { x: 12, y: 27, r: 21, g: 32, b: 47 },
 ]);
-export const rfpageFistItemIsCastle = new Page('pageFistItemIsCastle', [
-  { x: 275, y: 228, r: 57, g: 77, b: 123 },
-  { x: 255, y: 151, r: 245, g: 160, b: 161 },
-  { x: 252, y: 159, r: 239, g: 190, b: 115 },
-]);
 export const rfpageInCookieCastle = new Page(
   'rfpageInCookieCastle',
   [
@@ -1261,136 +1163,6 @@ export const rfpageGeneralMessageWindow = new Page(
   { x: 424, y: 101 }
 );
 
-export const pageCannotFindLoginInfo = [
-  { x: 316, y: 243, r: 82, g: 136, b: 5 },
-  { x: 323, y: 242, r: 254, g: 254, b: 254 },
-  { x: 332, y: 243, r: 123, g: 207, b: 8 },
-  { x: 305, y: 242, r: 123, g: 207, b: 8 },
-  { x: 300, y: 242, r: 123, g: 207, b: 8 },
-  { x: 343, y: 243, r: 123, g: 207, b: 8 },
-  { x: 201, y: 106, r: 57, g: 69, b: 107 },
-  { x: 422, y: 95, r: 57, g: 69, b: 107 },
-  { x: 438, y: 106, r: 57, g: 69, b: 107 },
-  { x: 383, y: 177, r: 215, g: 205, b: 195 },
-  { x: 377, y: 178, r: 231, g: 220, b: 209 },
-  { x: 371, y: 178, r: 231, g: 220, b: 209 },
-  { x: 243, y: 180, r: 80, g: 80, b: 80 },
-];
-// v1.15
-export const pageCanDownloadResources = [
-  { x: 346, y: 240, r: 121, g: 207, b: 12 },
-  { x: 420, y: 237, r: 219, g: 207, b: 199 },
-  { x: 418, y: 172, r: 243, g: 233, b: 223 },
-  { x: 412, y: 103, r: 60, g: 70, b: 105 },
-  { x: 219, y: 98, r: 60, g: 70, b: 105 },
-  { x: 221, y: 250, r: 219, g: 207, b: 199 },
-  { x: 380, y: 100, r: 57, g: 69, b: 107 },
-  { x: 319, y: 102, r: 57, g: 69, b: 107 },
-  { x: 292, y: 108, r: 57, g: 69, b: 107 },
-];
-// v2.0.1
-export const pageDownloadDataAndVoiceOver = [
-  { x: 207, y: 192, r: 39, g: 204, b: 0 },
-  { x: 372, y: 216, r: 12, g: 167, b: 223 },
-  { x: 445, y: 218, r: 12, g: 167, b: 223 },
-  { x: 430, y: 81, r: 60, g: 70, b: 105 },
-  { x: 214, y: 195, r: 255, g: 255, b: 255 },
-];
-export const pageDownloadDataAndVoiceOverUnchecked = [
-  { x: 207, y: 192, r: 255, g: 255, b: 255 },
-  { x: 372, y: 216, r: 12, g: 167, b: 223 },
-  { x: 445, y: 218, r: 12, g: 167, b: 223 },
-  { x: 430, y: 81, r: 60, g: 70, b: 105 },
-  { x: 214, y: 195, r: 255, g: 255, b: 255 },
-];
-// v2.0.1 has 'New data pak is available'
-export const pageDownloadNewDataPakIsAvailable = [
-  { x: 368, y: 254, r: 123, g: 207, b: 8 },
-  { x: 441, y: 99, r: 57, g: 69, b: 107 },
-  { x: 346, y: 251, r: 255, g: 255, b: 255 },
-];
-export const pageEnterEmail = [
-  { x: 298, y: 53, r: 60, g: 60, b: 60 },
-  { x: 320, y: 53, r: 223, g: 223, b: 223 },
-  { x: 322, y: 99, r: 245, g: 245, b: 245 },
-  { x: 357, y: 97, r: 70, g: 70, b: 70 },
-  { x: 362, y: 98, r: 255, g: 255, b: 255 },
-  { x: 368, y: 98, r: 255, g: 255, b: 255 },
-  { x: 391, y: 124, r: 255, g: 255, b: 255 },
-];
-export const pageEnterTwoPasswords = [
-  { x: 243, y: 307, r: 255, g: 255, b: 255 },
-  { x: 377, y: 229, r: 200, g: 200, b: 200 },
-  { x: 367, y: 176, r: 255, g: 255, b: 255 },
-  { x: 371, y: 50, r: 60, g: 60, b: 60 },
-  { x: 319, y: 53, r: 230, g: 230, b: 230 },
-  { x: 236, y: 149, r: 195, g: 195, b: 195 },
-  { x: 236, y: 183, r: 194, g: 194, b: 194 },
-  { x: 243, y: 303, r: 200, g: 200, b: 200 },
-];
-export const pageEnterpassword = [
-  { x: 370, y: 150, r: 255, g: 255, b: 255 },
-  { x: 227, y: 112, r: 125, g: 125, b: 125 },
-  { x: 235, y: 112, r: 84, g: 84, b: 84 },
-  { x: 239, y: 114, r: 255, g: 255, b: 255 },
-  { x: 368, y: 110, r: 84, g: 84, b: 84 },
-  { x: 404, y: 188, r: 200, g: 200, b: 200 },
-  { x: 227, y: 170, r: 255, g: 255, b: 255 },
-];
-export const pageEnterPasswordLongId = [
-  { x: 370, y: 161, r: 255, g: 255, b: 255 },
-  { x: 227, y: 127, r: 125, g: 125, b: 125 },
-  { x: 234, y: 124, r: 207, g: 207, b: 207 },
-  { x: 229, y: 110, r: 255, g: 255, b: 255 },
-  { x: 230, y: 110, r: 120, g: 120, b: 120 },
-  { x: 227, y: 183, r: 255, g: 255, b: 255 },
-];
-// Check if wrong password set. Any red string in this area means wrong password
-export const pageEnteredPassword = [
-  { x: 370, y: 155, r: 255, g: 255, b: 255 },
-  { x: 301, y: 115, r: 255, g: 255, b: 255 },
-  { x: 387, y: 53, r: 60, g: 60, b: 60 },
-  { x: 298, y: 53, r: 60, g: 60, b: 60 },
-  { x: 322, y: 52, r: 60, g: 60, b: 60 },
-];
-export const pageServerSelection = [
-  { x: 351, y: 260, r: 121, g: 207, b: 12 },
-  { x: 428, y: 261, r: 12, g: 167, b: 223 },
-  { x: 442, y: 242, r: 60, g: 70, b: 105 },
-  { x: 422, y: 234, r: 44, g: 47, b: 62 },
-  { x: 324, y: 54, r: 101, g: 137, b: 231 },
-  { x: 302, y: 64, r: 117, g: 186, b: 100 },
-  { x: 278, y: 81, r: 254, g: 254, b: 254 },
-];
-
-export const rfpageInputAge = new Page('rfpageInputAge', pageInputAge, pageInputAge[0]);
-export const rfpageTermsOfServices2 = new Page('rfpageTermsOfServices2', pageTermsOfServices2, pageTermsOfServices2[0]);
-export const rfpageTermsOfServicesMemu = new Page('rfpageTermsOfServicesMemu', pageTermsOfServicesMemu, pageTermsOfServicesMemu[0]);
-export const rfpageTermsOfServicesHitBack = new Page('rfpageTermsOfServicesHitBack', pageTermsOfServicesHitBack, pageTermsOfServicesHitBack[0]);
-export const rfpageCannotFindLoginInfo = new Page('rfpageCannotFindLoginInfo', pageCannotFindLoginInfo, pageCannotFindLoginInfo[0]);
-export const rfpageCanDownloadResources = new Page('rfpageCanDownloadResources', pageCanDownloadResources, pageCanDownloadResources[0]);
-export const rfpageDownloadDataAndVoiceOver = new Page('rfpageDownloadDataAndVoiceOver', pageDownloadDataAndVoiceOver, pageDownloadDataAndVoiceOver[0]);
-export const rfpageDownloadDataAndVoiceOverUnchecked = new Page(
-  'rfpageDownloadDataAndVoiceOverUnchecked',
-  pageDownloadDataAndVoiceOverUnchecked,
-  pageDownloadDataAndVoiceOverUnchecked[0]
-);
-export const rfpageDownloadNewDataPakIsAvailable = new Page(
-  'rfpageDownloadNewDataPakIsAvailable',
-  pageDownloadNewDataPakIsAvailable,
-  pageDownloadNewDataPakIsAvailable[0]
-);
-export const rfpageEnterEmail = new Page('rfpageEnterEmail', pageEnterEmail, pageEnterEmail[0]);
-export const rfpageEnterTwoPasswords = new Page('rfpageEnterTwoPasswords', pageEnterTwoPasswords, pageEnterTwoPasswords[0]);
-export const rfpageEnterpassword = new Page('rfpageEnterpassword', pageEnterpassword, pageEnterpassword[0]);
-export const rfpageEnterPasswordLongId = new Page('rfpageEnterPasswordLongId', pageEnterPasswordLongId, pageEnterPasswordLongId[0]);
-export const groupPageEnterPassword = new GroupPage(
-  'groupPageEnterPassword',
-  [rfpageEnterpassword, rfpageEnterPasswordLongId],
-  rfpageEnterPasswordLongId.next /* next*/
-);
-
-export const rfpageServerSelection = new Page('rfpageServerSelection', pageServerSelection, pageServerSelection[0]);
 export const rfpageNotifyQuitWindow = new Page('rfpageNotifyQuitWindow', pageNotifyQuitWindow, pageNotifyQuitWindow[0]);
 
 // Seems outdated, and confused with timejump in tosc
