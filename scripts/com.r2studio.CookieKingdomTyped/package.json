@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build-framework": "cd ../Rerouter && npm i && npm run build && cd - && npm i",
-    "build": "npm run build-framework && sh build.sh",
+    "build": "sh build.sh",
     "run": "webpack --entry ./index.ts && rbm run --file=dist/index.js",
     "test": "webpack --entry ./test.ts && rbm run --file=dist/index.js"
   },

@@ -1339,13 +1339,11 @@ export function configSharePref() {
   console.log('Write file return: ', rtn);
 }
 
-export function mergeObject(target: any) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        // console.log('merge type: ', key, source[key], typeof(source[key]))
-        target[key] = source[key];
+export function mergeObject<T>(target: T, ...sources: Partial<T>[]): T {
+  for (let source of sources) {
+    for (let key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key) && source[key] !== undefined) {
+        (target as T)[key as keyof T] = source[key] as T[keyof T];
       }
     }
   }
