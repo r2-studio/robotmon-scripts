@@ -46,6 +46,7 @@ import { addHotAirBallonRoutes, addHotAirBallonTask } from './src/tasks/hotAirBa
 import { addPvpArenaRoutes, addPvpArenaTask, addPvpPurchaseTask } from './src/tasks/pvpArena';
 import { addTropicalIslandRoutes, addTropicalIslandTasks } from './src/tasks/tropicalIsland';
 import { addGnomeLabRoutes, addGnomeLabTasks } from './src/tasks/gnomeLab';
+import { addGuildBattleAllianceTask, addGuildBattleDragonTask, addGuildCheckinTask, addGuildRoutes } from './src/tasks/guild';
 
 const VERSION_CODE: number = 0.1;
 
@@ -87,7 +88,7 @@ export class CookieKingdom {
     this.initTaskStatus();
 
     console.log('>', rerouter.getCurrentMatchNames());
-    // console.log('>>', findUnmatchInPage(PAGES.rfpageInPVPArena));
+    // console.log('>>', findUnmatchInPage(rfpageInCookieAlliance));
     // return;
 
     rerouter.start(this.packageName);
@@ -98,7 +99,7 @@ export class CookieKingdom {
     const allIcons: { [key: string]: Icon } = ICONS as any;
     for (const iconIdx in allIcons) {
       const icon = allIcons[iconIdx];
-      if (!(icon instanceof Icon)) {
+      if (!(icon instanceof Icon) || icon.image === undefined) {
         continue;
       }
       releaseImage(icon.image);
@@ -198,7 +199,6 @@ export class CookieKingdom {
       },
     };
 
-
     this.taskStatus[TASKS.haborShopInSeaMarket] = {
       needPullToRightHead: true,
       rareItems: [],
@@ -231,13 +231,6 @@ export class CookieKingdom {
       tryLimit: this.config.autoHandleTowerOfSweetChaos ? 4 : 0,
     };
 
-    this.taskStatus[TASKS.guildBattleDragon] = {
-      bossIdx: 0,
-    };
-    this.taskStatus[TASKS.guildBattleAlliance] = {
-      needIgniteBeacon: true,
-    };
-
     this.taskStatus[TASKS.findAndTapCandy] = {
       searchHousePathIdx: 0, // There are 3 paths, each with differert steps
       searchHouseIdx: 0,
@@ -261,8 +254,9 @@ export class CookieKingdom {
     }
 
     // In dev:
-    if (this.config.autoLabResearch) {
-      addGnomeLabTasks();
+    addGuildCheckinTask();
+    if (this.config.autoGuildBattleDragon) {
+      addGuildBattleDragonTask();
     }
     return;
 
@@ -405,27 +399,12 @@ export class CookieKingdom {
       });
     }
 
-    rerouter.addTask({
-      name: TASKS.guildCheckin,
-      maxTaskDuring: 3 * CONSTANTS.minuteInMs,
-      minRoundInterval: 180 * CONSTANTS.minuteInMs,
-      forceStop: true,
-    });
+    addGuildCheckinTask();
     if (this.config.autoGuildBattleDragon) {
-      rerouter.addTask({
-        name: TASKS.guildBattleDragon,
-        maxTaskDuring: 10 * CONSTANTS.minuteInMs,
-        minRoundInterval: 180 * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+      addGuildBattleDragonTask();
     }
     if (this.config.autoGuildAllianceBattle) {
-      rerouter.addTask({
-        name: TASKS.guildBattleAlliance,
-        maxTaskDuring: 40 * CONSTANTS.minuteInMs,
-        minRoundInterval: 180 * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+      addGuildBattleAllianceTask();
     }
 
     rerouter.addTask({
@@ -1491,211 +1470,8 @@ export class CookieKingdom {
       },
     });
 
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInGuildLand.name}`,
-      match: PAGES.rfpageInGuildLand,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name.substring(0, 5) !== 'guild') {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `in rfpageInGuildLand, handle it`);
-
-        switch (context.task.name) {
-          case TASKS.guildCheckin:
-            rerouter.screen.tap({ x: 315, y: 217 }); // tap center guild level up trophy
-            Utils.sleep(2000);
-            break;
-          case TASKS.guildExpandLand:
-            // rerouter.screen.tap({ x: 315, y: 217 });
-            // Utils.sleep(2000);
-            break;
-          case TASKS.guildBattleDragon:
-            rerouter.screen.tap({ x: 150, y: 328 }); // tap dragon icon
-            Utils.sleep(2000);
-            break;
-          case TASKS.guildBattleAlliance:
-            rerouter.screen.tap({ x: 200, y: 330 }); // tap alliance icon
-            Utils.sleep(5000);
-            break;
-          default:
-            // TODO: will fail when resume battle
-            console.log('I am rfpageInGuildLand, panic and donno what to do');
-            saveImageToDisk();
-          // ii++;
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInGuildBeacon.name}`,
-      match: PAGES.rfpageInGuildBeacon,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name === TASKS.guildCheckin) {
-          logs(context.task.name, `in rfpageInGuildBeacon, finishRound`);
-          rerouter.goNext(PAGES.rfpageInGuildBeacon);
-          sendEventRunning();
-          finishRound(true);
-        }
-        sendKeyBack();
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfPageGuildBeaconIsClear.name}`,
-      match: PAGES.rfPageGuildBeaconIsClear,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name === TASKS.guildCheckin) {
-          logs(context.task.name, `in rfPageGuildBeaconIsClear, finishRound`);
-          rerouter.goNext(PAGES.rfPageGuildBeaconIsClear);
-          sendEventRunning();
-          finishRound(true);
-        }
-        sendKeyBack();
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageBattleDragon.name}`,
-      match: PAGES.rfpageBattleDragon,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.guildBattleDragon) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `in ${context.path}, handle it`);
-
-        const guildBossesEntryPoints = [
-          { x: 113, y: 202, r: 123, g: 207, b: 8 }, // left
-          { x: 312, y: 205, r: 123, g: 207, b: 8 }, // middle
-          { x: 505, y: 204, r: 123, g: 207, b: 8 }, // right
-        ];
-
-        let dragonStatus = this.taskStatus[TASKS.guildBattleDragon];
-        if (dragonStatus.bossIdx >= guildBossesEntryPoints.length) {
-          dragonStatus.bossIdx = 0;
-        }
-
-        logs(context.task.name, `Try to fight boss: ${dragonStatus.bossIdx}`);
-        let bossEntryPoint: XYRGB = guildBossesEntryPoints[dragonStatus.bossIdx];
-        rerouter.screen.tap(bossEntryPoint);
-
-        dragonStatus.bossIdx++;
-        return;
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageDragonAddMoreCookie.name}`,
-      match: PAGES.rfpageDragonAddMoreCookie,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.guildBattleDragon) {
-          sendKeyBack();
-          return;
-        }
-
-        sendKeyBack();
-        logs(context.task.name, `rfpageDragonAddMoreCookie, skip and finish round`);
-        sendEventRunning();
-        finishRound(true);
-        return;
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageReadyToFightDragon.name}`,
-      match: PAGES.rfpageReadyToFightDragon,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.guildBattleDragon) {
-          sendKeyBack();
-          return;
-        }
-
-        rerouter.goNext(PAGES.rfpageReadyToFightDragon);
-        Utils.sleep(6000);
-
-        if (rerouter.isPageMatch(PAGES.rfpageReadyToFightDragon)) {
-          logs(context.task.name, `Still in rfpageReadyToFightDragon 6 secs after tapped Battle!, no more dragon ticket, finish round`);
-          sendEventRunning();
-          finishRound(true);
-          return;
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageStartedFightingSoCannotStartBeacon.name}`,
-      match: PAGES.rfpageStartedFightingSoCannotStartBeacon,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.guildBattleAlliance) {
-          sendKeyBack();
-          return;
-        }
-
-        rerouter.screen.tap({ x: 372, y: 287 });
-        Utils.sleep(2000);
-
-        if (rerouter.isPageMatch(PAGES.rfpageStartedFightingSoCannotStartBeacon)) {
-          logs(context.task.name, `rfpageStartedFightingSoCannotStartBeacon, stop trying to ignite beacon`);
-          this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon = false;
-          rerouter.goNext(PAGES.rfpageStartedFightingSoCannotStartBeacon);
-        }
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInCookieAlliance.name}`,
-      match: PAGES.rfpageInCookieAlliance,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.guildBattleAlliance) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `start guild alliance battle`);
-
-        if (this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon && rerouter.isPageMatchImage(PAGES.rfpageAllianceBeaconIsOff, image)) {
-          rerouter.screen.tap({ x: 215, y: 198 });
-          return;
-        }
-
-        rerouter.screen.tap({ x: 515, y: 324 });
-        Utils.sleep(this.config.sleepAnimate);
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageSelectStartingTeam.name}`,
-      match: PAGES.rfpageSelectStartingTeam,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.guildBattleAlliance) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `found rfpageSelectStartingTeam, tap all from top`);
-        rerouter.screen.tap({ x: 470, y: 70 });
-        Utils.sleep(this.config.sleep);
-        rerouter.screen.tap({ x: 470, y: 113 });
-        Utils.sleep(this.config.sleep);
-        rerouter.screen.tap({ x: 470, y: 165 });
-        Utils.sleep(this.config.sleep);
-        rerouter.screen.tap({ x: 470, y: 215 });
-        Utils.sleep(this.config.sleep);
-        rerouter.screen.tap({ x: 470, y: 267 });
-        Utils.sleep(this.config.sleep);
-        return;
-      },
-    });
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageCannotRefilAllianceTicketToday.name}`,
-      match: PAGES.rfpageCannotRefilAllianceTicketToday,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.guildBattleAlliance) {
-          sendKeyBack();
-          return;
-        }
-
-        logs(context.task.name, `found rfpageCannotRefilAllianceTicketToday, finish round`);
-        rerouter.screen.tap({ x: 282, y: 276 });
-        sendEventRunning();
-        finishRound(true);
-      },
-    });
+    // Guild
+    addGuildRoutes();
 
     // Battle handling
     rerouter.addRoute({
@@ -2305,7 +2081,6 @@ export class CookieKingdom {
           case TASKS.guildExpandLand:
           case TASKS.guildBattleDragon:
           case TASKS.guildBattleAlliance:
-            this.taskStatus[TASKS.guildBattleAlliance].needIgniteBeacon = true;
             rerouter.screen.tap({ x: 317, y: 325 }); // goto Guild
             break;
           case TASKS.findAndTapCandy:
@@ -2553,6 +2328,7 @@ if (window === undefined) {
 // ! following is only for dev
 function run() {
   cookieKingdom = new CookieKingdom(defaultConfig);
+  cookieKingdom.stop();
   cookieKingdom.start();
 }
 

@@ -107,7 +107,7 @@ export const defaultConfig = {
   tryRestartGameLimit: 5,
   needToSendLoginSuccess: true,
   needToSendPlaying: true,
-  licenseId: ''
+  licenseId: '',
 
   stock_axe: 60,
   stock_pickaxe: 60,
