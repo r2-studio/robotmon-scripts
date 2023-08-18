@@ -18,7 +18,7 @@ import { Point, seasideStockRect } from '../types';
 import { cookieKingdom } from '../..';
 import * as CONSTANTS from '../constants';
 
-const rfpageInTradeHabor = new Page('rfpageInTradeHabor', [
+export const rfpageInTradeHabor = new Page('rfpageInTradeHabor', [
   { x: 314, y: 18, r: 247, g: 254, b: 203 },
   { x: 404, y: 20, r: 243, g: 232, b: 12 },
   { x: 519, y: 21, r: 0, g: 178, b: 255 },

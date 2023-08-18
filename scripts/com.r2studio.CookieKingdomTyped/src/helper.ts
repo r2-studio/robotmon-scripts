@@ -7,6 +7,7 @@ import { logs, padZero, sendEventRunning, sendKeyBack } from './utils';
 import { TASKS } from './tasks';
 import { cookieKingdom } from '../index';
 import { globalStorage } from './storage';
+import { rfpageInTradeHabor } from './tasks/tradeHabor';
 
 export function findUnmatchInPage(page: Page) {
   let img = getScreenshot();
@@ -1111,7 +1112,7 @@ export function swipeDirection(direction: XY, targetPage: Page | null, swippingP
   if (swipeFromToPoint(fromPnt, toPnt, steps, targetPage, swippingPage)) {
     // console.log('swipe successfully');
     return true;
-  } else if (rerouter.isPageMatch(PAGES.rfpageInTradeHabor)) {
+  } else if (rerouter.isPageMatch(rfpageInTradeHabor)) {
     console.log('swipeDirection skip to go to head and start over');
     return false;
   } else {
@@ -1288,8 +1289,7 @@ export function configSharePref() {
     }
   }
 
-  rtn = writeFile('/data/data/com.devsisters.ck/shared_prefs/com.devsisters.ck.v2.playerprefs.xml', lines.join('\n'));
-  console.log('Write file return: ', rtn);
+  console.log('Write file return: ', writeFile('/data/data/com.devsisters.ck/shared_prefs/com.devsisters.ck.v2.playerprefs.xml', lines.join('\n')));
 }
 
 export function mergeObject<T>(target: T, ...sources: Partial<T>[]): T {
