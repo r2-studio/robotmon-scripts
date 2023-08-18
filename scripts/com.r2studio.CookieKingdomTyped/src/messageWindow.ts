@@ -217,6 +217,20 @@ export const guildBattleAttemptNotUsedMessageScreen = {
   targetColorCount: 152,
   targetColorThreashold: 5,
 };
+// Guild dragon: Battle Completed! If you didn't inflict any damage to the Guild battle boss monsters, you won't be able to claim the individual reward when the battle ends.
+export const battleCompletedNotInflictDamageMessageScreen = {
+  name: 'battleCompletedNotInflictDamageMessageScreen',
+  x: 192,
+  y: 192,
+  width: 252,
+  height: 8,
+
+  targetY: 4,
+  lookingForColor: { r: 131, g: 128, b: 124 },
+  targetColorCount: 46,
+  targetColorThreashold: 4,
+};
+
 // Your last battle was not finished prperly, and the Searing Leys were not used!
 export const TOSCsearingKeysNotUsedMessageScreen = {
   name: 'TOSCsearingKeysNotUsedMessageScreen',

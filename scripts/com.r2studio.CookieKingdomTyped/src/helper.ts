@@ -471,7 +471,7 @@ export function dynamicSort(property: any) {
   };
 }
 
-// Stocks like 220/2, means need 2 while we have 200
+// Stocks like 220/2, means need 2 while we have 200, and will return 218
 export function ocrStocksInRect(rect: RECT, icons: Icon[]): number {
   var img = getScreenshot();
   var croppedImage = cropImage(img, rect.x, rect.y, rect.w, rect.h);
@@ -575,32 +575,6 @@ export function ocrTextInRect(rect: RECT, icons: Icon[], overrideThre?: number, 
 
   // console.log('ocrTextInRect has output: ', output);
   return output;
-}
-
-export function considerPurchaseSeasideMarket(target: RECT): boolean {
-  let newStock = ocrStocksInRect(target, ICONS.numberAuroraStockInTradeBird);
-  // let newStock = ocrStockAndReqInRect(target, ICONS.numberAuroraStockInTradeBird);
-  console.log('considerPurchaseSeasideMarket, newStock', newStock, JSON.stringify(target));
-  // TODO: 兩千多會讀不出來，確定幾百可以
-  if (newStock > 50) {
-    rerouter.screen.tap(target);
-    if (rerouter.waitScreenForMatchingPage(PAGES.rfpageMarketItemDetail, 2000)) {
-      // let productNowHave = ocrNumberInRect({ x: 330, y: 154, w: 28, h: 14 }, ICONS.bNumbers);
-      let productNowHave = ocrTextInRect({ x: 330, y: 154, w: 28, h: 14 }, ICONS.bNumbers);
-      logs('haborShopInSeaMarket', `Considering trade ${newStock} for ${productNowHave}`);
-
-      if (newStock > productNowHave) {
-        console.log('Purchased seaside market: ', newStock, productNowHave);
-        rerouter.goNext(PAGES.rfpageMarketItemDetail);
-        sleep(1000);
-      } else {
-        console.log('NOT purchased seaside market: ', newStock, productNowHave);
-        rerouter.screen.tap({ x: 438, y: 90 }); // close the window
-      }
-    }
-  }
-
-  return false;
 }
 
 export function tapThroughAnimate(targetPage: Page, tappingPoint: XY, timeInMs: number, interval?: number): boolean {
