@@ -4,6 +4,12 @@ export interface XY {
   x: number;
   y: number;
 }
+export interface RECT {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
 
 export interface XYRGB {
   x: number;
