@@ -120,4 +120,5 @@ declare global {
   function writeFile(path: string, content: string): void;
   function targz(targetPath: string, sourcePath: string): string | 'success';
   function untargz(sourcePath: string): string | 'success';
+  function xDecodeHex(hexedString: string): string | undefined;
 }
