@@ -5,8 +5,6 @@ import {
   scrollDownALot,
   scrollLeftALot,
   scrollRightALot,
-  getStatusOfGivenWish,
-  checkToSendSpecificWish,
   AdvanturesBountiesAt3rd,
   checkScreenMessage,
   getMayhemScores,
@@ -47,6 +45,7 @@ import { addGnomeLabRoutes, addGnomeLabTasks } from './src/tasks/gnomeLab';
 import { addGuildBattleAllianceTask, addGuildBattleDragonTask, addGuildCheckinTask, addGuildRoutes } from './src/tasks/guild';
 import { addLoginRoutes } from './src/tasks/login';
 import { addSeasideMarketTask, addSendHaborShipTask, addShellGalleryTask, addTradeHaborRoutes, rfpageShellShopNotEnoughShell } from './src/tasks/tradeHabor';
+import { addWishingTreeRoutes, addWishingTreeTask } from './src/tasks/wishingTree';
 
 const VERSION_CODE: number = 0.1;
 
@@ -185,15 +184,6 @@ export class CookieKingdom {
     this.taskStatus[TASKS.getInShopFreeDailyPack] = {
       trials: 0,
     };
-    this.taskStatus[TASKS.wishingTree] = {
-      records: {
-        opened: 0,
-        golden: 0,
-        fulfilled: 0,
-        notEnoughAndSkip: 0,
-        goldenAndSkip: 0,
-      },
-    };
 
     this.taskStatus[TASKS.towerOfSweetChaos] = {
       tryCount: 0,
@@ -223,6 +213,8 @@ export class CookieKingdom {
     }
 
     // In dev:
+    // config.alwaysFulfillWishes = true;
+    // addWishingTreeTask();
     // return;
 
     rerouter.addTask({
@@ -272,12 +264,7 @@ export class CookieKingdom {
       });
     }
     if (this.config.autoFulfillWishesIntervalInMins > 0) {
-      rerouter.addTask({
-        name: TASKS.wishingTree,
-        maxTaskDuring: 10 * CONSTANTS.minuteInMs,
-        minRoundInterval: this.config.autoFulfillWishesIntervalInMins * CONSTANTS.minuteInMs,
-        forceStop: true,
-      });
+      addWishingTreeTask();
     }
     if (this.config.autoCollectFountainIntervalInMins > 0) {
       rerouter.addTask({
@@ -577,77 +564,7 @@ export class CookieKingdom {
     });
 
     // Wishing trees
-    rerouter.addRoute({
-      path: `/${PAGES.rfpageInWishingTree.name}`,
-      match: PAGES.rfpageInWishingTree,
-      action: (context, image, matched, finishRound) => {
-        if (context.task.name !== TASKS.wishingTree) {
-          logs(context.task.name, `rfpageInWishingTree, leave because current task is not wishing tree, but: ${context.task.name}`);
-          rerouter.screen.tap({ x: 618, y: 20 }); // tap X
-          return;
-        }
-
-        logs(context.task.name, `rfpageInWishingTree, start working`);
-
-        const rfpageAllWishingDailyRewardCollected = new Page('rfpageAllWishingDailyRewardCollected', [
-          { x: 59, y: 242, r: 247, g: 247, b: 247 },
-          { x: 60, y: 256, r: 138, g: 138, b: 138 },
-        ]);
-
-        if (rerouter.isPageMatchImage(rfpageAllWishingDailyRewardCollected, image) && !this.config.alwaysFulfillWishes) {
-          logs(context.task.name, `rfpageInWishingTree, All wish fulfilled, skipping and send running`);
-          sendEventRunning();
-          rerouter.screen.tap({ x: 618, y: 20 }); // tap X
-          finishRound(true);
-          return;
-        }
-
-        let refreshing = 0;
-        for (var i in this.wishes) {
-          var wish = this.wishes[i];
-
-          let records = this.taskStatus[TASKS.wishingTree].records;
-          var result = getStatusOfGivenWish(wish, this.taskStatus[TASKS.wishingTree].records, this.config.wishingTreeRefreshGoldenWishes);
-          wish = result['wish'];
-          records = result['records'];
-          console.log('handling wish', i, JSON.stringify(wish));
-
-          if (wish.status === 'refresh') {
-            refreshing++;
-            continue;
-          } else if (wish.status === 'opened') {
-            result = checkToSendSpecificWish(wish, records, this.config.wishingTreeSafetyStock);
-            wish = result['wish'];
-            records = result['records'];
-            console.log('handled wish', i, JSON.stringify(wish));
-          }
-
-          this.taskStatus[TASKS.wishingTree].records = records;
-          Utils.sleep(CONSTANTS.sleep);
-        }
-        console.log('>>> Wising tree records', JSON.stringify(this.taskStatus[TASKS.wishingTree].records));
-
-        var rfpageCollectTreeReward = new Page('rfpageCollectTreeReward', [{ x: 85, y: 289, r: 44, g: 203, b: 8 }]);
-        if (rerouter.isPageMatch(rfpageCollectTreeReward)) {
-          console.log('Daily reward collected');
-          rerouter.screen.tap({ x: 60, y: 255 });
-          Utils.sleep(2000);
-
-          rerouter.waitScreenForMatchingPage(PAGES.rfpageInWishingTree, 8000);
-          // waitUntilSeePage(pageInWishingTree, 8, pageCollectTreeReward);
-        }
-
-        if (refreshing === 4) {
-          console.log('All wishes are refreshing, jobs done here');
-          return;
-        }
-
-        // console.log('Run wishing tree for ', (Date.now() - wishingTreeStartTime) / 60000, ' mins, ending this task');
-        sendEventRunning();
-        finishRound(true);
-        return true;
-      },
-    });
+    addWishingTreeRoutes();
 
     // Fountain
     rerouter.addRoute({
@@ -1724,7 +1641,6 @@ if (window === undefined) {
 // // ! following is only for dev
 // function run() {
 //   cookieKingdom = new CookieKingdom(defaultConfig);
-//   cookieKingdom.stop();
 //   cookieKingdom.start();
 // }
 

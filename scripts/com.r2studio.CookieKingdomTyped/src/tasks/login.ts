@@ -190,7 +190,7 @@ const rfpageDownloadDataAndVoiceOverUnchecked = new Page(
     { x: 430, y: 81, r: 60, g: 70, b: 105 },
     { x: 214, y: 195, r: 255, g: 255, b: 255 },
   ],
-  { x: 207, y: 192 }
+  { x: 317, y: 264 }
 );
 // v2.0.1 has 'New data pak is available'
 const rfpageDownloadNewDataPakIsAvailable = new Page(

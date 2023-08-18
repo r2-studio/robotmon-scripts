@@ -248,38 +248,6 @@ export const rfpageTrainNotEnoughGoods = new Page('rfpageTrainNotEnoughGoods', [
   { x: 6, y: 72, r: 86, g: 96, b: 78 },
 ]);
 
-export const rfpageInWishingTree = new Page('rfpageInWishingTree', [
-  { x: 157, y: 29, r: 107, g: 56, b: 82 },
-  { x: 235, y: 35, r: 255, g: 0, b: 81 },
-  { x: 348, y: 22, r: 255, g: 40, b: 123 },
-  { x: 412, y: 18, r: 255, g: 190, b: 8 },
-  { x: 523, y: 15, r: 0, g: 195, b: 255 },
-]);
-export const rfpageNotEnoughForTree = new Page(
-  'rfpageNotEnoughForTree',
-  [
-    { x: 445, y: 97, r: 57, g: 166, b: 231 },
-    { x: 437, y: 97, r: 255, g: 255, b: 255 },
-    { x: 397, y: 112, r: 57, g: 69, b: 107 },
-    { x: 252, y: 142, r: 191, g: 183, b: 174 },
-    { x: 247, y: 140, r: 80, g: 80, b: 80 },
-    { x: 253, y: 15, r: 127, g: 22, b: 61 },
-    { x: 60, y: 18, r: 41, g: 18, b: 28 },
-    { x: 64, y: 41, r: 20, g: 32, b: 66 },
-    { x: 8, y: 24, r: 49, g: 30, b: 94 },
-    { x: 524, y: 20, r: 0, g: 69, b: 127 },
-  ],
-  { x: 442, y: 97 }
-);
-
-export const rfpageCheckWishingTreeStock = new Page('rfpageCheckWishingTreeStock', [
-  { x: 355, y: 302, r: 121, g: 207, b: 12 },
-  { x: 244, y: 46, r: 60, g: 70, b: 105 },
-  { x: 257, y: 21, r: 127, g: 12, b: 46 },
-  { x: 410, y: 18, r: 127, g: 94, b: 4 },
-  { x: 6, y: 25, r: 50, g: 31, b: 93 },
-]);
-
 export const rfpageBattleVictoryButNeedTap = new Page(
   'rfpageBattleVictoryButNeedTap',
   [

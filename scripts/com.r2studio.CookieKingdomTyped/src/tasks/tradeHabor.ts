@@ -2,17 +2,7 @@ import { Page, RECT, Utils, rerouter } from 'Rerouter';
 import { logs, sendEventRunning, sendKeyBack } from '../utils';
 import { TASKS } from '../tasks';
 import { config } from '../scriptConfig';
-import {
-  assign,
-  findSpecificIconInScreen,
-  ocrNumberInRect,
-  ocrStockAndReqInRect,
-  ocrStocksInRect,
-  ocrTextInRect,
-  passiveAddRoute,
-  recognizeWishingTreeRequirements,
-  swipeFromToPoint,
-} from '../helper';
+import { assign, findSpecificIconInScreen, ocrNumberInRect, ocrStockAndReqInRect, ocrStocksInRect, passiveAddRoute, swipeFromToPoint } from '../helper';
 import * as ICONS from '../icons';
 import { Point, seasideStockRect } from '../types';
 import { cookieKingdom } from '../..';

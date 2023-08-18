@@ -1,4 +1,4 @@
-import { WishStatus } from './types';
+import { Wish, WishStatus } from './types';
 
 export const defaultConfig = {
   sleep: 240,
@@ -169,7 +169,7 @@ export const defaultConfig = {
 
 export let config = defaultConfig;
 
-export const defaultWishes = [
+export const defaultWishes: Wish[] = [
   {
     id: 0,
     refreshPnt: { x: 149, y: 74 },
