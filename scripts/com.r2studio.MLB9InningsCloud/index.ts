@@ -1,7 +1,5 @@
 import { Utils, RouteConfig } from 'Rerouter';
-import { rerouter, Config, Session } from './src/modules';
-
-import { EventName, GameStatusContent } from './src/types';
+import { rerouter, Config, Session, EventSender } from './src/modules';
 
 import * as PAGE from './src/pages';
 import * as CONSTANTS from './src/constants';
@@ -14,8 +12,7 @@ class MLB9I {
   public static packageName: string = 'com.com2us.ninepb3d.normal.freefull.google.global.android.common';
   public state = {
     hasSession: false,
-    lastGameStatusEvent: '',
-    lastRunningEvent: 0,
+    isWaitingLogin: false,
     lastUploadSession: 0,
 
     leagueGame: {
@@ -176,7 +173,15 @@ class MLB9I {
           return;
         }
 
+        // set to default once app is launched (first and again)
         this.state.hasSession = false;
+        this.state.lastUploadSession = 0;
+        this.state.leagueGame = {
+          lastCheckPowerSaveAt: 0,
+          powerSaveColorCount: {},
+          tryEnterGameCnts: this.state.leagueGame.tryEnterGameCnts,
+          needResetProgress: false,
+        };
 
         // reopen if stuck
         const now = Date.now();
@@ -187,16 +192,26 @@ class MLB9I {
           return;
         }
 
-        this.handleSendEventLaunching();
+        EventSender.launching();
       },
     });
     rerouter.addRoute({
       path: `/${PAGE.landingLoading.name}`,
       match: PAGE.landingLoading,
       action: this.wrapRouteAction(_ => {
-        this.state.hasSession = false;
         console.log('landing loading...');
-        this.handleSendEventLaunching();
+
+        // set to default once app is launched (first and again)
+        this.state.hasSession = false;
+        this.state.lastUploadSession = 0;
+        this.state.leagueGame = {
+          lastCheckPowerSaveAt: 0,
+          powerSaveColorCount: {},
+          tryEnterGameCnts: this.state.leagueGame.tryEnterGameCnts,
+          needResetProgress: false,
+        };
+
+        EventSender.launching();
       }),
       afterActionDelay: CONSTANTS.sleepMedium,
     });
@@ -226,9 +241,10 @@ class MLB9I {
           return;
         }
         this.state.hasSession = false;
+        this.state.isWaitingLogin = true;
 
         // use interval
-        this.handleSendEventRunning(true);
+        EventSender.running(true);
         if (context.task.name === TASK.stayInLogin) {
           console.log('stay in login');
           if (context.matchDuring < CONSTANTS.switchWaitingLoginPagesInterval) {
@@ -252,6 +268,7 @@ class MLB9I {
           }
 
           this.state.hasSession = false;
+          this.state.isWaitingLogin = true;
           if (context.task.name === TASK.stayInLogin) {
             console.log('stay in login');
             keycode('BACK', 100);
@@ -260,9 +277,8 @@ class MLB9I {
           }
 
           // use interval
-          this.handleSendEventRunning(true);
-          this.handleSendEventLoginInputing();
-
+          EventSender.running(true);
+          EventSender.loginInputing();
           if (context.matchDuring < CONSTANTS.switchWaitingLoginPagesInterval) {
             return;
           }
@@ -324,11 +340,10 @@ class MLB9I {
         }
 
         this.state.hasSession = true;
-
-        // sleep for send 1+ events
-        this.handleSendEventLoginSuccess() && Utils.sleep(CONSTANTS.sleepMedium);
-        this.handleSendEventPlaying();
-        this.handleSendEventRunning();
+        this.state.isWaitingLogin = false;
+        EventSender.loginSuccess();
+        EventSender.playing();
+        EventSender.running();
       }),
     });
 
@@ -349,7 +364,7 @@ class MLB9I {
               rerouter.screen.tap(PAGE.settingsGraphTabBtns.powerSaveOn);
               Utils.sleep(CONSTANTS.sleepShort);
               finishRound(true);
-              this.handleSendEventRunning();
+              EventSender.running();
             } else {
               // go to graphicTab
               rerouter.screen.tap(PAGE.settingsTabs.graphicTab);
@@ -396,7 +411,7 @@ class MLB9I {
         Utils.sleep(CONSTANTS.sleepShort);
         if (context.task.name === TASK.adReward) {
           finishRound(true);
-          this.handleSendEventRunning();
+          EventSender.running();
         }
       }),
     });
@@ -409,7 +424,7 @@ class MLB9I {
         Utils.sleep(CONSTANTS.sleepShort);
         if (context.task.name === TASK.adReward) {
           finishRound(true);
-          this.handleSendEventRunning();
+          EventSender.running();
         }
       }),
     });
@@ -458,7 +473,7 @@ class MLB9I {
             if (!canCollect) {
               console.log('wait all weekly mission complete');
               finishRound(true);
-              this.handleSendEventRunning();
+              EventSender.running();
               return;
             }
           }
@@ -477,7 +492,7 @@ class MLB9I {
 
           // enter receive confirm page
           finishRound(true);
-          this.handleSendEventRunning();
+          EventSender.running();
         }
       }),
     });
@@ -518,7 +533,7 @@ class MLB9I {
         // cannot play
         if (context.matchTimes > 5) {
           finishRound(true);
-          this.handleSendEventRunning();
+          EventSender.running();
           return;
         }
 
@@ -526,7 +541,7 @@ class MLB9I {
         const isPlayDisabled = isSameColor(image, PAGE.rankedBattlePanelBtns.disabledPlayBtn);
         if (isPlayDisabled) {
           finishRound(true);
-          this.handleSendEventRunning();
+          EventSender.running();
           console.log('ranked battle play disabled');
           return;
         }
@@ -543,7 +558,7 @@ class MLB9I {
         if (context.task.name === TASK.playBattleGame) {
           console.log('play rank game disabled');
           finishRound(true);
-          this.handleSendEventRunning();
+          EventSender.running();
         }
         rerouter.goBack(PAGE.rankedBattleWaitToRefresh);
       }),
@@ -651,7 +666,7 @@ class MLB9I {
         if (hasEnergy0) {
           console.log('no energy');
           finishRound(true);
-          this.handleSendEventRunning();
+          EventSender.running();
           return;
         }
 
@@ -908,7 +923,7 @@ class MLB9I {
           case TASK.playLeagueGame:
             console.log('complete a game');
             finishRound();
-            this.handleSendEventRunning();
+            EventSender.running();
             break;
           default:
             break;
@@ -1005,7 +1020,7 @@ class MLB9I {
           // success enter game
           this.state.leagueGame.tryEnterGameCnts = 0;
         }
-        this.handleSendEventRunning(true);
+        EventSender.running(true);
         rerouter.goNext(PAGE.onQuickPlayGroup);
       }),
     });
@@ -1049,7 +1064,7 @@ class MLB9I {
 
         if (!isSame) {
           console.log('game is still playing with power save on');
-          this.handleSendEventRunning();
+          EventSender.running();
           return;
         }
 
@@ -1212,7 +1227,7 @@ class MLB9I {
         default:
           break;
       }
-      if (this.state.lastGameStatusEvent === GameStatusContent.WAIT_FOR_LOGIN_INPUT) {
+      if (this.state.isWaitingLogin) {
         console.log('wait user input');
         return;
       }
@@ -1284,54 +1299,6 @@ class MLB9I {
     };
   }
 
-  public handleSendEventLoginInputing() {
-    const content = GameStatusContent.WAIT_FOR_LOGIN_INPUT;
-    return this.handleSendGameStatusEvent(content);
-  }
-  public handleSendEventLoginSuccess() {
-    if (this.state.lastGameStatusEvent !== GameStatusContent.WAIT_FOR_LOGIN_INPUT) {
-      return false;
-    }
-    const content = GameStatusContent.LOGIN_SUCCEEDED;
-    return this.handleSendGameStatusEvent(content);
-  }
-  public handleSendEventLaunching() {
-    // set to default once app is launched (first and again)
-    this.state.lastRunningEvent = 0;
-    this.state.lastUploadSession = 0;
-    this.state.leagueGame = {
-      lastCheckPowerSaveAt: 0,
-      powerSaveColorCount: {},
-      tryEnterGameCnts: this.state.leagueGame.tryEnterGameCnts,
-      needResetProgress: false,
-    };
-    const content = GameStatusContent.LAUNCHING;
-    return this.handleSendGameStatusEvent(content);
-  }
-
-  public handleSendEventPlaying() {
-    const content = GameStatusContent.PLAYING;
-    return this.handleSendGameStatusEvent(content);
-  }
-  public handleSendGameStatusEvent(content: string): boolean {
-    if (this.state.lastGameStatusEvent === content) {
-      return false;
-    }
-    this.state.lastGameStatusEvent = content;
-    sendEvent(EventName.GAME_STATUS, content);
-    console.log(`send event: ${content}`);
-    return true;
-  }
-
-  public handleSendEventRunning(useInterval: boolean = false) {
-    const now = Date.now();
-    if (useInterval && now - this.state.lastRunningEvent < CONSTANTS.sendRunningEventInterval) {
-      return;
-    }
-    this.state.lastRunningEvent = now;
-    sendEvent(EventName.RUNNING, '');
-    console.log('send event: running');
-  }
   public handleImplementUploadSession() {
     // only upload session when is playing
     if (!Config.config.isCloud || !this.state.hasSession) {
