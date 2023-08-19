@@ -53,6 +53,9 @@ declare global {
   function swipe(x1: number, y1: number, x2: number, y2: number): void;
   function keycode(label: string, during: number): void;
   function typing(words: string, during: number): void;
+  function readFile(path: string): string;
+  function writeFile(path: string, text: string): number;
+
   // opencv apis
   function clone(sourceImg: Image): Image;
   enum SmoothType {
@@ -92,7 +95,8 @@ declare global {
     minR: number,
     maxR: number
   ): { [i: string]: { x: number; y: number; r: number } };
-  function getBase64FromImage(image: any): string;
+  function getBase64FromImage(image: Image): string;
+  function getImageFromBase64(string: string): Image;
   function httpClient(method: string, url: string, body: string, headers: { [key: string]: string }): string;
   function getUserPlan(): string | undefined;
   function s3UploadFile(

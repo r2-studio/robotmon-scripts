@@ -187,6 +187,28 @@ export class Rerouter {
     }
   }
 
+  public getPagesMatch(groupPage: GroupPage): Page[] {
+    const image = this.screen.getCvtDevScreenshot();
+    const match = this.getPagesMatchImage(groupPage, image, this.defaultConfig.GroupPageThres);
+    releaseImage(image);
+    return match;
+  }
+
+  public getPagesMatchImage(groupPage: GroupPage, image: Image, parentThres?: number, debug?: boolean): Page[] {
+    let pages: Page[] = [];
+    const thres = groupPage.thres ?? parentThres ?? this.defaultConfig.PageThres;
+
+    for (let i = 0; i < groupPage.pages.length; i++) {
+      const page = groupPage.pages[i];
+      const isPageMatch = this.isMatchPageImpl(image, page, thres, this.debug);
+
+      if (isPageMatch) {
+        pages.push(page);
+      }
+    }
+    return pages;
+  }
+
   public waitScreenForMatchingPage(page: Page | GroupPage, timeout: number, matchTimes: number = 1, interval = 600): boolean {
     return Utils.waitForAction(() => this.isPageMatch(page), timeout, matchTimes, interval);
   }
