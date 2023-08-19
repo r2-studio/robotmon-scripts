@@ -1193,6 +1193,7 @@ class MLB9I {
       PAGE.promotion3,
       PAGE.rechargePromotion,
       PAGE.teamSupportPackagePromotion,
+      PAGE.enterGamePromotion,
       PAGE.event,
       PAGE.ok,
       PAGE.next,

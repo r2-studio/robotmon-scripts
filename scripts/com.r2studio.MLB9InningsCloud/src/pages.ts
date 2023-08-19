@@ -2172,6 +2172,26 @@ export const teamSupportPackagePromotion = new Page(
   { x: 583, y: 45 }
 );
 
+export const enterGamePromotion = new Page(
+  'enterGamePromotion',
+  [
+    // x
+    { x: 277, y: 280, r: 113, g: 124, b: 147 },
+
+    // dont show this again today
+    { x: 240, y: 280, r: 10, g: 7, b: 3 },
+    { x: 207, y: 281, r: 36, g: 39, b: 47 },
+
+    // bg
+    { x: 279, y: 36, r: 3, g: 3, b: 3 },
+    { x: 76, y: 169, r: 0, g: 2, b: 5 },
+    { x: 326, y: 337, r: 3, g: 3, b: 2 },
+    { x: 571, y: 211, r: 2, g: 2, b: 5 },
+  ],
+  { x: 485, y: 281 },
+  { x: 485, y: 281 }
+);
+
 // TODO: add this page
 // export const enterGamePromotion = new Page(
 //   'enterGamePromotion',
