@@ -6,7 +6,7 @@ import { EventName, GameStatusContent } from './src/types';
 import * as PAGE from './src/pages';
 import * as CONSTANTS from './src/constants';
 import { TASK } from './src/task';
-import { isSameColor, getColorCountInRange, isSameColorCount, arrayFind } from './src/utils';
+import { isSameColor, getColorCountInRange, isSameColorCount, arrayFind, executeCommands } from './src/utils';
 
 const VERSION_CODE: number = 15.32;
 
@@ -71,6 +71,7 @@ class MLB9I {
   public start() {
     if (Config.config.isCloud) {
       Session.initSession();
+      executeCommands('pm disable-user com.android.inputmethod.latin');
     }
     this.init();
 
