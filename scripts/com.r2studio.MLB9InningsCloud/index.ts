@@ -12,14 +12,8 @@ const VERSION_CODE: number = 15.32;
 
 class MLB9I {
   public static packageName: string = 'com.com2us.ninepb3d.normal.freefull.google.global.android.common';
-  public static licenseFilePath: string = '/sdcard/Robotmon/license.txt';
-  public static scriptCacheRoot = '/sdcard/Robotmon/loginCache';
-  public static appSessionRoot = `data/data/${MLB9I.packageName}`;
-  public static appRecordRoot = `/sdcard/Android/data/${MLB9I.packageName}/files`;
-  public static endpoint = 's3.robotmon.app:9000';
-  public static bucket = 'mlb-record';
-
   public state = {
+    hasSession: false,
     lastGameStatusEvent: '',
     lastRunningEvent: 0,
     lastUploadSession: 0,
@@ -181,6 +175,8 @@ class MLB9I {
           return;
         }
 
+        this.state.hasSession = false;
+
         // reopen if stuck
         const now = Date.now();
         if (now - context.matchStartTS > 5 * CONSTANTS.minuteInMs) {
@@ -197,6 +193,7 @@ class MLB9I {
       path: `/${PAGE.landingLoading.name}`,
       match: PAGE.landingLoading,
       action: this.wrapRouteAction(_ => {
+        this.state.hasSession = false;
         console.log('landing loading...');
         this.handleSendEventLaunching();
       }),
@@ -227,6 +224,7 @@ class MLB9I {
           console.log('stay in login');
           return;
         }
+        this.state.hasSession = false;
 
         // use interval
         this.handleSendEventRunning(true);
@@ -251,6 +249,8 @@ class MLB9I {
             console.log('stay in login');
             return;
           }
+
+          this.state.hasSession = false;
           if (context.task.name === TASK.stayInLogin) {
             console.log('stay in login');
             keycode('BACK', 100);
@@ -261,6 +261,13 @@ class MLB9I {
           // use interval
           this.handleSendEventRunning(true);
           this.handleSendEventLoginInputing();
+
+          if (context.matchDuring < CONSTANTS.switchWaitingLoginPagesInterval) {
+            return;
+          }
+          console.log('click back for avoid session expired');
+          keycode('BACK', 100);
+          console.log('keycode back');
         },
       });
     });
@@ -314,6 +321,8 @@ class MLB9I {
           default:
             break;
         }
+
+        this.state.hasSession = true;
 
         // sleep for send 1+ events
         this.handleSendEventLoginSuccess() && Utils.sleep(CONSTANTS.sleepMedium);
@@ -1324,7 +1333,7 @@ class MLB9I {
   }
   public handleImplementUploadSession() {
     // only upload session when is playing
-    if (!Config.config.isCloud || this.state.lastGameStatusEvent !== GameStatusContent.PLAYING) {
+    if (!Config.config.isCloud || !this.state.hasSession) {
       return;
     }
 
