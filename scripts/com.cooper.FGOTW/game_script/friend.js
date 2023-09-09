@@ -80,6 +80,11 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes) {
     sleep(500);
     return;
   }
+  if(isSelectTeamPage()){
+    console.log("已進入隊伍選單，選擇好友省略");
+    sleep(500);
+    return;
+  }
   if (checkIsFriend == undefined) {
     checkIsFriend = true;
   }
