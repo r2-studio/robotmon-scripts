@@ -108,6 +108,16 @@
       },
       {
         type: "select",
+        titlei18n: { zh_TW: "玩排名賽", en: "run ranked battle task" },
+        selections: [
+          { text: "✅ on", value: true },
+          { text: "🚫 off", value: false },
+        ],
+        default: true,
+        key: "isRunPlayBattleGame",
+      },
+      {
+        type: "select",
         titlei18n: { zh_TW: "看廣告任務", en: "run ad reward task" },
         selections: [
           { text: "🚫 off", value: false },
@@ -118,13 +128,16 @@
       },
       {
         type: "select",
-        titlei18n: { zh_TW: "玩排名賽", en: "run ranked battle task" },
+        titlei18n: {
+          zh_TW: "收每週任務獎勵",
+          en: "redeem weekly mission task rewards",
+        },
         selections: [
           { text: "✅ on", value: true },
           { text: "🚫 off", value: false },
         ],
-        default: true,
-        key: "isRunPlayBattleGame",
+        default: false,
+        key: "isRunWeeklyMission",
       },
     ],
   };
@@ -136,12 +149,14 @@
     isCloud: false,
     isRunAdReward: false,
     isRunPlayBattleGame: true,
+    isRunWeeklyMission: false,
   };
   simplesettings.render("#app", selections, function (c) {
     config.leagueSeasonMode = c.leagueSeasonMode;
     config.leagueYear = c.leagueYear;
     config.isRunAdReward = c.isRunAdReward;
     config.isRunPlayBattleGame = c.isRunPlayBattleGame;
+    config.isRunWeeklyMission = c.isRunWeeklyMission;
     console.log("config", JSON.stringify(config));
   });
 
