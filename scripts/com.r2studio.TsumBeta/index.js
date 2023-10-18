@@ -406,11 +406,10 @@ var Page = {
   HighScore: {
     name: 'HighScore',
     colors: [
-      {x: 298, y: 1253 + adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
-      {x: 810, y: 1253 + adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
+      {x: 576, y: 1253 + adjY, r: 238, g: 187, b: 10, match: true, threshold: 80},
     ],
-    back: {x: 298, y: 1253 + adjY},
-    next: {x: 810, y: 1253 + adjY},
+    back: {x: 576, y: 1253 + adjY},
+    next: {x: 576, y: 1253 + adjY},
   },
   InvitePage: {
     name: 'InvitePage', // the close button at left bottom
