@@ -816,7 +816,6 @@ function Tsum(isJP, detect, logs) {
   this.logs = logs;
   this.coinItem = false;
   this.bubbleItem = false;
-  this.isSlowCalculation = false;
   this.isPause = false;
   this.receiveOneItem = false;
   this.sentToZero = false;
@@ -1884,7 +1883,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
