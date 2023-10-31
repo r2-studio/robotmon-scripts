@@ -1049,10 +1049,9 @@ Tsum.prototype.findPage = function(times, timeout) {
         currentPage = '';
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
-          if (diff < page.colors[i].threshold && page.colors[i].match) {
+          if ((page.colors[i].match && diff < page.colors[i].threshold) // page color wants to be matched
+              || (!page.colors[i].match && diff >= threshold)) {  // page color doesn't want to be matched
             currentPage = pageName;
-          } else if (diff >= threshold && !page.colors[i].match) {
-            currentPage = pageName; // TODO Why is that with the if condition?!
           } else {
             currentPage = '';
             break;
