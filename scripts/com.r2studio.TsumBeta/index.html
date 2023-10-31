@@ -146,7 +146,6 @@
       }
       .dropbtn {
         font-size: 16px;
-        border: none;
         cursor: pointer;
         border-radius: 5px;
         border: 0.5px solid rgba(0,0,0,0.2);
@@ -334,11 +333,11 @@
 
       function loadSettings(settings) {
         var recordSettings = {};
-        if (localStorage = undefined) {
+        if (localStorage === undefined) {
           return;
         }
         var version = +localStorage.getItem('tsumtsumversion');
-        if (!version || VERSION != version) {
+        if (!version || VERSION !== version) {
           return;
         }
         var settingsJSON = localStorage.getItem('tsumtsumsettings');
@@ -353,7 +352,7 @@
           for (var g in settings[i]) {
             var id = i + '_' + g;
             var setting = settings[i][g];
-            if (recordSettings[id] != undefined) {
+            if (recordSettings[id] !== undefined) {
               setting.default = recordSettings[id];
             }
           }
@@ -369,7 +368,7 @@
       }
 
       function saveSettings(settings) {
-        if (localStorage != undefined) {
+        if (localStorage !== undefined) {
           var recordSettings = {};
           for (var i in settings) {
             for (var g in settings[i]) {
@@ -643,12 +642,12 @@
       }
 
       function onEvent(eventType) {
-        if (eventType == 'OnPlayClick') {
+        if (eventType === 'OnPlayClick') {
           var startCommand = genStartCommand(settings);
           JavaScriptInterface.runScript(startCommand);
-        } else if (eventType == 'OnPauseClick') {
+        } else if (eventType === 'OnPauseClick') {
           JavaScriptInterface.runScript('stop();');
-        } else if (eventType == 'OnSettingClick') {
+        } else if (eventType === 'OnSettingClick') {
           // refreshRecord();
         }
       }
