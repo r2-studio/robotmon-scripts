@@ -1023,7 +1023,7 @@ Tsum.prototype.link = function(paths) {
   var isBubble = false;
   for (var i in paths) {
     var path = paths[i];
-    if (path.length > 7) { // FIXME Might be >= 7? include +Bubble bonus item?
+    if (path.length >= 7) {
       isBubble = true;
     }
     this.linkTsums(path);
