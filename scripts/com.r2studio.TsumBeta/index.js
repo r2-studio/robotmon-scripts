@@ -386,14 +386,6 @@ var Page = {
     back: {x: 300, y: 1588 + adjY},
     next: {x: 300, y: 1588 + adjY},
   },
-  ClosePage: { // including EventPage, MyInfo, SettingPage, others
-    name: 'ClosePage', // the close button at center bottom
-    colors: [
-      {x: 540, y: 1516 + adjY, r: 233, g: 180, b: 10, match: true, threshold: 80}, // top right of the close button
-    ],
-    back: {x: 576, y: 1588 + adjY},
-    next: {x: 576, y: 1588 + adjY},
-  },
   HighScore: {
     name: 'HighScore',
     colors: [
@@ -401,6 +393,14 @@ var Page = {
     ],
     back: {x: 576, y: 1253 + adjY},
     next: {x: 576, y: 1253 + adjY},
+  },
+  ClosePage: { // including EventPage, MyInfo, SettingPage, others
+    name: 'ClosePage', // the close button at center bottom
+    colors: [
+      {x: 540, y: 1516 + adjY, r: 233, g: 180, b: 10, match: true, threshold: 80}, // top right of the close button
+    ],
+    back: {x: 576, y: 1588 + adjY},
+    next: {x: 576, y: 1588 + adjY},
   },
   InvitePage: {
     name: 'InvitePage', // the close button at left bottom
