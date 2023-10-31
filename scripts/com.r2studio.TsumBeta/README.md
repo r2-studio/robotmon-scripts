@@ -11,3 +11,4 @@ This is the successor of the script `com.r2studio.Tsum`.
 - "New highscore" detection and escape
 - "Bingo detection" and escape 
 - "New Event" detection and escape
+- Unlock next Tsum level automatically
