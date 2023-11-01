@@ -5,19 +5,12 @@ var gTaskController;
 
 // Utils
 function isSameColor(c1, c2, diff) {
-  if (diff == undefined) {
+  if (diff === undefined) {
     diff = 20;
   }
-  if (Math.abs(c1.r - c2.r) > diff) {
-    return false;
-  }
-  if (Math.abs(c1.g - c2.g) > diff) {
-    return false;
-  }
-  if (Math.abs(c1.b - c2.b) > diff) {
-    return false;
-  }
-  return true;
+  return Math.abs(c1.r - c2.r) <= diff
+      && Math.abs(c1.g - c2.g) <= diff
+      && Math.abs(c1.b - c2.b) <= diff;
 }
 
 function absColor(c1, c2) {
@@ -32,14 +25,14 @@ function nowTime() {
 function log() {
   sleep(10);
   var args = [];
-  if (ts != undefined && ts.showHeartLog && ts.record && ts.record['hearts_count']) {
+  if (ts !== undefined && ts.showHeartLog && ts.record && ts.record['hearts_count']) {
     var msg = "";
     msg += "R:"+ts.record['hearts_count'].receivedCount+" ";
     msg += "S:"+ts.record['hearts_count'].sentCount;
-    if (gTaskController != undefined && gTaskController.tasks != undefined) {
+    if (gTaskController !== undefined && gTaskController.tasks !== undefined) {
       var sendTask = gTaskController.tasks["sendHearts"];
-      if (sendTask != undefined) {
-        if (sendTask.lastRunTime == 0) {
+      if (sendTask !== undefined) {
+        if (sendTask.lastRunTime === 0) {
           msg += "/0";
         } else {
           var next = (nowTime() - (sendTask.lastRunTime + sendTask.interval)) / 60000;
@@ -47,9 +40,7 @@ function log() {
         }
       }
     }
-    if (msg != "") {
-      args.push("["+msg+"]");
-    }
+    args.push("["+msg+"]");
   }
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
@@ -395,14 +386,6 @@ var Page = {
     back: {x: 300, y: 1588 + adjY},
     next: {x: 300, y: 1588 + adjY},
   },
-  ClosePage: { // including EventPage, MyInfo, SettingPage, others
-    name: 'ClosePage', // the close button at center bottom
-    colors: [
-      {x: 540, y: 1516 + adjY, r: 233, g: 180, b: 10, match: true, threshold: 80}, // top right of the close button
-    ],
-    back: {x: 576, y: 1588 + adjY},
-    next: {x: 576, y: 1588 + adjY},
-  },
   HighScore: {
     name: 'HighScore',
     colors: [
@@ -410,6 +393,14 @@ var Page = {
     ],
     back: {x: 576, y: 1253 + adjY},
     next: {x: 576, y: 1253 + adjY},
+  },
+  ClosePage: { // including EventPage, MyInfo, SettingPage, others
+    name: 'ClosePage', // the close button at center bottom
+    colors: [
+      {x: 540, y: 1516 + adjY, r: 233, g: 180, b: 10, match: true, threshold: 80}, // top right of the close button
+    ],
+    back: {x: 576, y: 1588 + adjY},
+    next: {x: 576, y: 1588 + adjY},
   },
   InvitePage: {
     name: 'InvitePage', // the close button at left bottom
@@ -542,14 +533,11 @@ function checkCanSendMessage() {
   console.log('User Plan', _userPlan);
 }
 function canSendMessage() {
-  if (_userPlan == -1) {
+  if (_userPlan === -1) {
     return false;
   }
   var during = Date.now() - _lastSendingTime;
-  if (_userPlan >= 0 && during > 60 * 60 * 1000) {
-    return true;
-  }
-  return false;
+  return _userPlan >= 0 && during > 60 * 60 * 1000;
 }
 function sendMessage(topMsg, msg) {
   if (canSendMessage()) {
@@ -602,7 +590,7 @@ function calculateNearTsumPaths(tsum, ts) {
     var minDis = result.dis;
     var minTsum = result.tsum;
     var minIdx = result.idx;
-    if (minIdx == -1 || minDis > Config.tsumWidth * 2.8) {
+    if (minIdx === -1 || minDis > Config.tsumWidth * 2.8) {
       break;
     }
     tsum = minTsum;
@@ -624,9 +612,9 @@ function calculatePathCenter(path) {
 
 function calculatePaths(board, logs) {
   var tsums = {};
-  for (var i in board) {
-    var tsum = board[i];
-    if (tsums[tsum.tsumIdx] == undefined) {
+  for (var t in board) {
+    var tsum = board[t];
+    if (tsums[tsum.tsumIdx] === undefined) {
       tsums[tsum.tsumIdx] = [];
     }
     tsums[tsum.tsumIdx].push(tsum);
@@ -640,7 +628,7 @@ function calculatePaths(board, logs) {
       var path = calculateNearTsumPaths(tsums[tsumIdx][i], tsums[tsumIdx]);
       if (path.length > 2) {
         var c = calculatePathCenter(path);
-        if (centers[c.x] == c.y) {
+        if (centers[c.x] === c.y) {
           // path already exists
         } else {
           centers[c.x] = c.y;
@@ -724,7 +712,7 @@ function classifyTsums(points, tsumCount) {
   var p = points[0];
   tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p] });
   for (var i = 1; i < points.length; i++) {
-    var p = points[i];
+    p = points[i];
     var isSame = false;
     for(var j in tcs) {
       var tc = tcs[j];
@@ -765,8 +753,8 @@ function detectOffsetYInGame() {
   console.log('topBlackY', topBlackY);
 
   var bottomBlackY = size.height;
-  for (var y = centerY; y < size.height; y++) {
-    var color = getImageColor(img, size.width*0.9, y);
+  for (y = centerY; y < size.height; y++) {
+    color = getImageColor(img, size.width*0.9, y);
     if (isSameColor({r: 0, g: 0, b: 0}, color, 6)) {
       // black color found
       bottomBlackY = y;
@@ -816,7 +804,6 @@ function Tsum(isJP, detect, logs) {
   this.logs = logs;
   this.coinItem = false;
   this.bubbleItem = false;
-  this.isSlowCalculation = false;
   this.isPause = false;
   this.receiveOneItem = false;
   this.sentToZero = false;
@@ -877,7 +864,7 @@ Tsum.prototype.init = function(detect) {
     this.playWidth = this.screenWidth;
     this.playOffsetX = 0;
   }
-  this.playHeight = this.playWidth;
+  this.playHeight = this.playWidth; // game has square dimension
   this.playOffsetY = 465 * this.captureGameRatio - this.gameOffsetY;
 
   this.sleep(200);
@@ -920,11 +907,7 @@ Tsum.prototype.isAppOn = function() {
     return false;
   }
   var packageName = result[0];
-  var activityName = result[1];
-  if (packageName.indexOf('LGTMTM') == -1) {
-    return false;
-  }
-  return true;
+  return packageName.indexOf('LGTMTM') !== -1;
 };
 
 Tsum.prototype.startApp = function() {
@@ -1040,7 +1023,7 @@ Tsum.prototype.link = function(paths) {
   var isBubble = false;
   for (var i in paths) {
     var path = paths[i];
-    if (path.length > 7) {
+    if (path.length >= 7) {
       isBubble = true;
     }
     this.linkTsums(path);
@@ -1053,35 +1036,36 @@ function adsColor(c1, v2) {
 }
 
 Tsum.prototype.findPage = function(times, timeout) {
-  if (times == undefined) {times = 2;}
-  if (timeout == undefined) {timeout = 700;}
+  if (times === undefined) {times = 2;}
+  if (timeout === undefined) {timeout = 700;}
   var start = Date.now();
   while(this.isRunning) {
+    var currentPage = '';
     for (var t = 0; t < times; t++) {
       var img = this.screenshot();
       for (var key in Page) {
         var page = Page[key];
         var pageName = page.name;
-        var currentPage = '';
+        currentPage = '';
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
           if (diff < page.colors[i].threshold && page.colors[i].match) {
             currentPage = pageName;
           } else if (diff >= threshold && !page.colors[i].match) {
-            currentPage = pageName;
+            currentPage = pageName; // TODO Why is that with the if condition?!
           } else {
             currentPage = '';
             break;
           }
         }
-        if (currentPage != '') {
+        if (currentPage !== '') {
           break;
         }
       }
       releaseImage(img);
       this.sleep(100);
     } // for times
-    if (currentPage != '') {
+    if (currentPage !== '') {
       return currentPage;
     }
     if (Date.now() - start > timeout) {
@@ -1108,17 +1092,17 @@ Tsum.prototype.goFriendPage = function() {
     }
     var page = this.findPage(2, 1000);
     log(this.logs.currentPage, page, "goFriend");
-    if (page == 'FriendPage') {
+    if (page === 'FriendPage') {
       // check again
       page = this.findPage(1, 500);
-      if (page == 'FriendPage') {
+      if (page === 'FriendPage') {
         this.sendMoneyInfo();
         return;
       }
-    } else if (page == "ClosePage") {
+    } else if (page === "ClosePage") {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
-    } else if (page == 'unknown') {
+    } else if (page === 'unknown') {
       this.exitUnknownPage();
     } else {
       this.tap(Page[page].back);
@@ -1132,7 +1116,7 @@ Tsum.prototype.checkGameItem = function() {
   if (this.enableAllItems) {
     isItemsOn = [true, true, true, true, true, true];
   }
-  if (this.tsumCount == 4) {
+  if (this.tsumCount === 4) {
     isItemsOn[5] = true;
   }
   if (this.coinItem) {
@@ -1176,25 +1160,25 @@ Tsum.prototype.goGamePlayingPage = function() {
     }
     var page = this.findPage(2, 2000);
     log(this.logs.currentPage, page, "play");
-    if (page == 'FriendPage') {
+    if (page === 'FriendPage') {
       this.tap(Page[page].next);
-    } else if (page == 'StartPage') {
+    } else if (page === 'StartPage') {
       this.sleep(500);
       this.checkGameItem();
       this.sendMoneyInfo();
       this.tap(Button.outStart2);
       this.sleep(3000); // avoid checking items again!
-    } else if (page == 'GamePlaying') {
+    } else if (page === 'GamePlaying') {
       // check again
       page = this.findPage(1, 500);
-      if (page == 'GamePlaying') {
+      if (page === 'GamePlaying') {
         return;
       }
-    } else if (page == 'GamePause') {
+    } else if (page === 'GamePause') {
       this.tap(Page[page].next);
-    } else if (page == 'unknown') {
+    } else if (page === 'unknown') {
       this.exitUnknownPage();
-    } else if (page == "ClosePage") {
+    } else if (page === "ClosePage") {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
     } else {
@@ -1241,7 +1225,7 @@ Tsum.prototype.useCinderellaSkill = function(board) {
 
 Tsum.prototype.useSkill = function(board) {
   var page = this.findPage(1, 500);
-  if (page != 'GamePlaying' && page != 'GamePause') {
+  if (page !== 'GamePlaying' && page !== 'GamePause') {
     return false;
   }
   for (var i = 0; i < 2; i++) {
@@ -1253,7 +1237,7 @@ Tsum.prototype.useSkill = function(board) {
     // log(isSkillOff1, isSkillOff2, isSkillOff3, this.getColor(img, Button.gameSkillOff1), this.getColor(img, Button.gameSkillOff2), this.getColor(img, Button.gameSkillOff3));
     releaseImage(img);
     if (!isSkillOff1 && !isSkillOff2 && !isSkillOff3 && !isSkillOff4) {
-      if (i == 0) {
+      if (i === 0) {
         this.sleep(200);
       }
     } else {
@@ -1261,7 +1245,7 @@ Tsum.prototype.useSkill = function(board) {
     }
   }
   log(this.logs.useSkill);
-  if (this.skillType == 'block_lukej_s') {
+  if (this.skillType === 'block_lukej_s') {
     this.tap(Button.skillLuke1, 30);
     this.tap(Button.skillLuke2, 30);
     this.tap(Button.skillLuke3, 30);
@@ -1269,11 +1253,11 @@ Tsum.prototype.useSkill = function(board) {
   }
   this.tap(Button.gameSkillOn);
   this.sleep(30);
-  if (this.skillType == 'block_lukej_s') {
+  if (this.skillType === 'block_lukej_s') {
     for (var i = 0; i < 5; i++) {
       this.tapDown({x: 820, y: 1200}, 20);
       this.moveTo({x: 820, y: 1150}, 20);
-      if (i == 0) {
+      if (i === 0) {
         this.sleep(1160);
       }
       this.sleep(350);
@@ -1293,7 +1277,7 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillLuke3, 30);
     this.tap(Button.skillLuke4, 30);
     this.sleep(400);
-  } else if (this.skillType == 'block_donald_s' || this.skillType == 'block_donaldx_s') {
+  } else if (this.skillType === 'block_donald_s' || this.skillType === 'block_donaldx_s') {
     for (var i = 0; i < 3; i++) {
       for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
         for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 150) {
@@ -1301,23 +1285,23 @@ Tsum.prototype.useSkill = function(board) {
         }
       }
     }
-  } else if (this.skillType == 'block_marie_s' || this.skillType == 'block_missbunny_s' || this.skillType == 'block_rabbit_s') {
+  } else if (this.skillType === 'block_marie_s' || this.skillType === 'block_missbunny_s' || this.skillType === 'block_rabbit_s') {
     this.clearAllBubbles(2000, 50);
-  } else if(this.skillType == 'block_moana_s') {
+  } else if(this.skillType === 'block_moana_s') {
     this.clearAllBubbles(2500, 50);
-  } else if(this.skillType == 'block_mickeyh2015_s') {
+  } else if(this.skillType === 'block_mickeyh2015_s') {
     this.clearAllBubbles(1500, 50);
-  } else if(this.skillType == 'block_snowwhite_s') {
+  } else if(this.skillType === 'block_snowwhite_s') {
     this.clearAllBubbles(1300);
     this.clearAllBubbles(10, 50, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
-  } else if(this.skillType == 'block_cinderella_s') {
+  } else if(this.skillType === 'block_cinderella_s') {
     this.sleep(1500);
     this.useCinderellaSkill(board);
     this.sleep(500);
     board = this.scanBoardQuick();
     this.useCinderellaSkill(board);
     this.clearAllBubbles(2500, 50);
-  } else if(this.skillType == 'block_woody2_s'){
+  } else if(this.skillType === 'block_woody2_s'){
     this.sleep(1800);
     this.tapDown({x: 540, y: 960}, 20);
     this.moveTo({x: 980, y: 960}, 20);      
@@ -1396,7 +1380,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
   var zeroPath = 0;
   while(this.isRunning) {  
     var board = this.scanBoardQuick();
-    if (board == undefined || board == null) {
+    if (board === undefined || board === null) {
       break;
     }
     log(this.logs.calculationPathStart);
@@ -1421,7 +1405,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
       clearBubbles = 0;
       this.clearAllBubbles();
     }
-    if (this.useFan && this.runTimes % 4 == 3) {
+    if (this.useFan && this.runTimes % 4 === 3) {
       this.tap(Button.gameRand, 60);
       this.tap(Button.gameRand, 60);
     }
@@ -1437,10 +1421,10 @@ Tsum.prototype.taskPlayGameQuick = function() {
 
     // double check
     var page = this.findPage(1, 2500);
-    if (page != 'GamePlaying' && page != 'GamePause') {
+    if (page !== 'GamePlaying' && page !== 'GamePause') {
       this.sleep(500);
       page = this.findPage(1, 2500);
-      if (page != 'GamePlaying' && page != 'GamePause') {
+      if (page !== 'GamePlaying' && page !== 'GamePause') {
         log(this.logs.gameOver);
         break;
       }
@@ -1474,11 +1458,11 @@ Tsum.prototype.readRecord = function() {
   var recordDir = this.storagePath + '/' + Config.recordDir;
   var recordFile = recordDir + '/record.txt';
   var txt = readFile(recordFile);
-  if (txt != undefined && txt != "") {
+  if (txt !== undefined && txt !== "") {
     this.record = JSON.parse(txt);
   }
   for (var filename in this.record) {
-    if (filename != "hearts_count") {
+    if (filename !== "hearts_count") {
       this.recordImages[filename] = openImage(recordDir + '/' + filename);
     }
   }
@@ -1519,7 +1503,7 @@ Tsum.prototype.recognizeSender = function(img) {
     saveImage(nameImg, path);
     this.sleep(80);
     var check = execute("ls " + path);
-    if (check.indexOf(filename) == -1) {
+    if (check.indexOf(filename) === -1) {
       log(this.logs.saveNewFriendAgain);
       saveImage(nameImg, path);
     }
@@ -1537,7 +1521,7 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
   var now = nowTime();
   var dayTime = Math.floor(now / (24 * 60 * 60 * 1000)); 
   // found
-  if (this.record[existFilename].receiveCounts[dayTime] == undefined) {
+  if (this.record[existFilename].receiveCounts[dayTime] === undefined) {
     this.record[existFilename].receiveCounts[dayTime] = 0;
   }
   this.record[existFilename].receiveCounts[dayTime]++;
@@ -1576,10 +1560,8 @@ Tsum.prototype.isLoading = function() {
     }
   }
   releaseImage(img);
-  if (whiteCount >= 3) {
-    return true;
-  }
-  return false;
+  return whiteCount >= 3;
+
 }
 
 Tsum.prototype.skipAd = function () {
@@ -1624,7 +1606,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       }
       if (!this.keepRuby || !isRuby) {
         if (this.recordReceive) {
-          var img = this.screenshot();
+          img = this.screenshot();
           var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
           if (isItem2) {
             this.tap(Button.outReceiveOne);
@@ -1642,8 +1624,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outReceiveOk);
       this.sleep(1000);
     } else if (isOk) {
-      if (this.recordReceive && sender != undefined) {
-        if (sender != "") {
+      if (this.recordReceive && sender !== undefined) {
+        if (sender !== "") {
           this.countReceiveHeart(sender);
         }
         this.record['hearts_count'].receivedCount++;
@@ -1666,7 +1648,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outClose);
       this.goFriendPage();
       this.sleep(500);
-      if (receivedCount == 0 || receiveCheckLimit >= this.receiveCheckLimit) {
+      if (receivedCount === 0 || receiveCheckLimit >= this.receiveCheckLimit) {
         log(this.logs.receivingGiftsCompleted);
         break;
       } else {
@@ -1695,7 +1677,7 @@ Tsum.prototype.taskSendHearts = function() {
   this.goFriendPage();
   log(this.logs.startSendingHearts);
   this.sleep(1000);
-  if (this.sendHeartMaxDuring == 0) {
+  if (this.sendHeartMaxDuring === 0) {
     this.friendPageGoTop();
     tap(0, 0, 20); // Avoid overlap between zero score and pointer location
   }
@@ -1705,7 +1687,7 @@ Tsum.prototype.taskSendHearts = function() {
   var times = 0;
   while(this.isRunning) {
     times++;
-    if (times % 15 == 14) {
+    if (times % 15 === 14) {
       this.goFriendPage();
     }
     var hfx = Button.outSendHeartFrom.x;
@@ -1725,7 +1707,7 @@ Tsum.prototype.taskSendHearts = function() {
     var isZero = true;
     var fx = Button.outFriendScoreFrom.x;
     var tx = Button.outFriendScoreTo.x;
-    var sy = heartsPos.length == 0 ? Button.outFriendScoreFrom.y : (heartsPos[0].y + 35);
+    var sy = heartsPos.length === 0 ? Button.outFriendScoreFrom.y : (heartsPos[0].y + 35);
     for (var px = fx; px <= tx; px += 20) {
       isZero = isSameColor(Button.outFriendScoreFrom.color, this.getColor(img, {x: px, y: sy}), 40);
       if (!isZero) {
@@ -1747,11 +1729,11 @@ Tsum.prototype.taskSendHearts = function() {
     releaseImage(img);
     log('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd1, 'isEnd', isEnd,'isNotEndJP', isNotEndJP, 'isEndJP1', isEndJP1, 'isEndJP3', isEndJP3, 'isEndJP', isEndJP, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
 
-    if (isOk && heartsPos.length == 0) {
+    if (isOk && heartsPos.length === 0) {
       this.tap(Button.outReceiveOk);
     }
 
-    if ((heartsPos.length == 0 && (isEnd || isEndJP)) || (!this.sentToZero && isZero && heartsPos.length != 0)) {
+    if ((heartsPos.length === 0 && (isEnd || isEndJP)) || (!this.sentToZero && isZero && heartsPos.length !== 0)) {
       if(retry < 3){
         this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
         this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
@@ -1764,7 +1746,7 @@ Tsum.prototype.taskSendHearts = function() {
         log(this.logs.checkSendingHearts, retry);
         this.sleep(1000);
       } else {
-        if (this.sendHeartMaxDuring != 0) {
+        if (this.sendHeartMaxDuring !== 0) {
           this.sleep(1000);
           this.friendPageGoTop();
         }
@@ -1788,10 +1770,10 @@ Tsum.prototype.taskSendHearts = function() {
           return;
         }
       }
-      if (heartsPos.length != 0 && rTimes == 0) {
+      if (heartsPos.length !== 0 && rTimes === 0) {
         continue;
       }
-      if (this.recordReceive && heartsPos.length != 0) {
+      if (this.recordReceive && heartsPos.length !== 0) {
         this.saveRecord();
       }
       this.sleep(250);
@@ -1804,13 +1786,13 @@ Tsum.prototype.taskSendHearts = function() {
       this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
 
       this.sleep(400);
-      if (this.sendHeartMaxDuring != 0) {
+      if (this.sendHeartMaxDuring !== 0) {
         if (Date.now() - startTime > this.sendHeartMaxDuring) {
           log(this.logs.timeIsUp);
           break;
         }
       }
-      if (heartsPos.length == 0 && isEnd2) {
+      if (heartsPos.length === 0 && isEnd2) {
         this.sleep(700); // end bug
       }
     }
@@ -1819,14 +1801,12 @@ Tsum.prototype.taskSendHearts = function() {
 
 Tsum.prototype.sendHeart = function(btn) {
   var unknownCount = 0;
-  var isSent = 0;
-  var isClickedOk = false;
   var isGift = false;
   var isSent = false;
   // log("sendHeart");
   while (this.isRunning) {
     var page = this.findPage(1, 300);
-    if (page == "FriendPage") {
+    if (page === "FriendPage") {
       // log("sendHeart A", Date.now() / 1000);
       var img = this.screenshot();
       var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
@@ -1838,11 +1818,11 @@ Tsum.prototype.sendHeart = function(btn) {
       } else {
         unknownCount += 1;
       }
-    } else if (page == "GiftHeart") {
+    } else if (page === "GiftHeart") {
       this.tap(Button.outReceiveOk);
       isGift = true;
       // log("sendHeart B", Date.now() / 1000);
-    } else if (page == "Received") {
+    } else if (page === "Received") {
       this.sleep(100);
       this.tap(Button.outSendHeartClose);
       // log("sendHeart C", Date.now() / 1000);
@@ -1852,9 +1832,9 @@ Tsum.prototype.sendHeart = function(btn) {
         this.sleep(100);
         return true;
       }
-    } else if (page == "FriendInfo") {
+    } else if (page === "FriendInfo") {
       this.tap(Page.FriendInfo.back);
-    } else if (page == "ClosePage") {
+    } else if (page === "ClosePage") {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
     } else {
@@ -1869,7 +1849,7 @@ Tsum.prototype.sendHeart = function(btn) {
 }
 
 Tsum.prototype.sleep = function(t) {
-  if (t == undefined) {
+  if (t === undefined) {
     t = 1000;
   }
   var waitTime = t;
@@ -1884,7 +1864,7 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
-function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
@@ -1924,7 +1904,7 @@ function start(isJP, detect, autoLaunch, autoPlay, isSlowCalculation, isPause, c
   if (ts.recordReceive) {
     ts.readRecord();
   }
-  if (ts.record['hearts_count'] == undefined) {
+  if (ts.record['hearts_count'] === undefined) {
     ts.record['hearts_count'] = {
       receivedCount: 0,
       sentCount: 0,
@@ -1959,8 +1939,8 @@ function stop() {
       ts.releaseRecord();
     }
   }
-  if (gTaskController != undefined) {gTaskController.removeAllTasks();}
-  if (gTaskController != undefined) {gTaskController.stop();}
+  if (gTaskController !== undefined) {gTaskController.removeAllTasks();}
+  if (gTaskController !== undefined) {gTaskController.stop();}
   ts = undefined;
 }
 
@@ -1969,7 +1949,7 @@ function genRecordTable() {
   var recordFile = getStoragePath() + "/tsum_record/record.txt";
   var txt = readFile(recordFile);
   var record = {};
-  if (txt != undefined && txt != "") {
+  if (txt !== undefined && txt !== "") {
     try {
       record = JSON.parse(txt);
     } catch(e) {
@@ -1984,7 +1964,7 @@ function genRecordTable() {
   html += "<tr><td>UserImage</td><td>UserImage2</td><td>All</td><td>Avg</td><td>Day</td></tr>";
   var dayMapCount = {};
   for (var filename in record) {
-    if (filename == "hearts_count") {
+    if (filename === "hearts_count") {
       continue;
     }
     html += "<tr>";
@@ -2026,8 +2006,8 @@ function genRecordTable() {
   // day count
   html += "<table>";
   html += "<tr><td>Date</td><td>Hearts</td></tr>";
-  for (var day in dayMapCount) {
-    var dayTime = new Date(+day * 86400000);
+  for (day in dayMapCount) {
+    dayTime = new Date(+day * 86400000);
     html += "<tr>";
     html += "<td>" + getDayTimeString(dayTime) + "</td>";
     html += "<td>" + dayMapCount[day] + "</td>";

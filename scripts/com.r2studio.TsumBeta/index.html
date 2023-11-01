@@ -146,7 +146,6 @@
       }
       .dropbtn {
         font-size: 16px;
-        border: none;
         cursor: pointer;
         border-radius: 5px;
         border: 0.5px solid rgba(0,0,0,0.2);
@@ -191,7 +190,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-      VERSION = 57;
+      VERSION = 58;
       ASC = true;
 
       var settings = [
@@ -226,7 +225,6 @@
         ],
         [
           { title: 'Auto Play Game', title_zh_TW: '自動玩遊戲', default: true},
-          { title: 'Slow Calculation', title_zh_TW: '慢速計算', default: false},
           { title: 'Pause When Calculating', title_zh_TW: '計算時暫停', default: false},
           { title: 'Clear Bubbles', title_zh_TW: '自動清除泡泡', default: false},
           { title: 'Use Fan?', title_zh_TW: '使用風扇', default: false},
@@ -335,11 +333,11 @@
 
       function loadSettings(settings) {
         var recordSettings = {};
-        if (localStorage = undefined) {
+        if (localStorage === undefined) {
           return;
         }
         var version = +localStorage.getItem('tsumtsumversion');
-        if (!version || VERSION != version) {
+        if (!version || VERSION !== version) {
           return;
         }
         var settingsJSON = localStorage.getItem('tsumtsumsettings');
@@ -354,7 +352,7 @@
           for (var g in settings[i]) {
             var id = i + '_' + g;
             var setting = settings[i][g];
-            if (recordSettings[id] != undefined) {
+            if (recordSettings[id] !== undefined) {
               setting.default = recordSettings[id];
             }
           }
@@ -370,7 +368,7 @@
       }
 
       function saveSettings(settings) {
-        if (localStorage != undefined) {
+        if (localStorage !== undefined) {
           var recordSettings = {};
           for (var i in settings) {
             for (var g in settings[i]) {
@@ -644,12 +642,12 @@
       }
 
       function onEvent(eventType) {
-        if (eventType == 'OnPlayClick') {
+        if (eventType === 'OnPlayClick') {
           var startCommand = genStartCommand(settings);
           JavaScriptInterface.runScript(startCommand);
-        } else if (eventType == 'OnPauseClick') {
+        } else if (eventType === 'OnPauseClick') {
           JavaScriptInterface.runScript('stop();');
-        } else if (eventType == 'OnSettingClick') {
+        } else if (eventType === 'OnSettingClick') {
           // refreshRecord();
         }
       }
