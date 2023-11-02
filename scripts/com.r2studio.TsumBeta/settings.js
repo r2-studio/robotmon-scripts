@@ -297,7 +297,7 @@ function genSettings(jContainer, settings) {
                 var jDiv = $('<div class="dropdown"></div>');
                 var jDropdownBtn = $('<button id="setting_value_' + id + '" class="dropbtn"></button>');
                 var jDropdown = $('<div class="dropdown-content"></div>');
-                jDropdownBtn.click((function (jDropdown) {
+                jDropdownBtn.on('click', (function (jDropdown) {
                     return function () {
                         jDropdown.addClass('show');
                     }
@@ -310,14 +310,14 @@ function genSettings(jContainer, settings) {
                         jDropdownBtn.text(itemTitle);
                     }
                     var jItem = $('<a href="#' + itemTitle + '" class="action-dropdown-item">' + itemTitle + '</a>');
-                    jItem.click((function (jDropdownBtn, itemTitle, setting, key) {
+                    jItem.on('click', (function (jDropdown, jDropdownBtn, itemTitle, setting, key) {
                         return function () {
                             setting.default = key;
                             jDropdownBtn.text(itemTitle);
                             jDropdown.removeClass('show');
                             saveSettings(settings);
                         }
-                    })(jDropdownBtn, itemTitle, setting, item.key));
+                    })(jDropdown, jDropdownBtn, itemTitle, setting, item.key));
                     jDropdown.append(jItem);
                 }
                 jDiv.append(jDropdownBtn).append(jDropdown);
@@ -331,7 +331,7 @@ function genSettings(jContainer, settings) {
                 var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>');
                 var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
                 var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
-                jBtnP.click((function (jInput, min, max, step) {
+                jBtnP.on('click', (function (jInput, min, max, step) {
                     return function () {
                         var newValue = (+jInput.val()) + step;
                         if (newValue <= max) {
@@ -340,7 +340,7 @@ function genSettings(jContainer, settings) {
                         saveSettings(settings);
                     }
                 })(jInput, min, max, step));
-                jBtnM.click((function (jInput, min, max, step) {
+                jBtnM.on('click', (function (jInput, min, max, step) {
                     return function () {
                         var newValue = (+jInput.val()) - step;
                         if (newValue >= min) {
@@ -359,7 +359,7 @@ function genSettings(jContainer, settings) {
                 appendCol(jSetting, jBtns);
             } else if (typeof setting.default === 'string') {
                 var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="text" value="' + setting.default + '"/>');
-                jInput.change(function () {
+                jInput.on('change', function () {
                     saveSettings(settings);
                 });
                 appendTitle(jSetting, title);
@@ -382,10 +382,7 @@ function genSettings(jContainer, settings) {
     }
 }
 
-function getCheckStatus(id) {
-    return $(id).is(':checked');
-}
-
+// entry function called by Robotmon
 function onEvent(eventType) {
     if (eventType === 'OnPlayClick') {
         var startCommand = genStartCommand(settings);
@@ -397,6 +394,7 @@ function onEvent(eventType) {
     }
 }
 
+// function called by Robotmon when writing logs
 function onLog(message) {
     console.log(message);
 }
@@ -419,10 +417,10 @@ function getBase64(id, filename) {
 
 function assignImage(results) {
     var rs = results.split(',');
-    if (rs.length == 2) {
+    if (rs.length === 2) {
         $('#' + rs[0]).attr('src', 'data:image/png;base64,' + rs[1]);
     }
-    if (imageQueue.length == 0) {
+    if (imageQueue.length === 0) {
         isRunning = false;
     } else {
         JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
@@ -447,13 +445,14 @@ function genRecordTable(path) {
 }
 
 function genRecord(record) {
-    if (record == undefined || record == 'undefined' || record == '') {
+    if (record === undefined || record === 'undefined' || record === '') {
         return;
     }
     var recordObjs = JSON.parse(record);
     record = [];
-    for (var filename in recordObjs) {
-        if (filename == 'hearts_count') {
+    var filename;
+    for (filename in recordObjs) {
+        if (filename === 'hearts_count') {
             continue;
         }
         var obj = recordObjs[filename];
@@ -477,7 +476,7 @@ function genRecord(record) {
 
     var html = '<ul>';
     for (var idx in record) {
-        var filename = record[idx].filename;
+        filename = record[idx].filename;
         var imgId = filename.split('.')[0];
         var lastTime = new Date(record[idx].lastReceiveTime);
         html += '<li>'
@@ -524,22 +523,22 @@ $(function () {
     loadSettings(settings);
     genSettings($('#settings'), settings);
 
-    $('#updateRecordASC').click(function () {
+    $('#updateRecordASC').on('click', function () {
         ASC = true;
         refreshRecord();
     });
-    $('#updateRecordDESC').click(function () {
+    $('#updateRecordDESC').on('click', function () {
         ASC = false;
         refreshRecord();
     });
-    $('#goToTop').click(function () {
+    $('#goToTop').on('click', function () {
         window.scrollTo(0, 0);
     });
-    $('#goToBottom').click(function () {
+    $('#goToBottom').on('click', function () {
         window.scrollTo(0, document.body.scrollHeight);
     });
     var protect = true;
-    $('#resetRecord').click(function () {
+    $('#resetRecord').on('click', function () {
         if (protect) {
             protect = false;
             if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
@@ -558,10 +557,10 @@ $(function () {
             $('#record').html('');
         }
     });
-    $('#exportRecordLegacy').click(function () {
+    $('#exportRecordLegacy').on('click', function () {
         exportHTML();
     });
-    $('#exportRecordExcel').click(function () {
+    $('#exportRecordExcel').on('click', function () {
         $("#genTableResult").html("Please wait...");
         JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
     });
