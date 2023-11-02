@@ -12,6 +12,10 @@ var settings = [
         {
             title: 'Thanks Chris Kwan\'s and Melissa Stinson\'s great help',
             title_zh_TW: '感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙'
+        },
+        {
+            title: 'Build date: $BUILD_DATE',
+            title_zh_TW: '建造日期: $BUILD_DATE'
         }
     ],
     [
