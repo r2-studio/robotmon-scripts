@@ -1,16 +1,18 @@
-VERSION = 58;
-ASC = true;
+"use strict";
+
+var VERSION = 58;
+var ASC = true;
 
 var settings = [
     [
         {
             title: 'Thanks ttung for improve image recognition and send heart function',
-            title_zh_TW: '感謝 ttung 提供改善辨識和送心功能',
+            title_zh_TW: '感謝 ttung 提供改善辨識和送心功能'
         },
         {
             title: 'Thanks Chris Kwan\'s and Melissa Stinson\'s great help',
-            title_zh_TW: '感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙',
-        },
+            title_zh_TW: '感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙'
+        }
     ],
     [
         {
@@ -33,7 +35,7 @@ var settings = [
             title_zh_TW: '特殊螢幕比例(長螢幕)(遊戲中啟動)',
             default: false
         },
-        {title: 'Auto Launch Tsum App', title_zh_TW: '自動開啟 Tsum App', default: false},
+        {title: 'Auto Launch Tsum App', title_zh_TW: '自動開啟 Tsum App', default: false}
     ],
     [
         {title: 'Auto Play Game', title_zh_TW: '自動玩遊戲', default: true},
@@ -50,7 +52,7 @@ var settings = [
             default: 3,
             step: 1,
             max: 15,
-            min: 1,
+            min: 1
         },
         {
             title: 'Skill Level',
@@ -58,27 +60,27 @@ var settings = [
             default: 3,
             step: 1,
             max: 6,
-            min: 1,
+            min: 1
         },
         {
             title: 'Skill Type',
             title_zh_TW: '技能類型',
             default: 'burst',
             dropdown: [
-                {key: 'burst', title: 'Burst', title_zh_TW: '消除系',},
-                {key: 'block_donald_s', title: 'Donald', title_zh_TW: '唐老鴨',},
-                {key: 'block_donaldx_s', title: 'Holiday Donald', title_zh_TW: '假日唐老鴨',},
-                {key: 'block_lukej_s', title: 'Jedi Luke', title_zh_TW: '絕地路克',},
-                {key: 'block_moana_s', title: 'Moana', title_zh_TW: '莫娜',},
-                {key: 'block_marie_s', title: 'Marie', title_zh_TW: '瑪麗',},
-                {key: 'block_missbunny_s', title: 'Miss Bunny', title_zh_TW: '小兔子',},
-                {key: 'block_rabbit_s', title: 'Rabbit', title_zh_TW: '兔子',},
-                {key: 'block_mickeyh2015_s', title: 'Horn Hat Mickey', title_zh_TW: '角帽米奇',},
-                {key: 'block_snowwhite_s', title: 'Snow White', title_zh_TW: '白雪公主',},
-                {key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉',},
-                {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪',},
-            ],
-        },
+                {key: 'burst', title: 'Burst', title_zh_TW: '消除系'},
+                {key: 'block_donald_s', title: 'Donald', title_zh_TW: '唐老鴨'},
+                {key: 'block_donaldx_s', title: 'Holiday Donald', title_zh_TW: '假日唐老鴨'},
+                {key: 'block_lukej_s', title: 'Jedi Luke', title_zh_TW: '絕地路克'},
+                {key: 'block_moana_s', title: 'Moana', title_zh_TW: '莫娜'},
+                {key: 'block_marie_s', title: 'Marie', title_zh_TW: '瑪麗'},
+                {key: 'block_missbunny_s', title: 'Miss Bunny', title_zh_TW: '小兔子'},
+                {key: 'block_rabbit_s', title: 'Rabbit', title_zh_TW: '兔子'},
+                {key: 'block_mickeyh2015_s', title: 'Horn Hat Mickey', title_zh_TW: '角帽米奇'},
+                {key: 'block_snowwhite_s', title: 'Snow White', title_zh_TW: '白雪公主'},
+                {key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉'},
+                {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'}
+            ]
+        }
     ],
     [
         {title: 'Receive All Hearts', title_zh_TW: '收全部愛心', default: true},
@@ -88,8 +90,8 @@ var settings = [
             default: 25,
             step: 5,
             max: 60,
-            min: 5,
-        },
+            min: 5
+        }
     ],
     [
         {title: 'Receive Hearts One By One', title_zh_TW: '一顆一顆收愛心', default: false},
@@ -101,7 +103,7 @@ var settings = [
             default: 5,
             step: 1,
             max: 20,
-            min: 1,
+            min: 1
         },
         {
             title: 'Waiting time (min) before repeat',
@@ -109,10 +111,10 @@ var settings = [
             default: 5,
             step: 2,
             max: 60,
-            min: 1,
+            min: 1
         },
         {title: 'Record Sender', title_zh_TW: '記錄送心者', default: false},
-        {title: 'Enlarge Sender\'s Image (Emulator)', title_zh_TW: '放大送心者圖片(模擬器)', default: false},
+        {title: 'Enlarge Sender\'s Image (Emulator)', title_zh_TW: '放大送心者圖片(模擬器)', default: false}
     ],
     [
         {title: 'Auto Send Hearts', title_zh_TW: '自動送愛心', default: false},
@@ -123,7 +125,7 @@ var settings = [
             default: 0,
             step: 5,
             max: 80,
-            min: 0,
+            min: 0
         },
         {
             title: 'Waiting time (min) before repeat',
@@ -131,11 +133,12 @@ var settings = [
             default: 26,
             step: 5,
             max: 60,
-            min: 1,
-        },
+            min: 1
+        }
     ]
 ];
 
+// noinspection JSUnusedGlobalSymbols
 function saveLocale(locale) {
     if (localStorage !== undefined) {
         localStorage.setItem('tsumtsumlanguage', locale);
@@ -144,19 +147,21 @@ function saveLocale(locale) {
 }
 
 function loadSettings(settings) {
-    var recordSettings = {};
     if (localStorage === undefined) {
-        return;
-    }
-    var version = +localStorage.getItem('tsumtsumversion');
-    if (!version || VERSION !== version) {
         return;
     }
     var settingsJSON = localStorage.getItem('tsumtsumsettings');
     if (!settingsJSON) {
         return;
     }
-    recordSettings = JSON.parse(settingsJSON);
+    var version = +localStorage.getItem('tsumtsumversion');
+    if (!version) {
+        return;
+    }
+    if (version < VERSION) {
+        return;
+    }
+    var recordSettings = JSON.parse(settingsJSON);
     if (!recordSettings) {
         return;
     }
@@ -171,7 +176,7 @@ function loadSettings(settings) {
     }
 
     // This is so we send the locale for logging.... we should do this better but good enough for now.
-    lang = localStorage.getItem('tsumtsumlanguage');
+    var lang = localStorage.getItem('tsumtsumlanguage');
     if (lang === 'zh-TW') {
         console.log('讀取設定');
     } else {
@@ -197,10 +202,10 @@ function saveSettings(settings) {
                 }
             }
         }
-        localStorage.setItem('tsumtsumversion', VERSION);
+        localStorage.setItem('tsumtsumversion', '' + VERSION);
         localStorage.setItem('tsumtsumsettings', JSON.stringify(recordSettings));
 
-        lang = localStorage.getItem('tsumtsumlanguage');
+        var lang = localStorage.getItem('tsumtsumlanguage');
         if (lang === 'zh-TW') {
             console.log('儲存設定');
         } else {
@@ -228,7 +233,7 @@ function genStartCommand(settings) {
     }
 
     // This is so we send the locale to the start function
-    lang = localStorage.getItem('tsumtsumlanguage');
+    var lang = localStorage.getItem('tsumtsumlanguage');
     if (lang === 'zh-TW') {
         command += 'true);';
         console.log('啟動命令: ' + command);
@@ -239,6 +244,9 @@ function genStartCommand(settings) {
     return command;
 }
 
+/**
+ * @returns {string}
+ */
 function getTitle(setting) {
     if (localStorage === undefined) {
         return setting.title;
@@ -352,7 +360,7 @@ function genSettings(jContainer, settings) {
                 jBtns.push(jInput);
                 jBtns.push(jBtnP);
                 jBtns.push(jBtnM);
-                jInput.change(function () {
+                jInput.on('change', function () {
                     saveSettings(settings);
                 });
                 appendTitle(jSetting, title);
@@ -367,7 +375,7 @@ function genSettings(jContainer, settings) {
             } else if (setting.buttons !== undefined) {
                 var jBtns = [];
                 for (var j in setting.buttons) {
-                    var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + ' class="btn btn-plus">' + setting.buttons[j].title + '</button>');
+                    var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + '>' + setting.buttons[j].title + '</button>').addClass('btn btn-plus');
                     jBtns.push(jBtn);
                 }
                 appendTitle(jSetting, title);
@@ -383,6 +391,7 @@ function genSettings(jContainer, settings) {
 }
 
 // entry function called by Robotmon
+// noinspection JSUnusedGlobalSymbols
 function onEvent(eventType) {
     if (eventType === 'OnPlayClick') {
         var startCommand = genStartCommand(settings);
@@ -395,6 +404,7 @@ function onEvent(eventType) {
 }
 
 // function called by Robotmon when writing logs
+// noinspection JSUnusedGlobalSymbols
 function onLog(message) {
     console.log(message);
 }
