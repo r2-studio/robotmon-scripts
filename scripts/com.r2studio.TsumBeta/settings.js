@@ -2,6 +2,9 @@
 
 var VERSION = 58;
 var ASC = true;
+var VERSIONS = {
+    58: {resetSettings: true}
+}
 
 var settings = [
     [
@@ -151,6 +154,17 @@ function saveLocale(locale) {
 }
 
 function loadSettings(settings) {
+    function isResetSettingsRequired(startVersion, endVersion) {
+        // check for version jumps that require fallback to default settings
+        for (var i = startVersion + 1; i <= endVersion; i++) {
+            var v = VERSIONS[i];
+            if (v != null && v.resetSettings) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     if (localStorage === undefined) {
         return;
     }
@@ -159,10 +173,9 @@ function loadSettings(settings) {
         return;
     }
     var version = +localStorage.getItem('tsumtsumversion');
-    if (!version) {
-        return;
-    }
-    if (version < VERSION) {
+    if (!version
+        || version < VERSION && isResetSettingsRequired(version, VERSION)       // version updated
+        || version > VERSION && isResetSettingsRequired(VERSION, version)) {    // version downgraded
         return;
     }
     var recordSettings = JSON.parse(settingsJSON);
