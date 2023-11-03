@@ -288,6 +288,7 @@ function loadSettings(settings) {
         if (!recordSettings) {
             return;
         }
+        log("Loading new settings format");
         (function () {
             for (var k1 in settings) {
                 for (var k2 in settings[k1]) {
@@ -311,6 +312,7 @@ function loadSettings(settings) {
         if (!recordSettings) {
             return;
         }
+        log("Loading old settings format");
         (function () {
             for (var i in settings) {
                 for (var g in settings[i]) {
@@ -332,21 +334,23 @@ function saveSettings(settings) {
         var recordSettings = {};
         for (var i in settings) {
             for (var g in settings[i]) {
-                var id = i + '_' + g;
                 var setting = settings[i][g];
+                var key = setting.key;
+                var selector = '.' + key;
                 if (typeof setting.default === 'boolean') {
-                    recordSettings[id] = $('#setting_value_' + id).is(':checked');
+                    recordSettings[key] = $(selector).is(':checked');
                 } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
-                    recordSettings[id] = setting.default;
+                    recordSettings[key] = setting.default;  // why here no retieval via jQuery?
                 } else if (typeof setting.default === 'number') {
-                    recordSettings[id] = +$('#setting_value_' + id).val();
+                    recordSettings[key] = +$(selector).val();
                 } else if (typeof setting.default === 'string') {
-                    recordSettings[id] = $('#setting_value_' + id).val();
+                    recordSettings[key] = $(selector).val();
                 }
             }
         }
         localStorage.setItem('tsumtsumversion', '' + VERSION);
-        localStorage.setItem('tsumtsumsettings', JSON.stringify(recordSettings));
+        localStorage.setItem('tsumtsumsettings2', JSON.stringify(recordSettings));
+        localStorage.removeItem('tsumtsumsettings');
 
         log(i18n('儲存設定', 'Save settings'));
     }
