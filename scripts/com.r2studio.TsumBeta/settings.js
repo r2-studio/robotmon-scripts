@@ -38,34 +38,80 @@ var settings = [
             title: 'Language',
             title_zh_TW: '語言',
             buttons: [
-                {
-                    title: 'En',
-                    onclick: 'saveLocale("en-US")'
-                },
-                {
-                    title: '中文',
-                    onclick: 'saveLocale("zh-TW")'
-                }
+                {title: 'En', onclick: 'saveLocale("en-US")'},
+                {title: '中文', onclick: 'saveLocale("zh-TW")'}
             ]
         },
-        {title: 'Japan Version?', title_zh_TW: '日本版?', default: false},
         {
+            key: 'jpVersion',
+            title: 'Japan Version?',
+            title_zh_TW: '日本版?',
+            default: false
+        },
+        {
+            key: 'specialScreenRatio',
             title: 'Special Screen Ratio(Long Screen)(Should start in game)',
             title_zh_TW: '特殊螢幕比例(長螢幕)(遊戲中啟動)',
             default: false
         },
-        {title: 'Auto Launch Tsum App', title_zh_TW: '自動開啟 Tsum App', default: false}
+        {
+            key: 'autoLaunchApp',
+            title: 'Auto Launch Tsum App',
+            title_zh_TW: '自動開啟 Tsum App',
+            default: false
+        }
     ],
     [
-        {title: 'Auto Play Game', title_zh_TW: '自動玩遊戲', default: true},
-        {title: 'Pause When Calculating', title_zh_TW: '計算時暫停', default: false},
-        {title: 'Clear Bubbles', title_zh_TW: '自動清除泡泡', default: false},
-        {title: 'Use Fan?', title_zh_TW: '使用風扇', default: false},
-        {title: '5>4', title_zh_TW: '道具五變四', default: false},
-        {title: '+Coin', title_zh_TW: '道具Coin', default: false},
-        {title: '+Bubble', title_zh_TW: '道具Bubble', default: false},
-        {title: 'All Bonus Items', title_zh_TW: '開/關全部道具', default: false},
         {
+            key: 'autoPlayGame',
+            title: 'Auto Play Game',
+            title_zh_TW: '自動玩遊戲',
+            default: true
+        },
+        {
+            key: 'pauseWhenCalc',
+            title: 'Pause When Calculating',
+            title_zh_TW: '計算時暫停',
+            default: false
+        },
+        {
+            key: 'clearBubbles',
+            title: 'Clear Bubbles',
+            title_zh_TW: '自動清除泡泡',
+            default: false
+        },
+        {
+            key: 'useFan',
+            title: 'Use Fan?',
+            title_zh_TW: '使用風扇',
+            default: false
+        },
+        {
+            key: 'bonus5to4',
+            title: '5>4',
+            title_zh_TW: '道具五變四',
+            default: false
+        },
+        {
+            key: 'bonusCoin',
+            title: '+Coin',
+            title_zh_TW: '道具Coin',
+            default: false
+        },
+        {
+            key: 'bonusBubble',
+            title: '+Bubble',
+            title_zh_TW: '道具Bubble',
+            default: false
+        },
+        {
+            key: 'bonusAllItems',
+            title: 'All Bonus Items',
+            title_zh_TW: '開/關全部道具',
+            default: false
+        },
+        {
+            key: 'skillWaitingTime',
             title: 'Skill Waiting time (sec)',
             title_zh_TW: '技能等待時間(秒)',
             default: 3,
@@ -74,6 +120,7 @@ var settings = [
             min: 1
         },
         {
+            key: 'skillLevel',
             title: 'Skill Level',
             title_zh_TW: '技能等級',
             default: 3,
@@ -82,6 +129,7 @@ var settings = [
             min: 1
         },
         {
+            key: 'skillType',
             title: 'Skill Type',
             title_zh_TW: '技能類型',
             default: 'burst',
@@ -102,8 +150,14 @@ var settings = [
         }
     ],
     [
-        {title: 'Receive All Hearts', title_zh_TW: '收全部愛心', default: true},
         {
+            key: 'receiveAllHearts',
+            title: 'Receive All Hearts',
+            title_zh_TW: '收全部愛心',
+            default: true
+        },
+        {
+            key: 'receiveAllHeartsMinWait',
             title: 'Waiting time (min) before repeat',
             title_zh_TW: '完成後休息時間(分)',
             default: 25,
@@ -113,10 +167,26 @@ var settings = [
         }
     ],
     [
-        {title: 'Receive Hearts One By One', title_zh_TW: '一顆一顆收愛心', default: false},
-        {title: 'Skip first person(disable record)', title_zh_TW: '跳過一個使用者(無法紀錄收心)', default: false},
-        {title: 'Skip Ruby', title_zh_TW: '保留鑽石', default: false},
         {
+            key: 'receiveHeartsOneByOne',
+            title: 'Receive Hearts One By One',
+            title_zh_TW: '一顆一顆收愛心',
+            default: false
+        },
+        {
+            key: 'receiveHeartsSkipFirst',
+            title: 'Skip first person(disable record)',
+            title_zh_TW: '跳過一個使用者(無法紀錄收心)',
+            default: false
+        },
+        {
+            key: 'receiveHeartsSkipRuby',
+            title: 'Skip Ruby',
+            title_zh_TW: '保留鑽石',
+            default: false
+        },
+        {
+            key: 'mailOpenMax',
             title: 'Max Times to Open Mailbox',
             title_zh_TW: '重複檢查上限次數',
             default: 5,
@@ -125,6 +195,7 @@ var settings = [
             min: 1
         },
         {
+            key: 'mailMinWait',
             title: 'Waiting time (min) before repeat',
             title_zh_TW: '完成後休息時間(分)',
             default: 5,
@@ -132,13 +203,34 @@ var settings = [
             max: 60,
             min: 1
         },
-        {title: 'Record Sender', title_zh_TW: '記錄送心者', default: false},
-        {title: 'Enlarge Sender\'s Image (Emulator)', title_zh_TW: '放大送心者圖片(模擬器)', default: false}
+        {
+            key: 'recordSender',
+            title: 'Record Sender',
+            title_zh_TW: '記錄送心者',
+            default: false
+        },
+        {
+            key: 'recordSenderEnlarge',
+            title: 'Enlarge Sender\'s Image (Emulator)',
+            title_zh_TW: '放大送心者圖片(模擬器)',
+            default: false
+        }
     ],
     [
-        {title: 'Auto Send Hearts', title_zh_TW: '自動送愛心', default: false},
-        {title: 'Send to 0 score', title_zh_TW: '送心給 0 分', default: false},
         {
+            key: 'sendHeartsAuto',
+            title: 'Auto Send Hearts',
+            title_zh_TW: '自動送愛心',
+            default: false
+        },
+        {
+            key: 'sendHeartsToZeroScore',
+            title: 'Send to 0 score',
+            title_zh_TW: '送心給 0 分',
+            default: false
+        },
+        {
+            key: 'sendHeartsMaxRuntime',
             title: 'Max run time(min) [Start from the first place if time is 0]',
             title_zh_TW: '執行時間上限(分) [0 將從第一名開始送]',
             default: 0,
@@ -147,6 +239,7 @@ var settings = [
             min: 0
         },
         {
+            key: 'sendHeartsMinWait',
             title: 'Waiting time (min) before repeat',
             title_zh_TW: '完成後休息時間(分)',
             default: 26,
