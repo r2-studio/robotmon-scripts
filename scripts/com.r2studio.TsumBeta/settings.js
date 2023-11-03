@@ -265,13 +265,7 @@ function genStartCommand(settings) {
  * @returns {string}
  */
 function getTitle(setting) {
-    if (localStorage === undefined) {
-        return setting.title;
-    }
-    var lang = localStorage.getItem('tsumtsumlanguage');
-    if (!lang) {
-        return setting.title;
-    } else if (lang === 'zh-TW') {
+    if (localStorage && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
         return setting.title_zh_TW;
     }
     return setting.title;
