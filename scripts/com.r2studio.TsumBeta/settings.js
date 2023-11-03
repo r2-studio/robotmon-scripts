@@ -195,9 +195,9 @@ function loadSettings(settings) {
     // This is so we send the locale for logging.... we should do this better but good enough for now.
     var lang = localStorage.getItem('tsumtsumlanguage');
     if (lang === 'zh-TW') {
-        console.log('讀取設定');
+        log('讀取設定');
     } else {
-        console.log('Load settings');
+        log('Load settings');
     }
 }
 
@@ -224,9 +224,9 @@ function saveSettings(settings) {
 
         var lang = localStorage.getItem('tsumtsumlanguage');
         if (lang === 'zh-TW') {
-            console.log('儲存設定');
+            log('儲存設定');
         } else {
-            console.log('Save settings');
+            log('Save settings');
         }
     }
 }
@@ -253,10 +253,10 @@ function genStartCommand(settings) {
     var lang = localStorage.getItem('tsumtsumlanguage');
     if (lang === 'zh-TW') {
         command += 'true);';
-        console.log('啟動命令: ' + command);
+        log('啟動命令: ' + command);
     } else {
         command += 'false);';
-        console.log('Start command: ' + command);
+        log('Start command: ' + command);
     }
     return command;
 }
@@ -418,6 +418,17 @@ function onEvent(eventType) {
 // noinspection JSUnusedGlobalSymbols
 function onLog(message) {
     console.log(message);
+}
+
+function log() {
+    var params = '[Settings] ';
+    if (typeof arguments === 'object') {
+        for (var k in arguments) {
+            var arg = arguments[k];
+            params += arg.replace(/'/g, '"') + ' ';
+        }
+    }
+    JavaScriptInterface.runScript('console.log(\'' + params + '\')');
 }
 
 function refreshRecord() {
