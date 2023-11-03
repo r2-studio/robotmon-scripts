@@ -6,6 +6,15 @@ var VERSIONS = {
     58: {resetSettings: true}
 }
 
+var zhTW = 'zh-TW';
+
+function i18n (msgZhTW, msgEn) {
+    if (localStorage && localStorage.getItem('tsumtsumlanguage') === zhTW) {
+        return msgZhTW;
+    }
+    return msgEn;
+}
+
 var settings = [
     [
         {
@@ -193,12 +202,7 @@ function loadSettings(settings) {
     }
 
     // This is so we send the locale for logging.... we should do this better but good enough for now.
-    var lang = localStorage.getItem('tsumtsumlanguage');
-    if (lang === 'zh-TW') {
-        log('讀取設定');
-    } else {
-        log('Load settings');
-    }
+    log(i18n('讀取設定', 'Load settings'));
 }
 
 function saveSettings(settings) {
@@ -222,12 +226,7 @@ function saveSettings(settings) {
         localStorage.setItem('tsumtsumversion', '' + VERSION);
         localStorage.setItem('tsumtsumsettings', JSON.stringify(recordSettings));
 
-        var lang = localStorage.getItem('tsumtsumlanguage');
-        if (lang === 'zh-TW') {
-            log('儲存設定');
-        } else {
-            log('Save settings');
-        }
+        log(i18n('儲存設定', 'Save settings'));
     }
 }
 
@@ -251,13 +250,8 @@ function genStartCommand(settings) {
 
     // This is so we send the locale to the start function
     var lang = localStorage.getItem('tsumtsumlanguage');
-    if (lang === 'zh-TW') {
-        command += 'true);';
-        log('啟動命令: ' + command);
-    } else {
-        command += 'false);';
-        log('Start command: ' + command);
-    }
+    command += (lang === zhTW) + ');';
+    log(i18n('啟動命令: ','Start command: ') + command);
     return command;
 }
 
@@ -265,10 +259,7 @@ function genStartCommand(settings) {
  * @returns {string}
  */
 function getTitle(setting) {
-    if (localStorage && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
-        return setting.title_zh_TW;
-    }
-    return setting.title;
+    return i18n(setting.title_zh_TW, setting.title);
 }
 
 function appendTitle(jSetting, title) {
@@ -529,11 +520,7 @@ function genRecord(record) {
 }
 
 function exportHTML() {
-    if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
-        $('#exportRecordLegacy').text('輸出中');
-    } else {
-        $('#exportRecordLegacy').text('Exporting');
-    }
+    $('#exportRecordLegacy').text(i18n('輸出中', 'Exporting'));
     var html = $('#record').html();
     html = html.replace(/\n/g, '');
     var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>' + html + '</body>\');';
@@ -541,11 +528,7 @@ function exportHTML() {
 }
 
 function exportSuccess() {
-    if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
-        $('#exportRecordLegacy').text('輸出 HTML(舊版)');
-    } else {
-        $('#exportRecordLegacy').text('Export HTML(Legacy)');
-    }
+    $('#exportRecordLegacy').text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
 }
 
 // render settings page
@@ -573,18 +556,10 @@ $(function () {
     $('#resetRecord').on('click', function () {
         if (protect) {
             protect = false;
-            if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
-                $('#resetRecord').text('確定要清除紀錄嗎？');
-            } else {
-                $('#resetRecord').text('Are you sure?');
-            }
+            $('#resetRecord').text(i18n('確定要清除紀錄嗎？', 'Are you sure?'));
         } else {
             protect = true;
-            if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
-                $('#resetRecord').text('清除紀錄');
-            } else {
-                $('#resetRecord').text('Reset Record');
-            }
+            $('#resetRecord').text(i18n('清除紀錄', 'Reset Record'));
             JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
             $('#record').html('');
         }
@@ -597,25 +572,15 @@ $(function () {
         JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
     });
 
-    if (localStorage !== undefined && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
-        $('#senders').text('誰送你心');
-        $('#updateRecordASC').text('更新(遞增)');
-        $('#updateRecordDESC').text('更新(遞減)');
-        $('#resetRecord').text('清除紀錄');
-        $('#goToTop').text('回頁面頂端');
-        $('#goToBottom').text('回頁面底端');
-        $('#exportInfo').text('輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)');
-        $('#exportRecordLegacy').text('輸出 HTML(舊版)');
-        $('#exportRecordExcel').text('輸出 HTML(Excel)');
-    } else {
-        $('#senders').text('List of Heart Counts');
-        $('#updateRecordASC').text('Update(ASC)');
-        $('#updateRecordDESC').text('Update(DESC)');
-        $('#resetRecord').text('Reset Record');
-        $('#goToTop').text('Go to Top');
-        $('#goToBottom').text('Go to Bottom');
-        $('#exportInfo').text('Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)');
-        $('#exportRecordLegacy').text('Export HTML(Legacy)');
-        $('#exportRecordExcel').text('Export HTML(Excel)');
-    }
+    $('#senders').text(i18n('誰送你心', 'List of Heart Counts'));
+    $('#updateRecordASC').text(i18n('更新(遞增)', 'Update(ASC)'));
+    $('#updateRecordDESC').text(i18n('更新(遞減)', 'Update(DESC)'));
+    $('#resetRecord').text(i18n('清除紀錄', 'Reset Record'));
+    $('#goToTop').text(i18n('回頁面頂端', 'Go to Top'));
+    $('#goToBottom').text(i18n('回頁面底端', 'Go to Bottom'));
+    $('#exportInfo').text(i18n(
+        '輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)',
+        'Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)'));
+    $('#exportRecordLegacy').text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
+    $('#exportRecordExcel').text(i18n('輸出 HTML(Excel)', 'Export HTML(Excel)'));
 })($);
