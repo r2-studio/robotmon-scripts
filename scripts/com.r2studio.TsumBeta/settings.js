@@ -1,15 +1,18 @@
 "use strict";
 
 var VERSION = 58;
-var ASC = true;
 var VERSIONS = {
     58: {resetSettings: true}
 }
 
-var zhTW = 'zh-TW';
-
-function i18n (msgZhTW, msgEn) {
-    if (localStorage && localStorage.getItem('tsumtsumlanguage') === zhTW) {
+/**
+ * Returns the language parameter for the currently active locale.
+ * @param msgZhTW {string} the message in zh-TW
+ * @param msgEn {string} the message in en-US
+ * @returns {string} msgZhTW if current locale is zh-TW, else msgEn
+ */
+function i18n(msgZhTW, msgEn) {
+    if (localStorage && localStorage.getItem('tsumtsumlanguage') === 'zh-TW') {
         return msgZhTW;
     }
     return msgEn;
@@ -187,6 +190,7 @@ function loadSettings(settings) {
         || version > VERSION && isResetSettingsRequired(VERSION, version)) {    // version downgraded
         return;
     }
+    /** @type {Object.<string, boolean|number|string>} */
     var recordSettings = JSON.parse(settingsJSON);
     if (!recordSettings) {
         return;
@@ -250,8 +254,8 @@ function genStartCommand(settings) {
 
     // This is so we send the locale to the start function
     var lang = localStorage.getItem('tsumtsumlanguage');
-    command += (lang === zhTW) + ');';
-    log(i18n('啟動命令: ','Start command: ') + command);
+    command += (lang === 'zh-TW') + ');';
+    log(i18n('啟動命令: ', 'Start command: ') + command);
     return command;
 }
 
@@ -467,6 +471,7 @@ function genRecordTable(path) {
     $("#genTableResult").html(path);
 }
 
+var ASC = true;
 function genRecord(record) {
     if (record === undefined || record === 'undefined' || record === '') {
         return;
@@ -519,68 +524,58 @@ function genRecord(record) {
     $('#record').html(html);
 }
 
-function exportHTML() {
-    $('#exportRecordLegacy').text(i18n('輸出中', 'Exporting'));
+var $exportRecordLegacy = $('#exportRecordLegacy').on('click', function () {
+    $(this).text(i18n('輸出中', 'Exporting'));
     var html = $('#record').html();
     html = html.replace(/\n/g, '');
     var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>' + html + '</body>\');';
     JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
-}
+});
 
 function exportSuccess() {
-    $('#exportRecordLegacy').text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
+    $exportRecordLegacy.text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
 }
 
 // render settings page
-$(function () {
+$(function ($) {
     $('#version').html('Tsum Tsum v' + VERSION);
 
     loadSettings(settings);
     genSettings($('#settings'), settings);
 
-    $('#updateRecordASC').on('click', function () {
+
+    $('#senders').text(i18n('誰送你心', 'List of Heart Counts'));
+    $('#updateRecordASC').text(i18n('更新(遞增)', 'Update(ASC)')).on('click', function () {
         ASC = true;
         refreshRecord();
     });
-    $('#updateRecordDESC').on('click', function () {
+    $('#updateRecordDESC').text(i18n('更新(遞減)', 'Update(DESC)')).on('click', function () {
         ASC = false;
         refreshRecord();
     });
-    $('#goToTop').on('click', function () {
-        window.scrollTo(0, 0);
-    });
-    $('#goToBottom').on('click', function () {
-        window.scrollTo(0, document.body.scrollHeight);
-    });
     var protect = true;
-    $('#resetRecord').on('click', function () {
+    $('#resetRecord').text(i18n('清除紀錄', 'Reset Record')).on('click', function () {
         if (protect) {
-            protect = false;
-            $('#resetRecord').text(i18n('確定要清除紀錄嗎？', 'Are you sure?'));
+            $(this).text(i18n('確定要清除紀錄嗎？', 'Are you sure?'));
         } else {
-            protect = true;
-            $('#resetRecord').text(i18n('清除紀錄', 'Reset Record'));
+            $(this).text(i18n('清除紀錄', 'Reset Record'));
             JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
             $('#record').html('');
         }
+        protect = !protect;
     });
-    $('#exportRecordLegacy').on('click', function () {
-        exportHTML();
+    $('#goToTop').text(i18n('回頁面頂端', 'Go to Top')).on('click', function () {
+        window.scrollTo(0, 0);
     });
-    $('#exportRecordExcel').on('click', function () {
-        $("#genTableResult").html("Please wait...");
-        JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
+    $('#goToBottom').text(i18n('回頁面底端', 'Go to Bottom')).on('click', function () {
+        window.scrollTo(0, document.body.scrollHeight);
     });
-
-    $('#senders').text(i18n('誰送你心', 'List of Heart Counts'));
-    $('#updateRecordASC').text(i18n('更新(遞增)', 'Update(ASC)'));
-    $('#updateRecordDESC').text(i18n('更新(遞減)', 'Update(DESC)'));
-    $('#resetRecord').text(i18n('清除紀錄', 'Reset Record'));
-    $('#goToTop').text(i18n('回頁面頂端', 'Go to Top'));
-    $('#goToBottom').text(i18n('回頁面底端', 'Go to Bottom'));
     $('#exportInfo').text(i18n(
         '輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)',
         'Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)'));
-    $('#exportRecordLegacy').text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
-    $('#exportRecordExcel').text(i18n('輸出 HTML(Excel)', 'Export HTML(Excel)'));
+    $exportRecordLegacy.text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
+    $('#exportRecordExcel').text(i18n('輸出 HTML(Excel)', 'Export HTML(Excel)')).on('click', function () {
+        $("#genTableResult").html(i18n("请稍等...", "Please wait..."));
+        JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
+    });
 })($);
