@@ -402,9 +402,9 @@ function appendCol(jSetting, jContent) {
     jSetting.append(jCol);
 }
 
-function getSwitchButton(id, checked) {
+function getSwitchButton(id, key, checked) {
     var jLabel = $('<label class="switch pull-right"></label>');
-    var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="checkbox" ' + (checked ? 'checked' : '') + '/>');
+    var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="checkbox" ' + (checked ? 'checked' : '') + '/>').addClass(key);
     jInput.on('change', function () {
         saveSettings(settings);
     });
@@ -419,15 +419,16 @@ function genSettings(jContainer, settings) {
         for (var g in settings[i]) {
             var id = i + '_' + g;
             var setting = settings[i][g];
+            var key = setting.key;
             var title = getTitle(setting);
             var jGroupItem = $('<div id="setting_' + id + '" class="list-group-item"></div>');
             var jSetting = $('<div class="row"></div>');
             if (typeof setting.default === 'boolean') {
                 appendTitle(jSetting, title);
-                appendCol(jSetting, getSwitchButton(id, setting.default));
+                appendCol(jSetting, getSwitchButton(id, key, setting.default));
             } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
                 var jDiv = $('<div class="dropdown"></div>');
-                var jDropdownBtn = $('<button id="setting_value_' + id + '" class="dropbtn"></button>');
+                var jDropdownBtn = $('<button id="setting_value_' + id + '" class="dropbtn"></button>').addClass(key);
                 var jDropdown = $('<div class="dropdown-content"></div>');
                 jDropdownBtn.on('click', (function (jDropdown) {
                     return function () {
@@ -460,7 +461,7 @@ function genSettings(jContainer, settings) {
                 var max = setting.max;
                 var min = setting.min;
                 var jBtns = [];
-                var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>');
+                var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>').addClass(key);
                 var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
                 var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
                 jBtnP.on('click', (function (jInput, min, max, step) {
@@ -490,7 +491,7 @@ function genSettings(jContainer, settings) {
                 appendTitle(jSetting, title);
                 appendCol(jSetting, jBtns);
             } else if (typeof setting.default === 'string') {
-                var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="text" value="' + setting.default + '"/>');
+                var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="text" value="' + setting.default + '"/>').addClass(key);
                 jInput.on('change', function () {
                     saveSettings(settings);
                 });
