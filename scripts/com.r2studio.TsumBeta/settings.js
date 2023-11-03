@@ -273,10 +273,6 @@ function loadSettings(settings) {
     if (localStorage === undefined) {
         return;
     }
-    var settingsJSON = localStorage.getItem('tsumtsumsettings');
-    if (!settingsJSON) {
-        return;
-    }
     var version = +localStorage.getItem('tsumtsumversion');
     if (!version
         || version < VERSION && isResetSettingsRequired(version, VERSION)       // version updated
@@ -284,21 +280,50 @@ function loadSettings(settings) {
         return;
     }
     /** @type {Object.<string, boolean|number|string>} */
-    var recordSettings = JSON.parse(settingsJSON);
-    if (!recordSettings) {
-        return;
-    }
-    for (var i in settings) {
-        for (var g in settings[i]) {
-            var id = i + '_' + g;
-            var setting = settings[i][g];
-            if (recordSettings[id] !== undefined) {
-                setting.default = recordSettings[id];
-            }
+    var recordSettings;
+    var settingsJSON = localStorage.getItem('tsumtsumsettings2');
+    if (settingsJSON) {
+        // new key based setting assignments
+        recordSettings = JSON.parse(settingsJSON);
+        if (!recordSettings) {
+            return;
         }
+        (function () {
+            for (var k1 in settings) {
+                for (var k2 in settings[k1]) {
+                    var setting = settings[k1][k2];
+                    var key = setting.key;
+                    if (typeof key === 'string') {
+                        if (recordSettings[key] !== undefined) {
+                            setting.default = recordSettings[key];
+                        }
+                    }
+                }
+            }
+        })();
+    } else {
+        // old index based setting assignments
+        settingsJSON = localStorage.getItem('tsumtsumsettings');
+        if (!settingsJSON) {
+            return;
+        }
+        recordSettings = JSON.parse(settingsJSON);
+        if (!recordSettings) {
+            return;
+        }
+        (function () {
+            for (var i in settings) {
+                for (var g in settings[i]) {
+                    var id = i + '_' + g;
+                    var setting = settings[i][g];
+                    if (recordSettings[id] !== undefined) {
+                        setting.default = recordSettings[id];
+                    }
+                }
+            }
+        })();
     }
 
-    // This is so we send the locale for logging.... we should do this better but good enough for now.
     log(i18n('讀取設定', 'Load settings'));
 }
 
