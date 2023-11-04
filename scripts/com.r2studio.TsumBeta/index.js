@@ -1832,6 +1832,39 @@ Tsum.prototype.sleep = function(t) {
   }
 }
 
+function start(settings) {
+  log("Starting with new object-based start function")
+  startDeprecated(
+      settings['jpVersion'],
+      settings['specialScreenRatio'],
+      settings['autoLaunchApp'],
+      settings['autoPlayGame'],
+      settings['pauseWhenCalc'],
+      settings['clearBubbles'],
+      settings['useFan'],
+      settings['bonus5to4'],
+      settings['bonusCoin'],
+      settings['bonusBubble'],
+      settings['bonusAllItems'],
+      settings['skillWaitingTime'],
+      settings['skillLevel'],
+      settings['skillType'],
+      settings['receiveAllHearts'],
+      settings['receiveAllHeartsMinWait'],
+      settings['receiveHeartsOneByOne'],
+      settings['receiveHeartsSkipFirst'],
+      settings['receiveHeartsSkipRuby'],
+      settings['mailOpenMax'],
+      settings['mailMinWait'],
+      settings['recordSender'],
+      settings['recordSenderEnlarge'],
+      settings['sendHeartsAuto'],
+      settings['sendHeartsToZeroScore'],
+      settings['sendHeartsMaxRuntime'],
+      settings['sendHeartsMinWait'],
+      settings['langTaiwan']
+  );
+}
 // FIXME Use order-insensitive object instead of parameter list which is tighty coupled to the UI settings order.
 function startDeprecated(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
@@ -1869,7 +1902,7 @@ function startDeprecated(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbl
     Button.outReceiveOneRuby = Button.outReceiveOneRuby2th;
     Button.outReceiveOneAd = Button.outReceiveOneAd2th;
   }
-  
+
   if (ts.recordReceive) {
     ts.readRecord();
   }
@@ -1879,7 +1912,7 @@ function startDeprecated(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbl
       sentCount: 0
     };
   }
-  
+
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
     return;
