@@ -357,26 +357,29 @@ function saveSettings(settings) {
 }
 
 function genStartCommand(settings) {
-    var command = 'startDeprecated(';
+    var commandSettings = {};
     for (var i in settings) {
         for (var g in settings[i]) {
-            var id = i + '_' + g;
             var setting = settings[i][g];
+            var key = setting.key;
+            var selector = "." + key;
             if (typeof setting.default === 'boolean') {
-                command += $('#setting_value_' + id).is(':checked') + ', ';
+                commandSettings[key] = $(selector).is(':checked');
             } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
-                command += '"' + setting.default + '", ';
+                commandSettings[key] = setting.default; // why here no retieval via jQuery?
             } else if (typeof setting.default === 'number') {
-                command += $('#setting_value_' + id).val() + ', ';
+                commandSettings[key] = +$(selector).val();
             } else if (typeof setting.default === 'string') {
-                command += '"' + $('#setting_value_' + id).val() + '", ';
+                commandSettings[key] = $(selector).val();
             }
         }
     }
 
-    // This is so we send the locale to the start function
+    // Additionally send Taiwan locale information to the start function
     var lang = localStorage.getItem('tsumtsumlanguage');
-    command += (lang === 'zh-TW') + ');';
+    commandSettings.langTaiwan = lang === 'zh-TW';
+    // Create the start command
+    var command = "start(" + JSON.stringify(commandSettings) + ");";
     log(i18n('啟動命令: ', 'Start command: ') + command);
     return command;
 }
