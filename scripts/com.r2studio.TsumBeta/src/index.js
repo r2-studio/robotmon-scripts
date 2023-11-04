@@ -1945,7 +1945,7 @@ function genRecordTable() {
     }
     html += "<tr>";
     // user image
-    html += "<td><img src='./" + filename + "' /></td>";
+    html += "<td><img src=" + filename + "'..' /></td>";
     // user image2
     var filePath = getStoragePath()+"/tsum_record/" + filename;
     var tmpImg = openImage(filePath);
