@@ -357,7 +357,7 @@ function saveSettings(settings) {
 }
 
 function genStartCommand(settings) {
-    var command = 'start(';
+    var command = 'startDeprecated(';
     for (var i in settings) {
         for (var g in settings[i]) {
             var id = i + '_' + g;

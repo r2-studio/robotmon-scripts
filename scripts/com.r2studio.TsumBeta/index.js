@@ -1833,7 +1833,7 @@ Tsum.prototype.sleep = function(t) {
 }
 
 // FIXME Use order-insensitive object instead of parameter list which is tighty coupled to the UI settings order.
-function start(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
+function startDeprecated(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
   ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
