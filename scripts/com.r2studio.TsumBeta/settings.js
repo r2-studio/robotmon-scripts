@@ -1,9 +1,6 @@
 "use strict";
 
 var VERSION = 58;
-var VERSIONS = {
-    58: {resetSettings: true}
-}
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -259,24 +256,11 @@ function saveLocale(locale) {
 }
 
 function loadSettings(settings) {
-    function isResetSettingsRequired(startVersion, endVersion) {
-        // check for version jumps that require fallback to default settings
-        for (var i = startVersion + 1; i <= endVersion; i++) {
-            var v = VERSIONS[i];
-            if (v != null && v.resetSettings) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     if (localStorage === undefined) {
         return;
     }
     var version = +localStorage.getItem('tsumtsumversion');
-    if (!version
-        || version < VERSION && isResetSettingsRequired(version, VERSION)       // version updated
-        || version > VERSION && isResetSettingsRequired(VERSION, version)) {    // version downgraded
+    if (!version || version < 58) {
         return;
     }
     /** @type {Object.<string, boolean|number|string>} */
@@ -303,7 +287,7 @@ function loadSettings(settings) {
             }
         })();
     } else {
-        // old index based setting assignments
+        // old pre v59 index based setting assignments - delete when probably nobody uses v58 or older anymore
         settingsJSON = localStorage.getItem('tsumtsumsettings');
         if (!settingsJSON) {
             return;
@@ -409,9 +393,9 @@ function appendCol(jSetting, jContent) {
     jSetting.append(jCol);
 }
 
-function getSwitchButton(id, key, checked) {
+function getSwitchButton(key, checked) {
     var jLabel = $('<label class="switch pull-right"></label>');
-    var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="checkbox" ' + (checked ? 'checked' : '') + '/>').addClass(key);
+    var jInput = $('<input id="setting_value_' + key + '" class="setting_input_value" type="checkbox" ' + (checked ? 'checked' : '') + '/>').addClass(key);
     jInput.on('change', function () {
         saveSettings(settings);
     });
@@ -424,18 +408,17 @@ function genSettings(jContainer, settings) {
     for (var i in settings) {
         var jGroup = $('<div class="list-group"></div>');
         for (var g in settings[i]) {
-            var id = i + '_' + g;
             var setting = settings[i][g];
             var key = setting.key;
             var title = getTitle(setting);
-            var jGroupItem = $('<div id="setting_' + id + '" class="list-group-item"></div>');
+            var jGroupItem = $('<div id="setting_' + key + '" class="list-group-item"></div>');
             var jSetting = $('<div class="row"></div>');
             if (typeof setting.default === 'boolean') {
                 appendTitle(jSetting, title);
-                appendCol(jSetting, getSwitchButton(id, key, setting.default));
+                appendCol(jSetting, getSwitchButton(key, setting.default));
             } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
                 var jDiv = $('<div class="dropdown"></div>');
-                var jDropdownBtn = $('<button id="setting_value_' + id + '" class="dropbtn"></button>').addClass(key);
+                var jDropdownBtn = $('<button id="setting_value_' + key + '" class="dropbtn"></button>').addClass(key);
                 var jDropdown = $('<div class="dropdown-content"></div>');
                 jDropdownBtn.on('click', (function (jDropdown) {
                     return function () {
@@ -468,9 +451,9 @@ function genSettings(jContainer, settings) {
                 var max = setting.max;
                 var min = setting.min;
                 var jBtns = [];
-                var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>').addClass(key);
-                var jBtnP = $('<button id="setting_value_p_' + id + '" class="btn btn-danger">+' + step + '</button>');
-                var jBtnM = $('<button id="setting_value_m_' + id + '" class="btn btn-danger">-' + step + '</button>');
+                var jInput = $('<input id="setting_value_' + key + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>').addClass(key);
+                var jBtnP = $('<button id="setting_value_p_' + key + '" class="btn btn-danger">+' + step + '</button>');
+                var jBtnM = $('<button id="setting_value_m_' + key + '" class="btn btn-danger">-' + step + '</button>');
                 jBtnP.on('click', (function (jInput, min, max, step) {
                     return function () {
                         var newValue = (+jInput.val()) + step;
@@ -498,7 +481,7 @@ function genSettings(jContainer, settings) {
                 appendTitle(jSetting, title);
                 appendCol(jSetting, jBtns);
             } else if (typeof setting.default === 'string') {
-                var jInput = $('<input id="setting_value_' + id + '" class="setting_input_value" type="text" value="' + setting.default + '"/>').addClass(key);
+                var jInput = $('<input id="setting_value_' + key + '" class="setting_input_value" type="text" value="' + setting.default + '"/>').addClass(key);
                 jInput.on('change', function () {
                     saveSettings(settings);
                 });
@@ -507,7 +490,7 @@ function genSettings(jContainer, settings) {
             } else if (setting.buttons !== undefined) {
                 var jBtns = [];
                 for (var j in setting.buttons) {
-                    var jBtn = $('<button id="setting_value_b_' + id + '" onclick=' + setting.buttons[j].onclick + '>' + setting.buttons[j].title + '</button>').addClass('btn btn-plus');
+                    var jBtn = $('<button id="setting_value_b_' + key + '" onclick=' + setting.buttons[j].onclick + '>' + setting.buttons[j].title + '</button>').addClass('btn btn-plus');
                     jBtns.push(jBtn);
                 }
                 appendTitle(jSetting, title);
@@ -598,6 +581,7 @@ function genRecordTable(path) {
 }
 
 var ASC = true;
+
 function genRecord(record) {
     if (record === undefined || record === 'undefined' || record === '') {
         return;

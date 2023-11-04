@@ -1833,67 +1833,33 @@ Tsum.prototype.sleep = function(t) {
 }
 
 function start(settings) {
-  log("Starting with new object-based start function")
-  startDeprecated(
-      settings['jpVersion'],
-      settings['specialScreenRatio'],
-      settings['autoLaunchApp'],
-      settings['autoPlayGame'],
-      settings['pauseWhenCalc'],
-      settings['clearBubbles'],
-      settings['useFan'],
-      settings['bonus5to4'],
-      settings['bonusCoin'],
-      settings['bonusBubble'],
-      settings['bonusAllItems'],
-      settings['skillWaitingTime'],
-      settings['skillLevel'],
-      settings['skillType'],
-      settings['receiveAllHearts'],
-      settings['receiveAllHeartsMinWait'],
-      settings['receiveHeartsOneByOne'],
-      settings['receiveHeartsSkipFirst'],
-      settings['receiveHeartsSkipRuby'],
-      settings['mailOpenMax'],
-      settings['mailMinWait'],
-      settings['recordSender'],
-      settings['recordSenderEnlarge'],
-      settings['sendHeartsAuto'],
-      settings['sendHeartsToZeroScore'],
-      settings['sendHeartsMaxRuntime'],
-      settings['sendHeartsMinWait'],
-      settings['langTaiwan']
-  );
-}
-// FIXME Use order-insensitive object instead of parameter list which is tighty coupled to the UI settings order.
-function startDeprecated(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbles, useFan, isFourTsum, coinItem, bubbleItem, enableAllItems, skillInterval, skillLevel, skillType, receiveItem, receiveItemInterval, receiveOneItem, receiveSecondItem, keepRuby, receiveCheckLimit, receiveOneItemInterval, recordReceive, largeImage, sendHearts, sentToZero, sendHeartMaxDuring, sendHeartsInterval, isLocaleTW) {
-  ts = new Tsum(isJP, detect, isLocaleTW ? LogsTW : Logs);
+  ts = new Tsum(settings['jpVersion'], settings['specialScreenRatio'], settings['langTaiwan'] ? LogsTW : Logs);
   log(ts.logs.start);
   ts.debug = false;
-  if (isFourTsum) {
+  if (settings['bonus5to4']) {
     ts.tsumCount = 4;
   }
-  ts.autoLaunch = autoLaunch;
-  ts.coinItem = coinItem;
-  ts.bubbleItem = bubbleItem;
-  ts.isPause = isPause;
-  ts.receiveOneItem = receiveOneItem;
-  ts.receiveSecondItem = receiveSecondItem || false;
-  ts.recordReceive = recordReceive;
-  ts.sentToZero = sentToZero;
-  ts.receiveCheckLimit = receiveCheckLimit;
-  ts.clearBubbles = clearBubbles;
-  ts.enableAllItems = enableAllItems;
-  ts.skillInterval = skillInterval * 1000;
-  ts.skillLevel = skillLevel;
-  ts.skillType = skillType;
-  ts.receiveOneItem = receiveOneItem;
-  ts.sendHearts = sendHearts;
+  ts.autoLaunch = settings['autoLaunchApp'];
+  ts.coinItem = settings['bonusCoin'];
+  ts.bubbleItem = settings['bonusBubble'];
+  ts.isPause = settings['pauseWhenCalc'];
+  ts.receiveOneItem = settings['receiveHeartsOneByOne'];
+  ts.receiveSecondItem = settings['receiveHeartsSkipFirst'] || false;
+  ts.recordReceive = settings['recordSender'];
+  ts.sentToZero = settings['sendHeartsToZeroScore'];
+  ts.receiveCheckLimit = settings['mailOpenMax'];
+  ts.clearBubbles = settings['clearBubbles'];
+  ts.enableAllItems = settings['bonusAllItems'];
+  ts.skillInterval = settings['skillWaitingTime'] * 1000;
+  ts.skillLevel = settings['skillLevel'];
+  ts.skillType = settings['skillType'];
+  ts.receiveOneItem = settings['receiveHeartsOneByOne'];
+  ts.sendHearts = settings['sendHeartsAuto'];
   ts.showHeartLog = true;
-  ts.keepRuby = keepRuby;
-  ts.sendHeartMaxDuring = sendHeartMaxDuring * 60 * 1000;
-  ts.useFan = useFan;
-  if (largeImage) {
+  ts.keepRuby = settings['receiveHeartsSkipRuby'];
+  ts.sendHeartMaxDuring = settings['sendHeartsMaxRuntime'] * 60 * 1000;
+  ts.useFan = settings['useFan'];
+  if (settings['recordSenderEnlarge']) {
     ts.resizeRatio = 1;
   }
   if (ts.receiveSecondItem) {
@@ -1919,11 +1885,19 @@ function startDeprecated(isJP, detect, autoLaunch, autoPlay, isPause, clearBubbl
   }
 
   gTaskController = new TaskController();
-  if(receiveOneItem){gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), receiveOneItemInterval * 60 * 1000, 0);}
-  if(receiveItem){gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), receiveItemInterval * 60 * 1000, 0);}
-  if(sendHearts){gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), sendHeartsInterval * 60 * 1000, 0);}
+  if (settings['receiveHeartsOneByOne']) {
+    gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), settings['mailMinWait'] * 60 * 1000, 0);
+  }
+  if (settings['receiveAllHearts']) {
+    gTaskController.newTask('receiveItems', ts.taskReceiveAllItems.bind(ts), settings['receiveAllHeartsMinWait'] * 60 * 1000, 0);
+  }
+  if (settings['sendHeartsAuto']) {
+    gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), settings['sendHeartsMinWait'] * 60 * 1000, 0);
+  }
   if (checkFunction(outRange)) {
-    if(autoPlay){gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);}
+    if (settings['autoPlayGame']) {
+      gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);
+    }
   }
   sleep(500);
   gTaskController.start();
