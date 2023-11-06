@@ -1,14 +1,15 @@
 files=( index.js index.html settings.js )
 
-rm -rf dist 2>/dev/null
-mkdir dist
+rm -rf ./dist 2>/dev/null
+mkdir ./dist
 
 # shellcheck disable=SC2155
 export BUILD_DATE="$(date "+%F %H:%M:%S %:z")" # used by envsubst later
 
-for file in "${files[@]}"; do
-  envsubst < "$file" > dist/"$file"
-done
+npx html-inline-external --src ./src/index.html --dest ./dist/index.inlined.html
+envsubst < ./dist/index.inlined.html > ./dist/index.html
+rm ./dist/index.inlined.html
+cp ./src/index.js ./dist/
 
 (
 cd dist || exit
