@@ -88,7 +88,14 @@ var Button = {
   gameMagicalTime2: {x: 750, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameMagicalTime3: {x: 320, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   gameMagicalTime4: {x: 750, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  outGameItems: [{x: 205, y: 817 + adjY},{x: 435, y: 821 + adjY},{x: 651, y: 817 + adjY},{x: 871, y: 821 + adjY},{x: 201, y: 1095 + adjY},{x: 424, y: 1098 + adjY}],
+  outGameItems: [
+    {x: 205, y: 817 + adjY},    // +Score
+    {x: 435, y: 821 + adjY},    // +Coin
+    {x: 651, y: 817 + adjY},    // +Exp
+    {x: 871, y: 821 + adjY},    // +Time
+    {x: 201, y: 1095 + adjY},   // +Bubble
+    {x: 424, y: 1098 + adjY},   // 5>4
+    {x: 610, y: 1103 + adjY}],  // +Combo
   outGameEnd: {x: 890, y: 1520 + adjY, color: {"a":0,"b":15,"g":140,"r":245}},
   outStart1: {x: 500, y: 1520 + adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
   outStart2: {x: 500, y: 1520 + adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
@@ -793,13 +800,16 @@ function Tsum(isJP, detect, logs) {
   this.tsumCount = 5;
   this.isJP = isJP;
   this.logs = logs;
+  this.scoreItem = false;
   this.coinItem = false;
+  this.expItem = false;
+  this.timeItem = false;
   this.bubbleItem = false;
+  this.comboItem = false;
   this.isPause = false;
   this.receiveOneItem = false;
   this.sentToZero = false;
   this.recordReceive = true;
-  this.enableAllItems = false;
   this.skillInterval = 3000;
   this.skillLevel = 3;
   this.skillType = '';
@@ -1098,23 +1108,32 @@ Tsum.prototype.goFriendPage = function() {
 }
 
 Tsum.prototype.checkGameItem = function() { 
-  var isItemsOn = [false, false, false, false, false, false];
-  if (this.enableAllItems) {
-    isItemsOn = [true, true, true, true, true, true];
-  }
-  if (this.tsumCount === 4) {
-    isItemsOn[5] = true;
+  var isItemsOn = [false, false, false, false, false, false, false];
+  if (this.scoreItem) {
+    isItemsOn[0] = true;
   }
   if (this.coinItem) {
     isItemsOn[1] = true;
   }
+  if (this.expItem) {
+    isItemsOn[2] = true;
+  }
+  if (this.timeItem) {
+    isItemsOn[3] = true;
+  }
   if (this.bubbleItem) {
     isItemsOn[4] = true;
+  }
+  if (this.tsumCount === 4) {
+    isItemsOn[5] = true;
+  }
+  if (this.comboItem) {
+    isItemsOn[6] = true;
   }
   for(var t = 0; t < 3; t++) {
     var img = this.screenshot();
     var isChange = false;
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < Button.outGameItems.length; i++) {
       var c = this.getColor(img, Button.outGameItems[i]);
       if (c.b > 128) { // off
         if (isItemsOn[i]) {
@@ -1840,8 +1859,12 @@ function start(settings) {
     ts.tsumCount = 4;
   }
   ts.autoLaunch = settings['autoLaunchApp'];
+  ts.scoreItem = settings['bonusScore'];
   ts.coinItem = settings['bonusCoin'];
+  ts.expItem = settings['bonusExp'];
+  ts.timeItem = settings['bonusTime'];
   ts.bubbleItem = settings['bonusBubble'];
+  ts.comboItem = settings['bonusCombo'];
   ts.isPause = settings['pauseWhenCalc'];
   ts.receiveOneItem = settings['receiveHeartsOneByOne'];
   ts.receiveSecondItem = settings['receiveHeartsSkipFirst'] || false;
@@ -1849,7 +1872,6 @@ function start(settings) {
   ts.sentToZero = settings['sendHeartsToZeroScore'];
   ts.receiveCheckLimit = settings['mailOpenMax'];
   ts.clearBubbles = settings['clearBubbles'];
-  ts.enableAllItems = settings['bonusAllItems'];
   ts.skillInterval = settings['skillWaitingTime'] * 1000;
   ts.skillLevel = settings['skillLevel'];
   ts.skillType = settings['skillType'];

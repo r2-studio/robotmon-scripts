@@ -84,9 +84,9 @@ var settings = [
             default: false
         },
         {
-            key: 'bonus5to4',
-            title: '5>4',
-            title_zh_TW: '道具五變四',
+            key: 'bonusScore',
+            title: '+Score',
+            title_zh_TW: '道具Score',
             default: false
         },
         {
@@ -96,15 +96,33 @@ var settings = [
             default: false
         },
         {
+            key: 'bonusExp',
+            title: '+Exp',
+            title_zh_TW: '道具Exp',
+            default: false
+        },
+        {
+            key: 'bonusTime',
+            title: '+Time',
+            title_zh_TW: '道具Time',
+            default: false
+        },
+        {
             key: 'bonusBubble',
             title: '+Bubble',
             title_zh_TW: '道具Bubble',
             default: false
         },
         {
-            key: 'bonusAllItems',
-            title: 'All Bonus Items',
-            title_zh_TW: '開/關全部道具',
+            key: 'bonus5to4',
+            title: '5>4',
+            title_zh_TW: '道具五變四',
+            default: false
+        },
+        {
+            key: 'bonusCombo',
+            title: '+Combo',
+            title_zh_TW: '道具Combo',
             default: false
         },
         {
