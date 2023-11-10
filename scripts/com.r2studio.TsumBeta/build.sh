@@ -1,4 +1,4 @@
-files=( index.js index.html settings.js )
+#!/usr/bin/env sh
 
 rm -rf ./dist 2>/dev/null
 mkdir ./dist
