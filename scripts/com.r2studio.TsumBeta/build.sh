@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 rm -rf ./dist 2>/dev/null
 mkdir ./dist
@@ -16,4 +16,22 @@ cd dist || exit
 zip ../index.zip -- *
 )
 
-#adb push index.zip sdcard/Robotmon/scripts/com.r2studio.TsumBeta/index.zip
+while getopts ":a:" opt; do
+  case $opt in
+    a) ADB="$OPTARG"
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    exit 1
+    ;;
+  esac
+
+  case $OPTARG in
+    -*) echo "Option $opt needs a valid argument"
+    exit 1
+    ;;
+  esac
+done
+
+if [[ -v ADB ]] && [[ $ADB = true ]]; then
+  npm run adb
+fi

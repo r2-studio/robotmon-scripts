@@ -4,6 +4,8 @@
   "description": "This is the successor of the script com.r2studio.Tsum.",
   "main": "src/index.js",
   "scripts": {
+    "build" : "./build.sh",
+    "buildAndAdb" : "./build.sh -a true",
     "adb" : "adb push dist/index.* sdcard/Download/Robotmon/scripts/com.r2studio.TsumBeta/"
   },
   "keywords": [],
