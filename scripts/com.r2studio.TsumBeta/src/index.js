@@ -1150,6 +1150,7 @@ Tsum.prototype.checkGameItem = function() {
       }
     }
     releaseImage(img);
+    console.log("Bonus items changed = " + isChange);
     if (!isChange) {
       break;
     }
@@ -1167,12 +1168,13 @@ Tsum.prototype.goGamePlayingPage = function() {
     log(this.logs.currentPage, page, "play");
     if (page === 'FriendPage') {
       this.tap(Page[page].next);
+      this.sleep(3000);
     } else if (page === 'StartPage') {
       this.sleep(500);
       this.checkGameItem();
       this.sendMoneyInfo();
       this.tap(Button.outStart2);
-      this.sleep(3000); // avoid checking items again!
+      this.sleep(5000); // avoid checking items again!
     } else if (page === 'GamePlaying') {
       // check again
       page = this.findPage(1, 500);
@@ -1181,13 +1183,16 @@ Tsum.prototype.goGamePlayingPage = function() {
       }
     } else if (page === 'GamePause') {
       this.tap(Page[page].next);
+      this.sleep(500);
     } else if (page === 'unknown') {
       this.exitUnknownPage();
     } else if (page === "ClosePage") {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
+      this.sleep(1000);
     } else {
       this.tap(Page[page].back);
+      this.sleep(1000);
     }
   }
 }
