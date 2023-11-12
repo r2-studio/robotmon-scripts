@@ -290,7 +290,6 @@ function loadSettings(settings) {
         if (!recordSettings) {
             return;
         }
-        log("Loading new settings format");
         (function () {
             for (var k1 in settings) {
                 for (var k2 in settings[k1]) {
@@ -305,29 +304,9 @@ function loadSettings(settings) {
             }
         })();
     } else {
-        // old pre v59 index based setting assignments - delete when probably nobody uses v58 or older anymore
-        settingsJSON = localStorage.getItem('tsumtsumsettings');
-        if (!settingsJSON) {
-            return;
-        }
-        recordSettings = JSON.parse(settingsJSON);
-        if (!recordSettings) {
-            return;
-        }
-        log("Loading old settings format");
-        (function () {
-            for (var i in settings) {
-                for (var g in settings[i]) {
-                    var id = i + '_' + g;
-                    var setting = settings[i][g];
-                    if (recordSettings[id] !== undefined) {
-                        setting.default = recordSettings[id];
-                    }
-                }
-            }
-        })();
+        log(i18n('没有找到设置，使用默认设置', 'No settings found, using default ones'));
+        return;
     }
-
     log(i18n('讀取設定', 'Load settings'));
 }
 
@@ -352,7 +331,7 @@ function saveSettings(settings) {
         }
         localStorage.setItem('tsumtsumversion', '' + VERSION);
         localStorage.setItem('tsumtsumsettings2', JSON.stringify(recordSettings));
-        localStorage.removeItem('tsumtsumsettings');
+        localStorage.removeItem('tsumtsumsettings');    // old settings storage until v58
 
         log(i18n('儲存設定', 'Save settings'));
     }
