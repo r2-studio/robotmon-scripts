@@ -70,7 +70,6 @@ var adjY = 72;
 var Button = {
   gameBubblesFrom: {x: 100, y: 560 + adjY},
   gameBubblesTo: {x: 1000, y: 1460 + adjY},
-  gameMyTsum: {x: 100, y: 1450 + adjY},
   gameQuestionCancel: {x: 400, y: 1280 + adjY},
   gameQuestionCancel2: {x: 400, y: 1000 + adjY},
   gameStop: {x: 440, y: 1000 + adjY},
@@ -82,12 +81,6 @@ var Button = {
   gameRand: {x: 985, y: 1580 + adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 983, y: 250 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue: {x: 540, y: 1270 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameContinue1: {x: 461, y: 980 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue2: {x: 911, y: 980 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameMagicalTime1: {x: 320, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime2: {x: 750, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime3: {x: 320, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime4: {x: 750, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
   outGameItems: [
     {x: 205, y: 817 + adjY},    // +Score
     {x: 435, y: 821 + adjY},    // +Coin
@@ -96,29 +89,19 @@ var Button = {
     {x: 201, y: 1095 + adjY},   // +Bubble
     {x: 424, y: 1098 + adjY},   // 5>4
     {x: 610, y: 1103 + adjY}],  // +Combo
-  outGameEnd: {x: 890, y: 1520 + adjY, color: {"a":0,"b":15,"g":140,"r":245}},
-  outStart1: {x: 500, y: 1520 + adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
-  outStart2: {x: 500, y: 1520 + adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
+  outStart: {x: 500, y: 1520 + adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
   outClose: {x: 500, y: 1520 + adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
-  outClose2: {x: 300, y: 1520 + adjY}, // 關閉
   outReceive: {x: 910, y: 350 + adjY},
   outReceiveAll: {x: 800, y: 1350 + adjY},
   outReceiveOk: {x: 835, y: 1020 + adjY, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveClose: {x: 530, y: 1300 + adjY},
   outReceiveOne: {x: 840, y: 497 + adjY, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outReceiveOneCoin: {x: 291, y: 579 + adjY, color: {r: 232, g: 229, b: 38}},
   outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
   outReceiveOneRuby2th: {x: 295, y: 651+68*3, color: {r: 235, g: 93, b: 105}}, // ruby
   outReceiveOneAd: { x: 290, y: 812 - 140, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveOneAd2th: { x: 290, y: 672+68*3, color: { r: 90, g: 57, b: 25 } }, // ad
-  outReceiveOneTicket1: {x: 298, y: 569 + adjY, color: {r: 125, g: 188, b: 177}}, // green
-  outReceiveOneTicket2: {x: 316, y: 576 + adjY, color: {r: 248, g: 255, b: 253}}, // white
-  outIsLoading1: {x: 540, y: 720 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
-  outIsLoading2: {x: 540, y: 910 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
   outReceiveTimeout: {x: 600, y: 1020 + adjY, color: {"a":0,"b":11,"g":171,"r":235}},
-  outDisconnected: {x:  147, y: 1008 + adjY, color: {r: 243, g: 89, b: 117}},
   outSendHeartTop: {x: 910, y: 430 + adjY},
   outSendHeart0: {x: 910, y: 626 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart1: {x: 910, y: 823 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -1173,7 +1156,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.sleep(500);
       this.checkGameItem();
       this.sendMoneyInfo();
-      this.tap(Button.outStart2);
+      this.tap(Button.outStart);
       this.sleep(5000); // avoid checking items again!
     } else if (page === 'GamePlaying') {
       // check again
@@ -1880,7 +1863,6 @@ function start(settings) {
   ts.skillInterval = settings['skillWaitingTime'] * 1000;
   ts.skillLevel = settings['skillLevel'];
   ts.skillType = settings['skillType'];
-  ts.receiveOneItem = settings['receiveHeartsOneByOne'];
   ts.sendHearts = settings['sendHeartsAuto'];
   ts.showHeartLog = true;
   ts.keepRuby = settings['receiveHeartsSkipRuby'];
