@@ -826,7 +826,7 @@ function Tsum(isJP, detect, logs) {
   this.skillInterval = 3000;
   this.skillLevel = 3;
   this.skillType = '';
-  this.autoUnlockLevel = false;
+  this.unlockLevelHoursWait = 0;
   this.sendHearts = false;
   this.keepRuby = false;
   this.showHeartLog = true;
@@ -2020,7 +2020,7 @@ function start(settings) {
   ts.skillInterval = settings['skillWaitingTime'] * 1000;
   ts.skillLevel = settings['skillLevel'];
   ts.skillType = settings['skillType'];
-  ts.autoUnlockLevel = settings["autoUnlockLevel"];
+  ts.unlockLevelHoursWait = settings["unlockLevelHoursWait"];
   ts.sendHearts = settings['sendHeartsAuto'];
   ts.showHeartLog = true;
   ts.keepRuby = settings['receiveHeartsSkipRuby'];
@@ -2052,8 +2052,8 @@ function start(settings) {
   }
 
   gTaskController = new TaskController();
-  if (settings['autoUnlockLevel']) {
-    gTaskController.newTask('autoUnlockLevel', ts.taskAutoUnlockLevel.bind(ts), 60 * 60 * 1000, 0);
+  if (settings['unlockLevelHoursWait'] > 0) {
+    gTaskController.newTask('autoUnlockLevel', ts.taskAutoUnlockLevel.bind(ts), settings['unlockLevelHoursWait'] * 60 * 60 * 1000, 0);
   }
   if (settings['receiveHeartsOneByOne']) {
     gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), settings['mailMinWait'] * 60 * 1000, 0);

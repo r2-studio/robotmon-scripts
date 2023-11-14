@@ -165,10 +165,13 @@ var settings = [
             ]
         },
         {
-            key: 'autoUnlockLevel',
-            title: 'Auto Unlock Level',
-            title_zh_TW: '自动解锁级别',
-            default: false
+            key: 'unlockLevelHoursWait',
+            title: 'Unlock Level every hours',
+            title_zh_TW: '每小时解锁等级',
+            default: 0,
+            min: 0,
+            max: 24,
+            step: 1
         }
     ],
     [
