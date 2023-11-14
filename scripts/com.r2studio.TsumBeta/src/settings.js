@@ -302,10 +302,8 @@ function loadSettings(settings) {
                 for (var k2 in settings[k1]) {
                     var setting = settings[k1][k2];
                     var key = setting.key;
-                    if (typeof key === 'string') {
-                        if (recordSettings[key] !== undefined) {
-                            setting.default = recordSettings[key];
-                        }
+                    if (typeof key === 'string' && typeof recordSettings[key] === typeof setting.default) {
+                        setting.default = recordSettings[key];
                     }
                 }
             }
