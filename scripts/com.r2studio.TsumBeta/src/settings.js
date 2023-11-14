@@ -163,6 +163,12 @@ var settings = [
                 {key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉'},
                 {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'}
             ]
+        },
+        {
+            key: 'autoUnlockLevel',
+            title: 'Auto Unlock Level',
+            title_zh_TW: '自动解锁级别',
+            default: false
         }
     ],
     [
