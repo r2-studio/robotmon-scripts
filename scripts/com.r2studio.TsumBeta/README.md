@@ -8,11 +8,11 @@ This is the successor of the script `com.r2studio.Tsum`.
 - "New highscore" detection and escape
 - Do not reset settings to default values on new script version
 - Add missing bonus items "+Score", "+Exp", "+Time" and "+Combo"
+- Unlock next Tsum level automatically
 
 ### ⏹️ Planned and rather realistic
 - "Bingo detection" and escape 
 - "New Event" detection and escape
-- Unlock next Tsum level automatically
 - Support for Pair Tsum skill activations
 
 ### ❓ Probably too sophisticated ideas
