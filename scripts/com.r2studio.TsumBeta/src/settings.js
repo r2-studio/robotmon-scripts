@@ -26,6 +26,7 @@ var settings = [
             title_zh_TW: '感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙'
         },
         {
+            key: 'buildDate',
             title: 'Build date: $BUILD_DATE',
             title_zh_TW: '建造日期: $BUILD_DATE'
         }
@@ -337,6 +338,13 @@ function saveSettings(settings) {
     }
 }
 
+function resetSettings() {
+    localStorage.removeItem('tsumtsumsettings2');
+    $("#restartNowText")
+      .text(i18n('立即重启TsumTsum脚本', 'Restart TsumTsum script now'))
+      .show();
+}
+
 function genStartCommand(settings) {
     var commandSettings = {};
     for (var i in settings) {
@@ -643,6 +651,7 @@ function exportSuccess() {
     $exportRecordLegacy.text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
 }
 
+var buildDateClicks = 0;
 // render settings page
 $(function ($) {
     $('#version').html('Tsum Tsum v' + VERSION);
@@ -650,6 +659,13 @@ $(function ($) {
     loadSettings(settings);
     genSettings($('#settings'), settings);
 
+    $("#setting_buildDate").on("click", function () {
+        buildDateClicks++;
+        log("Increased build date clicks to " + buildDateClicks);
+        if (buildDateClicks >= 10) {
+            $('#resetSettings').show();
+        }
+    });
 
     $('#senders').text(i18n('誰送你心', 'List of Heart Counts'));
     $('#updateRecordASC').text(i18n('更新(遞增)', 'Update(ASC)')).on('click', function () {
