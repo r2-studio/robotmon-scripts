@@ -16,9 +16,11 @@ cd dist || exit
 zip ../index.zip -- *
 )
 
-while getopts ":a:" opt; do
+while getopts ":ad:" opt; do
   case $opt in
-    a) ADB="$OPTARG"
+    a) ADB="true"
+    ;;
+    d) DEVICE="$OPTARG"
     ;;
     \?) echo "Invalid option -$OPTARG" >&2
     exit 1
@@ -33,6 +35,9 @@ while getopts ":a:" opt; do
 done
 
 if [[ -v ADB ]] && [[ $ADB = true ]]; then
-  adb push dist/index.js sdcard/Download/Robotmon/scripts/com.r2studio.TsumBeta/
-  adb push dist/index.html sdcard/Download/Robotmon/scripts/com.r2studio.TsumBeta/
+  if [[ -v DEVICE ]]; then
+    EXTRA_ARG="-s $DEVICE"
+  fi
+  adb $EXTRA_ARG push dist/index.js sdcard/Download/Robotmon/scripts/com.r2studio.TsumBeta/
+  adb $EXTRA_ARG push dist/index.html sdcard/Download/Robotmon/scripts/com.r2studio.TsumBeta/
 fi
