@@ -33,5 +33,6 @@ while getopts ":a:" opt; do
 done
 
 if [[ -v ADB ]] && [[ $ADB = true ]]; then
-  npm run adb
+  adb push dist/index.js sdcard/Download/Robotmon/scripts/com.r2studio.TsumBeta/
+  adb push dist/index.html sdcard/Download/Robotmon/scripts/com.r2studio.TsumBeta/
 fi
