@@ -2139,8 +2139,8 @@ function genRecordTable() {
       totalCount += dayCount;
     }
     var avg = 0;
-    if (dayCount !== 0) {
-      avg = (totalCount/dayCount).toFixed(1);  // FIXME dayCount should probably be totalDay
+    if (totalDay !== 0) {
+      avg = (totalCount/totalDay).toFixed(1);
     }
     html += "<td>" + totalCount + "</td>";
     html += "<td>" + avg + "</td>";
