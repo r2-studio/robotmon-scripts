@@ -131,8 +131,8 @@ var Button = {
   skillLuke2: {x: 830, y: 1402},
   skillLuke3: {x: 670, y: 1447},
   skillLuke4: {x: 960, y: 1232},
-  outReceiveNameFrom: {x: 160, y: 532},
-  outReceiveNameTo: {x: 620, y: 627},
+  outReceiveNameFrom: {x: 150, y: 532},
+  outReceiveNameTo: {x: 660, y: 670},
   moneyInfoBox: {x: 430, y: 188, w: 230, h: 56},
   outOpenTsumCollectionOrder: {x: 983, y: 890, r: 165, g: 85, b: 49},
   outCloseTsumCollectionOrder: {x: 552, y: 1365, r: 247, g: 174, b: 8},
@@ -2849,18 +2849,68 @@ function genRecordTable() {
     return "Can not read record.txt";
   }
 
-  var html = "<html><body>";
-  html += "<table>";
-  html += "<tr><td>UserImage</td><td>UserImage2</td><td>All</td><td>Avg</td><td>Day</td></tr>";
+  // enhance records with total and average hearts per filename
   var dayMapCount = {};
+  var renderRecords = [];
   for (var filename in record) {
-    if (filename === "hearts_count") {
-      continue;
+    (function (filename) {
+      if (filename !== "hearts_count") {
+        var totalDay = 0;
+        var totalCount = 0;
+        var recordElement = record[filename];
+        for (var dayTime in recordElement.receiveCounts) {
+          var dayCount = recordElement.receiveCounts[dayTime];
+
+          if (dayMapCount[+dayTime] === undefined) {
+            dayMapCount[+dayTime] = 0;
+          }
+          dayMapCount[+dayTime] += dayCount;
+
+          totalDay++;
+          totalCount += dayCount;
+        }
+        var avg = 0;
+        if (totalDay !== 0) {
+          avg = (totalCount / totalDay).toFixed(1);
+        }
+        recordElement.all = totalCount;
+        recordElement.avg = avg;
+        recordElement.filename = filename;
+        renderRecords.push(recordElement);
+      }
+    })(filename, dayMapCount, renderRecords);
+  }
+
+  // sort records descending by total
+  renderRecords.sort(function (a, b) {
+    return b.all - a.all;
+  });
+
+  // create sorted dayTime array
+  var dayTimesSorted = [];
+  for (var dayTime in dayMapCount) {
+    if (dayMapCount.hasOwnProperty(dayTime)) {
+      dayTimesSorted.push(dayTime);
     }
+  }
+  dayTimesSorted.sort(function (a, b) {
+    return a - b;
+  });
+
+  // render records
+  var html = "<html><body><style>table { border-collapse: collapse; } th, td { border: solid 1px black; text-align: right; padding: 4px 10px 4px 10px; } .records td:nth-child(2n+5), .records th:nth-child(2n+5) { background-color: lightgray; } .all { background-color: darkseagreen; } .avg { background-color: lightsteelblue; border-right-width: 5px; }</style>";
+  html += "<table class='records'>";
+  html += "<tr><th>UserImage</th><th class='all'>All</th><th class='avg'>Avg</th>";
+  for (var j = 0; j < dayTimesSorted.length ; j++) {
+    dayTime = dayTimesSorted[j];
+    html += '<th>' + getDayTimeString(new Date(dayTime * (24 * 60 * 60 * 1000))) + '</th>';
+  }
+  html += "</tr>";
+  for (var i = 0; i < renderRecords.length; i += 1) {
+    var renderRecord = renderRecords[i];
+    filename = renderRecord.filename;
     html += "<tr>";
     // user image
-    html += "<td><img src=" + filename + "'..' /></td>";
-    // user image2
     var filePath = getStoragePath()+"/tsum_record/" + filename;
     var tmpImg = openImage(filePath);
     var base64 = getBase64FromImage(tmpImg);
@@ -2870,15 +2920,11 @@ function genRecordTable() {
     var totalDay = 0;
     var totalCount = 0;
     var tmpHtml = "";
-    for (var day in record[filename].receiveCounts) {
-      var dayTime = new Date(+day * 86400000);
-      var dayStr = getDayTimeString(dayTime);
-      var dayCount = record[filename].receiveCounts[day];
+    for (j = 0; j < dayTimesSorted.length ; j++) {
+      dayTime = dayTimesSorted[j];
+      var dayCount = parseInt(renderRecord.receiveCounts[dayTime]) || 0;
+      tmpHtml += '<td>' + dayCount + '</td>';
 
-      if (dayMapCount[+day] === undefined) {dayMapCount[+day] = 0;}
-      dayMapCount[+day] += dayCount;
-
-      tmpHtml += "<td>" + dayStr + ":" + dayCount + "</td>";
       totalDay++;
       totalCount += dayCount;
     }
@@ -2886,8 +2932,8 @@ function genRecordTable() {
     if (totalDay !== 0) {
       avg = (totalCount/totalDay).toFixed(1);
     }
-    html += "<td>" + totalCount + "</td>";
-    html += "<td>" + avg + "</td>";
+    html += "<td class='all'>" + totalCount + "</td>";
+    html += "<td class='avg'>" + avg + "</td>";
     html += tmpHtml;
     html += "</tr>";
   }
@@ -2895,12 +2941,13 @@ function genRecordTable() {
   html += "<br /> <br />";
   // day count
   html += "<table>";
-  html += "<tr><td>Date</td><td>Hearts</td></tr>";
-  for (day in dayMapCount) {
-    dayTime = new Date(+day * 86400000);
+  html += "<tr><th>Date</th><th>Hearts</th></tr>";
+  for (j = 0; j < dayTimesSorted.length ; j++) {
+    dayTime = dayTimesSorted[j];
+    var date = new Date(+dayTime * (24 * 60 * 60 * 1000));
     html += "<tr>";
-    html += "<td>" + getDayTimeString(dayTime) + "</td>";
-    html += "<td>" + dayMapCount[day] + "</td>";
+    html += "<td>" + getDayTimeString(date) + "</td>";
+    html += "<td>" + dayMapCount[dayTime] + "</td>";
     html += "</tr>";
   }
   html += "</table>";
