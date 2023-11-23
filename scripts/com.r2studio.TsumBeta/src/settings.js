@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 58;
+var VERSION = 59;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -26,6 +26,7 @@ var settings = [
             title_zh_TW: '感謝 Chris Kwan 和 Melissa Stinson 的熱情幫忙'
         },
         {
+            key: 'buildDate',
             title: 'Build date: $BUILD_DATE',
             title_zh_TW: '建造日期: $BUILD_DATE'
         }
@@ -84,9 +85,9 @@ var settings = [
             default: false
         },
         {
-            key: 'bonus5to4',
-            title: '5>4',
-            title_zh_TW: '道具五變四',
+            key: 'bonusScore',
+            title: '+Score',
+            title_zh_TW: '道具Score',
             default: false
         },
         {
@@ -96,15 +97,33 @@ var settings = [
             default: false
         },
         {
+            key: 'bonusExp',
+            title: '+Exp',
+            title_zh_TW: '道具Exp',
+            default: false
+        },
+        {
+            key: 'bonusTime',
+            title: '+Time',
+            title_zh_TW: '道具Time',
+            default: false
+        },
+        {
             key: 'bonusBubble',
             title: '+Bubble',
             title_zh_TW: '道具Bubble',
             default: false
         },
         {
-            key: 'bonusAllItems',
-            title: 'All Bonus Items',
-            title_zh_TW: '開/關全部道具',
+            key: 'bonus5to4',
+            title: '5>4',
+            title_zh_TW: '道具五變四',
+            default: false
+        },
+        {
+            key: 'bonusCombo',
+            title: '+Combo',
+            title_zh_TW: '道具Combo',
             default: false
         },
         {
@@ -144,6 +163,15 @@ var settings = [
                 {key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉'},
                 {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'}
             ]
+        },
+        {
+            key: 'unlockLevelHoursWait',
+            title: 'Unlock Level every hours',
+            title_zh_TW: '每小时解锁等级',
+            default: 0,
+            min: 0,
+            max: 24,
+            step: 1
         }
     ],
     [
@@ -272,44 +300,21 @@ function loadSettings(settings) {
         if (!recordSettings) {
             return;
         }
-        log("Loading new settings format");
         (function () {
             for (var k1 in settings) {
                 for (var k2 in settings[k1]) {
                     var setting = settings[k1][k2];
                     var key = setting.key;
-                    if (typeof key === 'string') {
-                        if (recordSettings[key] !== undefined) {
-                            setting.default = recordSettings[key];
-                        }
+                    if (typeof key === 'string' && typeof recordSettings[key] === typeof setting.default) {
+                        setting.default = recordSettings[key];
                     }
                 }
             }
         })();
     } else {
-        // old pre v59 index based setting assignments - delete when probably nobody uses v58 or older anymore
-        settingsJSON = localStorage.getItem('tsumtsumsettings');
-        if (!settingsJSON) {
-            return;
-        }
-        recordSettings = JSON.parse(settingsJSON);
-        if (!recordSettings) {
-            return;
-        }
-        log("Loading old settings format");
-        (function () {
-            for (var i in settings) {
-                for (var g in settings[i]) {
-                    var id = i + '_' + g;
-                    var setting = settings[i][g];
-                    if (recordSettings[id] !== undefined) {
-                        setting.default = recordSettings[id];
-                    }
-                }
-            }
-        })();
+        log(i18n('没有找到设置，使用默认设置', 'No settings found, using default ones'));
+        return;
     }
-
     log(i18n('讀取設定', 'Load settings'));
 }
 
@@ -334,10 +339,17 @@ function saveSettings(settings) {
         }
         localStorage.setItem('tsumtsumversion', '' + VERSION);
         localStorage.setItem('tsumtsumsettings2', JSON.stringify(recordSettings));
-        localStorage.removeItem('tsumtsumsettings');
+        localStorage.removeItem('tsumtsumsettings');    // old settings storage until v58
 
         log(i18n('儲存設定', 'Save settings'));
     }
+}
+
+function resetSettings() {
+    localStorage.removeItem('tsumtsumsettings2');
+    $("#restartNowText")
+      .text(i18n('立即重启TsumTsum脚本', 'Restart TsumTsum script now'))
+      .show();
 }
 
 function genStartCommand(settings) {
@@ -646,6 +658,7 @@ function exportSuccess() {
     $exportRecordLegacy.text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
 }
 
+var buildDateClicks = 0;
 // render settings page
 $(function ($) {
     $('#version').html('Tsum Tsum v' + VERSION);
@@ -653,6 +666,13 @@ $(function ($) {
     loadSettings(settings);
     genSettings($('#settings'), settings);
 
+    $("#setting_buildDate").on("click", function () {
+        buildDateClicks++;
+        log("Increased build date clicks to " + buildDateClicks);
+        if (buildDateClicks >= 10) {
+            $('#resetSettings').show();
+        }
+    });
 
     $('#senders').text(i18n('誰送你心', 'List of Heart Counts'));
     $('#updateRecordASC').text(i18n('更新(遞增)', 'Update(ASC)')).on('click', function () {

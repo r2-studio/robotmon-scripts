@@ -70,7 +70,6 @@ var adjY = 72;
 var Button = {
   gameBubblesFrom: {x: 100, y: 560 + adjY},
   gameBubblesTo: {x: 1000, y: 1460 + adjY},
-  gameMyTsum: {x: 100, y: 1450 + adjY},
   gameQuestionCancel: {x: 400, y: 1280 + adjY},
   gameQuestionCancel2: {x: 400, y: 1000 + adjY},
   gameStop: {x: 440, y: 1000 + adjY},
@@ -82,36 +81,27 @@ var Button = {
   gameRand: {x: 985, y: 1580 + adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 983, y: 250 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue: {x: 540, y: 1270 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameContinue1: {x: 461, y: 980 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue2: {x: 911, y: 980 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameMagicalTime1: {x: 320, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime2: {x: 750, y: 1255 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime3: {x: 320, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  gameMagicalTime4: {x: 750, y: 1130 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
-  outGameItems: [{x: 205, y: 817 + adjY},{x: 435, y: 821 + adjY},{x: 651, y: 817 + adjY},{x: 871, y: 821 + adjY},{x: 201, y: 1095 + adjY},{x: 424, y: 1098 + adjY}],
-  outGameEnd: {x: 890, y: 1520 + adjY, color: {"a":0,"b":15,"g":140,"r":245}},
-  outStart1: {x: 500, y: 1520 + adjY, color: {"a":0,"b":19,"g":145,"r":247}}, // 開始遊戲
-  outStart2: {x: 500, y: 1520 + adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
+  outGameItems: [
+    {x: 205, y: 817 + adjY},    // +Score
+    {x: 435, y: 821 + adjY},    // +Coin
+    {x: 651, y: 817 + adjY},    // +Exp
+    {x: 871, y: 821 + adjY},    // +Time
+    {x: 201, y: 1095 + adjY},   // +Bubble
+    {x: 424, y: 1098 + adjY},   // 5>4
+    {x: 610, y: 1103 + adjY}],  // +Combo
+  outStart: {x: 500, y: 1520 + adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
   outClose: {x: 500, y: 1520 + adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
-  outClose2: {x: 300, y: 1520 + adjY}, // 關閉
   outReceive: {x: 910, y: 350 + adjY},
   outReceiveAll: {x: 800, y: 1350 + adjY},
   outReceiveOk: {x: 835, y: 1020 + adjY, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveClose: {x: 530, y: 1300 + adjY},
   outReceiveOne: {x: 840, y: 497 + adjY, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOneHeart: {x: 290, y: 585 + adjY, color: {"a":0,"b":146,"g":65,"r":214}},
-  outReceiveOneCoin: {x: 291, y: 579 + adjY, color: {r: 232, g: 229, b: 38}},
   outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
   outReceiveOneRuby2th: {x: 295, y: 651+68*3, color: {r: 235, g: 93, b: 105}}, // ruby
   outReceiveOneAd: { x: 290, y: 812 - 140, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveOneAd2th: { x: 290, y: 672+68*3, color: { r: 90, g: 57, b: 25 } }, // ad
-  outReceiveOneTicket1: {x: 298, y: 569 + adjY, color: {r: 125, g: 188, b: 177}}, // green
-  outReceiveOneTicket2: {x: 316, y: 576 + adjY, color: {r: 248, g: 255, b: 253}}, // white
-  outIsLoading1: {x: 540, y: 720 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
-  outIsLoading2: {x: 540, y: 910 + adjY, color: {"a":0,"b":255,"g":255,"r":255}},
   outReceiveTimeout: {x: 600, y: 1020 + adjY, color: {"a":0,"b":11,"g":171,"r":235}},
-  outDisconnected: {x:  147, y: 1008 + adjY, color: {r: 243, g: 89, b: 117}},
   outSendHeartTop: {x: 910, y: 430 + adjY},
   outSendHeart0: {x: 910, y: 626 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart1: {x: 910, y: 823 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -131,7 +121,14 @@ var Button = {
   skillLuke4: {x: 960, y: 1160 + adjY},
   outReceiveNameFrom: {x: 160, y: 460 + adjY},
   outReceiveNameTo: {x: 620, y: 555 + adjY},
-  moneyInfoBox: {x: 430, y: 116 + adjY, w: 230, h: 56}
+  moneyInfoBox: {x: 430, y: 116 + adjY, w: 230, h: 56},
+  outOpenTsumCollectionOrder: {x: 983, y: 890, r: 165, g: 85, b: 49},
+  outCloseTsumCollectionOrder: {x: 552, y: 1365, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderByReleaseDate: {name: 'By Release Date', x: 331, y: 774, r: 247, g: 178, b: 8},
+  outTsumCollectionOrderFavorites: {name: 'By Favorites', x: 765, y: 769, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderBySkill: {name: 'By Skill', x: 310, y: 988, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderByLevelLock: {name: 'By Level Lock', x: 766, y: 984, r: 247, g: 174, b: 8},
+  outTsumCollectionDoUnlock: {x: 111, y: 760, r: 173, g: 109, b: 57}
 };
 
 var Page = {
@@ -164,7 +161,8 @@ var Page = {
       {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
-    next: {x: 547, y: 1581 + adjY}
+    next: {x: 547, y: 1581 + adjY},
+    tsums: {x: 900, y: 1581 + adjY}
   },
   FriendPage2: {
     name: 'FriendPage',
@@ -175,7 +173,8 @@ var Page = {
       {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
-    next: {x: 547, y: 1581 + adjY}
+    next: {x: 547, y: 1581 + adjY},
+    tsums: {x: 900, y: 1581 + adjY}
   },
   FriendPage3: {
     name: 'FriendPage',
@@ -186,7 +185,8 @@ var Page = {
       {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
-    next: {x: 547, y: 1581 + adjY}
+    next: {x: 547, y: 1581 + adjY},
+    tsums: {x: 900, y: 1581 + adjY}
   },
   FriendPage4: {
     name: 'FriendPage',
@@ -197,7 +197,8 @@ var Page = {
       {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
     ],
     back: {x: 547, y: 1581 + adjY},
-    next: {x: 547, y: 1581 + adjY}
+    next: {x: 547, y: 1581 + adjY},
+    tsums: {x: 900, y: 1581 + adjY}
   },
   GiftHeart: {
     name: 'GiftHeart',
@@ -274,7 +275,8 @@ var Page = {
       {x: 792, y: 1588 + adjY, r: 234, g: 171, b: 8  , match: true, threshold: 100}
     ],
     back: {x: 190, y: 1574 + adjY},
-    next: {x: 558, y: 1563 + adjY}
+    next: {x: 558, y: 1563 + adjY},
+    tsums: {x: 900, y: 1581 + adjY}
   },
   StartPage2: {
     name: 'StartPage',
@@ -301,9 +303,21 @@ var Page = {
   TsumsPage: {
     name: 'TsumsPage',
     colors: [
-      {x: 514, y: 842  + adjY, r: 41, g: 177, b: 203 , match: true, threshold: 80},
-      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11 , match: true, threshold: 100},
-      {x: 817, y: 1516 + adjY, r: 238, g: 191, b: 13 , match: true, threshold: 80}
+      {x: 27, y: 901, r: 198, g: 239, b: 247, match: true, threshold: 80},    // left of "Tsum Tsum Collection" title bar
+      {x: 577, y: 906, r: 255, g: 251, b: 255, match: true, threshold: 80},   // middle of "Tsum Tsum Collection" title bar
+      {x: 741, y: 899, r: 132, g: 190, b: 214, match: true, threshold: 80},   // right of "Tsum Tsum Collection" title bar (short before "Level Lock")
+      {x: 1012, y: 899, r: 247, g: 186, b: 16, match: true, threshold: 80}    // yellow "order" button
+
+    ],
+    lockIcons: [
+      {x: 196, y: 1195, r: 239, g: 247, b: 255},
+      {x: 429, y: 1195, r: 239, g: 247, b: 255},
+      {x: 663, y: 1195, r: 239, g: 247, b: 255},
+      {x: 898, y: 1195, r: 239, g: 247, b: 255},
+      {x: 196, y: 1450, r: 239, g: 247, b: 255},
+      {x: 429, y: 1450, r: 239, g: 247, b: 255},
+      {x: 663, y: 1450, r: 239, g: 247, b: 255},
+      {x: 898, y: 1450, r: 239, g: 247, b: 255}
     ],
     back: {x: 176, y: 1520 + adjY},
     next: {x: 176, y: 1520 + adjY}
@@ -464,7 +478,10 @@ var Logs = {
   checkSendingHearts: 'Check sending hearts',
   sendingHearts: 'Sending',
   sendingZeroScore: 'hearts',
-  timeIsUp: 'Time\'s up'
+  timeIsUp: 'Time\'s up',
+  tsumsPage: 'Tsum collection page',
+  startUnlockLevel: 'Check for level locked Tsums',
+  endUnlockLevel: 'Finished unlocking Tsum levels'
 }
 
 var LogsTW = {
@@ -517,7 +534,10 @@ var LogsTW = {
   checkSendingHearts: '檢查送愛心',
   sendingHearts: '已送出',
   sendingZeroScore: '顆愛心',
-  timeIsUp: '送心時間結束'
+  timeIsUp: '送心時間結束',
+  tsumsPage: 'Tsum收集页面',
+  startUnlockLevel: '检查等级锁定的Tsum',
+  endUnlockLevel: '已完成解锁 Tsum 关卡'
 }
 
 // Utils for sending message
@@ -664,7 +684,7 @@ function findTsums(img) {
   releaseImage(filter2);
 
   var points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
-  
+
   smooth(hsvImg, 1, 22);
   var results = [];
   for (var k in points) {
@@ -680,13 +700,13 @@ function findTsums(img) {
     var avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
     results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
   }
-  
+
   // saveImage(mask, getStoragePath() + "/tmp/mask.jpg");
   // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg.jpg");
-  
+
   releaseImage(mask);
   releaseImage(hsvImg);
-  
+
   return results;
 }
 
@@ -733,7 +753,7 @@ function detectOffsetYInGame() {
   var size = getImageSize(img);
   console.log('deviceW', size.width, 'deviceH', size.height);
   var centerY = Math.floor(size.height / 2);
-  
+
   // find top black
   var topBlackY = 0;
   for (var y = centerY; y >= 0; y--) {
@@ -793,16 +813,20 @@ function Tsum(isJP, detect, logs) {
   this.tsumCount = 5;
   this.isJP = isJP;
   this.logs = logs;
+  this.scoreItem = false;
   this.coinItem = false;
+  this.expItem = false;
+  this.timeItem = false;
   this.bubbleItem = false;
+  this.comboItem = false;
   this.isPause = false;
   this.receiveOneItem = false;
   this.sentToZero = false;
   this.recordReceive = true;
-  this.enableAllItems = false;
   this.skillInterval = 3000;
   this.skillLevel = 3;
   this.skillType = '';
+  this.unlockLevelHoursWait = 0;
   this.sendHearts = false;
   this.keepRuby = false;
   this.showHeartLog = true;
@@ -916,11 +940,11 @@ Tsum.prototype.startApp = function() {
 
 Tsum.prototype.screenshot = function() {
   return getScreenshotModify(
-    0, 
-    0, 
-    this.originScreenWidth, 
-    this.originScreenHeight, 
-    this.originScreenWidth / this.resizeRatio, 
+    0,
+    0,
+    this.originScreenWidth,
+    this.originScreenHeight,
+    this.originScreenWidth / this.resizeRatio,
     this.originScreenHeight / this.resizeRatio,
     80
   );
@@ -928,11 +952,11 @@ Tsum.prototype.screenshot = function() {
 
 Tsum.prototype.playScreenshot = function() {
   return getScreenshotModify(
-    this.playOffsetX, 
-    this.playOffsetY, 
-    this.playWidth, 
-    this.playHeight, 
-    this.playResizeWidth, 
+    this.playOffsetX,
+    this.playOffsetY,
+    this.playWidth,
+    this.playHeight,
+    this.playResizeWidth,
     this.playResizeHeight,
     100
   );
@@ -1097,24 +1121,33 @@ Tsum.prototype.goFriendPage = function() {
   }
 }
 
-Tsum.prototype.checkGameItem = function() { 
-  var isItemsOn = [false, false, false, false, false, false];
-  if (this.enableAllItems) {
-    isItemsOn = [true, true, true, true, true, true];
-  }
-  if (this.tsumCount === 4) {
-    isItemsOn[5] = true;
+Tsum.prototype.checkGameItem = function() {
+  var isItemsOn = [false, false, false, false, false, false, false];
+  if (this.scoreItem) {
+    isItemsOn[0] = true;
   }
   if (this.coinItem) {
     isItemsOn[1] = true;
   }
+  if (this.expItem) {
+    isItemsOn[2] = true;
+  }
+  if (this.timeItem) {
+    isItemsOn[3] = true;
+  }
   if (this.bubbleItem) {
     isItemsOn[4] = true;
+  }
+  if (this.tsumCount === 4) {
+    isItemsOn[5] = true;
+  }
+  if (this.comboItem) {
+    isItemsOn[6] = true;
   }
   for(var t = 0; t < 3; t++) {
     var img = this.screenshot();
     var isChange = false;
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < Button.outGameItems.length; i++) {
       var c = this.getColor(img, Button.outGameItems[i]);
       if (c.b > 128) { // off
         if (isItemsOn[i]) {
@@ -1131,6 +1164,7 @@ Tsum.prototype.checkGameItem = function() {
       }
     }
     releaseImage(img);
+    console.log("Bonus items changed = " + isChange);
     if (!isChange) {
       break;
     }
@@ -1148,12 +1182,13 @@ Tsum.prototype.goGamePlayingPage = function() {
     log(this.logs.currentPage, page, "play");
     if (page === 'FriendPage') {
       this.tap(Page[page].next);
+      this.sleep(3000);
     } else if (page === 'StartPage') {
       this.sleep(500);
       this.checkGameItem();
       this.sendMoneyInfo();
-      this.tap(Button.outStart2);
-      this.sleep(3000); // avoid checking items again!
+      this.tap(Button.outStart);
+      this.sleep(5000); // avoid checking items again!
     } else if (page === 'GamePlaying') {
       // check again
       page = this.findPage(1, 500);
@@ -1162,13 +1197,49 @@ Tsum.prototype.goGamePlayingPage = function() {
       }
     } else if (page === 'GamePause') {
       this.tap(Page[page].next);
+      this.sleep(500);
     } else if (page === 'unknown') {
       this.exitUnknownPage();
     } else if (page === "ClosePage") {
       this.tap(Page.ClosePage.back);
       this.tap({x: 310, y: 1588 - 140});
+      this.sleep(1000);
     } else {
       this.tap(Page[page].back);
+      this.sleep(1000);
+    }
+  }
+}
+
+Tsum.prototype.goTsumsPage = function() {
+  while(this.isRunning) {
+    if (!this.isAppOn()) {
+      this.startApp();
+    }
+    var pageName = this.findPage(2, 2000);
+    log(this.logs.currentPage, pageName, "play");
+    var page = Page[pageName];
+    if (pageName === 'TsumsPage') {
+      // check again
+      pageName = this.findPage(1, 500);
+      if (pageName === 'TsumsPage') {
+        return;
+      }
+    } else if (page != null && page.hasOwnProperty('tsums')) {
+      this.tap(Page[pageName].tsums);
+      this.sleep(3000);
+    } else if (pageName === 'GamePause') {
+      this.tap(Page[pageName].next);
+      this.sleep(500);
+    } else if (pageName === 'unknown') {
+      this.exitUnknownPage();
+    } else if (pageName === "ClosePage") {
+      this.tap(Page.ClosePage.back);
+      this.tap({x: 310, y: 1588 - 140});
+      this.sleep(1000);
+    } else {
+      this.tap(Page[pageName].back);
+      this.sleep(1000);
     }
   }
 }
@@ -1290,7 +1361,7 @@ Tsum.prototype.useSkill = function(board) {
   } else if(this.skillType === 'block_woody2_s'){
     this.sleep(1800);
     this.tapDown({x: 540, y: 960}, 20);
-    this.moveTo({x: 980, y: 960}, 20);      
+    this.moveTo({x: 980, y: 960}, 20);
     this.sleep(50);
     for (var i = 0; i < 3; i++) {
       this.moveTo({x: 100, y: 960}, 20);
@@ -1364,7 +1435,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
   this.runTimes = 0;
   var clearBubbles = 0;
   var zeroPath = 0;
-  while(this.isRunning) {  
+  while(this.isRunning) {
     var board = this.scanBoardQuick();
     if (board == null) {
       break;
@@ -1473,7 +1544,7 @@ Tsum.prototype.recognizeSender = function(img) {
   // console.log("Score: " + score);
   if (existFilename === '') {
     var now = nowTime();
-    var dayTime = Math.floor(now / (24 * 60 * 60 * 1000)); 
+    var dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
     // not found, new friend
     var filename = 'f_' + now + '.png';
     this.record[filename] = {
@@ -1503,7 +1574,7 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
   }
   log(this.logs.calculatingHeartSender);
   var now = nowTime();
-  var dayTime = Math.floor(now / (24 * 60 * 60 * 1000)); 
+  var dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
   // found
   if (this.record[existFilename].receiveCounts[dayTime] === undefined) {
     this.record[existFilename].receiveCounts[dayTime] = 0;
@@ -1611,7 +1682,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     if (!isNonItem) {
       receiveTime = Date.now();
     }
-    
+
     if (Date.now() - receiveTime > 3000) {
       this.tap(Button.outClose);
       this.goFriendPage();
@@ -1725,7 +1796,7 @@ Tsum.prototype.taskSendHearts = function() {
       for (var h in heartsPos) {
         var success = this.sendHeart(heartsPos[h]);
         if (!success) {
-          success = this.sendHeart(heartsPos[h]); 
+          success = this.sendHeart(heartsPos[h]);
         }
         if (success) {
           rTimes++;
@@ -1765,6 +1836,99 @@ Tsum.prototype.taskSendHearts = function() {
       }
     }
   }
+}
+
+Tsum.prototype.taskAutoUnlockLevel = function() {
+  var btn;
+  var i;
+  var img;
+  var formerOrderButton = null;
+  var orderButtons = [
+    Button.outTsumCollectionOrderByReleaseDate,
+    Button.outTsumCollectionOrderByLevelLock,
+    Button.outTsumCollectionOrderBySkill,
+    Button.outTsumCollectionOrderFavorites
+  ];
+  log(this.logs.tsumsPage);
+  this.goTsumsPage();
+  log(this.logs.startUnlockLevel);
+
+  // Switch order to "By Level Lock" and remember former selection
+  this.tap(Button.outOpenTsumCollectionOrder);
+  this.sleep(1000);
+  img = this.screenshot();
+  for (i = 0; i < orderButtons.length; i++) {
+    btn = orderButtons[i];
+    if (isSameColor(btn, this.getColor(img, btn))) {
+      formerOrderButton = btn;
+      console.log("Found active button: " + btn.name);
+      break;
+    }
+  }
+  releaseImage(img);
+
+  this.tap(Button.outTsumCollectionOrderByLevelLock);
+  this.sleep();
+  this.tap(Button.outCloseTsumCollectionOrder);
+  this.sleep(1000);
+
+  // Start looking for locks from first entries
+  this.tap({x: 1, y: 1892});  // jump to first Tsum entries
+  this.sleep(3000);
+
+  // check all
+  do {
+    var allLocked = true;
+    var lockIcons = Page.TsumsPage.lockIcons;
+    img = this.screenshot();
+    for (i = 0; i < lockIcons.length; i++) {
+      var lockIcon = lockIcons[i];
+      console.log("Checking for lock on i=" + i);
+      var realColor = this.getColor(img, lockIcon);
+      console.log("For i=" + i + " I found color " + JSON.stringify(realColor));
+      if (isSameColor(lockIcon, realColor)) {
+        console.log("Unlocking i=" + i);
+        var tsumButton = {x: lockIcon.x, y: lockIcon.y - 100};
+        this.tap(tsumButton);
+        this.sleep(1000);
+        this.tap(Button.outTsumCollectionDoUnlock);
+        this.sleep(1000);
+        this.tap({x: 814, y: 1071, r: 247, g: 174, b: 8}); // OK button
+        this.sleep(5000);
+        this.tap({x: 600, y: 600}); // just tap anywhere to close the confirmation dialog
+        this.sleep(1000);
+        console.log("Unlocked i=" + i);
+      } else {
+        console.log("No lock found for i=" + i);
+        allLocked = false;
+        break;
+      }
+    }
+    releaseImage(img);
+
+    // scroll to next page if all Tsums were locked
+    if (allLocked) {
+      console.log("Clicking scroll button to move to next page")
+      this.tap({x: 1030, y: 1193, r: 214, g: 243, b: 255}); // arrow, scroll right to next page
+      this.sleep(3000);
+    }
+
+    // Progress until no more locks exist
+  } while (allLocked)
+
+
+
+  // Reset order to former selection
+  if (formerOrderButton != null) {
+    this.tap(Button.outOpenTsumCollectionOrder);
+    this.sleep(1000);
+    this.tap(formerOrderButton);
+    this.sleep();
+    this.tap(Button.outCloseTsumCollectionOrder);
+    this.sleep(1000);
+  }
+
+  log(this.logs.endUnlockLevel);
 }
 
 Tsum.prototype.sendHeart = function(btn) {
@@ -1817,11 +1981,11 @@ Tsum.prototype.sendHeart = function(btn) {
 }
 
 Tsum.prototype.sleep = function(t) {
-  if (t === undefined) {
+  if (typeof t !== 'number') {
     t = 1000;
   }
   var waitTime = t;
-  while(this.isRunning) {
+  while (this.isRunning && waitTime > 0) {
     if (waitTime <= 500) {
       sleep(waitTime);
       break;
@@ -1840,8 +2004,12 @@ function start(settings) {
     ts.tsumCount = 4;
   }
   ts.autoLaunch = settings['autoLaunchApp'];
+  ts.scoreItem = settings['bonusScore'];
   ts.coinItem = settings['bonusCoin'];
+  ts.expItem = settings['bonusExp'];
+  ts.timeItem = settings['bonusTime'];
   ts.bubbleItem = settings['bonusBubble'];
+  ts.comboItem = settings['bonusCombo'];
   ts.isPause = settings['pauseWhenCalc'];
   ts.receiveOneItem = settings['receiveHeartsOneByOne'];
   ts.receiveSecondItem = settings['receiveHeartsSkipFirst'] || false;
@@ -1849,11 +2017,10 @@ function start(settings) {
   ts.sentToZero = settings['sendHeartsToZeroScore'];
   ts.receiveCheckLimit = settings['mailOpenMax'];
   ts.clearBubbles = settings['clearBubbles'];
-  ts.enableAllItems = settings['bonusAllItems'];
   ts.skillInterval = settings['skillWaitingTime'] * 1000;
   ts.skillLevel = settings['skillLevel'];
   ts.skillType = settings['skillType'];
-  ts.receiveOneItem = settings['receiveHeartsOneByOne'];
+  ts.unlockLevelHoursWait = settings["unlockLevelHoursWait"];
   ts.sendHearts = settings['sendHeartsAuto'];
   ts.showHeartLog = true;
   ts.keepRuby = settings['receiveHeartsSkipRuby'];
@@ -1885,6 +2052,9 @@ function start(settings) {
   }
 
   gTaskController = new TaskController();
+  if (settings['unlockLevelHoursWait'] > 0) {
+    gTaskController.newTask('autoUnlockLevel', ts.taskAutoUnlockLevel.bind(ts), settings['unlockLevelHoursWait'] * 60 * 60 * 1000, 0);
+  }
   if (settings['receiveHeartsOneByOne']) {
     gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), settings['mailMinWait'] * 60 * 1000, 0);
   }
@@ -1952,7 +2122,7 @@ function genRecordTable() {
     var base64 = getBase64FromImage(tmpImg);
     releaseImage(tmpImg);
     html += "<td><img src='data:image/png;base64," + base64 + "' /></td>";
-    
+
     var totalDay = 0;
     var totalCount = 0;
     var tmpHtml = "";
@@ -1969,8 +2139,8 @@ function genRecordTable() {
       totalCount += dayCount;
     }
     var avg = 0;
-    if (dayCount !== 0) {
-      avg = (totalCount/dayCount).toFixed(1);  // FIXME dayCount should probably be totalDay
+    if (totalDay !== 0) {
+      avg = (totalCount/totalDay).toFixed(1);
     }
     html += "<td>" + totalCount + "</td>";
     html += "<td>" + avg + "</td>";
