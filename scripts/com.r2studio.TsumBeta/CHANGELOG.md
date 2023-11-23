@@ -5,6 +5,11 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## unreleased
+
+### Changed
+- The output file of "Export HTML (Excel)" has been redesigned to make it much easier to work with.
+
 ## [v68] - 2024-06-30
 
 ### Fixed
