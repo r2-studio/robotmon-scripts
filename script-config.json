@@ -57,8 +57,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 59,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v59 Beta</b>\n<ul>\n    <li>添加了全部 7 个奖励项目<br>Added all 7 bonus items</li>\n    <li>修复了 Tsum 前几秒未连接的问题<br>Fixed Tsums not being connected first few seconds</li>\n    <li>使页面流更稳健（但速度更慢）<br>Made page flow more robust (but slower)</li>\n    <li>允许每小时自动级别解锁<br>Allow hourly auto level unlock</li>\n</ul>",
+      "versionCode": 60,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v60 Beta</b>\n<ul>\n    <li>修复了新的日语个人资料屏幕的导航<br>Fixed navigation of new JP profile screen</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
