@@ -104,7 +104,8 @@ function getScreenshotResize() {
     return null;
   }
   if (orientationLog) {
-    console.log("螢幕方向回復");
+    console.log("螢幕方向回復，等待10秒繼續執行");
+    sleep(10000);
     orientationLog = false;
   }
   var screenshot = getScreenshot();
