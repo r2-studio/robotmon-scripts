@@ -143,8 +143,8 @@
     "com.cooper.FGO": {
       "id": "com.cooper.FGO",
       "title": "Fate/Grand Order 日服",
-      "versionCode": 3.58,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.58 支援自動編成功能<br>V3.57 支援周回白紙化地球任務<br><br>推薦使用夜神 Android 7 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.62,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.62 修正新活動無法友抽的問題<br><br>推薦使用夜神 Android 7 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },

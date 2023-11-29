@@ -3,18 +3,16 @@ var iconMargin = [];
 
 function setMarginIcon() {
   if (server == "TW") {
-    icon["friendPointMain"] = [625, 538, 675, 108];
     icon["boxNoPoint"] = [360, 630, 195, 82];
     icon["settingDialog"] = [840, 220, 240, 60];
     icon["stageFailed"] = [900, 154, 140, 60];
-  }else{
-    icon["friendPointMain"] = [675, 538, 675, 108];
+  } else {
     icon["boxNoPoint"] = [470, 530, 200, 100];
     icon["settingDialog"] = [750, 220, 350, 60];
     icon["stageFailed"] = [750, 160, 300, 60];
   }
-  
-    //1920 default
+
+  //1920 default
   if (resolution < 17 / 9) {
     icon["main"][0] = 1710;
     iconMargin["main"] = undefined;
@@ -300,15 +298,15 @@ function isUseItemDialog() {
   return false;
 }
 
-function isTeamAutoBuild(){
+function isTeamAutoBuild() {
   return checkIconInScreen("teamPage");
 }
 
-function isTeamAutoBuildDialog(){
+function isTeamAutoBuildDialog() {
   return checkIconInScreen("teamAutoBuildDialog");
 }
 
-function isStartStageMemberFailed(){
+function isStartStageMemberFailed() {
   return checkIconInScreen("startStageMemberFailed");
 }
 
@@ -450,10 +448,12 @@ function isItemPage() {
 }
 
 //friendPoint-----------------------------------------------
-icon["friendPointMain"] = [675, 538, 675, 108];
+icon["friendPointMain"] = [1130, 20, 100, 90];
 icon["friendPointFree"] = [787, 740, 337, 75];
-icon["friendPointContinue"] = [1050, 975, 187, 63];
+icon["friendPointFreeEvent"] = [787, 740, 337, 75];
 icon["friendPointTen"] = [1125, 740, 240, 75];
+icon["friendPointTenEvent"] = [1125, 740, 240, 75];
+icon["friendPointContinue"] = [1050, 975, 187, 63];
 icon["friendPointServantFull"] = [487, 225, 900, 187];
 icon["friendPointItemFull"] = [487, 225, 900, 187];
 
@@ -462,11 +462,17 @@ function isFriendPointMainPage() {
 }
 
 function isFriendPointFree() {
-  return checkIconInScreen("friendPointFree");
+  return checkIconListInScreen(
+    ["friendPointFree", "friendPointFreeEvent"],
+    false
+  );
 }
 
 function isFriendPointTen() {
-  return checkIconInScreen("friendPointTen");
+    return checkIconListInScreen(
+      ["friendPointTen", "friendPointTenEvent"],
+      false
+    );
 }
 
 function isFriendPointNew() {
@@ -484,7 +490,14 @@ function isFriendPointFull() {
 }
 
 function isFriendPointContinue() {
-  return checkIconInScreen("friendPointContinue");
+  if (server == "TW") {
+    return checkIconListInScreen(
+      ["friendPointContinue", "friendPointContinueEvent"],
+      false
+    );
+  } else {
+    return checkIconInScreen("friendPointContinue");
+  }
 }
 
 function isPresentBoxFull() {

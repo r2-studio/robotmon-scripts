@@ -85,16 +85,12 @@ function selectStage(useApple) {
         sendNormalMessage(runningScriptName, "使用銀蘋果");
         break;
       case 5:
-        if (server == "JP") {
           tapScale(900, 840);
           console.log("使用青銅蘋果");
           sendNormalMessage(runningScriptName, "使用青銅蘋果");
-        }
         break;
       case 0: //bronze
-        if (server == "JP") {
-          swipeScale(600, 750, 600, 150, 300);
-        }
+        swipeScale(600, 750, 600, 150, 300);
         tapScale(900, 840);
         console.log("使用赤銅蘋果");
         sendNormalMessage(runningScriptName, "使用赤銅蘋果");
