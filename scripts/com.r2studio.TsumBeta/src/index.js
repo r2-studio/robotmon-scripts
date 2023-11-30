@@ -152,6 +152,19 @@ var Page = {
     back: {x: 309, y: 1581 + adjY},
     next: {x: 784, y: 1581 + adjY}
   },
+  ProfilePage: {
+    name: 'ProfilePage',
+    colors: [
+      {x: 540, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 34, y: 932  + adjY, r: 247, g: 178, b: 8, match: true, threshold: 80}     // left home tab button
+    ],
+    back: {x: 31, y: 1054 + adjY},
+    next: {x: 31, y: 1054 + adjY},
+    tsums: {x: 900, y: 1581 + adjY}
+  },
   FriendPage: {
     name: 'FriendPage',
     colors: [
