@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 60;
+var VERSION = 61;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -161,7 +161,8 @@ var settings = [
                 {key: 'block_mickeyh2015_s', title: 'Horn Hat Mickey', title_zh_TW: '角帽米奇'},
                 {key: 'block_snowwhite_s', title: 'Snow White', title_zh_TW: '白雪公主'},
                 {key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉'},
-                {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'}
+                {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'},
+                {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '配对Tsum'}
             ]
         },
         {

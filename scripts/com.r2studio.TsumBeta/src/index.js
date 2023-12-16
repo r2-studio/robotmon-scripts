@@ -73,11 +73,8 @@ var Button = {
   gameQuestionCancel: {x: 400, y: 1280 + adjY},
   gameQuestionCancel2: {x: 400, y: 1000 + adjY},
   gameStop: {x: 440, y: 1000 + adjY},
-  gameSkillOn: {x: 160, y: 1490 + adjY, color: {"a":0,"b":0,"g":220,"r":238}},
-  gameSkillOff1: {x: 160, y: 1630 + adjY, color: {"a":0,"b":157,"g":112,"r":85}},
-  gameSkillOff2: {x: 160, y: 1630 + adjY, color: {"a":0,"b":181,"g":139,"r":72}},
-  gameSkillOff3: {x: 160, y: 1630 + adjY, color: {"a":0,"b":128,"g":73,"r":16}},
-  gameSkillOff4: {x: 160, y: 1630 + adjY, color: {"a":0,"b":178,"g":153,"r":3}},
+  gameSkill1: {x: 160, y: 1630 + adjY},
+  gameSkill2: {x: 95, y: 1630 + adjY},
   gameRand: {x: 985, y: 1580 + adjY, color: {"a":0,"b":6,"g":180,"r":232}},
   gamePause: {x: 983, y: 250 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
   gameContinue: {x: 540, y: 1270 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
@@ -690,7 +687,7 @@ function findTsums(img) {
   smooth(hsvImg, 1, 7);
   convertColor(hsvImg, 40);
   var filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
-	var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
+  var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
   var mask = bgrToGray(filter2);
 
   releaseImage(filter1);
@@ -1294,19 +1291,37 @@ Tsum.prototype.useCinderellaSkill = function(board) {
 }
 
 Tsum.prototype.useSkill = function(board) {
+  function isSkillActive(that, img, skillButton) {
+    // Don't know the reason why these are checked instead the "active skill" colors, but hopefully for a good reason
+    var skillNotActiveColors = [
+      {"a": 0, "b": 157, "g": 112, "r": 85},
+      {"a": 0, "b": 181, "g": 139, "r": 72},
+      {"a": 0, "b": 128, "g": 73, "r": 16},
+      {"a": 0, "b": 178, "g": 153, "r": 3},
+      {"a": 0, "b": 255, "g": 215, "r": 33}
+    ];
+    var currentButtonColor = that.getColor(img, skillButton);
+    var skillActive = true;
+    for (var colorIdx in skillNotActiveColors) {
+      var color = skillNotActiveColors[colorIdx];
+      var matchesSkillNotActiveColor = isSameColor(color, currentButtonColor, 60);
+      // console.log(JSON.stringify(skillButton) + " - " + JSON.stringify(color) + " matches actual color " + JSON.stringify(currentButtonColor) + " = " + matchesSkillNotActiveColor);
+      skillActive = skillActive && !matchesSkillNotActiveColor;
+    }
+    return skillActive;
+  }
+
   var page = this.findPage(1, 500);
   if (page !== 'GamePlaying' && page !== 'GamePause') {
     return false;
   }
+
   for (var i = 0; i < 2; i++) {
     var img = this.screenshot();
-    var isSkillOff1 = isSameColor(Button.gameSkillOff1.color, this.getColor(img, Button.gameSkillOff1), 60);
-    var isSkillOff2 = isSameColor(Button.gameSkillOff2.color, this.getColor(img, Button.gameSkillOff2), 60);
-    var isSkillOff3 = isSameColor(Button.gameSkillOff3.color, this.getColor(img, Button.gameSkillOff3), 60);
-    var isSkillOff4 = isSameColor(Button.gameSkillOff4.color, this.getColor(img, Button.gameSkillOff4), 60);
-    // log(isSkillOff1, isSkillOff2, isSkillOff3, this.getColor(img, Button.gameSkillOff1), this.getColor(img, Button.gameSkillOff2), this.getColor(img, Button.gameSkillOff3));
+    var skillActive1 = isSkillActive(this, img, Button.gameSkill1);
+    var skillActive2 = this.skillType === 'block_pair_tsum' && isSkillActive(this, img, Button.gameSkill2);
     releaseImage(img);
-    if (!isSkillOff1 && !isSkillOff2 && !isSkillOff3 && !isSkillOff4) {
+    if (skillActive1 || skillActive2) {
       if (i === 0) {
         this.sleep(200);
       }
@@ -1321,8 +1336,12 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillLuke3, 30);
     this.tap(Button.skillLuke4, 30);
   }
-  this.tap(Button.gameSkillOn);
+  this.tap(Button.gameSkill1);
   this.sleep(30);
+  if (skillActive2) {
+    this.tap(Button.gameSkill2);
+    this.sleep(30);
+  }
   if (this.skillType === 'block_lukej_s') {
     for (var i = 0; i < 5; i++) {
       this.tapDown({x: 820, y: 1200}, 20);
