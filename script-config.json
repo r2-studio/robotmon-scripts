@@ -12,7 +12,7 @@
     "com.r2studio.MLB9InningsBasic": {
       "id": "com.r2studio.MLB9InningsBasic",
       "title": "*MLB9 Innings Basic*",
-      "versionCode": "15.43",
+      "versionCode": "15.44",
       "description": "<h3>MLB9 Innings Basic</h3><ul><li>一鍵自動暢玩聯賽<br><small>play league automatically through one click</small></li><li>體力判斷速刷模式<br><small>better energy controlling and play efficiency</small></li><li>遊玩畫面不中斷<br><small>decrease disruptions caused by power save view</small></li></ul>",
       "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9InningsBasic/index.zip",
