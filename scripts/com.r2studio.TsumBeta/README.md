@@ -9,11 +9,11 @@ This is the successor of the script `com.r2studio.Tsum`.
 - Do not reset settings to default values on new script version
 - Add missing bonus items "+Score", "+Exp", "+Time" and "+Combo"
 - Unlock next Tsum level automatically
+- Basic support for Pair Tsum skill activations
 
 ### ⏹️ Planned and rather realistic
 - "Bingo detection" and escape 
 - "New Event" detection and escape
-- Support for Pair Tsum skill activations
 
 ### ❓ Probably too sophisticated ideas
 - Support for Charm Tsum path finding
