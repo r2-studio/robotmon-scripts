@@ -1671,6 +1671,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     releaseImage(img);
     if (isItem) {
       if (isAd) {
+        console.log("Receive heart isItem and isAd");
         this.skipAd();
         this.sleep(2000);
         continue;
@@ -1684,28 +1685,33 @@ Tsum.prototype.taskReceiveOneItem = function() {
             sender = this.recognizeSender(img);
           }
           releaseImage(img);
+        } else {
+          sender = "";
         }
         this.tap(Button.outReceiveOne);
+        this.sleep(600);
       } else {
         isNonItem = true;
         receiveTime = 0;
       }
     } else if (isTimeout) {
+      console.log("Receive heart isTimeout");
       log(this.logs.receiveGiftAgain);
       this.tap(Button.outReceiveOk);
       this.sleep(1000);
     } else if (isOk) {
-      if (this.recordReceive && sender !== undefined) {
-        if (sender !== "") {
-          this.countReceiveHeart(sender);
-        }
-        this.record['hearts_count'].receivedCount++;
-        sender = undefined;
+      if (this.recordReceive && sender !== undefined && sender !== "") {
+        this.countReceiveHeart(sender);
         this.saveRecord();
       }
       this.sleep(100);
       this.tap(Button.outReceiveOk);
-      receivedCount++;
+      if (sender !== undefined) {
+        this.record['hearts_count'].receivedCount++;
+        receivedCount++;
+      }
+      sender = undefined;
+      this.sleep(600);
     } else {
       this.tap(Button.outReceiveClose);
     }
