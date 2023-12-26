@@ -398,8 +398,111 @@ var Page = {
       {x: 663, y: 1450, r: 239, g: 247, b: 255},
       {x: 898, y: 1450, r: 239, g: 247, b: 255}
     ],
-    back: {x: 176, y: 1520 + adjY},
-    next: {x: 176, y: 1520 + adjY}
+    back: {x: 176, y: 1592},
+    next: {x: 176, y: 1592},
+    store: {x: 910, y: 1592}
+  },
+  TsumTsumStorePageNoMission: {
+    // only happyness and premium boxes available
+    name: 'TsumTsumStorePage',
+    colors: [
+      {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
+      {x: 150, y: 750, r: 247, g: 184, b: 8, match: true, threshold: 30}, // yellow button happy box top left
+      {x: 460, y: 760, r: 247, g: 130, b: 8, match: true, threshold: 30}, // orange select box button
+      {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
+      {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
+      {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}, // right side of premium box button
+      {x: 159, y: 1566, r: 49, g: 40, b: 0, match: true, threshold: 30}   // left bottom modal button
+    ],
+    back: {x: 530, y: 1650},  // close button
+    next: {x: 632, y: 1066}   // buy premium box button
+  },
+  TsumTsumStoreSelectBoxPage: {
+    // select box available
+    name: 'TsumTsumStorePage',
+    colors: [
+      {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
+      {x: 150, y: 750, r: 247, g: 184, b: 8, match: true, threshold: 30}, // yellow button happy box top left
+      {x: 460, y: 760, r: 247, g: 130, b: 8, match: true, threshold: 30}, // orange select box button
+      {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
+      {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
+      {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}  // right side of premium box button
+    ],
+    back: {x: 190, y: 1655},  // close button
+    next: {x: 632, y: 1066}   // buy select box button
+  },
+  TsumTsumStorePage: {
+    // only happyness and premium boxes available
+    name: 'TsumTsumStorePage',
+    colors: [
+      {x: 276, y: 944, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
+      {x: 151, y: 752, r: 247, g: 191, b: 8, match: true, threshold: 30}, // yellow button happy box top left
+      {x: 542, y: 964, r: 57, g: 95, b: 148, match: true, threshold: 30}, // blue space between happy box and premium box
+      {x: 787, y: 939, r: 181, g: 18, b: 0, match: true, threshold: 30},  // red premium box on right button
+      {x: 614, y: 763, r: 247, g: 187, b: 8, match: true, threshold: 30}, // yellow button premium box top left
+      {x: 943, y: 1004, r: 247, g: 174, b: 8, match: true, threshold: 30} // right side of premium box button
+    ],
+    back: {x: 190, y: 1650},  // close button
+    next: {x: 632, y: 1066}   // buy premium box button
+  },
+  ConfirmPurchaseBoxPage: {
+    name: 'ConfirmPurchasePage',
+    colors: [
+      {x: 208, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // left of Cancel button
+      {x: 420, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // right of Cancel button
+      {x: 540, y: 1070, r: 54, g: 93, b: 146, match: true, threshold: 30},  // betwen buttons
+      {x: 650, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // left of OK button
+      {x: 880, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // right of OK button
+      {x: 948, y: 1066, r: 33, g: 69, b: 107, match: true, threshold: 30},  // right next to OK button
+      {x: 805, y: 1265, r: 239, g: 167, b: 8, match: true, threshold: 50}   // left of List button
+    ],
+    back: {x: 310, y: 1070},  // Cancel button
+    next: {x: 760, y: 1070}   // OK button
+  },
+  ConfirmPurchaseCapsulePage: {
+    name: 'ConfirmPurchasePage',
+    colors: [
+      {x: 200, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // left of Cancel button
+      {x: 426, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of Cancel button
+      {x: 540, y: 1444, r: 54, g: 93, b: 146, match: true, threshold: 30},  // betwen buttons
+      {x: 660, y: 1444, r: 247, g: 174, b: 8, match: true, threshold: 30},  // left of OK button
+      {x: 860, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of OK button
+      {x: 940, y: 1444, r: 33, g: 65, b: 107, match: true, threshold: 30},  // right next to OK button
+      {x: 416, y: 790, r: 239, g: 28, b: 49, match: true, threshold: 30}    // red top of big pickup capsule image
+    ],
+    back: {x: 320, y: 1444},  // Cancel button
+    next: {x: 766, y: 1444}   // OK button
+  },
+  TapOpenPage: {
+    name: 'TapOpenPage',
+    colors: [
+      {x: 641, y: 328, r: 255, g: 255, b: 231, match: true, threshold: 30},
+      {x: 641, y: 243, r: 255, g: 255, b: 247, match: true, threshold: 30},
+      {x: 180, y: 520, r: 247, g: 182, b: 189, match: true, threshold: 30},
+      {x: 641, y: 328, r: 255, g: 255, b: 231, match: true, threshold: 30},
+      {x: 899, y: 777, r: 140, g: 121, b: 156, match: true, threshold: 30},
+      {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
+      {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
+      {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
+    ],
+    back: {x: 500, y: 500},
+    next: {x: 500, y: 500}
+  },
+  BoxPurchasedPage: {
+    name: 'BoxPurchasedPage',
+    colors: [
+      {x: 156, y: 1077, r: 24, g: 195, b: 231, match: true, threshold: 30},
+      {x: 48, y: 998, r: 24, g: 52, b: 82, match: true, threshold: 30},
+      {x: 131, y: 1134, r: 33, g: 65, b: 107, match: true, threshold: 30},
+      {x: 928, y: 1077, r: 33, g: 203, b: 239, match: true, threshold: 30},
+      {x: 923, y: 1183, r: 33, g: 65, b: 107, match: true, threshold: 30},
+      {x: 904, y: 1396, r: 33, g: 199, b: 239, match: true, threshold: 30},
+      {x: 389, y: 1634, r: 247, g: 174, b: 8, match: true, threshold: 30},
+      {x: 279, y: 1627, r: 41, g: 77, b: 115, match: true, threshold: 30},
+      {x: 525, y: 1823, r: 24, g: 158, b: 189, match: true, threshold: 30}
+    ],
+    back: {x: 550, y: 1630},  // Close button
+    next: {x: 550, y: 1630}   // Close button
   },
   GamePause: {
     name: 'GamePause',
@@ -924,6 +1027,7 @@ function Tsum(isJP, detect, logs) {
   this.recordImages = {};
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
+  this.autobuyBoxes = 0;
   this.init(detect);
 }
 
@@ -1012,6 +1116,7 @@ Tsum.prototype.startApp = function() {
     return;
   }
   log(this.logs.startTsumTsumApp);
+  this.isStartupPhase = true;
   var package;
   if (this.isJP) {
     package = 'com.linecorp.LGTMTM';
@@ -1059,9 +1164,6 @@ Tsum.prototype.toResizeXYs = function(xy) {
 
 Tsum.prototype.getColor = function(img, xy) {
   var rxy = this.toResizeXYs(xy);
-  if (this.debug) {
-    debug({xy: xy, rxy: rxy}, 'getColor');
-  }
   return getImageColor(img, Math.max(rxy.x, 0), Math.max(rxy.y, 0));
 }
 
@@ -1134,12 +1236,12 @@ Tsum.prototype.link = function(paths) {
   return isBubble;
 }
 
-Tsum.prototype.findPage = function(times, timeout) {
+Tsum.prototype.findPageObject = function(times, timeout) {
   if (times === undefined) {times = 2;}
   if (timeout === undefined) {timeout = 700;}
   var start = Date.now();
   while(this.isRunning) {
-    var currentPage = '';
+    var currentPage = null;
     for (var t = 0; t < times; t++) {
       var img = this.screenshot();
       if (this.debug) {
@@ -1147,30 +1249,39 @@ Tsum.prototype.findPage = function(times, timeout) {
       }
       for (var key in Page) {
         var page = Page[key];
-        currentPage = '';
+        currentPage = null;
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
           if (diff < page.colors[i].threshold === page.colors[i].match) {
-            currentPage = page.name;
+            currentPage = page;
           } else {
-            currentPage = '';
+            currentPage = null;
             break;
           }
         }
-        if (currentPage !== '') {
-          debug(this.logs.currentPage, currentPage + ' (' + key + ')', 'findPage');
+        if (currentPage !== null) {
+          debug(this.logs.currentPage, currentPage.name + ' (' + key + ')', 'findPageObject');
           break;
         }
       }
       releaseImage(img);
       this.sleep(100);
     } // for times
-    if (currentPage !== '') {
+    if (currentPage !== null) {
       return currentPage;
     }
     if (Date.now() - start > timeout) {
-      return 'unknown';
+      return null;
     }
+  }
+}
+
+Tsum.prototype.findPage = function(times, timeout) {
+  var page = this.findPageObject(times, timeout);
+  if (page != null) {
+    return  page.name;
+  } else {
+    return  'unknown';
   }
 }
 
@@ -1189,9 +1300,9 @@ Tsum.prototype.goFriendPage = function() {
   while(this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
-      this.isStartupPhase = true;
     }
-    var page = this.findPage(2, 1000);
+    var pageObj = this.findPageObject(2, 1000);
+    var page = pageObj != null ? pageObj.name : "unknown";
     log(this.logs.currentPage, page, "goFriend");
     if (this.isStartupPhase) {
       // sleep longer to safely detect new event windows which might initially take longer to load
@@ -1207,12 +1318,12 @@ Tsum.prototype.goFriendPage = function() {
         return;
       }
     } else if (page === "ClosePage") {
-      this.tap(Page.ClosePage.back);
+      this.tap(pageObj.back);
       this.tap({x: 310, y: 1588 - 140});
     } else if (page === 'unknown') {
       this.exitUnknownPage();
     } else {
-      this.tap(Page[page].back);
+      this.tap(pageObj.back);
     }
     this.sleep(1000);
     if (this.isStartupPhase) {
@@ -1313,34 +1424,46 @@ Tsum.prototype.goGamePlayingPage = function() {
 }
 
 Tsum.prototype.goTsumsPage = function() {
+  if (!this.isAppOn()) {
+    this.startApp();
+  }
+  this.goFriendPage();
   while(this.isRunning) {
+    var page = this.findPageObject(2, 2000);
+    if (page != null)
+      log(this.logs.currentPage, page.name, "goTsumPage");
+    if (page === null) {
+      this.exitUnknownPage();
+    } else if (page.name === 'TsumsPage') {
+      // check again
+      page = this.findPageObject(1, 500);
+      if (page != null && page.name === 'TsumsPage') {
+        return;
+      }
+    } else if (page.hasOwnProperty('tsums')) {
+      this.tap(page.tsums);
+      this.sleep(3000);
+    } else {
+      this.tap(page.back);
+      this.sleep(1000);
+    }
+  }
+}
+
+Tsum.prototype.goTsumTsumStorePage = function() {
+  while (this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
     }
+    this.goTsumsPage();
+    this.tap(Page.TsumsPage.store);
+    this.sleep(3000);
     var pageName = this.findPage(2, 2000);
-    log(this.logs.currentPage, pageName, "play");
-    var page = Page[pageName];
-    if (pageName === 'TsumsPage') {
-      // check again
-      pageName = this.findPage(1, 500);
-      if (pageName === 'TsumsPage') {
-        return;
-      }
-    } else if (page != null && page.hasOwnProperty('tsums')) {
-      this.tap(Page[pageName].tsums);
-      this.sleep(3000);
-    } else if (pageName === 'GamePause') {
-      this.tap(Page[pageName].next);
-      this.sleep(500);
-    } else if (pageName === 'unknown') {
-      this.exitUnknownPage();
-    } else if (pageName === "ClosePage") {
-      this.tap(Page.ClosePage.back);
-      this.tap({x: 310, y: 1588 - 140});
-      this.sleep(1000);
+    if (pageName === 'TsumTsumStorePage') {
+      return true;
     } else {
-      this.tap(Page[pageName].back);
-      this.sleep(1000);
+      log('Unexpected page found:', pageName, 'goTsumTsumStorePage');
+      return false;
     }
   }
 }
@@ -2074,6 +2197,51 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
   log(this.logs.endUnlockLevel);
 }
 
+Tsum.prototype.taskAutoBuyBoxes = function() {
+  log("Starting taskAutoBuyBoxes");
+  if (this.autobuyBoxes === 0) {
+    log("Nothing to do", "taskAutoBuyBoxes");
+    return;
+  }
+  var isStorePage = this.goTsumTsumStorePage();
+  var lastPage = null;
+  if (!isStorePage) {
+    log("Cannot open Tsum Tsum Store page. Leaving buy task.");
+    this.autobuyBoxes = 0;
+    return;
+  }
+  log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
+  var countUnknownPages = 0;
+  while (this.autobuyBoxes > 0) {
+    var page = this.findPageObject(1, 200);
+    if (page != null) {
+      countUnknownPages = 0;
+      this.tap(page.next);
+      if (page !== lastPage && page === Page.BoxPurchasedPage) {
+        this.autobuyBoxes--;
+        log("Bought box.", this.autobuyBoxes, "left");
+      } else if (page.name === Page.Received.name) {  // matches when "all Tsums collected" appears
+        log("Collected all Tsums.");
+        this.autobuyBoxes = 0;
+      } else if (page.name === Page.MailBox.name) {   // matches when "Buy coins for rubies" appears
+        log("Not enough coins.");
+        this.autobuyBoxes = 0;
+      }
+      lastPage = page;
+    } else {
+      debug("Unknown page");
+      this.tap({x: 560, y: 1860});
+      countUnknownPages++;
+      if (countUnknownPages > 10) {
+        this.exitUnknownPage();
+        countUnknownPages = 0;
+      }
+    }
+    this.sleep(500);
+  }
+  log("Finished taskAutoBuyBoxes");
+}
+
 Tsum.prototype.sendHeart = function(btn) {
   var unknownCount = 0;
   var isGift = false;
@@ -2191,6 +2359,7 @@ function start(settings) {
   }
 
   DEBUG_LOGS = settings['debugLogs'];
+  ts.autobuyBoxes = settings['autobuyBoxes'];
 
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
@@ -2198,6 +2367,7 @@ function start(settings) {
   }
 
   gTaskController = new TaskController();
+  gTaskController.newTask('taskAutoBuyBoxes', ts.taskAutoBuyBoxes.bind(ts), 60 * 1000, 0);
   if (settings['receiveHeartsOneByOne']) {
     gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), settings['mailMinWait'] * 60 * 1000, 0);
   }
