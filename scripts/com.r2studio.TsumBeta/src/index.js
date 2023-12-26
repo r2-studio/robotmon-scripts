@@ -2102,9 +2102,6 @@ function start(settings) {
   }
 
   gTaskController = new TaskController();
-  if (settings['unlockLevelHoursWait'] > 0) {
-    gTaskController.newTask('autoUnlockLevel', ts.taskAutoUnlockLevel.bind(ts), settings['unlockLevelHoursWait'] * 60 * 60 * 1000, 0);
-  }
   if (settings['receiveHeartsOneByOne']) {
     gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), settings['mailMinWait'] * 60 * 1000, 0);
   }
@@ -2116,6 +2113,9 @@ function start(settings) {
   }
   if (checkFunction(outRange)) {
     if (settings['autoPlayGame']) {
+      if (settings['unlockLevelHoursWait'] > 0) {
+        gTaskController.newTask('autoUnlockLevel', ts.taskAutoUnlockLevel.bind(ts), settings['unlockLevelHoursWait'] * 60 * 60 * 1000, 0);
+      }
       gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);
     }
   }
