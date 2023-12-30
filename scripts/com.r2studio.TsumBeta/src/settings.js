@@ -29,6 +29,13 @@ var settings = [
             key: 'buildDate',
             title: 'Build date: $BUILD_DATE',
             title_zh_TW: '建造日期: $BUILD_DATE'
+        },
+        {
+            key: 'debugLogs',
+            title: 'Debug logs',
+            title_zh_TW: '调试日志',
+            default: false,
+            dev_mode: true
         }
     ],
     [
@@ -425,6 +432,10 @@ function genSettings(jContainer, settings) {
             var key = setting.key;
             var title = getTitle(setting);
             var jGroupItem = $('<div id="setting_' + key + '" class="list-group-item"></div>');
+            if (setting.dev_mode) {
+                jGroupItem.addClass("dev_mode");
+                jGroupItem.hide();
+            }
             var jSetting = $('<div class="row"></div>');
             if (typeof setting.default === 'boolean') {
                 appendTitle(jSetting, title);
@@ -672,6 +683,7 @@ $(function ($) {
         log("Increased build date clicks to " + buildDateClicks);
         if (buildDateClicks >= 10) {
             $('#resetSettings').show();
+            $('.dev_mode').show();
         }
     });
 
