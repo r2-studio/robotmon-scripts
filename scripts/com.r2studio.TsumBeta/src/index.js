@@ -178,7 +178,8 @@ var Page = {
       {x: 540, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
       {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
       {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -190,7 +191,8 @@ var Page = {
       {x: 540, y: 1577 + adjY, r: 175, g: 188, b: 197, match: true, threshold: 80}, // center of the Tsum Hades
       {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
       {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -202,7 +204,8 @@ var Page = {
       {x: 540, y: 1577 + adjY, r: 203, g: 192, b: 237, match: true, threshold: 80}, // center of the Tsum Ursula
       {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
       {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -214,7 +217,8 @@ var Page = {
       {x: 540, y: 1577 + adjY, r: 79 , g: 89 , b: 94 , match: true, threshold: 80}, // center of the Tsum Maleficentd
       {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
       {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -357,6 +361,7 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
+      {x: 916, y:  126 + adjY, r: 255, g: 215, b: 0, match: true, threshold: 80}, // above pause
       {x: 916, y:  246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below pause
       {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
     ],
@@ -367,6 +372,7 @@ var Page = {
     name: 'GamePlaying',
     colors: [
       {x: 980, y:  186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
+      {x: 852, y:  186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // left of pause
       {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 201 + adjY},
@@ -1079,19 +1085,18 @@ Tsum.prototype.findPage = function(times, timeout) {
       var img = this.screenshot();
       for (var key in Page) {
         var page = Page[key];
-        var pageName = page.name;
         currentPage = '';
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
-          if ((page.colors[i].match && diff < page.colors[i].threshold) // page color wants to be matched
-              || (!page.colors[i].match && diff >= threshold)) {  // page color doesn't want to be matched
-            currentPage = pageName;
+          if (diff < page.colors[i].threshold === page.colors[i].match) {
+            currentPage = page.name;
           } else {
             currentPage = '';
             break;
           }
         }
         if (currentPage !== '') {
+          debug(this.logs.currentPage, currentPage + ' (' + key + ')', 'findPage');
           break;
         }
       }
@@ -1126,7 +1131,8 @@ Tsum.prototype.goFriendPage = function() {
     var page = this.findPage(2, 1000);
     log(this.logs.currentPage, page, "goFriend");
     if (page === 'FriendPage') {
-      // check again
+      // check again with 3 seoconds delay (Event notification/page might fly in)
+      this.sleep(3000);
       page = this.findPage(1, 500);
       if (page === 'FriendPage') {
         this.sendMoneyInfo();
