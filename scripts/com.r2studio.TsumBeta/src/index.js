@@ -361,22 +361,22 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 916, y:  126 + adjY, r: 255, g: 215, b: 0, match: true, threshold: 80}, // above pause
-      {x: 916, y:  246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below pause
-      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
+      {x: 916, y: 198, r: 230, g: 215, b: 25, match: true, threshold: 80}, // above pause
+      {x: 916, y: 318, r: 230, g: 215, b: 20, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
     ],
-    back: {x: 986, y: 201 + adjY},
-    next: {x: 986, y: 201 + adjY}
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
   },
   GamePlaying2: {
     name: 'GamePlaying',
     colors: [
-      {x: 980, y:  186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
-      {x: 852, y:  186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // left of pause
-      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
+      {x: 980, y: 258, r: 190, g: 244, b: 70, match: true, threshold: 80}, // right of pause
+      {x: 852, y: 258, r: 244, g: 197, b: 10, match: true, threshold: 80}, // left of pause
+      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
     ],
-    back: {x: 986, y: 201 + adjY},
-    next: {x: 986, y: 201 + adjY}
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
   },
   MagicalTime: {
     name: 'MagicalTime',
