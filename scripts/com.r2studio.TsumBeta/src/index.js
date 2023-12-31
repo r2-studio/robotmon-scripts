@@ -2056,7 +2056,7 @@ Tsum.prototype.sleep = function(t) {
 function start(settings) {
   ts = new Tsum(settings['jpVersion'], settings['specialScreenRatio'], settings['langTaiwan'] ? LogsTW : Logs);
   log(ts.logs.start);
-  ts.debug = false;
+  ts.debug = settings['debugGame'];
   if (settings['bonus5to4']) {
     ts.tsumCount = 4;
   }

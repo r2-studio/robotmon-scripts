@@ -36,6 +36,13 @@ var settings = [
             title_zh_TW: '调试日志',
             default: false,
             dev_mode: true
+        },
+        {
+            key: 'debugGame',
+            title: 'Debug game',
+            title_zh_TW: '调试游戏',
+            default: false,
+            dev_mode: true
         }
     ],
     [
