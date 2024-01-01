@@ -868,6 +868,7 @@ function Tsum(isJP, detect, logs) {
   this.debug = false;
   this.autoLaunch = false;
   this.isRunning = true;
+  this.isStartupPhase = false;
   this.runTimes = 0;
   this.myTsum = '';
   this.storagePath = getStoragePath();
@@ -1188,15 +1189,21 @@ Tsum.prototype.goFriendPage = function() {
   while(this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
+      this.isStartupPhase = true;
     }
     var page = this.findPage(2, 1000);
     log(this.logs.currentPage, page, "goFriend");
+    if (this.isStartupPhase) {
+      // sleep longer to safely detect new event windows which might initially take longer to load
+      this.sleep(2000);
+    }
     if (page === 'FriendPage') {
       // check again with 3 seoconds delay (Event notification/page might fly in)
       this.sleep(3000);
       page = this.findPage(1, 500);
       if (page === 'FriendPage') {
         this.sendMoneyInfo();
+        this.isStartupPhase = false;
         return;
       }
     } else if (page === "ClosePage") {
@@ -1208,6 +1215,10 @@ Tsum.prototype.goFriendPage = function() {
       this.tap(Page[page].back);
     }
     this.sleep(1000);
+    if (this.isStartupPhase) {
+      // sleep longer to safely close possible event windows which crash the game if clicked too fast
+      this.sleep(2000);
+    }
   }
 }
 
@@ -1740,7 +1751,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
 
   var sender = undefined;
   var receiveTime = Date.now();
-  while (this.isRunning) {
+  var timeoutCounter = 0;
+  while (this.isRunning && timeoutCounter < 100) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
@@ -1748,6 +1760,10 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isAd = isSameColor(Button.outReceiveOneAd.color, this.getColor(img, Button.outReceiveOneAd), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
+    debug({
+      isItem: isItem, isRuby: isRuby, isNonItem: isNonItem, isAd: isAd, isOk: isOk,
+      isTimeout: isTimeout, timeoutCounter: timeoutCounter
+    });
     releaseImage(img);
     if (isItem) {
       if (isAd) {
@@ -1770,6 +1786,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         }
         this.tap(Button.outReceiveOne);
         this.sleep(200);
+        timeoutCounter = 0;
       } else {
         isNonItem = true;
         receiveTime = 0;
@@ -1779,6 +1796,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       log(this.logs.receiveGiftAgain);
       this.tap(Button.outReceiveOk);
       this.sleep(1000);
+      timeoutCounter = 0;
     } else if (isOk) {
       if (this.recordReceive && sender !== undefined && sender !== "") {
         this.countReceiveHeart(sender);
@@ -1793,9 +1811,11 @@ Tsum.prototype.taskReceiveOneItem = function() {
       }
       sender = undefined;
       this.sleep(600);
+      timeoutCounter = 0;
     } else {
       debug("else-path", "taskReceiveOneItem");
       this.tap(Button.outReceiveClose);
+      timeoutCounter = 0;
     }
     this.sleep(200);
 
@@ -1815,12 +1835,14 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receiveCheckLimit++;
         receivedCount = 0;
         sender = "";
+        timeoutCounter = 0;
         log(this.logs.checkUnreceivedGift);
         this.sleep(500);
         this.tap(Button.outReceive);
         this.sleep(1500);
       }
     }
+    timeoutCounter++;
   }
 }
 
