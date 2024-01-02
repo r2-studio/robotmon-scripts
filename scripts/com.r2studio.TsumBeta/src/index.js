@@ -139,6 +139,61 @@ var Button = {
 };
 
 var Page = {
+  RootDetectionLdp1080p480dpiEn: {
+    name: 'RootDetectionLdp1080p480dpiEn',
+    colors: [
+      {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 70, y: 680, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 1000, y: 1300, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1010, y: 1310, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 855, y: 1224},
+    next: {x: 855, y: 1224}
+  },
+  RootDetectionLdp1080p480dpiJp: {
+    name: 'RootDetectionLdp1080p480dpiJp',
+    colors: [
+      {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 70, y: 625, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 1000, y: 1360, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1010, y: 1370, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 850, y: 1280},
+    next: {x: 850, y: 1280}
+  },
+  RootDetectionNox1080p360dpiEn: {
+    name: 'RootDetectionNox1080p360dpiEn',
+    colors: [
+      {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 125, y: 785, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 945, y: 1170, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 955, y: 1180, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 850, y: 1115},
+    next: {x: 850, y: 1115}
+  },
+  RootDetectionNox480x800x160dpiJp: {
+    name: 'RootDetectionNox480x800x160dpiJp',
+    colors: [
+      {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 75, y: 725, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 995, y: 1240, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1005, y: 1250, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 885, y: 1170},
+    next: {x: 885, y: 1170}
+  },
+  RootDetectionNox480x800x160dpiEn: {
+    name: 'RootDetectionNox480x800x160dpiEn',
+    colors: [
+      {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 75, y: 750, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 995, y: 1215, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1005, y: 1225, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 885, y: 1150},
+    next: {x: 885, y: 1150}
+  },
   TodayMission: {
     name: 'TodayMission',
     colors: [
@@ -1003,6 +1058,9 @@ Tsum.prototype.toResizeXYs = function(xy) {
 
 Tsum.prototype.getColor = function(img, xy) {
   var rxy = this.toResizeXYs(xy);
+  if (this.debug) {
+    debug({xy: xy, rxy: rxy}, 'getColor');
+  }
   return getImageColor(img, Math.max(rxy.x, 0), Math.max(rxy.y, 0));
 }
 
@@ -1083,6 +1141,9 @@ Tsum.prototype.findPage = function(times, timeout) {
     var currentPage = '';
     for (var t = 0; t < times; t++) {
       var img = this.screenshot();
+      if (this.debug) {
+        saveImage(img, this.storagePath + "/tmp/pageImg-" + Date.now() + ".jpg");
+      }
       for (var key in Page) {
         var page = Page[key];
         currentPage = '';
