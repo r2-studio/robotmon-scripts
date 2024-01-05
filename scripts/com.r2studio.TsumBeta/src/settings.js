@@ -563,7 +563,12 @@ function log() {
             params += arg.replace(/'/g, '"') + ' ';
         }
     }
-    JavaScriptInterface.runScript('console.log(\'' + params + '\')');
+    if (typeof JavaScriptInterface !== "undefined" && typeof JavaScriptInterface.runScript === "function") {
+        JavaScriptInterface.runScript('console.log(\'' + params + '\')');
+    } else {
+        console.log(params);
+    }
+
 }
 
 function refreshRecord() {
@@ -728,4 +733,4 @@ $(function ($) {
         $("#genTableResult").html(i18n("请稍等...", "Please wait..."));
         JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
     });
-})($);
+});
