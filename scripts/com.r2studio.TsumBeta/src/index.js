@@ -1975,7 +1975,7 @@ Tsum.prototype.friendPageGoTop = function() {
   this.moveTo({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
   this.tapUp({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
-  this.sleep(2500);
+  this.sleep(3500);
 }
 
 Tsum.prototype.taskSendHearts = function() {
