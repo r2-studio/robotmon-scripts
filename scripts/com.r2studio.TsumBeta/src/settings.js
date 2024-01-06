@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 61;
+var VERSION = 62;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -29,6 +29,20 @@ var settings = [
             key: 'buildDate',
             title: 'Build date: $BUILD_DATE',
             title_zh_TW: '建造日期: $BUILD_DATE'
+        },
+        {
+            key: 'debugLogs',
+            title: 'Debug logs',
+            title_zh_TW: '调试日志',
+            default: false,
+            dev_mode: true
+        },
+        {
+            key: 'debugGame',
+            title: 'Debug game',
+            title_zh_TW: '调试游戏',
+            default: false,
+            dev_mode: true
         }
     ],
     [
@@ -425,6 +439,10 @@ function genSettings(jContainer, settings) {
             var key = setting.key;
             var title = getTitle(setting);
             var jGroupItem = $('<div id="setting_' + key + '" class="list-group-item"></div>');
+            if (setting.dev_mode) {
+                jGroupItem.addClass("dev_mode");
+                jGroupItem.hide();
+            }
             var jSetting = $('<div class="row"></div>');
             if (typeof setting.default === 'boolean') {
                 appendTitle(jSetting, title);
@@ -545,7 +563,12 @@ function log() {
             params += arg.replace(/'/g, '"') + ' ';
         }
     }
-    JavaScriptInterface.runScript('console.log(\'' + params + '\')');
+    if (typeof JavaScriptInterface !== "undefined" && typeof JavaScriptInterface.runScript === "function") {
+        JavaScriptInterface.runScript('console.log(\'' + params + '\')');
+    } else {
+        console.log(params);
+    }
+
 }
 
 function refreshRecord() {
@@ -672,6 +695,7 @@ $(function ($) {
         log("Increased build date clicks to " + buildDateClicks);
         if (buildDateClicks >= 10) {
             $('#resetSettings').show();
+            $('.dev_mode').show();
         }
     });
 
@@ -709,4 +733,4 @@ $(function ($) {
         $("#genTableResult").html(i18n("请稍等...", "Please wait..."));
         JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
     });
-})($);
+});
