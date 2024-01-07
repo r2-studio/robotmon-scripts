@@ -143,9 +143,9 @@ var Page = {
     name: 'RootDetectionLdp1080p480dpiEn',
     colors: [
       {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 70, y: 680, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 70, y: 680,  r: 255 , g: 255, b: 255, match: false, threshold: 25},
       {x: 1000, y: 1300, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1010, y: 1310, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+      {x: 1010, y: 1310, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 855, y: 1224},
     next: {x: 855, y: 1224}
@@ -154,9 +154,9 @@ var Page = {
     name: 'RootDetectionLdp1080p480dpiJp',
     colors: [
       {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 70, y: 625, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 70, y: 625, r: 255 , g: 255, b: 255, match: false, threshold: 25},
       {x: 1000, y: 1360, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1010, y: 1370, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+      {x: 1010, y: 1370, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 850, y: 1280},
     next: {x: 850, y: 1280}
@@ -165,9 +165,9 @@ var Page = {
     name: 'RootDetectionNox1080p360dpiEn',
     colors: [
       {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 125, y: 785, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 125, y: 785, r: 255 , g: 255, b: 255, match: false, threshold: 25},
       {x: 945, y: 1170, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 955, y: 1180, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+      {x: 955, y: 1180, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 850, y: 1115},
     next: {x: 850, y: 1115}
@@ -176,9 +176,9 @@ var Page = {
     name: 'RootDetectionNox480x800x160dpiJp',
     colors: [
       {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 75, y: 725, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 75, y: 725, r: 255 , g: 255, b: 255, match: false, threshold: 25},
       {x: 995, y: 1240, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1005, y: 1250, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+      {x: 1005, y: 1250, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 885, y: 1170},
     next: {x: 885, y: 1170}
@@ -187,9 +187,9 @@ var Page = {
     name: 'RootDetectionNox480x800x160dpiEn',
     colors: [
       {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 75, y: 750, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 75, y: 750, r: 255 , g: 255, b: 255, match: false, threshold: 25},
       {x: 995, y: 1215, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1005, y: 1225, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+      {x: 1005, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 885, y: 1150},
     next: {x: 885, y: 1150}
@@ -1117,15 +1117,16 @@ Tsum.prototype.startApp = function() {
   }
   log(this.logs.startTsumTsumApp);
   this.isStartupPhase = true;
-  var package;
+  var packageName;
   if (this.isJP) {
-    package = 'com.linecorp.LGTMTM';
+    packageName = 'com.linecorp.LGTMTM';
   } else {
-    package = 'com.linecorp.LGTMTMG';
+    packageName = 'com.linecorp.LGTMTMG';
   }
   execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
-      ' am start -n ' + package + '/com.linecorp.LGTMTM.TsumTsum');
-  this.sleep(15000);
+      ' am start --activity-single-top -n ' + packageName + '/com.linecorp.LGTMTM.TsumTsum');
+  this.sleep(3000);
+  log("TsumTsum app starting.");
 }
 
 Tsum.prototype.screenshot = function() {
@@ -1252,7 +1253,7 @@ Tsum.prototype.findPageObject = function(times, timeout) {
         currentPage = null;
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
-          if (diff < page.colors[i].threshold === page.colors[i].match) {
+          if ((diff < page.colors[i].threshold) === page.colors[i].match) {
             currentPage = page;
           } else {
             currentPage = null;
@@ -1301,13 +1302,13 @@ Tsum.prototype.goFriendPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
+    if (this.isStartupPhase) {
+      // sleep longer to safely detect new event windows which might initially take longer to load
+      this.sleep(4000);
+    }
     var pageObj = this.findPageObject(2, 1000);
     var page = pageObj != null ? pageObj.name : "unknown";
     log(this.logs.currentPage, page, "goFriend");
-    if (this.isStartupPhase) {
-      // sleep longer to safely detect new event windows which might initially take longer to load
-      this.sleep(2000);
-    }
     if (page === 'FriendPage') {
       // check again with 3 seoconds delay (Event notification/page might fly in)
       this.sleep(3000);
@@ -1326,10 +1327,6 @@ Tsum.prototype.goFriendPage = function() {
       this.tap(pageObj.back);
     }
     this.sleep(1000);
-    if (this.isStartupPhase) {
-      // sleep longer to safely close possible event windows which crash the game if clicked too fast
-      this.sleep(2000);
-    }
   }
 }
 
