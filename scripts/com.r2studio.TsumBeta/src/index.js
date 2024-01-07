@@ -519,9 +519,9 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 916, y: 198, r: 230, g: 215, b: 25, match: true, threshold: 80}, // above pause
-      {x: 916, y: 318, r: 230, g: 215, b: 20, match: true, threshold: 80}, // below pause
-      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
+      {x: 916, y: 198, r: 230, g: 200, b: 20, match: true, threshold: 80}, // above pause
+      {x: 916, y: 318, r: 214, g: 191, b: 28, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1688, r: 214, g: 191, b: 28, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
@@ -530,8 +530,18 @@ var Page = {
     name: 'GamePlaying',
     colors: [
       {x: 980, y: 258, r: 190, g: 244, b: 70, match: true, threshold: 80}, // right of pause
-      {x: 852, y: 258, r: 244, g: 197, b: 10, match: true, threshold: 80}, // left of pause
+      {x: 852, y: 258, r: 244, g: 197, b: 20, match: true, threshold: 80}, // left of pause
       {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
+    ],
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
+  },
+  GamePlayingLastSeconds: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 916, y: 198, r: 181, g: 207, b: 74, match: true, threshold: 80}, // above pause
+      {x: 916, y: 318, r: 190, g: 174, b: 57, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1688, r: 181, g: 178, b: 74, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
@@ -1241,15 +1251,13 @@ Tsum.prototype.findPageObject = function(times, timeout) {
   if (times === undefined) {times = 2;}
   if (timeout === undefined) {timeout = 700;}
   var start = Date.now();
+  var page = null;
   while(this.isRunning) {
     var currentPage = null;
     for (var t = 0; t < times; t++) {
       var img = this.screenshot();
-      if (this.debug) {
-        saveImage(img, this.storagePath + "/tmp/pageImg-" + Date.now() + ".jpg");
-      }
       for (var key in Page) {
-        var page = Page[key];
+        page = Page[key];
         currentPage = null;
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
@@ -1279,11 +1287,7 @@ Tsum.prototype.findPageObject = function(times, timeout) {
 
 Tsum.prototype.findPage = function(times, timeout) {
   var page = this.findPageObject(times, timeout);
-  if (page != null) {
-    return  page.name;
-  } else {
-    return  'unknown';
-  }
+  return page != null ? page.name : 'unknown';
 }
 
 Tsum.prototype.exitUnknownPage = function() {
