@@ -57,8 +57,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 61,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v61 Beta</b>\n<ul>\n    <li>简单的 Pair Tsum 支持<br>Ssimple Pair Tsum support</li>\n</ul>",
+      "versionCode": 62,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v62 Beta</b>\n<ul>\n    <li>很多小错误修正<br>Lots of small bugfixes</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []

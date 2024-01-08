@@ -1,5 +1,7 @@
 "use strict";
 
+var DEBUG_LOGS = false;
+
 function TaskController(){this.tasks={},this.isRunning=!1,this.interval=200}TaskController.prototype.getFirstPriorityTaskName=function(){var t=null,n=Date.now();for(var s in this.tasks){var i=this.tasks[s];n-i.lastRunTime<i.interval||(null!==t?i.priority<t.priority?t=i:i.interval>t.interval?t=i:i.lastRunTime<t.lastRunTime&&(t=i):t=i)}return null===t?"":t.name},TaskController.prototype.loop=function(){for(console.log("loop start");this.isRunning;){var t=this.getFirstPriorityTaskName(),n=this.tasks[t];void 0!==n&&(n.run(),n.lastRunTime=Date.now(),n.runTimes--,0===n.runTimes&&delete this.tasks[t]),sleep(this.interval)}this.isRunning=!1,console.log("loop stop")},TaskController.prototype.updateRunInterval=function(t){t<this.interval&&t>=50&&(this.interval=t)},TaskController.prototype.newTaskObject=function(t,n,s,i,o){return{name:t,run:n,interval:s||1e3,runTimes:i||0,priority:o,lastRunTime:0,status:0}},TaskController.prototype.newTask=function(t,n,s,i,o){if(void 0===o&&(o=!1),"function"==typeof n){var e=this.newTaskObject(t,n,s,i,0);o&&(e.lastRunTime=Date.now()),this.updateRunInterval(e.interval);var r="system_newTask_"+t,a=this.newTaskObject(r,function(){this.tasks[t]=e}.bind(this),0,1,-20);return this.tasks[r]=a,e}console.log("Error not a function",t,n)},TaskController.prototype.removeTask=function(t){var n="system_removeTask_"+Date.now().toString(),s=this.newTaskObject(n,function(){delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[n]=s},TaskController.prototype.removeAllTasks=function(){var t="system_removeAllTask_"+Date.now().toString(),n=this.newTaskObject(t,function(){for(var t in this.tasks)delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[t]=n},TaskController.prototype.start=function(){this.isRunning||(this.isRunning=!0,this.loop())},TaskController.prototype.stop=function(){this.isRunning&&(this.isRunning=!1,console.log("wait loop stop..."))};
 
 var ts;
@@ -22,6 +24,14 @@ function absColor(c1, c2) {
 function nowTime() {
   var offset = (new Date().getTimezoneOffset()) * 60 * 1000;
   return Date.now() + offset;
+}
+
+function debug() {
+  if (DEBUG_LOGS) {
+    var argsArray = Array.prototype.slice.call(arguments);
+    var newArgs = ['*DEBUG*'].concat(argsArray);
+    log.apply(null, newArgs);
+  }
 }
 
 function log() {
@@ -129,6 +139,61 @@ var Button = {
 };
 
 var Page = {
+  RootDetectionLdp1080p480dpiEn: {
+    name: 'RootDetectionLdp1080p480dpiEn',
+    colors: [
+      {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 70, y: 680, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 1000, y: 1300, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1010, y: 1310, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 855, y: 1224},
+    next: {x: 855, y: 1224}
+  },
+  RootDetectionLdp1080p480dpiJp: {
+    name: 'RootDetectionLdp1080p480dpiJp',
+    colors: [
+      {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 70, y: 625, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 1000, y: 1360, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1010, y: 1370, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 850, y: 1280},
+    next: {x: 850, y: 1280}
+  },
+  RootDetectionNox1080p360dpiEn: {
+    name: 'RootDetectionNox1080p360dpiEn',
+    colors: [
+      {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 125, y: 785, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 945, y: 1170, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 955, y: 1180, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 850, y: 1115},
+    next: {x: 850, y: 1115}
+  },
+  RootDetectionNox480x800x160dpiJp: {
+    name: 'RootDetectionNox480x800x160dpiJp',
+    colors: [
+      {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 75, y: 725, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 995, y: 1240, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1005, y: 1250, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 885, y: 1170},
+    next: {x: 885, y: 1170}
+  },
+  RootDetectionNox480x800x160dpiEn: {
+    name: 'RootDetectionNox480x800x160dpiEn',
+    colors: [
+      {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 75, y: 750, r: 92 , g: 92, b: 92, match: true, threshold: 20},
+      {x: 995, y: 1215, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1005, y: 1225, r: 92 , g: 92, b: 92, match: true, threshold: 20}
+    ],
+    back: {x: 885, y: 1150},
+    next: {x: 885, y: 1150}
+  },
   TodayMission: {
     name: 'TodayMission',
     colors: [
@@ -168,7 +233,8 @@ var Page = {
       {x: 540, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
       {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
       {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -180,7 +246,8 @@ var Page = {
       {x: 540, y: 1577 + adjY, r: 175, g: 188, b: 197, match: true, threshold: 80}, // center of the Tsum Hades
       {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
       {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -192,7 +259,8 @@ var Page = {
       {x: 540, y: 1577 + adjY, r: 203, g: 192, b: 237, match: true, threshold: 80}, // center of the Tsum Ursula
       {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
       {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -204,7 +272,8 @@ var Page = {
       {x: 540, y: 1577 + adjY, r: 79 , g: 89 , b: 94 , match: true, threshold: 80}, // center of the Tsum Maleficentd
       {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
       {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80} // left top of the ranking time
+      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
     back: {x: 547, y: 1581 + adjY},
     next: {x: 547, y: 1581 + adjY},
@@ -347,20 +416,22 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 916, y:  246 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80}, // below pause
-      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
+      {x: 916, y: 198, r: 230, g: 215, b: 25, match: true, threshold: 80}, // above pause
+      {x: 916, y: 318, r: 230, g: 215, b: 20, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
     ],
-    back: {x: 986, y: 201 + adjY},
-    next: {x: 986, y: 201 + adjY}
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
   },
   GamePlaying2: {
     name: 'GamePlaying',
     colors: [
-      {x: 980, y:  186 + adjY, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
-      {x: 916, y: 1616 + adjY, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
+      {x: 980, y: 258, r: 190, g: 244, b: 70, match: true, threshold: 80}, // right of pause
+      {x: 852, y: 258, r: 244, g: 197, b: 10, match: true, threshold: 80}, // left of pause
+      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
     ],
-    back: {x: 986, y: 201 + adjY},
-    next: {x: 986, y: 201 + adjY}
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
   },
   MagicalTime: {
     name: 'MagicalTime',
@@ -797,6 +868,7 @@ function Tsum(isJP, detect, logs) {
   this.debug = false;
   this.autoLaunch = false;
   this.isRunning = true;
+  this.isStartupPhase = false;
   this.runTimes = 0;
   this.myTsum = '';
   this.storagePath = getStoragePath();
@@ -940,12 +1012,15 @@ Tsum.prototype.startApp = function() {
     return;
   }
   log(this.logs.startTsumTsumApp);
+  var package;
   if (this.isJP) {
-    execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am start -n com.linecorp.LGTMTM/.TsumTsum');
+    package = 'com.linecorp.LGTMTM';
   } else {
-    execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar am start -n com.linecorp.LGTMTMG/.TsumTsum');
+    package = 'com.linecorp.LGTMTMG';
   }
-  this.sleep(3000);
+  execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
+      ' am start -n ' + package + '/com.linecorp.LGTMTM.TsumTsum');
+  this.sleep(15000);
 }
 
 Tsum.prototype.screenshot = function() {
@@ -984,6 +1059,9 @@ Tsum.prototype.toResizeXYs = function(xy) {
 
 Tsum.prototype.getColor = function(img, xy) {
   var rxy = this.toResizeXYs(xy);
+  if (this.debug) {
+    debug({xy: xy, rxy: rxy}, 'getColor');
+  }
   return getImageColor(img, Math.max(rxy.x, 0), Math.max(rxy.y, 0));
 }
 
@@ -1064,21 +1142,23 @@ Tsum.prototype.findPage = function(times, timeout) {
     var currentPage = '';
     for (var t = 0; t < times; t++) {
       var img = this.screenshot();
+      if (this.debug) {
+        saveImage(img, this.storagePath + "/tmp/pageImg-" + Date.now() + ".jpg");
+      }
       for (var key in Page) {
         var page = Page[key];
-        var pageName = page.name;
         currentPage = '';
         for (var i = 0; i < page.colors.length; i++) {
           var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
-          if ((page.colors[i].match && diff < page.colors[i].threshold) // page color wants to be matched
-              || (!page.colors[i].match && diff >= threshold)) {  // page color doesn't want to be matched
-            currentPage = pageName;
+          if (diff < page.colors[i].threshold === page.colors[i].match) {
+            currentPage = page.name;
           } else {
             currentPage = '';
             break;
           }
         }
         if (currentPage !== '') {
+          debug(this.logs.currentPage, currentPage + ' (' + key + ')', 'findPage');
           break;
         }
       }
@@ -1109,14 +1189,21 @@ Tsum.prototype.goFriendPage = function() {
   while(this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
+      this.isStartupPhase = true;
     }
     var page = this.findPage(2, 1000);
     log(this.logs.currentPage, page, "goFriend");
+    if (this.isStartupPhase) {
+      // sleep longer to safely detect new event windows which might initially take longer to load
+      this.sleep(2000);
+    }
     if (page === 'FriendPage') {
-      // check again
+      // check again with 3 seoconds delay (Event notification/page might fly in)
+      this.sleep(3000);
       page = this.findPage(1, 500);
       if (page === 'FriendPage') {
         this.sendMoneyInfo();
+        this.isStartupPhase = false;
         return;
       }
     } else if (page === "ClosePage") {
@@ -1128,6 +1215,10 @@ Tsum.prototype.goFriendPage = function() {
       this.tap(Page[page].back);
     }
     this.sleep(1000);
+    if (this.isStartupPhase) {
+      // sleep longer to safely close possible event windows which crash the game if clicked too fast
+      this.sleep(2000);
+    }
   }
 }
 
@@ -1660,7 +1751,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
 
   var sender = undefined;
   var receiveTime = Date.now();
-  while (this.isRunning) {
+  var timeoutCounter = 0;
+  while (this.isRunning && timeoutCounter < 100) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
@@ -1668,9 +1760,14 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isAd = isSameColor(Button.outReceiveOneAd.color, this.getColor(img, Button.outReceiveOneAd), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
+    debug({
+      isItem: isItem, isRuby: isRuby, isNonItem: isNonItem, isAd: isAd, isOk: isOk,
+      isTimeout: isTimeout, timeoutCounter: timeoutCounter
+    });
     releaseImage(img);
     if (isItem) {
       if (isAd) {
+        debug("handle ad");
         this.skipAd();
         this.sleep(2000);
         continue;
@@ -1684,30 +1781,41 @@ Tsum.prototype.taskReceiveOneItem = function() {
             sender = this.recognizeSender(img);
           }
           releaseImage(img);
+        } else {
+          sender = "";
         }
         this.tap(Button.outReceiveOne);
+        this.sleep(200);
+        timeoutCounter = 0;
       } else {
         isNonItem = true;
         receiveTime = 0;
       }
     } else if (isTimeout) {
+      debug("isTimeout", "taskReceiveOneItem");
       log(this.logs.receiveGiftAgain);
       this.tap(Button.outReceiveOk);
       this.sleep(1000);
+      timeoutCounter = 0;
     } else if (isOk) {
-      if (this.recordReceive && sender !== undefined) {
-        if (sender !== "") {
-          this.countReceiveHeart(sender);
-        }
-        this.record['hearts_count'].receivedCount++;
-        sender = undefined;
+      if (this.recordReceive && sender !== undefined && sender !== "") {
+        this.countReceiveHeart(sender);
         this.saveRecord();
       }
       this.sleep(100);
+      debug("isOK", "taskReceiveOneItem")
       this.tap(Button.outReceiveOk);
-      receivedCount++;
+      if (sender !== undefined) {
+        this.record['hearts_count'].receivedCount++;
+        receivedCount++;
+      }
+      sender = undefined;
+      this.sleep(600);
+      timeoutCounter = 0;
     } else {
+      debug("else-path", "taskReceiveOneItem");
       this.tap(Button.outReceiveClose);
+      timeoutCounter = 0;
     }
     this.sleep(200);
 
@@ -1716,6 +1824,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     }
 
     if (Date.now() - receiveTime > 3000) {
+      debug("took more than 3 seconds", "taskReceiveOneItem");
       this.tap(Button.outClose);
       this.goFriendPage();
       this.sleep(500);
@@ -1726,12 +1835,14 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receiveCheckLimit++;
         receivedCount = 0;
         sender = "";
+        timeoutCounter = 0;
         log(this.logs.checkUnreceivedGift);
         this.sleep(500);
         this.tap(Button.outReceive);
         this.sleep(1500);
       }
     }
+    timeoutCounter++;
   }
 }
 
@@ -1893,7 +2004,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
     btn = orderButtons[i];
     if (isSameColor(btn, this.getColor(img, btn))) {
       formerOrderButton = btn;
-      console.log("Found active button: " + btn.name);
+      debug("Found active button: " + btn.name);
       break;
     }
   }
@@ -1915,11 +2026,11 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
     img = this.screenshot();
     for (i = 0; i < lockIcons.length; i++) {
       var lockIcon = lockIcons[i];
-      console.log("Checking for lock on i=" + i);
+      debug("Checking for lock on i=" + i);
       var realColor = this.getColor(img, lockIcon);
-      console.log("For i=" + i + " I found color " + JSON.stringify(realColor));
+      debug("For i=" + i + " I found color " + JSON.stringify(realColor));
       if (isSameColor(lockIcon, realColor)) {
-        console.log("Unlocking i=" + i);
+        debug("Unlocking i=" + i);
         var tsumButton = {x: lockIcon.x, y: lockIcon.y - 100};
         this.tap(tsumButton);
         this.sleep(1000);
@@ -1929,9 +2040,9 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
         this.sleep(5000);
         this.tap({x: 600, y: 600}); // just tap anywhere to close the confirmation dialog
         this.sleep(1000);
-        console.log("Unlocked i=" + i);
+        debug("Unlocked i=" + i);
       } else {
-        console.log("No lock found for i=" + i);
+        debug("No lock found for i=" + i);
         allLocked = false;
         break;
       }
@@ -1940,7 +2051,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
 
     // scroll to next page if all Tsums were locked
     if (allLocked) {
-      console.log("Clicking scroll button to move to next page")
+      debug("Clicking scroll button to move to next page")
       this.tap({x: 1030, y: 1193, r: 214, g: 243, b: 255}); // arrow, scroll right to next page
       this.sleep(3000);
     }
@@ -1977,22 +2088,23 @@ Tsum.prototype.sendHeart = function(btn) {
       var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 40);
       releaseImage(img);
       if ((isSendBtn || !isSentBtn) && !isGift && !isSent) {
-        // log("sendHeart A-A", Date.now() / 1000);
+        debug("sendHeart A-A", Date.now() / 1000);
         this.tap(btn);
       } else {
+        debug("sendHeart A-B", Date.now() / 1000);
         unknownCount += 1;
       }
     } else if (page === "GiftHeart") {
       this.tap(Button.outReceiveOk);
       isGift = true;
-      // log("sendHeart B", Date.now() / 1000);
+      debug("sendHeart B", Date.now() / 1000);
     } else if (page === "Received") {
       this.sleep(100);
       this.tap(Button.outSendHeartClose);
-      // log("sendHeart C", Date.now() / 1000);
+      debug("sendHeart C", Date.now() / 1000);
       if (isGift) {
         isSent = true;
-        // log("sendHeart C-C", Date.now() / 1000);
+        debug("sendHeart C-C", Date.now() / 1000);
         this.sleep(100);
         return true;
       }
@@ -2005,7 +2117,7 @@ Tsum.prototype.sendHeart = function(btn) {
       unknownCount++;
     }
     if (unknownCount >= 15) {
-      log(this.logs.UnknownState);
+      debug(this.logs.UnknownState);
       return false;
     }
     // this.sleep(150);
@@ -2031,7 +2143,7 @@ Tsum.prototype.sleep = function(t) {
 function start(settings) {
   ts = new Tsum(settings['jpVersion'], settings['specialScreenRatio'], settings['langTaiwan'] ? LogsTW : Logs);
   log(ts.logs.start);
-  ts.debug = false;
+  ts.debug = settings['debugGame'];
   if (settings['bonus5to4']) {
     ts.tsumCount = 4;
   }
@@ -2078,15 +2190,14 @@ function start(settings) {
     };
   }
 
+  DEBUG_LOGS = settings['debugLogs'];
+
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
     return;
   }
 
   gTaskController = new TaskController();
-  if (settings['unlockLevelHoursWait'] > 0) {
-    gTaskController.newTask('autoUnlockLevel', ts.taskAutoUnlockLevel.bind(ts), settings['unlockLevelHoursWait'] * 60 * 60 * 1000, 0);
-  }
   if (settings['receiveHeartsOneByOne']) {
     gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), settings['mailMinWait'] * 60 * 1000, 0);
   }
@@ -2098,6 +2209,9 @@ function start(settings) {
   }
   if (checkFunction(outRange)) {
     if (settings['autoPlayGame']) {
+      if (settings['unlockLevelHoursWait'] > 0) {
+        gTaskController.newTask('autoUnlockLevel', ts.taskAutoUnlockLevel.bind(ts), settings['unlockLevelHoursWait'] * 60 * 60 * 1000, 0);
+      }
       gTaskController.newTask('taskPlayGameQuick', ts.taskPlayGameQuick.bind(ts), 3 * 1000, 0);
     }
   }
