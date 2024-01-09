@@ -1,5 +1,14 @@
 # TsumTsum script
-This is the successor of the script `com.r2studio.Tsum`.  
+This is the successor of the script [`com.r2studio.Tsum`](https://github.com/r2-studio/robotmon-scripts/tree/master/scripts/com.r2studio.Tsum).  
+
+## Script description
+
+This script automates the following tasks:
+- Receiving items from the mailbox
+- Sending hearts to all friends
+- Playing the game
+- Buying pickup capsules and select / premium boxes (*experimental*)
+
 
 ## Roadmap
 
