@@ -75,60 +75,59 @@ var Config = {
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]]
 };
 
-// 1776 * 1920 (y - 78)
-var adjY = 72;
+// Definitions assuming screen resolution of 1080 * 1920
 var Button = {
-  gameBubblesFrom: {x: 100, y: 560 + adjY},
-  gameBubblesTo: {x: 1000, y: 1460 + adjY},
-  gameQuestionCancel: {x: 400, y: 1280 + adjY},
-  gameQuestionCancel2: {x: 400, y: 1000 + adjY},
-  gameStop: {x: 440, y: 1000 + adjY},
-  gameSkill1: {x: 160, y: 1630 + adjY},
-  gameSkill2: {x: 95, y: 1630 + adjY},
-  gameRand: {x: 985, y: 1580 + adjY, color: {"a":0,"b":6,"g":180,"r":232}},
-  gamePause: {x: 983, y: 250 + adjY, color: {"a":0,"b":9,"g":188,"r":239}},
-  gameContinue: {x: 540, y: 1270 + adjY, color: {"a":0,"b":13,"g":175,"r":240}},
+  gameBubblesFrom: {x: 100, y: 632},
+  gameBubblesTo: {x: 1000, y: 1532},
+  gameQuestionCancel: {x: 400, y: 1352},
+  gameQuestionCancel2: {x: 400, y: 1072},
+  gameStop: {x: 440, y: 1072},
+  gameSkill1: {x: 160, y: 1702},
+  gameSkill2: {x: 95, y: 1702},
+  gameRand: {x: 985, y: 1652, color: {"a":0,"b":6,"g":180,"r":232}},
+  gamePause: {x: 983, y: 322, color: {"a":0,"b":9,"g":188,"r":239}},
+  gameContinue: {x: 540, y: 1342, color: {"a":0,"b":13,"g":175,"r":240}},
   outGameItems: [
-    {x: 205, y: 817 + adjY},    // +Score
-    {x: 435, y: 821 + adjY},    // +Coin
-    {x: 651, y: 817 + adjY},    // +Exp
-    {x: 871, y: 821 + adjY},    // +Time
-    {x: 201, y: 1095 + adjY},   // +Bubble
-    {x: 424, y: 1098 + adjY},   // 5>4
-    {x: 610, y: 1103 + adjY}],  // +Combo
-  outStart: {x: 500, y: 1520 + adjY, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
-  outClose: {x: 500, y: 1520 + adjY, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
-  outReceive: {x: 910, y: 350 + adjY},
-  outReceiveAll: {x: 800, y: 1350 + adjY},
-  outReceiveOk: {x: 835, y: 1020 + adjY, color: {"a":0,"b":6,"g":175,"r":236}},
-  outReceiveClose: {x: 530, y: 1300 + adjY},
-  outReceiveOne: {x: 840, y: 497 + adjY, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
+    {x: 205, y: 889},    // +Score
+    {x: 435, y: 893},    // +Coin
+    {x: 651, y: 889},    // +Exp
+    {x: 871, y: 893},    // +Time
+    {x: 201, y: 1167},   // +Bubble
+    {x: 424, y: 1170},   // 5>4
+    {x: 610, y: 1175}],  // +Combo
+  outStart: {x: 500, y: 1592, color: {"a":0,"b":129,"g":111,"r":236}}, // 開始
+  outClose: {x: 500, y: 1592, color: {"a":0,"b":7,"g":180,"r":236}}, // 關閉
+  outReceive: {x: 910, y: 422},
+  outReceiveAll: {x: 800, y: 1422},
+  outReceiveOk: {x: 835, y: 1092, color: {"a":0,"b":6,"g":175,"r":236}},
+  outReceiveClose: {x: 530, y: 1372},
+  outReceiveOne: {x: 840, y: 569, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOneRuby: {x: 295, y: 579 + adjY, color: {r: 224, g: 93, b: 101}}, // ruby
+  outReceiveOneRuby: {x: 295, y: 651, color: {r: 224, g: 93, b: 101}}, // ruby
   outReceiveOneRuby2th: {x: 295, y: 651+68*3, color: {r: 235, g: 93, b: 105}}, // ruby
   outReceiveOneAd: { x: 290, y: 812 - 140, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveOneAd2th: { x: 290, y: 672+68*3, color: { r: 90, g: 57, b: 25 } }, // ad
-  outReceiveTimeout: {x: 600, y: 1020 + adjY, color: {"a":0,"b":11,"g":171,"r":235}},
-  outSendHeartTop: {x: 910, y: 430 + adjY},
-  outSendHeart0: {x: 910, y: 626 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart1: {x: 910, y: 823 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart2: {x: 910, y: 1030 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeart3: {x: 910, y: 1232 + adjY, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
-  outSendHeartClose: {x: 666, y: 1354 + adjY, color: {r: 236, g: 178, b: 9}},
-  outSendHeartFrom: {x: 910, y: 530 + adjY},
-  outSendHeartTo: {x: 910, y: 1250 + adjY},
-  outSendHeartEnd: {x: 328, y: 1194 + adjY, color: {"a":0,"b":132,"g":85,"r":47}},
-  outSendHeartEnd2: {x: 227, y: 1190 + adjY, color: {"a":0,"b":123,"g":78,"r":44}},
-  outSendHeartEnd3: {x: 316, y: 1152 + adjY, color: {r: 55, g: 91, b: 139}},
-  outFriendScoreFrom: {x: 550, y: 863 + adjY, color: {"a":0,"b":140,"g":93,"r":55}},
-  outFriendScoreTo: {x: 760, y: 863 + adjY},
-  skillLuke1: {x: 1000, y: 1300 + adjY},
-  skillLuke2: {x: 830, y: 1330 + adjY},
-  skillLuke3: {x: 670, y: 1375 + adjY},
-  skillLuke4: {x: 960, y: 1160 + adjY},
-  outReceiveNameFrom: {x: 160, y: 460 + adjY},
-  outReceiveNameTo: {x: 620, y: 555 + adjY},
-  moneyInfoBox: {x: 430, y: 116 + adjY, w: 230, h: 56},
+  outReceiveTimeout: {x: 600, y: 1092, color: {"a":0,"b":11,"g":171,"r":235}},
+  outSendHeartTop: {x: 910, y: 502},
+  outSendHeart0: {x: 910, y: 698, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart1: {x: 910, y: 895, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart2: {x: 910, y: 1102, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeart3: {x: 910, y: 1304, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeartClose: {x: 666, y: 1426, color: {r: 236, g: 178, b: 9}},
+  outSendHeartFrom: {x: 910, y: 602},
+  outSendHeartTo: {x: 910, y: 1322},
+  outSendHeartEnd: {x: 328, y: 1266, color: {"a":0,"b":132,"g":85,"r":47}},
+  outSendHeartEnd2: {x: 227, y: 1262, color: {"a":0,"b":123,"g":78,"r":44}},
+  outSendHeartEnd3: {x: 316, y: 1224, color: {r: 55, g: 91, b: 139}},
+  outFriendScoreFrom: {x: 550, y: 935, color: {"a":0,"b":140,"g":93,"r":55}},
+  outFriendScoreTo: {x: 760, y: 935},
+  skillLuke1: {x: 1000, y: 1372},
+  skillLuke2: {x: 830, y: 1402},
+  skillLuke3: {x: 670, y: 1447},
+  skillLuke4: {x: 960, y: 1232},
+  outReceiveNameFrom: {x: 160, y: 532},
+  outReceiveNameTo: {x: 620, y: 627},
+  moneyInfoBox: {x: 430, y: 188, w: 230, h: 56},
   outOpenTsumCollectionOrder: {x: 983, y: 890, r: 165, g: 85, b: 49},
   outCloseTsumCollectionOrder: {x: 552, y: 1365, r: 247, g: 174, b: 8},
   outTsumCollectionOrderByReleaseDate: {name: 'By Release Date', x: 331, y: 774, r: 247, g: 178, b: 8},
@@ -197,9 +196,9 @@ var Page = {
   TodayMission: {
     name: 'TodayMission',
     colors: [
-      {x: 540, y: 1408 + adjY, r: 238, g: 181, b: 12 , match: true, threshold: 80},
-      {x: 975, y: 428  + adjY, r: 161, g: 224, b: 231, match: true, threshold: 80},
-      {x: 554, y: 1260 + adjY, r: 24 , g: 189, b: 219, match: true, threshold: 80}
+      {x: 540, y: 1480, r: 238, g: 181, b: 12 , match: true, threshold: 80},
+      {x: 975, y: 500, r: 161, g: 224, b: 231, match: true, threshold: 80},
+      {x: 554, y: 1332, r: 24 , g: 189, b: 219, match: true, threshold: 80}
     ],
     back: {x: 558, y: 1473},
     next: {x: 558, y: 1473}
@@ -207,177 +206,177 @@ var Page = {
   ScorePage: {
     name: 'ScorePage',
     colors: [
-      {x: 302, y: 1509 + adjY, r: 235, g: 184, b: 7  , match: true, threshold: 80},
-      {x: 777, y: 1516 + adjY, r: 248, g: 142, b: 20 , match: true, threshold: 80},
-      {x: 774, y: 428  + adjY, r: 243, g: 248, b: 242, match: true, threshold: 80}
+      {x: 302, y: 1581, r: 235, g: 184, b: 7  , match: true, threshold: 80},
+      {x: 777, y: 1588, r: 248, g: 142, b: 20 , match: true, threshold: 80},
+      {x: 774, y: 500, r: 243, g: 248, b: 242, match: true, threshold: 80}
     ],
-    back: {x: 309, y: 1581 + adjY},
-    next: {x: 784, y: 1581 + adjY}
+    back: {x: 309, y: 1653},
+    next: {x: 784, y: 1653}
   },
   ProfilePage: {
     name: 'ProfilePage',
     colors: [
-      {x: 540, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
-      {x: 34, y: 932  + adjY, r: 247, g: 178, b: 8, match: true, threshold: 80}     // left home tab button
+      {x: 540, y: 1592, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 34, y: 1004, r: 247, g: 178, b: 8, match: true, threshold: 80}     // left home tab button
     ],
-    back: {x: 31, y: 1054 + adjY},
-    next: {x: 31, y: 1054 + adjY},
-    tsums: {x: 900, y: 1581 + adjY}
+    back: {x: 31, y: 1126},
+    next: {x: 31, y: 1126},
+    tsums: {x: 900, y: 1653}
   },
   FriendPage: {
     name: 'FriendPage',
     colors: [
-      {x: 540, y: 1520 + adjY, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 540, y: 1592, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
       {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
-    back: {x: 547, y: 1581 + adjY},
-    next: {x: 547, y: 1581 + adjY},
-    tsums: {x: 900, y: 1581 + adjY}
+    back: {x: 547, y: 1653},
+    next: {x: 547, y: 1653},
+    tsums: {x: 900, y: 1653}
   },
   FriendPage2: {
     name: 'FriendPage',
     colors: [
-      {x: 540, y: 1577 + adjY, r: 175, g: 188, b: 197, match: true, threshold: 80}, // center of the Tsum Hades
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 540, y: 1649, r: 175, g: 188, b: 197, match: true, threshold: 80}, // center of the Tsum Hades
+      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
       {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
-    back: {x: 547, y: 1581 + adjY},
-    next: {x: 547, y: 1581 + adjY},
-    tsums: {x: 900, y: 1581 + adjY}
+    back: {x: 547, y: 1653},
+    next: {x: 547, y: 1653},
+    tsums: {x: 900, y: 1653}
   },
   FriendPage3: {
     name: 'FriendPage',
     colors: [
-      {x: 540, y: 1577 + adjY, r: 203, g: 192, b: 237, match: true, threshold: 80}, // center of the Tsum Ursula
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 540, y: 1649, r: 203, g: 192, b: 237, match: true, threshold: 80}, // center of the Tsum Ursula
+      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
       {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
-    back: {x: 547, y: 1581 + adjY},
-    next: {x: 547, y: 1581 + adjY},
-    tsums: {x: 900, y: 1581 + adjY}
+    back: {x: 547, y: 1653},
+    next: {x: 547, y: 1653},
+    tsums: {x: 900, y: 1653}
   },
   FriendPage4: {
     name: 'FriendPage',
     colors: [
-      {x: 540, y: 1577 + adjY, r: 79 , g: 89 , b: 94 , match: true, threshold: 80}, // center of the Tsum Maleficentd
-      {x: 187, y: 1527 + adjY, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1581 + adjY, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 392  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
+      {x: 540, y: 1649, r: 79 , g: 89 , b: 94 , match: true, threshold: 80}, // center of the Tsum Maleficentd
+      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
       {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
     ],
-    back: {x: 547, y: 1581 + adjY},
-    next: {x: 547, y: 1581 + adjY},
-    tsums: {x: 900, y: 1581 + adjY}
+    back: {x: 547, y: 1653},
+    next: {x: 547, y: 1653},
+    tsums: {x: 900, y: 1653}
   },
   GiftHeart: {
     name: 'GiftHeart',
     colors: [
-      {x: 216, y: 1012 + adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
-      {x: 673, y: 1008 + adjY, r: 235, g: 174, b: 8  , match: true, threshold: 80},
-      {x: 468, y: 731  + adjY, r: 214, g: 61 , b: 143, match: true, threshold: 100},
-      {x: 572, y: 489  + adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 583, y: 1123 + adjY, r: 28 , g: 186, b: 221, match: true, threshold: 80}
+      {x: 216, y: 1084, r: 233, g: 172, b: 6  , match: true, threshold: 80},
+      {x: 673, y: 1080, r: 235, g: 174, b: 8  , match: true, threshold: 80},
+      {x: 468, y: 803, r: 214, g: 61 , b: 143, match: true, threshold: 100},
+      {x: 572, y: 561, r: 30 , g: 193, b: 224, match: true, threshold: 80},
+      {x: 583, y: 1195, r: 28 , g: 186, b: 221, match: true, threshold: 80}
     ],
-    back: {x: 774, y: 1023 + adjY},
-    next: {x: 320, y: 1019 + adjY}
+    back: {x: 774, y: 1095},
+    next: {x: 320, y: 1091}
   },
   MailBox: {
     name: 'MailBox',
     colors: [
-      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 604, y: 1347 + adjY, r: 234, g: 171, b: 6  , match: true, threshold: 80}
+      {x: 738, y: 414, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1581, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 604, y: 1419, r: 234, g: 171, b: 6  , match: true, threshold: 80}
     ],
-    back: {x: 561, y: 1581 + adjY},
-    next: {x: 561, y: 1581 + adjY}
+    back: {x: 561, y: 1653},
+    next: {x: 561, y: 1653}
   },
   MailBox2: {
     name: 'MailBox',
     colors: [
-      {x: 738, y: 342  + adjY, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1509 + adjY, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 619, y: 1354 + adjY, r: 19 , g: 137, b: 175, match: true, threshold: 80}
+      {x: 738, y: 414, r: 240, g: 245, b: 239, match: true, threshold: 80},
+      {x: 550, y: 1581, r: 238, g: 187, b: 10 , match: true, threshold: 80},
+      {x: 619, y: 1426, r: 19 , g: 137, b: 175, match: true, threshold: 80}
     ],
-    back: {x: 561, y: 1581 + adjY},
-    next: {x: 561, y: 1581 + adjY}
+    back: {x: 561, y: 1653},
+    next: {x: 561, y: 1653}
   },
   ReceiveHeart: {
     name: 'ReceiveHeart',
     colors: [
-      {x: 208, y: 1008 + adjY, r: 233, g: 172, b: 6  , match: true, threshold: 80},
-      {x: 662, y: 1008 + adjY, r: 232, g: 171, b: 5  , match: true, threshold: 80},
-      {x: 561, y: 482  + adjY, r: 28 , g: 191, b: 222, match: true, threshold: 80},
-      {x: 565, y: 1138 + adjY, r: 30 , g: 195, b: 225, match: true, threshold: 80},
-      {x: 334, y: 745  + adjY, r: 213, g: 62 , b: 143, match: true, threshold: 90},
-      {x: 586, y: 749  + adjY, r: 248, g: 249, b: 51 , match: true, threshold: 100}
+      {x: 208, y: 1080, r: 233, g: 172, b: 6  , match: true, threshold: 80},
+      {x: 662, y: 1080, r: 232, g: 171, b: 5  , match: true, threshold: 80},
+      {x: 561, y: 554, r: 28 , g: 191, b: 222, match: true, threshold: 80},
+      {x: 565, y: 1210, r: 30 , g: 195, b: 225, match: true, threshold: 80},
+      {x: 334, y: 817, r: 213, g: 62 , b: 143, match: true, threshold: 90},
+      {x: 586, y: 821, r: 248, g: 249, b: 51 , match: true, threshold: 100}
     ],
-    back: {x: 774, y: 1023 + adjY},
-    next: {x: 320, y: 1019 + adjY}
+    back: {x: 774, y: 1095},
+    next: {x: 320, y: 1091}
   },
   Received: {
     name: 'Received',
     colors: [
-      {x: 799, y: 644 + adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 806, y: 817 + adjY, r: 45, g: 80 , b: 122, match: true, threshold: 80},
-      {x: 799, y: 976 + adjY, r: 27, g: 188, b: 217, match: true, threshold: 80}
+      {x: 799, y: 716, r: 30, g: 188, b: 223, match: true, threshold: 80},
+      {x: 806, y: 889, r: 45, g: 80 , b: 122, match: true, threshold: 80},
+      {x: 799, y: 1048, r: 27, g: 188, b: 217, match: true, threshold: 80}
     ],
-    back: {x: 774, y: 1023 + adjY},
-    next: {x: 320, y: 1019 + adjY}
+    back: {x: 774, y: 1095},
+    next: {x: 320, y: 1091}
   },
   Received2: {
     name: 'Received',
     colors: [
-      {x: 799, y: 644 + adjY, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 889, y: 752 + adjY, r: 40, g: 72 , b: 111, match: true, threshold: 80},
-      {x: 799, y: 976 + adjY, r: 27, g: 188, b: 217, match: true, threshold: 80}
+      {x: 799, y: 716, r: 30, g: 188, b: 223, match: true, threshold: 80},
+      {x: 889, y: 824, r: 40, g: 72 , b: 111, match: true, threshold: 80},
+      {x: 799, y: 1048, r: 27, g: 188, b: 217, match: true, threshold: 80}
     ],
-    back: {x: 774, y: 1023 + adjY},
-    next: {x: 320, y: 1019 + adjY}
+    back: {x: 774, y: 1095},
+    next: {x: 320, y: 1091}
   },
   StartPage: {
     name: 'StartPage',
     colors: [
-      {x: 752, y: 399  + adjY, r: 244, g: 249, b: 243, match: true, threshold: 80},
-      {x: 856, y: 1358 + adjY, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 169, y: 1509 + adjY, r: 239, g: 188, b: 11 , match: true, threshold: 80},
-      {x: 547, y: 1509 + adjY, r: 235, g: 118, b: 134, match: true, threshold: 80},
-      {x: 792, y: 1588 + adjY, r: 234, g: 171, b: 8  , match: true, threshold: 100}
+      {x: 752, y: 471, r: 244, g: 249, b: 243, match: true, threshold: 80},
+      {x: 856, y: 1430, r: 30 , g: 193, b: 224, match: true, threshold: 80},
+      {x: 169, y: 1581, r: 239, g: 188, b: 11 , match: true, threshold: 80},
+      {x: 547, y: 1581, r: 235, g: 118, b: 134, match: true, threshold: 80},
+      {x: 792, y: 1660, r: 234, g: 171, b: 8  , match: true, threshold: 100}
     ],
-    back: {x: 190, y: 1574 + adjY},
-    next: {x: 558, y: 1563 + adjY},
-    tsums: {x: 900, y: 1581 + adjY}
+    back: {x: 190, y: 1646},
+    next: {x: 558, y: 1635},
+    tsums: {x: 900, y: 1653}
   },
   StartPage2: {
     name: 'StartPage',
     colors: [
-      {x: 820,  y: 443  + adjY, r: 245, g: 250, b: 244, match: true, threshold: 80},
-      {x: 954,  y: 1354 + adjY, r: 31 , g: 190, b: 220, match: true, threshold: 80},
-      {x: 180,  y: 1512 + adjY, r: 235, g: 182, b: 8  , match: true, threshold: 80},
-      {x: 540,  y: 1512 + adjY, r: 238, g: 115, b: 133, match: true, threshold: 80},
-      {x: 1011, y: 1603 + adjY, r: 229, g: 166, b: 11 , match: true, threshold: 100}
+      {x: 820,  y: 515, r: 245, g: 250, b: 244, match: true, threshold: 80},
+      {x: 954,  y: 1426, r: 31 , g: 190, b: 220, match: true, threshold: 80},
+      {x: 180,  y: 1584, r: 235, g: 182, b: 8  , match: true, threshold: 80},
+      {x: 540,  y: 1584, r: 238, g: 115, b: 133, match: true, threshold: 80},
+      {x: 1011, y: 1675, r: 229, g: 166, b: 11 , match: true, threshold: 100}
     ],
-    back: {x: 190, y: 1574 + adjY},
-    next: {x: 558, y: 1563 + adjY}
+    back: {x: 190, y: 1646},
+    next: {x: 558, y: 1635}
   },
   StartPage3: {
     name: 'StartPage',
     colors: [
-      {x: 400,  y: 1600 + adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
-      {x: 680,  y: 1600 + adjY, r: 245, g: 85, b: 115, match: true, threshold: 80},
-      {x: 540,  y: 1650 + adjY, r: 235, g: 70, b: 90 , match: true, threshold: 80}
+      {x: 400,  y: 1672, r: 245, g: 85, b: 115, match: true, threshold: 80},
+      {x: 680,  y: 1672, r: 245, g: 85, b: 115, match: true, threshold: 80},
+      {x: 540,  y: 1722, r: 235, g: 70, b: 90 , match: true, threshold: 80}
     ],
-    back: {x: 190, y: 1574 + adjY},
-    next: {x: 558, y: 1563 + adjY}
+    back: {x: 190, y: 1646},
+    next: {x: 558, y: 1635}
   },
   TsumsPage: {
     name: 'TsumsPage',
@@ -507,14 +506,14 @@ var Page = {
   GamePause: {
     name: 'GamePause',
     colors: [
-      {x: 165, y: 1005 + adjY, r: 234, g: 173, b: 7  , match: true, threshold: 80},
-      {x: 594, y: 1001 + adjY, r: 233, g: 171, b: 8  , match: true, threshold: 80},
-      {x: 367, y: 702  + adjY, r: 24 , g: 191, b: 225, match: true, threshold: 80},
-      {x: 738, y: 540  + adjY, r: 248, g: 244, b: 245, match: true, threshold: 80},
-      {x: 550, y: 1264 + adjY, r: 236, g: 182, b: 11 , match: true, threshold: 80}
+      {x: 165, y: 1077, r: 234, g: 173, b: 7  , match: true, threshold: 80},
+      {x: 594, y: 1073, r: 233, g: 171, b: 8  , match: true, threshold: 80},
+      {x: 367, y: 774, r: 24 , g: 191, b: 225, match: true, threshold: 80},
+      {x: 738, y: 612, r: 248, g: 244, b: 245, match: true, threshold: 80},
+      {x: 550, y: 1336, r: 236, g: 182, b: 11 , match: true, threshold: 80}
     ],
-    back: {x: 331, y: 1008 + adjY},
-    next: {x: 561, y: 1350 + adjY}
+    back: {x: 331, y: 1080},
+    next: {x: 561, y: 1422}
   },
   GamePlaying: {
     name: 'GamePlaying',
@@ -549,76 +548,76 @@ var Page = {
   MagicalTime: {
     name: 'MagicalTime',
     colors: [
-      {x: 817, y:  435 + adjY, r: 244, g: 249, b: 243, match: true, threshold:  80},
-      {x: 594, y:  785 + adjY, r: 248, g: 102, b: 121, match: true, threshold: 100},
-      {x: 208, y: 1145 + adjY, r: 236, g: 175, b:   9, match: true, threshold:  80},
-      {x: 662, y: 1141 + adjY, r: 232, g: 171, b:   5, match: true, threshold:  80}
+      {x: 817, y: 507, r: 244, g: 249, b: 243, match: true, threshold:  80},
+      {x: 594, y: 857, r: 248, g: 102, b: 121, match: true, threshold: 100},
+      {x: 208, y: 1217, r: 236, g: 175, b:   9, match: true, threshold:  80},
+      {x: 662, y: 1213, r: 232, g: 171, b:   5, match: true, threshold:  80}
     ],
-    back: {x: 381, y: 1149 + adjY},
-    next: {x: 856, y: 1149 + adjY}
+    back: {x: 381, y: 1221},
+    next: {x: 856, y: 1221}
   },
   NetworkDisable: {
     name: 'NetworkDisable',
     colors: [
-      {x: 478, y: 1008 + adjY, r: 236, g:  94, b: 116, match: true, threshold: 80},
-      {x: 932, y: 1005 + adjY, r: 232, g: 171, b:   5, match: true, threshold: 80}
+      {x: 478, y: 1080, r: 236, g:  94, b: 116, match: true, threshold: 80},
+      {x: 932, y: 1077, r: 232, g: 171, b:   5, match: true, threshold: 80}
     ],
-    back: {x: 885, y: 1008 + adjY},
-    next: {x: 885, y: 1012 + adjY}
+    back: {x: 885, y: 1080},
+    next: {x: 885, y: 1084}
   },
   NetworkTimeout: {
     name: 'NetworkTimeout',
     colors: [
-      {x: 478, y: 1008 + adjY, r: 232, g: 171, b: 5, match: true, threshold: 80},
-      {x: 932, y: 1005 + adjY, r: 232, g: 171, b: 5, match: true, threshold: 80}
+      {x: 478, y: 1080, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 932, y: 1077, r: 232, g: 171, b: 5, match: true, threshold: 80}
     ],
-    back: {x: 885, y: 1012 + adjY},
-    next: {x: 885, y: 1012 + adjY}
+    back: {x: 885, y: 1084},
+    next: {x: 885, y: 1084}
   },
   FriendInfo: { // FriendInfo of Friend Page, SocailAccount of Setting Page
     name: 'FriendInfo',
     colors: [
-      {x: 565, y:  504 + adjY, r:  31, g: 190, b: 220, match: true, threshold: 80},
-      {x: 547, y: 1123 + adjY, r:  27, g: 192, b: 222, match: true, threshold: 80},
-      {x: 554, y: 1260 + adjY, r: 238, g: 186, b:  12, match: true, threshold: 80}
+      {x: 565, y: 576, r:  31, g: 190, b: 220, match: true, threshold: 80},
+      {x: 547, y: 1195, r:  27, g: 192, b: 222, match: true, threshold: 80},
+      {x: 554, y: 1332, r: 238, g: 186, b:  12, match: true, threshold: 80}
     ],
-    back: {x: 576, y: 1336 + adjY},
-    next: {x: 576, y: 1336 + adjY}
+    back: {x: 576, y: 1408},
+    next: {x: 576, y: 1408}
   },
   LevelUp: { // LevelUp and RankUp
     name: 'LevelUp',
     colors: [
-      {x: 140, y: 1584 + adjY, r: 233, g: 175, b: 6, match: true, threshold: 80}, // left of the close button
-      {x: 450, y: 1584 + adjY, r: 233, g: 175, b: 6, match: true, threshold: 80}, // right of the close button
-      {x: 620, y: 1584 + adjY, r: 233, g: 175, b: 6, match: true, threshold: 80}, // left of the share button
-      {x: 930, y: 1584 + adjY, r: 233, g: 175, b: 6, match: true, threshold: 80} // right of the share button
+      {x: 140, y: 1656, r: 233, g: 175, b: 6, match: true, threshold: 80}, // left of the close button
+      {x: 450, y: 1656, r: 233, g: 175, b: 6, match: true, threshold: 80}, // right of the close button
+      {x: 620, y: 1656, r: 233, g: 175, b: 6, match: true, threshold: 80}, // left of the share button
+      {x: 930, y: 1656, r: 233, g: 175, b: 6, match: true, threshold: 80} // right of the share button
     ],
-    back: {x: 300, y: 1588 + adjY},
-    next: {x: 300, y: 1588 + adjY}
+    back: {x: 300, y: 1660},
+    next: {x: 300, y: 1660}
   },
   HighScore: {
     name: 'HighScore',
     colors: [
-      {x: 576, y: 1253 + adjY, r: 238, g: 187, b: 10, match: true, threshold: 80}
+      {x: 576, y: 1325, r: 238, g: 187, b: 10, match: true, threshold: 80}
     ],
-    back: {x: 576, y: 1253 + adjY},
-    next: {x: 576, y: 1253 + adjY}
+    back: {x: 576, y: 1325},
+    next: {x: 576, y: 1325}
   },
   ClosePage: { // including EventPage, MyInfo, SettingPage, others
     name: 'ClosePage', // the close button at center bottom
     colors: [
-      {x: 540, y: 1516 + adjY, r: 233, g: 180, b: 10, match: true, threshold: 80} // top right of the close button
+      {x: 540, y: 1588, r: 233, g: 180, b: 10, match: true, threshold: 80} // top right of the close button
     ],
-    back: {x: 576, y: 1588 + adjY},
-    next: {x: 576, y: 1588 + adjY}
+    back: {x: 576, y: 1660},
+    next: {x: 576, y: 1660}
   },
   InvitePage: {
     name: 'InvitePage', // the close button at left bottom
     colors: [
-      {x: 180, y: 1520 + adjY, r: 238, g: 180, b: 11, match: true, threshold: 80}
+      {x: 180, y: 1592, r: 238, g: 180, b: 11, match: true, threshold: 80}
     ],
-    back: {x: 176, y: 1520 + adjY},
-    next: {x: 176, y: 1520 + adjY}
+    back: {x: 176, y: 1592},
+    next: {x: 176, y: 1592}
   }
 };
 
