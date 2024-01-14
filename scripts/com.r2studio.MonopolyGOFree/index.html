@@ -27,7 +27,7 @@
 <script>
   var selections = {
     package: "com.r2studio.MonopolyGOFree",
-    versionCode: "0.1.0",
+    versionCode: "0.2.0",
     languages: ["en", "zh_TW"],
     title: "Monopoly GO (free)",
     settings: [
@@ -59,7 +59,7 @@
     if (eventType == "OnPlayClick") {
       var jsonConfig = JSON.stringify(config);
       var startCommand = "start('" + jsonConfig + "')";
-      // JavaScriptInterface.setXY(345, 159); // avoid logo sheld screen
+      JavaScriptInterface.setXY(0, 50); // avoid logo sheld screen
       JavaScriptInterface.hideMenu();
       JavaScriptInterface.runScript(startCommand);
     } else if (eventType == "OnPauseClick") {

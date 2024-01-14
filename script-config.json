@@ -3,7 +3,7 @@
     "com.r2studio.MonopolyGOFree": {
       "id": "com.r2studio.MonopolyGOFree",
       "title": "*Monopoly GO Free*",
-      "versionCode": "0.1.0",
+      "versionCode": "0.2.0",
       "description": "<h3>Monopoly GO Free</h3>",
       "packageName": "com.scopely.monopolygo",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MonopolyGOFree/index.zip",
