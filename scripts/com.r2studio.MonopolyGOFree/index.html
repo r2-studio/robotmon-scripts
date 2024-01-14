@@ -1,0 +1,71 @@
+<meta charset="utf-8" />
+<title>Monopoly GO Free</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts/utils/simplesettings/simplesettings.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/r2-studio/robotmon-scripts@master/utils/simplesettings/simplesettings.umd.min.js"></script>
+<style>
+  .mt-3 {
+    text-align: left;
+  }
+</style>
+<body>
+  <div id="app"></div>
+</body>
+
+<script>
+  var selections = {
+    package: "com.r2studio.MonopolyGOFree",
+    versionCode: "0.1.0",
+    languages: ["en", "zh_TW"],
+    title: "Monopoly GO (free)",
+    settings: [
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW: "自動玩大富翁GO",
+          en: "Auto play Monopoly GO",
+        },
+      },
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW: "適用於 Monopoly GO",
+          en: "for Monopoly GO",
+        },
+      },
+    ],
+  };
+
+  var config = {
+    isLocalPay: false,
+    isCloud: false,
+  };
+  simplesettings.render("#app", selections, function (c) {
+  });
+
+  function onEvent(eventType) {
+    if (eventType == "OnPlayClick") {
+      var jsonConfig = JSON.stringify(config);
+      var startCommand = "start('" + jsonConfig + "')";
+      // JavaScriptInterface.setXY(345, 159); // avoid logo sheld screen
+      JavaScriptInterface.hideMenu();
+      JavaScriptInterface.runScript(startCommand);
+    } else if (eventType == "OnPauseClick") {
+      JavaScriptInterface.runScript("stop();");
+    } else if (eventType == "OnSettingClick") {
+      JavaScriptInterface.runScript("stop();");
+    }
+  }
+</script>
