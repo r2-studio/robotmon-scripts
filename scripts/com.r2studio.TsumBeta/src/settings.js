@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 62;
+var VERSION = 63;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -287,6 +287,22 @@ var settings = [
             max: 60,
             min: 1
         }
+    ],
+    [
+        {
+            title: '<b style="color: red">Experimental features</b><br>Things may not work correctly in every scenario',
+            title_zh_TW: '<b style="color: red">实验特点</b><br>事情可能无法在每种情况下正常工作'
+        },
+        {
+            transient: true,
+            key: 'autobuyBoxes',
+            title: 'Auto buy boxes',
+            title_zh_TW: '自动购买框',
+            default: 0,
+            step: 10,
+            max: 500,
+            min: 0
+        }
     ]
 ];
 
@@ -319,6 +335,9 @@ function loadSettings(settings) {
             for (var k1 in settings) {
                 for (var k2 in settings[k1]) {
                     var setting = settings[k1][k2];
+                    if (setting.transient === true) {
+                        continue;
+                    }
                     var key = setting.key;
                     if (typeof key === 'string' && typeof recordSettings[key] === typeof setting.default) {
                         setting.default = recordSettings[key];
@@ -339,6 +358,9 @@ function saveSettings(settings) {
         for (var i in settings) {
             for (var g in settings[i]) {
                 var setting = settings[i][g];
+                if (setting.transient === true) {
+                    continue;
+                }
                 var key = setting.key;
                 var selector = '.' + key;
                 if (typeof setting.default === 'boolean') {
@@ -488,18 +510,14 @@ function genSettings(jContainer, settings) {
                 jBtnP.on('click', (function (jInput, min, max, step) {
                     return function () {
                         var newValue = (+jInput.val()) + step;
-                        if (newValue <= max) {
-                            jInput.val(newValue);
-                        }
+                        jInput.val(Math.min(newValue, max));
                         saveSettings(settings);
                     }
                 })(jInput, min, max, step));
                 jBtnM.on('click', (function (jInput, min, max, step) {
                     return function () {
                         var newValue = (+jInput.val()) - step;
-                        if (newValue >= min) {
-                            jInput.val(newValue);
-                        }
+                        jInput.val(Math.max(newValue, min));
                         saveSettings(settings);
                     }
                 })(jInput, min, max, step));
