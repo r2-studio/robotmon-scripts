@@ -5,6 +5,14 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v64] - 2024-01-24
+
+### Fixed
+
+- Auto game play didn't work with screen resolution of 480x800px anymore (introduced with TsumBeta v62). 
+  This _might_ reintroduce the bug that the game gets stopped short before the end.
+
+
 ## [v63] - 2024-01-09
 
 ### Added

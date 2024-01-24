@@ -66,8 +66,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 63,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 <a href='https://github.com/r2-studio/robotmon-scripts/blob/master/scripts/com.r2studio.TsumBeta/CHANGELOG.md'>v63 Beta</a></b>\n<ul>\n    <li>实验性的：自动购买框<br>Experimental: Auto buy boxes</li>\n</ul>",
+      "versionCode": 64,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v64 Beta</b>\n<ul>\n    <li>修正：以 480x800 屏幕分辨率自动播放<br>Bugfix: Auto play with 480x800 screen resolution</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
