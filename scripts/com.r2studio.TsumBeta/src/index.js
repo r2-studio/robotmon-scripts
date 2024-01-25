@@ -518,9 +518,8 @@ var Page = {
   GamePlaying: {
     name: 'GamePlaying',
     colors: [
-      {x: 916, y: 198, r: 230, g: 200, b: 20, match: true, threshold: 80}, // above pause
-      {x: 916, y: 318, r: 214, g: 191, b: 28, match: true, threshold: 80}, // below pause
-      {x: 916, y: 1688, r: 214, g: 191, b: 28, match: true, threshold: 80} // below fan
+      {x: 916, y: 198, r: 230, g: 150, b: 6, match: true, threshold: 80}, // above pause
+      {x: 916, y: 1688, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
@@ -528,9 +527,8 @@ var Page = {
   GamePlaying2: {
     name: 'GamePlaying',
     colors: [
-      {x: 980, y: 258, r: 190, g: 244, b: 70, match: true, threshold: 80}, // right of pause
-      {x: 852, y: 258, r: 244, g: 197, b: 20, match: true, threshold: 80}, // left of pause
-      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
+      {x: 980, y: 258, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
+      {x: 916, y: 1688, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
