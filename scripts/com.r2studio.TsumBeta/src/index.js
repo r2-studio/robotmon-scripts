@@ -1968,11 +1968,15 @@ Tsum.prototype.taskReceiveOneItem = function() {
 }
 
 Tsum.prototype.friendPageGoTop = function() {
+  debug("Scrolling to top of friends list");
   this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
   this.tapUp({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
+  debug("Scrolled to top of friends list");
+  debug("Waiting short time for UI finishing movement");
   this.sleep(3500);
+  debug("Waited for UI finishing movement");
 }
 
 Tsum.prototype.taskSendHearts = function() {
@@ -1988,14 +1992,16 @@ Tsum.prototype.taskSendHearts = function() {
   var startTime = Date.now();
   var retry = 0;
   var times = 0;
+  var hfx = Button.outSendHeartFrom.x;
+  var hfy = Button.outSendHeartFrom.y - 40; // hearts from y
+  var hty = Button.outSendHeartTo.y + 30;   // hearts to y
   while(this.isRunning) {
     times++;
-    if (times % 15 === 14) {
+    if (times % 15 === 0) {
+      debug("Ensuring friends page");
       this.goFriendPage();
+      debug("Ensured friends page");
     }
-    var hfx = Button.outSendHeartFrom.x;
-    var hfy = Button.outSendHeartFrom.y - 40;
-    var hty = Button.outSendHeartTo.y + 30;
     var heartsPos = [];
 
     var img = this.screenshot();
@@ -2007,6 +2013,7 @@ Tsum.prototype.taskSendHearts = function() {
         y += 140;
       }
     }
+    debug("Found " + heartsPos.length + " hearts on current page");
     var isZero = true;
     var fx = Button.outFriendScoreFrom.x;
     var tx = Button.outFriendScoreTo.x;
@@ -2030,7 +2037,11 @@ Tsum.prototype.taskSendHearts = function() {
     // both jp or global using this now
     var isEndJP = !isNotEndJP && isEndJP1 && isEnd2 && isEndJP3;
     releaseImage(img);
-    log('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd1, 'isEnd', isEnd,'isNotEndJP', isNotEndJP, 'isEndJP1', isEndJP1, 'isEndJP3', isEndJP3, 'isEndJP', isEndJP, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
+    if (this.isJP) {
+      log('isNotEndJP', isNotEndJP, 'isEndJP1', isEndJP1, 'isEndJP3', isEndJP3, 'isEndJP', isEndJP, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
+    } else {
+      log('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd3, 'isEnd', isEnd, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
+    }
 
     if (isOk && heartsPos.length === 0) {
       this.tap(Button.outReceiveOk);
@@ -2053,21 +2064,28 @@ Tsum.prototype.taskSendHearts = function() {
           this.sleep(1000);
           this.friendPageGoTop();
         }
+        debug("Ending taskSendHearts");
         break;
       }
     } else {
       var rTimes = 0;
       for (var h in heartsPos) {
+        debug("Try sending heart to", h);
         var success = this.sendHeart(heartsPos[h]);
+        debug("Tried sending heart to", h, "with success=" + success);
         if (!success) {
+          debug("Try again sending heart to", h);
           success = this.sendHeart(heartsPos[h]);
+          debug("Tried again sending heart to", h, "with success=" + success);
         }
         if (success) {
           rTimes++;
           this.record['hearts_count'].sentCount++;
         } else {
+          debug("Try return to FriendPage");
           this.goFriendPage();
           this.sleep(1000);
+          debug("Tried return to FriendPage");
         }
         if (!this.isRunning) {
           return;
