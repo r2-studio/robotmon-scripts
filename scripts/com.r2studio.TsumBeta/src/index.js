@@ -160,6 +160,17 @@ var Page = {
     back: {x: 850, y: 1280},
     next: {x: 850, y: 1280}
   },
+  RootDetectionLdp480x800x160dpiEn: {
+    name: 'RootDetectionLdp480x800x160dpiEn',
+    colors: [
+      {x: 90, y: 780, r: 253 , g: 253, b: 253, match: true, threshold: 25},
+      {x: 65, y: 745, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 990, y: 1190, r: 252 , g: 252, b: 252, match: true, threshold: 25},
+      {x: 1015, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 885, y: 1135},
+    next: {x: 885, y: 1135}
+  },
   RootDetectionNox1080p360dpiEn: {
     name: 'RootDetectionNox1080p360dpiEn',
     colors: [
@@ -515,20 +526,12 @@ var Page = {
     back: {x: 331, y: 1080},
     next: {x: 561, y: 1422}
   },
-  GamePlaying: {
+  GamePlaying480x800: {
     name: 'GamePlaying',
     colors: [
-      {x: 916, y: 198, r: 230, g: 150, b: 6, match: true, threshold: 80}, // above pause
-      {x: 916, y: 1688, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
-    ],
-    back: {x: 986, y: 273},
-    next: {x: 986, y: 273}
-  },
-  GamePlaying2: {
-    name: 'GamePlaying',
-    colors: [
-      {x: 980, y: 258, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
-      {x: 916, y: 1688, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
+      {x: 916, y: 198, r: 253, g: 216, b: 0, match: true, threshold: 80}, // above pause
+      {x: 916, y: 318, r: 241, g: 161, b: 8, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1688, r: 242, g: 161, b: 8, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
@@ -539,6 +542,26 @@ var Page = {
       {x: 916, y: 198, r: 181, g: 207, b: 74, match: true, threshold: 80}, // above pause
       {x: 916, y: 318, r: 190, g: 174, b: 57, match: true, threshold: 80}, // below pause
       {x: 916, y: 1688, r: 181, g: 178, b: 74, match: true, threshold: 80} // below fan
+    ],
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
+  },
+  GamePlaying: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 916, y: 198, r: 230, g: 200, b: 20, match: true, threshold: 80}, // above pause
+      {x: 916, y: 318, r: 214, g: 191, b: 28, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1688, r: 214, g: 191, b: 28, match: true, threshold: 80} // below fan
+    ],
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
+  },
+  GamePlaying2: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 980, y: 258, r: 190, g: 244, b: 70, match: true, threshold: 80}, // right of pause
+      {x: 852, y: 258, r: 244, g: 197, b: 20, match: true, threshold: 80}, // left of pause
+      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
@@ -1132,7 +1155,7 @@ Tsum.prototype.startApp = function() {
   }
   execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
       ' am start --activity-single-top -n ' + packageName + '/com.linecorp.LGTMTM.TsumTsum');
-  this.sleep(3000);
+  this.sleep(10000);
   log("TsumTsum app starting.");
 }
 
