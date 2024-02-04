@@ -138,72 +138,6 @@ var Button = {
 };
 
 var Page = {
-  RootDetectionLdp1080p480dpiEn: {
-    name: 'RootDetectionLdp1080p480dpiEn',
-    colors: [
-      {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 70, y: 680,  r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 1000, y: 1300, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1010, y: 1310, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 855, y: 1224},
-    next: {x: 855, y: 1224}
-  },
-  RootDetectionLdp1080p480dpiJp: {
-    name: 'RootDetectionLdp1080p480dpiJp',
-    colors: [
-      {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 70, y: 625, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 1000, y: 1360, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1010, y: 1370, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 850, y: 1280},
-    next: {x: 850, y: 1280}
-  },
-  RootDetectionLdp480x800x160dpiEn: {
-    name: 'RootDetectionLdp480x800x160dpiEn',
-    colors: [
-      {x: 90, y: 780, r: 253 , g: 253, b: 253, match: true, threshold: 25},
-      {x: 65, y: 745, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 990, y: 1190, r: 252 , g: 252, b: 252, match: true, threshold: 25},
-      {x: 1015, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 885, y: 1135},
-    next: {x: 885, y: 1135}
-  },
-  RootDetectionNox1080p360dpiEn: {
-    name: 'RootDetectionNox1080p360dpiEn',
-    colors: [
-      {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 125, y: 785, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 945, y: 1170, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 955, y: 1180, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 850, y: 1115},
-    next: {x: 850, y: 1115}
-  },
-  RootDetectionNox480x800x160dpiJp: {
-    name: 'RootDetectionNox480x800x160dpiJp',
-    colors: [
-      {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 75, y: 725, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 995, y: 1240, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1005, y: 1250, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 885, y: 1170},
-    next: {x: 885, y: 1170}
-  },
-  RootDetectionNox480x800x160dpiEn: {
-    name: 'RootDetectionNox480x800x160dpiEn',
-    colors: [
-      {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 75, y: 750, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 995, y: 1215, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1005, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 885, y: 1150},
-    next: {x: 885, y: 1150}
-  },
   TodayMission: {
     name: 'TodayMission',
     colors: [
@@ -565,6 +499,72 @@ var Page = {
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
+  },
+  RootDetectionLdp1080p480dpiEn: {
+    name: 'RootDetectionLdp1080p480dpiEn',
+    colors: [
+      {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 70, y: 680,  r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 1000, y: 1300, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1010, y: 1310, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 855, y: 1224},
+    next: {x: 855, y: 1224}
+  },
+  RootDetectionLdp1080p480dpiJp: {
+    name: 'RootDetectionLdp1080p480dpiJp',
+    colors: [
+      {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 70, y: 625, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 1000, y: 1360, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1010, y: 1370, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 850, y: 1280},
+    next: {x: 850, y: 1280}
+  },
+  RootDetectionLdp480x800x160dpiEn: {
+    name: 'RootDetectionLdp480x800x160dpiEn',
+    colors: [
+      {x: 90, y: 780, r: 253 , g: 253, b: 253, match: true, threshold: 25},
+      {x: 65, y: 745, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 990, y: 1190, r: 252 , g: 252, b: 252, match: true, threshold: 25},
+      {x: 1015, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 885, y: 1135},
+    next: {x: 885, y: 1135}
+  },
+  RootDetectionNox1080p360dpiEn: {
+    name: 'RootDetectionNox1080p360dpiEn',
+    colors: [
+      {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 125, y: 785, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 945, y: 1170, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 955, y: 1180, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 850, y: 1115},
+    next: {x: 850, y: 1115}
+  },
+  RootDetectionNox480x800x160dpiJp: {
+    name: 'RootDetectionNox480x800x160dpiJp',
+    colors: [
+      {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 75, y: 725, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 995, y: 1240, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1005, y: 1250, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 885, y: 1170},
+    next: {x: 885, y: 1170}
+  },
+  RootDetectionNox480x800x160dpiEn: {
+    name: 'RootDetectionNox480x800x160dpiEn',
+    colors: [
+      {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 75, y: 750, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 995, y: 1215, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1005, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 885, y: 1150},
+    next: {x: 885, y: 1150}
   },
   MagicalTime: {
     name: 'MagicalTime',
