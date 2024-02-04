@@ -1562,6 +1562,10 @@ Tsum.prototype.useSkill = function(board) {
     return skillActive;
   }
 
+  if (this.skillType === 'no_skill') {
+    return false;
+  }
+
   var page = this.findPage(1, 500);
   if (page !== 'GamePlaying' && page !== 'GamePause') {
     return false;
