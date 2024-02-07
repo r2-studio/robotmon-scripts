@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 64;
+var VERSION = 65;
 
 /**
  * Returns the language parameter for the currently active locale.

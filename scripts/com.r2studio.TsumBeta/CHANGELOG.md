@@ -5,6 +5,23 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v65] - 2024-02-12
+
+### Fixed
+
+- v64 reintroduced that the sender got stuck on Bingo and Event cards. The fix was to again sharpen game
+  detection. This time, the color matching was also tested with 480x800 screen resolution to not
+  break auto gameplay again.
+- Auto gameplay did sometimes quit while playing due to falsely matching "Root Screen" detection.
+- Receiving an item set blocked further script processing due to another OK button position.
+
+### Added
+
+- New skill "No Skill" which just ignores any active skill buttons. Useful for Fever missions where no fever tsum 
+  is allowed, so that skill activation can be timed exactly after fever time to immediately start a new fever time.
+- New skill "Cabbage Mickey" (only working for skill level 1, 3 and 6).
+
+
 ## [v64] - 2024-01-24
 
 ### Fixed

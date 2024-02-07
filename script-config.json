@@ -66,8 +66,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 64,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v64 Beta</b>\n<ul>\n    <li>修正：以 480x800 屏幕分辨率自动播放<br>Bugfix: Auto play with 480x800 screen resolution</li>\n</ul>",
+      "versionCode": 65,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v65 Beta</b>\n<ul>\n    <li>回归:重新启用正确的宾果和事件卡检测<br>Regression: Re-enable proper Bingo and Event card detection</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
