@@ -100,6 +100,7 @@ var Button = {
   outReceive: {x: 910, y: 422},
   outReceiveAll: {x: 800, y: 1422},
   outReceiveOk: {x: 835, y: 1092, color: {"a":0,"b":6,"g":175,"r":236}},
+  outReceiveItemSetOk: {x: 830, y: 1260, color: {"a":0,"b":8,"g":176,"r":238}},
   outReceiveClose: {x: 530, y: 1372},
   outReceiveOne: {x: 840, y: 569, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
@@ -1907,6 +1908,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isAd = isSameColor(Button.outReceiveOneAd.color, this.getColor(img, Button.outReceiveOneAd), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
+    var isOk2 = isSameColor(Button.outReceiveItemSetOk.color, this.getColor(img, Button.outReceiveItemSetOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     debug({
       isItem: isItem, isRuby: isRuby, isNonItem: isNonItem, isAd: isAd, isOk: isOk,
@@ -1945,14 +1947,19 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outReceiveOk);
       this.sleep(1000);
       timeoutCounter = 0;
-    } else if (isOk) {
+    } else if (isOk || isOk2) {
       if (this.recordReceive && sender !== undefined && sender !== "") {
         this.countReceiveHeart(sender);
         this.saveRecord();
       }
       this.sleep(100);
-      debug("isOK", "taskReceiveOneItem")
-      this.tap(Button.outReceiveOk);
+      if (isOk) {
+        debug("isOK", "taskReceiveOneItem")
+        this.tap(Button.outReceiveOk);
+      } else {
+        debug("isOK2", "taskReceiveOneItem")
+        this.tap(Button.outReceiveItemSetOk);
+      }
       if (sender !== undefined) {
         this.record['hearts_count'].receivedCount++;
         receivedCount++;
