@@ -1657,6 +1657,33 @@ Tsum.prototype.useSkill = function(board) {
       this.sleep(480);
     }
     this.tapUp({x: 980, y: 960}, 20);
+  } else if (this.skillType === 'block_cabbage_mickey_s') {
+    this.sleep(3500);
+    // find mickey in cabbage
+    var colorMickeyFace = {r: 255, g: 225, b: 210};
+    var startTime = Date.now();
+    img = this.screenshot();
+    var foundMickey = false;
+    var maybeMickey = null;
+    var color = null;
+    for (var y = 720; y < 1380 && !foundMickey; y += 25) {
+      for (var x = 120; x < 1000 && !foundMickey; x +=60) {
+        maybeMickey = {x: x, y: y};
+        color = this.getColor(img, maybeMickey);
+        foundMickey |= isSameColor(colorMickeyFace, color, 15);
+      }
+    }
+    if (foundMickey && maybeMickey != null) {
+      debug("Found mickey at position", maybeMickey, "with color", color, "in", Date.now() - startTime, "ms.");
+      var tapXY = {x: maybeMickey.x + 15, y: maybeMickey.y + 15};
+      this.tap(tapXY, 100);
+      this.sleep(1000);
+    } else {
+      log("*** Didn't find Mickey! ***");
+      saveImage(img, this.storagePath + "/tmp/boardImg-cabbageMickey_not_found-" + Date.now() + ".jpg");
+      this.clearAllBubbles();
+    }
+    releaseImage(img);
   }
   else {
     this.sleep(this.skillInterval);
