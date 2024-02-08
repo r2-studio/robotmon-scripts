@@ -495,14 +495,7 @@ function isFriendPointFull() {
 }
 
 function isFriendPointContinue() {
-  if (server == "TW") {
-    return checkIconListInScreen(
-      ["friendPointContinue", "friendPointContinueEvent"],
-      false
-    );
-  } else {
     return checkIconInScreen("friendPointContinue");
-  }
 }
 
 function isPresentBoxFull() {
