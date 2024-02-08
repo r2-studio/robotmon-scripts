@@ -176,8 +176,9 @@ var settings = [
                 {key: 'block_snowwhite_s', title: 'Snow White', title_zh_TW: '白雪公主'},
                 {key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉'},
                 {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'},
-                {key: 'no_skill', title: 'No Skill', title_zh_TW: '没有技能'},
-                {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '配对Tsum'}
+                {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '配对Tsum'},
+                {key: 'block_cabbage_mickey_s', title: 'Cabbage Mickey (SL 1,3,6)', title_zh_TW: '卷心菜米奇 (SL 1,3,6)'},
+                {key: 'no_skill', title: 'No Skill', title_zh_TW: '没有技能'}
             ]
         },
         {

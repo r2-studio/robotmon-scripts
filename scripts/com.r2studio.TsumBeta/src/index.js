@@ -658,6 +658,52 @@ var Page = {
   }
 };
 
+var GameEntities = {
+  CabbageMickey: {
+    colorMickey: {r: 245, g: 234, b: 220},
+    SkillLevel: {
+      1: [
+          {x: 328, y: 906},
+          {x: 532, y: 852},
+          {x: 736, y: 906},
+          {x: 332, y: 1158},
+          {x: 532, y: 1112},
+          {x: 736, y: 1158},
+        ],
+      3: [
+          {x: 330, y: 854},
+          {x: 530, y: 806},
+          {x: 736, y: 856},
+          {x: 210, y: 1064},
+          {x: 416, y: 1030},
+          {x: 646, y: 1026},
+          {x: 852, y: 1064},
+          {x: 330, y: 1244},
+          {x: 534, y: 1204},
+          {x: 738, y: 1240}
+        ],
+      6: [
+          {x: 217, y: 776},
+          {x: 424, y: 730},
+          {x: 646, y: 730},
+          {x: 856, y: 776},
+          {x: 130, y: 1004},
+          {x: 334, y: 952},
+          {x: 536, y: 902},
+          {x: 740, y: 952},
+          {x: 944, y: 1004},
+          {x: 220, y: 1162},
+          {x: 430, y: 1120},
+          {x: 648, y: 1120},
+          {x: 854, y: 1162},
+          {x: 330, y: 1334},
+          {x: 540, y: 1286},
+          {x: 740, y: 1334}
+        ]
+    }
+  }
+};
+
 var Logs = {
   start: '[TsumTsum] Start',
   stop: '[TsumTsum] Stop',
@@ -1657,6 +1703,30 @@ Tsum.prototype.useSkill = function(board) {
       this.sleep(480);
     }
     this.tapUp({x: 980, y: 960}, 20);
+  } else if (this.skillType === 'block_cabbage_mickey_s') {
+    this.sleep(3500);
+    // find mickey in cabbage
+    img = this.screenshot();
+    if (this.debug)
+      saveImage(img, this.storagePath + "/tmp/boardImg-cabbage-" + this.runTimes + ".jpg");
+    var colorMickey = GameEntities.CabbageMickey.colorMickey;
+    var cabbages = GameEntities.CabbageMickey.SkillLevel[this.skillLevel] || [];
+    var foundMickey = false;
+    for (var i = 0; i < cabbages.length; i++) {
+      var cabbage = cabbages[i];
+      var color = this.getColor(img, cabbage);
+      if (this.debug) {
+        debug(this.runTimes, "Color at index " + i + ": ", color);
+      }
+      foundMickey |= isSameColor(colorMickey, color, 25);
+      if (foundMickey) {
+        this.tap(cabbage, 100);
+        break;
+      }
+    }
+    if (!foundMickey)
+      this.clearAllBubbles();
+    releaseImage(img);
   }
   else {
     this.sleep(this.skillInterval);
