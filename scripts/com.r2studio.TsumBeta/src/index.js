@@ -433,14 +433,27 @@ var Page = {
     back: {x: 320, y: 1444},  // Cancel button
     next: {x: 766, y: 1444}   // OK button
   },
-  TapOpenPage: {
+  TapOpenPageBox: {
     name: 'TapOpenPage',
     colors: [
       {x: 641, y: 328, r: 255, g: 255, b: 231, match: true, threshold: 30},
       {x: 641, y: 243, r: 255, g: 255, b: 247, match: true, threshold: 30},
       {x: 180, y: 520, r: 247, g: 182, b: 189, match: true, threshold: 30},
-      {x: 641, y: 328, r: 255, g: 255, b: 231, match: true, threshold: 30},
       {x: 899, y: 777, r: 140, g: 121, b: 156, match: true, threshold: 30},
+      {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
+      {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
+      {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
+    ],
+    back: {x: 500, y: 500},
+    next: {x: 500, y: 500}
+  },
+  TapOpenPageCapsule: {
+    name: 'TapOpenPage',
+    colors: [
+      {x: 620, y: 328, r: 205, g: 13, b: 34, match: true, threshold: 30},
+      {x: 641, y: 243, r: 146, g: 0, b: 0, match: true, threshold: 30},
+      {x: 70, y: 560, r: 24, g: 85, b: 132, match: true, threshold: 30},
+      {x: 899, y: 777, r: 137, g: 117, b: 148, match: true, threshold: 30},
       {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
       {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
       {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
@@ -919,20 +932,20 @@ function findTsums(img) {
   var results = [];
   for (var k in points) {
     var p = points[k];
-    var hsv1 = getImageColor(hsvImg, p.x, p.y);
-    var hsv2 = hsv1; var hsv3 = hsv1; var hsv4 = hsv1; var hsv5 = hsv1;
+    var hsv1, hsv2, hsv3, hsv4, hsv5;
+    hsv5 = hsv4 = hsv3 = hsv2 = hsv1 = getImageColor(hsvImg, p.x, p.y);
     if (p.x - 1 >= 0) { hsv2 = getImageColor(hsvImg, p.x - 1, p.y); }
-    if (p.x + 1 < 200) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
+    if (p.x + 1 < Config.screenResize) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
     if (p.y - 1 >= 0) { hsv4 = getImageColor(hsvImg, p.x, p.y - 1); }
-    if (p.y + 1 < 200) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
+    if (p.y + 1 < Config.screenResize) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
     var avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
     var avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
     var avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
     results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
   }
 
-  // saveImage(mask, getStoragePath() + "/tmp/mask.jpg");
-  // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg.jpg");
+  // saveImage(mask, getStoragePath() + "/tmp/mask-" + Date.now() + ".jpg");
+  // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg-" + Date.now() + ".jpg");
 
   releaseImage(mask);
   releaseImage(hsvImg);
@@ -1094,7 +1107,7 @@ Tsum.prototype.init = function(detect) {
     console.log('??', this.gameHeight, this.screenHeight, this.gameWidth);
   }
 
-  if (detect && this.screenHeight / this.screenWidth > 1.777777) {
+  if (detect && this.screenHeight / this.screenWidth > 16 / 9) {
     log('detect screen size (special screen ratio)');
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.gameWidth * 1.5;
@@ -2312,7 +2325,9 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
       if (page !== lastPage && page === Page.BoxPurchasedPage) {
         this.autobuyBoxes--;
         log("Bought box.", this.autobuyBoxes, "left");
-      } else if (page.name === Page.Received.name) {  // matches when "all Tsums collected" appears
+      } else if (page.name === Page.Received.name
+          || page.name === Page.FriendPage.name
+          || page.name === Page.TsumsPage.name) {
         log("Collected all Tsums.");
         this.autobuyBoxes = 0;
       } else if (page.name === Page.MailBox.name) {   // matches when "Buy coins for rubies" appears
@@ -2322,7 +2337,6 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
       lastPage = page;
     } else {
       debug("Unknown page");
-      this.tap({x: 560, y: 1860});
       countUnknownPages++;
       if (countUnknownPages > 10) {
         this.exitUnknownPage();
