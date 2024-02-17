@@ -100,6 +100,7 @@ var Button = {
   outReceive: {x: 910, y: 422},
   outReceiveAll: {x: 800, y: 1422},
   outReceiveOk: {x: 835, y: 1092, color: {"a":0,"b":6,"g":175,"r":236}},
+  outReceiveItemSetOk: {x: 830, y: 1260, color: {"a":0,"b":8,"g":176,"r":238}},
   outReceiveClose: {x: 530, y: 1372},
   outReceiveOne: {x: 840, y: 569, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
@@ -138,61 +139,6 @@ var Button = {
 };
 
 var Page = {
-  RootDetectionLdp1080p480dpiEn: {
-    name: 'RootDetectionLdp1080p480dpiEn',
-    colors: [
-      {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 70, y: 680,  r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 1000, y: 1300, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1010, y: 1310, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 855, y: 1224},
-    next: {x: 855, y: 1224}
-  },
-  RootDetectionLdp1080p480dpiJp: {
-    name: 'RootDetectionLdp1080p480dpiJp',
-    colors: [
-      {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 70, y: 625, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 1000, y: 1360, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1010, y: 1370, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 850, y: 1280},
-    next: {x: 850, y: 1280}
-  },
-  RootDetectionNox1080p360dpiEn: {
-    name: 'RootDetectionNox1080p360dpiEn',
-    colors: [
-      {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 125, y: 785, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 945, y: 1170, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 955, y: 1180, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 850, y: 1115},
-    next: {x: 850, y: 1115}
-  },
-  RootDetectionNox480x800x160dpiJp: {
-    name: 'RootDetectionNox480x800x160dpiJp',
-    colors: [
-      {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 75, y: 725, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 995, y: 1240, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1005, y: 1250, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 885, y: 1170},
-    next: {x: 885, y: 1170}
-  },
-  RootDetectionNox480x800x160dpiEn: {
-    name: 'RootDetectionNox480x800x160dpiEn',
-    colors: [
-      {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 75, y: 750, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 995, y: 1215, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1005, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 885, y: 1150},
-    next: {x: 885, y: 1150}
-  },
   TodayMission: {
     name: 'TodayMission',
     colors: [
@@ -216,15 +162,30 @@ var Page = {
   ProfilePage: {
     name: 'ProfilePage',
     colors: [
-      {x: 540, y: 1592, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
-      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
-      {x: 34, y: 1004, r: 247, g: 178, b: 8, match: true, threshold: 80}     // left home tab button
+      {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1599, r: 240, g: 218, b:  72, match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y:  464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // above the ranking title
+      {x:  34, y: 1004, r: 247, g: 178, b:   8, match: true, threshold: 80}, // left home tab button
+      {x:  16, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
+      {x:  16, y: 1270, r:  44, g: 134, b: 233, match: true, threshold: 80}  // left square tab button
     ],
     back: {x: 31, y: 1126},
     next: {x: 31, y: 1126},
     tsums: {x: 900, y: 1653}
+  },
+  SquarePage: {
+    name: 'SquarePage',
+    colors: [
+      {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1599, r: 240, g: 218, b:  72, match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
+      {x:  18, y:  994, r:  46, g: 135, b: 234, match: true, threshold: 80}, // left home tab button
+      {x:  16, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
+      {x:  34, y: 1270, r: 247, g: 175, b:   8, match: true, threshold: 80}  // left square tab button
+    ],
+    back: {x: 31, y: 1126},
+    next: {x: 31, y: 1126}
   },
   FriendPage: {
     name: 'FriendPage',
@@ -472,14 +433,27 @@ var Page = {
     back: {x: 320, y: 1444},  // Cancel button
     next: {x: 766, y: 1444}   // OK button
   },
-  TapOpenPage: {
+  TapOpenPageBox: {
     name: 'TapOpenPage',
     colors: [
       {x: 641, y: 328, r: 255, g: 255, b: 231, match: true, threshold: 30},
       {x: 641, y: 243, r: 255, g: 255, b: 247, match: true, threshold: 30},
       {x: 180, y: 520, r: 247, g: 182, b: 189, match: true, threshold: 30},
-      {x: 641, y: 328, r: 255, g: 255, b: 231, match: true, threshold: 30},
       {x: 899, y: 777, r: 140, g: 121, b: 156, match: true, threshold: 30},
+      {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
+      {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
+      {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
+    ],
+    back: {x: 500, y: 500},
+    next: {x: 500, y: 500}
+  },
+  TapOpenPageCapsule: {
+    name: 'TapOpenPage',
+    colors: [
+      {x: 620, y: 328, r: 205, g: 13, b: 34, match: true, threshold: 30},
+      {x: 641, y: 243, r: 146, g: 0, b: 0, match: true, threshold: 30},
+      {x: 70, y: 560, r: 24, g: 85, b: 132, match: true, threshold: 30},
+      {x: 899, y: 777, r: 137, g: 117, b: 148, match: true, threshold: 30},
       {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
       {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
       {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
@@ -515,20 +489,12 @@ var Page = {
     back: {x: 331, y: 1080},
     next: {x: 561, y: 1422}
   },
-  GamePlaying: {
+  GamePlaying480x800: {
     name: 'GamePlaying',
     colors: [
-      {x: 916, y: 198, r: 230, g: 150, b: 6, match: true, threshold: 80}, // above pause
-      {x: 916, y: 1688, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
-    ],
-    back: {x: 986, y: 273},
-    next: {x: 986, y: 273}
-  },
-  GamePlaying2: {
-    name: 'GamePlaying',
-    colors: [
-      {x: 980, y: 258, r: 244, g: 197, b: 5, match: true, threshold: 80}, // right of pause
-      {x: 916, y: 1688, r: 230, g: 150, b: 6, match: true, threshold: 80} // below fan
+      {x: 916, y: 198, r: 253, g: 216, b: 0, match: true, threshold: 80}, // above pause
+      {x: 916, y: 318, r: 241, g: 161, b: 8, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1688, r: 242, g: 161, b: 8, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
@@ -542,6 +508,92 @@ var Page = {
     ],
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
+  },
+  GamePlaying: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 916, y: 198, r: 230, g: 200, b: 20, match: true, threshold: 80}, // above pause
+      {x: 916, y: 318, r: 214, g: 191, b: 28, match: true, threshold: 80}, // below pause
+      {x: 916, y: 1688, r: 214, g: 191, b: 28, match: true, threshold: 80} // below fan
+    ],
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
+  },
+  GamePlaying2: {
+    name: 'GamePlaying',
+    colors: [
+      {x: 980, y: 258, r: 190, g: 244, b: 70, match: true, threshold: 80}, // right of pause
+      {x: 852, y: 258, r: 244, g: 197, b: 20, match: true, threshold: 80}, // left of pause
+      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
+    ],
+    back: {x: 986, y: 273},
+    next: {x: 986, y: 273}
+  },
+  RootDetectionLdp1080p480dpiEn: {
+    name: 'RootDetectionLdp1080p480dpiEn',
+    colors: [
+      {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 70, y: 680,  r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 1000, y: 1300, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1010, y: 1310, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 855, y: 1224},
+    next: {x: 855, y: 1224}
+  },
+  RootDetectionLdp1080p480dpiJp: {
+    name: 'RootDetectionLdp1080p480dpiJp',
+    colors: [
+      {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 70, y: 625, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 1000, y: 1360, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1010, y: 1370, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 850, y: 1280},
+    next: {x: 850, y: 1280}
+  },
+  RootDetectionLdp480x800x160dpiEn: {
+    name: 'RootDetectionLdp480x800x160dpiEn',
+    colors: [
+      {x: 90, y: 780, r: 253 , g: 253, b: 253, match: true, threshold: 25},
+      {x: 65, y: 745, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 990, y: 1190, r: 252 , g: 252, b: 252, match: true, threshold: 25},
+      {x: 1015, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 885, y: 1135},
+    next: {x: 885, y: 1135}
+  },
+  RootDetectionNox1080p360dpiEn: {
+    name: 'RootDetectionNox1080p360dpiEn',
+    colors: [
+      {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 125, y: 785, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 945, y: 1170, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 955, y: 1180, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 850, y: 1115},
+    next: {x: 850, y: 1115}
+  },
+  RootDetectionNox480x800x160dpiJp: {
+    name: 'RootDetectionNox480x800x160dpiJp',
+    colors: [
+      {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 75, y: 725, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 995, y: 1240, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1005, y: 1250, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 885, y: 1170},
+    next: {x: 885, y: 1170}
+  },
+  RootDetectionNox480x800x160dpiEn: {
+    name: 'RootDetectionNox480x800x160dpiEn',
+    colors: [
+      {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 75, y: 750, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 995, y: 1215, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1005, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 885, y: 1150},
+    next: {x: 885, y: 1150}
   },
   MagicalTime: {
     name: 'MagicalTime',
@@ -880,20 +932,20 @@ function findTsums(img) {
   var results = [];
   for (var k in points) {
     var p = points[k];
-    var hsv1 = getImageColor(hsvImg, p.x, p.y);
-    var hsv2 = hsv1; var hsv3 = hsv1; var hsv4 = hsv1; var hsv5 = hsv1;
+    var hsv1, hsv2, hsv3, hsv4, hsv5;
+    hsv5 = hsv4 = hsv3 = hsv2 = hsv1 = getImageColor(hsvImg, p.x, p.y);
     if (p.x - 1 >= 0) { hsv2 = getImageColor(hsvImg, p.x - 1, p.y); }
-    if (p.x + 1 < 200) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
+    if (p.x + 1 < Config.screenResize) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
     if (p.y - 1 >= 0) { hsv4 = getImageColor(hsvImg, p.x, p.y - 1); }
-    if (p.y + 1 < 200) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
+    if (p.y + 1 < Config.screenResize) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
     var avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
     var avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
     var avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
     results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
   }
 
-  // saveImage(mask, getStoragePath() + "/tmp/mask.jpg");
-  // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg.jpg");
+  // saveImage(mask, getStoragePath() + "/tmp/mask-" + Date.now() + ".jpg");
+  // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg-" + Date.now() + ".jpg");
 
   releaseImage(mask);
   releaseImage(hsvImg);
@@ -1055,7 +1107,7 @@ Tsum.prototype.init = function(detect) {
     console.log('??', this.gameHeight, this.screenHeight, this.gameWidth);
   }
 
-  if (detect && this.screenHeight / this.screenWidth > 1.777777) {
+  if (detect && this.screenHeight / this.screenWidth > 16 / 9) {
     log('detect screen size (special screen ratio)');
     this.gameWidth = this.screenWidth;
     this.gameHeight = this.gameWidth * 1.5;
@@ -1132,7 +1184,7 @@ Tsum.prototype.startApp = function() {
   }
   execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
       ' am start --activity-single-top -n ' + packageName + '/com.linecorp.LGTMTM.TsumTsum');
-  this.sleep(3000);
+  this.sleep(10000);
   log("TsumTsum app starting.");
 }
 
@@ -1523,6 +1575,10 @@ Tsum.prototype.useSkill = function(board) {
     return skillActive;
   }
 
+  if (this.skillType === 'no_skill') {
+    return false;
+  }
+
   var page = this.findPage(1, 500);
   if (page !== 'GamePlaying' && page !== 'GamePause') {
     return false;
@@ -1614,6 +1670,33 @@ Tsum.prototype.useSkill = function(board) {
       this.sleep(480);
     }
     this.tapUp({x: 980, y: 960}, 20);
+  } else if (this.skillType === 'block_cabbage_mickey_s') {
+    this.sleep(3500);
+    // find mickey in cabbage
+    var colorMickeyFace = {r: 255, g: 225, b: 210};
+    var startTime = Date.now();
+    img = this.screenshot();
+    var foundMickey = false;
+    var maybeMickey = null;
+    var color = null;
+    for (var y = 720; y < 1380 && !foundMickey; y += 25) {
+      for (var x = 120; x < 1000 && !foundMickey; x +=60) {
+        maybeMickey = {x: x, y: y};
+        color = this.getColor(img, maybeMickey);
+        foundMickey |= isSameColor(colorMickeyFace, color, 15);
+      }
+    }
+    if (foundMickey && maybeMickey != null) {
+      debug("Found mickey at position", maybeMickey, "with color", color, "in", Date.now() - startTime, "ms.");
+      var tapXY = {x: maybeMickey.x + 15, y: maybeMickey.y + 15};
+      this.tap(tapXY, 100);
+      this.sleep(1000);
+    } else {
+      log("*** Didn't find Mickey! ***");
+      saveImage(img, this.storagePath + "/tmp/boardImg-cabbageMickey_not_found-" + Date.now() + ".jpg");
+      this.clearAllBubbles();
+    }
+    releaseImage(img);
   }
   else {
     this.sleep(this.skillInterval);
@@ -1880,6 +1963,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
     var isAd = isSameColor(Button.outReceiveOneAd.color, this.getColor(img, Button.outReceiveOneAd), 35);
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
+    var isOk2 = isSameColor(Button.outReceiveItemSetOk.color, this.getColor(img, Button.outReceiveItemSetOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
     debug({
       isItem: isItem, isRuby: isRuby, isNonItem: isNonItem, isAd: isAd, isOk: isOk,
@@ -1918,14 +2002,19 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.tap(Button.outReceiveOk);
       this.sleep(1000);
       timeoutCounter = 0;
-    } else if (isOk) {
+    } else if (isOk || isOk2) {
       if (this.recordReceive && sender !== undefined && sender !== "") {
         this.countReceiveHeart(sender);
         this.saveRecord();
       }
       this.sleep(100);
-      debug("isOK", "taskReceiveOneItem")
-      this.tap(Button.outReceiveOk);
+      if (isOk) {
+        debug("isOK", "taskReceiveOneItem")
+        this.tap(Button.outReceiveOk);
+      } else {
+        debug("isOK2", "taskReceiveOneItem")
+        this.tap(Button.outReceiveItemSetOk);
+      }
       if (sender !== undefined) {
         this.record['hearts_count'].receivedCount++;
         receivedCount++;
@@ -1968,11 +2057,15 @@ Tsum.prototype.taskReceiveOneItem = function() {
 }
 
 Tsum.prototype.friendPageGoTop = function() {
+  debug("Scrolling to top of friends list");
   this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
   this.moveTo({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
   this.tapUp({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
+  debug("Scrolled to top of friends list");
+  debug("Waiting short time for UI finishing movement");
   this.sleep(3500);
+  debug("Waited for UI finishing movement");
 }
 
 Tsum.prototype.taskSendHearts = function() {
@@ -1988,14 +2081,16 @@ Tsum.prototype.taskSendHearts = function() {
   var startTime = Date.now();
   var retry = 0;
   var times = 0;
+  var hfx = Button.outSendHeartFrom.x;
+  var hfy = Button.outSendHeartFrom.y - 40; // hearts from y
+  var hty = Button.outSendHeartTo.y + 30;   // hearts to y
   while(this.isRunning) {
     times++;
-    if (times % 15 === 14) {
+    if (times % 15 === 0) {
+      debug("Ensuring friends page");
       this.goFriendPage();
+      debug("Ensured friends page");
     }
-    var hfx = Button.outSendHeartFrom.x;
-    var hfy = Button.outSendHeartFrom.y - 40;
-    var hty = Button.outSendHeartTo.y + 30;
     var heartsPos = [];
 
     var img = this.screenshot();
@@ -2007,6 +2102,7 @@ Tsum.prototype.taskSendHearts = function() {
         y += 140;
       }
     }
+    debug("Found " + heartsPos.length + " hearts on current page");
     var isZero = true;
     var fx = Button.outFriendScoreFrom.x;
     var tx = Button.outFriendScoreTo.x;
@@ -2030,7 +2126,11 @@ Tsum.prototype.taskSendHearts = function() {
     // both jp or global using this now
     var isEndJP = !isNotEndJP && isEndJP1 && isEnd2 && isEndJP3;
     releaseImage(img);
-    log('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd1, 'isEnd', isEnd,'isNotEndJP', isNotEndJP, 'isEndJP1', isEndJP1, 'isEndJP3', isEndJP3, 'isEndJP', isEndJP, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
+    if (this.isJP) {
+      log('isNotEndJP', isNotEndJP, 'isEndJP1', isEndJP1, 'isEndJP3', isEndJP3, 'isEndJP', isEndJP, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
+    } else {
+      log('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd3, 'isEnd', isEnd, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
+    }
 
     if (isOk && heartsPos.length === 0) {
       this.tap(Button.outReceiveOk);
@@ -2053,21 +2153,28 @@ Tsum.prototype.taskSendHearts = function() {
           this.sleep(1000);
           this.friendPageGoTop();
         }
+        debug("Ending taskSendHearts");
         break;
       }
     } else {
       var rTimes = 0;
       for (var h in heartsPos) {
+        debug("Try sending heart to", h);
         var success = this.sendHeart(heartsPos[h]);
+        debug("Tried sending heart to", h, "with success=" + success);
         if (!success) {
+          debug("Try again sending heart to", h);
           success = this.sendHeart(heartsPos[h]);
+          debug("Tried again sending heart to", h, "with success=" + success);
         }
         if (success) {
           rTimes++;
           this.record['hearts_count'].sentCount++;
         } else {
+          debug("Try return to FriendPage");
           this.goFriendPage();
           this.sleep(1000);
+          debug("Tried return to FriendPage");
         }
         if (!this.isRunning) {
           return;
@@ -2218,7 +2325,9 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
       if (page !== lastPage && page === Page.BoxPurchasedPage) {
         this.autobuyBoxes--;
         log("Bought box.", this.autobuyBoxes, "left");
-      } else if (page.name === Page.Received.name) {  // matches when "all Tsums collected" appears
+      } else if (page.name === Page.Received.name
+          || page.name === Page.FriendPage.name
+          || page.name === Page.TsumsPage.name) {
         log("Collected all Tsums.");
         this.autobuyBoxes = 0;
       } else if (page.name === Page.MailBox.name) {   // matches when "Buy coins for rubies" appears
@@ -2228,7 +2337,6 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
       lastPage = page;
     } else {
       debug("Unknown page");
-      this.tap({x: 560, y: 1860});
       countUnknownPages++;
       if (countUnknownPages > 10) {
         this.exitUnknownPage();
