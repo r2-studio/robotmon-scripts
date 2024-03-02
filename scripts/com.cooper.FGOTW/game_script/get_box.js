@@ -109,7 +109,7 @@ function getFriendPoint() {
     } else if (isFriendPointContinue()) {
       tapScale(1125, 875);
     } else {
-      console.log("結束友抽");
+      console.log("無法辨識畫面，結束友抽");
       isScriptRunning = false;
       return;
     }

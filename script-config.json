@@ -66,8 +66,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 64,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v64 Beta</b>\n<ul>\n    <li>修正：以 480x800 屏幕分辨率自动播放<br>Bugfix: Auto play with 480x800 screen resolution</li>\n</ul>",
+      "versionCode": 65,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v65 Beta</b>\n<ul>\n    <li>各种修复和卷心菜米奇技能<br>Variuos fixes and Cabbage Mickey skill</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
@@ -153,15 +153,15 @@
       "id": "com.cooper.FGO",
       "title": "Fate/Grand Order 日服",
       "versionCode": 3.63,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.63 修正改版後有可能會卡在選擇好友畫面的問題<br><br>推薦使用夜神 Android 7 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.63 修正改版後有可能會卡在選擇好友畫面的問題<br><br>模擬器推薦使用夜神 Android 64位元 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
     },
     "com.cooper.FGOTW": {
       "id": "com.cooper.FGOTW",
       "title": "Fate/Grand Order 台服",
-      "versionCode": 3.61,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.61 支援使用青銅蘋果<br><br>推薦使用夜神 Android 7 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "versionCode": 3.63,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.63 修正新活動無法友抽的問題<br><br>模擬器推薦使用夜神 Android 64位元 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     }
