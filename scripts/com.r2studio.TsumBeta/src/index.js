@@ -1185,20 +1185,24 @@ Tsum.prototype.isAppOn = function() {
   return packageName.indexOf('LGTMTM') !== -1;
 };
 
-Tsum.prototype.startApp = function() {
-  if (!this.autoLaunch) {
-    return;
-  }
-  log(this.logs.startTsumTsumApp);
-  this.isStartupPhase = true;
+function startTsumTsumApp(isJP) {
   var packageName;
-  if (this.isJP) {
+  if (isJP) {
     packageName = 'com.linecorp.LGTMTM';
   } else {
     packageName = 'com.linecorp.LGTMTMG';
   }
   execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
       ' am start --activity-single-top -n ' + packageName + '/com.linecorp.LGTMTM.TsumTsum');
+}
+
+Tsum.prototype.startApp = function() {
+  if (!this.autoLaunch) {
+    return;
+  }
+  log(this.logs.startTsumTsumApp);
+  this.isStartupPhase = true;
+  startTsumTsumApp(this.isJP);
   this.sleep(10000);
   log("TsumTsum app starting.");
 }
@@ -1865,6 +1869,8 @@ Tsum.prototype.taskPlayGameQuick = function() {
 }
 
 Tsum.prototype.taskReceiveAllItems = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   log(this.logs.friendsPage);
   this.goFriendPage();
   this.sleep(1000);
@@ -1990,6 +1996,8 @@ Tsum.prototype.skipAd = function () {
 }
 
 Tsum.prototype.taskReceiveOneItem = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   log(this.logs.friendsPage);
   this.goFriendPage();
   this.sleep(1000)
@@ -2116,6 +2124,8 @@ Tsum.prototype.friendPageGoTop = function() {
 }
 
 Tsum.prototype.taskSendHearts = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   log(this.logs.friendsPage);
   this.goFriendPage();
   log(this.logs.startSendingHearts);
@@ -2257,6 +2267,8 @@ Tsum.prototype.taskSendHearts = function() {
 }
 
 Tsum.prototype.taskAutoUnlockLevel = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   var btn;
   var i;
   var img;
@@ -2350,6 +2362,8 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
 }
 
 Tsum.prototype.taskAutoBuyBoxes = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   log("Starting taskAutoBuyBoxes");
   if (this.autobuyBoxes === 0) {
     log("Nothing to do", "taskAutoBuyBoxes");
@@ -2464,6 +2478,7 @@ Tsum.prototype.sleep = function(t) {
 function start(settings) {
   ts = new Tsum(settings['jpVersion'], settings['specialScreenRatio'], settings['langTaiwan'] ? LogsTW : Logs);
   log(ts.logs.start);
+  // startTsumTsumApp(ts.isJP);
   ts.debug = settings['debugGame'];
   if (settings['bonus5to4']) {
     ts.tsumCount = 4;
