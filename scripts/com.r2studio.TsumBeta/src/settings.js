@@ -304,6 +304,15 @@ var settings = [
             step: 10,
             max: 500,
             min: 0
+        },
+        {
+            key: 'noSkillLastFeverSec',
+            title: 'No skill last fever seconds',
+            title_zh_TW: '无技能最后发烧秒',
+            default: 0,
+            step: 1,
+            max: 10,
+            min: 0
         }
     ]
 ];
