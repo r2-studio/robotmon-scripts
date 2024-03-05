@@ -957,8 +957,10 @@ function findTsums(img) {
     results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
   }
 
-  // saveImage(mask, getStoragePath() + "/tmp/mask-" + Date.now() + ".jpg");
-  // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg-" + Date.now() + ".jpg");
+  if (ts.debug) {
+    saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
+    saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
+  }
 
   releaseImage(mask);
   releaseImage(hsvImg);
@@ -1722,34 +1724,71 @@ Tsum.prototype.useSkill = function(board) {
     }
     this.tapUp({x: 980, y: 960}, 20);
   } else if (this.skillType === 'block_cabbage_mickey_s') {
-    this.sleep(3500);
+    // wait for all cabbages being placed
+    this.sleep(3300);
     // find mickey in cabbage
-    var colorMickeyFace = {r: 255, g: 225, b: 210};
+    var colorMickeyFace = {r: 245, g: 225, b: 210};
     var startTime = Date.now();
-    img = this.screenshot();
     var foundMickey = false;
     var maybeMickey = null;
     var color = null;
-    for (var y = 720; y < 1380 && !foundMickey; y += 25) {
-      for (var x = 120; x < 1000 && !foundMickey; x +=60) {
-        maybeMickey = {x: x, y: y};
-        color = this.getColor(img, maybeMickey);
-        foundMickey |= isSameColor(colorMickeyFace, color, 15);
+    var maxTries = 5;
+    for (var tries = 1; tries <= maxTries && !foundMickey; tries++) {
+      this.sleep(100);
+      img = this.screenshot();
+      smooth(img, 2, 5);
+      for (var y = 720; y < 1380 && !foundMickey; y += 25) {
+        for (var x = 120; x < 1000 && !foundMickey; x +=60) {
+          maybeMickey = {x: x, y: y};
+          color = this.getColor(img, maybeMickey);
+          // if (color.r >= 140)
+          //   color.r = 255;
+          foundMickey |= isSameColor(colorMickeyFace, color, 20);
+          if (foundMickey) {
+            var up, down, left, right;
+            up = down = left = right = maybeMickey;
+            up.y -= 10;
+            down.y += 10;
+            left.x -= 10;
+            right.x += 10;
+            foundMickey = (
+                    isSameColor(colorMickeyFace, this.getColor(img, up), 20)
+                    || isSameColor(colorMickeyFace, this.getColor(img, down), 20))
+                && (
+                    isSameColor(colorMickeyFace, this.getColor(img, left), 20)
+                    || isSameColor(colorMickeyFace, this.getColor(img, right), 20));
+          }
+          if (this.debug) {
+            // logical width is 1080, screenshot usually 360, so reduce xy by factor 3
+            drawCircle(img, x / 3, y / 3, 4, foundMickey ? 0 : 255, foundMickey ? 255 : 0, 0, 0);
+          }
+        }
       }
+      if (!foundMickey) {
+        debug("*** Didn't find Mickey! ***", function () {
+          if (ts.debug) {
+            saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey_not_found-" + ts.runTimes + "-" + tries + ".jpg");
+            return "Saved screenshot";
+          } else {
+            return "";
+          }
+        });
+      } else {
+        if (this.debug) {
+          saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey-" + ts.runTimes + "-" + tries + ".jpg");
+        }
+      }
+      releaseImage(img);
     }
     if (foundMickey && maybeMickey != null) {
       debug("Found mickey at position", maybeMickey, "with color", color, "in", Date.now() - startTime, "ms.");
       var tapXY = {x: maybeMickey.x + 15, y: maybeMickey.y + 15};
-      this.tap(tapXY, 100);
+      for (i = 0; i < 10; i++)
+        this.tap(tapXY);
       this.sleep(1000);
     } else {
-      debug("*** Didn't find Mickey! ***", function () {
-        saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey_not_found-" + Date.now() + ".jpg");
-        return "Saved screenshot";
-      });
       this.clearAllBubbles();
     }
-    releaseImage(img);
   }
   else {
     this.sleep(this.skillInterval);
@@ -1787,7 +1826,7 @@ Tsum.prototype.scanBoardQuick = function() {
     }
   }
   if (this.debug) {
-    saveImage(srcImg, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
+    saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
   }
   releaseImage(srcImg);
   log(this.logs.recognizedTsums, board.length);
