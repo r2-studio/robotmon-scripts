@@ -569,12 +569,16 @@ function genSettings(jContainer, settings) {
 // noinspection JSUnusedGlobalSymbols
 function onEvent(eventType) {
     if (eventType === 'OnPlayClick') {
+        // close settings by hiding and showing menu
+        JavaScriptInterface.hideMenu();
+        JavaScriptInterface.showMenu();
         var startCommand = genStartCommand(settings);
         JavaScriptInterface.runScript(startCommand);
     } else if (eventType === 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
     } else if (eventType === 'OnSettingClick') {
-        // refreshRecord();
+        // stop script as it would now tap on the settings page
+        JavaScriptInterface.runScript('stop();');
     }
 }
 
@@ -762,4 +766,7 @@ $(function ($) {
         $("#genTableResult").html(i18n("请稍等...", "Please wait..."));
         JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
     });
+
+    // convenience preparations of Robotmon control panel
+    JavaScriptInterface.showMenu();
 });
