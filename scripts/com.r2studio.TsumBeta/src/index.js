@@ -381,14 +381,14 @@ var Page = {
 
     ],
     lockIcons: [
-      {x: 196, y: 1195, r: 239, g: 247, b: 255},
-      {x: 429, y: 1195, r: 239, g: 247, b: 255},
-      {x: 663, y: 1195, r: 239, g: 247, b: 255},
-      {x: 898, y: 1195, r: 239, g: 247, b: 255},
-      {x: 196, y: 1450, r: 239, g: 247, b: 255},
-      {x: 429, y: 1450, r: 239, g: 247, b: 255},
-      {x: 663, y: 1450, r: 239, g: 247, b: 255},
-      {x: 898, y: 1450, r: 239, g: 247, b: 255}
+      {x: 196, y: 1195, r: 236, g: 245, b: 254},
+      {x: 430, y: 1195, r: 234, g: 244, b: 253},
+      {x: 665, y: 1195, r: 237, g: 246, b: 253},
+      {x: 900, y: 1195, r: 236, g: 246, b: 254},
+      {x: 196, y: 1450, r: 236, g: 245, b: 254},
+      {x: 430, y: 1450, r: 235, g: 244, b: 253},
+      {x: 665, y: 1450, r: 237, g: 246, b: 254},
+      {x: 900, y: 1450, r: 236, g: 246, b: 254}
     ],
     back: {x: 176, y: 1592},
     next: {x: 176, y: 1592},
@@ -2524,7 +2524,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
     // scroll to next page if all Tsums were locked
     if (allLocked) {
       debug("Clicking scroll button to move to next page")
-      this.tap({x: 1030, y: 1193, r: 214, g: 243, b: 255}); // arrow, scroll right to next page
+      this.tap({x: 1030, y: 1193, r: 212, g: 239, b: 246}); // arrow, scroll right to next page
       this.sleep(3000);
     }
 
