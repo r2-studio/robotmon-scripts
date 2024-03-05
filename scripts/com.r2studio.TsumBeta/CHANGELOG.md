@@ -5,6 +5,32 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v66] - 2024-02-27
+
+### Fixed
+- Auto-buying worked only when Tsum Store missions were active.
+- Skill for Cabbage Mickey sometimes missed Mickey.
+- Unlock level didn't detect 3rd lock icon on 480x800 screen resolution.
+- Highscore page detection was incorrectly detected on new JP startup popup.
+
+### Added
+- Allow script to defer skill activation if fever is active and ends within X seconds 
+  (X can be defined in the settings).
+- "Claim All" when retrieved hearts do not contain coins anymore. When 3 hearts without coins were collected, the 
+  mailbox will be refreshed and new mails will be retrieved until 3 hearts without coins were collected again.
+  This will be repeated until 5 or fewer mails were opened before hearts without coins were received. Then "Claim All"
+  will be pressed. Intended for when script did not run for more than an hour.
+- Documentation of the script settings in the [README](README.md).
+- Root detection on Samsung A20.
+
+### Changed
+- Robotmon control panel opens automatically when script is loaded.
+- Opening the Robotmon script settings now stops script execution.
+- Changed minimal screenshot resolution of pages to a width of 360px in order to make page navigation more safe.
+- If script gets started while a game is already open in "pause" mode, the script will continue playing the game instead 
+  of leaving it.
+
+
 ## [v65] - 2024-02-12
 
 ### Fixed

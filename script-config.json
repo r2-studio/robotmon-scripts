@@ -66,8 +66,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 65,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v65 Beta</b>\n<ul>\n    <li>各种修复和卷心菜米奇技能<br>Variuos fixes and Cabbage Mickey skill</li>\n</ul>",
+      "versionCode": 66,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v66 Beta</b>\n<ul>\n    <li>修正<br>Bugfixes</li>\n    <li>小改进<br>Minor improvements</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
