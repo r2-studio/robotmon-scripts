@@ -4,9 +4,9 @@ Only support ES5
 
 ## Contents
 
-* [JavaScript Events](#javascrip-svents)
-* [JavaScript Interface](#javascrip-interface)
-* [JavaScript Raw APIs](#javascrip-apis)
+* [JavaScript Events](#javascript-events)
+* [JavaScript Interface](#javascript-interface)
+* [JavaScript Raw APIs](#javascript-raw-apis)
 * [RBM library APIs](#rbm-library-apis)
 * [gRPC APIs](#grpc-apis)
 * [Debug](#debug)
@@ -20,9 +20,9 @@ Add the following `<script>` in the `<head>` section of `index.html`
 ```html
 <script>
   function onEvent(eventType) {
-    if (eventType == 'OnPlayClick') {
+    if (eventType === 'OnPlayClick') {
       JavaScriptInterface.runScript(`start();`);
-    } else if (eventType == 'OnPauseClick') {
+    } else if (eventType === 'OnPauseClick') {
       JavaScriptInterface.runScript('stop();');
     }
   }
@@ -33,14 +33,14 @@ Add the following `<script>` in the `<head>` section of `index.html`
 </script>
 ```
 
-|event name|
-|---|
-|OnMenuClick|
-|OnPlayClick|
-|OnPauseClick|
-|OnLogClick|
-|OnSettingClick|
-|OnCloseClick|
+| event name     |
+|----------------|
+| OnMenuClick    |
+| OnPlayClick    |
+| OnPauseClick   |
+| OnLogClick     |
+| OnSettingClick |
+| OnCloseClick   |
 
 ## JavaScript Interface
 
@@ -185,7 +185,7 @@ releaseImage(image);
 
 #### `execute(command)`
 
-Call exec command in android system. It's permission is same as `adb shell`
+Call exec command in android system. Its permission is same as `adb shell`
 
 * `command` String
 
@@ -199,42 +199,42 @@ console.log(result);
 
 #### `tap(x, y, during)`
 
-Simulate a tap event
+Simulate a tap event after `during` milliseconds have passed.
 
 * `x` Integer
 * `y` Integer
-* `during` Integer
+* `during` Integer time to wait before tap in milliseconds
 
 ```javascript
 tap(200, 200, 10);
-// Will inject a tap down and a tap up event to system
+// Will inject a tap down and a tap up event after 10ms to system
 ```
 
 #### `tapDown(x, y, during)`
 
 * `x` Integer
 * `y` Integer
-* `during` Integer
+* `during` Integer time to wait before tapDown in milliseconds
 
 ```javascript
 tapDown(200, 200, 40);
-// Will inject a tapDown event to system
+// Will inject a tapDown event after 10ms to system
 ```
 
 #### `tapUp(x, y, during)`
 
 * `x` Integer
 * `y` Integer
-* `during` Integer
+* `during` Integer time to wait before tapUp in milliseconds
 
 ```javascript
 tapUp(200, 200, 40);
-// Will inject a tapUo event to system
+// Will inject a tapUo event after 10ms to system
 ```
 
 #### `moveTo(x, y, during)`
 
-moveTo should be betewwn `tapDown` and `tapUp`
+moveTo should be between `tapDown` and `tapUp`
 
 * `x` Integer
 * `y` Integer
@@ -265,7 +265,7 @@ swipe(500, 300, 40); // same as above example
 #### `keycode(label, during)`
 
 Send a key code event to system
-Like adb shell input keyevent command
+Like `adb shell` input keyevent command
 [Android Keycode List](https://developer.android.com/reference/android/view/KeyEvent.html)
 
 * `label` String
@@ -318,13 +318,13 @@ Same as OpenCV `smooth()` function.
 * `smoothType` Integer
 * `size` Integer
 
-|smoothType|description|
-|---|---|
-|0|CV_BLUR_NO_SCALE|
-|1|CV_BLUR|
-|2|CV_GAUSSIAN|
-|3|CV_MEDIAN|
-|4|CV_BILATERAL|
+| smoothType  | description      |
+|-------------|------------------|
+| 0           | CV_BLUR_NO_SCALE |
+| 1           | CV_BLUR          |
+| 2           | CV_GAUSSIAN      |
+| 3           | CV_MEDIAN        |
+| 4           | CV_BILATERAL     |
 
 ```javascript
 var img = getScreenshot();
@@ -341,10 +341,10 @@ Note that `getScreenshot` and `getScreenshotModify` is BGR order;
 * `sourceImg` Integer
 * `code` Integer
 
-|code|description|
-|---|---|
-|40|CV_BGR2HSV|
-|52|CV_BGR2HLS|
+| code  | description |
+|-------|-------------|
+| 40    | CV_BGR2HSV  |
+| 52    | CV_BGR2HLS  |
 
 See more: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
 
@@ -398,9 +398,9 @@ Same as OpenCV `threshold()`.
 * `maxThr` Float
 * `code` Integer
 
-|code|description|
-|---|---|
-|0|CV_THRES_BINARY|
+| code | description     |
+|------|-----------------|
+| 0    | CV_THRES_BINARY |
 
 See more: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
 
@@ -657,7 +657,7 @@ releaseImage(cropImg);
 
 #### `findImage(sourceImg, targetImg)`
 
-Using OpenCV `Template Match` to fing image.
+Using OpenCV `Template Match` to find image.
 
 * `sourceImg` Integer
 * `targetImg` Integer
@@ -675,7 +675,7 @@ releaseImage(cropImg);
 
 #### `findImages(sourceImg, targetImg, scoreLimit, resultCountLimit, withoutOverlap)`
 
-Same as `findImage()`, but find mulitple times.
+Same as `findImage()`, but find multiple times.
 
 * `sourceImg` Integer
 * `targetImg` Integer
@@ -711,11 +711,11 @@ releaseImage(img);
 releaseImage(resizeImg);
 ```
 
-#### `releaseImage(imgPtr)`
+#### `releaseImage(imagePointer)`
 
-Very Important! You should call this function with all imgPtrs.
+Very Important! You should call this function with all image pointers.
 
-* `imgPtr` Integer
+* `imagePointer` Integer
 
 ```javascript
 var img = getScreenshot(); // keep in memory
@@ -849,7 +849,7 @@ Returns String - The encrypted script
 
 #### `runEncryptedScript(script)`
 
-Run a encrypted javascript string.
+Run an encrypted javascript string.
 
 * `script` String - The script is encrypted by `encrypt`
 
@@ -897,17 +897,17 @@ The RBM library is an API wrapper of the Robotmon JavaScript APIs.
 
 ### RBM Config
 
-|property|description|
-|---|---|
-|appName|The name of the script.|
-|oriScreenWidth|The width of developer's phone.|
-|oriScreenHeight|The height of developer's phone.|
-|oriVirtualButtonHeight|The virtual button height of developer's phone(`getVirtualButtonHeight()`). If no virtual button in app, just set to `0`.|
-|oriResizeFactor|The resize ratio of the screenshot in developer's environment. For `screencrop()`. Range from `0` to `1`.|
-|eventDelay|The delay milliseconds of the event.|
-|imageThreshold|The threshold of image recognition. Range from `0` to `1`.|
-|imageQuality|The compression level of the image. Range from `0` to `100`.|
-|resizeFactor|The resize ratio of the screenshot in user's environment. Same as `oriResizeFactor` is better. Range from `0` to `1`.|
+| property               | description                                                                                                               |
+|------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| appName                | The name of the script.                                                                                                   |
+| oriScreenWidth         | The width of developer's phone.                                                                                           |
+| oriScreenHeight        | The height of developer's phone.                                                                                          |
+| oriVirtualButtonHeight | The virtual button height of developer's phone(`getVirtualButtonHeight()`). If no virtual button in app, just set to `0`. |
+| oriResizeFactor        | The resize ratio of the screenshot in developer's environment. For `screencrop()`. Range from `0` to `1`.                 |
+| eventDelay             | The delay milliseconds of the event.                                                                                      |
+| imageThreshold         | The threshold of image recognition. Range from `0` to `1`.                                                                |
+| imageQuality           | The compression level of the image. Range from `0` to `100`.                                                              |
+| resizeFactor           | The resize ratio of the screenshot in user's environment. Same as `oriResizeFactor` is better. Range from `0` to `1`.     |
 
 ### Using
 
@@ -1099,7 +1099,7 @@ rbm.imageExists(filename, threshold)
 * `filename` String
 * `threshold` Float
 
-Returns `Boolean` - Whether the image is exists in screen.
+Returns `Boolean` - Whether the image exists in screen.
 
 ```javascript
 rbm.imageClick(filename, threshold)
@@ -1108,7 +1108,7 @@ rbm.imageClick(filename, threshold)
 * `filename` String
 * `threshold` Float
 
-Click the image if the image is exists in screen.
+Click the image if the image exists in screen.
 
 ```javascript
 rbm.imageWaitClick(filename, timeout, threshold)
@@ -1118,7 +1118,7 @@ rbm.imageWaitClick(filename, timeout, threshold)
 * `timeout` Integer
 * `threshold` Float
 
-Click the image if the image is exists in screen until timeout (milliseconds).
+Click the image if the image exists in screen until timeout (milliseconds).
 
 ```javascript
 rbm.imageWaitShow(filename, timeout, threshold)
@@ -1144,7 +1144,7 @@ Block until the image is gone or timeout
 rbm.keepScreenshot()
 ```
 
-Keep the screenshot in memory. To avoid to many times screencap.
+Keep the screenshot in memory. To avoid too many times screencap.
 
 
 ```javascript
@@ -1156,7 +1156,7 @@ rbm.screencrop(fromX, fromY, toX, toY)
 * `toX` Integer
 * `toY` Integer
 
-Keep the partial screenshot in memory. To avoid to many times screencap.
+Keep the partial screenshot in memory. To avoid too many times screencap.
 
 
 ```javascript
