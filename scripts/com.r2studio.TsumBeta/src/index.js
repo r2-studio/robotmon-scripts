@@ -1035,6 +1035,7 @@ function Tsum(isJP, detect, logs) {
   this.myTsum = '';
   this.storagePath = getStoragePath();
   // screen size config
+  /** @type {{width: number, height: number}}  */
   var size = getScreenSize();
   this.originScreenWidth = size.width;
   this.originScreenHeight = size.height;
@@ -1044,7 +1045,7 @@ function Tsum(isJP, detect, logs) {
   this.gameOffsetY = 0;
   this.gameHeight = 0;
   this.gameWidth = 0;
-  this.resizeRatio = 3;
+  this.resizeRatio = Math.max(1, this.screenWidth / 360); // normalize page screenshots to 360px width
   this.captureGameRatio = 0;
   // playing game screen size config
   this.playOffsetX = 0;
@@ -1200,7 +1201,7 @@ Tsum.prototype.screenshot = function() {
   );
 }
 
-Tsum.prototype.playScreenshot = function() {
+Tsum.prototype.playScreenshotSquare = function() {
   return getScreenshotModify(
     this.playOffsetX,
     this.playOffsetY,
@@ -1501,7 +1502,7 @@ Tsum.prototype.goTsumsPage = function() {
 }
 
 Tsum.prototype.goTsumTsumStorePage = function() {
-  while (this.isRunning) {
+  if (this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
     }
@@ -1707,7 +1708,7 @@ Tsum.prototype.useSkill = function(board) {
 Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
-  var srcImg = this.playScreenshot();
+  var srcImg = this.playScreenshotSquare();
 
   if (this.isPause) {
     this.tap(Button.gamePause);
