@@ -109,9 +109,9 @@ var Button = {
   outReceiveOne: {x: 840, y: 569, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneRuby: {x: 295, y: 651, color: {r: 224, g: 93, b: 101}}, // ruby
-  outReceiveOneRuby2th: {x: 295, y: 651+68*3, color: {r: 235, g: 93, b: 105}}, // ruby
-  outReceiveOneAd: { x: 290, y: 812 - 140, color: { r: 90, g: 57, b: 25 } }, // ad
-  outReceiveOneAd2th: { x: 290, y: 672+68*3, color: { r: 90, g: 57, b: 25 } }, // ad
+  outReceiveOneRuby2th: {x: 295, y: 855, color: {r: 235, g: 93, b: 105}}, // ruby
+  outReceiveOneAd: { x: 290, y: 672, color: { r: 90, g: 57, b: 25 } }, // ad
+  outReceiveOneAd2th: { x: 290, y: 876, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveTimeout: {x: 600, y: 1092, color: {"a":0,"b":11,"g":171,"r":235}},
   outSendHeartTop: {x: 910, y: 502},
   outSendHeart0: {x: 910, y: 698, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -681,6 +681,38 @@ var Page = {
     ],
     back: {x: 176, y: 1592},
     next: {x: 176, y: 1592}
+  },
+  ReceiveSkillTicket: {
+    name: 'ReceiveSkillTicket',
+    colors: [
+      {x: 405, y: 806, r: 240, g: 155, b: 20, match: true, threshold: 80},
+      {x: 488, y: 839, r: 244, g: 164, b: 23, match: true, threshold: 80},
+      {x: 502, y: 821, r: 255, g: 255, b: 255, match: true, threshold: 40},
+      {x: 390, y: 824, r: 58, g: 92, b: 142, match: true, threshold: 80},
+      {x: 522, y: 812, r: 60, g: 95, b: 147, match: true, threshold: 80},
+      {x: 874, y: 1098, r: 238, g: 174, b: 8, match: true, threshold: 80},
+      {x: 198, y: 1095, r: 239, g: 174, b: 8, match: true, threshold: 80},
+      {x: 160, y: 1545, r: 0, g: 4, b: 8, match: true, threshold: 80},
+      {x: 526, y: 553, r: 33, g: 195, b: 231, match: true, threshold: 80}
+    ],
+    back: {x: 198, y: 1095},
+    next: {x: 874, y: 1098}
+  },
+  ReceivePremiumTicket: {
+    name: 'ReceivePremiumTicket',
+    colors: [
+      {x: 405, y: 806, r: 216, g: 20, b: 25, match: true, threshold: 80},
+      {x: 488, y: 839, r: 208, g: 20, b: 23, match: true, threshold: 80},
+      {x: 502, y: 821, r: 255, g: 247, b: 181, match: true, threshold: 40},
+      {x: 390, y: 824, r: 58, g: 92, b: 142, match: true, threshold: 80},
+      {x: 522, y: 812, r: 60, g: 95, b: 147, match: true, threshold: 80},
+      {x: 874, y: 1098, r: 238, g: 174, b: 8, match: true, threshold: 80},
+      {x: 198, y: 1095, r: 239, g: 174, b: 8, match: true, threshold: 80},
+      {x: 160, y: 1545, r: 0, g: 4, b: 8, match: true, threshold: 80},
+      {x: 526, y: 553, r: 33, g: 195, b: 231, match: true, threshold: 80}
+    ],
+    back: {x: 198, y: 1095},
+    next: {x: 874, y: 1098}
   }
 };
 
@@ -1363,6 +1395,36 @@ Tsum.prototype.findPage = function(times, timeout) {
   return page != null ? page.name : 'unknown';
 }
 
+Tsum.prototype.matchesPage = function (pageName) {
+  var found = false;
+  var img = null;
+  for (var pageId in Page) {
+    var page = Page[pageId];
+    if (pageName === page.name) {
+      if (img == null) {
+        // lazy init only if page exists
+        img = this.screenshot();
+      }
+      var colors = page.colors || [];
+      found = false;
+      for (var i = 0; i < colors.length; i++) {
+        var color = colors[i];
+        found = isSameColor(this.getColor(img, color), color, 20);
+        if (!found) {
+          break;  // try next page
+        }
+      }
+      if (found)
+        break;  // exit search
+    }
+  }
+  if (img != null) {
+    releaseImage(img);
+  }
+  debug("*** Found", pageName, "=", found);
+  return found;
+}
+
 Tsum.prototype.exitUnknownPage = function() {
   keycode('KEYCODE_DPAD_DOWN', 50);
   this.sleep(500);
@@ -2026,15 +2088,28 @@ Tsum.prototype.clear = function() {
 }
 
 Tsum.prototype.skipAd = function () {
-  log("Ignore Ad");
   this.tap(Button.outReceiveOne);
-  this.sleep(4000);
-  // delete ad
-  this.tap({ x: 462, y: 1235 - 140 });
-  this.sleep(4000);
-  this.tap({ x: 172, y: 1360 - 140 });
-  this.sleep(2000);
-  this.tap({ x: 556, y: 1557 - 140 });
+  this.sleep(1000);
+  // also gets called for skill and premium tickets, so check we really have an ad!!!
+  if (this.matchesPage('ReceiveSkillTicket') || this.matchesPage('ReceivePremiumTicket')) {
+    // mcs: I improved ad detection here because I don't get ad mails. So I cannot improve detection in list view
+    log("Receive ticket");
+    this.tap(Button.outReceiveOk);
+  } else {
+    log("Ignore Ad");
+    if (Config.debugLogs) {
+      var img = this.screenshot();
+      saveImage(img, this.storagePath + "/tmp/" + this.runTimes + "-detectedAd.jpg");
+      releaseImage(img);
+    }
+    this.sleep(4000);
+    // delete ad
+    this.tap({ x: 462, y: 1095});
+    this.sleep(4000);
+    this.tap({ x: 172, y: 1220});
+    this.sleep(2000);
+    this.tap({ x: 556, y: 1417});
+  }
 }
 
 Tsum.prototype.taskReceiveOneItem = function() {
