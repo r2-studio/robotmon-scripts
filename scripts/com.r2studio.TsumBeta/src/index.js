@@ -1,7 +1,5 @@
 "use strict";
 
-var DEBUG_LOGS = false;
-
 function TaskController(){this.tasks={},this.isRunning=!1,this.interval=200}TaskController.prototype.getFirstPriorityTaskName=function(){var t=null,n=Date.now();for(var s in this.tasks){var i=this.tasks[s];n-i.lastRunTime<i.interval||(null!==t?i.priority<t.priority?t=i:i.interval>t.interval?t=i:i.lastRunTime<t.lastRunTime&&(t=i):t=i)}return null===t?"":t.name},TaskController.prototype.loop=function(){for(console.log("loop start");this.isRunning;){var t=this.getFirstPriorityTaskName(),n=this.tasks[t];void 0!==n&&(n.run(),n.lastRunTime=Date.now(),n.runTimes--,0===n.runTimes&&delete this.tasks[t]),sleep(this.interval)}this.isRunning=!1,console.log("loop stop")},TaskController.prototype.updateRunInterval=function(t){t<this.interval&&t>=50&&(this.interval=t)},TaskController.prototype.newTaskObject=function(t,n,s,i,o){return{name:t,run:n,interval:s||1e3,runTimes:i||0,priority:o,lastRunTime:0,status:0}},TaskController.prototype.newTask=function(t,n,s,i,o){if(void 0===o&&(o=!1),"function"==typeof n){var e=this.newTaskObject(t,n,s,i,0);o&&(e.lastRunTime=Date.now()),this.updateRunInterval(e.interval);var r="system_newTask_"+t,a=this.newTaskObject(r,function(){this.tasks[t]=e}.bind(this),0,1,-20);return this.tasks[r]=a,e}console.log("Error not a function",t,n)},TaskController.prototype.removeTask=function(t){var n="system_removeTask_"+Date.now().toString(),s=this.newTaskObject(n,function(){delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[n]=s},TaskController.prototype.removeAllTasks=function(){var t="system_removeAllTask_"+Date.now().toString(),n=this.newTaskObject(t,function(){for(var t in this.tasks)delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[t]=n},TaskController.prototype.start=function(){this.isRunning||(this.isRunning=!0,this.loop())},TaskController.prototype.stop=function(){this.isRunning&&(this.isRunning=!1,console.log("wait loop stop..."))};
 
 var ts;
@@ -27,7 +25,7 @@ function nowTime() {
 }
 
 function debug() {
-  if (DEBUG_LOGS) {
+  if (Config.debugLogs) {
     var argsArray = Array.prototype.slice.call(arguments);
     var newArgs = ['*DEBUG*'].concat(argsArray);
     log.apply(null, newArgs);
@@ -56,7 +54,12 @@ function log() {
   }
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
-      arguments[i] = JSON.stringify(arguments[i]);
+      arguments[i] = JSON.stringify(arguments[i], null, 2);
+    } else if (typeof arguments[i] == 'function') {
+      if (Config.debugLogs)
+        arguments[i] = arguments[i]();
+      else
+        arguments[i] = "";
     }
     args.push(arguments[i]);
   }
@@ -72,7 +75,8 @@ var Config = {
   tsumBoundH: 13,
   screenResize: 200,
   gameContinueDelay: 400,
-  colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]]
+  colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
+  debugLogs: false
 };
 
 // Definitions assuming screen resolution of 1080 * 1920
@@ -1703,8 +1707,10 @@ Tsum.prototype.useSkill = function(board) {
       this.tap(tapXY, 100);
       this.sleep(1000);
     } else {
-      log("*** Didn't find Mickey! ***");
-      saveImage(img, this.storagePath + "/tmp/boardImg-cabbageMickey_not_found-" + Date.now() + ".jpg");
+      debug("*** Didn't find Mickey! ***", function () {
+        saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey_not_found-" + Date.now() + ".jpg");
+        return "Saved screenshot";
+      });
       this.clearAllBubbles();
     }
     releaseImage(img);
@@ -2475,7 +2481,7 @@ function start(settings) {
     };
   }
 
-  DEBUG_LOGS = settings['debugLogs'];
+  Config.debugLogs = settings['debugLogs'];
   ts.autobuyBoxes = settings['autobuyBoxes'];
 
   if (!checkFunction(TaskController)) {
