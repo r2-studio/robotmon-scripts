@@ -313,6 +313,12 @@ var settings = [
             step: 1,
             max: 10,
             min: 0
+        },
+        {
+            key: 'claimAllWithoutCoins',
+            title: 'Claim All old mails',
+            title_zh_TW: '认领所有旧邮件',
+            default: false
         }
     ]
 ];

@@ -713,6 +713,20 @@ var Page = {
     ],
     back: {x: 198, y: 1095},
     next: {x: 874, y: 1098}
+  },
+  ReceiveHeartWithoutCoins: {
+    name: 'ReceiveHeartWithoutCoins',
+    colors: [
+      {x: 360, y: 570, r: 33, g: 198, b: 233, match: true, threshold: 30},
+      {x: 400, y: 620, r: 61, g: 94, b: 147, match: true, threshold: 30},
+      {x: 460, y: 820, r: 222, g: 61, b: 148, match: true, threshold: 30},
+      {x: 420, y: 1100, r: 238, g: 174, b: 8, match: true, threshold: 30},
+      {x: 860, y: 1100, r: 238, g: 174, b: 8, match: true, threshold: 30},
+      {x: 540, y: 1100, r: 58, g: 94, b: 146, match: true, threshold: 30},
+      {x: 550, y: 1600, r: 49, g: 36, b: 0, match: true, threshold: 30}
+    ],
+    back: {x: 420, y: 1100},
+    next: {x: 860, y: 1100}
   }
 };
 
@@ -1136,6 +1150,7 @@ function Tsum(isJP, detect, logs) {
   this.clearBubbles = true;
   this.autobuyBoxes = 0;
   this.noSkillLastFeverSec = 0;
+  this.claimAllWithoutCoins = false;
   this.init(detect);
 }
 
@@ -2129,6 +2144,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var receiveTime = Date.now();
   var timeoutCounter = 0;
   var maxTimeoutCount = 100;
+  var receivedHeartWithoutCoins = 0;
   while (this.isRunning && timeoutCounter < maxTimeoutCount) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
@@ -2138,6 +2154,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isOk2 = isSameColor(Button.outReceiveItemSetOk.color, this.getColor(img, Button.outReceiveItemSetOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
+    var isHeartWithoutCoins = this.matchesPage('ReceiveHeartWithoutCoins');
     debug({
       isItem: isItem, isRuby: isRuby, isNonItem: isNonItem, isAd: isAd, isOk: isOk,
       isTimeout: isTimeout, timeoutCounter: timeoutCounter
@@ -2150,7 +2167,28 @@ Tsum.prototype.taskReceiveOneItem = function() {
         this.sleep(2000);
         continue;
       }
-      if (!this.keepRuby || !isRuby) {
+      if (receivedHeartWithoutCoins > 2) {
+        if (receivedCount <= 5 + receivedHeartWithoutCoins) {
+          this.sleep(2000);
+          debug("Should receive all now");
+          this.taskReceiveAllItems();
+          this.tap(Button.outReceive);
+          this.sleep(1500);
+        }
+        debug("Closing");
+        this.tap(Button.outClose);
+        receivedHeartWithoutCoins = 0;
+        this.tap(Button.outClose);
+        this.goFriendPage();
+        this.sleep(500);
+        receivedCount = 0;
+        sender = "";
+        timeoutCounter = 0;
+        log(this.logs.checkUnreceivedGift);
+        this.sleep(500);
+        this.tap(Button.outReceive);
+        this.sleep(1500);
+      } else if (!this.keepRuby || !isRuby) {
         if (this.recordReceive) {
           img = this.screenshot();
           var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
@@ -2195,8 +2233,10 @@ Tsum.prototype.taskReceiveOneItem = function() {
       sender = undefined;
       this.sleep(600);
       timeoutCounter = 0;
+      if (this.claimAllWithoutCoins &&  isHeartWithoutCoins)
+        receivedHeartWithoutCoins++;
     } else {
-      debug("else-path", "taskReceiveOneItem");
+      debug("fetched all so far", "taskReceiveOneItem");
       this.tap(Button.outReceiveClose); // usual close button
     }
     this.sleep(200);
@@ -2661,6 +2701,7 @@ function start(settings) {
   Config.debugLogs = settings['debugLogs'];
   ts.autobuyBoxes = settings['autobuyBoxes'];
   ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
+  ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];
 
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
