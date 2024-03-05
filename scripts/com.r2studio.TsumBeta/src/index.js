@@ -1307,7 +1307,9 @@ Tsum.prototype.link = function(paths) {
   var isBubble = false;
   for (var i in paths) {
     var path = paths[i];
-    if (path.length >= 7) {
+    // >= 7 should be correct, but practically the real chain is always shorter
+    // so using a bigger value than theoretically correct
+    if (path.length >= 12) {
       isBubble = true;
     }
     this.linkTsums(path);
@@ -1539,22 +1541,22 @@ Tsum.prototype.goTsumTsumStorePage = function() {
 }
 
 Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
-  if (startDelay !== undefined) {
+  if (typeof startDelay === 'number' && startDelay > 0) {
     this.sleep(startDelay);
   }
 
   var fy = Button.gameBubblesFrom.y;
-  if (fromY !== undefined) {
+  if (typeof fromY == 'number') {
     fy = fromY;
   }
 
-  for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
-    for (var by = fy; by <= Button.gameBubblesTo.y; by += 140) {
+  for (var by = fy; by <= Button.gameBubblesTo.y; by += 140) {
+    for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
       this.tap({x: bx, y: by}, 10);
     }
   }
 
-  if (endDelay !== undefined) {
+  if (typeof endDelay === 'number' && endDelay > 0) {
     this.sleep(endDelay);
   }
 }
@@ -1838,7 +1840,8 @@ Tsum.prototype.taskPlayGameQuick = function() {
     if (this.clearBubbles && clearBubbles >= 2) {
       log(this.logs.clearBubbles);
       clearBubbles = 0;
-      this.clearAllBubbles();
+      // only clearing lower area in order to speed up the cleaning process
+      this.clearAllBubbles(0, 0, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
     }
     if (this.useFan && this.runTimes % 4 === 3) {
       this.tap(Button.gameRand, 60);
@@ -2011,7 +2014,8 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var sender = undefined;
   var receiveTime = Date.now();
   var timeoutCounter = 0;
-  while (this.isRunning && timeoutCounter < 100) {
+  var maxTimeoutCount = 100;
+  while (this.isRunning && timeoutCounter < maxTimeoutCount) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
@@ -2079,8 +2083,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
       timeoutCounter = 0;
     } else {
       debug("else-path", "taskReceiveOneItem");
-      this.tap(Button.outReceiveClose);
-      timeoutCounter = 0;
+      this.tap(Button.outReceiveClose); // usual close button
     }
     this.sleep(200);
 
@@ -2108,6 +2111,21 @@ Tsum.prototype.taskReceiveOneItem = function() {
       }
     }
     timeoutCounter++;
+    if (timeoutCounter % 10 === 0) {
+      log("Timeout counter = " + timeoutCounter + " / 100");
+    }
+  }
+  if (maxTimeoutCount <= timeoutCounter) {
+    // we seem to be trapped, try to exit the trap
+    log("I'm stuck! Trying exit...");
+    this.exitUnknownPage();
+    this.sleep(1000);
+    if (this.findPage() === 'unknown') {
+      // last attempt
+      log("Still stuck! Last try...");
+      this.exitUnknownPage();
+      this.sleep(1000);
+    }
   }
 }
 
