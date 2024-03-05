@@ -138,6 +138,34 @@ var Button = {
   outTsumCollectionDoUnlock: {x: 111, y: 760, r: 173, g: 109, b: 57}
 };
 
+var AbstractPage = {
+  TsumStore: {
+    colorsTwoBoxTypes: [
+      {x: 270, y: 920, r: 22, g: 125, b: 65, match: true, threshold: 30},  // green ribbon of happy box on left button
+      {x: 150, y: 750, r: 247, g: 189, b: 8, match: true, threshold: 30},  // yellow button happy box top left
+      {x: 460, y: 760, r: 247, g: 187, b: 8, match: true, threshold: 30},  // yellow button happy box top right
+      {x: 818, y: 862, r: 242, g: 90, b: 121, match: true, threshold: 30}, // red premium box on right button
+      {x: 590, y: 810, r: 240, g: 178, b: 8, match: true, threshold: 30},  // yellow button premium box top left
+      {x: 950, y: 980, r: 238, g: 173, b: 8, match: true, threshold: 30}   // right side of premium box button
+    ],
+    colorsThreeBoxTypes: [
+      {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
+      {x: 150, y: 750, r: 247, g: 184, b: 8, match: true, threshold: 30}, // yellow button happy box top left
+      {x: 460, y: 760, r: 247, g: 130, b: 8, match: true, threshold: 30}, // orange select box button
+      {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
+      {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
+      {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}  // right side of premium box button
+    ],
+    colorsNoMissionPage: [
+      {x: 170, y: 1580, r: 49, g: 40, b: 0, match: true, threshold: 30}   // left bottom modal button
+    ],
+    next: {x: 632, y: 1066},            // buy select / premium box button
+    backNoMission: {x: 530, y: 1650},   // close button
+    backWithMission: {x: 190, y: 1650}  // close button
+
+  }
+};
+
 var Page = {
   TodayMission: {
     name: 'TodayMission',
@@ -362,48 +390,29 @@ var Page = {
     next: {x: 176, y: 1592},
     store: {x: 910, y: 1592}
   },
-  TsumTsumStorePageNoMission: {
-    // only happyness and premium boxes available
+  TsumTsumStorePageTwoBoxesNoMission: {
     name: 'TsumTsumStorePage',
-    colors: [
-      {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
-      {x: 150, y: 750, r: 247, g: 184, b: 8, match: true, threshold: 30}, // yellow button happy box top left
-      {x: 460, y: 760, r: 247, g: 130, b: 8, match: true, threshold: 30}, // orange select box button
-      {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
-      {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
-      {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}, // right side of premium box button
-      {x: 159, y: 1566, r: 49, g: 40, b: 0, match: true, threshold: 30}   // left bottom modal button
-    ],
-    back: {x: 530, y: 1650},  // close button
-    next: {x: 632, y: 1066}   // buy premium box button
+    colors: AbstractPage.TsumStore.colorsTwoBoxTypes.concat(AbstractPage.TsumStore.colorsNoMissionPage),
+    back: AbstractPage.TsumStore.backNoMission,
+    next: AbstractPage.TsumStore.next
   },
-  TsumTsumStoreSelectBoxPage: {
-    // select box available
+  TsumTsumStorePageThreeBoxesNoMission: {
     name: 'TsumTsumStorePage',
-    colors: [
-      {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
-      {x: 150, y: 750, r: 247, g: 184, b: 8, match: true, threshold: 30}, // yellow button happy box top left
-      {x: 460, y: 760, r: 247, g: 130, b: 8, match: true, threshold: 30}, // orange select box button
-      {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
-      {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
-      {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}  // right side of premium box button
-    ],
-    back: {x: 190, y: 1655},  // close button
-    next: {x: 632, y: 1066}   // buy select box button
+    colors: AbstractPage.TsumStore.colorsThreeBoxTypes.concat(AbstractPage.TsumStore.colorsNoMissionPage),
+    back: AbstractPage.TsumStore.backNoMission,
+    next: AbstractPage.TsumStore.next
   },
-  TsumTsumStorePage: {
-    // only happyness and premium boxes available
+  TsumTsumStorePageThreeBoxesWithMission: {
     name: 'TsumTsumStorePage',
-    colors: [
-      {x: 276, y: 944, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
-      {x: 151, y: 752, r: 247, g: 191, b: 8, match: true, threshold: 30}, // yellow button happy box top left
-      {x: 542, y: 964, r: 57, g: 95, b: 148, match: true, threshold: 30}, // blue space between happy box and premium box
-      {x: 787, y: 939, r: 181, g: 18, b: 0, match: true, threshold: 30},  // red premium box on right button
-      {x: 614, y: 763, r: 247, g: 187, b: 8, match: true, threshold: 30}, // yellow button premium box top left
-      {x: 943, y: 1004, r: 247, g: 174, b: 8, match: true, threshold: 30} // right side of premium box button
-    ],
-    back: {x: 190, y: 1650},  // close button
-    next: {x: 632, y: 1066}   // buy premium box button
+    colors: AbstractPage.TsumStore.colorsThreeBoxTypes,
+    back: AbstractPage.TsumStore.backWithMission,
+    next: AbstractPage.TsumStore.next
+  },
+  TsumTsumStorePageTwoBoxesWithMission: {
+    name: 'TsumTsumStorePage',
+    colors: AbstractPage.TsumStore.colorsTwoBoxTypes,
+    back: AbstractPage.TsumStore.backWithMission,
+    next: AbstractPage.TsumStore.next
   },
   ConfirmPurchaseBoxPage: {
     name: 'ConfirmPurchasePage',
@@ -1309,9 +1318,10 @@ Tsum.prototype.findPageObject = function(times, timeout) {
       for (var key in Page) {
         page = Page[key];
         currentPage = null;
-        for (var i = 0; i < page.colors.length; i++) {
-          var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
-          if ((diff < page.colors[i].threshold) === page.colors[i].match) {
+        var pageColors = page.colors || [];
+        for (var i = 0; i < pageColors.length; i++) {
+          var diff = absColor(pageColors[i], this.getColor(img, pageColors[i]));
+          if ((diff < pageColors[i].threshold) === pageColors[i].match) {
             currentPage = page;
           } else {
             currentPage = null;
