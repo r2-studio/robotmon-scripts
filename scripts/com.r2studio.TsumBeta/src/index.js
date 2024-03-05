@@ -608,6 +608,19 @@ var Page = {
     back: {x: 885, y: 1150},
     next: {x: 885, y: 1150}
   },
+  RootDetectionSamsungA20En: {
+    name: 'RootDetectionSamsungA20En',
+    colors: [
+      {x: 60, y: 440, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 50, y: 440, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 60, y: 430, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 1020, y: 1310, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1020, y: 1320, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 1010, y: 1325, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 850, y: 1230},
+    next: {x: 850, y: 1230}
+  },
   MagicalTime: {
     name: 'MagicalTime',
     colors: [
