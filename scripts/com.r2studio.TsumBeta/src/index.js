@@ -2344,7 +2344,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
     }
 
     // Progress until no more locks exist
-  } while (allLocked)
+  } while (this.isRunning && allLocked)
 
 
 
@@ -2378,7 +2378,7 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
   }
   log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
   var countUnknownPages = 0;
-  while (this.autobuyBoxes > 0) {
+  while (this.isRunning && this.autobuyBoxes > 0) {
     var page = this.findPageObject(1, 200);
     if (page != null) {
       countUnknownPages = 0;
@@ -2560,9 +2560,9 @@ function start(settings) {
 }
 
 function stop() {
-  log(ts.logs.stop);
-  sleep(500);
   if (ts != null) {
+    log(ts.logs.stop);
+    sleep(500);
     ts.isRunning = false;
     sleep(2000);
     // loop stop here...
@@ -2570,8 +2570,8 @@ function stop() {
       ts.releaseRecord();
     }
   }
-  if (gTaskController !== undefined) {gTaskController.removeAllTasks();}
-  if (gTaskController !== undefined) {gTaskController.stop();}
+  if (gTaskController !== undefined) gTaskController.removeAllTasks();
+  if (gTaskController !== undefined) gTaskController.stop();
   ts = undefined;
 }
 
