@@ -1101,6 +1101,7 @@ function Tsum(isJP, detect, logs) {
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
   this.autobuyBoxes = 0;
+  this.noSkillLastFeverSec = 0;
   this.init(detect);
 }
 
@@ -1611,6 +1612,35 @@ Tsum.prototype.useSkill = function(board) {
     } else {
       return false;
     }
+  }
+  if (this.noSkillLastFeverSec > 0) {
+    var feverAlmostOver = null;
+    do {
+      if (feverAlmostOver) {
+        this.sleep(100);
+      }
+      feverAlmostOver = (function (tsum) {
+        // skip skill activation if fever and fever almost over and enough seconds remaining
+        var img = tsum.screenshot();
+        var fever1 = isSameColor(tsum.getColor(img, {x: 340, y: 310}), {r: 0, g: 40, b: 49}, 80);
+        var feverRingLeft = rgb2hsv(tsum.getColor(img, {x: 332, y: 1666}));
+        var feverRingRight = rgb2hsv(tsum.getColor(img, {x: 746, y: 1666}));
+        var hueDifference = Math.min(
+            Math.abs(feverRingLeft.h - feverRingRight.h),
+            360 - Math.abs(feverRingLeft.h - feverRingRight.h));
+        var fever2 = hueDifference > 20;
+        var feverStartColorHsv = rgb2hsv(tsum.getColor(img, {x: 345, y: 1670}));
+        var offsetX = Math.floor((733 - 345) * tsum.noSkillLastFeverSec / 10);
+        var feverEndColorHsv = rgb2hsv(tsum.getColor(img, {x: 345 + offsetX, y: 1670}));
+        var feverAlmostOver = feverEndColorHsv.v < 90 || Math.abs(feverStartColorHsv.v - feverEndColorHsv.v) > 10;
+        var remainingTimeColor = tsum.getColor(img, {x: 155, y: 190});
+        var fewSecondsLeftColor = tsum.getColor(img, {x: 144, y: 195});
+        var enoughSecondsRemaining = isSameColor(remainingTimeColor, fewSecondsLeftColor, 60);
+        releaseImage(img);
+        // debug({fever1: fever1, fever2: fever2, almostOver: feverAlmostOver, enoughTime: enoughSecondsRemaining});
+        return fever1 && fever2 && feverAlmostOver && enoughSecondsRemaining;
+      })(this);
+    } while (feverAlmostOver);
   }
   log(this.logs.useSkill);
   if (this.skillType === 'block_lukej_s') {
@@ -2483,6 +2513,7 @@ function start(settings) {
 
   Config.debugLogs = settings['debugLogs'];
   ts.autobuyBoxes = settings['autobuyBoxes'];
+  ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
 
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
@@ -2613,4 +2644,14 @@ function getDayTimeString(d) {
 function getRecordFilename() {
   var d = new Date();
   return 'recordTable_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
+}
+
+// input: rgb in [0,255], out: h in [0,360) and s,v in [0,100]
+function rgb2hsv(rgb) {
+  var r = rgb.r / 255;
+  var g = rgb.g / 255;
+  var b = rgb.b / 255;
+  var v = Math.max(r, g, b), c = v - Math.min(r, g, b);
+  var h = c && ((v === r) ? (g - b) / c : ((v === g) ? 2 + (b - r) / c : 4 + (r - g) / c));
+  return {h: 60 * (h < 0 ? h + 6 : h), s: Math.round(v && c / v * 100), v: Math.round(v * 100)};
 }
