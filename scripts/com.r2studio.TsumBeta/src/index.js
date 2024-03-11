@@ -2577,8 +2577,13 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
         log("Collected all Tsums.");
         this.autobuyBoxes = 0;
       } else if (page.name === Page.MailBox.name) {   // matches when "Buy coins for rubies" appears
-        log("Not enough coins.");
-        this.autobuyBoxes = 0;
+        // test again, sometimes falsely matched while page transition
+        this.sleep(500);
+        page = this.findPageObject(1, 200);
+        if (page.name === Page.MailBox.name) {
+          log("Not enough coins.");
+          this.autobuyBoxes = 0;
+        }
       }
       lastPage = page;
     } else {
