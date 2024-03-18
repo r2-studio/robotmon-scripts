@@ -674,7 +674,10 @@ var Page = {
   HighScore: {
     name: 'HighScore',
     colors: [
-      {x: 576, y: 1325, r: 238, g: 187, b: 10, match: true, threshold: 80}
+      {x: 576, y: 1325, r: 238, g: 187, b:  10, match: true, threshold: 80}, // top yellow of close button
+      {x: 576, y: 1082, r:  33, g: 194, b: 231, match: true, threshold: 80}, // bottom light blue of highscore cell
+      {x: 576, y:  762, r:  33, g: 194, b: 231, match: true, threshold: 80}, // top light blue of highscore cell
+      {x: 576, y:  820, r:  64, g: 109, b: 171, match: true, threshold: 80}  // inner dark blue of highscore cell
     ],
     back: {x: 576, y: 1325},
     next: {x: 576, y: 1325}
