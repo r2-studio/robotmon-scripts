@@ -1167,6 +1167,7 @@ function Tsum(isJP, detect, logs) {
   this.autobuyBoxes = 0;
   this.noSkillLastFeverSec = 0;
   this.claimAllWithoutCoins = false;
+  this.nextMonitorExecution = 0;
   this.init(detect);
 }
 
@@ -1938,6 +1939,7 @@ Tsum.prototype.scanBoardQuick = function() {
 }
 
 Tsum.prototype.taskPlayGameQuick = function() {
+  this.requestTsumMonitor();
   log(this.logs.gameStart);
   this.goGamePlayingPage();
   log(this.logs.fastGaming);
@@ -2006,6 +2008,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
 Tsum.prototype.taskReceiveAllItems = function() {
   if (this.findPage() === 'GamePause')
     return;
+  this.requestTsumMonitor();
   log(this.logs.friendsPage);
   this.goFriendPage();
   this.sleep(1000);
@@ -2162,6 +2165,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var maxTimeoutCount = 100;
   var receivedHeartWithoutCoins = 0;
   while (this.isRunning && timeoutCounter < maxTimeoutCount) {
+    this.requestTsumMonitor();
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
@@ -2330,6 +2334,7 @@ Tsum.prototype.taskSendHearts = function() {
   var hfy = Button.outSendHeartFrom.y - 40; // hearts from y
   var hty = Button.outSendHeartTo.y + 30;   // hearts to y
   while(this.isRunning) {
+    this.requestTsumMonitor();
     times++;
     if (times % 15 === 0) {
       debug("Ensuring friends page");
@@ -2496,6 +2501,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
 
   // check all
   do {
+    this.requestTsumMonitor();
     var allLocked = true;
     var lockIcons = Page.TsumsPage.lockIcons;
     img = this.screenshot();
@@ -2567,6 +2573,7 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
   log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
   var countUnknownPages = 0;
   while (this.isRunning && this.autobuyBoxes > 0) {
+    this.requestTsumMonitor();
     var page = this.findPageObject(1, 200);
     if (page != null) {
       countUnknownPages = 0;
@@ -2600,6 +2607,24 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
     this.sleep(500);
   }
   log("Finished taskAutoBuyBoxes");
+}
+
+Tsum.prototype.taskRequestTsumMonitor = function() {
+  this.requestTsumMonitor(true);
+}
+
+Tsum.prototype.requestTsumMonitor = function(force) {
+  var url = this.tsumMonitorUrl;
+  if (url.length === 0)
+    return;
+  if (force || this.nextMonitorExecution <= Date.now()) {
+    log("TsumMonitor - GET", url);
+    var response = httpClient('GET', url, '', {});
+    log("TsumMonitor - Response:", response);
+    this.nextMonitorExecution = Date.now() + 60 * 1000;
+  } else {
+    debug("Skipping TsumMonitor call");
+  }
 }
 
 Tsum.prototype.sendHeart = function(btn) {
@@ -2723,6 +2748,7 @@ function start(settings) {
   ts.autobuyBoxes = settings['autobuyBoxes'];
   ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
   ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];
+  ts.tsumMonitorUrl = settings['tsumMonitorUrl'] || "";
 
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
@@ -2730,6 +2756,9 @@ function start(settings) {
   }
 
   gTaskController = new TaskController();
+  if (ts.tsumMonitorUrl.length > 0) {
+    gTaskController.newTask('requestTsumMonitor', ts.taskRequestTsumMonitor.bind(ts), 30 * 1000, 0);
+  }
   gTaskController.newTask('taskAutoBuyBoxes', ts.taskAutoBuyBoxes.bind(ts), 60 * 1000, 0);
   if (settings['receiveHeartsOneByOne']) {
     gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), settings['mailMinWait'] * 60 * 1000, 0);

@@ -5,6 +5,13 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## Unreleased
+
+### Added
+- Allow script to repeatedly call a configurable HTTP endpoint. This allows keeping track if the script is unhealthy for
+  some time and for example react on that by restarting the virtual machine where the script runs in.
+
+
 ## [v66] - 2024-02-27
 
 ### Fixed
