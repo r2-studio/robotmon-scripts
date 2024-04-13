@@ -25,9 +25,17 @@
 </body>
 
 <script>
+  var SCRIPT_VERSION_CODE = "15.52";
+  var UPDATE_PART = {
+    zh_TW: "修正可以選擇的聯賽年份, 遊戲版本的畫面更新",
+    en: "league year options, image match update of the game version",
+  };
+  var MIN_YEAR = 2024;
+  var GAME_VERSION = "24 9.0.3";
+
   var selections = {
     package: "com.r2studio.MLB9InningsBasic",
-    versionCode: "15.51",
+    versionCode: SCRIPT_VERSION_CODE,
     languages: ["zh_TW", "en"],
     title: "MLB9 Innings (basic)",
     settings: [
@@ -56,8 +64,8 @@
       {
         type: "text",
         titlei18n: {
-          zh_TW: "適用於 MLB9Innings 23 8.0.8",
-          en: "for MLB9Innings 23 8.0.8",
+          zh_TW: "適用於 MLB9Innings " + GAME_VERSION,
+          en: "for MLB9Innings " + GAME_VERSION,
         },
       },
       {
@@ -71,8 +79,8 @@
       {
         type: "text",
         titlei18n: {
-          zh_TW: "*本次更新： 修正遊戲版本的畫面更新",
-          en: "*updated: image match update of the game version",
+          zh_TW: "*本次更新： " + UPDATE_PART.zh_TW,
+          en: "*updated: " + UPDATE_PART.en,
         },
       },
       {
@@ -98,19 +106,19 @@
       {
         type: "number",
         titlei18n: { zh_TW: "聯賽年份選擇", en: "League year selection" },
-        default: 2023,
-        min: 2023,
-        max: 2033,
+        default: MIN_YEAR,
+        min: MIN_YEAR,
+        max: MIN_YEAR + 14,
         step: 1,
         key: "leagueYear",
-        value: 2023,
+        value: MIN_YEAR,
       },
     ],
   };
 
   var config = {
     leagueSeasonMode: "full", // half, quarter, postSeason
-    leagueYear: 2023,
+    leagueYear: MIN_YEAR + 0,
     isCloud: false,
   };
   simplesettings.render("#app", selections, function (c) {
