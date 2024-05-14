@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 65;
+var VERSION = 66;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -304,6 +304,21 @@ var settings = [
             step: 10,
             max: 500,
             min: 0
+        },
+        {
+            key: 'noSkillLastFeverSec',
+            title: 'No skill last fever seconds',
+            title_zh_TW: '无技能最后发烧秒',
+            default: 0,
+            step: 1,
+            max: 10,
+            min: 0
+        },
+        {
+            key: 'claimAllWithoutCoins',
+            title: 'Claim All old mails',
+            title_zh_TW: '认领所有旧邮件',
+            default: false
         }
     ]
 ];
@@ -560,12 +575,16 @@ function genSettings(jContainer, settings) {
 // noinspection JSUnusedGlobalSymbols
 function onEvent(eventType) {
     if (eventType === 'OnPlayClick') {
+        // close settings by hiding and showing menu
+        JavaScriptInterface.hideMenu();
+        JavaScriptInterface.showMenu();
         var startCommand = genStartCommand(settings);
         JavaScriptInterface.runScript(startCommand);
     } else if (eventType === 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
     } else if (eventType === 'OnSettingClick') {
-        // refreshRecord();
+        // stop script as it would now tap on the settings page
+        JavaScriptInterface.runScript('stop();');
     }
 }
 
@@ -753,4 +772,7 @@ $(function ($) {
         $("#genTableResult").html(i18n("请稍等...", "Please wait..."));
         JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
     });
+
+    // convenience preparations of Robotmon control panel
+    JavaScriptInterface.showMenu();
 });

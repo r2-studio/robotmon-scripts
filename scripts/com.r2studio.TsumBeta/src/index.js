@@ -1,7 +1,5 @@
 "use strict";
 
-var DEBUG_LOGS = false;
-
 function TaskController(){this.tasks={},this.isRunning=!1,this.interval=200}TaskController.prototype.getFirstPriorityTaskName=function(){var t=null,n=Date.now();for(var s in this.tasks){var i=this.tasks[s];n-i.lastRunTime<i.interval||(null!==t?i.priority<t.priority?t=i:i.interval>t.interval?t=i:i.lastRunTime<t.lastRunTime&&(t=i):t=i)}return null===t?"":t.name},TaskController.prototype.loop=function(){for(console.log("loop start");this.isRunning;){var t=this.getFirstPriorityTaskName(),n=this.tasks[t];void 0!==n&&(n.run(),n.lastRunTime=Date.now(),n.runTimes--,0===n.runTimes&&delete this.tasks[t]),sleep(this.interval)}this.isRunning=!1,console.log("loop stop")},TaskController.prototype.updateRunInterval=function(t){t<this.interval&&t>=50&&(this.interval=t)},TaskController.prototype.newTaskObject=function(t,n,s,i,o){return{name:t,run:n,interval:s||1e3,runTimes:i||0,priority:o,lastRunTime:0,status:0}},TaskController.prototype.newTask=function(t,n,s,i,o){if(void 0===o&&(o=!1),"function"==typeof n){var e=this.newTaskObject(t,n,s,i,0);o&&(e.lastRunTime=Date.now()),this.updateRunInterval(e.interval);var r="system_newTask_"+t,a=this.newTaskObject(r,function(){this.tasks[t]=e}.bind(this),0,1,-20);return this.tasks[r]=a,e}console.log("Error not a function",t,n)},TaskController.prototype.removeTask=function(t){var n="system_removeTask_"+Date.now().toString(),s=this.newTaskObject(n,function(){delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[n]=s},TaskController.prototype.removeAllTasks=function(){var t="system_removeAllTask_"+Date.now().toString(),n=this.newTaskObject(t,function(){for(var t in this.tasks)delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[t]=n},TaskController.prototype.start=function(){this.isRunning||(this.isRunning=!0,this.loop())},TaskController.prototype.stop=function(){this.isRunning&&(this.isRunning=!1,console.log("wait loop stop..."))};
 
 var ts;
@@ -27,7 +25,7 @@ function nowTime() {
 }
 
 function debug() {
-  if (DEBUG_LOGS) {
+  if (Config.debugLogs) {
     var argsArray = Array.prototype.slice.call(arguments);
     var newArgs = ['*DEBUG*'].concat(argsArray);
     log.apply(null, newArgs);
@@ -56,7 +54,12 @@ function log() {
   }
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
-      arguments[i] = JSON.stringify(arguments[i]);
+      arguments[i] = JSON.stringify(arguments[i], null, 2);
+    } else if (typeof arguments[i] == 'function') {
+      if (Config.debugLogs)
+        arguments[i] = arguments[i]();
+      else
+        arguments[i] = "";
     }
     args.push(arguments[i]);
   }
@@ -72,7 +75,8 @@ var Config = {
   tsumBoundH: 13,
   screenResize: 200,
   gameContinueDelay: 400,
-  colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]]
+  colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
+  debugLogs: false
 };
 
 // Definitions assuming screen resolution of 1080 * 1920
@@ -105,9 +109,9 @@ var Button = {
   outReceiveOne: {x: 840, y: 569, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
   outReceiveOneRuby: {x: 295, y: 651, color: {r: 224, g: 93, b: 101}}, // ruby
-  outReceiveOneRuby2th: {x: 295, y: 651+68*3, color: {r: 235, g: 93, b: 105}}, // ruby
-  outReceiveOneAd: { x: 290, y: 812 - 140, color: { r: 90, g: 57, b: 25 } }, // ad
-  outReceiveOneAd2th: { x: 290, y: 672+68*3, color: { r: 90, g: 57, b: 25 } }, // ad
+  outReceiveOneRuby2th: {x: 295, y: 855, color: {r: 235, g: 93, b: 105}}, // ruby
+  outReceiveOneAd: { x: 290, y: 672, color: { r: 90, g: 57, b: 25 } }, // ad
+  outReceiveOneAd2th: { x: 290, y: 876, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveTimeout: {x: 600, y: 1092, color: {"a":0,"b":11,"g":171,"r":235}},
   outSendHeartTop: {x: 910, y: 502},
   outSendHeart0: {x: 910, y: 698, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -136,6 +140,34 @@ var Button = {
   outTsumCollectionOrderBySkill: {name: 'By Skill', x: 310, y: 988, r: 247, g: 174, b: 8},
   outTsumCollectionOrderByLevelLock: {name: 'By Level Lock', x: 766, y: 984, r: 247, g: 174, b: 8},
   outTsumCollectionDoUnlock: {x: 111, y: 760, r: 173, g: 109, b: 57}
+};
+
+var AbstractPage = {
+  TsumStore: {
+    colorsTwoBoxTypes: [
+      {x: 270, y: 920, r: 22, g: 125, b: 65, match: true, threshold: 30},  // green ribbon of happy box on left button
+      {x: 150, y: 750, r: 247, g: 189, b: 8, match: true, threshold: 30},  // yellow button happy box top left
+      {x: 460, y: 760, r: 247, g: 187, b: 8, match: true, threshold: 30},  // yellow button happy box top right
+      {x: 818, y: 862, r: 242, g: 90, b: 121, match: true, threshold: 30}, // red premium box on right button
+      {x: 590, y: 810, r: 240, g: 178, b: 8, match: true, threshold: 30},  // yellow button premium box top left
+      {x: 950, y: 980, r: 238, g: 173, b: 8, match: true, threshold: 30}   // right side of premium box button
+    ],
+    colorsThreeBoxTypes: [
+      {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
+      {x: 150, y: 750, r: 247, g: 184, b: 8, match: true, threshold: 30}, // yellow button happy box top left
+      {x: 460, y: 760, r: 247, g: 130, b: 8, match: true, threshold: 30}, // orange select box button
+      {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
+      {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
+      {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}  // right side of premium box button
+    ],
+    colorsNoMissionPage: [
+      {x: 170, y: 1580, r: 49, g: 40, b: 0, match: true, threshold: 30}   // left bottom modal button
+    ],
+    next: {x: 632, y: 1066},            // buy select / premium box button
+    backNoMission: {x: 530, y: 1650},   // close button
+    backWithMission: {x: 190, y: 1650}  // close button
+
+  }
 };
 
 var Page = {
@@ -349,61 +381,42 @@ var Page = {
 
     ],
     lockIcons: [
-      {x: 196, y: 1195, r: 239, g: 247, b: 255},
-      {x: 429, y: 1195, r: 239, g: 247, b: 255},
-      {x: 663, y: 1195, r: 239, g: 247, b: 255},
-      {x: 898, y: 1195, r: 239, g: 247, b: 255},
-      {x: 196, y: 1450, r: 239, g: 247, b: 255},
-      {x: 429, y: 1450, r: 239, g: 247, b: 255},
-      {x: 663, y: 1450, r: 239, g: 247, b: 255},
-      {x: 898, y: 1450, r: 239, g: 247, b: 255}
+      {x: 196, y: 1195, r: 236, g: 245, b: 254},
+      {x: 430, y: 1195, r: 234, g: 244, b: 253},
+      {x: 665, y: 1195, r: 237, g: 246, b: 253},
+      {x: 900, y: 1195, r: 236, g: 246, b: 254},
+      {x: 196, y: 1450, r: 236, g: 245, b: 254},
+      {x: 430, y: 1450, r: 235, g: 244, b: 253},
+      {x: 665, y: 1450, r: 237, g: 246, b: 254},
+      {x: 900, y: 1450, r: 236, g: 246, b: 254}
     ],
     back: {x: 176, y: 1592},
     next: {x: 176, y: 1592},
     store: {x: 910, y: 1592}
   },
-  TsumTsumStorePageNoMission: {
-    // only happyness and premium boxes available
+  TsumTsumStorePageTwoBoxesNoMission: {
     name: 'TsumTsumStorePage',
-    colors: [
-      {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
-      {x: 150, y: 750, r: 247, g: 184, b: 8, match: true, threshold: 30}, // yellow button happy box top left
-      {x: 460, y: 760, r: 247, g: 130, b: 8, match: true, threshold: 30}, // orange select box button
-      {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
-      {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
-      {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}, // right side of premium box button
-      {x: 159, y: 1566, r: 49, g: 40, b: 0, match: true, threshold: 30}   // left bottom modal button
-    ],
-    back: {x: 530, y: 1650},  // close button
-    next: {x: 632, y: 1066}   // buy premium box button
+    colors: AbstractPage.TsumStore.colorsTwoBoxTypes.concat(AbstractPage.TsumStore.colorsNoMissionPage),
+    back: AbstractPage.TsumStore.backNoMission,
+    next: AbstractPage.TsumStore.next
   },
-  TsumTsumStoreSelectBoxPage: {
-    // select box available
+  TsumTsumStorePageThreeBoxesNoMission: {
     name: 'TsumTsumStorePage',
-    colors: [
-      {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
-      {x: 150, y: 750, r: 247, g: 184, b: 8, match: true, threshold: 30}, // yellow button happy box top left
-      {x: 460, y: 760, r: 247, g: 130, b: 8, match: true, threshold: 30}, // orange select box button
-      {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
-      {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
-      {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}  // right side of premium box button
-    ],
-    back: {x: 190, y: 1655},  // close button
-    next: {x: 632, y: 1066}   // buy select box button
+    colors: AbstractPage.TsumStore.colorsThreeBoxTypes.concat(AbstractPage.TsumStore.colorsNoMissionPage),
+    back: AbstractPage.TsumStore.backNoMission,
+    next: AbstractPage.TsumStore.next
   },
-  TsumTsumStorePage: {
-    // only happyness and premium boxes available
+  TsumTsumStorePageThreeBoxesWithMission: {
     name: 'TsumTsumStorePage',
-    colors: [
-      {x: 276, y: 944, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
-      {x: 151, y: 752, r: 247, g: 191, b: 8, match: true, threshold: 30}, // yellow button happy box top left
-      {x: 542, y: 964, r: 57, g: 95, b: 148, match: true, threshold: 30}, // blue space between happy box and premium box
-      {x: 787, y: 939, r: 181, g: 18, b: 0, match: true, threshold: 30},  // red premium box on right button
-      {x: 614, y: 763, r: 247, g: 187, b: 8, match: true, threshold: 30}, // yellow button premium box top left
-      {x: 943, y: 1004, r: 247, g: 174, b: 8, match: true, threshold: 30} // right side of premium box button
-    ],
-    back: {x: 190, y: 1650},  // close button
-    next: {x: 632, y: 1066}   // buy premium box button
+    colors: AbstractPage.TsumStore.colorsThreeBoxTypes,
+    back: AbstractPage.TsumStore.backWithMission,
+    next: AbstractPage.TsumStore.next
+  },
+  TsumTsumStorePageTwoBoxesWithMission: {
+    name: 'TsumTsumStorePage',
+    colors: AbstractPage.TsumStore.colorsTwoBoxTypes,
+    back: AbstractPage.TsumStore.backWithMission,
+    next: AbstractPage.TsumStore.next
   },
   ConfirmPurchaseBoxPage: {
     name: 'ConfirmPurchasePage',
@@ -595,6 +608,19 @@ var Page = {
     back: {x: 885, y: 1150},
     next: {x: 885, y: 1150}
   },
+  RootDetectionSamsungA20En: {
+    name: 'RootDetectionSamsungA20En',
+    colors: [
+      {x: 60, y: 440, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 50, y: 440, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 60, y: 430, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 1020, y: 1310, r: 255 , g: 255, b: 255, match: true, threshold: 25},
+      {x: 1020, y: 1320, r: 255 , g: 255, b: 255, match: false, threshold: 25},
+      {x: 1010, y: 1325, r: 255 , g: 255, b: 255, match: false, threshold: 25}
+    ],
+    back: {x: 850, y: 1230},
+    next: {x: 850, y: 1230}
+  },
   MagicalTime: {
     name: 'MagicalTime',
     colors: [
@@ -648,7 +674,10 @@ var Page = {
   HighScore: {
     name: 'HighScore',
     colors: [
-      {x: 576, y: 1325, r: 238, g: 187, b: 10, match: true, threshold: 80}
+      {x: 576, y: 1325, r: 238, g: 187, b:  10, match: true, threshold: 80}, // top yellow of close button
+      {x: 576, y: 1082, r:  33, g: 194, b: 231, match: true, threshold: 80}, // bottom light blue of highscore cell
+      {x: 576, y:  762, r:  33, g: 194, b: 231, match: true, threshold: 80}, // top light blue of highscore cell
+      {x: 576, y:  820, r:  64, g: 109, b: 171, match: true, threshold: 80}  // inner dark blue of highscore cell
     ],
     back: {x: 576, y: 1325},
     next: {x: 576, y: 1325}
@@ -668,6 +697,52 @@ var Page = {
     ],
     back: {x: 176, y: 1592},
     next: {x: 176, y: 1592}
+  },
+  ReceiveSkillTicket: {
+    name: 'ReceiveSkillTicket',
+    colors: [
+      {x: 405, y: 806, r: 240, g: 155, b: 20, match: true, threshold: 80},
+      {x: 488, y: 839, r: 244, g: 164, b: 23, match: true, threshold: 80},
+      {x: 502, y: 821, r: 255, g: 255, b: 255, match: true, threshold: 40},
+      {x: 390, y: 824, r: 58, g: 92, b: 142, match: true, threshold: 80},
+      {x: 522, y: 812, r: 60, g: 95, b: 147, match: true, threshold: 80},
+      {x: 874, y: 1098, r: 238, g: 174, b: 8, match: true, threshold: 80},
+      {x: 198, y: 1095, r: 239, g: 174, b: 8, match: true, threshold: 80},
+      {x: 160, y: 1545, r: 0, g: 4, b: 8, match: true, threshold: 80},
+      {x: 526, y: 553, r: 33, g: 195, b: 231, match: true, threshold: 80}
+    ],
+    back: {x: 198, y: 1095},
+    next: {x: 874, y: 1098}
+  },
+  ReceivePremiumTicket: {
+    name: 'ReceivePremiumTicket',
+    colors: [
+      {x: 405, y: 806, r: 216, g: 20, b: 25, match: true, threshold: 80},
+      {x: 488, y: 839, r: 208, g: 20, b: 23, match: true, threshold: 80},
+      {x: 502, y: 821, r: 255, g: 247, b: 181, match: true, threshold: 40},
+      {x: 390, y: 824, r: 58, g: 92, b: 142, match: true, threshold: 80},
+      {x: 522, y: 812, r: 60, g: 95, b: 147, match: true, threshold: 80},
+      {x: 874, y: 1098, r: 238, g: 174, b: 8, match: true, threshold: 80},
+      {x: 198, y: 1095, r: 239, g: 174, b: 8, match: true, threshold: 80},
+      {x: 160, y: 1545, r: 0, g: 4, b: 8, match: true, threshold: 80},
+      {x: 526, y: 553, r: 33, g: 195, b: 231, match: true, threshold: 80}
+    ],
+    back: {x: 198, y: 1095},
+    next: {x: 874, y: 1098}
+  },
+  ReceiveHeartWithoutCoins: {
+    name: 'ReceiveHeartWithoutCoins',
+    colors: [
+      {x: 360, y: 570, r: 33, g: 198, b: 233, match: true, threshold: 30},
+      {x: 400, y: 620, r: 61, g: 94, b: 147, match: true, threshold: 30},
+      {x: 460, y: 820, r: 222, g: 61, b: 148, match: true, threshold: 30},
+      {x: 420, y: 1100, r: 238, g: 174, b: 8, match: true, threshold: 30},
+      {x: 860, y: 1100, r: 238, g: 174, b: 8, match: true, threshold: 30},
+      {x: 540, y: 1100, r: 58, g: 94, b: 146, match: true, threshold: 30},
+      {x: 550, y: 1600, r: 49, g: 36, b: 0, match: true, threshold: 30}
+    ],
+    back: {x: 420, y: 1100},
+    next: {x: 860, y: 1100}
   }
 };
 
@@ -944,8 +1019,10 @@ function findTsums(img) {
     results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
   }
 
-  // saveImage(mask, getStoragePath() + "/tmp/mask-" + Date.now() + ".jpg");
-  // saveImage(hsvImg, getStoragePath() + "/tmp/hsvImg-" + Date.now() + ".jpg");
+  if (ts.debug) {
+    saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
+    saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
+  }
 
   releaseImage(mask);
   releaseImage(hsvImg);
@@ -1035,6 +1112,7 @@ function Tsum(isJP, detect, logs) {
   this.myTsum = '';
   this.storagePath = getStoragePath();
   // screen size config
+  /** @type {{width: number, height: number}}  */
   var size = getScreenSize();
   this.originScreenWidth = size.width;
   this.originScreenHeight = size.height;
@@ -1044,7 +1122,7 @@ function Tsum(isJP, detect, logs) {
   this.gameOffsetY = 0;
   this.gameHeight = 0;
   this.gameWidth = 0;
-  this.resizeRatio = 3;
+  this.resizeRatio = Math.max(1, this.screenWidth / 360); // normalize page screenshots to 360px width
   this.captureGameRatio = 0;
   // playing game screen size config
   this.playOffsetX = 0;
@@ -1087,6 +1165,8 @@ function Tsum(isJP, detect, logs) {
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
   this.autobuyBoxes = 0;
+  this.noSkillLastFeverSec = 0;
+  this.claimAllWithoutCoins = false;
   this.init(detect);
 }
 
@@ -1170,20 +1250,24 @@ Tsum.prototype.isAppOn = function() {
   return packageName.indexOf('LGTMTM') !== -1;
 };
 
-Tsum.prototype.startApp = function() {
-  if (!this.autoLaunch) {
-    return;
-  }
-  log(this.logs.startTsumTsumApp);
-  this.isStartupPhase = true;
+function startTsumTsumApp(isJP) {
   var packageName;
-  if (this.isJP) {
+  if (isJP) {
     packageName = 'com.linecorp.LGTMTM';
   } else {
     packageName = 'com.linecorp.LGTMTMG';
   }
   execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
       ' am start --activity-single-top -n ' + packageName + '/com.linecorp.LGTMTM.TsumTsum');
+}
+
+Tsum.prototype.startApp = function() {
+  if (!this.autoLaunch) {
+    return;
+  }
+  log(this.logs.startTsumTsumApp);
+  this.isStartupPhase = true;
+  startTsumTsumApp(this.isJP);
   this.sleep(10000);
   log("TsumTsum app starting.");
 }
@@ -1200,7 +1284,7 @@ Tsum.prototype.screenshot = function() {
   );
 }
 
-Tsum.prototype.playScreenshot = function() {
+Tsum.prototype.playScreenshotSquare = function() {
   return getScreenshotModify(
     this.playOffsetX,
     this.playOffsetY,
@@ -1288,7 +1372,9 @@ Tsum.prototype.link = function(paths) {
   var isBubble = false;
   for (var i in paths) {
     var path = paths[i];
-    if (path.length >= 7) {
+    // >= 7 should be correct, but practically the real chain is always shorter
+    // so using a bigger value than theoretically correct
+    if (path.length >= 12) {
       isBubble = true;
     }
     this.linkTsums(path);
@@ -1308,9 +1394,10 @@ Tsum.prototype.findPageObject = function(times, timeout) {
       for (var key in Page) {
         page = Page[key];
         currentPage = null;
-        for (var i = 0; i < page.colors.length; i++) {
-          var diff = absColor(page.colors[i], this.getColor(img, page.colors[i]));
-          if ((diff < page.colors[i].threshold) === page.colors[i].match) {
+        var pageColors = page.colors || [];
+        for (var i = 0; i < pageColors.length; i++) {
+          var diff = absColor(pageColors[i], this.getColor(img, pageColors[i]));
+          if ((diff < pageColors[i].threshold) === pageColors[i].match) {
             currentPage = page;
           } else {
             currentPage = null;
@@ -1337,6 +1424,36 @@ Tsum.prototype.findPageObject = function(times, timeout) {
 Tsum.prototype.findPage = function(times, timeout) {
   var page = this.findPageObject(times, timeout);
   return page != null ? page.name : 'unknown';
+}
+
+Tsum.prototype.matchesPage = function (pageName) {
+  var found = false;
+  var img = null;
+  for (var pageId in Page) {
+    var page = Page[pageId];
+    if (pageName === page.name) {
+      if (img == null) {
+        // lazy init only if page exists
+        img = this.screenshot();
+      }
+      var colors = page.colors || [];
+      found = false;
+      for (var i = 0; i < colors.length; i++) {
+        var color = colors[i];
+        found = isSameColor(this.getColor(img, color), color, 20);
+        if (!found) {
+          break;  // try next page
+        }
+      }
+      if (found)
+        break;  // exit search
+    }
+  }
+  if (img != null) {
+    releaseImage(img);
+  }
+  debug("*** Found", pageName, "=", found);
+  return found;
 }
 
 Tsum.prototype.exitUnknownPage = function() {
@@ -1501,7 +1618,7 @@ Tsum.prototype.goTsumsPage = function() {
 }
 
 Tsum.prototype.goTsumTsumStorePage = function() {
-  while (this.isRunning) {
+  if (this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
     }
@@ -1519,22 +1636,22 @@ Tsum.prototype.goTsumTsumStorePage = function() {
 }
 
 Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
-  if (startDelay !== undefined) {
+  if (typeof startDelay === 'number' && startDelay > 0) {
     this.sleep(startDelay);
   }
 
   var fy = Button.gameBubblesFrom.y;
-  if (fromY !== undefined) {
+  if (typeof fromY == 'number') {
     fy = fromY;
   }
 
-  for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
-    for (var by = fy; by <= Button.gameBubblesTo.y; by += 140) {
+  for (var by = fy; by <= Button.gameBubblesTo.y; by += 140) {
+    for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
       this.tap({x: bx, y: by}, 10);
     }
   }
 
-  if (endDelay !== undefined) {
+  if (typeof endDelay === 'number' && endDelay > 0) {
     this.sleep(endDelay);
   }
 }
@@ -1596,6 +1713,35 @@ Tsum.prototype.useSkill = function(board) {
     } else {
       return false;
     }
+  }
+  if (this.noSkillLastFeverSec > 0) {
+    var feverAlmostOver = null;
+    do {
+      if (feverAlmostOver) {
+        this.sleep(100);
+      }
+      feverAlmostOver = (function (tsum) {
+        // skip skill activation if fever and fever almost over and enough seconds remaining
+        var img = tsum.screenshot();
+        var fever1 = isSameColor(tsum.getColor(img, {x: 340, y: 310}), {r: 0, g: 40, b: 49}, 80);
+        var feverRingLeft = rgb2hsv(tsum.getColor(img, {x: 332, y: 1666}));
+        var feverRingRight = rgb2hsv(tsum.getColor(img, {x: 746, y: 1666}));
+        var hueDifference = Math.min(
+            Math.abs(feverRingLeft.h - feverRingRight.h),
+            360 - Math.abs(feverRingLeft.h - feverRingRight.h));
+        var fever2 = hueDifference > 20;
+        var feverStartColorHsv = rgb2hsv(tsum.getColor(img, {x: 345, y: 1670}));
+        var offsetX = Math.floor((733 - 345) * tsum.noSkillLastFeverSec / 10);
+        var feverEndColorHsv = rgb2hsv(tsum.getColor(img, {x: 345 + offsetX, y: 1670}));
+        var feverAlmostOver = feverEndColorHsv.v < 90 || Math.abs(feverStartColorHsv.v - feverEndColorHsv.v) > 10;
+        var remainingTimeColor = tsum.getColor(img, {x: 155, y: 190});
+        var fewSecondsLeftColor = tsum.getColor(img, {x: 144, y: 195});
+        var enoughSecondsRemaining = isSameColor(remainingTimeColor, fewSecondsLeftColor, 60);
+        releaseImage(img);
+        // debug({fever1: fever1, fever2: fever2, almostOver: feverAlmostOver, enoughTime: enoughSecondsRemaining});
+        return fever1 && fever2 && feverAlmostOver && enoughSecondsRemaining;
+      })(this);
+    } while (feverAlmostOver);
   }
   log(this.logs.useSkill);
   if (this.skillType === 'block_lukej_s') {
@@ -1671,32 +1817,71 @@ Tsum.prototype.useSkill = function(board) {
     }
     this.tapUp({x: 980, y: 960}, 20);
   } else if (this.skillType === 'block_cabbage_mickey_s') {
-    this.sleep(3500);
+    // wait for all cabbages being placed
+    this.sleep(3300);
     // find mickey in cabbage
-    var colorMickeyFace = {r: 255, g: 225, b: 210};
+    var colorMickeyFace = {r: 245, g: 225, b: 210};
     var startTime = Date.now();
-    img = this.screenshot();
     var foundMickey = false;
     var maybeMickey = null;
     var color = null;
-    for (var y = 720; y < 1380 && !foundMickey; y += 25) {
-      for (var x = 120; x < 1000 && !foundMickey; x +=60) {
-        maybeMickey = {x: x, y: y};
-        color = this.getColor(img, maybeMickey);
-        foundMickey |= isSameColor(colorMickeyFace, color, 15);
+    var maxTries = 5;
+    for (var tries = 1; tries <= maxTries && !foundMickey; tries++) {
+      this.sleep(100);
+      img = this.screenshot();
+      smooth(img, 2, 5);
+      for (var y = 720; y < 1380 && !foundMickey; y += 25) {
+        for (var x = 120; x < 1000 && !foundMickey; x +=60) {
+          maybeMickey = {x: x, y: y};
+          color = this.getColor(img, maybeMickey);
+          // if (color.r >= 140)
+          //   color.r = 255;
+          foundMickey |= isSameColor(colorMickeyFace, color, 20);
+          if (foundMickey) {
+            var up, down, left, right;
+            up = down = left = right = maybeMickey;
+            up.y -= 10;
+            down.y += 10;
+            left.x -= 10;
+            right.x += 10;
+            foundMickey = (
+                    isSameColor(colorMickeyFace, this.getColor(img, up), 20)
+                    || isSameColor(colorMickeyFace, this.getColor(img, down), 20))
+                && (
+                    isSameColor(colorMickeyFace, this.getColor(img, left), 20)
+                    || isSameColor(colorMickeyFace, this.getColor(img, right), 20));
+          }
+          if (this.debug) {
+            // logical width is 1080, screenshot usually 360, so reduce xy by factor 3
+            drawCircle(img, x / 3, y / 3, 4, foundMickey ? 0 : 255, foundMickey ? 255 : 0, 0, 0);
+          }
+        }
       }
+      if (!foundMickey) {
+        debug("*** Didn't find Mickey! ***", function () {
+          if (ts.debug) {
+            saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey_not_found-" + ts.runTimes + "-" + tries + ".jpg");
+            return "Saved screenshot";
+          } else {
+            return "";
+          }
+        });
+      } else {
+        if (this.debug) {
+          saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey-" + ts.runTimes + "-" + tries + ".jpg");
+        }
+      }
+      releaseImage(img);
     }
     if (foundMickey && maybeMickey != null) {
       debug("Found mickey at position", maybeMickey, "with color", color, "in", Date.now() - startTime, "ms.");
       var tapXY = {x: maybeMickey.x + 15, y: maybeMickey.y + 15};
-      this.tap(tapXY, 100);
+      for (i = 0; i < 10; i++)
+        this.tap(tapXY);
       this.sleep(1000);
     } else {
-      log("*** Didn't find Mickey! ***");
-      saveImage(img, this.storagePath + "/tmp/boardImg-cabbageMickey_not_found-" + Date.now() + ".jpg");
       this.clearAllBubbles();
     }
-    releaseImage(img);
   }
   else {
     this.sleep(this.skillInterval);
@@ -1707,7 +1892,7 @@ Tsum.prototype.useSkill = function(board) {
 Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
-  var srcImg = this.playScreenshot();
+  var srcImg = this.playScreenshotSquare();
 
   if (this.isPause) {
     this.tap(Button.gamePause);
@@ -1734,7 +1919,7 @@ Tsum.prototype.scanBoardQuick = function() {
     }
   }
   if (this.debug) {
-    saveImage(srcImg, this.storagePath + "/tmp/boardImg-" + this.runTimes + ".jpg");
+    saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
   }
   releaseImage(srcImg);
   log(this.logs.recognizedTsums, board.length);
@@ -1787,7 +1972,8 @@ Tsum.prototype.taskPlayGameQuick = function() {
     if (this.clearBubbles && clearBubbles >= 2) {
       log(this.logs.clearBubbles);
       clearBubbles = 0;
-      this.clearAllBubbles();
+      // only clearing lower area in order to speed up the cleaning process
+      this.clearAllBubbles(0, 0, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
     }
     if (this.useFan && this.runTimes % 4 === 3) {
       this.tap(Button.gameRand, 60);
@@ -1818,6 +2004,8 @@ Tsum.prototype.taskPlayGameQuick = function() {
 }
 
 Tsum.prototype.taskReceiveAllItems = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   log(this.logs.friendsPage);
   this.goFriendPage();
   this.sleep(1000);
@@ -1931,18 +2119,33 @@ Tsum.prototype.clear = function() {
 }
 
 Tsum.prototype.skipAd = function () {
-  log("Ignore Ad");
   this.tap(Button.outReceiveOne);
-  this.sleep(4000);
-  // delete ad
-  this.tap({ x: 462, y: 1235 - 140 });
-  this.sleep(4000);
-  this.tap({ x: 172, y: 1360 - 140 });
-  this.sleep(2000);
-  this.tap({ x: 556, y: 1557 - 140 });
+  this.sleep(1000);
+  // also gets called for skill and premium tickets, so check we really have an ad!!!
+  if (this.matchesPage('ReceiveSkillTicket') || this.matchesPage('ReceivePremiumTicket')) {
+    // mcs: I improved ad detection here because I don't get ad mails. So I cannot improve detection in list view
+    log("Receive ticket");
+    this.tap(Button.outReceiveOk);
+  } else {
+    log("Ignore Ad");
+    if (Config.debugLogs) {
+      var img = this.screenshot();
+      saveImage(img, this.storagePath + "/tmp/" + this.runTimes + "-detectedAd.jpg");
+      releaseImage(img);
+    }
+    this.sleep(4000);
+    // delete ad
+    this.tap({ x: 462, y: 1095});
+    this.sleep(4000);
+    this.tap({ x: 172, y: 1220});
+    this.sleep(2000);
+    this.tap({ x: 556, y: 1417});
+  }
 }
 
 Tsum.prototype.taskReceiveOneItem = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   log(this.logs.friendsPage);
   this.goFriendPage();
   this.sleep(1000)
@@ -1956,7 +2159,9 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var sender = undefined;
   var receiveTime = Date.now();
   var timeoutCounter = 0;
-  while (this.isRunning && timeoutCounter < 100) {
+  var maxTimeoutCount = 100;
+  var receivedHeartWithoutCoins = 0;
+  while (this.isRunning && timeoutCounter < maxTimeoutCount) {
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
@@ -1965,6 +2170,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
     var isOk2 = isSameColor(Button.outReceiveItemSetOk.color, this.getColor(img, Button.outReceiveItemSetOk), 35);
     var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
+    var isHeartWithoutCoins = this.matchesPage('ReceiveHeartWithoutCoins');
     debug({
       isItem: isItem, isRuby: isRuby, isNonItem: isNonItem, isAd: isAd, isOk: isOk,
       isTimeout: isTimeout, timeoutCounter: timeoutCounter
@@ -1977,7 +2183,28 @@ Tsum.prototype.taskReceiveOneItem = function() {
         this.sleep(2000);
         continue;
       }
-      if (!this.keepRuby || !isRuby) {
+      if (receivedHeartWithoutCoins > 2) {
+        if (receivedCount <= 5 + receivedHeartWithoutCoins) {
+          this.sleep(2000);
+          debug("Should receive all now");
+          this.taskReceiveAllItems();
+          this.tap(Button.outReceive);
+          this.sleep(1500);
+        }
+        debug("Closing");
+        this.tap(Button.outClose);
+        receivedHeartWithoutCoins = 0;
+        this.tap(Button.outClose);
+        this.goFriendPage();
+        this.sleep(500);
+        receivedCount = 0;
+        sender = "";
+        timeoutCounter = 0;
+        log(this.logs.checkUnreceivedGift);
+        this.sleep(500);
+        this.tap(Button.outReceive);
+        this.sleep(1500);
+      } else if (!this.keepRuby || !isRuby) {
         if (this.recordReceive) {
           img = this.screenshot();
           var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
@@ -2022,10 +2249,11 @@ Tsum.prototype.taskReceiveOneItem = function() {
       sender = undefined;
       this.sleep(600);
       timeoutCounter = 0;
+      if (this.claimAllWithoutCoins &&  isHeartWithoutCoins)
+        receivedHeartWithoutCoins++;
     } else {
-      debug("else-path", "taskReceiveOneItem");
-      this.tap(Button.outReceiveClose);
-      timeoutCounter = 0;
+      debug("fetched all so far", "taskReceiveOneItem");
+      this.tap(Button.outReceiveClose); // usual close button
     }
     this.sleep(200);
 
@@ -2053,6 +2281,21 @@ Tsum.prototype.taskReceiveOneItem = function() {
       }
     }
     timeoutCounter++;
+    if (timeoutCounter % 10 === 0) {
+      log("Timeout counter = " + timeoutCounter + " / 100");
+    }
+  }
+  if (maxTimeoutCount <= timeoutCounter) {
+    // we seem to be trapped, try to exit the trap
+    log("I'm stuck! Trying exit...");
+    this.exitUnknownPage();
+    this.sleep(1000);
+    if (this.findPage() === 'unknown') {
+      // last attempt
+      log("Still stuck! Last try...");
+      this.exitUnknownPage();
+      this.sleep(1000);
+    }
   }
 }
 
@@ -2069,6 +2312,8 @@ Tsum.prototype.friendPageGoTop = function() {
 }
 
 Tsum.prototype.taskSendHearts = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   log(this.logs.friendsPage);
   this.goFriendPage();
   log(this.logs.startSendingHearts);
@@ -2210,6 +2455,8 @@ Tsum.prototype.taskSendHearts = function() {
 }
 
 Tsum.prototype.taskAutoUnlockLevel = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   var btn;
   var i;
   var img;
@@ -2280,12 +2527,12 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
     // scroll to next page if all Tsums were locked
     if (allLocked) {
       debug("Clicking scroll button to move to next page")
-      this.tap({x: 1030, y: 1193, r: 214, g: 243, b: 255}); // arrow, scroll right to next page
+      this.tap({x: 1030, y: 1193, r: 212, g: 239, b: 246}); // arrow, scroll right to next page
       this.sleep(3000);
     }
 
     // Progress until no more locks exist
-  } while (allLocked)
+  } while (this.isRunning && allLocked)
 
 
 
@@ -2303,6 +2550,8 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
 }
 
 Tsum.prototype.taskAutoBuyBoxes = function() {
+  if (this.findPage() === 'GamePause')
+    return;
   log("Starting taskAutoBuyBoxes");
   if (this.autobuyBoxes === 0) {
     log("Nothing to do", "taskAutoBuyBoxes");
@@ -2317,7 +2566,7 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
   }
   log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
   var countUnknownPages = 0;
-  while (this.autobuyBoxes > 0) {
+  while (this.isRunning && this.autobuyBoxes > 0) {
     var page = this.findPageObject(1, 200);
     if (page != null) {
       countUnknownPages = 0;
@@ -2331,8 +2580,13 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
         log("Collected all Tsums.");
         this.autobuyBoxes = 0;
       } else if (page.name === Page.MailBox.name) {   // matches when "Buy coins for rubies" appears
-        log("Not enough coins.");
-        this.autobuyBoxes = 0;
+        // test again, sometimes falsely matched while page transition
+        this.sleep(500);
+        page = this.findPageObject(1, 200);
+        if (page.name === Page.MailBox.name) {
+          log("Not enough coins.");
+          this.autobuyBoxes = 0;
+        }
       }
       lastPage = page;
     } else {
@@ -2417,6 +2671,7 @@ Tsum.prototype.sleep = function(t) {
 function start(settings) {
   ts = new Tsum(settings['jpVersion'], settings['specialScreenRatio'], settings['langTaiwan'] ? LogsTW : Logs);
   log(ts.logs.start);
+  // startTsumTsumApp(ts.isJP);
   ts.debug = settings['debugGame'];
   if (settings['bonus5to4']) {
     ts.tsumCount = 4;
@@ -2464,8 +2719,10 @@ function start(settings) {
     };
   }
 
-  DEBUG_LOGS = settings['debugLogs'];
+  Config.debugLogs = settings['debugLogs'];
   ts.autobuyBoxes = settings['autobuyBoxes'];
+  ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
+  ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];
 
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
@@ -2497,9 +2754,9 @@ function start(settings) {
 }
 
 function stop() {
-  log(ts.logs.stop);
-  sleep(500);
   if (ts != null) {
+    log(ts.logs.stop);
+    sleep(500);
     ts.isRunning = false;
     sleep(2000);
     // loop stop here...
@@ -2507,8 +2764,8 @@ function stop() {
       ts.releaseRecord();
     }
   }
-  if (gTaskController !== undefined) {gTaskController.removeAllTasks();}
-  if (gTaskController !== undefined) {gTaskController.stop();}
+  if (gTaskController !== undefined) gTaskController.removeAllTasks();
+  if (gTaskController !== undefined) gTaskController.stop();
   ts = undefined;
 }
 
@@ -2596,4 +2853,14 @@ function getDayTimeString(d) {
 function getRecordFilename() {
   var d = new Date();
   return 'recordTable_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
+}
+
+// input: rgb in [0,255], out: h in [0,360) and s,v in [0,100]
+function rgb2hsv(rgb) {
+  var r = rgb.r / 255;
+  var g = rgb.g / 255;
+  var b = rgb.b / 255;
+  var v = Math.max(r, g, b), c = v - Math.min(r, g, b);
+  var h = c && ((v === r) ? (g - b) / c : ((v === g) ? 2 + (b - r) / c : 4 + (r - g) / c));
+  return {h: 60 * (h < 0 ? h + 6 : h), s: Math.round(v && c / v * 100), v: Math.round(v * 100)};
 }
