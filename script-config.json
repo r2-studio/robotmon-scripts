@@ -1,5 +1,21 @@
 {
   "scripts": {
+    "com.cooper.FGO": {
+      "id": "com.cooper.FGO",
+      "title": "Fate/Grand Order 日服",
+      "versionCode": 3.64,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.64 修正卡在技能確認畫面的問題<br><br>模擬器推薦使用夜神 Android 64位元 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "packageName": "com.xiaomeng.fategrandorder",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
+    },
+    "com.cooper.FGOTW": {
+      "id": "com.cooper.FGOTW",
+      "title": "Fate/Grand Order 台服",
+      "versionCode": 3.63,
+      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.63 修正新活動無法友抽的問題<br><br>模擬器推薦使用夜神 Android 64位元 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
+      "packageName": "com.xiaomeng.fategrandorder",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
+    },
     "com.r2studio.MonopolyGOFree": {
       "id": "com.r2studio.MonopolyGOFree",
       "title": "*Monopoly GO Free*",
@@ -148,22 +164,6 @@
       "description": "<div>Make the relics rain! / 自動愛心農場!</div>",
       "packageName": "com.gamehivecorp.taptitans2",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TapTitans2/index.zip"
-    },
-    "com.cooper.FGO": {
-      "id": "com.cooper.FGO",
-      "title": "Fate/Grand Order 日服",
-      "versionCode": 3.63,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.63 修正改版後有可能會卡在選擇好友畫面的問題<br><br>模擬器推薦使用夜神 Android 64位元 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
-      "packageName": "com.xiaomeng.fategrandorder",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
-    },
-    "com.cooper.FGOTW": {
-      "id": "com.cooper.FGOTW",
-      "title": "Fate/Grand Order 台服",
-      "versionCode": 3.63,
-      "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.63 修正新活動無法友抽的問題<br><br>模擬器推薦使用夜神 Android 64位元 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
-      "packageName": "com.xiaomeng.fategrandorder",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
     }
   },
   "libs": {
