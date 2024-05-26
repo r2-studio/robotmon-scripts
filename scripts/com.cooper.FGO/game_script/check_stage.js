@@ -2,6 +2,9 @@ var icon = [];
 var iconMargin = [];
 
 function setMarginIcon() {
+  if(isDebug){
+    console.log("setMarginIcon "+server);
+  }
   if (server == "TW") {
     icon["friendPointMain"] = [959, 20, 100, 90];
     icon["boxNoPoint"] = [360, 630, 195, 82];
@@ -492,14 +495,7 @@ function isFriendPointFull() {
 }
 
 function isFriendPointContinue() {
-  if (server == "TW") {
-    return checkIconListInScreen(
-      ["friendPointContinue", "friendPointContinueEvent"],
-      false
-    );
-  } else {
     return checkIconInScreen("friendPointContinue");
-  }
 }
 
 function isPresentBoxFull() {
