@@ -145,12 +145,12 @@ var Button = {
 var AbstractPage = {
   TsumStore: {
     colorsTwoBoxTypes: [
-      {x: 270, y: 920, r: 22, g: 125, b: 65, match: true, threshold: 30},  // green ribbon of happy box on left button
-      {x: 150, y: 750, r: 247, g: 189, b: 8, match: true, threshold: 30},  // yellow button happy box top left
-      {x: 460, y: 760, r: 247, g: 187, b: 8, match: true, threshold: 30},  // yellow button happy box top right
-      {x: 818, y: 862, r: 242, g: 90, b: 121, match: true, threshold: 30}, // red premium box on right button
-      {x: 590, y: 810, r: 240, g: 178, b: 8, match: true, threshold: 30},  // yellow button premium box top left
-      {x: 950, y: 980, r: 238, g: 173, b: 8, match: true, threshold: 30}   // right side of premium box button
+      {x: 270, y: 920, r:  22, g: 125, b:  65, match: true, threshold: 30}, // green ribbon of happy box on left button
+      {x: 150, y: 750, r: 247, g: 189, b:   8, match: true, threshold: 30}, // yellow button happy box top left
+      {x: 460, y: 860, r: 238, g: 178, b:  16, match: true, threshold: 30}, // yellow button happy box mid right
+      {x: 818, y: 862, r: 242, g:  90, b: 121, match: true, threshold: 30}, // red premium box on right button
+      {x: 590, y: 810, r: 240, g: 178, b:   8, match: true, threshold: 30}, // yellow button premium box top left
+      {x: 950, y: 980, r: 238, g: 173, b:   8, match: true, threshold: 30}  // right side of premium box button
     ],
     colorsThreeBoxTypes: [
       {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
