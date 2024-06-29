@@ -82,8 +82,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 66,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v66 Beta</b>\n<ul>\n    <li>修正<br>Bugfixes</li>\n    <li>小改进<br>Minor improvements</li>\n</ul>",
+      "versionCode": 67,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v67 Beta</b>\n<ul>\n    <li>检测新的国际主屏幕<br>Detect new Int'l Home screen</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
