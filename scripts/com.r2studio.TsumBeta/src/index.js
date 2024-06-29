@@ -191,7 +191,7 @@ var Page = {
     back: {x: 309, y: 1653},
     next: {x: 784, y: 1653}
   },
-  ProfilePage: {
+  ProfilePageJp: {
     name: 'ProfilePage',
     colors: [
       {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
@@ -199,8 +199,23 @@ var Page = {
       {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
       {x: 698, y:  464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // above the ranking title
       {x:  34, y: 1004, r: 247, g: 178, b:   8, match: true, threshold: 80}, // left home tab button
-      {x:  16, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
-      {x:  16, y: 1270, r:  44, g: 134, b: 233, match: true, threshold: 80}  // left square tab button
+      {x:  6, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
+      {x:  6, y: 1270, r:  44, g: 134, b: 233, match: true, threshold: 80}  // left square tab button
+    ],
+    back: {x: 31, y: 1126},
+    next: {x: 31, y: 1126},
+    tsums: {x: 900, y: 1653}
+  },
+  ProfilePageIntl: {
+    name: 'ProfilePage',
+    colors: [
+      {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1599, r: 240, g: 218, b:  72, match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y:  464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // above the ranking title
+      {x:  34, y: 1004, r: 247, g: 178, b:   8, match: true, threshold: 80}, // left home tab button
+      {x:   6, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
+      {x:   6, y: 1270, r:  52, g:  98, b: 143, match: true, threshold: 80}  // left border where in JP left square tab button is
     ],
     back: {x: 31, y: 1126},
     next: {x: 31, y: 1126},
@@ -493,11 +508,11 @@ var Page = {
   GamePause: {
     name: 'GamePause',
     colors: [
-      {x: 165, y: 1077, r: 234, g: 173, b: 7  , match: true, threshold: 80},
-      {x: 594, y: 1073, r: 233, g: 171, b: 8  , match: true, threshold: 80},
-      {x: 367, y: 774, r: 24 , g: 191, b: 225, match: true, threshold: 80},
-      {x: 738, y: 612, r: 248, g: 244, b: 245, match: true, threshold: 80},
-      {x: 550, y: 1336, r: 236, g: 182, b: 11 , match: true, threshold: 80}
+      {x: 165, y: 1077, r: 234, g: 173, b:   7, match: true, threshold: 80},
+      {x: 586, y: 1080, r: 239, g: 174, b:   7, match: true, threshold: 80},
+      {x: 367, y:  774, r:  24, g: 191, b: 225, match: true, threshold: 80},
+      {x: 738, y:  612, r: 248, g: 244, b: 245, match: true, threshold: 80},
+      {x: 550, y: 1336, r: 247, g: 185, b:   8, match: true, threshold: 80}
     ],
     back: {x: 331, y: 1080},
     next: {x: 561, y: 1422}
