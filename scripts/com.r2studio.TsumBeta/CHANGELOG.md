@@ -5,6 +5,12 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v68] - 2024-06-30
+
+### Fixed
+- "script error" when "auto play" was active and all "Wait time (min) before repeat" values were greater than 1
+
+
 ## [v67] - 2024-06-29
 
 ### Added
