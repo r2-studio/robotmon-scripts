@@ -5,6 +5,17 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v67] - 2024-06-29
+
+### Added
+- Allow script to repeatedly call a configurable HTTP endpoint. This allows keeping track if the script is unhealthy for
+  some time and for example react on that by restarting the virtual machine where the script runs in.
+
+### Fixed
+- After Int'l UI change, the new Ranking page could not be found anymore.
+- Tsum Store now also works if ads are available.
+
+
 ## [v66] - 2024-02-27
 
 ### Fixed

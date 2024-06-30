@@ -145,12 +145,12 @@ var Button = {
 var AbstractPage = {
   TsumStore: {
     colorsTwoBoxTypes: [
-      {x: 270, y: 920, r: 22, g: 125, b: 65, match: true, threshold: 30},  // green ribbon of happy box on left button
-      {x: 150, y: 750, r: 247, g: 189, b: 8, match: true, threshold: 30},  // yellow button happy box top left
-      {x: 460, y: 760, r: 247, g: 187, b: 8, match: true, threshold: 30},  // yellow button happy box top right
-      {x: 818, y: 862, r: 242, g: 90, b: 121, match: true, threshold: 30}, // red premium box on right button
-      {x: 590, y: 810, r: 240, g: 178, b: 8, match: true, threshold: 30},  // yellow button premium box top left
-      {x: 950, y: 980, r: 238, g: 173, b: 8, match: true, threshold: 30}   // right side of premium box button
+      {x: 270, y: 920, r:  22, g: 125, b:  65, match: true, threshold: 30}, // green ribbon of happy box on left button
+      {x: 150, y: 750, r: 247, g: 189, b:   8, match: true, threshold: 30}, // yellow button happy box top left
+      {x: 460, y: 860, r: 238, g: 178, b:  16, match: true, threshold: 30}, // yellow button happy box mid right
+      {x: 818, y: 862, r: 242, g:  90, b: 121, match: true, threshold: 30}, // red premium box on right button
+      {x: 590, y: 810, r: 240, g: 178, b:   8, match: true, threshold: 30}, // yellow button premium box top left
+      {x: 950, y: 980, r: 238, g: 173, b:   8, match: true, threshold: 30}  // right side of premium box button
     ],
     colorsThreeBoxTypes: [
       {x: 204, y: 920, r: 16, g: 125, b: 66, match: true, threshold: 30}, // green ribbon of happy box on left button
@@ -191,7 +191,7 @@ var Page = {
     back: {x: 309, y: 1653},
     next: {x: 784, y: 1653}
   },
-  ProfilePage: {
+  ProfilePageJp: {
     name: 'ProfilePage',
     colors: [
       {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
@@ -199,8 +199,23 @@ var Page = {
       {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
       {x: 698, y:  464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // above the ranking title
       {x:  34, y: 1004, r: 247, g: 178, b:   8, match: true, threshold: 80}, // left home tab button
-      {x:  16, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
-      {x:  16, y: 1270, r:  44, g: 134, b: 233, match: true, threshold: 80}  // left square tab button
+      {x:  6, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
+      {x:  6, y: 1270, r:  44, g: 134, b: 233, match: true, threshold: 80}  // left square tab button
+    ],
+    back: {x: 31, y: 1126},
+    next: {x: 31, y: 1126},
+    tsums: {x: 900, y: 1653}
+  },
+  ProfilePageIntl: {
+    name: 'ProfilePage',
+    colors: [
+      {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
+      {x: 187, y: 1599, r: 240, g: 218, b:  72, match: true, threshold: 80}, // top of the card button
+      {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
+      {x: 698, y:  464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // above the ranking title
+      {x:  34, y: 1004, r: 247, g: 178, b:   8, match: true, threshold: 80}, // left home tab button
+      {x:   6, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
+      {x:   6, y: 1270, r:  52, g:  98, b: 143, match: true, threshold: 80}  // left border where in JP left square tab button is
     ],
     back: {x: 31, y: 1126},
     next: {x: 31, y: 1126},
@@ -493,11 +508,11 @@ var Page = {
   GamePause: {
     name: 'GamePause',
     colors: [
-      {x: 165, y: 1077, r: 234, g: 173, b: 7  , match: true, threshold: 80},
-      {x: 594, y: 1073, r: 233, g: 171, b: 8  , match: true, threshold: 80},
-      {x: 367, y: 774, r: 24 , g: 191, b: 225, match: true, threshold: 80},
-      {x: 738, y: 612, r: 248, g: 244, b: 245, match: true, threshold: 80},
-      {x: 550, y: 1336, r: 236, g: 182, b: 11 , match: true, threshold: 80}
+      {x: 165, y: 1077, r: 234, g: 173, b:   7, match: true, threshold: 80},
+      {x: 586, y: 1080, r: 239, g: 174, b:   7, match: true, threshold: 80},
+      {x: 367, y:  774, r:  24, g: 191, b: 225, match: true, threshold: 80},
+      {x: 738, y:  612, r: 248, g: 244, b: 245, match: true, threshold: 80},
+      {x: 550, y: 1336, r: 247, g: 185, b:   8, match: true, threshold: 80}
     ],
     back: {x: 331, y: 1080},
     next: {x: 561, y: 1422}
@@ -1167,6 +1182,7 @@ function Tsum(isJP, detect, logs) {
   this.autobuyBoxes = 0;
   this.noSkillLastFeverSec = 0;
   this.claimAllWithoutCoins = false;
+  this.nextMonitorExecution = 0;
   this.init(detect);
 }
 
@@ -1938,6 +1954,7 @@ Tsum.prototype.scanBoardQuick = function() {
 }
 
 Tsum.prototype.taskPlayGameQuick = function() {
+  this.requestTsumMonitor();
   log(this.logs.gameStart);
   this.goGamePlayingPage();
   log(this.logs.fastGaming);
@@ -2006,6 +2023,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
 Tsum.prototype.taskReceiveAllItems = function() {
   if (this.findPage() === 'GamePause')
     return;
+  this.requestTsumMonitor();
   log(this.logs.friendsPage);
   this.goFriendPage();
   this.sleep(1000);
@@ -2162,6 +2180,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
   var maxTimeoutCount = 100;
   var receivedHeartWithoutCoins = 0;
   while (this.isRunning && timeoutCounter < maxTimeoutCount) {
+    this.requestTsumMonitor();
     var img = this.screenshot();
     var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
     var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
@@ -2330,6 +2349,7 @@ Tsum.prototype.taskSendHearts = function() {
   var hfy = Button.outSendHeartFrom.y - 40; // hearts from y
   var hty = Button.outSendHeartTo.y + 30;   // hearts to y
   while(this.isRunning) {
+    this.requestTsumMonitor();
     times++;
     if (times % 15 === 0) {
       debug("Ensuring friends page");
@@ -2496,6 +2516,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
 
   // check all
   do {
+    this.requestTsumMonitor();
     var allLocked = true;
     var lockIcons = Page.TsumsPage.lockIcons;
     img = this.screenshot();
@@ -2567,6 +2588,7 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
   log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
   var countUnknownPages = 0;
   while (this.isRunning && this.autobuyBoxes > 0) {
+    this.requestTsumMonitor();
     var page = this.findPageObject(1, 200);
     if (page != null) {
       countUnknownPages = 0;
@@ -2600,6 +2622,24 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
     this.sleep(500);
   }
   log("Finished taskAutoBuyBoxes");
+}
+
+Tsum.prototype.taskRequestTsumMonitor = function() {
+  this.requestTsumMonitor(true);
+}
+
+Tsum.prototype.requestTsumMonitor = function(force) {
+  var url = this.tsumMonitorUrl;
+  if (url.length === 0)
+    return;
+  if (force || this.nextMonitorExecution <= Date.now()) {
+    log("TsumMonitor - GET", url);
+    var response = httpClient('GET', url, '', {});
+    log("TsumMonitor - Response:", response);
+    this.nextMonitorExecution = Date.now() + 60 * 1000;
+  } else {
+    debug("Skipping TsumMonitor call");
+  }
 }
 
 Tsum.prototype.sendHeart = function(btn) {
@@ -2723,6 +2763,7 @@ function start(settings) {
   ts.autobuyBoxes = settings['autobuyBoxes'];
   ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
   ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];
+  ts.tsumMonitorUrl = settings['tsumMonitorUrl'] || "";
 
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
@@ -2730,6 +2771,9 @@ function start(settings) {
   }
 
   gTaskController = new TaskController();
+  if (ts.tsumMonitorUrl.length > 0) {
+    gTaskController.newTask('requestTsumMonitor', ts.taskRequestTsumMonitor.bind(ts), 30 * 1000, 0);
+  }
   gTaskController.newTask('taskAutoBuyBoxes', ts.taskAutoBuyBoxes.bind(ts), 60 * 1000, 0);
   if (settings['receiveHeartsOneByOne']) {
     gTaskController.newTask('receiveOneItem', ts.taskReceiveOneItem.bind(ts), settings['mailMinWait'] * 60 * 1000, 0);

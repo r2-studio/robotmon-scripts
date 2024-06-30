@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 66;
+var VERSION = 67;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -319,6 +319,12 @@ var settings = [
             title: 'Claim All old mails',
             title_zh_TW: '认领所有旧邮件',
             default: false
+        },
+        {
+            key: 'tsumMonitorUrl',
+            title: 'URL to Tsum Monitor',
+            title_zh_TW: '链接到 Tsum 监视器',
+            default: ""
         }
     ]
 ];
