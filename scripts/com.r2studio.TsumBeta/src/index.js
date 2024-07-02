@@ -1573,10 +1573,11 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
-    var page = this.findPage(2, 2000);
+    var pageObj = this.findPageObject(2, 2000);
+    var page = pageObj != null ? pageObj.name : "unknown";
     log(this.logs.currentPage, page, "play");
     if (page === 'FriendPage') {
-      this.tap(Page[page].next);
+      this.tap(pageObj.next);
       this.sleep(3000);
     } else if (page === 'StartPage') {
       this.sleep(500);
@@ -1591,7 +1592,7 @@ Tsum.prototype.goGamePlayingPage = function() {
         return;
       }
     } else if (page === 'GamePause') {
-      this.tap(Page[page].next);
+      this.tap(pageObj.next);
       this.sleep(500);
     } else if (page === 'unknown') {
       this.exitUnknownPage();
@@ -1600,7 +1601,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap({x: 310, y: 1588 - 140});
       this.sleep(1000);
     } else {
-      this.tap(Page[page].back);
+      this.tap(pageObj.back);
       this.sleep(1000);
     }
   }
