@@ -1184,6 +1184,7 @@ function Tsum(isJP, detect, logs) {
   this.noSkillLastFeverSec = 0;
   this.claimAllWithoutCoins = false;
   this.nextMonitorExecution = 0;
+  this.lastVisitedPages = {init1: true, init2: true, init3: true};  // trigger initial monitor call on script startup
   this.init(detect);
 }
 
@@ -1580,12 +1581,14 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (page === 'FriendPage') {
       this.tap(pageObj.next);
       this.sleep(3000);
+      this.lastVisitedPages.gameFriend = true;
     } else if (page === 'StartPage') {
       this.sleep(500);
       this.checkGameItem();
       this.sendMoneyInfo();
       this.tap(Button.outStart);
       this.sleep(5000); // avoid checking items again!
+      this.lastVisitedPages.gameStart = true;
     } else if (page === 'GamePlaying') {
       // check again
       page = this.findPage(1, 500);
@@ -1729,9 +1732,11 @@ Tsum.prototype.useSkill = function(board) {
         this.sleep(200);
       }
     } else {
+      this.lastVisitedPages.gameSkillInactive = true;
       return false;
     }
   }
+  this.lastVisitedPages.gameSkillActive = true;
   if (this.noSkillLastFeverSec > 0) {
     var feverAlmostOver = null;
     do {
@@ -2202,6 +2207,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         debug("handle ad");
         this.skipAd();
         this.sleep(2000);
+        this.lastVisitedPages.receiveOneItemIsAd = true;
         continue;
       }
       if (receivedHeartWithoutCoins > 2) {
@@ -2226,6 +2232,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         this.tap(Button.outReceive);
         this.sleep(1500);
       } else if (!this.keepRuby || !isRuby) {
+        this.lastVisitedPages.receiveOneItemReceiving = true;
         if (this.recordReceive) {
           img = this.screenshot();
           var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
@@ -2258,9 +2265,11 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.sleep(100);
       if (isOk) {
         debug("isOK", "taskReceiveOneItem")
+        this.lastVisitedPages.receiveOneItemIsOK = true;
         this.tap(Button.outReceiveOk);
       } else {
         debug("isOK2", "taskReceiveOneItem")
+        this.lastVisitedPages.receiveOneItemIsOK2 = true;
         this.tap(Button.outReceiveItemSetOk);
       }
       if (sender !== undefined) {
@@ -2295,6 +2304,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receivedCount = 0;
         sender = "";
         timeoutCounter = 0;
+        this.lastVisitedPages.receiveOneItemNextCheckCycle = true;
         log(this.logs.checkUnreceivedGift);
         this.sleep(500);
         this.tap(Button.outReceive);
@@ -2356,6 +2366,7 @@ Tsum.prototype.taskSendHearts = function() {
     if (times % 15 === 0) {
       debug("Ensuring friends page");
       this.goFriendPage();
+      this.lastVisitedPages.friends = true;
       debug("Ensured friends page");
     }
     var heartsPos = [];
@@ -2437,6 +2448,7 @@ Tsum.prototype.taskSendHearts = function() {
         if (success) {
           rTimes++;
           this.record['hearts_count'].sentCount++;
+          this.lastVisitedPages.sendHeartSuccess = true;
         } else {
           debug("Try return to FriendPage");
           this.goFriendPage();
@@ -2491,6 +2503,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
   ];
   log(this.logs.tsumsPage);
   this.goTsumsPage();
+  this.lastVisitedPages.autoUnlockLevelTsum = true;
   log(this.logs.startUnlockLevel);
 
   // Switch order to "By Level Lock" and remember former selection
@@ -2529,6 +2542,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
       debug("For i=" + i + " I found color " + JSON.stringify(realColor));
       if (isSameColor(lockIcon, realColor)) {
         debug("Unlocking i=" + i);
+        this.lastVisitedPages.autoUnlockLevelUnlock = true;
         var tsumButton = {x: lockIcon.x, y: lockIcon.y - 100};
         this.tap(tsumButton);
         this.sleep(1000);
@@ -2560,7 +2574,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
 
 
   // Reset order to former selection
-  if (formerOrderButton != null) {
+  if (formerOrderButton != null && formerOrderButton !== Button.outTsumCollectionOrderByLevelLock) {
     this.tap(Button.outOpenTsumCollectionOrder);
     this.sleep(1000);
     this.tap(formerOrderButton);
@@ -2587,6 +2601,7 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
     this.autobuyBoxes = 0;
     return;
   }
+  this.lastVisitedPages.autoBuyBoxesStore = true;
   log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
   var countUnknownPages = 0;
   while (this.isRunning && this.autobuyBoxes > 0) {
@@ -2594,6 +2609,7 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
     var page = this.findPageObject(1, 200);
     if (page != null) {
       countUnknownPages = 0;
+      this.lastVisitedPages['autoBuyBoxes' + page.name] = true;
       this.tap(page.next);
       if (page !== lastPage && page === Page.BoxPurchasedPage) {
         this.autobuyBoxes--;
@@ -2634,11 +2650,12 @@ Tsum.prototype.requestTsumMonitor = function(force) {
   var url = this.tsumMonitorUrl;
   if (url.length === 0)
     return;
-  if (force || this.nextMonitorExecution <= Date.now()) {
+  if (this.nextMonitorExecution <= Date.now() && Object.keys(this.lastVisitedPages).length >= 2) {
     log("TsumMonitor - GET", url);
     var response = httpClient('GET', url, '', {});
     log("TsumMonitor - Response:", response);
     this.nextMonitorExecution = Date.now() + 60 * 1000;
+    this.lastVisitedPages = {};
   } else {
     debug("Skipping TsumMonitor call");
   }
@@ -2665,10 +2682,12 @@ Tsum.prototype.sendHeart = function(btn) {
         unknownCount += 1;
       }
     } else if (page === "GiftHeart") {
+      this.lastVisitedPages.sendHeartGiftHeart = true;
       this.tap(Button.outReceiveOk);
       isGift = true;
       debug("sendHeart B", Date.now() / 1000);
     } else if (page === "Received") {
+      this.lastVisitedPages.sendHeartReceived = true;
       this.sleep(100);
       this.tap(Button.outSendHeartClose);
       debug("sendHeart C", Date.now() / 1000);
