@@ -5,10 +5,21 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
-## unreleased
+[//]: # (## unreleased)
+
+
+## [v69] - 2024-07-27
+
+### Fixed
+- Monitor missed stuck sender in certain cases, so the script now checks that a running task had at least two relevant positive state changes before calling the external monitor.
+
+### Added
+- Detection of "Extra update" page.
+- Recording hearts is now possible when "Skip first person" is active (in case you cannot or don't want to disable ingame ads).
 
 ### Changed
 - The output file of "Export HTML (Excel)" has been redesigned to make it much easier to work with.
+
 
 ## [v68] - 2024-06-30
 
