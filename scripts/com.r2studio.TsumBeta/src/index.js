@@ -107,12 +107,12 @@ var Button = {
   outReceiveOk: {x: 835, y: 1092, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveItemSetOk: {x: 830, y: 1260, color: {"a":0,"b":8,"g":176,"r":238}},
   outReceiveClose: {x: 530, y: 1372},
-  outReceiveOne: {x: 840, y: 569, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOneRuby: {x: 295, y: 651, color: {r: 224, g: 93, b: 101}}, // ruby
-  outReceiveOneRuby2th: {x: 295, y: 855, color: {r: 235, g: 93, b: 105}}, // ruby
-  outReceiveOneAd: { x: 290, y: 672, color: { r: 90, g: 57, b: 25 } }, // ad
-  outReceiveOneAd2th: { x: 290, y: 876, color: { r: 90, g: 57, b: 25 } }, // ad
+  outReceiveOneBase: {y: 569},
+  outReceiveOne: {x: 840, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
+  outReceiveOneRubyBase: {y: 651}, // ruby
+  outReceiveOneRuby: {x: 295, color: {r: 224, g: 93, b: 101}}, // ruby
+  outReceiveOneAdBase: { y: 672 }, // ad
+  outReceiveOneAd: { x: 290, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveTimeout: {x: 600, y: 1092, color: {"a":0,"b":11,"g":171,"r":235}},
   outSendHeartTop: {x: 910, y: 502},
   outSendHeart0: {x: 910, y: 698, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -131,8 +131,10 @@ var Button = {
   skillLuke2: {x: 830, y: 1402},
   skillLuke3: {x: 670, y: 1447},
   skillLuke4: {x: 960, y: 1232},
-  outReceiveNameFrom: {x: 150, y: 532},
-  outReceiveNameTo: {x: 660, y: 670},
+  outReceiveNameFromBase: {y: 532},
+  outReceiveNameFrom: {x: 150},
+  outReceiveNameToBase: {y: 670},
+  outReceiveNameTo: {x: 660},
   moneyInfoBox: {x: 430, y: 188, w: 230, h: 56},
   outOpenTsumCollectionOrder: {x: 983, y: 890, r: 165, g: 85, b: 49},
   outCloseTsumCollectionOrder: {x: 552, y: 1365, r: 247, g: 174, b: 8},
@@ -2797,12 +2799,12 @@ function start(settings) {
   if (settings['recordSenderEnlarge']) {
     ts.resizeRatio = 1;
   }
-  if (ts.receiveSecondItem) {
-    ts.recordReceive = false;
-    Button.outReceiveOne = Button.outReceiveOne2th;
-    Button.outReceiveOneRuby = Button.outReceiveOneRuby2th;
-    Button.outReceiveOneAd = Button.outReceiveOneAd2th;
-  }
+  var yOffset = ts.receiveSecondItem ? 202 : 0;
+  Button.outReceiveOne.y = Button.outReceiveOneBase.y + yOffset;
+  Button.outReceiveOneRuby.y = Button.outReceiveOneRubyBase.y + yOffset;
+  Button.outReceiveOneAd.y = Button.outReceiveOneAdBase.y + yOffset;
+  Button.outReceiveNameFrom.y = Button.outReceiveNameFromBase.y + yOffset;
+  Button.outReceiveNameTo.y = Button.outReceiveNameToBase.y + yOffset;
 
   if (ts.recordReceive) {
     ts.readRecord();

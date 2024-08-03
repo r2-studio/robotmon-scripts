@@ -238,8 +238,8 @@ var settings = [
         },
         {
             key: 'receiveHeartsSkipFirst',
-            title: 'Skip first person(disable record)',
-            title_zh_TW: '跳過一個使用者(無法紀錄收心)',
+            title: 'Skip first person',
+            title_zh_TW: '跳過一個使用者',
             default: false
         },
         {
