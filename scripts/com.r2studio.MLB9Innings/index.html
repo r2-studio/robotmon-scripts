@@ -26,13 +26,13 @@
 </body>
 
 <script>
-  var SCRIPT_VERSION_CODE = "15.57";
+  var SCRIPT_VERSION_CODE = "15.58";
   var UPDATE_PART = {
-    zh_TW: "修正無法選擇選手獎勵, 遊戲版本的畫面更新",
-    en: "fix cannot select reward players, image match update of the game version",
+    zh_TW: "修正遊戲版本的畫面更新, 新增全球員自動使用飲料功能",
+    en: "fix image match update of the game version",
   };
   var MIN_YEAR = 2024;
-  var GAME_VERSION = "24 9.0.5";
+  var GAME_VERSION = "24 9.0.8";
 
   var selections = {
     package: "com.r2studio.MLB9Innings",
@@ -126,6 +126,19 @@
       },
       {
         type: "select",
+        titlei18n: {
+          zh_TW: "全球員自動喝飲料",
+          en: "apply condition drinks to all players",
+        },
+        selections: [
+          { text: "🚫 off", value: false },
+          { text: "✅ on", value: true },
+        ],
+        default: false,
+        key: "useDrink",
+      },
+      {
+        type: "select",
         titlei18n: { zh_TW: "看廣告任務", en: "run ad reward task" },
         selections: [
           { text: "🚫 off", value: false },
@@ -155,6 +168,7 @@
     leagueYear: MIN_YEAR + 0,
     isLocalPaid: true,
     isCloud: false,
+    useDrink: false,
     isRunAdReward: false,
     isRunPlayBattleGame: true,
     isRunWeeklyMission: false,
@@ -162,10 +176,11 @@
   simplesettings.render("#app", selections, function (c) {
     config.leagueSeasonMode = c.leagueSeasonMode;
     config.leagueYear = c.leagueYear;
+    config.useDrink = c.useDrink;
     config.isRunAdReward = c.isRunAdReward;
     config.isRunPlayBattleGame = c.isRunPlayBattleGame;
     config.isRunWeeklyMission = c.isRunWeeklyMission;
-    console.log("config", JSON.stringify(config));
+    console.log("config", JSON.stringify(config, null, 2));
   });
 
   function onEvent(eventType) {
