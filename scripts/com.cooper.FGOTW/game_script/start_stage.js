@@ -33,7 +33,7 @@ function selectStage(useApple) {
     console.log("請使用黑邊設定功能");
     console.log("3.模擬器不支援火箭模式:");
     console.log("請使用Simple Manager啟動");
-    console.log("選擇關卡失敗 可能原因如上");
+    console.log("選擇關卡失敗 可能原因請下拉訊息");
     isScriptRunning = false;
     return;
   } else {
@@ -167,7 +167,14 @@ function selectTeam(team, useTeamAutoBuild) {
   if (useTeamAutoBuild == undefined || useTeamAutoBuild == null) {
     useTeamAutoBuild = 0;
   }
-  if (team < 0 || team >= 10) {
+  var teamMaxCnt = 15;
+  var teamOffset = 2;
+  if(server == "TW"){
+    teamMaxCnt = 10;
+    teamOffset = 0;
+  }
+  if (team < 0 || team >= teamMaxCnt) {
+    console.log("隊伍編號超出上限，請確認遊戲與小幫手版本");
     return;
   }
   if (isReplay) {
@@ -184,8 +191,8 @@ function selectTeam(team, useTeamAutoBuild) {
     console.log("不在選擇隊伍畫面");
     return;
   }
-  var x = 787 + 37 * team;
-  var x2 = 787 + 37 * ((team + 1) % 10);
+  var x = 787 + 37 * (team - teamOffset);
+  var x2 = 787 + 37 * ((team + 1) % teamMaxCnt - teamOffset);
   tapScale(x2, 75);
   sleep(1000);
   tapScale(x, 75);
