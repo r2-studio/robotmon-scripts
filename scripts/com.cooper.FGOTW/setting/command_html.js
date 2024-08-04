@@ -206,6 +206,7 @@ function getSelectFriend(id) {
       '<option value = "3">三次</option></select></div>'
   );
 }
+
 function getSelectTeam(id) {
   return getCommandItem(
     id,
@@ -224,7 +225,12 @@ function getSelectTeam(id) {
       '<option value = "6">隊伍7</option>' +
       '<option value = "7">隊伍8</option>' +
       '<option value = "8">隊伍9</option>' +
-      '<option value = "9">隊伍10</option></select></div>'+
+      '<option value = "9">隊伍10</option>' +
+      '<option value = "10">隊伍11</option>' +
+      '<option value = "11">隊伍12</option>' +
+      '<option value = "12">隊伍13</option>' +
+      '<option value = "13">隊伍14</option>' +
+      '<option value = "14">隊伍15</option></select></div>'+
       "<div class='commandSelectDiv'>" +
       '<div class="commandItem"  id = "selectTeamAutoBuildTitle'+ 
       id +

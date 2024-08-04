@@ -6,12 +6,10 @@ function setMarginIcon() {
     console.log("setMarginIcon "+server);
   }
   if (server == "TW") {
-    icon["friendPointMain"] = [959, 20, 100, 90];
     icon["boxNoPoint"] = [360, 630, 195, 82];
     icon["settingDialog"] = [840, 220, 240, 60];
     icon["stageFailed"] = [900, 154, 140, 60];
   } else {
-    icon["friendPointMain"] = [1130, 20, 100, 90];
     icon["boxNoPoint"] = [470, 530, 200, 100];
     icon["settingDialog"] = [750, 220, 350, 60];
     icon["stageFailed"] = [750, 160, 300, 60];
