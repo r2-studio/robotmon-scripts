@@ -1,5 +1,9 @@
 # ensure it's production version
-(grep "exports.isProduction = true" ./index.js) || (echo "error not build bc is not production version" & exit 1)
+IS_PRODUCTION=$(grep "exports.isProduction = true" ./index.js)
+if [ -z "$IS_PRODUCTION" ]; then
+    echo "Please set production version"
+    exit 1
+fi
 
 zip index.zip ./index.js ./index.html
 echo "com.r2studio.MLB9Innings done"
