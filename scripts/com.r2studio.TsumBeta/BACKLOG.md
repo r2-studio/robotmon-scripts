@@ -8,6 +8,5 @@ All potential changes which would improve the TsumBeta script will be documented
 
 ### Features
 - Add "Spam skill" option to check for skill after every finished chain instead of every chain batch.
-- Skill: Captain Lightyear
 - Skill: Jedi Luke (13 swipes technique)
 - Rewrite of Settings UI (became too large as single-page, not dynamic regarding settings like "skill level" of Cinderella)
