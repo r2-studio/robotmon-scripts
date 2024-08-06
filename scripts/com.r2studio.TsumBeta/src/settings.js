@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 68;
+var VERSION = 69;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -71,6 +71,18 @@ var settings = [
             title: 'Auto Launch Tsum App',
             title_zh_TW: '自動開啟 Tsum App',
             default: false
+        }
+    ],
+    [
+        {
+            transient: true,
+            key: 'autobuyBoxes',
+            title: 'Auto buy boxes',
+            title_zh_TW: '自动购买框',
+            default: 0,
+            step: 10,
+            max: 500,
+            min: 0
         }
     ],
     [
@@ -182,6 +194,15 @@ var settings = [
             ]
         },
         {
+            key: 'noSkillLastFeverSec',
+            title: 'No skill last fever seconds',
+            title_zh_TW: '无技能最后发烧秒',
+            default: 0,
+            step: 1,
+            max: 10,
+            min: 0
+        },
+        {
             key: 'unlockLevelHoursWait',
             title: 'Unlock Level every hours',
             title_zh_TW: '每小时解锁等级',
@@ -217,14 +238,20 @@ var settings = [
         },
         {
             key: 'receiveHeartsSkipFirst',
-            title: 'Skip first person(disable record)',
-            title_zh_TW: '跳過一個使用者(無法紀錄收心)',
+            title: 'Skip first person',
+            title_zh_TW: '跳過一個使用者',
             default: false
         },
         {
             key: 'receiveHeartsSkipRuby',
             title: 'Skip Ruby',
             title_zh_TW: '保留鑽石',
+            default: false
+        },
+        {
+            key: 'claimAllWithoutCoins',
+            title: 'Claim All old mails',
+            title_zh_TW: '认领所有旧邮件',
             default: false
         },
         {
@@ -294,31 +321,6 @@ var settings = [
         {
             title: '<b style="color: red">Experimental features</b><br>Things may not work correctly in every scenario',
             title_zh_TW: '<b style="color: red">实验特点</b><br>事情可能无法在每种情况下正常工作'
-        },
-        {
-            transient: true,
-            key: 'autobuyBoxes',
-            title: 'Auto buy boxes',
-            title_zh_TW: '自动购买框',
-            default: 0,
-            step: 10,
-            max: 500,
-            min: 0
-        },
-        {
-            key: 'noSkillLastFeverSec',
-            title: 'No skill last fever seconds',
-            title_zh_TW: '无技能最后发烧秒',
-            default: 0,
-            step: 1,
-            max: 10,
-            min: 0
-        },
-        {
-            key: 'claimAllWithoutCoins',
-            title: 'Claim All old mails',
-            title_zh_TW: '认领所有旧邮件',
-            default: false
         },
         {
             key: 'tsumMonitorUrl',

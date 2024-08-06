@@ -2,6 +2,7 @@
 
 function TaskController(){this.tasks={},this.isRunning=!1,this.interval=200}TaskController.prototype.getFirstPriorityTaskName=function(){var t=null,n=Date.now();for(var s in this.tasks){var i=this.tasks[s];n-i.lastRunTime<i.interval||(null!==t?i.priority<t.priority?t=i:i.interval>t.interval?t=i:i.lastRunTime<t.lastRunTime&&(t=i):t=i)}return null===t?"":t.name},TaskController.prototype.loop=function(){for(console.log("loop start");this.isRunning;){var t=this.getFirstPriorityTaskName(),n=this.tasks[t];void 0!==n&&(n.run(),n.lastRunTime=Date.now(),n.runTimes--,0===n.runTimes&&delete this.tasks[t]),sleep(this.interval)}this.isRunning=!1,console.log("loop stop")},TaskController.prototype.updateRunInterval=function(t){t<this.interval&&t>=50&&(this.interval=t)},TaskController.prototype.newTaskObject=function(t,n,s,i,o){return{name:t,run:n,interval:s||1e3,runTimes:i||0,priority:o,lastRunTime:0,status:0}},TaskController.prototype.newTask=function(t,n,s,i,o){if(void 0===o&&(o=!1),"function"==typeof n){var e=this.newTaskObject(t,n,s,i,0);o&&(e.lastRunTime=Date.now()),this.updateRunInterval(e.interval);var r="system_newTask_"+t,a=this.newTaskObject(r,function(){this.tasks[t]=e}.bind(this),0,1,-20);return this.tasks[r]=a,e}console.log("Error not a function",t,n)},TaskController.prototype.removeTask=function(t){var n="system_removeTask_"+Date.now().toString(),s=this.newTaskObject(n,function(){delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[n]=s},TaskController.prototype.removeAllTasks=function(){var t="system_removeAllTask_"+Date.now().toString(),n=this.newTaskObject(t,function(){for(var t in this.tasks)delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[t]=n},TaskController.prototype.start=function(){this.isRunning||(this.isRunning=!0,this.loop())},TaskController.prototype.stop=function(){this.isRunning&&(this.isRunning=!1,console.log("wait loop stop..."))};
 
+
 var ts;
 var gTaskController;
 
@@ -106,12 +107,12 @@ var Button = {
   outReceiveOk: {x: 835, y: 1092, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveItemSetOk: {x: 830, y: 1260, color: {"a":0,"b":8,"g":176,"r":238}},
   outReceiveClose: {x: 530, y: 1372},
-  outReceiveOne: {x: 840, y: 569, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOne2th: {x: 840, y: 774, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
-  outReceiveOneRuby: {x: 295, y: 651, color: {r: 224, g: 93, b: 101}}, // ruby
-  outReceiveOneRuby2th: {x: 295, y: 855, color: {r: 235, g: 93, b: 105}}, // ruby
-  outReceiveOneAd: { x: 290, y: 672, color: { r: 90, g: 57, b: 25 } }, // ad
-  outReceiveOneAd2th: { x: 290, y: 876, color: { r: 90, g: 57, b: 25 } }, // ad
+  outReceiveOneBase: {y: 569},
+  outReceiveOne: {x: 840, color: {"a":0,"b":30,"g":181,"r":235}, color2: {"a":0,"b":119,"g":74,"r":40}},
+  outReceiveOneRubyBase: {y: 651}, // ruby
+  outReceiveOneRuby: {x: 295, color: {r: 224, g: 93, b: 101}}, // ruby
+  outReceiveOneAdBase: { y: 672 }, // ad
+  outReceiveOneAd: { x: 290, color: { r: 90, g: 57, b: 25 } }, // ad
   outReceiveTimeout: {x: 600, y: 1092, color: {"a":0,"b":11,"g":171,"r":235}},
   outSendHeartTop: {x: 910, y: 502},
   outSendHeart0: {x: 910, y: 698, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
@@ -130,8 +131,10 @@ var Button = {
   skillLuke2: {x: 830, y: 1402},
   skillLuke3: {x: 670, y: 1447},
   skillLuke4: {x: 960, y: 1232},
-  outReceiveNameFrom: {x: 160, y: 532},
-  outReceiveNameTo: {x: 620, y: 627},
+  outReceiveNameFromBase: {y: 532},
+  outReceiveNameFrom: {x: 150},
+  outReceiveNameToBase: {y: 670},
+  outReceiveNameTo: {x: 660},
   moneyInfoBox: {x: 430, y: 188, w: 230, h: 56},
   outOpenTsumCollectionOrder: {x: 983, y: 890, r: 165, g: 85, b: 49},
   outCloseTsumCollectionOrder: {x: 552, y: 1365, r: 247, g: 174, b: 8},
@@ -758,6 +761,40 @@ var Page = {
     ],
     back: {x: 420, y: 1100},
     next: {x: 860, y: 1100}
+  },
+  ExtraUpdateJp: {
+    name: 'ExtraUpdate',
+    colors: [
+      {x: 104, y:  556, r:  36, g: 204, b: 239, match: true, threshold: 80},  // light blue top left
+      {x: 104, y: 1194, r:  36, g: 204, b: 239, match: true, threshold: 80},  // light blue bottom left
+      {x: 700, y: 1100, r: 238, g: 174, b:   8, match: true, threshold: 80},  // OK button
+      {x: 200, y: 1100, r: 238, g: 174, b:   8, match: true, threshold: 80},  // Cancel button
+      {x: 644, y:  676, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Left of big white "o" letter
+      {x: 694, y:  676, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Right of big white "o" letter
+      {x: 668, y:  676, r:  58, g:  93, b: 148, match: true, threshold: 80},  // Middle of big white "o" letter
+      {x: 422, y:  998, r:  48, g:  93, b: 148, match: true, threshold: 80},  // Middle of small white "o" letter
+      {x: 406, y:  998, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Left of small white "o" letter
+      {x: 434, y:  998, r: 248, g: 248, b: 248, match: true, threshold: 80}   // Right of small white "o" letter
+    ],
+    back: {x: 770, y: 1100},
+    next: {x: 770, y: 1100}
+  },
+  ExtraUpdateEn: {
+    name: 'ExtraUpdate',
+    colors: [
+      {x: 104, y:  556, r:  36, g: 204, b: 239, match: true, threshold: 80},  // light blue top left
+      {x: 104, y: 1194, r:  36, g: 204, b: 239, match: true, threshold: 80},  // light blue bottom left
+      {x: 700, y: 1100, r: 238, g: 174, b:   8, match: true, threshold: 80},  // OK button
+      {x: 200, y: 1100, r: 238, g: 174, b:   8, match: true, threshold: 80},  // Cancel button
+      {x: 520, y:  680, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Left of big white "o" letter
+      {x: 558, y:  680, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Right of big white "o" letter
+      {x: 538, y:  680, r:  55, g:  94, b: 148, match: true, threshold: 80},  // Middle of big white "o" letter
+      {x: 674, y: 1002, r:  60, g: 100, b: 150, match: true, threshold: 80},  // Middle of small white "o" letter
+      {x: 662, y: 1002, r: 240, g: 240, b: 240, match: true, threshold: 80},  // Left of small white "o" letter
+      {x: 686, y: 1002, r: 240, g: 240, b: 240, match: true, threshold: 80}   // Right of small white "o" letter
+    ],
+    back: {x: 770, y: 1100},
+    next: {x: 770, y: 1100}
   }
 };
 
@@ -1183,6 +1220,7 @@ function Tsum(isJP, detect, logs) {
   this.noSkillLastFeverSec = 0;
   this.claimAllWithoutCoins = false;
   this.nextMonitorExecution = 0;
+  this.lastVisitedPages = {init1: true, init2: true, init3: true};  // trigger initial monitor call on script startup
   this.init(detect);
 }
 
@@ -1579,12 +1617,14 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (page === 'FriendPage') {
       this.tap(pageObj.next);
       this.sleep(3000);
+      this.lastVisitedPages.gameFriend = true;
     } else if (page === 'StartPage') {
       this.sleep(500);
       this.checkGameItem();
       this.sendMoneyInfo();
       this.tap(Button.outStart);
       this.sleep(5000); // avoid checking items again!
+      this.lastVisitedPages.gameStart = true;
     } else if (page === 'GamePlaying') {
       // check again
       page = this.findPage(1, 500);
@@ -1728,9 +1768,11 @@ Tsum.prototype.useSkill = function(board) {
         this.sleep(200);
       }
     } else {
+      this.lastVisitedPages.gameSkillInactive = true;
       return false;
     }
   }
+  this.lastVisitedPages.gameSkillActive = true;
   if (this.noSkillLastFeverSec > 0) {
     var feverAlmostOver = null;
     do {
@@ -2201,6 +2243,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         debug("handle ad");
         this.skipAd();
         this.sleep(2000);
+        this.lastVisitedPages.receiveOneItemIsAd = true;
         continue;
       }
       if (receivedHeartWithoutCoins > 2) {
@@ -2225,6 +2268,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         this.tap(Button.outReceive);
         this.sleep(1500);
       } else if (!this.keepRuby || !isRuby) {
+        this.lastVisitedPages.receiveOneItemReceiving = true;
         if (this.recordReceive) {
           img = this.screenshot();
           var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
@@ -2257,9 +2301,11 @@ Tsum.prototype.taskReceiveOneItem = function() {
       this.sleep(100);
       if (isOk) {
         debug("isOK", "taskReceiveOneItem")
+        this.lastVisitedPages.receiveOneItemIsOK = true;
         this.tap(Button.outReceiveOk);
       } else {
         debug("isOK2", "taskReceiveOneItem")
+        this.lastVisitedPages.receiveOneItemIsOK2 = true;
         this.tap(Button.outReceiveItemSetOk);
       }
       if (sender !== undefined) {
@@ -2294,6 +2340,7 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receivedCount = 0;
         sender = "";
         timeoutCounter = 0;
+        this.lastVisitedPages.receiveOneItemNextCheckCycle = true;
         log(this.logs.checkUnreceivedGift);
         this.sleep(500);
         this.tap(Button.outReceive);
@@ -2355,6 +2402,7 @@ Tsum.prototype.taskSendHearts = function() {
     if (times % 15 === 0) {
       debug("Ensuring friends page");
       this.goFriendPage();
+      this.lastVisitedPages.friends = true;
       debug("Ensured friends page");
     }
     var heartsPos = [];
@@ -2436,6 +2484,7 @@ Tsum.prototype.taskSendHearts = function() {
         if (success) {
           rTimes++;
           this.record['hearts_count'].sentCount++;
+          this.lastVisitedPages.sendHeartSuccess = true;
         } else {
           debug("Try return to FriendPage");
           this.goFriendPage();
@@ -2490,6 +2539,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
   ];
   log(this.logs.tsumsPage);
   this.goTsumsPage();
+  this.lastVisitedPages.autoUnlockLevelTsum = true;
   log(this.logs.startUnlockLevel);
 
   // Switch order to "By Level Lock" and remember former selection
@@ -2528,6 +2578,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
       debug("For i=" + i + " I found color " + JSON.stringify(realColor));
       if (isSameColor(lockIcon, realColor)) {
         debug("Unlocking i=" + i);
+        this.lastVisitedPages.autoUnlockLevelUnlock = true;
         var tsumButton = {x: lockIcon.x, y: lockIcon.y - 100};
         this.tap(tsumButton);
         this.sleep(1000);
@@ -2559,7 +2610,7 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
 
 
   // Reset order to former selection
-  if (formerOrderButton != null) {
+  if (formerOrderButton != null && formerOrderButton !== Button.outTsumCollectionOrderByLevelLock) {
     this.tap(Button.outOpenTsumCollectionOrder);
     this.sleep(1000);
     this.tap(formerOrderButton);
@@ -2586,6 +2637,7 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
     this.autobuyBoxes = 0;
     return;
   }
+  this.lastVisitedPages.autoBuyBoxesStore = true;
   log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
   var countUnknownPages = 0;
   while (this.isRunning && this.autobuyBoxes > 0) {
@@ -2593,6 +2645,7 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
     var page = this.findPageObject(1, 200);
     if (page != null) {
       countUnknownPages = 0;
+      this.lastVisitedPages['autoBuyBoxes' + page.name] = true;
       this.tap(page.next);
       if (page !== lastPage && page === Page.BoxPurchasedPage) {
         this.autobuyBoxes--;
@@ -2633,11 +2686,12 @@ Tsum.prototype.requestTsumMonitor = function(force) {
   var url = this.tsumMonitorUrl;
   if (url.length === 0)
     return;
-  if (force || this.nextMonitorExecution <= Date.now()) {
+  if (this.nextMonitorExecution <= Date.now() && Object.keys(this.lastVisitedPages).length >= 2) {
     log("TsumMonitor - GET", url);
     var response = httpClient('GET', url, '', {});
     log("TsumMonitor - Response:", response);
     this.nextMonitorExecution = Date.now() + 60 * 1000;
+    this.lastVisitedPages = {};
   } else {
     debug("Skipping TsumMonitor call");
   }
@@ -2664,10 +2718,12 @@ Tsum.prototype.sendHeart = function(btn) {
         unknownCount += 1;
       }
     } else if (page === "GiftHeart") {
+      this.lastVisitedPages.sendHeartGiftHeart = true;
       this.tap(Button.outReceiveOk);
       isGift = true;
       debug("sendHeart B", Date.now() / 1000);
     } else if (page === "Received") {
+      this.lastVisitedPages.sendHeartReceived = true;
       this.sleep(100);
       this.tap(Button.outSendHeartClose);
       debug("sendHeart C", Date.now() / 1000);
@@ -2743,12 +2799,12 @@ function start(settings) {
   if (settings['recordSenderEnlarge']) {
     ts.resizeRatio = 1;
   }
-  if (ts.receiveSecondItem) {
-    ts.recordReceive = false;
-    Button.outReceiveOne = Button.outReceiveOne2th;
-    Button.outReceiveOneRuby = Button.outReceiveOneRuby2th;
-    Button.outReceiveOneAd = Button.outReceiveOneAd2th;
-  }
+  var yOffset = ts.receiveSecondItem ? 202 : 0;
+  Button.outReceiveOne.y = Button.outReceiveOneBase.y + yOffset;
+  Button.outReceiveOneRuby.y = Button.outReceiveOneRubyBase.y + yOffset;
+  Button.outReceiveOneAd.y = Button.outReceiveOneAdBase.y + yOffset;
+  Button.outReceiveNameFrom.y = Button.outReceiveNameFromBase.y + yOffset;
+  Button.outReceiveNameTo.y = Button.outReceiveNameToBase.y + yOffset;
 
   if (ts.recordReceive) {
     ts.readRecord();
@@ -2829,18 +2885,68 @@ function genRecordTable() {
     return "Can not read record.txt";
   }
 
-  var html = "<html><body>";
-  html += "<table>";
-  html += "<tr><td>UserImage</td><td>UserImage2</td><td>All</td><td>Avg</td><td>Day</td></tr>";
+  // enhance records with total and average hearts per filename
   var dayMapCount = {};
+  var renderRecords = [];
   for (var filename in record) {
-    if (filename === "hearts_count") {
-      continue;
+    (function (filename) {
+      if (filename !== "hearts_count") {
+        var totalDay = 0;
+        var totalCount = 0;
+        var recordElement = record[filename];
+        for (var dayTime in recordElement.receiveCounts) {
+          var dayCount = recordElement.receiveCounts[dayTime];
+
+          if (dayMapCount[+dayTime] === undefined) {
+            dayMapCount[+dayTime] = 0;
+          }
+          dayMapCount[+dayTime] += dayCount;
+
+          totalDay++;
+          totalCount += dayCount;
+        }
+        var avg = 0;
+        if (totalDay !== 0) {
+          avg = (totalCount / totalDay).toFixed(1);
+        }
+        recordElement.all = totalCount;
+        recordElement.avg = avg;
+        recordElement.filename = filename;
+        renderRecords.push(recordElement);
+      }
+    })(filename, dayMapCount, renderRecords);
+  }
+
+  // sort records descending by total
+  renderRecords.sort(function (a, b) {
+    return b.all - a.all;
+  });
+
+  // create sorted dayTime array
+  var dayTimesSorted = [];
+  for (var dayTime in dayMapCount) {
+    if (dayMapCount.hasOwnProperty(dayTime)) {
+      dayTimesSorted.push(dayTime);
     }
+  }
+  dayTimesSorted.sort(function (a, b) {
+    return a - b;
+  });
+
+  // render records
+  var html = "<html><body><style>table { border-collapse: collapse; } th, td { border: solid 1px black; text-align: right; padding: 4px 10px 4px 10px; } .records td:nth-child(2n+5), .records th:nth-child(2n+5) { background-color: lightgray; } .all { background-color: darkseagreen; } .avg { background-color: lightsteelblue; border-right-width: 5px; }</style>";
+  html += "<table class='records'>";
+  html += "<tr><th>UserImage</th><th class='all'>All</th><th class='avg'>Avg</th>";
+  for (var j = 0; j < dayTimesSorted.length ; j++) {
+    dayTime = dayTimesSorted[j];
+    html += '<th>' + getDayTimeString(new Date(dayTime * (24 * 60 * 60 * 1000))) + '</th>';
+  }
+  html += "</tr>";
+  for (var i = 0; i < renderRecords.length; i += 1) {
+    var renderRecord = renderRecords[i];
+    filename = renderRecord.filename;
     html += "<tr>";
     // user image
-    html += "<td><img src=" + filename + "'..' /></td>";
-    // user image2
     var filePath = getStoragePath()+"/tsum_record/" + filename;
     var tmpImg = openImage(filePath);
     var base64 = getBase64FromImage(tmpImg);
@@ -2850,15 +2956,11 @@ function genRecordTable() {
     var totalDay = 0;
     var totalCount = 0;
     var tmpHtml = "";
-    for (var day in record[filename].receiveCounts) {
-      var dayTime = new Date(+day * 86400000);
-      var dayStr = getDayTimeString(dayTime);
-      var dayCount = record[filename].receiveCounts[day];
+    for (j = 0; j < dayTimesSorted.length ; j++) {
+      dayTime = dayTimesSorted[j];
+      var dayCount = parseInt(renderRecord.receiveCounts[dayTime]) || 0;
+      tmpHtml += '<td>' + dayCount + '</td>';
 
-      if (dayMapCount[+day] === undefined) {dayMapCount[+day] = 0;}
-      dayMapCount[+day] += dayCount;
-
-      tmpHtml += "<td>" + dayStr + ":" + dayCount + "</td>";
       totalDay++;
       totalCount += dayCount;
     }
@@ -2866,8 +2968,8 @@ function genRecordTable() {
     if (totalDay !== 0) {
       avg = (totalCount/totalDay).toFixed(1);
     }
-    html += "<td>" + totalCount + "</td>";
-    html += "<td>" + avg + "</td>";
+    html += "<td class='all'>" + totalCount + "</td>";
+    html += "<td class='avg'>" + avg + "</td>";
     html += tmpHtml;
     html += "</tr>";
   }
@@ -2875,12 +2977,13 @@ function genRecordTable() {
   html += "<br /> <br />";
   // day count
   html += "<table>";
-  html += "<tr><td>Date</td><td>Hearts</td></tr>";
-  for (day in dayMapCount) {
-    dayTime = new Date(+day * 86400000);
+  html += "<tr><th>Date</th><th>Hearts</th></tr>";
+  for (j = 0; j < dayTimesSorted.length ; j++) {
+    dayTime = dayTimesSorted[j];
+    var date = new Date(+dayTime * (24 * 60 * 60 * 1000));
     html += "<tr>";
-    html += "<td>" + getDayTimeString(dayTime) + "</td>";
-    html += "<td>" + dayMapCount[day] + "</td>";
+    html += "<td>" + getDayTimeString(date) + "</td>";
+    html += "<td>" + dayMapCount[dayTime] + "</td>";
     html += "</tr>";
   }
   html += "</table>";
