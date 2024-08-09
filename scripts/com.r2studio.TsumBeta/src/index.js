@@ -829,7 +829,7 @@ var Logs = {
   calculateScreenSize: 'Calculating screen size',
   offset: 'Offset (X, Y, H, W)',
   startTsumTsumApp: 'Start TsumTsum app',
-  currentPage: 'Current page',
+  currentPage: 'Pg:',
   friendsPage: 'Friends page',
   checkBonusItems: 'Check bonus items',
   receiveAllGifts: 'Receive all gifts',
