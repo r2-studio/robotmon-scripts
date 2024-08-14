@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Skill: Captain Lightyear
 
+### Changed
+- First clicks on script start do now always have pauses until the friends page is reached. This should reduce the game ending in an infinite "Loading" dialog if event notifications get clicked away too fast. This attempt is not very solid, but a better implementation will need time, so this topic stays in the backlog.
 
 ## [v69] - 2024-07-27
 

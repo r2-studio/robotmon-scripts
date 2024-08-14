@@ -1162,7 +1162,7 @@ function Tsum(isJP, detect, logs) {
   this.debug = false;
   this.autoLaunch = false;
   this.isRunning = true;
-  this.isStartupPhase = false;
+  this.isStartupPhase = true;
   this.runTimes = 0;
   this.myTsum = '';
   this.storagePath = getStoragePath();
@@ -1323,7 +1323,6 @@ Tsum.prototype.startApp = function() {
     return;
   }
   log(this.logs.startTsumTsumApp);
-  this.isStartupPhase = true;
   startTsumTsumApp(this.isJP);
   this.sleep(10000);
   log("TsumTsum app starting.");
