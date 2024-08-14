@@ -2328,7 +2328,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receivedCount++;
       }
       sender = undefined;
-      this.sleep(600);
       timeoutCounter = 0;
       if (this.claimAllWithoutCoins &&  isHeartWithoutCoins)
         receivedHeartWithoutCoins++;
