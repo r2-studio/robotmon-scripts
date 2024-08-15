@@ -82,8 +82,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 69,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v69</b>\n<ul>\n    <li>重新设计的 HTML 报告<br>Redesigned HTML report</li>\n</ul>",
+      "versionCode": 70,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v70</b>\n<ul>\n    <li>新技能: 光年队长<br>New skill: Captain Lightyear</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
