@@ -131,6 +131,9 @@ var Button = {
   skillLuke2: {x: 830, y: 1402},
   skillLuke3: {x: 670, y: 1447},
   skillLuke4: {x: 960, y: 1232},
+  skillCptLy1: {x: 670, y: 1050},
+  skillCptLy2: {x: 310, y: 1050},
+  skillCptLy3: {x: 540, y: 414},
   outReceiveNameFromBase: {y: 532},
   outReceiveNameFrom: {x: 150},
   outReceiveNameToBase: {y: 670},
@@ -826,7 +829,7 @@ var Logs = {
   calculateScreenSize: 'Calculating screen size',
   offset: 'Offset (X, Y, H, W)',
   startTsumTsumApp: 'Start TsumTsum app',
-  currentPage: 'Current page',
+  currentPage: 'Pg:',
   friendsPage: 'Friends page',
   checkBonusItems: 'Check bonus items',
   receiveAllGifts: 'Receive all gifts',
@@ -1159,7 +1162,7 @@ function Tsum(isJP, detect, logs) {
   this.debug = false;
   this.autoLaunch = false;
   this.isRunning = true;
-  this.isStartupPhase = false;
+  this.isStartupPhase = true;
   this.runTimes = 0;
   this.myTsum = '';
   this.storagePath = getStoragePath();
@@ -1320,7 +1323,6 @@ Tsum.prototype.startApp = function() {
     return;
   }
   log(this.logs.startTsumTsumApp);
-  this.isStartupPhase = true;
   startTsumTsumApp(this.isJP);
   this.sleep(10000);
   log("TsumTsum app starting.");
@@ -1941,8 +1943,21 @@ Tsum.prototype.useSkill = function(board) {
     } else {
       this.clearAllBubbles();
     }
-  }
-  else {
+  } else if (this.skillType === 'block_cpt_ly_s'){
+    this.tap(Button.gameRand, 100);
+    this.sleep(2100);
+    this.tap(Button.skillCptLy1, 10);
+    this.sleep(50);
+    this.tap(Button.skillCptLy2, 10);
+    this.sleep(500);
+    this.tap(Button.skillCptLy3, 10);
+    this.sleep(500);
+    this.tap(Button.skillCptLy3, 10);
+    this.sleep(550);
+    this.tap(Button.skillCptLy3, 10);
+    this.sleep(500);
+    this.clearAllBubbles(0, 0, 1000);
+  } else {
     this.sleep(this.skillInterval);
   }
   return true;
@@ -2313,7 +2328,6 @@ Tsum.prototype.taskReceiveOneItem = function() {
         receivedCount++;
       }
       sender = undefined;
-      this.sleep(600);
       timeoutCounter = 0;
       if (this.claimAllWithoutCoins &&  isHeartWithoutCoins)
         receivedHeartWithoutCoins++;
