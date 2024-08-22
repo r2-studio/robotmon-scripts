@@ -37,9 +37,11 @@ function log() {
   sleep(10);
   var args = [];
   if (ts !== undefined && ts.showHeartLog && ts.record && ts.record['hearts_count']) {
-    var msg = "";
-    msg += "R:"+ts.record['hearts_count'].receivedCount+" ";
-    msg += "S:"+ts.record['hearts_count'].sentCount;
+    var msg = "C";
+    // msg += "R:"+ts.record['hearts_count'].receivedCount+" ";
+    // msg += "S:"+ts.record['hearts_count'].sentCount;
+    // add timestamp in HH:MM:SS
+    msg += new Date().toTimeString().split(' ')[0];
     if (gTaskController !== undefined && gTaskController.tasks !== undefined) {
       var sendTask = gTaskController.tasks["sendHearts"];
       if (sendTask !== undefined) {
@@ -127,6 +129,7 @@ var Button = {
   outSendHeartEnd3: {x: 316, y: 1224, color: {r: 55, g: 91, b: 139}},
   outFriendScoreFrom: {x: 550, y: 935, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 935},
+  outSplashPageTapToStart: {x: 510, y: 1510},
   skillLuke1: {x: 1000, y: 1372},
   skillLuke2: {x: 830, y: 1402},
   skillLuke3: {x: 670, y: 1447},
@@ -1516,10 +1519,12 @@ Tsum.prototype.exitUnknownPage = function() {
   keycode('KEYCODE_DPAD_DOWN', 50);
   this.sleep(500);
   keycode('KEYCODE_ENTER', 50);
-  this.tap(Button.gameQuestionCancel);
-  this.tap(Button.gameQuestionCancel2);
-  this.tap(Button.outClose);
-  this.tap(Button.gameStop);
+  this.tap(Button.outSplashPageTapToStart, 250);
+  this.tap(Button.gameQuestionCancel, 250);
+  this.tap(Button.gameQuestionCancel2, 250);
+  this.tap(Button.outClose, 250);
+  this.tap(Button.gameStop, 250);
+  this.tap(Button.outStart, 250);
   this.sleep(500);
 }
 
