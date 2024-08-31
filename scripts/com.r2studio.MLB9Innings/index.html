@@ -26,7 +26,7 @@
 </body>
 
 <script>
-  var SCRIPT_VERSION_CODE = "15.62";
+  var SCRIPT_VERSION_CODE = "15.63";
   var UPDATE_PART = {
     zh_TW: "修正遊戲版本的畫面更新, 全球員自動使用飲料功能",
     en: "fix image match update of the game version",
@@ -139,19 +139,6 @@
       },
       {
         type: "select",
-        titlei18n: {
-          zh_TW: "聯賽使用省電模式遊玩",
-          en: "apply power saving mode to league game",
-        },
-        selections: [
-          { text: "🚫 off", value: false },
-          { text: "✅ on", value: true },
-        ],
-        default: true,
-        key: "leaguePowerSaveModeOn",
-      },
-      {
-        type: "select",
         titlei18n: { zh_TW: "看廣告任務", en: "run ad reward task" },
         selections: [
           { text: "🚫 off", value: false },
@@ -179,7 +166,6 @@
   var config = {
     leagueSeasonMode: "full", // half, quarter, postSeason
     leagueYear: MIN_YEAR + 0,
-    leaguePowerSaveModeOn: true,
     isLocalPaid: true,
     isCloud: false,
     useDrink: false,
@@ -190,7 +176,6 @@
   simplesettings.render("#app", selections, function (c) {
     config.leagueSeasonMode = c.leagueSeasonMode;
     config.leagueYear = c.leagueYear;
-    config.leaguePowerSaveModeOn = c.leaguePowerSaveModeOn;
     config.useDrink = c.useDrink;
     config.isRunAdReward = c.isRunAdReward;
     config.isRunPlayBattleGame = c.isRunPlayBattleGame;
