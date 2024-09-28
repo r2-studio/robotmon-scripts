@@ -25,7 +25,7 @@
 </body>
 
 <script>
-  var SCRIPT_VERSION_CODE = "15.66";
+  var SCRIPT_VERSION_CODE = "15.67";
   var UPDATE_PART = {
     zh_TW: "將螢幕解析度設定為 640x360，90 dpi 避免與雲端版本衝突",
     en: "set 640x360，90 dpi",
@@ -39,6 +39,17 @@
     languages: ["zh_TW", "en"],
     title: "MLB9 Innings (basic)",
     settings: [
+      {
+        type: "text",
+        titlei18n: {
+          zh_TW:
+            `💙 這是免費體驗版，您可以享受最多8小時的遊戲樂趣！` +
+            `想要體驗無限暢玩24小時？歡迎支持🙏 -> https://x.robotmon.app/intro`,
+          en:
+            "💙 This is a free trial version, allowing you to enjoy up to 8 hours of gaming fun!" +
+            `Want to play nonstop for 24 hours? Feel free to support us 🙏-> https://x.robotmon.app/intro`,
+        },
+      },
       {
         type: "text",
         titlei18n: {
@@ -71,8 +82,7 @@
       {
         type: "text",
         titlei18n: {
-          zh_TW:
-            "*請使用無廣告版本，將螢幕解析度設定為 640x360，90 dpi，將遊戲語言設定為英文，並勿移動robotmom的頭像避免影響機器人判斷",
+          zh_TW: `*請使用無廣告版本，將螢幕解析度設定為 640x360，90 dpi，將遊戲語言設定為英文，並勿移動robotmom的頭像避免影響機器人判斷`,
           en: "Only support 640x360 resolution, 90 dpi, AD-free version, please set language to English and do not move the app icon to avoid affecting identification",
         },
       },
