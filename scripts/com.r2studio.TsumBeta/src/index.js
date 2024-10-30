@@ -119,6 +119,7 @@ var Button = {
   outSendHeart1: {x: 910, y: 895, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart2: {x: 910, y: 1102, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
   outSendHeart3: {x: 910, y: 1304, color: {"a":0,"b":142,"g":60,"r":209}, color2: {"a":0,"b":140,"g":65,"r":3}},
+  outSendHeartBottom: {x: 910, y: 1500},
   outSendHeartClose: {x: 666, y: 1426, color: {r: 236, g: 178, b: 9}},
   outSendHeartFrom: {x: 910, y: 602},
   outSendHeartTo: {x: 910, y: 1322},
@@ -127,6 +128,8 @@ var Button = {
   outSendHeartEnd3: {x: 316, y: 1224, color: {r: 55, g: 91, b: 139}},
   outFriendScoreFrom: {x: 550, y: 935, color: {"a":0,"b":140,"g":93,"r":55}},
   outFriendScoreTo: {x: 760, y: 935},
+  outHomePage: {x: 60, y: 1000},
+  outFriendPage: {x: 60, y: 1130},
   skillLuke1: {x: 1000, y: 1372},
   skillLuke2: {x: 830, y: 1402},
   skillLuke3: {x: 670, y: 1447},
@@ -1224,6 +1227,7 @@ function Tsum(isJP, detect, logs) {
   this.claimAllWithoutCoins = false;
   this.nextMonitorExecution = 0;
   this.lastVisitedPages = {init1: true, init2: true, init3: true};  // trigger initial monitor call on script startup
+  this.sendHeartsDownwards = true;
   this.init(detect);
 }
 
@@ -2380,37 +2384,44 @@ Tsum.prototype.taskReceiveOneItem = function() {
   }
 }
 
-Tsum.prototype.friendPageGoTop = function() {
-  debug("Scrolling to top of friends list");
-  this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
-  this.moveTo({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart0.y  }, 100);
-  this.moveTo({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
-  this.tapUp({x: Button.outSendHeart0.x - 10, y: 350000}, 100);
-  debug("Scrolled to top of friends list");
-  debug("Waiting short time for UI finishing movement");
-  this.sleep(3500);
-  debug("Waited for UI finishing movement");
+Tsum.prototype.friendPageGoToSelf = function() {
+  debug("'Scrolling' to own player ranking");
+  this.tap(Button.outHomePage, 100);
+  this.sleep(2000);
+  this.tap(Button.outFriendPage, 100);
+  debug("'Scrolled' to own player ranking");
+  this.sleep(2000);
 }
 
-Tsum.prototype.taskSendHearts = function() {
-  if (this.findPage() === 'GamePause')
-    return;
-  log(this.logs.friendsPage);
-  this.goFriendPage();
-  log(this.logs.startSendingHearts);
-  this.sleep(1000);
-  if (this.sendHeartMaxDuring === 0) {
-    this.friendPageGoTop();
-    tap(0, 0, 20); // Avoid overlap between zero score and pointer location
-  }
-
-  var startTime = Date.now();
+Tsum.prototype.doHeartSending = function(startTime) {
   var retry = 0;
   var times = 0;
   var hfx = Button.outSendHeartFrom.x;
   var hfy = Button.outSendHeartFrom.y - 40; // hearts from y
   var hty = Button.outSendHeartTo.y + 30;   // hearts to y
-  while(this.isRunning) {
+  var finished;
+
+  function scrollToNextHearts() {
+    if (this.sendHeartsDownwards) {
+      this.tapDown({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
+      this.tapUp({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+    } else {
+      this.tapDown({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y}, 50);
+      this.moveTo({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartBottom.y}, 500);
+      this.tapUp({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartBottom.y}, 100);
+    }
+  }
+
+  while (this.isRunning && typeof finished === 'undefined') {
     this.requestTsumMonitor();
     times++;
     if (times % 15 === 0) {
@@ -2423,7 +2434,7 @@ Tsum.prototype.taskSendHearts = function() {
 
     var img = this.screenshot();
     var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
-    for(var y = hfy; y <= hty; y += 8) {
+    for (var y = hfy; y <= hty; y += 8) {
       var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}), 40);
       if (isHs) {
         heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
@@ -2441,48 +2452,36 @@ Tsum.prototype.taskSendHearts = function() {
         break;
       }
     }
-    var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, Button.outSendHeartEnd2), 40); //x: 75, y: 420
-    var isEnd1 = isSameColor({r: 162, g: 84, b: 53}, this.getColor(img, {x: 75*3, y: 420*3}), 40); // {x: 75, y: 420, r: 162, g: 84, b: 53}}
-    var isEnd2 = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40); // x: 109, y: 422
-    var isEnd3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, Button.outSendHeartEnd3), 40); // x: 105, y: 408
-
-    var isNotEndJP = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, {x: 75*3, y: 352*3}), 40); //x: 75, y: 352
-    var isEndJP1 = isSameColor({r: 162, g: 84, b: 53}, this.getColor(img, {x: 75*3, y: 352*3}), 40); // {x: 75, y: 352, r: 162, g: 84, b: 53}}
-    var isEndJP3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, {x: 105*3, y: 340*3}), 40); // x: 105, y: 340
-
-    var isEnd = !this.isJP && (!isNotEnd && isEnd1 && isEnd2 && isEnd3);
-    // both jp or global using this now
-    var isEndJP = !isNotEndJP && isEndJP1 && isEnd2 && isEndJP3;
+    var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, {x: 225, y: 1056}), 40);
+    var isEnd1 = isSameColor({r: 162, g: 84, b: 53}, this.getColor(img, {x: 225, y: 1056}), 40);
+    var isEnd2 = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
+    var isEnd3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, {x: 315, y: 1020}), 40);
+    var isTop = isSameColor({r: 255, g: 227, b: 115}, this.getColor(img, {x: 200, y: 670}));
     releaseImage(img);
-    if (this.isJP) {
-      log('isNotEndJP', isNotEndJP, 'isEndJP1', isEndJP1, 'isEndJP3', isEndJP3, 'isEndJP', isEndJP, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
-    } else {
-      log('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd3, 'isEnd', isEnd, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
-    }
+
+    var isEnd = !isNotEnd && isEnd1 && isEnd2 && isEnd3;
+    debug('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd3, 'isEnd', isEnd, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
 
     if (isOk && heartsPos.length === 0) {
       this.tap(Button.outReceiveOk);
     }
 
-    if ((heartsPos.length === 0 && (isEnd || isEndJP)) || (!this.sentToZero && isZero && heartsPos.length !== 0)) {
-      if(retry < 3){
-        this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-        this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 500);
-        this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+    if ((heartsPos.length === 0 && (isEnd || isTop)) || (!this.sentToZero && isZero && heartsPos.length !== 0)) {
+      log("'isEnd'=" + isEnd + ", 'isZero'=" + isZero + ", 'isTop'=" + isTop);
+      if (retry < 3) {
+        scrollToNextHearts.call(this);
         retry++;
         log(this.logs.checkSendingHearts, retry);
         this.sleep(1000);
       } else {
         if (this.sendHeartMaxDuring !== 0) {
           this.sleep(1000);
-          this.friendPageGoTop();
+          this.friendPageGoToSelf();
         }
         debug("Ending taskSendHearts");
-        break;
+        this.sendHeartsDownwards = !this.sendHeartsDownwards;
+        // we're finished if we reached the top of the ranking and will send downwards again on the next run
+        finished = this.sendHeartsDownwards;
       }
     } else {
       var rTimes = 0;
@@ -2506,7 +2505,7 @@ Tsum.prototype.taskSendHearts = function() {
           debug("Tried return to FriendPage");
         }
         if (!this.isRunning) {
-          return;
+          return true;  // don't let the surrounding job retry this immediately, so we pretend to be finished
         }
       }
       if (heartsPos.length !== 0 && rTimes === 0) {
@@ -2516,19 +2515,14 @@ Tsum.prototype.taskSendHearts = function() {
         this.saveRecord();
       }
       this.sleep(250);
-      this.tapDown({x: Button.outSendHeart3.x - 10 ,y: Button.outSendHeart3.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart3.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart2.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart1.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeart0.y  }, 50);
-      this.moveTo ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 400);
-      this.tapUp  ({x: Button.outSendHeart3.x - 10, y: Button.outSendHeartTop.y}, 100);
+      scrollToNextHearts.call(this);
 
       this.sleep(400);
       if (this.sendHeartMaxDuring !== 0) {
         if (Date.now() - startTime > this.sendHeartMaxDuring) {
+          // we exceeded the maximum allowed sending time. leaving unfinished.
           log(this.logs.timeIsUp);
-          break;
+          finished = true;
         }
       }
       if (heartsPos.length === 0 && isEnd2) {
@@ -2536,6 +2530,35 @@ Tsum.prototype.taskSendHearts = function() {
       }
     }
   }
+  return finished;
+}
+
+Tsum.prototype.taskSendHearts = function() {
+  debug("Started taskSendHearts");
+  if (this.findPage() === 'GamePause')
+    return;
+  log(this.logs.friendsPage);
+  this.goFriendPage();
+  log(this.logs.startSendingHearts);
+  this.sleep(1000);
+  if (this.sendHeartMaxDuring === 0) {
+    this.friendPageGoToSelf();
+    tap(0, 0, 20); // Avoid overlap between zero score and pointer location
+  }
+
+  var startTime = Date.now();
+  var finished;
+  do {
+    finished = this.doHeartSending(startTime);
+    debug("Finished doHeartSending with result " + finished);
+    this.sleep(2000);
+    if (!finished) {
+      this.friendPageGoToSelf();
+      tap(0, 0, 20); // Avoid overlap between zero score and pointer location
+    }
+    this.sleep(2000);
+  } while (!finished)
+  debug("Finished taskSendHearts");
 }
 
 Tsum.prototype.taskAutoUnlockLevel = function() {
