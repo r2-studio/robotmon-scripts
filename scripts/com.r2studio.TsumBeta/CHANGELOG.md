@@ -5,6 +5,13 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v71] - 2024-10-31
+
+### Fixed
+- Sending hearts crashed in TsumTsum Ver: 10.11.0.
+- Unlocking Tsum levels did not work in JP after adding a new Tsum sort option.
+
+
 ## [v70] - 2024-08-16
 
 ### Added
