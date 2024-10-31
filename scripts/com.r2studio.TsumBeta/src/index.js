@@ -143,11 +143,20 @@ var Button = {
   outReceiveNameTo: {x: 660},
   moneyInfoBox: {x: 430, y: 188, w: 230, h: 56},
   outOpenTsumCollectionOrder: {x: 983, y: 890, r: 165, g: 85, b: 49},
-  outCloseTsumCollectionOrder: {x: 552, y: 1365, r: 247, g: 174, b: 8},
-  outTsumCollectionOrderByReleaseDate: {name: 'By Release Date', x: 331, y: 774, r: 247, g: 178, b: 8},
-  outTsumCollectionOrderFavorites: {name: 'By Favorites', x: 765, y: 769, r: 247, g: 174, b: 8},
-  outTsumCollectionOrderBySkill: {name: 'By Skill', x: 310, y: 988, r: 247, g: 174, b: 8},
-  outTsumCollectionOrderByLevelLock: {name: 'By Level Lock', x: 766, y: 984, r: 247, g: 174, b: 8},
+
+  outCloseTsumCollectionOrderOld: {x: 552, y: 1365, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderByReleaseDateOld: {name: 'By Release Date', x: 331, y: 774, r: 247, g: 178, b: 8},
+  outTsumCollectionOrderFavoritesOld: {name: 'By Favorites', x: 765, y: 769, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderBySkillOld: {name: 'By Skill', x: 310, y: 988, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderByLevelLockOld: {name: 'By Level Lock', x: 766, y: 984, r: 247, g: 174, b: 8},
+
+  outCloseTsumCollectionOrderNew: {x: 552, y: 1585, r: 247, g: 185, b: 8},
+  outTsumCollectionOrderByReleaseDateNew: {name: 'By Release Date', x: 330, y: 673, r: 247, g: 178, b: 8},
+  outTsumCollectionOrderFavoritesNew: {name: 'By Favorites', x: 765, y: 668, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderBySkillNew: {name: 'By Skill', x: 310, y: 900, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderByLevelLockNew: {name: 'By Level Lock', x: 766, y: 894, r: 247, g: 174, b: 8},
+  outTsumCollectionOrderByEntryDateNew: {name: 'By Entry Date', x: 310, y: 1125, r: 247, g: 174, b: 8},
+
   outTsumCollectionDoUnlock: {x: 111, y: 760, r: 173, g: 109, b: 57}
 };
 
@@ -2568,12 +2577,9 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
   var i;
   var img;
   var formerOrderButton = null;
-  var orderButtons = [
-    Button.outTsumCollectionOrderByReleaseDate,
-    Button.outTsumCollectionOrderByLevelLock,
-    Button.outTsumCollectionOrderBySkill,
-    Button.outTsumCollectionOrderFavorites
-  ];
+  var orderButtons;
+  var buttonCloseTsumCollectionOrder;
+  var buttonOrderByLevelLock;
   log(this.logs.tsumsPage);
   this.goTsumsPage();
   this.lastVisitedPages.autoUnlockLevelTsum = true;
@@ -2583,6 +2589,27 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
   this.tap(Button.outOpenTsumCollectionOrder);
   this.sleep(1000);
   img = this.screenshot();
+  // detect old or new ordering view
+  if (isSameColor(Button.outCloseTsumCollectionOrderNew, this.getColor(img, Button.outCloseTsumCollectionOrderNew))) {
+    orderButtons = [
+      Button.outTsumCollectionOrderByReleaseDateNew,
+      Button.outTsumCollectionOrderByLevelLockNew,
+      Button.outTsumCollectionOrderBySkillNew,
+      Button.outTsumCollectionOrderFavoritesNew,
+      Button.outTsumCollectionOrderByEntryDateNew
+    ];
+    buttonCloseTsumCollectionOrder = Button.outCloseTsumCollectionOrderNew;
+    buttonOrderByLevelLock = Button.outTsumCollectionOrderByLevelLockNew;
+  } else {
+    orderButtons = [
+      Button.outTsumCollectionOrderByReleaseDateOld,
+      Button.outTsumCollectionOrderByLevelLockOld,
+      Button.outTsumCollectionOrderBySkillOld,
+      Button.outTsumCollectionOrderFavoritesOld
+    ];
+    buttonCloseTsumCollectionOrder = Button.outCloseTsumCollectionOrderOld;
+    buttonOrderByLevelLock = Button.outTsumCollectionOrderByLevelLockOld;
+  }
   for (i = 0; i < orderButtons.length; i++) {
     btn = orderButtons[i];
     if (isSameColor(btn, this.getColor(img, btn))) {
@@ -2593,9 +2620,9 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
   }
   releaseImage(img);
 
-  this.tap(Button.outTsumCollectionOrderByLevelLock);
+  this.tap(buttonOrderByLevelLock);
   this.sleep();
-  this.tap(Button.outCloseTsumCollectionOrder);
+  this.tap(buttonCloseTsumCollectionOrder);
   this.sleep(1000);
 
   // Start looking for locks from first entries
@@ -2647,12 +2674,12 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
 
 
   // Reset order to former selection
-  if (formerOrderButton != null && formerOrderButton !== Button.outTsumCollectionOrderByLevelLock) {
+  if (formerOrderButton != null && formerOrderButton !== buttonOrderByLevelLock) {
     this.tap(Button.outOpenTsumCollectionOrder);
     this.sleep(1000);
     this.tap(formerOrderButton);
     this.sleep();
-    this.tap(Button.outCloseTsumCollectionOrder);
+    this.tap(buttonCloseTsumCollectionOrder);
     this.sleep(1000);
   }
 
