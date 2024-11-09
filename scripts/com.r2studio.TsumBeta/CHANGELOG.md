@@ -4,10 +4,17 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v73] - 2024-12-19
+
+### Fixed
+- After a game crash, the script now slows down clicks until fully loaded as soon as the "root detected" screen is found. This should minimize problems when clicking away the news dialogs after a full game startup.
+
+
 ## [v72] - 2024-12-04
 
 ### Added
 - Added option to increment by 1 for more precise adjustments for settings that previously only supported increments by multiples of 2/5/10.
+
 
 ## [v71] - 2024-10-31
 

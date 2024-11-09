@@ -584,7 +584,8 @@ var Page = {
       {x: 1010, y: 1310, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 855, y: 1224},
-    next: {x: 855, y: 1224}
+    next: {x: 855, y: 1224},
+    onDetect: switchToStartupMode
   },
   RootDetectionLdp1080p480dpiJp: {
     name: 'RootDetectionLdp1080p480dpiJp',
@@ -595,7 +596,8 @@ var Page = {
       {x: 1010, y: 1370, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 850, y: 1280},
-    next: {x: 850, y: 1280}
+    next: {x: 850, y: 1280},
+    onDetect: switchToStartupMode
   },
   RootDetectionLdp480x800x160dpiEn: {
     name: 'RootDetectionLdp480x800x160dpiEn',
@@ -606,7 +608,8 @@ var Page = {
       {x: 1015, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 885, y: 1135},
-    next: {x: 885, y: 1135}
+    next: {x: 885, y: 1135},
+    onDetect: switchToStartupMode
   },
   RootDetectionNox1080p360dpiEn: {
     name: 'RootDetectionNox1080p360dpiEn',
@@ -617,7 +620,8 @@ var Page = {
       {x: 955, y: 1180, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 850, y: 1115},
-    next: {x: 850, y: 1115}
+    next: {x: 850, y: 1115},
+    onDetect: switchToStartupMode
   },
   RootDetectionNox480x800x160dpiJp: {
     name: 'RootDetectionNox480x800x160dpiJp',
@@ -628,7 +632,8 @@ var Page = {
       {x: 1005, y: 1250, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 885, y: 1170},
-    next: {x: 885, y: 1170}
+    next: {x: 885, y: 1170},
+    onDetect: switchToStartupMode
   },
   RootDetectionNox480x800x160dpiEn: {
     name: 'RootDetectionNox480x800x160dpiEn',
@@ -639,7 +644,8 @@ var Page = {
       {x: 1005, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 885, y: 1150},
-    next: {x: 885, y: 1150}
+    next: {x: 885, y: 1150},
+    onDetect: switchToStartupMode
   },
   RootDetectionSamsungA20En: {
     name: 'RootDetectionSamsungA20En',
@@ -652,7 +658,8 @@ var Page = {
       {x: 1010, y: 1325, r: 255 , g: 255, b: 255, match: false, threshold: 25}
     ],
     back: {x: 850, y: 1230},
-    next: {x: 850, y: 1230}
+    next: {x: 850, y: 1230},
+    onDetect: switchToStartupMode
   },
   MagicalTime: {
     name: 'MagicalTime',
@@ -813,6 +820,13 @@ var Page = {
   }
 };
 
+// page callbacks (this = actual Tsum instance)
+function switchToStartupMode() {
+  this.isStartupPhase = true;
+}
+
+
+// predefined log messages
 var Logs = {
   start: '[TsumTsum] Start',
   stop: '[TsumTsum] Stop',
@@ -1482,6 +1496,13 @@ Tsum.prototype.findPageObject = function(times, timeout) {
       this.sleep(100);
     } // for times
     if (currentPage !== null) {
+      // trigger callback if defined
+      if (typeof currentPage.onDetect === "function") {
+        var callback = currentPage.onDetect;
+        log("Applying fn " + callback.name + "...");
+        callback.apply(this);
+        log("Applied fn " + callback.name + ".");
+      }
       return currentPage;
     }
     if (Date.now() - start > timeout) {
@@ -1543,7 +1564,7 @@ Tsum.prototype.goFriendPage = function() {
     }
     if (this.isStartupPhase) {
       // sleep longer to safely detect new event windows which might initially take longer to load
-      this.sleep(4000);
+      this.sleep(5000);
     }
     var pageObj = this.findPageObject(2, 1000);
     var page = pageObj != null ? pageObj.name : "unknown";
