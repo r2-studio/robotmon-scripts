@@ -385,9 +385,6 @@ function isBattleSkillDetailDialog() {
 }
 
 function isBattleKklDialog() {
-  if (server == "TW") {
-    return false;
-  }
   return checkIconListInScreen(["kkl", "kkl2"], true);
 }
 
