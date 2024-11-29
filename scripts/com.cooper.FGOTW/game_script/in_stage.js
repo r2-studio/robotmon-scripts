@@ -147,6 +147,7 @@ function useSkill(player, skill, target) {
         console.log("庫庫魯坎技能不使用星星");
         clickIcon("kkl");
       }
+      sleep(2000);
     }
   }
   if (isBattleSkillSpaceDialog()) {
