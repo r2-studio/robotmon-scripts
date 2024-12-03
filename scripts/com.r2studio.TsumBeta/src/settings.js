@@ -451,12 +451,12 @@ function getTitle(setting) {
 }
 
 function appendTitle(jSetting, title) {
-    jSetting.append('<div class="col-xs-6">' + title + '</div>');
+    jSetting.append('<div class="col-xs-4">' + title + '</div>');
 }
 
 function appendCol(jSetting, jContent) {
     var jDiv = $('<div class="pull-right"></div>');
-    var jCol = $('<div class="col-xs-6"></div>');
+    var jCol = $('<div class="col-xs-8"></div>');
     if (Array.isArray(jContent)) {
         for (var j in jContent) {
             jDiv.append(jContent[j]);
@@ -526,13 +526,26 @@ function genSettings(jContainer, settings) {
                 appendTitle(jSetting, title);
                 appendCol(jSetting, jDiv);
             } else if (typeof setting.default === 'number') {
-                var step = setting.step;
+                var step = setting.step || 1;
                 var max = setting.max;
                 var min = setting.min;
+
+                // Check if the current step is already 1
+                var hasIncrementBy1 = (step === 1);
+
                 var jBtns = [];
                 var jInput = $('<input id="setting_value_' + key + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>').addClass(key);
                 var jBtnP = $('<button id="setting_value_p_' + key + '" class="btn btn-danger">+' + step + '</button>');
                 var jBtnM = $('<button id="setting_value_m_' + key + '" class="btn btn-danger">-' + step + '</button>');
+
+                // Only create additional increment-by-1 buttons if step isn't already 1
+                var jBtnP1, jBtnM1;
+                if (!hasIncrementBy1) {
+                    jBtnP1 = $('<button id="setting_value_p1_' + key + '" class="btn btn-danger">+1</button>');
+                    jBtnM1 = $('<button id="setting_value_m1_' + key + '" class="btn btn-danger">-1</button>');
+                }
+
+
                 jBtnP.on('click', (function (jInput, min, max, step) {
                     return function () {
                         var newValue = (+jInput.val()) + step;
@@ -547,9 +560,34 @@ function genSettings(jContainer, settings) {
                         saveSettings(settings);
                     }
                 })(jInput, min, max, step));
+
+                // Event handlers for single-step adjustment
+                jBtnP1.on('click', (function (jInput, min, max) {
+                    return function () {
+                        var newValue = (+jInput.val()) + 1;
+                        jInput.val(Math.min(newValue, max));
+                        saveSettings(settings);
+                    };
+                })(jInput, min, max));
+
+                jBtnM1.on('click', (function (jInput, min, max) {
+                    return function () {
+                        var newValue = (+jInput.val()) - 1;
+                        jInput.val(Math.max(newValue, min));
+                        saveSettings(settings);
+                    };
+                })(jInput, min, max));
+
                 jBtns.push(jInput);
                 jBtns.push(jBtnP);
                 jBtns.push(jBtnM);
+
+                if (!hasIncrementBy1) {
+                    jBtns.push(jBtnP1); // Add new +1 button if needed
+                    jBtns.push(jBtnM1); // Add new -1 button if needed
+                }
+            
+                
                 jInput.on('change', function () {
                     saveSettings(settings);
                 });
