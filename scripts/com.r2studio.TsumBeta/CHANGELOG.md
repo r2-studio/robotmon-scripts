@@ -4,6 +4,10 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v72] - 2024-12-04
+
+### Added
+- Added option to increment by 1 for more precise adjustments for settings that previously only supported increments by multiples of 2/5/10.
 
 ## [v71] - 2024-10-31
 
