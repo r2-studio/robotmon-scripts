@@ -82,8 +82,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 71,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v71</b>\n<ul>\n    <li>修复：发送爱心时崩溃<br>Fix: Crash on Send hearts</li>\n    <li>修复：日本等级解锁<br>Fix: JP Tsum level unlock</li>\n</ul>",
+      "versionCode": 72,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v72</b>\n<ul>\n    <li>新增：支持按 1 递增，允许更精确的调整设置（之前只能按 2/5/10 递增）<br>Added option to increment by 1 for more precise adjustments for settings that previously only supported increments by multiples of 2/5/10</li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
