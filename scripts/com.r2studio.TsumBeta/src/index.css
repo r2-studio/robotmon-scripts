@@ -87,10 +87,7 @@ input:checked + .slider:before {
 }
 
 .btn {
-    padding: 3px 5px !important;
-    font-size: 12px;
-    margin: 1.5px;
-    height: 26px;
+    margin-left: 5px;
 }
 
 .btn-plus {
@@ -133,10 +130,7 @@ fieldset[disabled] .btn-plus.active {
 }
 
 .setting_input_value {
-    width: 35px;
-    font-size: 12px;
-    height: 26px;
-    margin: 1.5px;
+    width: 40px;
     text-align: center;
 }
 
