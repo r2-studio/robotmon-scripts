@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - After a game crash, the script now slows down clicks until fully loaded as soon as the "root detected" screen is found. This should minimize problems when clicking away the news dialogs after a full game startup.
+- Chinese descriptions were often created with Google Translate, which probably often gave bad results. The worst translations got now probably fixed.
 
 
 ## [v72] - 2024-12-04

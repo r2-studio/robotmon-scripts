@@ -78,7 +78,7 @@ var settings = [
             transient: true,
             key: 'autobuyBoxes',
             title: 'Auto buy boxes',
-            title_zh_TW: '自动购买框',
+            title_zh_TW: '自動抽盒（次）',
             default: 0,
             step: 10,
             max: 500,
@@ -188,16 +188,16 @@ var settings = [
                 {key: 'block_snowwhite_s', title: 'Snow White', title_zh_TW: '白雪公主'},
                 {key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉'},
                 {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'},
-                {key: 'block_cabbage_mickey_s', title: 'Cabbage Mickey', title_zh_TW: '卷心菜米奇'},
-                {key: 'block_cpt_ly_s', title: 'Cpt. Lightyear', title_zh_TW: '光年队长'},
-                {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '配对Tsum'},
+                {key: 'block_cabbage_mickey_s', title: 'Cabbage Mickey', title_zh_TW: '高麗菜米奇'},
+                {key: 'block_cpt_ly_s', title: 'Cpt. Lightyear', title_zh_TW: '光年隊長'},
+                {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '搭檔Tsum'},
                 {key: 'no_skill', title: 'No Skill', title_zh_TW: '没有技能'}
             ]
         },
         {
             key: 'noSkillLastFeverSec',
             title: 'No skill last fever seconds',
-            title_zh_TW: '无技能最后发烧秒',
+            title_zh_TW: 'Fever尾段扣技能秒數',
             default: 0,
             step: 1,
             max: 10,
@@ -206,7 +206,7 @@ var settings = [
         {
             key: 'unlockLevelHoursWait',
             title: 'Unlock Level every hours',
-            title_zh_TW: '每小时解锁等级',
+            title_zh_TW: '解鎖角色等級時間(時)',
             default: 0,
             min: 0,
             max: 24,
@@ -240,19 +240,19 @@ var settings = [
         {
             key: 'receiveHeartsSkipFirst',
             title: 'Skip first person',
-            title_zh_TW: '跳過一個使用者',
+            title_zh_TW: '從第二行開始接收',
             default: false
         },
         {
             key: 'receiveHeartsSkipRuby',
             title: 'Skip Ruby',
-            title_zh_TW: '保留鑽石',
+            title_zh_TW: '跳過紅寶石',
             default: false
         },
         {
             key: 'claimAllWithoutCoins',
             title: 'Claim All old mails',
-            title_zh_TW: '认领所有旧邮件',
+            title_zh_TW: '領取過期郵件',
             default: false
         },
         {
@@ -321,12 +321,12 @@ var settings = [
     [
         {
             title: '<b style="color: red">Experimental features</b><br>Things may not work correctly in every scenario',
-            title_zh_TW: '<b style="color: red">实验特点</b><br>事情可能无法在每种情况下正常工作'
+            title_zh_TW: '<b style="color: red">實驗性功能</b><br>無法保證所有功能正常運作'
         },
         {
             key: 'tsumMonitorUrl',
             title: 'URL to Tsum Monitor',
-            title_zh_TW: '链接到 Tsum 监视器',
+            title_zh_TW: 'Tsum監視器URL',
             default: ""
         }
     ]
