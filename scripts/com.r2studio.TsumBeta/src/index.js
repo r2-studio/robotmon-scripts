@@ -105,6 +105,9 @@ var Button = {
   outReceive: {x: 910, y: 422},
   outReceiveAll: {x: 800, y: 1422},
   outReceiveOk: {x: 835, y: 1092, color: {"a":0,"b":6,"g":175,"r":236}},
+  outReceiveAllHeartsDisabledJP: {x: 679, y: 880, color: {"a":0,"b":214,"g":129,"r":41}},
+  outReceiveAllRubiesEnabledJP: {x: 261, y: 705, color: {"a":0,"b":33,"g":178,"r":247}},
+  outReceiveAllOkJP: {x: 835, y: 1258, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveItemSetOk: {x: 830, y: 1260, color: {"a":0,"b":8,"g":176,"r":238}},
   outReceiveClose: {x: 530, y: 1372},
   outReceiveOneBase: {y: 569},
@@ -2124,13 +2127,40 @@ Tsum.prototype.taskReceiveAllItems = function() {
   this.sleep(3500);
   this.tap(Button.outReceiveAll);
   this.sleep(2500);
-  this.tap(Button.outReceiveOk);
+  this.fetchAllMails();
   this.sleep(2000);
   this.tap(Button.outReceiveClose);
   this.sleep(1500);
   this.tap(Button.outClose);
   this.goFriendPage();
   log(this.logs.allGiftsReceived);
+}
+
+Tsum.prototype.fetchAllMails = function() {
+  var intlOkButton = Button.outReceiveOk;
+  var jpOkButton = Button.outReceiveAllOkJP;
+
+  var img = this.screenshot();
+
+  if (this.isOnScreenshot(img, intlOkButton, 35)) {
+    this.tap(intlOkButton);
+  } else if (this.isOnScreenshot(img, jpOkButton, 35)) {
+    // check important previous buttons before pressing OK
+    if (this.keepRuby && this.isOnScreenshot(img, Button.outReceiveAllRubiesEnabledJP)) {
+      this.tap(Button.outReceiveAllRubiesEnabledJP);
+      this.sleep(500);
+    }
+    if (this.isOnScreenshot(img, Button.outReceiveAllHeartsDisabledJP)) {
+      this.tap(Button.outReceiveAllHeartsDisabledJP);
+      this.sleep(500);
+    }
+    this.tap(jpOkButton);
+  } else {
+    log("ERROR! No OK button found!");
+    this.exitUnknownPage();
+  }
+
+  releaseImage(img);
 }
 
 Tsum.prototype.readRecord = function() {
@@ -2849,6 +2879,11 @@ Tsum.prototype.sleep = function(t) {
     }
   }
 }
+
+Tsum.prototype.isOnScreenshot = function(img, pageObject, colorDiff) {
+  return pageObject && pageObject.color && isSameColor(pageObject.color, this.getColor(img, pageObject), colorDiff)
+}
+
 
 function start(settings) {
   ts = new Tsum(settings['jpVersion'], settings['specialScreenRatio'], settings['langTaiwan'] ? LogsTW : Logs);
