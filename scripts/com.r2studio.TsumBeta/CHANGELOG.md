@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - JP Tsum Tsum update broke "Receive All Hearts". As there are now more features, "Receive All Hearts" now respects the "Skip Ruby" option. 
+- JP Tsum Tsum update broke "Auto buy Tsums".
+- "Auto buy Tsums" sometimes missed some buys when counting down
 
 
 ## [v73] - 2024-12-19
