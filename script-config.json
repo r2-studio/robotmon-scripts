@@ -82,8 +82,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 73,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v73</b>\n<ul>\n    <li>\n        修正遊戲重開流程與中文翻譯。\n        <br>\n        Improved startup behavior and Chinese translation.\n    </li>\n</ul>",
+      "versionCode": 74,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v74</b>\n<ul>\n    <li>\n        修復了日版中的“全部領取”和“自動抽盒”\n        <br>\n        Improved startup behavior and Chinese translation.\n    </li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
