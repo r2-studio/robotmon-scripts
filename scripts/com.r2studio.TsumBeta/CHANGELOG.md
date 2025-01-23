@@ -4,6 +4,16 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v74] - tba
+
+### Fixed
+- JP Tsum Tsum update broke "Receive All Hearts". As there are now more features, "Receive All Hearts" now respects the "Skip Ruby" option. 
+- JP Tsum Tsum update broke "Auto buy Tsums".
+- "Auto buy Tsums" sometimes missed some buys when counting down
+
+### Changed
+- Reduced the amount of regular logging. Most of the logs like "Recognized Tsums" are not useful in non-debug mode and might increase resource demand.
+
 ## [v73] - 2024-12-19
 
 ### Fixed

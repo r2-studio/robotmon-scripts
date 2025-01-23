@@ -105,6 +105,9 @@ var Button = {
   outReceive: {x: 910, y: 422},
   outReceiveAll: {x: 800, y: 1422},
   outReceiveOk: {x: 835, y: 1092, color: {"a":0,"b":6,"g":175,"r":236}},
+  outReceiveAllHeartsDisabledJP: {x: 679, y: 880, color: {"a":0,"b":214,"g":129,"r":41}},
+  outReceiveAllRubiesEnabledJP: {x: 261, y: 705, color: {"a":0,"b":33,"g":178,"r":247}},
+  outReceiveAllOkJP: {x: 835, y: 1258, color: {"a":0,"b":6,"g":175,"r":236}},
   outReceiveItemSetOk: {x: 830, y: 1260, color: {"a":0,"b":8,"g":176,"r":238}},
   outReceiveClose: {x: 530, y: 1372},
   outReceiveOneBase: {y: 569},
@@ -177,6 +180,20 @@ var AbstractPage = {
       {x: 856, y: 920, r: 165, g: 12, b: 0, match: true, threshold: 30},  // red premium box on right button
       {x: 760, y: 760, r: 247, g: 182, b: 8, match: true, threshold: 30}, // yellow button premium box top left
       {x: 960, y: 980, r: 247, g: 178, b: 8, match: true, threshold: 30}  // right side of premium box button
+    ],
+    colors2025OverviewGeneral: [
+      {x: 30, y: 910, r: 16, g: 53, b: 93, match: true, threshold: 30},
+      {x: 60, y: 910, r: 233, g: 171, b: 8, match: true, threshold: 30},
+      {x: 520, y: 910, r: 237, g: 174, b: 8, match: true, threshold: 30},
+      {x: 545, y: 840, r: 22, g: 65, b: 107, match: true, threshold: 30},
+      {x: 570, y: 910, r: 29, g: 85, b: 159, match: true, threshold: 30},
+      {x: 10, y: 955, r: 37, g: 71, b: 115, match: true, threshold: 30},
+      {x: 170, y: 1490, r: 48, g: 81, b: 130, match: true, threshold: 30},
+      {x: 170, y: 1515, r: 8, g: 164, b: 213, match: true, threshold: 30},
+      {x: 170, y: 1570, r: 247, g: 194, b: 16, match: true, threshold: 30}
+    ],
+    colors2025OverviewSelected: [
+      {x: 440, y: 1200, r: 246, g: 181, b: 17, match: true, threshold: 20} // yellow area for either premium or special box
     ],
     colorsNoMissionPage: [
       {x: 170, y: 1580, r: 49, g: 40, b: 0, match: true, threshold: 30}   // left bottom modal button
@@ -427,6 +444,20 @@ var Page = {
     next: {x: 176, y: 1592},
     store: {x: 910, y: 1592}
   },
+  TsumTsum2025StorePage: {
+    // needs to be before PrePage as it is more specific than the other page
+    name: 'TsumTsumStorePage',
+    colors: AbstractPage.TsumStore.colors2025OverviewGeneral.concat(AbstractPage.TsumStore.colors2025OverviewSelected),
+    back: {x: 190, y: 1650},
+    next: {x: 910, y: 690}
+  },
+  TsumTsum2025StorePrePage: {
+    name: 'TsumTsumStorePrePage',
+    colors: AbstractPage.TsumStore.colors2025OverviewGeneral,
+    back: {x: 190, y: 1650},
+    store: {x: 430, y: 1200},
+    next: {x: 430, y: 1200}
+  },
   TsumTsumStorePageTwoBoxesNoMission: {
     name: 'TsumTsumStorePage',
     colors: AbstractPage.TsumStore.colorsTwoBoxTypes.concat(AbstractPage.TsumStore.colorsNoMissionPage),
@@ -456,11 +487,25 @@ var Page = {
     colors: [
       {x: 208, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // left of Cancel button
       {x: 420, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // right of Cancel button
-      {x: 540, y: 1070, r: 54, g: 93, b: 146, match: true, threshold: 30},  // betwen buttons
+      {x: 540, y: 1070, r: 54, g: 93, b: 146, match: true, threshold: 30},  // between buttons
       {x: 650, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // left of OK button
       {x: 880, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // right of OK button
       {x: 948, y: 1066, r: 33, g: 69, b: 107, match: true, threshold: 30},  // right next to OK button
       {x: 805, y: 1265, r: 239, g: 167, b: 8, match: true, threshold: 50}   // left of List button
+    ],
+    back: {x: 310, y: 1070},  // Cancel button
+    next: {x: 760, y: 1070}   // OK button
+  },
+  Confirm2025PurchaseBoxPage: {
+    name: 'ConfirmPurchasePage',
+    colors: [
+      {x: 208, y: 1070, r: 247, g: 186, b:   8, match: true, threshold: 30},  // left of Cancel button
+      {x: 420, y: 1070, r: 247, g: 184, b:   8, match: true, threshold: 30},  // right of Cancel button
+      {x: 540, y: 1070, r:  54, g:  90, b: 141, match: true, threshold: 30},  // between buttons
+      {x: 650, y: 1070, r: 247, g: 190, b:   8, match: true, threshold: 30},  // left of OK button
+      {x: 880, y: 1070, r: 247, g: 191, b:  14, match: true, threshold: 30},  // right of OK button
+      {x: 948, y: 1066, r:  40, g:  70, b: 113, match: true, threshold: 30},  // right next to OK button
+      {x: 785, y: 1320, r: 238, g: 171, b:   8, match: true, threshold: 50}   // left of List button
     ],
     back: {x: 310, y: 1070},  // Cancel button
     next: {x: 760, y: 1070}   // OK button
@@ -470,7 +515,7 @@ var Page = {
     colors: [
       {x: 200, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // left of Cancel button
       {x: 426, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of Cancel button
-      {x: 540, y: 1444, r: 54, g: 93, b: 146, match: true, threshold: 30},  // betwen buttons
+      {x: 540, y: 1444, r: 54, g: 93, b: 146, match: true, threshold: 30},  // between buttons
       {x: 660, y: 1444, r: 247, g: 174, b: 8, match: true, threshold: 30},  // left of OK button
       {x: 860, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of OK button
       {x: 940, y: 1444, r: 33, g: 65, b: 107, match: true, threshold: 30},  // right next to OK button
@@ -478,6 +523,20 @@ var Page = {
     ],
     back: {x: 320, y: 1444},  // Cancel button
     next: {x: 766, y: 1444}   // OK button
+  },
+  Confirm2025PurchaseCapsulePage: {
+    name: 'ConfirmPurchasePage',
+    colors: [
+      {x: 200, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},  // left of Cancel button
+      {x: 426, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of Cancel button
+      {x: 540, y: 1464, r: 54, g: 93, b: 146, match: true, threshold: 30},  // between buttons
+      {x: 660, y: 1464, r: 247, g: 174, b: 8, match: true, threshold: 30},  // left of OK button
+      {x: 860, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of OK button
+      {x: 940, y: 1464, r: 33, g: 65, b: 107, match: true, threshold: 30},  // right next to OK button
+      {x: 416, y: 810, r: 239, g: 28, b: 49, match: true, threshold: 30}    // red top of big pickup capsule image
+    ],
+    back: {x: 320, y: 1464},  // Cancel button
+    next: {x: 766, y: 1464}   // OK button
   },
   TapOpenPageBox: {
     name: 'TapOpenPage',
@@ -1059,7 +1118,7 @@ function calculatePaths(board, logs) {
     if (a.length < b.length) { return 1; }
     return -1;
   });
-  log(logs.calculatedPath, paths.length);
+  debug(logs.calculatedPath, paths.length);
   return paths;
 }
 
@@ -1639,7 +1698,7 @@ Tsum.prototype.checkGameItem = function() {
     }
     this.sleep(500);
   }
-  log(this.logs.checkBonusItems, isItemsOn);
+  debug(this.logs.checkBonusItems, isItemsOn);
 }
 
 Tsum.prototype.goGamePlayingPage = function() {
@@ -1716,15 +1775,17 @@ Tsum.prototype.goTsumTsumStorePage = function() {
       this.startApp();
     }
     this.goTsumsPage();
-    this.tap(Page.TsumsPage.store);
-    this.sleep(3000);
-    var pageName = this.findPage(2, 2000);
-    if (pageName === 'TsumTsumStorePage') {
-      return true;
-    } else {
-      log('Unexpected page found:', pageName, 'goTsumTsumStorePage');
-      return false;
+    for (var i = 0; i < 3; i++) {
+      this.tap(this.findPageObject().store);
+      this.sleep(3000);
+      var pageName = this.findPage(2, 2000);
+      log("Pg: ", pageName);
+      if (pageName === 'TsumTsumStorePage') {
+        return true;
+      }
     }
+    log('Unexpected page found:', pageName, 'goTsumTsumStorePage');
+    return false;
   }
 }
 
@@ -2009,7 +2070,7 @@ Tsum.prototype.scanBoardQuick = function() {
   }
 
   var points = findTsums(srcImg);
-  log(this.logs.recognitionStart);
+  debug(this.logs.recognitionStart);
   var tcs = classifyTsums(points);
   tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
   var board = [];
@@ -2030,9 +2091,9 @@ Tsum.prototype.scanBoardQuick = function() {
     saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
   }
   releaseImage(srcImg);
-  log(this.logs.recognizedTsums, board.length);
+  debug(this.logs.recognizedTsums, board.length);
   sleep(30);
-  log(this.logs.recognitionTime, usingTimeString(startTime));
+  debug(this.logs.recognitionTime, usingTimeString(startTime));
 
   if (this.isPause) {
     this.sleep(Config.gameContinueDelay);
@@ -2061,12 +2122,12 @@ Tsum.prototype.taskPlayGameQuick = function() {
     if (board == null) {
       break;
     }
-    log(this.logs.calculationPathStart);
+    debug(this.logs.calculationPathStart);
     var paths = calculatePaths(board, this.logs);
     paths = paths.splice(0, 6);
     var isBubble = this.link(paths);
     if (isBubble) {
-      log(this.logs.bubbleGenerated);
+      debug(this.logs.bubbleGenerated);
       clearBubbles++;
     }
     if (paths.length < 3) {
@@ -2079,7 +2140,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
     // click bubbles
     if (this.clearBubbles && clearBubbles >= 2) {
-      log(this.logs.clearBubbles);
+      debug(this.logs.clearBubbles);
       clearBubbles = 0;
       // only clearing lower area in order to speed up the cleaning process
       this.clearAllBubbles(0, 0, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
@@ -2091,10 +2152,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
     if (this.isPause) {
       this.sleep(300);
     }
-    if (this.useSkill(board)) {
-      clearBubbles++;
-      if (this.useSkill(board)) {
-        this.useSkill(board);
+    while (this.useSkill(board)) {
+      if (this.skillType !== "block_cpt_ly_s") {
+        clearBubbles++;
       }
     }
 
@@ -2124,13 +2184,40 @@ Tsum.prototype.taskReceiveAllItems = function() {
   this.sleep(3500);
   this.tap(Button.outReceiveAll);
   this.sleep(2500);
-  this.tap(Button.outReceiveOk);
+  this.fetchAllMails();
   this.sleep(2000);
   this.tap(Button.outReceiveClose);
   this.sleep(1500);
   this.tap(Button.outClose);
   this.goFriendPage();
   log(this.logs.allGiftsReceived);
+}
+
+Tsum.prototype.fetchAllMails = function() {
+  var intlOkButton = Button.outReceiveOk;
+  var jpOkButton = Button.outReceiveAllOkJP;
+
+  var img = this.screenshot();
+
+  if (this.isOnScreenshot(img, intlOkButton, 35)) {
+    this.tap(intlOkButton);
+  } else if (this.isOnScreenshot(img, jpOkButton, 35)) {
+    // check important previous buttons before pressing OK
+    if (this.keepRuby && this.isOnScreenshot(img, Button.outReceiveAllRubiesEnabledJP)) {
+      this.tap(Button.outReceiveAllRubiesEnabledJP);
+      this.sleep(500);
+    }
+    if (this.isOnScreenshot(img, Button.outReceiveAllHeartsDisabledJP)) {
+      this.tap(Button.outReceiveAllHeartsDisabledJP);
+      this.sleep(500);
+    }
+    this.tap(jpOkButton);
+  } else {
+    log("ERROR! No OK button found!");
+    this.exitUnknownPage();
+  }
+
+  releaseImage(img);
 }
 
 Tsum.prototype.readRecord = function() {
@@ -2724,15 +2811,26 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
   }
   this.lastVisitedPages.autoBuyBoxesStore = true;
   log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
-  var countUnknownPages = 0;
-  while (this.isRunning && this.autobuyBoxes > 0) {
+  var countUnknownPages = 0, countSamePage = 0;
+  while (this.isRunning && this.autobuyBoxes > 0 && countSamePage < 10) {
     this.requestTsumMonitor();
     var page = this.findPageObject(1, 200);
     if (page != null) {
       countUnknownPages = 0;
       this.lastVisitedPages['autoBuyBoxes' + page.name] = true;
       this.tap(page.next);
-      if (page !== lastPage && page === Page.BoxPurchasedPage) {
+      if (page === lastPage) {
+        countSamePage++;
+        debug("countSamePage = ", countSamePage);
+      } else {
+        countSamePage = 0;
+      }
+      if (countSamePage > 30) {
+        // we didn't change the page for at least 15 seconds (30 * 0.500) so try escaping from wherever we are
+        this.exitUnknownPage();
+        countSamePage = 0;
+        this.autobuyBoxes = 0;
+      } else if (page !== lastPage && page.name === "ConfirmPurchasePage") {
         this.autobuyBoxes--;
         log("Bought box.", this.autobuyBoxes, "left");
       } else if (page.name === Page.Received.name
@@ -2774,7 +2872,7 @@ Tsum.prototype.requestTsumMonitor = function(force) {
   if (this.nextMonitorExecution <= Date.now() && Object.keys(this.lastVisitedPages).length >= 2) {
     log("TsumMonitor - GET", url);
     var response = httpClient('GET', url, '', {});
-    log("TsumMonitor - Response:", response);
+    log("TsumMonitor - Response:", response.trim());
     this.nextMonitorExecution = Date.now() + 60 * 1000;
     this.lastVisitedPages = {};
   } else {
@@ -2849,6 +2947,11 @@ Tsum.prototype.sleep = function(t) {
     }
   }
 }
+
+Tsum.prototype.isOnScreenshot = function(img, pageObject, colorDiff) {
+  return pageObject && pageObject.color && isSameColor(pageObject.color, this.getColor(img, pageObject), colorDiff)
+}
+
 
 function start(settings) {
   ts = new Tsum(settings['jpVersion'], settings['specialScreenRatio'], settings['langTaiwan'] ? LogsTW : Logs);
