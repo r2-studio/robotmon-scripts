@@ -9,10 +9,12 @@ function setMarginIcon() {
     icon["boxNoPoint"] = [360, 630, 195, 82];
     icon["settingDialog"] = [840, 220, 240, 60];
     icon["stageFailed"] = [900, 154, 140, 60];
+    icon["stageRestart"] = [1140, 810, 240, 75];
   } else {
     icon["boxNoPoint"] = [470, 530, 200, 100];
     icon["settingDialog"] = [750, 220, 350, 60];
     icon["stageFailed"] = [750, 160, 300, 60];
+    icon["stageRestart"] = [1140, 836, 240, 75];
   }
 
   //1920 default
@@ -385,9 +387,6 @@ function isBattleSkillDetailDialog() {
 }
 
 function isBattleKklDialog() {
-  if (server == "TW") {
-    return false;
-  }
   return checkIconListInScreen(["kkl", "kkl2"], true);
 }
 
