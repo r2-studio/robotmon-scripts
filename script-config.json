@@ -88,6 +88,15 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
     },
+    "com.r2studio.TsumBetaTest": {
+      "id": "com.r2studio.TsumBetaTest",
+      "title": "Disney Tsum Tsum Test",
+      "versionCode": 74,
+      "description": "<h3>Testing</h3>\n    </li>\n</ul>",
+      "packageName": "com.linecorp.LGTMTMG",
+      "downloadURL": "https://github.com/JackCameHere/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBetaTest/index.zip",
+      "dependencies": []
+    },
     "com.r2studio.CookieKingdom.Basic": {
       "id": "com.r2studio.CookieKingdom.Basic",
       "title": "CookieKingdom: basic management",
