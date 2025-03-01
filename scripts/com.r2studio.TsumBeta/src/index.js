@@ -743,8 +743,12 @@ var Page = {
   NetworkTimeout: {
     name: 'NetworkTimeout',
     colors: [
+      {x: 530, y: 590, r: 33, g: 197, b: 234, match: true, threshold: 80},
+      {x: 530, y: 620, r: 59, g: 94, b: 148, match: true, threshold: 80},
       {x: 478, y: 1080, r: 232, g: 171, b: 5, match: true, threshold: 80},
-      {x: 932, y: 1077, r: 232, g: 171, b: 5, match: true, threshold: 80}
+      {x: 932, y: 1077, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 530, y: 1150, r: 59, g: 94, b: 148, match: true, threshold: 80},
+      {x: 530, y: 1170, r: 33, g: 197, b: 234, match: true, threshold: 80}
     ],
     back: {x: 885, y: 1084},
     next: {x: 885, y: 1084}
