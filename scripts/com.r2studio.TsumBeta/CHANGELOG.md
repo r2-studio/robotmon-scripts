@@ -4,7 +4,17 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [v74] - tba
+## [v75] - 2025-03-01
+
+### Fixed
+- NetworkTimeout page detection was too generic so it falsely categorized the Events Info screen from March 2025 as that which made the script stall.
+
+### Changed
+- Improved skill of Cinderella by changing the clearance pattern.
+- Improved skill of Captain Lightyear by delaying bubble clearance after skill which effectively clears more Tsums.
+
+
+## [v74] - 2025-01-23
 
 ### Fixed
 - JP Tsum Tsum update broke "Receive All Hearts". As there are now more features, "Receive All Hearts" now respects the "Skip Ruby" option. 
@@ -13,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 - Reduced the amount of regular logging. Most of the logs like "Recognized Tsums" are not useful in non-debug mode and might increase resource demand.
+
 
 ## [v73] - 2024-12-19
 
