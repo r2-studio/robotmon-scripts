@@ -2058,8 +2058,7 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillCptLy3, 10);
     this.sleep(550);
     this.tap(Button.skillCptLy3, 10);
-    this.sleep(500);
-    this.clearAllBubbles(0, 0, 1000);
+    this.clearAllBubbles(600, 0, 1000, 300);
   } else {
     this.sleep(this.skillInterval);
   }
