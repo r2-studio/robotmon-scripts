@@ -743,8 +743,12 @@ var Page = {
   NetworkTimeout: {
     name: 'NetworkTimeout',
     colors: [
+      {x: 530, y: 590, r: 33, g: 197, b: 234, match: true, threshold: 80},
+      {x: 530, y: 620, r: 59, g: 94, b: 148, match: true, threshold: 80},
       {x: 478, y: 1080, r: 232, g: 171, b: 5, match: true, threshold: 80},
-      {x: 932, y: 1077, r: 232, g: 171, b: 5, match: true, threshold: 80}
+      {x: 932, y: 1077, r: 232, g: 171, b: 5, match: true, threshold: 80},
+      {x: 530, y: 1150, r: 59, g: 94, b: 148, match: true, threshold: 80},
+      {x: 530, y: 1170, r: 33, g: 197, b: 234, match: true, threshold: 80}
     ],
     back: {x: 885, y: 1084},
     next: {x: 885, y: 1084}
@@ -1789,7 +1793,8 @@ Tsum.prototype.goTsumTsumStorePage = function() {
   }
 }
 
-Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
+Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY, delayBetweenLines) {
+  delayBetweenLines = delayBetweenLines || 0;
   if (typeof startDelay === 'number' && startDelay > 0) {
     this.sleep(startDelay);
   }
@@ -1803,6 +1808,7 @@ Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
     for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
       this.tap({x: bx, y: by}, 10);
     }
+    this.sleep(delayBetweenLines);
   }
 
   if (typeof endDelay === 'number' && endDelay > 0) {
@@ -1810,19 +1816,29 @@ Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY) {
   }
 }
 
-Tsum.prototype.useCinderellaSkill = function(board) {
-  var size = this.skillLevel + 6;
-  board.sort(function(a, b) {
-    return a.y - b.y;
-  });
-  var paths = convertTo2DArray(board, size);
-  for (var i = 0; i < paths.length - 1; i++) {
-    var path = paths[i];
-    path.sort(function(a, b) {
-      return a.x - b.x;
-    });
-    this.linkTsums(path);
+Tsum.prototype.useCinderellaSkill = function() {
+  var path, offset, y;
+  for (var i = 0; i < 5; i += 1) {
+    for (offset = 0; offset <= 200; offset += 200) {
+      path = [];
+      for (y = 170; y >= 70; y -= 20)
+        path.push({x: Math.abs(offset - 10), y: y});
+
+      for (y = 60; y <= 180; y += 20)
+        path.push({x: Math.abs(offset - 40), y: y});
+
+      for (y = 180; y >= 60; y -= 20)
+        path.push({x: Math.abs(offset - 70), y: y});
+
+      for (y = 60; y <= 180; y += 20)
+        path.push({x: Math.abs(offset - 100), y: y});
+
+      debug("Cinderella i =", i, ", offset =", offset);
+      this.linkTsums(path);
+    }
   }
+  this.sleep(3000);
+  this.clearAllBubbles(10, 50, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2, 200);
 }
 
 Tsum.prototype.useSkill = function(board) {
@@ -1956,10 +1972,6 @@ Tsum.prototype.useSkill = function(board) {
   } else if(this.skillType === 'block_cinderella_s') {
     this.sleep(1500);
     this.useCinderellaSkill(board);
-    this.sleep(500);
-    board = this.scanBoardQuick();
-    this.useCinderellaSkill(board);
-    this.clearAllBubbles(2500, 50);
   } else if(this.skillType === 'block_woody2_s'){
     this.sleep(1800);
     this.tapDown({x: 540, y: 960}, 20);
@@ -2050,8 +2062,7 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillCptLy3, 10);
     this.sleep(550);
     this.tap(Button.skillCptLy3, 10);
-    this.sleep(500);
-    this.clearAllBubbles(0, 0, 1000);
+    this.clearAllBubbles(600, 0, 1000, 300);
   } else {
     this.sleep(this.skillInterval);
   }
