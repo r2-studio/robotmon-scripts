@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 75;
+var VERSION = 76;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -177,6 +177,7 @@ var settings = [
             default: 'burst',
             dropdown: [
                 {key: 'burst', title: 'Burst', title_zh_TW: '消除系'},
+                {key: 'burst_bubbles', title: 'Burst bubbles', title_zh_TW: '消除系2'},
                 {key: 'block_donald_s', title: 'Donald', title_zh_TW: '唐老鴨'},
                 {key: 'block_donaldx_s', title: 'Holiday Donald', title_zh_TW: '假日唐老鴨'},
                 {key: 'block_lukej_s', title: 'Jedi Luke', title_zh_TW: '絕地路克'},
@@ -190,6 +191,7 @@ var settings = [
                 {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'},
                 {key: 'block_cabbage_mickey_s', title: 'Cabbage Mickey', title_zh_TW: '高麗菜米奇'},
                 {key: 'block_cpt_ly_s', title: 'Cpt. Lightyear', title_zh_TW: '光年隊長'},
+                {key: 'block_lightning_mcqueen_plus_s', title: 'Lightning McQueen+', title_zh_TW: '閃電麥坤+'},
                 {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '搭檔Tsum'},
                 {key: 'no_skill', title: 'No Skill', title_zh_TW: '没有技能'}
             ]
