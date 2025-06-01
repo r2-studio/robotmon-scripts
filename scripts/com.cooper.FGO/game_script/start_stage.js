@@ -42,7 +42,7 @@ function selectStage(useApple) {
   }
   var status = -1;
   while (isScriptRunning) {
-    if(iswhiteStartFailedDialog()){
+    if (iswhiteStartFailedDialog()) {
       status = 3;
     } else if (isItemOrServantFullDialog()) {
       status = 0;
@@ -50,8 +50,8 @@ function selectStage(useApple) {
       status = 1;
     } else if (isSelectFriendPage() || isSelectTeamPage()) {
       status = 2;
-    } else if(isWhiteConfirmDialog()){
-      tapScale(1250,850);
+    } else if (isWhiteConfirmDialog()) {
+      tapScale(1250, 850);
       sleep(1000);
     }
     if (status >= 0) {
@@ -85,9 +85,9 @@ function selectStage(useApple) {
         sendNormalMessage(runningScriptName, "使用銀蘋果");
         break;
       case 5:
-          tapScale(900, 840);
-          console.log("使用青銅蘋果");
-          sendNormalMessage(runningScriptName, "使用青銅蘋果");
+        tapScale(900, 840);
+        console.log("使用青銅蘋果");
+        sendNormalMessage(runningScriptName, "使用青銅蘋果");
         break;
       case 0: //bronze
         swipeScale(600, 750, 600, 150, 300);
@@ -119,8 +119,8 @@ function selectStage(useApple) {
   }
   while (isScriptRunning) {
     waitLoading();
-    if(isWhiteConfirmDialog()){
-      tapScale(1250,850);
+    if (isWhiteConfirmDialog()) {
+      tapScale(1250, 850);
       sleep(1000);
     } else if (isSelectFriendPage()) {
       waitLoading();
@@ -164,12 +164,16 @@ function selectTeam(team, useTeamAutoBuild) {
   if (!isScriptRunning) {
     return;
   }
+  sleep(2000);
+  if (isTeamMemberCheckDialog()) {
+    clickIcon("teamMemberCheckDialog");
+  }
   if (useTeamAutoBuild == undefined || useTeamAutoBuild == null) {
     useTeamAutoBuild = 0;
   }
   var teamMaxCnt = 15;
   var teamOffset = 2;
-  if(server == "TW"){
+  if (server == "TW") {
     teamMaxCnt = 10;
     teamOffset = 0;
   }
@@ -192,7 +196,7 @@ function selectTeam(team, useTeamAutoBuild) {
     return;
   }
   var x = 787 + 37 * (team - teamOffset);
-  var x2 = 787 + 37 * ((team + 1) % teamMaxCnt - teamOffset);
+  var x2 = 787 + 37 * (((team + 1) % teamMaxCnt) - teamOffset);
   tapScale(x2, 75);
   sleep(1000);
   tapScale(x, 75);
@@ -232,10 +236,19 @@ function startQuest(useItem, checkStageLoadFinish) {
   }
   console.log("-進入關卡-");
   if (!isSelectTeamPage()) {
-    console.log("不在選擇隊伍畫面");
-    return;
+    if (isTeamMemberCheckDialog()) {
+      clickIcon("teamMemberCheckDialog");
+      sleep(500);
+    } else {
+      console.log("不在選擇隊伍畫面");
+      return;
+    }
   }
   while (isSelectTeamPage()) {
+    if (isTeamMemberCheckDialog()) {
+      clickIcon("teamMemberCheckDialog");
+      sleep(500);
+    }
     console.log("點擊進入關卡按鈕");
     clickIcon("teamPage");
     sleep(1500);
@@ -251,7 +264,7 @@ function startQuest(useItem, checkStageLoadFinish) {
       break;
     }
 
-    if(isStartStageMemberFailed()){
+    if (isStartStageMemberFailed()) {
       console.log("隊伍成員無法出擊，結束腳本");
       isScriptRunning = false;
     }
@@ -294,12 +307,12 @@ function selectItem(item) {
     sendUrgentMessage(runningScriptName, "道具不足");
     return;
   }
-  if(isReplay){
+  if (isReplay) {
     sleep(3000);
-    if(!isUseAppleDialog() && !isSelectFriendPage()){
+    if (!isUseAppleDialog() && !isSelectFriendPage()) {
       tapScale(1240, 832);
     }
-  }else{
+  } else {
     tapScale(1240, 832);
   }
   sleep(3000);
