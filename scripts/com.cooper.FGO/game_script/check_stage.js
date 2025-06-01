@@ -290,6 +290,7 @@ icon["useItemDialog"] = [1140, 960, 200, 60];
 icon["teamAutoBuild"] = [400, 975, 100, 75];
 icon["teamAutoBuildDialog"] = [1230, 800, 320, 60];
 icon["startStageMemberFailed"] = [450, 100, 1000, 80];
+icon["teamMemberCheckDialog"] = [850, 860, 190, 70];
 
 function isSelectTeamPage() {
   return checkIconInScreen("teamPage");
@@ -301,6 +302,14 @@ function isUseItemDialog() {
   }
   //TODO
   return false;
+}
+
+function isTeamMemberCheckDialog(){  
+  if (server == "TW") {
+    //TODO
+    return false
+  }
+  return checkIconInScreen("teamMemberCheckDialog");
 }
 
 function isTeamAutoBuild() {
@@ -327,6 +336,7 @@ icon["kkl2"] = [1640, 240, 60, 60];
 icon["battleTarget"] = [1620, 195, 60, 60];
 icon["spaceColor"] = [690, 288, 540, 45];
 icon["emiyaColor"] = [690, 240, 540, 90];
+icon["dubaiSkill"] = [760, 220, 395, 90];
 icon["ultFailed"] = [900, 637, 123, 60];
 icon["skillFailed"] = [870, 802, 180, 60];
 icon["settingDialog"] = [750, 220, 350, 60];
@@ -403,6 +413,13 @@ function isBattleSkillSpaceDialog() {
 
 function isBattleSkillEmiyaDialog() {
   return checkIconInScreen("emiyaColor", 0.75);
+}
+
+function isBattleSkillDubaiDialog() {  
+  if (server == "TW") {
+    return false;
+  }
+  return checkIconInScreen("dubaiSkill", 0.75);
 }
 
 //finish-----------------------------------------------

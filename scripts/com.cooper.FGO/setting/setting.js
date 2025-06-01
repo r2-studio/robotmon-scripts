@@ -518,6 +518,10 @@ function initButton() {
     minimumResultsForSearch: -1,
     width: "120px",
   });
+  $("#dubaiSkillSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
 
   $("#deleteCropImageSelect").select2({
     minimumResultsForSearch: -1,
@@ -691,11 +695,13 @@ function initHTML(result) {
       skillDirection = 0;
     }
     $("#skillDirectionSelect").val(skillDirection).trigger("change");
+
     var ultColor= parseInt(result[5][7]);
     if(ultColor == undefined || ultColor == null || isNaN(ultColor)){
       ultColor = 1;
     }
     $("#ultColorSelect").val(ultColor).trigger("change");
+
     var kukulkanUseStar= parseInt(result[5][8]);
     if(kukulkanUseStar == undefined || kukulkanUseStar == null || isNaN(kukulkanUseStar)){
       kukulkanUseStar = 7;
@@ -711,6 +717,12 @@ function initHTML(result) {
     $("#kukulkanUseStar0Select").val(kkl[0]).trigger("change");
     $("#kukulkanUseStar1Select").val(kkl[1]).trigger("change");
     $("#kukulkanUseStar2Select").val(kkl[2]).trigger("change");
+
+    var dubai= parseInt(result[5][9]);
+    if(dubai == undefined || dubai == null || isNaN(dubai)){
+      dubai = 0;
+    }
+    $("#dubaiSkillSelect").val(dubai).trigger("change");
   }
   setBlackEdgeValue(blackEdge);
 
@@ -1078,6 +1090,7 @@ function getOtherPreferenceValue() {
     parseInt($("#kukulkanUseStar1Select").val()) * 2 +
     parseInt($("#kukulkanUseStar2Select").val()) * 4;
   preference[4] = kkl;
+  preference[5] = parseInt($("#dubaiSkillSelect").val());
   return preference;
 }
 
@@ -1091,7 +1104,8 @@ function getPreferenceValue(){
     parseInt($("#kukulkanUseStar0Select").val()) +
     parseInt($("#kukulkanUseStar1Select").val()) * 2 +
     parseInt($("#kukulkanUseStar2Select").val()) * 4;
-  preference[8] = kkl;
+  preference[8] = kkl;  
+  preference[9] = parseInt($("#dubaiSkillSelect").val());
   return preference;
 
 }
