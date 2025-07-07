@@ -4,6 +4,20 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v76] - 2025-07-06
+
+### Fixed
+- Auto buy counted wrong in new Tsum Tsum Store.
+- Auto buy got stuck when all boxes were drawn but the counter was not down to zero.
+
+### Added
+- New "Bubble Burst" skill. This behaves like the "Burst" skill, but always clears bubbles after the skill in a slower way.
+- New "Lightning McQueen+" skill.
+
+### Changed
+- "Auto buy" now uses the box selected by default. There might be an option to make it pre-select "the middle" box in a later version, but that logic already causes problems in the JP version when there were 4 (!) boxes to draw from. 
+
+
 ## [v75] - 2025-03-01
 
 ### Fixed
@@ -19,7 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 - JP Tsum Tsum update broke "Receive All Hearts". As there are now more features, "Receive All Hearts" now respects the "Skip Ruby" option. 
 - JP Tsum Tsum update broke "Auto buy Tsums".
-- "Auto buy Tsums" sometimes missed some buys when counting down
+- "Auto buy Tsums" sometimes missed some buys when counting down.
 
 ### Changed
 - Reduced the amount of regular logging. Most of the logs like "Recognized Tsums" are not useful in non-debug mode and might increase resource demand.
