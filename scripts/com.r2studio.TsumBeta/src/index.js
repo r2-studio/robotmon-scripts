@@ -485,8 +485,8 @@ var Page = {
       {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
       {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
     ],
-    back: {x: 500, y: 500},
-    next: {x: 500, y: 500}
+    back: {x: 500, y: 1600},
+    next: {x: 500, y: 1600}
   },
   TapOpenPageCapsule: {
     name: 'TapOpenPage',
@@ -499,8 +499,8 @@ var Page = {
       {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
       {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
     ],
-    back: {x: 500, y: 500},
-    next: {x: 500, y: 500}
+    back: {x: 500, y: 1600},
+    next: {x: 500, y: 1600}
   },
   BoxPurchasedPage: {
     name: 'BoxPurchasedPage',
