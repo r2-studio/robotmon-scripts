@@ -175,7 +175,8 @@ function useSkill(player, skill, target) {
     }
     console.log("使用技能-杜拜BB技能模式 " + dubaiSkillName[dubaiSkill]);
     tapScale(dubaiSkillPositionX[dubaiSkill], dubaiSkillPositionY);
-  } else if (isBattleSkillTargetDialog()) {
+  }
+  if (isBattleSkillTargetDialog()) {
     console.log("使用技能-選擇目標");
     if (target == undefined || target < 0) {
       console.log("未設定目標，強迫選擇從者1");
@@ -186,8 +187,6 @@ function useSkill(player, skill, target) {
     //     sleep(1500);
     //     console.log("無法偵測目標從者視窗，強迫選擇好友");
     //     selectSkillTarget(target);
-  } else {
-    //console.log("使用技能-技能動畫中");
   }
 }
 
