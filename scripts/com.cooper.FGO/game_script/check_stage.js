@@ -339,6 +339,8 @@ icon["battleTarget"] = [1620, 195, 60, 60];
 icon["spaceColor"] = [690, 288, 540, 45];
 icon["emiyaColor"] = [690, 240, 540, 90];
 icon["dubaiSkill"] = [760, 220, 395, 90];
+icon["dubaiSkill2"] = [760, 220, 395, 90];
+icon["dubaiSkill3"] = [760, 220, 395, 90];
 icon["ultFailed"] = [900, 637, 123, 60];
 icon["skillFailed"] = [870, 802, 180, 60];
 icon["settingDialog"] = [750, 220, 350, 60];
@@ -421,7 +423,7 @@ function isBattleSkillDubaiDialog() {
   if (server == "TW") {
     return false;
   }
-  return checkIconInScreen("dubaiSkill", 0.75);
+  return checkIconListInScreen(["dubaiSkill", "dubaiSkill2", "dubaiSkill3"], false);
 }
 
 //finish-----------------------------------------------
