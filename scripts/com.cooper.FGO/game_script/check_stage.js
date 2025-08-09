@@ -10,11 +10,13 @@ function setMarginIcon() {
     icon["settingDialog"] = [840, 220, 240, 60];
     icon["stageFailed"] = [900, 154, 140, 60];
     icon["stageRestart"] = [1140, 810, 240, 75];
+    icon["friendPointFree"] = [787, 740, 337, 75];
   } else {
     icon["boxNoPoint"] = [470, 530, 200, 100];
     icon["settingDialog"] = [750, 220, 350, 60];
     icon["stageFailed"] = [750, 160, 300, 60];
     icon["stageRestart"] = [1140, 836, 240, 75];
+    icon["friendPointFree"] = [810, 740, 300, 75];
   }
 
   //1920 default
@@ -468,10 +470,11 @@ function isItemPage() {
 
 //friendPoint-----------------------------------------------
 icon["friendPointMain"] = [1130, 20, 100, 90];
-icon["friendPointFree"] = [787, 740, 337, 75];
+icon["friendPointFree"] = [810, 740, 300, 75];
 icon["friendPointFreeEvent"] = [787, 740, 337, 75];
 icon["friendPointTen"] = [1125, 740, 240, 75];
 icon["friendPointTenEvent"] = [1125, 740, 240, 75];
+icon["friendPointHundred"] = [1200, 740, 240, 75];
 icon["friendPointContinue"] = [1050, 975, 187, 63];
 icon["friendPointServantFull"] = [487, 225, 900, 187];
 icon["friendPointItemFull"] = [487, 225, 900, 187];
@@ -489,7 +492,7 @@ function isFriendPointFree() {
 
 function isFriendPointTen() {
     return checkIconListInScreen(
-      ["friendPointTen", "friendPointTenEvent"],
+      ["friendPointTen", "friendPointTenEvent", "friendPointHundred"],
       false
     );
 }
