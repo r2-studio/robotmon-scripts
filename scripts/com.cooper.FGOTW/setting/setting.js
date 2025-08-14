@@ -80,42 +80,28 @@ function initButton() {
   });
 
   //set crop btn
-  $("#getServantImage1").click(function () {
-    var blackEdge = getBlackEdgeValue();
-    JavaScriptInterface.hideMenu();
-    JavaScriptInterface.setXY(3000, 0);
-    JavaScriptInterface.runScriptCallback(
-      "saveFriendServantImage(1,[" + blackEdge + "]);",
-      "saveServantConfirm"
-    );
-  });
-  $("#getServantImage2").click(function () {
-    var blackEdge = getBlackEdgeValue();
-    JavaScriptInterface.hideMenu();
-    JavaScriptInterface.setXY(3000, 0);
-    JavaScriptInterface.runScriptCallback(
-      "saveFriendServantImage(2,[" + blackEdge + "]);",
-      "saveServantConfirm"
-    );
-  });
-  $("#getItemImage1").click(function () {
-    var blackEdge = getBlackEdgeValue();
-    JavaScriptInterface.hideMenu();
-    JavaScriptInterface.setXY(3000, 0);
-    JavaScriptInterface.runScriptCallback(
-      "saveFriendItemImage(1,[" + blackEdge + "]);",
-      "saveItemConfirm"
-    );
-  });
-  $("#getItemImage2").click(function () {
-    var blackEdge = getBlackEdgeValue();
-    JavaScriptInterface.hideMenu();
-    JavaScriptInterface.setXY(3000, 0);
-    JavaScriptInterface.runScriptCallback(
-      "saveFriendItemImage(2,[" + blackEdge + "]);",
-      "saveItemConfirm"
-    );
-  });
+  function setupImageCaptureButton(buttonId, functionName, index, callback) {
+    $("#" + buttonId).click(function () {
+      var blackEdge = getBlackEdgeValue();
+      var captureMethod = parseInt($("#captureMethodSelect").val());
+      JavaScriptInterface.hideMenu();
+      JavaScriptInterface.setXY(3000, 0);
+      JavaScriptInterface.runScriptCallback(
+        functionName + "(" + index + ",[" + blackEdge + "]," + captureMethod + ");",
+        callback
+      );
+    });
+  }
+
+  // 設定所有圖片擷取按鈕
+  setupImageCaptureButton("getServantImage1", "saveFriendServantImage", 0, "saveServantConfirm");
+  setupImageCaptureButton("getServantImage2", "saveFriendServantImage", 1, "saveServantConfirm");
+  setupImageCaptureButton("getItemImage1", "saveFriendItemImage", 0, "saveItemConfirm");
+  setupImageCaptureButton("getItemImage2", "saveFriendItemImage", 1, "saveItemConfirm");
+  setupImageCaptureButton("getGrandNormalItem1", "saveFriendItemImage", 2, "saveItemConfirm");
+  setupImageCaptureButton("getGrandRewardItem1", "saveFriendItemImage", 3, "saveItemConfirm");
+  setupImageCaptureButton("getGrandNormalItem2", "saveFriendItemImage", 4, "saveItemConfirm");
+  setupImageCaptureButton("getGrandRewardItem2", "saveFriendItemImage", 5, "saveItemConfirm");
 
   //set black edge btn
   $("#getBlackEdge").click(function () {
@@ -132,7 +118,7 @@ function initButton() {
   $("#savePreferenceButton").click(function () {
     var preference = getPreferenceValue();
     JavaScriptInterface.runScriptCallback(
-      "savePreference([" + preference +"])",
+      "savePreference([" + preference + "])",
       "savePreferenceConfirm"
     );
   });
@@ -518,6 +504,19 @@ function initButton() {
     minimumResultsForSearch: -1,
     width: "120px",
   });
+  $("#dubaiSkillSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
+  $("#friendAlgorithmSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
+
+  $("#captureMethodSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
 
   $("#deleteCropImageSelect").select2({
     minimumResultsForSearch: -1,
@@ -529,19 +528,19 @@ function initButton() {
     var index = $(this).val();
     var path;
     if (index != null && index != -1) {
-      if(index >= friendServantList.length){
+      if (index >= friendServantList.length) {
         index -= friendServantList.length;
-        path = itemImgPath + "/"+friendItemList[index] + ".png";
+        path = itemImgPath + "/" + friendItemList[index] + ".png";
         $("#deleteCropImg").css("height", 20);
-      }else{
-        path = servantImgPath +"/"+ friendServantList[index] + ".png";
+      } else {
+        path = servantImgPath + "/" + friendServantList[index] + ".png";
         $("#deleteCropImg").css("height", 40);
       }
       $("#deleteCropImg").attr("src", path);
-    }else{
+    } else {
       $("#deleteCropImg")
-      .removeAttr("src")
-      .replaceWith($("#deleteCropImg").clone());
+        .removeAttr("src")
+        .replaceWith($("#deleteCropImg").clone());
     }
   });
   $("#deleteCropImgButton").click(function () {
@@ -560,10 +559,16 @@ function initButton() {
     }
     bootbox.confirm("是否刪除 " + imageName + ".png?", function (result) {
       if (result && imageName.length > 0) {
-        if(isServant){
-          JavaScriptInterface.runScriptCallback('deleteFriendServantImage("' + imageName + '");', "deleteFriendServantConfirm");
-        }else{
-          JavaScriptInterface.runScriptCallback('deleteFriendItemImage("' + imageName + '");', "deleteFriendItemConfirm");
+        if (isServant) {
+          JavaScriptInterface.runScriptCallback(
+            'deleteFriendServantImage("' + imageName + '");',
+            "deleteFriendServantConfirm"
+          );
+        } else {
+          JavaScriptInterface.runScriptCallback(
+            'deleteFriendItemImage("' + imageName + '");',
+            "deleteFriendItemConfirm"
+          );
         }
       }
     });
@@ -629,10 +634,13 @@ function initHTML(result) {
   }
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
-      '<option value = "' + (friendServantList.length+i) + '">' + friendItemList[i] + "</option>"
+      '<option value = "' +
+        (friendServantList.length + i) +
+        '">' +
+        friendItemList[i] +
+        "</option>"
     );
   }
-
 
   //init select script
   if (result[0] == undefined) {
@@ -674,35 +682,53 @@ function initHTML(result) {
     for (var i = 0; i < 4; i++) {
       blackEdge[i] = parseInt(result[5][i]);
     }
-    var friendStrict= parseInt(result[5][4]);
-    if(friendStrict == undefined || friendStrict == null || isNaN(friendStrict)){
+    var friendStrict = parseInt(result[5][4]);
+    if (
+      friendStrict == undefined ||
+      friendStrict == null ||
+      isNaN(friendStrict)
+    ) {
       friendStrict = 0;
     }
     $("#friendStrictSelect").val(friendStrict).trigger("change");
 
-    var servantDirection= parseInt(result[5][5]);
-    if(servantDirection == undefined || servantDirection == null || isNaN(servantDirection)){
+    var servantDirection = parseInt(result[5][5]);
+    if (
+      servantDirection == undefined ||
+      servantDirection == null ||
+      isNaN(servantDirection)
+    ) {
       servantDirection = 0;
     }
     $("#servantDirectionSelect").val(servantDirection).trigger("change");
 
-    var skillDirection= parseInt(result[5][6]);
-    if(skillDirection == undefined || skillDirection == null || isNaN(skillDirection)){
+    var skillDirection = parseInt(result[5][6]);
+    if (
+      skillDirection == undefined ||
+      skillDirection == null ||
+      isNaN(skillDirection)
+    ) {
       skillDirection = 0;
     }
     $("#skillDirectionSelect").val(skillDirection).trigger("change");
-    var ultColor= parseInt(result[5][7]);
-    if(ultColor == undefined || ultColor == null || isNaN(ultColor)){
+
+    var ultColor = parseInt(result[5][7]);
+    if (ultColor == undefined || ultColor == null || isNaN(ultColor)) {
       ultColor = 1;
     }
     $("#ultColorSelect").val(ultColor).trigger("change");
-    var kukulkanUseStar= parseInt(result[5][8]);
-    if(kukulkanUseStar == undefined || kukulkanUseStar == null || isNaN(kukulkanUseStar)){
+
+    var kukulkanUseStar = parseInt(result[5][8]);
+    if (
+      kukulkanUseStar == undefined ||
+      kukulkanUseStar == null ||
+      isNaN(kukulkanUseStar)
+    ) {
       kukulkanUseStar = 7;
     }
-    var kkl = [0,0,0];
+    var kkl = [0, 0, 0];
     var t = 1;
-    for(var i = 0;i<3;i++){
+    for (var i = 0; i < 3; i++) {
       if ((kukulkanUseStar & t) != 0) {
         kkl[i] = 1;
       }
@@ -711,6 +737,22 @@ function initHTML(result) {
     $("#kukulkanUseStar0Select").val(kkl[0]).trigger("change");
     $("#kukulkanUseStar1Select").val(kkl[1]).trigger("change");
     $("#kukulkanUseStar2Select").val(kkl[2]).trigger("change");
+
+    var dubai = parseInt(result[5][9]);
+    if (dubai == undefined || dubai == null || isNaN(dubai)) {
+      dubai = 0;
+    }
+    $("#dubaiSkillSelect").val(dubai).trigger("change");
+
+    var friendAlgorithm = parseInt(result[5][10]);
+    if (
+      friendAlgorithm == undefined ||
+      friendAlgorithm == null ||
+      isNaN(friendAlgorithm)
+    ) {
+      friendAlgorithm = 0;
+    }
+    $("#friendAlgorithmSelect").val(friendAlgorithm).trigger("change");
   }
   setBlackEdgeValue(blackEdge);
 
@@ -822,7 +864,11 @@ function saveItemConfirm(time) {
   }
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
-      '<option value = "' + (friendServantList.length+i) + '">' + friendItemList[i] + "</option>"
+      '<option value = "' +
+        (friendServantList.length + i) +
+        '">' +
+        friendItemList[i] +
+        "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -920,7 +966,11 @@ function saveFriendServantConfirm(result) {
   }
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
-      '<option value = "' + (friendServantList.length+i) + '">' + friendItemList[i] + "</option>"
+      '<option value = "' +
+        (friendServantList.length + i) +
+        '">' +
+        friendItemList[i] +
+        "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -935,9 +985,18 @@ function saveFriendItemConfirm(result) {
   for (var i = 0; i < commandId + 1; i++) {
     if ($("#selectFriendItem" + i).length) {
       $("#selectFriendItem" + i).append(
-        '<option value = "' + commandId + '">' + result + "</option>"
+         '<option value = "' + commandId + '">' + result + "</option>"
       );
       $("#selectFriendItem" + i).select2({
+        minimumResultsForSearch: -1,
+        width: "160px",
+      });
+    }
+    if ($("#selectFriendGrandRewardItem" + i).length) {
+      $("#selectFriendGrandRewardItem" + i).append(
+         '<option value = "' + commandId + '">' + result + "</option>"
+      );
+      $("#selectFriendGrandRewardItem" + i).select2({
         minimumResultsForSearch: -1,
         width: "160px",
       });
@@ -951,7 +1010,11 @@ function saveFriendItemConfirm(result) {
   }
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
-      '<option value = "' + (friendServantList.length+i) + '">' + friendItemList[i] + "</option>"
+      '<option value = "' +
+        (friendServantList.length + i) +
+        '">' +
+        friendItemList[i] +
+        "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -963,7 +1026,7 @@ function savePreferenceConfirm() {
   bootbox.alert("設定儲存完成");
 }
 
-function deleteFriendServantConfirm(image){
+function deleteFriendServantConfirm(image) {
   var index = friendServantList.indexOf(image);
   friendServantList.splice(index, 1);
 
@@ -975,7 +1038,11 @@ function deleteFriendServantConfirm(image){
   }
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
-      '<option value = "' + (friendServantList.length+i) + '">' + friendItemList[i] + "</option>"
+      '<option value = "' +
+        (friendServantList.length + i) +
+        '">' +
+        friendItemList[i] +
+        "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -983,25 +1050,27 @@ function deleteFriendServantConfirm(image){
 
   for (var i = 0; i < commandId + 1; i++) {
     if ($("#selectFriendServant" + i).length) {
-      if($("#selectFriendServant" + i).val() == index){
+      if ($("#selectFriendServant" + i).val() == index) {
         $("#selectFriendServant" + i)
-        .val(-1)
-        .trigger("change");
+          .val(-1)
+          .trigger("change");
       }
-      $("#selectFriendServant"+i+" option[value='"+index+"']").remove();
+      $("#selectFriendServant" + i + " option[value='" + index + "']").remove();
     } else if ($("#additionalFriendServant" + i).length) {
-      if($("#additionalFriendServant" + i).val() == index){
+      if ($("#additionalFriendServant" + i).val() == index) {
         $("#additionalFriendServant" + i)
-        .val(-1)
-        .trigger("change");
+          .val(-1)
+          .trigger("change");
       }
-      $("#additionalFriendServant"+i+" option[value='"+index+"']").remove();
+      $(
+        "#additionalFriendServant" + i + " option[value='" + index + "']"
+      ).remove();
     }
   }
   bootbox.alert("截圖刪除成功");
 }
 
-function deleteFriendItemConfirm(image){
+function deleteFriendItemConfirm(image) {
   var index = friendItemList.indexOf(image);
   friendItemList.splice(index, 1);
 
@@ -1013,7 +1082,11 @@ function deleteFriendItemConfirm(image){
   }
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
-      '<option value = "' + (friendServantList.length+i) + '">' + friendItemList[i] + "</option>"
+      '<option value = "' +
+        (friendServantList.length + i) +
+        '">' +
+        friendItemList[i] +
+        "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -1021,12 +1094,20 @@ function deleteFriendItemConfirm(image){
 
   for (var i = 0; i < commandId + 1; i++) {
     if ($("#selectFriendItem" + i).length) {
-      if($("#selectFriendItem" + i).val() == index){
+      if ($("#selectFriendItem" + i).val() == index) {
         $("#selectFriendItem" + i)
-        .val(-1)
-        .trigger("change");
+          .val(-1)
+          .trigger("change");
       }
-      $("#selectFriendItem"+i+" option[value='"+index+"']").remove();
+      $("#selectFriendItem" + i + " option[value='" + index + "']").remove();
+    }
+    if ($("#selectFriendGrandRewardItem" + i).length) {
+      if ($("#selectFriendGrandRewardItem" + i).val() == index) {
+        $("#selectFriendGrandRewardItem" + i)
+          .val(-1)
+          .trigger("change");
+      }
+      $("#selectFriendGrandRewardItem" + i + " option[value='" + index + "']").remove();
     }
   }
   bootbox.alert("截圖刪除成功");
@@ -1078,10 +1159,12 @@ function getOtherPreferenceValue() {
     parseInt($("#kukulkanUseStar1Select").val()) * 2 +
     parseInt($("#kukulkanUseStar2Select").val()) * 4;
   preference[4] = kkl;
+  preference[5] = parseInt($("#dubaiSkillSelect").val());
+  preference[6] = parseInt($("#friendAlgorithmSelect").val());
   return preference;
 }
 
-function getPreferenceValue(){
+function getPreferenceValue() {
   var preference = getBlackEdgeValue();
   preference[4] = parseInt($("#friendStrictSelect").val());
   preference[5] = parseInt($("#servantDirectionSelect").val());
@@ -1092,8 +1175,9 @@ function getPreferenceValue(){
     parseInt($("#kukulkanUseStar1Select").val()) * 2 +
     parseInt($("#kukulkanUseStar2Select").val()) * 4;
   preference[8] = kkl;
+  preference[9] = parseInt($("#dubaiSkillSelect").val());
+  preference[10] = parseInt($("#friendAlgorithmSelect").val());
   return preference;
-
 }
 
 //Call by Android app---------------------------------------------------

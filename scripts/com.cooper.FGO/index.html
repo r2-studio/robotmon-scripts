@@ -135,6 +135,13 @@
               <option value="1">寬鬆</option>
             </select>
           </div>
+          <div class="commandSelectDiv">
+            <div class='commandItem'>好友偵測演算法</div>
+            <select id="friendAlgorithmSelect" class="commandItem">
+              <option value="0">傳統像素檢測</option>
+              <option value="1">圖片比對</option>
+            </select>
+          </div>
           <div class="blockDiv">若有誤選或是沒有選到指定從者禮裝，請調整此選項</div>
         </div>
         <div class="blockDiv">
@@ -208,6 +215,19 @@
       <div id="getServantBlock" class="blockDiv" style="display:none">
         <div class="blockDiv">
           <div class="blockTitle">
+            讀取座標方式
+          </div>
+          <div class="commandSelectDiv">
+            <select id="captureMethodSelect" class="commandItem">
+              <option value="0">絕對位置</option>
+              <option value="1">傳統像素定位</option>
+              <option value="2">圖片比對定位</option>
+            </select>
+          </div>
+          <div class="blockDiv">使用絕對位置時，僅限擷取好友清單最上面的兩個好友</div>
+        </div>
+        <div class="blockDiv">
+          <div class="blockTitle">
             擷取圖片
           </div>
           <div class="blockDiv">
@@ -221,9 +241,6 @@
             <button id="getGrandRewardItem1" class="cmdButton">擷取冠位報酬禮裝1</button>
             <button id="getGrandNormalItem2" class="cmdButton">擷取冠位普通禮裝2</button>
             <button id="getGrandRewardItem2" class="cmdButton">擷取冠位報酬禮裝2</button>
-          </div>
-          <div class="blockDiv">
-            請用不同排序方式找到需要的從者禮裝，不要上下滑動
           </div>
         </div>
         <div class="blockDiv">

@@ -5,7 +5,8 @@ var skillDirection = 0; //0 l->r 1 r->l
 var spaceUltColor = 1;
 var kukulkanUseStar = 7;
 var dubaiSkill = 0;
-var PREFERENCE_DEFAULT_VALUE = "0,0,0,0,0,0,0,1,7,0"
+var friendAlgorithm = 0; //0 pixel detection 1 image matching
+var PREFERENCE_DEFAULT_VALUE = "0,0,0,0,0,0,0,1,7,0,0"
 
 function loadPreference() {
   var fileName = "preferencejp.js";
@@ -41,6 +42,7 @@ function loadPreference() {
   spaceUltColor = split[7];
   kukulkanUseStar = split[8];
   dubaiSkill = split[9];
+  friendAlgorithm = split[10];
   if (valueMissing) {
     console.log("偏好設定缺損，重新建立");
     writeFile(itemPath + fileName, getPreferenceString());
@@ -61,6 +63,7 @@ function savePreference(pref) {
   spaceUltColor = pref[7];
   kukulkanUseStar = pref[8];
   dubaiSkill = pref[9];
+  friendAlgorithm = pref[10];
   return writeFile(itemPath + fileName, getPreferenceString());
 }
 
@@ -71,6 +74,7 @@ function setOtherPreference(pref) {
   spaceUltColor = pref[3];
   kukulkanUseStar = pref[4];
   dubaiSkill = pref[5];
+  friendAlgorithm = pref[6];
 }
 
 function getPreferenceString() {
@@ -90,6 +94,8 @@ function getPreferenceString() {
   p += kukulkanUseStar;
   p += ",";
   p += dubaiSkill;
+  p += ",";
+  p += friendAlgorithm;
 
   return p;
 }
