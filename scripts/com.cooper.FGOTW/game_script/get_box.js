@@ -103,7 +103,11 @@ function getFriendPoint() {
       return;
     }
     if (isFriendPointTen()) {
-      tapScale(1200, 825);
+      if(server == "JP"){
+        clickIcon("friendPointHundred");
+      }else{
+        clickIcon("friendPointTen");
+      }
     } else if (isFriendPointFree()) {
       tapScale(938, 825);
     } else if (isFriendPointContinue()) {
@@ -131,8 +135,6 @@ function getFriendPoint() {
             */
       if (isFriendPointNew()) {
         tapScale(1635, 1012);
-      } else if (isItemPage()) {
-        tapScale(67, 60);
       } else if (isFriendPointContinue()) {
         tapScale(1125, 975);
         sleep(1000);
@@ -143,6 +145,8 @@ function getFriendPoint() {
         }
         tapScale(1275, 850);
         sleep(1000);
+      } else if (isItemPage()) {
+        tapScale(67, 60);
       } else {
         tapScale(1125, 10);
       }

@@ -202,7 +202,12 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes, g
       while (isScriptRunning) {
         var found = false;
         var screenshot = getScreenshotResize();
-        var friendLinePosition = getFriendLine(screenshot);
+        var friendLinePosition;
+        if (friendAlgorithm == 1) {
+          friendLinePosition = getFriendLineByIcon(screenshot);
+        } else {
+          friendLinePosition = getFriendLineByPixel(screenshot);
+        }
         var haveNotFriend = false;
         var haveNotGrand = false;
 
@@ -359,7 +364,7 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes, g
   }
 }
 
-function getFriendLine(screenshot) {
+function getFriendLineByPixel(screenshot) {
   // console.log("getFriendLine");
   var lineY = [];
   var lineCnt = 0;
@@ -415,7 +420,7 @@ function getFriendLine(screenshot) {
 
   // 彈性變數，預設2px
   var tolerance = 1;
-  
+
   // 條件1：忽略所有大於800的線
   var validLines = [];
   for (var i = 0; i < lineY.length; i++) {
@@ -423,17 +428,17 @@ function getFriendLine(screenshot) {
       validLines[validLines.length] = lineY[i];
     }
   }
-  
+
   if (validLines.length == 0) {
     return [];
   }
-  
+
   // 排序線條
-  validLines.sort(function(a, b) { return a - b; });
-  
+  validLines.sort(function (a, b) { return a - b; });
+
   var correctLines = [];
   var uncertainLines = [];
-  
+
   // 處理每一條線
   for (var i = 0; i < validLines.length; i++) {
     var currentLine = validLines[i];
@@ -453,7 +458,7 @@ function getFriendLine(screenshot) {
         }
       }
     }
-    
+
     // 分類線條
     if (isCorrect && !isWrong) {
       correctLines[correctLines.length] = currentLine;
@@ -461,7 +466,7 @@ function getFriendLine(screenshot) {
       uncertainLines[uncertainLines.length] = currentLine;
     }
   }
-  
+
   // 條件3：當兩條線相差300px時且其中一條是正確的線，另一條也為正確的線
   var additionalCorrectLines = [];
   for (var i = 0; i < correctLines.length; i++) {
@@ -469,7 +474,7 @@ function getFriendLine(screenshot) {
     for (var j = 0; j < validLines.length; j++) {
       var otherLine = validLines[j];
       var diff = Math.abs(correctLine - otherLine);
-      
+
       if (diff >= (300 - tolerance) && diff <= (300 + tolerance)) {
         // 檢查otherLine是否已經在correctLines中
         var alreadyCorrect = false;
@@ -485,12 +490,12 @@ function getFriendLine(screenshot) {
       }
     }
   }
-  
+
   // 將額外的正確線條加入正確線條陣列
   for (var i = 0; i < additionalCorrectLines.length; i++) {
     correctLines[correctLines.length] = additionalCorrectLines[i];
   }
-  
+
   // 從不確定線條中移除已升級為正確的線條
   var newUncertainLines = [];
   for (var i = 0; i < uncertainLines.length; i++) {
@@ -506,9 +511,9 @@ function getFriendLine(screenshot) {
     }
   }
   uncertainLines = newUncertainLines;
-  
+
   var filteredLineY = [];
-  
+
   // 條件4：當有正確的線時，僅回傳所有正確的線
   if (correctLines.length > 0) {
     filteredLineY = correctLines;
@@ -518,7 +523,7 @@ function getFriendLine(screenshot) {
   }
 
   // 從小到大排序
-  filteredLineY.sort(function(a, b) { return a - b; });
+  filteredLineY.sort(function (a, b) { return a - b; });
 
   if (isDebug) {
     console.log("原始Line: " + lineY);
@@ -627,7 +632,7 @@ function scrollFriendList() {
   swipeScale(600, 750, 600, 150, 300);
 }
 
-function saveFriendServantImage(positionIndex, be) {
+function saveFriendServantImage(positionIndex, be, captureMethod) {
   sleep(1000);
   setBlackEdgeByHtmlValue(be);
   initScreenSize();
@@ -635,13 +640,34 @@ function saveFriendServantImage(positionIndex, be) {
   if (screenShot == null) {
     return null;
   }
-  var crop = cropImage(
-    screenShot,
-    friendServantPosition[positionIndex][0],
-    friendServantPosition[positionIndex][1],
-    friendServantPosition[positionIndex][2],
-    friendServantPosition[positionIndex][3]
-  );
+  
+  var cropX = friendServantPosition[positionIndex][0];
+  var cropY = friendServantPosition[positionIndex][1];
+  var cropW = friendServantPosition[positionIndex][2];
+  var cropH = friendServantPosition[positionIndex][3];
+  
+  // 根據 captureMethod 決定是否使用 getFriendLine
+  if (captureMethod == 1) {
+    var friendLinePosition = getFriendLineByPixel(screenShot);
+    if (friendLinePosition.length > positionIndex) {
+      cropY = friendLinePosition[positionIndex] + friendServantYOffset;
+    } else {
+      console.log("positionIndex " + positionIndex + " 超出好友行數量 " + friendLinePosition.length);
+      releaseImage(screenShot);
+      return null;
+    }
+  } else if (captureMethod == 2) {
+    var friendLinePosition = getFriendLineByIcon(screenShot);
+    if (friendLinePosition.length > positionIndex) {
+      cropY = friendLinePosition[positionIndex] + friendServantYOffset;
+    } else {
+      console.log("positionIndex " + positionIndex + " 超出好友行數量 " + friendLinePosition.length);
+      releaseImage(screenShot);
+      return null;
+    }
+  }
+  
+  var crop = cropImage(screenShot, cropX, cropY, cropW, cropH);
   var currentdate = new Date();
   var time = currentdate.getTime();
   var filePath = itemPath + "tmp_servant_" + time + ".png";
@@ -652,7 +678,7 @@ function saveFriendServantImage(positionIndex, be) {
   return time;
 }
 
-function saveFriendItemImage(positionIndex, be) {
+function saveFriendItemImage(positionIndex, be, captureMethod) {
   sleep(1000);
   setBlackEdgeByHtmlValue(be);
   initScreenSize();
@@ -660,13 +686,60 @@ function saveFriendItemImage(positionIndex, be) {
   if (screenShot == null) {
     return null;
   }
-  var crop = cropImage(
-    screenShot,
-    friendItemPosition[positionIndex][0],
-    friendItemPosition[positionIndex][1],
-    friendItemPosition[positionIndex][2],
-    friendItemPosition[positionIndex][3]
-  );
+  
+  var cropX = friendItemPosition[positionIndex][0];
+  var cropY = friendItemPosition[positionIndex][1];
+  var cropW = friendItemPosition[positionIndex][2];
+  var cropH = friendItemPosition[positionIndex][3];
+  
+  // 根據 captureMethod 決定是否使用 getFriendLine
+  if (captureMethod == 1) {
+    var friendLinePosition = getFriendLineByPixel(screenShot);
+    var friendIndex, itemOffset;
+    
+    if (positionIndex <= 1) {
+      // positionIndex 0,1: friend 0,1 的預設禮裝
+      friendIndex = positionIndex;
+      itemOffset = friendItemYOffset;
+    } else {
+      // positionIndex 2-5: 冠位禮裝
+      friendIndex = Math.floor((positionIndex - 2) / 2);  // positionIndex 2,3->0; 4,5->1
+      var grandItemIndex = (positionIndex - 2) % 2;  // positionIndex 2,4->0(普通); 3,5->1(報酬)
+      itemOffset = friendGrandItemYOffset[grandItemIndex];
+    }
+    
+    if (friendLinePosition.length > friendIndex) {
+      cropY = friendLinePosition[friendIndex] + itemOffset;
+    } else {
+      console.log("positionIndex " + positionIndex + " 對應好友行 " + friendIndex + " 超出好友行數量 " + friendLinePosition.length);
+      releaseImage(screenShot);
+      return null;
+    }
+  } else if (captureMethod == 2) {
+    var friendLinePosition = getFriendLineByIcon(screenShot);
+    var friendIndex, itemOffset;
+    
+    if (positionIndex <= 1) {
+      // positionIndex 0,1: friend 0,1 的預設禮裝
+      friendIndex = positionIndex;
+      itemOffset = friendItemYOffset;
+    } else {
+      // positionIndex 2-5: 冠位禮裝
+      friendIndex = Math.floor((positionIndex - 2) / 2);  // positionIndex 2,3->0; 4,5->1
+      var grandItemIndex = (positionIndex - 2) % 2;  // positionIndex 2,4->0(普通); 3,5->1(報酬)
+      itemOffset = friendGrandItemYOffset[grandItemIndex];
+    }
+    
+    if (friendLinePosition.length > friendIndex) {
+      cropY = friendLinePosition[friendIndex] + itemOffset;
+    } else {
+      console.log("positionIndex " + positionIndex + " 對應好友行 " + friendIndex + " 超出好友行數量 " + friendLinePosition.length);
+      releaseImage(screenShot);
+      return null;
+    }
+  }
+  
+  var crop = cropImage(screenShot, cropX, cropY, cropW, cropH);
   var currentdate = new Date();
   var time = currentdate.getTime();
   var filePath = itemPath + "tmp_item_" + time + ".png";
@@ -792,6 +865,72 @@ function checkGrandKitsunaItem(screenshot, kitsuna, lineY) {
   return kitsuna == result;
 }
 
+function getFriendLineByIcon(screenshot) {
+  if (isDebug) {
+    console.log("getFriendLineByIcon 開始執行");
+  }
+  var lineY = [];
+  var lineCnt = 0;
+  var searchX = friendX + 1164;
+  var friendLoginIcon = openImage(imagePath + "friendLogin.png");
+
+  if (friendLoginIcon == null) {
+    console.log("無法載入 friendLogin.png 圖片");
+    return lineY;
+  }
+
+  if (isDebug) {
+    console.log("成功載入 friendLogin.png，開始搜尋座標，searchX=" + searchX);
+  }
+
+  var searchArea = cropImage(screenshot, searchX, 250, 160, 600);
+  var results = findImages(searchArea, friendLoginIcon, 0.95, 3, true);
+
+  if (isDebug) {
+    console.log("findImages 找到 " + results.length + " 個匹配項目");
+  }
+
+  for (var i = 0; i < results.length; i++) {
+    var result = results[i];
+    if (result.score >= 0.85) {
+      var iconY = 250 + result.y;
+      var adjustedLineY = iconY - 15;
+
+      if (isDebug) {
+        console.log("找到圖標於 y=" + iconY + " (score=" + result.score + ")，調整後座標 y=" + adjustedLineY);
+      }
+
+      if (lineCnt > 0) {
+        if (Math.abs(adjustedLineY - lineY[lineCnt - 1]) < 10) {
+          if (isDebug) {
+            console.log("座標過於接近，跳過 y=" + adjustedLineY);
+          }
+          continue;
+        }
+      }
+
+      lineY[lineCnt] = adjustedLineY;
+      lineCnt++;
+
+      if (isDebug) {
+        console.log("新增好友行座標 [" + (lineCnt - 1) + "] = " + adjustedLineY);
+      }
+    }
+  }
+
+  releaseImage(searchArea);
+
+  // 對座標陣列進行由小到大排序
+  lineY.sort(function (a, b) { return a - b; });
+
+  if (isDebug) {
+    console.log("getFriendLineByIcon 完成，共找到 " + lineCnt + " 行好友");
+    console.log("排序後好友座標陣列: " + lineY);
+  }
+
+  releaseImage(friendLoginIcon);
+  return lineY;
+}
 
 loadApiCnt++;
 console.log("Load friend api finish");

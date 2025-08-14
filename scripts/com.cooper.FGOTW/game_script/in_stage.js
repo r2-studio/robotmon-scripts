@@ -28,6 +28,10 @@ var emiyaUltPositionX = [1125, 675];
 var spaceUltPositionX = [1350, 900, 450];
 var spaceUltPositionY = 675;
 var colorName = ["紅", "藍", "綠"];
+var dubaiSkillName = ["攻擊模式", "防禦模式"];
+var dubaiSkillPositionX = [720, 1200];
+var dubaiSkillPositionY = 675;
+
 
 var useMargin = undefined;
 //----------------------------------------------Battle main page
@@ -150,7 +154,7 @@ function useSkill(player, skill, target) {
       sleep(2000);
     }
   }
-  if (isBattleSkillSpaceDialog()) {
+  else if (isBattleSkillSpaceDialog()) {
     if (spaceUltColor == undefined || spaceUltColor < 0 || spaceUltColor > 2) {
       console.log("未指定顏色，設為綠色");
       spaceUltColor = 2;
@@ -164,7 +168,15 @@ function useSkill(player, skill, target) {
     }
     console.log("使用技能-紅A寶具顏色 " + colorName[spaceUltColor]);
     tapScale(emiyaUltPositionX[spaceUltColor], spaceUltPositionY);
-  } else if (isBattleSkillTargetDialog()) {
+  } else if (isBattleSkillDubaiDialog()){
+    if (dubaiSkill == undefined || dubaiSkill < 0 || dubaiSkill > 2) {
+      console.log("未指定模式，設為攻擊模式");
+      dubaiSkill = 0;
+    }
+    console.log("使用技能-杜拜BB技能模式 " + dubaiSkillName[dubaiSkill]);
+    tapScale(dubaiSkillPositionX[dubaiSkill], dubaiSkillPositionY);
+  }
+  if (isBattleSkillTargetDialog()) {
     console.log("使用技能-選擇目標");
     if (target == undefined || target < 0) {
       console.log("未設定目標，強迫選擇從者1");
@@ -175,8 +187,6 @@ function useSkill(player, skill, target) {
     //     sleep(1500);
     //     console.log("無法偵測目標從者視窗，強迫選擇好友");
     //     selectSkillTarget(target);
-  } else {
-    //console.log("使用技能-技能動畫中");
   }
 }
 
