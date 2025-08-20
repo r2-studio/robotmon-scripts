@@ -2083,6 +2083,11 @@ Tsum.prototype.taskSendHearts = function() {
   var startTime = Date.now();
   var retry = 0;
   var times = 0;
+  this.goFriendPage();
+  var page = this.findPage(1, 300);
+  if (page == "FriendPage") {
+    this.friendPageGoTop();
+  }
   while(this.isRunning) {
     times++;
     if (times % 15 == 14) {
