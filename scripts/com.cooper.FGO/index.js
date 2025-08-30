@@ -6,7 +6,7 @@ var server;
 var loadApiCnt;
 
 
-var version = "V3.71";
+var version = "V3.72";
 
 function start(loopTime, script, scriptName, be, pref) {
   startScript(loopTime, script, scriptName, be, pref);
@@ -18,9 +18,11 @@ function stop() {
 
 function initHTML(serverString) {
   console.log("初始化中");
-
+  
+  //ignore for single app mode
+  /*
   var img = getScreenshot();
-  if (img == undefined) {
+  if (img == undefined || img == null) {
     console.log("無法取得螢幕截圖");
     releaseImage(img);
     return "noimg";
@@ -30,7 +32,7 @@ function initHTML(serverString) {
     return "noimg";
   }
   releaseImage(img);
-
+  */
   server = serverString;
   initServer();
 
@@ -75,8 +77,7 @@ function initHTML(serverString) {
   if (itemList.slice(-1) == ",") {
     itemList = itemList.slice(0, -1);
   }
-
-  loadPreference();
+  
   return (
     scriptList +
     ";" +
@@ -88,7 +89,9 @@ function initHTML(serverString) {
     ";" +
     version +
     ";" +
-    getPreferenceString()
+    loadPreference() +
+    ";" +
+    getLastScriptName()
   );
 }
 

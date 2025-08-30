@@ -9,6 +9,7 @@ var itemImgPath;
 var insertDirection = 0;
 var listenScriptMode = true;
 var isPlayingScript = false;
+var initLoadScript = false;
 
 $(function () {
   try {
@@ -26,7 +27,7 @@ $(function () {
     JavaScriptInterface.showMenu();
     JavaScriptInterface.runScriptCallback(
       'initHTML("' + server + '");',
-      "initHTML"
+      "initHTMLCallback"
     );
   }, 1500);
 });
@@ -122,6 +123,13 @@ function initButton() {
       "savePreferenceConfirm"
     );
   });
+  $("#savePreferenceButton2").click(function () {
+    var preference = getPreferenceValue();
+    JavaScriptInterface.runScriptCallback(
+      "savePreference([" + preference + "])",
+      "savePreferenceConfirm"
+    );
+  });
 
   //set add default script btn
   $("#addAllFlow").click(function () {
@@ -137,7 +145,7 @@ function initButton() {
     commandId++;
     addStartQuest(commandId);
     commandId++;
-    addAuto(commandId);
+    addAutoV2(commandId);
     commandId++;
     addFinish(commandId);
     insertDirection = currentDirection;
@@ -156,14 +164,25 @@ function initButton() {
     commandId++;
     addStartQuest(commandId);
     commandId++;
-    addAuto(
+    addAutoV2(
       commandId,
-      "1,0,1,1,0,0,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,-1,0,0,0,0,0,0,false,-1,-1,-1,-1,-1,-1"
+      "1,NNNBBB,0," +
+      "0,0,0,0,0,0,0," +   // p0
+      "-1,0,0,0,0,0,0," +  // p1
+      "-1,0,0,0,0,0,0," +  // p2
+      "-1,-1,-1,-1,-1,-1"  // cloth
     );
     commandId++;
     addSwitchServant(commandId, "2,3");
     commandId++;
-    addAuto(commandId);
+    addAutoV2(
+      commandId,
+      "3,NNNBBB,0," +
+      "0,-1,-1,-1,-1,-1,-1," +   // p0
+      "-1,-1,-1,-1,-1,-1,-1," +  // p1
+      "-1,0,0,0,0,0,0," +        // p2
+      "0,0,-1,-1,-1,-1"          // cloth
+    );
     commandId++;
     addFinish(commandId);
     insertDirection = currentDirection;
@@ -189,9 +208,13 @@ function initButton() {
     commandId++;
     addSwitchServant(commandId, "2,3");
     commandId++;
-    addAuto(
+    addAutoV2(
       commandId,
-      "3,0,1,1,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,-1,0,0,0,0,0,0,false,2,-1,-1,-1,-1,-1"
+      "3,NNNBBB,0," +
+      "0,0,0,0,0,0,0," +   // p0
+      "-1,0,0,0,0,0,0," +  // p1
+      "-1,0,0,0,0,0,0," +  // p2
+      "2,-1,-1,-1,-1,-1"   // cloth
     );
     commandId++;
     addFinish(commandId);
@@ -200,6 +223,18 @@ function initButton() {
 
   $("#clearScript").click(function () {
     clearScript();
+  });
+
+  $("#insertFriendMultiSelect").click(function () {
+    var currentDirection = insertDirection;
+    insertDirection = 0; // 插入到前面
+
+    // 在腳本列表前面插入3個AdditionalFriendServantCommand
+    for (var i = 0; i < 3; i++) {
+      commandId++;
+      addAdditionalFriendServant(commandId);
+    }
+    insertDirection = currentDirection;
   });
 
   //set load script btn
@@ -407,6 +442,10 @@ function initButton() {
     commandId++;
     addAuto(commandId);
   });
+  $("#addAutoV2").click(function () {
+    commandId++;
+    addAutoV2(commandId);
+  });
   $("#addSkill").click(function () {
     commandId++;
     addSkill(commandId);
@@ -508,6 +547,14 @@ function initButton() {
     minimumResultsForSearch: -1,
     width: "120px",
   });
+  $("#rabbitSkillSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
+  $("#kishinamiSkillSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
   $("#friendAlgorithmSelect").select2({
     minimumResultsForSearch: -1,
     width: "120px",
@@ -593,9 +640,9 @@ function getCheckSwitchStatus(id) {
 }
 
 //Callback------------------------------------------------------------------------------------------------------------------------
-function initHTML(result) {
+function initHTMLCallback(result) {
   if (isDebug) {
-    console.log("initHTML:" + result);
+    console.log("initHTMLCallback:" + result);
   }
   if (result == undefined || result.includes("UNAVAILABLE")) {
     $("#serverMessage").text(
@@ -635,10 +682,10 @@ function initHTML(result) {
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
       '<option value = "' +
-        (friendServantList.length + i) +
-        '">' +
-        friendItemList[i] +
-        "</option>"
+      (friendServantList.length + i) +
+      '">' +
+      friendItemList[i] +
+      "</option>"
     );
   }
 
@@ -744,6 +791,18 @@ function initHTML(result) {
     }
     $("#dubaiSkillSelect").val(dubai).trigger("change");
 
+    var rabbit = parseInt(result[5][11]);
+    if (rabbit == undefined || rabbit == null || isNaN(rabbit)) {
+      rabbit = 0;
+    }
+    $("#rabbitSkillSelect").val(rabbit).trigger("change");
+
+    var kishinami = parseInt(result[5][12]);
+    if (kishinami == undefined || kishinami == null || isNaN(kishinami)) {
+      kishinami = 0;
+    }
+    $("#kishinamiSkillSelect").val(kishinami).trigger("change");
+
     var friendAlgorithm = parseInt(result[5][10]);
     if (
       friendAlgorithm == undefined ||
@@ -755,6 +814,23 @@ function initHTML(result) {
     $("#friendAlgorithmSelect").val(friendAlgorithm).trigger("change");
   }
   setBlackEdgeValue(blackEdge);
+
+  // Load last script name and set to script selector
+  if (result[6] != undefined && result[6].length > 0) {
+    var lastScriptName = result[6];
+    console.log("上次執行的腳本: " + lastScriptName);
+
+    // Find script by name and select it
+    var scriptOptions = $("#scriptMode option");
+    for (var i = 0; i < scriptOptions.length; i++) {
+      if ($(scriptOptions[i]).text() === lastScriptName) {
+        initLoadScript = true;
+        $("#scriptMode").val(i - 1).trigger("change");
+        console.log("已自動選擇上次執行的腳本: " + lastScriptName);
+        break;
+      }
+    }
+  }
 
   var gaEvent = "app" + server;
   ga("set", "page", gaEvent);
@@ -865,10 +941,10 @@ function saveItemConfirm(time) {
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
       '<option value = "' +
-        (friendServantList.length + i) +
-        '">' +
-        friendItemList[i] +
-        "</option>"
+      (friendServantList.length + i) +
+      '">' +
+      friendItemList[i] +
+      "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -967,10 +1043,10 @@ function saveFriendServantConfirm(result) {
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
       '<option value = "' +
-        (friendServantList.length + i) +
-        '">' +
-        friendItemList[i] +
-        "</option>"
+      (friendServantList.length + i) +
+      '">' +
+      friendItemList[i] +
+      "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -985,7 +1061,7 @@ function saveFriendItemConfirm(result) {
   for (var i = 0; i < commandId + 1; i++) {
     if ($("#selectFriendItem" + i).length) {
       $("#selectFriendItem" + i).append(
-         '<option value = "' + commandId + '">' + result + "</option>"
+        '<option value = "' + commandId + '">' + result + "</option>"
       );
       $("#selectFriendItem" + i).select2({
         minimumResultsForSearch: -1,
@@ -994,7 +1070,7 @@ function saveFriendItemConfirm(result) {
     }
     if ($("#selectFriendGrandRewardItem" + i).length) {
       $("#selectFriendGrandRewardItem" + i).append(
-         '<option value = "' + commandId + '">' + result + "</option>"
+        '<option value = "' + commandId + '">' + result + "</option>"
       );
       $("#selectFriendGrandRewardItem" + i).select2({
         minimumResultsForSearch: -1,
@@ -1011,10 +1087,10 @@ function saveFriendItemConfirm(result) {
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
       '<option value = "' +
-        (friendServantList.length + i) +
-        '">' +
-        friendItemList[i] +
-        "</option>"
+      (friendServantList.length + i) +
+      '">' +
+      friendItemList[i] +
+      "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -1039,10 +1115,10 @@ function deleteFriendServantConfirm(image) {
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
       '<option value = "' +
-        (friendServantList.length + i) +
-        '">' +
-        friendItemList[i] +
-        "</option>"
+      (friendServantList.length + i) +
+      '">' +
+      friendItemList[i] +
+      "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -1083,10 +1159,10 @@ function deleteFriendItemConfirm(image) {
   for (var i = 0; i < friendItemList.length; i++) {
     $("#deleteCropImageSelect").append(
       '<option value = "' +
-        (friendServantList.length + i) +
-        '">' +
-        friendItemList[i] +
-        "</option>"
+      (friendServantList.length + i) +
+      '">' +
+      friendItemList[i] +
+      "</option>"
     );
   }
   $("#deleteCropImageSelect").val(-1).trigger("change");
@@ -1161,6 +1237,8 @@ function getOtherPreferenceValue() {
   preference[4] = kkl;
   preference[5] = parseInt($("#dubaiSkillSelect").val());
   preference[6] = parseInt($("#friendAlgorithmSelect").val());
+  preference[7] = parseInt($("#rabbitSkillSelect").val());
+  preference[8] = parseInt($("#kishinamiSkillSelect").val());
   return preference;
 }
 
@@ -1177,6 +1255,8 @@ function getPreferenceValue() {
   preference[8] = kkl;
   preference[9] = parseInt($("#dubaiSkillSelect").val());
   preference[10] = parseInt($("#friendAlgorithmSelect").val());
+  preference[11] = parseInt($("#rabbitSkillSelect").val());
+  preference[12] = parseInt($("#kishinamiSkillSelect").val());
   return preference;
 }
 
@@ -1190,21 +1270,25 @@ function onEvent(eventType) {
     }
     var currentScript = getCurrentScript();
     var l = server + "_" + version;
-    var scriptName = $("#scriptMode").select2("data")[0].text;
+    var scriptData = $("#scriptMode").select2("data");
+    var scriptName = (scriptData && scriptData.length > 0 && scriptData[0].text) ? scriptData[0].text : "";
     var blackEdge = getBlackEdgeValue();
     var preference = getOtherPreferenceValue();
+    if (scriptName !== "") {
+      JavaScriptInterface.runScript("saveLastScriptName('" + scriptName + "');");
+    }
     JavaScriptInterface.runScriptCallback(
       "start(" +
-        loopTime +
-        ",'" +
-        currentScript +
-        "','" +
-        scriptName +
-        "',[" +
-        blackEdge +
-        "],[" +
-        preference +
-        "]);",
+      loopTime +
+      ",'" +
+      currentScript +
+      "','" +
+      scriptName +
+      "',[" +
+      blackEdge +
+      "],[" +
+      preference +
+      "]);",
       "scriptFinish"
     );
     JavaScriptInterface.hideMenu();

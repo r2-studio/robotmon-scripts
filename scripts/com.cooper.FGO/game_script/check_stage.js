@@ -341,6 +341,11 @@ icon["emiyaColor"] = [690, 240, 540, 90];
 icon["dubaiSkill"] = [760, 220, 395, 90];
 icon["dubaiSkill2"] = [760, 220, 395, 90];
 icon["dubaiSkill3"] = [760, 220, 395, 90];
+icon["rabbitSkill"] = [765,600,370,60];
+icon["rabbitSkill2"] = [1245,600,370,60];
+icon["kishinamiSkill"] = [660,600,260,60];
+icon["kishinamiSkill2"] = [1000,600,260,60];
+icon["kishinamiSkill3"] = [1360,600,260,60];
 icon["ultFailed"] = [900, 637, 123, 60];
 icon["skillFailed"] = [870, 802, 180, 60];
 icon["settingDialog"] = [750, 220, 350, 60];
@@ -424,6 +429,21 @@ function isBattleSkillDubaiDialog() {
     return false;
   }
   return checkIconListInScreen(["dubaiSkill", "dubaiSkill2", "dubaiSkill3"], false);
+}
+
+function isBattleSkillRabbitDialog() {
+  //Warning: will conflic with kkl, shoude run before isBattleKklDialog
+  if (server == "TW") {
+    return false;
+  }
+  return checkIconListInScreen(["rabbitSkill", "rabbitSkill2"], true);
+}
+
+function isBattleSkillKishinamiDialog() {  
+  if (server == "TW") {
+    return false;
+  }
+  return checkIconListInScreen(["kishinamiSkill", "kishinamiSkill2", "kishinamiSkill3"], true);
 }
 
 //finish-----------------------------------------------
