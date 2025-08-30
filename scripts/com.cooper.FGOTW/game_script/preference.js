@@ -6,9 +6,12 @@ var spaceUltColor = 1;
 var kukulkanUseStar = 7;
 var dubaiSkill = 0;
 var friendAlgorithm = 0; //0 pixel detection 1 image matching
-var PREFERENCE_DEFAULT_VALUE = "0,0,0,0,0,0,0,1,7,0,0"
+var rabbitSkill = 0;
+var kishinamiSkill = 0;
+var PREFERENCE_DEFAULT_VALUE = "0,0,0,0,0,0,0,1,7,0,0,0,0"
 
 function loadPreference() {
+  console.log("讀取偏好設定");
   var fileName = "preferencejp.js";
   if (server == "TW") {
     fileName = "preferencetw.js";
@@ -22,10 +25,13 @@ function loadPreference() {
     valueMissing = true;
   }
   if (preference == undefined || preference == null || preference.length == 0) {
+    console.log("偏好設定檔案不存在,使用預設值");
     preference = PREFERENCE_DEFAULT_VALUE;
     valueMissing = true;
   }
-  var split = preference.split(",");
+  var lines = preference.split("\n");
+  var preferenceData = lines[0];
+  var split = preferenceData.split(",");
   var defaultSplit = PREFERENCE_DEFAULT_VALUE.split(",");
   for (var i = 0; i < defaultSplit.length; i++) {
     if (split[i] == undefined || split[i] == null || isNaN(split[i])) {
@@ -43,9 +49,16 @@ function loadPreference() {
   kukulkanUseStar = split[8];
   dubaiSkill = split[9];
   friendAlgorithm = split[10];
+  rabbitSkill = split[11];
+  kishinamiSkill = split[12];
   if (valueMissing) {
     console.log("偏好設定缺損，重新建立");
-    writeFile(itemPath + fileName, getPreferenceString());
+    var lastScript = "";
+    if (lines.length > 1 && lines[1] != undefined && lines[1] != null) {
+      lastScript = lines[1];
+    }
+    var content = getPreferenceString() + "\n" + lastScript;
+    writeFile(itemPath + fileName, content);
   }
   return getPreferenceString();
 }
@@ -64,7 +77,11 @@ function savePreference(pref) {
   kukulkanUseStar = pref[8];
   dubaiSkill = pref[9];
   friendAlgorithm = pref[10];
-  return writeFile(itemPath + fileName, getPreferenceString());
+  rabbitSkill = pref[11];
+  kishinamiSkill = pref[12];
+  var lastScript = getLastScriptName();
+  var content = getPreferenceString() + "\n" + lastScript;
+  return writeFile(itemPath + fileName, content);
 }
 
 function setOtherPreference(pref) {
@@ -75,6 +92,8 @@ function setOtherPreference(pref) {
   kukulkanUseStar = pref[4];
   dubaiSkill = pref[5];
   friendAlgorithm = pref[6];
+  rabbitSkill = pref[7];
+  kishinamiSkill = pref[8];
 }
 
 function getPreferenceString() {
@@ -96,8 +115,47 @@ function getPreferenceString() {
   p += dubaiSkill;
   p += ",";
   p += friendAlgorithm;
+  p += ",";
+  p += rabbitSkill;
+  p += ",";
+  p += kishinamiSkill;
 
   return p;
+}
+
+function getLastScriptName() {
+  var fileName = "preferencejp.js";
+  if (server == "TW") {
+    fileName = "preferencetw.js";
+  }
+  try {
+    var content = readFile(itemPath + fileName);
+    if (content == undefined || content == null || content.length == 0) {
+      return "";
+    }
+    var lines = content.split("\n");
+    if (lines.length > 1 && lines[1] != undefined && lines[1] != null) {
+      return lines[1];
+    }
+  } catch (e) {
+    console.log("讀取上次腳本名稱失敗");
+  }
+  return "";
+}
+
+function saveLastScriptName(scriptName) {
+  var fileName = "preferencejp.js";
+  if (server == "TW") {
+    fileName = "preferencetw.js";
+  }
+  try {
+    var preferenceString = getPreferenceString();
+    var content = preferenceString + "\n" + scriptName;
+    writeFile(itemPath + fileName, content);
+    console.log("已儲存上次執行腳本名稱: " + scriptName);
+  } catch (e) {
+    console.log("儲存上次腳本名稱失敗: " + e);
+  }
 }
 
 function getKKLArray() {

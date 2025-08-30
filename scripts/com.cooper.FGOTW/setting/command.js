@@ -83,7 +83,14 @@ function getCurrentScript() {
           newScript += getAdditionalFriendServantScript(itemId);
           break;
         case "自動戰鬥":
-          newScript += getAutoScript(itemId);
+          // 檢查是否為V2版本（有cardOrderDisplay元素）
+          if ($("#cardOrderDisplay" + itemId).length > 0) {
+            console.log("使用AutoCommandV2腳本生成: " + itemId);
+            newScript += getAutoV2Script(itemId);
+          } else {
+            console.log("使用舊版AutoCommand腳本生成: " + itemId);
+            newScript += getAutoScript(itemId);
+          }
           break;
         case "使用御主技能":
           newScript += getClothScript(itemId);
@@ -175,6 +182,10 @@ function resetScript(result) {
       content = content.replace("startQuest(", "");
       content = content.replace(")", "");
       addStartQuest(commandId, content);
+    } else if (checkstring(content, "autoAttackV2")) {
+      content = content.replace("autoAttackV2(", "");
+      content = content.replace(")", "");
+      addAutoV2(commandId, content);
     } else if (checkstring(content, "autoAttack")) {
       content = content.replace("autoAttack(", "");
       content = content.replace(")", "");
@@ -219,5 +230,8 @@ function resetScript(result) {
     }
   });
   insertDirection = currentDirection;
-  bootbox.alert("讀取成功");
+  if (!initLoadScript) {
+    bootbox.alert("讀取成功");
+  }
+  initLoadScript = false;
 }

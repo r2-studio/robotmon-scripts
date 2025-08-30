@@ -33,7 +33,7 @@ var cardImage = [];
 
 var servantAliveMessage;
 var cardList = [];
-var cardStatus = []; // -1:null 0:disable 1:weak 2:resist
+var cardStatus = []; // -1:disable 0:null 1:resist 2:weak
 var cardWidth = 225;
 var cardHeight = 75;
 
@@ -229,6 +229,174 @@ function autoAttack(
   releaseAllImage();
 }
 
+function autoAttackV2(
+  until,
+  cardOrder,
+  die,
+  p0ult,
+  p0s0,
+  p0t0,
+  p0s1,
+  p0t1,
+  p0s2,
+  p0t2,
+  p1ult,
+  p1s0,
+  p1t0,
+  p1s1,
+  p1t1,
+  p1s2,
+  p1t2,
+  p2ult,
+  p2s0,
+  p2t0,
+  p2s1,
+  p2t1,
+  p2s2,
+  p2t2,
+  ctime0,
+  ctarget0,
+  ctime1,
+  ctarget1,
+  ctime2,
+  ctarget2
+) {
+  var ult = [];
+  ult[0] = p0ult;
+  ult[1] = p1ult;
+  ult[2] = p2ult;
+  var ps0 = [];
+  ps0[0] = p0s0;
+  ps0[1] = p0s1;
+  ps0[2] = p0s2;
+  var ps1 = [];
+  ps1[0] = p1s0;
+  ps1[1] = p1s1;
+  ps1[2] = p1s2;
+  var ps2 = [];
+  ps2[0] = p2s0;
+  ps2[1] = p2s1;
+  ps2[2] = p2s2;
+
+  var pt0 = [];
+  pt0[0] = p0t0;
+  pt0[1] = p0t1;
+  pt0[2] = p0t2;
+  var pt1 = [];
+  pt1[0] = p1t0;
+  pt1[1] = p1t1;
+  pt1[2] = p1t2;
+  var pt2 = [];
+  pt2[0] = p2t0;
+  pt2[1] = p2t1;
+  pt2[2] = p2t2;
+
+  var p0 = [];
+  p0[0] = ps0;
+  p0[1] = pt0;
+  var p1 = [];
+  p1[0] = ps1;
+  p1[1] = pt1;
+  var p2 = [];
+  p2[0] = ps2;
+  p2[1] = pt2;
+
+  var skill = [];
+  skill[0] = p0;
+  skill[1] = p1;
+  skill[2] = p2;
+
+  clothSkillUsed = [false, false, false];
+  var c0 = [];
+  c0[0] = ctime0 == undefined ? -1 : ctime0;
+  c0[1] = ctarget0 == undefined ? -1 : ctarget0;
+  var c1 = [];
+  c1[0] = ctime1 == undefined ? -1 : ctime1;
+  c1[1] = ctarget1 == undefined ? -1 : ctarget1;
+  var c2 = [];
+  c2[0] = ctime2 == undefined ? -1 : ctime2;
+  c2[1] = ctarget2 == undefined ? -1 : ctarget2;
+
+  var clothSkill = [];
+  clothSkill[0] = c0;
+  clothSkill[1] = c1;
+  clothSkill[2] = c2;
+
+
+  if (isDebug) {
+    console.log("until", until);
+    console.log("cardOrder", cardOrder);
+    console.log("die", die);
+    console.log("ult", ult);
+    console.log("ps0", ps0);
+    console.log("pt0", pt0);
+    console.log("ps1", ps1);
+    console.log("pt1", pt1);
+    console.log("ps2", ps2);
+    console.log("pt2", pt2);
+    console.log("c0", c0);
+    console.log("c1", c1);
+    console.log("c2", c2);
+  }
+
+  servantInited = false;
+  servantAliveMessage = [true, true, true];
+  skillUsedInLoop = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
+  loadAllImage();
+
+  var lastStage = -1;
+  while (true) {
+    if (!isScriptRunning) {
+      break;
+    }
+    if (!waitUntilPlayerCanMoveOrFinish()) {
+      if (isScriptRunning) {
+        console.log("關卡完成，自動戰鬥結束");
+      } else {
+        console.log("手動停止腳本");
+      }
+      break;
+    }
+    sleep(1000);
+    var currentStage = getCurrentStage();
+    if (until != 0 && until <= currentStage) {
+      console.log("進入第" + (currentStage + 1) + "波，自動戰鬥結束");
+      break;
+    }
+    if (lastStage < currentStage) {
+      lastStage = currentStage;
+      console.log("進入第" + (currentStage + 1) + "波");
+      if (getUserPlan() == 2) {
+        sendNormalMessage(runningScriptName, "Wave " + (lastStage + 1));
+      }
+    }
+    attackAIV2(
+      cardOrder,
+      die,
+      clothSkill,
+      ult,
+      skill,
+      currentStage
+    );
+    if (until == 0) {
+      console.log("一回合完成，自動戰鬥結束");
+      break;
+    }
+    sleep(5000);
+  }
+  releaseAllImage();
+}
+
 function attackAI(
   mainColor,
   sameColor,
@@ -248,8 +416,8 @@ function attackAI(
   releaseImage(screenshot);
   for (var s = 0; s < 3; s++) {
     var i = s;
-    if(skillDirection){
-      i = 2-s;
+    if (skillDirection) {
+      i = 2 - s;
     }
     if (!isScriptRunning) {
       return;
@@ -269,12 +437,12 @@ function attackAI(
         return;
       }
       var i = s1;
-      if(servantDirection){
-        i = 2-s1;
+      if (servantDirection) {
+        i = 2 - s1;
       }
       var j = s2;
-      if(skillDirection){
-        j = 2-s2;
+      if (skillDirection) {
+        j = 2 - s2;
       }
       if (!servantAlive[i]) {
         switch (die) {
@@ -306,13 +474,87 @@ function attackAI(
   selectCards(sameColor, weak, mainColor, ult, currentStage);
 }
 
+function attackAIV2(
+  cardOrder,
+  die,
+  clothSkill,
+  ult,
+  skill,
+  currentStage
+) {
+  console.log("自動戰鬥 新回合開始");
+  var screenshot = getScreenshotResize();
+  var servantAlive =
+    die == 3 ? [true, true, true] : updateServantAlive(screenshot);
+  var skillUsed = updateSkillUsed(screenshot);
+  var servantExist = updateServantExist(screenshot);
+  releaseImage(screenshot);
+  for (var s = 0; s < 3; s++) {
+    var i = s;
+    if (skillDirection) {
+      i = 2 - s;
+    }
+    if (!isScriptRunning) {
+      return;
+    }
+    if (
+      !clothSkillUsed[i] &&
+      clothSkill[i][0] >= 0 &&
+      currentStage >= clothSkill[i][0]
+    ) {
+      useClothesSkill(i, clothSkill[i][1]);
+      clothSkillUsed[i] = true;
+    }
+  }
+  for (var s1 = 0; s1 < 3; s1++) {
+    for (var s2 = 0; s2 < 3; s2++) {
+      if (!isScriptRunning) {
+        return;
+      }
+      var i = s1;
+      if (servantDirection) {
+        i = 2 - s1;
+      }
+      var j = s2;
+      if (skillDirection) {
+        j = 2 - s2;
+      }
+      if (!servantAlive[i]) {
+        switch (die) {
+          case 0:
+            isScriptRunning = false;
+            console.log("從者退場，停止腳本");
+            sendUrgentMessage(runningScriptName, "從者退場，停止腳本");
+            return;
+          case 1:
+            if (!skillUsed[i * 3 + j] && servantExist[i]) {
+              useSkill(i, j, skill[i][1][j], false);
+            }
+            break;
+          case 2:
+            break;
+        }
+      } else if (
+        skill[i][0][j] >= 0 &&
+        currentStage >= skill[i][0][j] &&
+        !skillUsed[i * 3 + j]
+      ) {
+        useSkill(i, j, skill[i][1][j], false);
+      }
+    }
+  }
+  startAttack();
+  updateCardList();
+  selectCardsV2(cardOrder, ult, currentStage);
+}
+
 //image---------------------------------------------
 function loadAllImage() {
   cardImage[0] = openImage(imagePath + "cardListB.png");
   cardImage[1] = openImage(imagePath + "cardListN.png");
   cardImage[2] = openImage(imagePath + "cardListQ.png");
-  cardImage[3] = openImage(imagePath + "cardWeak.png");
-  cardImage[4] = openImage(imagePath + "cardResist.png");
+  cardImage[3] = openImage(imagePath + "cardResist.png");
+  cardImage[4] = openImage(imagePath + "cardWeak.png");
   cardImage[5] = openImage(imagePath + "cardDisable1.png");
   cardImage[6] = openImage(imagePath + "cardDisable2.png");
   skillUsedImage = openImage(imagePath + "skillUsed.png");
@@ -454,6 +696,7 @@ function updateSkillUsed(screenshot) {
 
 //card--------------------------------------------------
 function updateUltList() {
+  //TODO: 寶具偵測待完成
   ultList = [-1, -1, -1];
   return;
 }
@@ -480,7 +723,7 @@ function updateCardList() {
     releaseImage(cropCard);
 
     //get card status
-    cardStatus[i] = -1;
+    cardStatus[i] = 0;
     var cropDisable = [];
     for (var j = 0; j < 2; j++) {
       cropDisable[j] = cropImage(
@@ -502,7 +745,7 @@ function updateCardList() {
       findImage(cropDisable[0], cardImage[5]).score >= 0.85 &&
       findImage(cropDisable[1], cardImage[6]).score >= 0.85
     ) {
-      cardStatus[i] = 0;
+      cardStatus[i] = -1;
     } else if (findImage(cropWeak, cardImage[3]).score >= 0.85) {
       cardStatus[i] = 1;
     } else if (findImage(cropWeak, cardImage[4]).score >= 0.85) {
@@ -519,7 +762,7 @@ function updateCardList() {
   if (isDebug) {
     console.log("Color 0:B 1:N 2:Q");
     console.log(cardList);
-    console.log("Status -1:x 0:disable 1:weak 2:resist");
+    console.log("Status -1:disable 0:x 1:resist 2:weak");
     console.log(cardStatus);
   }
 }
@@ -565,14 +808,14 @@ function selectCards(sameColor, weak, mainColor, ult, currentStage) {
       cardScore[i] += sameColorScore;
     }
     switch (cardStatus[i]) {
-      case 0:
+      case -1:
         cardScore[i] -= 100;
         break;
       case 1:
-        cardScore[i] += weakScore;
+        cardScore[i] -= weakScore;
         break;
       case 2:
-        cardScore[i] -= weakScore;
+        cardScore[i] += weakScore;
         break;
     }
     if (cardList[i] == mainColor) {
@@ -603,5 +846,86 @@ function selectCards(sameColor, weak, mainColor, ult, currentStage) {
     }
   }
 }
+
+function selectCardsV2(cardOrder, ult, currentStage) {
+  if (isDebug) {
+    console.log("selectCardsV2: 開始選卡，順序=" + cardOrder + ",寶具=" + ult + ",波數=" + currentStage);
+    var cardListText = "";
+    for (var i = 0; i < cardList.length; i++) {
+      cardListText += colorName[cardList[i]] + " ";
+    }
+  }
+  var ultIndex = 0;
+  var cardSelected = [false, false, false, false, false];
+  for (var i = 0; i < cardOrder.length; i++) {
+    var selectCardIndex = -1;
+    var selectUlt = false;
+    switch (cardOrder.charAt(i)) {
+      case 'B':
+        cardColor = 0;
+        break;
+      case 'A':
+        cardColor = 1;
+        break;
+      case 'Q':
+        cardColor = 2;
+        break;
+      case 'N':
+        selectUlt = true;
+        while (ultIndex < 3) {
+          if (ult[ultIndex] >= 0 && currentStage >= ult[ultIndex]) {
+            useUlt(ultIndex);
+            ultIndex++;
+            break;
+          }
+          ultIndex++;
+        }
+        break;
+    }
+    if (selectUlt) {
+      continue;
+    }
+
+    //選卡
+    for (var j = 0; j < 5; j++) {
+      if (!cardSelected[j] && cardList[j] == cardColor) {
+        if (selectCardIndex == -1) {
+          selectCardIndex = j;
+        } else {
+          if (cardStatus[selectCardIndex] < cardStatus[j]) {
+            selectCardIndex = j;
+          }
+        }
+      }
+    }
+    if (selectCardIndex != -1) {
+      selectCard(selectCardIndex);
+      cardSelected[selectCardIndex] = true;
+    } else if (!selectUlt) {
+      for (var j = 0; j < 5; j++) {
+        if (!cardSelected[j]) {
+          selectCard(j);
+          cardSelected[j] = true;
+          break;
+        }
+      }
+    }
+  }
+
+
+  //補足沒選到的卡
+  for (var i = ultIndex; i < 3; i++) {
+    if (ult[ultIndex] >= 0 && currentStage >= ult[ultIndex]) {
+      useUlt(i);
+      break;
+    }
+  }
+  for (var i = 0; i < 5; i++) {
+    if (!cardSelected[i]) {
+      selectCard(i);
+    }
+  }
+}
+
 loadApiCnt++;
 console.log("Load auto attack api finish");

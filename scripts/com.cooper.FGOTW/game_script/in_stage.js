@@ -31,6 +31,8 @@ var colorName = ["紅", "藍", "綠"];
 var dubaiSkillName = ["攻擊模式", "防禦模式"];
 var dubaiSkillPositionX = [720, 1200];
 var dubaiSkillPositionY = 675;
+var rabbitSkillName = ["全體", "單體"];
+var kishinamiSkillName = ["天", "地", "人"];
 
 
 var useMargin = undefined;
@@ -135,7 +137,40 @@ function useSkill(player, skill, target) {
   if (!isScriptRunning) {
     return;
   }
-  if (isBattleKklDialog()) {
+  if (isBattleSkillRabbitDialog()) {
+    if (rabbitSkill == undefined || rabbitSkill < 0 || rabbitSkill > 1) {
+      console.log("未指定模式，設為全體");
+      rabbitSkill = 0;
+    }
+    console.log("使用技能-玉兔技能模式 " + rabbitSkillName[rabbitSkill]);
+    switch (rabbitSkill) {
+      case 0:
+      default:
+        clickIcon("rabbitSkill");
+        break;
+      case 1:
+        clickIcon("rabbitSkill2");
+        break;
+    }
+  } else if (isBattleSkillKishinamiDialog()) {
+    if (kishinamiSkill == undefined || kishinamiSkill < 0 || kishinamiSkill > 2) {
+      console.log("未指定模式，設為天");
+      kishinamiSkill = 0;
+    }
+    console.log("使用技能-岸波白野特攻模式 " + kishinamiSkillName[kishinamiSkill]);
+    switch (kishinamiSkill) {
+      case 0:
+      default:
+        clickIcon("kishinamiSkill");
+        break;
+      case 1:
+        clickIcon("kishinamiSkill2");
+        break;
+      case 2:
+        clickIcon("kishinamiSkill3");
+        break;
+    }
+  } else if (isBattleKklDialog()) {
     sleep(1000);
     if (isBattleKklDialog()) {
       var kkl = getKKLArray()[skill];
@@ -168,7 +203,7 @@ function useSkill(player, skill, target) {
     }
     console.log("使用技能-紅A寶具顏色 " + colorName[spaceUltColor]);
     tapScale(emiyaUltPositionX[spaceUltColor], spaceUltPositionY);
-  } else if (isBattleSkillDubaiDialog()){
+  } else if (isBattleSkillDubaiDialog()) {
     if (dubaiSkill == undefined || dubaiSkill < 0 || dubaiSkill > 2) {
       console.log("未指定模式，設為攻擊模式");
       dubaiSkill = 0;

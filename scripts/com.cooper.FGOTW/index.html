@@ -1,351 +1,386 @@
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <!-- Google Analytics -->
-    <script>
-      (function (i, s, o, g, r, a, m) {
-        i["GoogleAnalyticsObject"] = r;
-        (i[r] =
-          i[r] ||
-          function () {
-            (i[r].q = i[r].q || []).push(arguments);
-          }),
-          (i[r].l = 1 * new Date());
-        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m);
-      })(
-        window,
-        document,
-        "script",
-        "https://www.google-analytics.com/analytics.js",
-        "ga"
-      );
 
-      ga("create", "UA-120995182-1");
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- Google Analytics -->
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i["GoogleAnalyticsObject"] = r;
+      (i[r] =
+        i[r] ||
+        function () {
+          (i[r].q = i[r].q || []).push(arguments);
+        }),
+        (i[r].l = 1 * new Date());
+      (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m);
+    })(
+      window,
+      document,
+      "script",
+      "https://www.google-analytics.com/analytics.js",
+      "ga"
+    );
 
-      ga("set", "checkProtocolTask", null); // Disable file protocol checking.
-      ga("set", "checkStorageTask", null); // Disable cookie storage checking.
-      ga("set", "historyImportTask", null); // Disable history checking (requires reading from cookies).
-    </script>
-    <!-- End Google Analytics -->
+    ga("create", "UA-120995182-1");
 
-    <script>
-      // var server = "JP";
-      var server = "TW";
-      var isDebug = false;
-    </script>
+    ga("set", "checkProtocolTask", null); // Disable file protocol checking.
+    ga("set", "checkStorageTask", null); // Disable cookie storage checking.
+    ga("set", "historyImportTask", null); // Disable history checking (requires reading from cookies).
+  </script>
+  <!-- End Google Analytics -->
 
-    <!--       ====================For debug================          -->
-    <!-- <script>
-      isDebug = true;
-    </script>
-    <script src="./debug/debug_html.js"></script>  -->
-    <!--       ====================For debug================          -->
+  <script>
+    // var server = "JP";
+    var server = "TW";
+    var isDebug = false;
+  </script>
 
-    <script src="./jquery/jquery.min.js"></script>
+  <!--       ====================For debug================          -->
+  <!-- <script>
+    isDebug = true;
+  </script>
+  <script src="./debug/debug_html.js"></script> -->
+  <!--       ====================For debug================          -->
 
-    <link rel="stylesheet" href="./jquery/bootstrap.min.css" />
-    <script src="./jquery/bootstrap.min.js"></script>
-    <script src="./jquery/bootbox.min.js"></script>
+  <script src="./jquery/jquery.min.js"></script>
 
-    <link href="./jquery/select2.min.css" rel="stylesheet" />
-    <script src="./jquery/select2.min.js"></script>
+  <link rel="stylesheet" href="./jquery/bootstrap.min.css" />
+  <script src="./jquery/bootstrap.min.js"></script>
+  <script src="./jquery/bootbox.min.js"></script>
 
-    <link type="text/css" rel="stylesheet" href="./setting/index.css" />
-    <script src="./setting/command_html.js"></script>
-    <script src="./setting/command.js"></script>
-    <script src="./setting/command/AdditionalFriendServantCommand.js"></script>
-    <script src="./setting/command/AutoCommand.js"></script>
-    <script src="./setting/command/ClothCommand.js"></script>
-    <script src="./setting/command/FinishCommand.js"></script>
-    <script src="./setting/command/FriendPointCommand.js"></script>
-    <script src="./setting/command/GetBoxCommand.js"></script>
-    <script src="./setting/command/SelectCardCommand.js"></script>
-    <script src="./setting/command/SelectEnemyCommand.js"></script>
-    <script src="./setting/command/SelectFriendCommand.js"></script>
-    <script src="./setting/command/SelectStageCommand.js"></script>
-    <script src="./setting/command/SelectTeamCommand.js"></script>
-    <script src="./setting/command/SkillCommand.js"></script>
-    <script src="./setting/command/SpaceUltCommand.js"></script>
-    <script src="./setting/command/StartAttackCommand.js"></script>
-    <script src="./setting/command/StartQuestCommand.js"></script>
-    <script src="./setting/command/SwitchServantCommand.js"></script>
-    <script src="./setting/command/UseUltCommand.js"></script>
-    <script src="./setting/setting.js"></script>
-  </head>
-  <body>
-    <div id="titleBar">
-      <div id="titleBarText">Fate/Grand Order 自動周回小幫手</div>
+  <link href="./jquery/select2.min.css" rel="stylesheet" />
+  <script src="./jquery/select2.min.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="./setting/index.css" />
+  <script src="./setting/command_html.js"></script>
+  <script src="./setting/command.js"></script>
+  <script src="./setting/command/AdditionalFriendServantCommand.js"></script>
+  <script src="./setting/command/AutoCommand.js"></script>
+  <script src="./setting/command/AutoCommandV2.js"></script>
+  <script src="./setting/command/ClothCommand.js"></script>
+  <script src="./setting/command/FinishCommand.js"></script>
+  <script src="./setting/command/FriendPointCommand.js"></script>
+  <script src="./setting/command/GetBoxCommand.js"></script>
+  <script src="./setting/command/SelectCardCommand.js"></script>
+  <script src="./setting/command/SelectEnemyCommand.js"></script>
+  <script src="./setting/command/SelectFriendCommand.js"></script>
+  <script src="./setting/command/SelectStageCommand.js"></script>
+  <script src="./setting/command/SelectTeamCommand.js"></script>
+  <script src="./setting/command/SkillCommand.js"></script>
+  <script src="./setting/command/SpaceUltCommand.js"></script>
+  <script src="./setting/command/StartAttackCommand.js"></script>
+  <script src="./setting/command/StartQuestCommand.js"></script>
+  <script src="./setting/command/SwitchServantCommand.js"></script>
+  <script src="./setting/command/UseUltCommand.js"></script>
+  <script src="./setting/setting.js"></script>
+</head>
+
+<body>
+  <div id="titleBar">
+    <div id="titleBarText">Fate/Grand Order 自動周回小幫手</div>
+  </div>
+  <div class="container">
+    <div id="serverMessage" class="discriptionText">
+      腳本開啟中，第一次使用須初始化約15秒，如此行文字一直存在，請重開腳本，並確認Robotmon
+      service狀態與檔案完整性
     </div>
-    <div class="container">
-      <div id="serverMessage" class="discriptionText">
-        腳本開啟中，第一次使用須初始化約15秒，如此行文字一直存在，請重開腳本，並確認Robotmon
-        service狀態與檔案完整性
+    <div id="loopTimeDiv" class="blockDiv">
+      <div id="loopTimeTitle" class="blockTitle">
+        腳本執行次數 <input id="loopTime" min="0" value="無限" readonly />
       </div>
-      <div id="loopTimeDiv" class="blockDiv">
-        <div id="loopTimeTitle" class="blockTitle">
-          腳本執行次數 <input id="loopTime" min="0" value="無限" readonly />
+      <div id="loopBtnDiv">
+        <button id="loopTime1" class="loopBtn red">重置</button>
+        <button id="loopTimeMinus" class="loopBtn red">-1</button>
+        <button id="loopTimePlus" class="loopBtn blue">+1</button>
+        <button id="loopTimePlus5" class="loopBtn blue">+5</button>
+        <button id="loopTimeInfinite" class="loopBtn blue">無限</button>
+      </div>
+    </div>
+    <div class="blockDiv">
+      <button id="switchPreferenceBlock" class="blockTitle">使用者設定</button>
+      <button id="switchGetServantBlock" class="blockTitle">好友設定與擷取</button>
+    </div>
+    <div id="preferenceBlock" class="blockDiv" style="display:none">
+      <div class="blockDiv">
+        <div class="blockTitle">
+          黑邊設定
         </div>
-        <div id="loopBtnDiv">
-          <button id="loopTime1" class="loopBtn red">重置</button>
-          <button id="loopTimeMinus" class="loopBtn red">-1</button>
-          <button id="loopTimePlus" class="loopBtn blue">+1</button>
-          <button id="loopTimePlus5" class="loopBtn blue">+5</button>
-          <button id="loopTimeInfinite" class="loopBtn blue">無限</button>
+        <div class="discriptionText">
+          如果手機截圖沒有黑邊則無需調整，部分手機只有一側有黑邊，請注意螢幕旋轉方向。
+        </div>
+        <div class="discriptionText">
+          使用偵測黑邊功能請先移動到遊戲主畫面，部分手機偵測不準確請手動輸入數值，詳情請見說明文件。
+        </div>
+        <div class="blockDiv">
+          左<input id="blackEdgeLeft" type="number" class="blackEdgeInput">
+          上<input id="blackEdgeTop" type="number" class="blackEdgeInput">
+        </div>
+        <div class="blockDiv">
+          右<input id="blackEdgeRight" type="number" class="blackEdgeInput">
+          下<input id="blackEdgeBottom" type="number" class="blackEdgeInput">
+        </div>
+        <div class="blockDiv">
+          <button id="getBlackEdge" class="cmdButton">偵測黑邊</button>
+          <button id="clearBlackEdge" class="cmdButton">清除黑邊數值</button>
         </div>
       </div>
       <div class="blockDiv">
-        <button id = "switchPreferenceBlock" class="blockTitle">黑邊、好友、技能設定</button>
-        <button id = "switchGetServantBlock" class="blockTitle">擷取好友從者禮裝</button>
-      </div>
-      <div id="preferenceBlock" class="blockDiv" style="display:none">
-        <div class="blockDiv">
-          <div class="blockTitle">
-            黑邊設定
-          </div>
-          <div class="discriptionText">
-            如果手機截圖沒有黑邊則無需調整，部分手機只有一側有黑邊，請注意螢幕旋轉方向。
-          </div>
-          <div class="discriptionText">
-            使用偵測黑邊功能請先移動到遊戲主畫面，部分手機偵測不準確請手動輸入數值，詳情請見說明文件。
-          </div>
-          <div class="blockDiv">
-            左<input id="blackEdgeLeft" type="number" class="blackEdgeInput">
-            上<input id="blackEdgeTop" type="number" class="blackEdgeInput">
-          </div>
-          <div class="blockDiv">
-            右<input id="blackEdgeRight" type="number" class="blackEdgeInput">
-            下<input id="blackEdgeBottom" type="number" class="blackEdgeInput">
-          </div>
-          <div class="blockDiv">
-            <button id="getBlackEdge" class="cmdButton">偵測黑邊</button>
-            <button id="clearBlackEdge" class="cmdButton">清除黑邊數值</button>
-          </div>
+        <div class="blockTitle">
+          技能設定
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>從者順序</div>
+          <select id="servantDirectionSelect" class="commandItem">
+            <option value="0">從左到右</option>
+            <option value="1">從右到左</option>
+          </select>
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>技能順序</div>
+          <select id="skillDirectionSelect" class="commandItem">
+            <option value="0">從左到右</option>
+            <option value="1">從右到左</option>
+          </select>
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>宇宙伊絲塔、紅A切換寶具顏色</div>
         </div>
         <div class="blockDiv">
-          <div class="blockTitle">
-            好友設定
-          </div>
           <div class="commandSelectDiv">
-            <div class='commandItem'>選擇好友精確度</div>
-            <select id="friendStrictSelect" class="commandItem">
-              <option value="0">嚴格</option>
-              <option value="1">寬鬆</option>
-            </select>
-          </div>
-          <div class="commandSelectDiv">
-            <div class='commandItem'>好友偵測演算法</div>
-            <select id="friendAlgorithmSelect" class="commandItem">
-              <option value="0">傳統像素檢測</option>
-              <option value="1">圖片比對</option>
-            </select>
-          </div>
-          <div class="blockDiv">若有誤選或是沒有選到指定從者禮裝，請調整此選項</div>
-        </div>
-        <div class="blockDiv">
-          <div class="blockTitle">
-            技能設定
-          </div>
-          <div class="commandSelectDiv">
-            <div class='commandItem'>從者順序</div>
-            <select id="servantDirectionSelect" class="commandItem">
-              <option value="0">從左到右</option>
-              <option value="1">從右到左</option>
-            </select>
-          </div>
-          <div class="commandSelectDiv">
-            <div class='commandItem'>技能順序</div>
-            <select id="skillDirectionSelect" class="commandItem">
-              <option value="0">從左到右</option>
-              <option value="1">從右到左</option>
-            </select>
-          </div>
-          <div class="commandSelectDiv">
-            <div class='commandItem'>切換寶具顏色</div>
+            <div class='commandItem'>顏色</div>
             <select id="ultColorSelect" class="commandItem">
               <option value="0">紅</option>
               <option value="1" selected>藍</option>
               <option value="2">綠</option>
             </select>
           </div>
-          <div class="commandSelectDiv">
-            <div class='commandItem'>庫庫魯坎技能使用星星</div>
-          </div>
-          <div class="blockDiv">
-            <div class="commandSelectDiv">
-              <div class='commandItem'>技能1</div>
-              <select id="kukulkanUseStar0Select" class="commandItem">
-                <option value="0">不使用</option>
-                <option value="1" selected>使用</option>
-              </select>
-            </div>
-            <div class="commandSelectDiv">
-              <div class='commandItem'>技能2</div>
-              <select id="kukulkanUseStar1Select" class="commandItem">
-                <option value="0">不使用</option>
-                <option value="1" selected>使用</option>
-              </select>
-            </div>
-            <div class="commandSelectDiv">
-              <div class='commandItem'>技能3</div>
-              <select id="kukulkanUseStar2Select" class="commandItem">
-                <option value="0">不使用</option>
-                <option value="1" selected>使用</option>
-              </select>
-            </div>
-          </div><div class="commandSelectDiv">
-            <div class='commandItem'>杜拜BB切換寶具模式</div>
-          </div>
-          <div class="blockDiv">
-            <div class="commandSelectDiv">
-              <div class='commandItem'>寶具模式</div>
-              <select id="dubaiSkillSelect" class="commandItem">
-                <option value="0" selected>攻擊模式</option>
-                <option value="1">防禦模式</option>
-              </select>
-            </div>
-          </div>
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>庫庫魯坎技能使用星星</div>
         </div>
         <div class="blockDiv">
-          <button id="savePreferenceButton" class="cmdButton">儲存設定</button>
-        </div>
-      </div>
-      <div id="getServantBlock" class="blockDiv" style="display:none">
-        <div class="blockDiv">
-          <div class="blockTitle">
-            讀取座標方式
-          </div>
           <div class="commandSelectDiv">
-            <select id="captureMethodSelect" class="commandItem">
-              <option value="0">絕對位置</option>
-              <option value="1">傳統像素定位</option>
-              <option value="2">圖片比對定位</option>
+            <div class='commandItem'>技能1</div>
+            <select id="kukulkanUseStar0Select" class="commandItem">
+              <option value="0">不使用</option>
+              <option value="1" selected>使用</option>
             </select>
           </div>
-          <div class="blockDiv">使用絕對位置時，僅限擷取好友清單最上面的兩個好友</div>
-        </div>
-        <div class="blockDiv">
-          <div class="blockTitle">
-            擷取圖片
-          </div>
-          <div class="blockDiv">
-            <button id="getServantImage1" class="cmdButton">擷取從者1</button>
-            <button id="getItemImage1" class="cmdButton">擷取禮裝1</button>
-            <button id="getServantImage2" class="cmdButton">擷取從者2</button>
-            <button id="getItemImage2" class="cmdButton">擷取禮裝2</button>
-          </div>
-          <div class="blockDiv">
-            <button id="getGrandNormalItem1" class="cmdButton">擷取冠位普通禮裝1</button>
-            <button id="getGrandRewardItem1" class="cmdButton">擷取冠位報酬禮裝1</button>
-            <button id="getGrandNormalItem2" class="cmdButton">擷取冠位普通禮裝2</button>
-            <button id="getGrandRewardItem2" class="cmdButton">擷取冠位報酬禮裝2</button>
-          </div>
-        </div>
-        <div class="blockDiv">
-          <div class="blockTitle">
-            刪除圖片
-          </div>
-          <div class='commandSelectDiv'>
-            <select id="deleteCropImageSelect">
-              <option></option>
+          <div class="commandSelectDiv">
+            <div class='commandItem'>技能2</div>
+            <select id="kukulkanUseStar1Select" class="commandItem">
+              <option value="0">不使用</option>
+              <option value="1" selected>使用</option>
             </select>
-            <img id="deleteCropImg">
           </div>
-          <div class="blockDiv">
-            <button id="deleteCropImgButton" class="cmdButton">刪除截圖</button>
+          <div class="commandSelectDiv">
+            <div class='commandItem'>技能3</div>
+            <select id="kukulkanUseStar2Select" class="commandItem">
+              <option value="0">不使用</option>
+              <option value="1" selected>使用</option>
+            </select>
+          </div>
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>杜拜BB切換寶具模式</div>
+        </div>
+        <div class="blockDiv">
+          <div class="commandSelectDiv">
+            <div class='commandItem'>寶具模式</div>
+            <select id="dubaiSkillSelect" class="commandItem">
+              <option value="0" selected>攻擊模式</option>
+              <option value="1">防禦模式</option>
+            </select>
+          </div>
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>玉兔切換寶具模式</div>
+        </div>
+        <div class="blockDiv">
+          <div class="commandSelectDiv">
+            <div class='commandItem'>寶具模式</div>
+            <select id="rabbitSkillSelect" class="commandItem">
+              <option value="0" selected>全體</option>
+              <option value="1">單體</option>
+            </select>
+          </div>
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>岸波白野切換特攻</div>
+        </div>
+        <div class="blockDiv">
+          <div class="commandSelectDiv">
+            <div class='commandItem'>特攻模式</div>
+            <select id="kishinamiSkillSelect" class="commandItem">
+              <option value="0" selected>天</option>
+              <option value="1">地</option>
+              <option value="2">人</option>
+            </select>
           </div>
         </div>
       </div>
       <div class="blockDiv">
-        <div class="blockTitle">讀取預設腳本</div>
-        <div>
-          <button id="addAllFlow" class="cmdButton">周回</button>
-          <button id="addAllFlowSwitch" class="cmdButton">周回-換人</button>
-          <button id="addAllFlowSwitchT1" class="cmdButton">
-            周回-首回合換人
-          </button>
-          <button id="addGetFriendPoint" class="cmdButton">友抽</button>
-          <button id="addGetBox" class="cmdButton">抽箱</button>
+        <button id="savePreferenceButton" class="cmdButton">儲存設定</button>
+      </div>
+    </div>
+    <div id="getServantBlock" class="blockDiv" style="display:none">
+      <div class="blockDiv">
+        <div class="blockTitle">
+          好友設定
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>選擇好友精確度</div>
+          <select id="friendStrictSelect" class="commandItem">
+            <option value="0">嚴格</option>
+            <option value="1">寬鬆</option>
+          </select>
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>好友偵測演算法</div>
+          <select id="friendAlgorithmSelect" class="commandItem">
+            <option value="0">傳統像素檢測</option>
+            <option value="1" selected>圖片比對</option>
+          </select>
+        </div>
+        <div class="blockDiv">若有誤選或是沒有選到指定從者禮裝，請調整此選項</div>
+        <div class="blockDiv">
+          <button id="savePreferenceButton2" class="cmdButton">儲存設定</button>
         </div>
       </div>
       <div class="blockDiv">
+        <div class="blockTitle">
+          擷取方式
+        </div>
+        <div class="commandSelectDiv">
+          <select id="captureMethodSelect" class="commandItem">
+            <option value="0">絕對位置</option>
+            <option value="1">傳統像素定位</option>
+            <option value="2" selected>圖片比對定位</option>
+          </select>
+        </div>
+        <div class="blockDiv">使用絕對位置時，僅限擷取好友清單最上面的兩個好友</div>
+      </div>
+      <div class="blockDiv">
+        <div class="blockTitle">
+          擷取圖片
+        </div>
+        <div class="blockDiv">
+          <button id="getServantImage1" class="cmdButton">擷取從者1</button>
+          <button id="getItemImage1" class="cmdButton">擷取禮裝1</button>
+          <button id="getServantImage2" class="cmdButton">擷取從者2</button>
+          <button id="getItemImage2" class="cmdButton">擷取禮裝2</button>
+        </div>
+        <div class="blockDiv">
+          <button id="getGrandNormalItem1" class="cmdButton">擷取冠位普通禮裝1</button>
+          <button id="getGrandRewardItem1" class="cmdButton">擷取冠位報酬禮裝1</button>
+          <button id="getGrandNormalItem2" class="cmdButton">擷取冠位普通禮裝2</button>
+          <button id="getGrandRewardItem2" class="cmdButton">擷取冠位報酬禮裝2</button>
+        </div>
+      </div>
+      <div class="blockDiv">
+        <div class="blockTitle">
+          刪除圖片
+        </div>
+        <div class='commandSelectDiv'>
+          <select id="deleteCropImageSelect">
+            <option></option>
+          </select>
+          <img id="deleteCropImg">
+        </div>
+        <div class="blockDiv">
+          <button id="deleteCropImgButton" class="cmdButton">刪除截圖</button>
+        </div>
+      </div>
+    </div>
+    <div class="blockDiv">
+      <div class="blockTitle">讀取預設腳本</div>
+      <div>
+        <button id="addAllFlow" class="cmdButton">周回</button>
+        <button id="addAllFlowSwitch" class="cmdButton">周回-換人</button>
+        <button id="addAllFlowSwitchT1" class="cmdButton">
+          周回-首回合換人
+        </button>
+        <button id="addGetFriendPoint" class="cmdButton">友抽</button>
+        <button id="addGetBox" class="cmdButton">抽箱</button>
+        <button id="insertFriendMultiSelect" class="cmdButton">插入好友從者多選</button>
+      </div>
+    </div>
+    <div class="blockDiv">
+      <div>
+        <div class="blockTitle">讀取自訂腳本</div>
         <div>
-          <div class="blockTitle">讀取自訂腳本</div>
-          <div>
           <select id="scriptMode">
             <option></option>
           </select>
         </div>
+      </div>
+      <div style="margin-top: 4px">
+        <button id="createScript" class="cmdButton">新建</button>
+        <button id="deleteScript" class="cmdButton">刪除</button>
+        <button id="copyScript" class="cmdButton">複製</button>
+        <button id="clearScript" class="cmdButton">清空</button>
+        <button id="saveScript" class="cmdButton">存檔</button>
+      </div>
+    </div>
+    <div class="blockDiv">
+      <button class="blockTitle" id="switchCommandBlock">設定指令
+    </div>
+    <div id="commandBlock" style="display:none">
+      <div class="blockDiv">
+        <div class="discriptionText">
+          新增指令位置<button id="insertDirection" class="cmdButton" value="0">
+            前
+          </button>
+          <button id="showAll" class="cmdButton">全部展開</button>
+          <button id="hideAll" class="cmdButton">全部收起</button>
         </div>
-        <div style="margin-top: 4px">
-          <button id="createScript" class="cmdButton">新建</button>
-          <button id="deleteScript" class="cmdButton">刪除</button>
-          <button id="copyScript" class="cmdButton">複製</button>
-          <button id="clearScript" class="cmdButton">清空</button>
-          <button id="saveScript" class="cmdButton">存檔</button>
+      </div>
+
+      <div class="blockDiv">
+        <div class="blockTitle">關卡外指令</div>
+        <button id="addSelectStage" class="cmdButton">選擇關卡</button>
+        <button id="addSelectFriend" class="cmdButton">選擇好友</button>
+        <button id="addSelectTeam" class="cmdButton">選擇隊伍</button>
+        <button id="addStartQuest" class="cmdButton">進入關卡</button>
+      </div>
+
+      <div class="blockDiv">
+        <div class="blockTitle">關卡內指令</div>
+        <div>
+          <button id="addAuto" class="cmdButton">自動戰鬥V1</button>
+          <button id="addAutoV2" class="cmdButton">自動戰鬥V2</button>
+          <button id="addSkill" class="cmdButton">使用技能</button>
+          <button id="addCloth" class="cmdButton">使用御主技能</button>
+          <button id="addSwitchServant" class="cmdButton">戰鬥服換人</button>
+        </div>
+        <div>
+          <button id="addSelectEnemy" class="cmdButton">選擇敵人</button>
+          <button id="addStartAttack" class="cmdButton">開始選卡</button>
+          <button id="addUseUlt" class="cmdButton">使用寶具</button>
+          <button id="addSelectCard" class="cmdButton">選擇卡片</button>
+          <button id="addFinish" class="cmdButton">結束關卡</button>
         </div>
       </div>
       <div class="blockDiv">
-        <button class="blockTitle" id="switchCommandBlock">設定指令
-      </div>
-      <div id="commandBlock" style="display:none">
-        <div class="blockDiv">
-          <div class="discriptionText">
-            新增指令位置<button
-              id="insertDirection"
-              class="cmdButton"
-              value="0"
-            >
-              前
-            </button>
-            <button id="showAll" class="cmdButton">全部展開</button>
-            <button id="hideAll" class="cmdButton">全部收起</button>
-          </div>
-        </div>
-
-        <div class="blockDiv">
-          <div class="blockTitle">關卡外指令</div>
-          <button id="addSelectStage" class="cmdButton">選擇關卡</button>
-          <button id="addSelectFriend" class="cmdButton">選擇好友</button>
-          <button id="addSelectTeam" class="cmdButton">選擇隊伍</button>
-          <button id="addStartQuest" class="cmdButton">進入關卡</button>
-        </div>
-
-        <div class="blockDiv">
-          <div class="blockTitle">關卡內指令</div>
-          <div>
-            <button id="addAuto" class="cmdButton">自動戰鬥</button>
-            <button id="addSkill" class="cmdButton">使用技能</button>
-            <button id="addCloth" class="cmdButton">使用御主技能</button>
-            <button id="addSwitchServant" class="cmdButton">戰鬥服換人</button>
-          </div>
-          <div>
-            <button id="addSelectEnemy" class="cmdButton">選擇敵人</button>
-            <button id="addStartAttack" class="cmdButton">開始選卡</button>
-            <button id="addUseUlt" class="cmdButton">使用寶具</button>
-            <button id="addSelectCard" class="cmdButton">選擇卡片</button>
-            <button id="addFinish" class="cmdButton">結束關卡</button>
-          </div>
-        </div>
-        <div class="blockDiv">
-          <div class="blockTitle">其他指令</div>
-          <div class="discriptionText">此排指令請放在最上面</div>
-          <button id="addSpaceUlt" class="cmdButton">
-            設定技能改變寶具顏色
-          </button>
-          <button id="additionalFriendServant" class="cmdButton">
-            好友從者多選
-          </button>
-        </div>
-      </div>
-      <div class="list-group" id="skill-list"></div>
-      <div id="footer">
-        <a href="https://www.facebook.com/MobotmonOfficial" class="discriptionText"
-          >有任何使用上的問題，歡迎到FaceBook Mobotmon粉絲團發問</a
-        >
+        <div class="blockTitle">其他指令</div>
+        <div class="discriptionText">此排指令請放在最上面</div>
+        <button id="addSpaceUlt" class="cmdButton">
+          設定技能改變寶具顏色
+        </button>
+        <button id="additionalFriendServant" class="cmdButton">
+          好友從者多選
+        </button>
       </div>
     </div>
-  </body>
+    <div class="list-group" id="skill-list"></div>
+    <div id="footer">
+      <a href="https://www.facebook.com/MobotmonOfficial" class="discriptionText">有任何使用上的問題，歡迎到FaceBook
+        Mobotmon粉絲團發問</a>
+    </div>
+  </div>
+</body>
+
 </html>
