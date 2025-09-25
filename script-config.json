@@ -82,8 +82,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 76,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v76</b>\n<ul>\n    <li>\n        新增技能類型\"閃電麥坤+\n        <br>\n        Added LMQ+\n    </li>\n    <li>\n        新增技能類型\"消除系\n        <br>\n        Added Burst bubbles\n    </li>\n    <li>\n        更加完善的自動抽盒\n        <br>\n        More reliable auto buy \n    </li>\n</ul>",
+      "versionCode": 77,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v77</b>\n<ul>\n    <li>\n        更加完善的自動抽盒\n        <br>\n        More reliable auto buy \n    </li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []

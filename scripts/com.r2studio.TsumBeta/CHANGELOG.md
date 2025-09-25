@@ -4,6 +4,15 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v77] - 2025-09-25
+
+### Fixed
+- Auto buy did crash if loading of Tsum store page took more than 4 seconds. Now up to 10 seconds is allowed.
+
+### Changed
+- Immediately leave slow-mode on script start if game is in some well-known area.
+
+
 ## [v76] - 2025-07-06
 
 ### Fixed
