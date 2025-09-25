@@ -1553,6 +1553,17 @@ Tsum.prototype.findPageObject = function(times, timeout) {
 
 Tsum.prototype.findPage = function(times, timeout) {
   var page = this.findPageObject(times, timeout);
+  if (page !== null) {
+    var name = page.name;
+    switch (name) {
+        case "GamePause":
+        case "GamePlaying":
+        case "StartPage":
+        case "TsumsPage":
+        case "TsumTsumStorePage":
+          this.isStartupPhase = false;
+    }
+  }
   return page != null ? page.name : 'unknown';
 }
 
@@ -2063,7 +2074,8 @@ Tsum.prototype.useSkill = function(board) {
     this.sleep(2500);
     // this.clearAllBubbles(600, 0, 1000, 300);
   } else {
-    this.sleep(this.skillInterval);
+    this.tap(Button.gameRand, 100); // randomize tsums if tsum supports it
+    this.sleep(this.skillInterval - 100);
     if (this.skillType === 'burst_bubbles') {
       this.clearAllBubbles(0, 0, 1000, 300);
     }
