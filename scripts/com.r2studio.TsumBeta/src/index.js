@@ -1717,9 +1717,11 @@ Tsum.prototype.goGamePlayingPage = function() {
       // check again
       page = this.findPage(1, 500);
       if (page === 'GamePlaying') {
+        this.isStartupPhase = false;
         return;
       }
     } else if (page === 'GamePause') {
+      this.isStartupPhase = false;
       this.tap(pageObj.next);
       this.sleep(500);
     } else if (page === 'unknown') {
