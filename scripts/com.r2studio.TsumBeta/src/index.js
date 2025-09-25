@@ -758,14 +758,15 @@ var Page = {
     back: {x: 576, y: 1660},
     next: {x: 576, y: 1660}
   },
-  InvitePage: {
-    name: 'InvitePage', // the close button at left bottom
-    colors: [
-      {x: 180, y: 1592, r: 238, g: 180, b: 11, match: true, threshold: 80}
-    ],
-    back: {x: 176, y: 1592},
-    next: {x: 176, y: 1592}
-  },
+  // *** Following commented out because detection is way too unspecific and I don't know what it should detect.
+  // InvitePage: {
+  //   name: 'InvitePage', // the close button at left bottom
+  //   colors: [
+  //     {x: 180, y: 1592, r: 238, g: 180, b: 11, match: true, threshold: 80}
+  //   ],
+  //   back: {x: 176, y: 1592},
+  //   next: {x: 176, y: 1592}
+  // },
   ReceiveSkillTicket: {
     name: 'ReceiveSkillTicket',
     colors: [
@@ -1771,7 +1772,7 @@ Tsum.prototype.goTsumTsumStorePage = function() {
     for (var i = 0; i < 3; i++) {
       this.tap(this.findPageObject().store);
       this.sleep(3000);
-      var page = this.findPageObject(2, 2000);
+      var page = this.findPageObject(5, 2000);
       pageName = page != null ? page.name : 'unknown';
       log("Pg: ", pageName);
       if (page !== null && page.name === 'TsumTsumStorePage') {
