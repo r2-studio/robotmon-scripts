@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 77;
+var VERSION = 78;
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -322,16 +322,24 @@ var settings = [
     ],
     [
         {
-            title: '<b style="color: red">Experimental features</b><br>Things may not work correctly in every scenario',
-            title_zh_TW: '<b style="color: red">實驗性功能</b><br>無法保證所有功能正常運作'
-        },
-        {
             key: 'tsumMonitorUrl',
             title: 'URL to Tsum Monitor',
             title_zh_TW: 'Tsum監視器URL',
             default: ""
         }
     ]
+    // [
+    //     {
+    //         title: '<b style="color: red">Experimental features</b><br>Things may not work correctly in every scenario',
+    //         title_zh_TW: '<b style="color: red">實驗性功能</b><br>無法保證所有功能正常運作'
+    //     },
+    //     {
+    //         key: 'tsumMonitorUrl',
+    //         title: 'URL to Tsum Monitor',
+    //         title_zh_TW: 'Tsum監視器URL',
+    //         default: ""
+    //     }
+    // ]
 ];
 
 // noinspection JSUnusedGlobalSymbols

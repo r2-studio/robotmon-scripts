@@ -5,7 +5,7 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
-## [v78] - tbd
+## [v78] - 2025-11-01
 
 ### Fixed
 - Fixed "Auto launch app" for Android 11+ (currently works with MuMu player).
