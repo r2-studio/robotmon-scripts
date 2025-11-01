@@ -1359,7 +1359,7 @@ Tsum.prototype.isAppOn = function() {
   if (!this.autoLaunch) {
     return true;
   }
-  var result = execute('dumpsys window windows').split('mCurrentFocus');
+  var result = execute('dumpsys window').split('mCurrentFocus');
   if (result.length < 2) {
     return false;
   }
@@ -3009,6 +3009,7 @@ Tsum.prototype.isOnScreenshot = function(img, pageObject, colorDiff) {
 
 function start(settings) {
   ts = new Tsum(settings['jpVersion'], settings['specialScreenRatio'], settings['langTaiwan'] ? LogsTW : Logs);
+  ts.settings = settings
   log(ts.logs.start);
   ts.debug = settings['debugGame'];
   if (settings['bonus5to4']) {
