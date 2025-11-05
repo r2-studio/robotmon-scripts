@@ -1375,13 +1375,16 @@ Tsum.prototype.isAppOn = function() {
   return packageName.indexOf('LGTMTM') !== -1;
 };
 
+function getPackageName(isJP) {
+    var packageName = 'com.linecorp.LGTMTM';
+    if (!isJP) {
+        packageName += 'G';
+    }
+    return packageName;
+}
+
 function startTsumTsumApp(isJP) {
-  var packageName;
-  if (isJP) {
-    packageName = 'com.linecorp.LGTMTM';
-  } else {
-    packageName = 'com.linecorp.LGTMTMG';
-  }
+  var packageName = getPackageName(isJP);
   execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
       ' am start --activity-single-top -n ' + packageName + '/com.linecorp.LGTMTM.TsumTsum');
 }
@@ -2054,12 +2057,21 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillCptLy1, 10);
     this.sleep(50);
     this.tap(Button.skillCptLy2, 10);
-    this.sleep(500);
-    this.tap(Button.skillCptLy3, 10);
-    this.sleep(500);
-    this.tap(Button.skillCptLy3, 10);
-    this.sleep(550);
-    this.tap(Button.skillCptLy3, 10);
+    if (this.skillLevel >= 2) {
+      // 3rd tap
+      this.sleep(500);
+      this.tap(Button.skillCptLy3, 10);
+    }
+    if (this.skillLevel >= 4) {
+      // 4th tap
+      this.sleep(500);
+      this.tap(Button.skillCptLy3, 10);
+    }
+    if (this.skillLevel === 6) {
+      // 5th tap
+      this.sleep(550);
+      this.tap(Button.skillCptLy3, 10);
+    }
     this.clearAllBubbles(600, 0, 1000, 300);
   } else if (this.skillType === 'block_lightning_mcqueen_plus_s'){
     this.sleep(2000);
@@ -2860,8 +2872,18 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
         var img = this.screenshot();
         var nextColor = this.getColor(img, page.next);
         releaseImage(img);
-        if (!isSameColor(page.next, nextColor, 50) || this.autobuyBoxes === 0) {
+        if (this.autobuyBoxes === 0) {
+          log("Buying finished");
           break;
+        }
+        if (!isSameColor(page.next, nextColor, 50)) {
+          // wait and test again
+          this.sleep(500);
+          page = this.findPageObject(1, 200);
+          if (page.name === "TsumTsumStorePage" && !isSameColor(page.next, nextColor, 50)) {
+            log("Finish with", this.autobuyBoxes, "boxes zu buy due to empty box");
+            break;
+          }
         }
       }
       this.tap(page.next);
@@ -2932,6 +2954,25 @@ Tsum.prototype.requestTsumMonitor = function(force) {
   } else {
     debug("Skipping TsumMonitor call");
   }
+}
+
+Tsum.prototype.taskTsumAppRestart = function () {
+    log("Preparing restarting TsumApp");
+    if (!this.isAppOn()) {
+        this.startApp();
+    }
+    this.goFriendPage();
+
+    log("Restarting TsumApp");
+    var packageName = getPackageName(ts.isJP);
+    execute("am force-stop " + packageName);
+
+    ts.sleep(10000);
+    if (!this.isAppOn()) {
+        this.startApp();
+    }
+    this.goFriendPage();
+    log("TsumTsumApp restarted");
 }
 
 Tsum.prototype.sendHeart = function(btn) {
@@ -3063,6 +3104,7 @@ function start(settings) {
   ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
   ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];
   ts.tsumMonitorUrl = settings['tsumMonitorUrl'] || "";
+  ts.tsumAppRestartFrequency = settings['tsumAppRestartFrequency'];
 
   if (!checkFunction(TaskController)) {
     console.log("File lose...");
@@ -3082,6 +3124,9 @@ function start(settings) {
   }
   if (settings['sendHeartsAuto']) {
     gTaskController.newTask('sendHearts', ts.taskSendHearts.bind(ts), settings['sendHeartsMinWait'] * 60 * 1000, 0);
+  }
+  if (settings['autoLaunchApp'] && settings['tsumAppRestartFrequency'] > 0) {
+    gTaskController.newTask('taskTsumAppRestart', ts.taskTsumAppRestart.bind(ts), settings['tsumAppRestartFrequency'] * 60 * 60 * 1000, 0, true);
   }
   if (checkFunction(outRange)) {
     if (settings['autoPlayGame']) {

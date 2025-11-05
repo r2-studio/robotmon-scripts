@@ -5,6 +5,19 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v79] - 2025-12-10
+
+### Fixed
+- Additional -1 and +1 buttons had effect on following settings. 
+- JP auto buy did not work correctly with high fps settings.
+
+### Changed
+- CLY respects chosen skill level and only shoots as many times as the skill level allows.
+
+### Added
+- When `Auto Launch Tsum App` is enabled, one can schedule a TsumTsum app restart at a specific interval.
+
+
 ## [v78] - 2025-11-01
 
 ### Fixed

@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = 78;
+var VERSION = '79';
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -327,19 +327,22 @@ var settings = [
             title_zh_TW: 'Tsum監視器URL',
             default: ""
         }
+    ],
+    [
+        {
+            title: '<b style="color: red">Experimental features</b><br>Things may not work correctly in every scenario',
+            title_zh_TW: '<b style="color: red">實驗性功能</b><br>無法保證所有功能正常運作'
+        },
+        {
+            key: 'tsumAppRestartFrequency',
+            title: 'Tsum app restart frequency (hours)',
+            title_zh_TW: '定時重啟Tsum app（時）',
+            min: 0,
+            max: 120,
+            step: 6,
+            default: 0
+        }
     ]
-    // [
-    //     {
-    //         title: '<b style="color: red">Experimental features</b><br>Things may not work correctly in every scenario',
-    //         title_zh_TW: '<b style="color: red">實驗性功能</b><br>無法保證所有功能正常運作'
-    //     },
-    //     {
-    //         key: 'tsumMonitorUrl',
-    //         title: 'URL to Tsum Monitor',
-    //         title_zh_TW: 'Tsum監視器URL',
-    //         default: ""
-    //     }
-    // ]
 ];
 
 // noinspection JSUnusedGlobalSymbols
@@ -352,10 +355,6 @@ function saveLocale(locale) {
 
 function loadSettings(settings) {
     if (localStorage === undefined) {
-        return;
-    }
-    var version = +localStorage.getItem('tsumtsumversion');
-    if (!version || version < 58) {
         return;
     }
     /** @type {Object.<string, boolean|number|string>} */
@@ -410,9 +409,7 @@ function saveSettings(settings) {
                 }
             }
         }
-        localStorage.setItem('tsumtsumversion', '' + VERSION);
         localStorage.setItem('tsumtsumsettings2', JSON.stringify(recordSettings));
-        localStorage.removeItem('tsumtsumsettings');    // old settings storage until v58
 
         log(i18n('儲存設定', 'Save settings'));
     }
@@ -553,8 +550,11 @@ function genSettings(jContainer, settings) {
                 if (!hasIncrementBy1) {
                     jBtnP1 = $('<button id="setting_value_p1_' + key + '" class="btn btn-danger">+1</button>');
                     jBtnM1 = $('<button id="setting_value_m1_' + key + '" class="btn btn-danger">-1</button>');
+                } else {
+                    // remove the assignment, or the following inputs will be changed, too
+                    jBtnP1 = $([]);
+                    jBtnM1 = $([]);
                 }
-
 
                 jBtnP.on('click', (function (jInput, min, max, step) {
                     return function () {

@@ -5,6 +5,7 @@ mkdir ./dist
 
 # shellcheck disable=SC2155
 export BUILD_DATE="$(date "+%F %H:%M:%S %:z")" # used by envsubst later
+echo "Build date = $BUILD_DATE"
 
 npx html-inline-external --src ./src/index.html --dest ./dist/index.inlined.html
 envsubst \$BUILD_DATE < ./dist/index.inlined.html > ./dist/index.html

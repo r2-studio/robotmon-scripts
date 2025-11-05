@@ -82,8 +82,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 78,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v78</b>\n<ul>\n    <li>\n        修復mumu模擬器“自動啟動Tsum app”功能\n        <br>\n        Fix “Auto Launch Tsum App” for MuMuPlayer \n    </li>\n</ul>",
+      "versionCode": 79,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v79</b>\n<ul>\n    <li>\n        修復了設定框中的±1按鈕\n        <br>\n        Fixed settings dialog +-1 buttons \n    </li>\n    <li>\n        修復了自動抽盒功能\n        <br>\n        Fixed auto buy \n    </li>\n    <li>\n        光年隊長現在會依設定的技能等級自動玩\n        <br>\n        CLY now respects chosen skill level \n    </li>\n    <li>\n        新增了遊戲定時重啟功能\n        <br>\n        Added scheduled game restart \n    </li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": []
