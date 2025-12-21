@@ -463,13 +463,15 @@ var Page = {
   Confirm2025PurchaseCapsulePage: {
     name: 'ConfirmPurchasePage',
     colors: [
-      {x: 200, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},  // left of Cancel button
-      {x: 426, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of Cancel button
-      {x: 540, y: 1464, r: 54, g: 93, b: 146, match: true, threshold: 30},  // between buttons
-      {x: 660, y: 1464, r: 247, g: 174, b: 8, match: true, threshold: 30},  // left of OK button
-      {x: 860, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of OK button
-      {x: 940, y: 1464, r: 33, g: 65, b: 107, match: true, threshold: 30},  // right next to OK button
-      {x: 416, y: 810, r: 239, g: 28, b: 49, match: true, threshold: 30}    // red top of big pickup capsule image
+      {x: 200, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},      // left of Cancel button
+      {x: 426, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},      // right of Cancel button
+      {x: 540, y: 1464, r: 54, g: 93, b: 146, match: true, threshold: 30},      // between buttons
+      {x: 660, y: 1464, r: 247, g: 174, b: 8, match: true, threshold: 30},      // left of OK button
+      {x: 860, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},      // right of OK button
+      {x: 940, y: 1464, r: 33, g: 65, b: 107, match: true, threshold: 30},      // right next to OK button
+      {x: 836, y: 1152, r: 255, g: 255, b: 255, match: true, threshold: 30},    // lower left of slash in "15/15"
+      {x: 860, y: 1081, r: 255, g: 255, b: 255, match: true, threshold: 30},    // upper right of slash in "15/15"
+      {x: 860, y: 1152, r: 48, g: 81, b: 127, match: true, threshold: 30}       // blue area under slash in "15/15"
     ],
     back: {x: 320, y: 1464},  // Cancel button
     next: {x: 766, y: 1464}   // OK button
@@ -490,6 +492,21 @@ var Page = {
   },
   TapOpenPageCapsule: {
     name: 'TapOpenPage',
+    colors: [
+      {x: 70, y: 560, r: 24, g: 85, b: 132, match: true, threshold: 30},
+      {x: 899, y: 777, r: 137, g: 117, b: 148, match: true, threshold: 30},
+      {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
+      {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
+      {x: 405, y: 1397, r: 255, g: 255, b: 255, match: true, threshold: 30}, // T from "TAP!"
+      {x: 546, y: 1429, r: 255, g: 255, b: 255, match: true, threshold: 30}, // A from "TAP!"
+      {x: 664, y: 1407, r: 255, g: 255, b: 255, match: true, threshold: 30}, // P from "TAP!"
+      {x: 709, y: 1381, r: 255, g: 255, b: 255, match: true, threshold: 30} // ! from "TAP!"
+    ],
+    back: {x: 500, y: 1600},
+    next: {x: 500, y: 1600}
+  },
+  TapOpenPageCapsuleDeprecated: {
+    name: 'TapOpenPageDeprecated',
     colors: [
       {x: 620, y: 328, r: 205, g: 13, b: 34, match: true, threshold: 30},
       {x: 641, y: 243, r: 146, g: 0, b: 0, match: true, threshold: 30},
