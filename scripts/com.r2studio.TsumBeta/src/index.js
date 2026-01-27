@@ -164,6 +164,23 @@ var Button = {
 };
 
 var Page = {
+
+  TodayMissions: {
+    name: 'TodayMissions',
+    colors: [
+      {x: 764, y: 445, r: 248, g: 190, b: 15, match: true, threshold: 80},
+      {x: 781, y: 436, r: 165, g: 92, b: 63, match: true, threshold: 80},
+      {x: 823, y: 445, r: 248, g: 249, b: 249, match: true, threshold: 80},
+      {x: 554, y: 444, r: 45, g: 111, b: 142, match: true, threshold: 80},
+      {x: 550, y: 1421, r: 33, g: 196, b: 231, match: true, threshold: 80},
+      {x: 593, y: 1423, r: 240, g: 175, b: 8, match: true, threshold: 80},
+      {x: 176, y: 1658, r: 238, g: 172, b: 8, match: true, threshold: 80},
+      {x: 55, y: 1649, r: 238, g: 172, b: 8, match: true, threshold: 80},
+      {x: 25, y: 1655, r: 8, g: 16, b: 26, match: true, threshold: 80}
+    ],
+    back: {x: 176, y: 1662},
+    next: {x: 176, y: 1662}
+  },
   TodayMission: {
     name: 'TodayMission',
     colors: [
