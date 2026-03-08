@@ -248,6 +248,7 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes, g
 
           var isGrandServant = checkIsGrandServant(screenshot, grandServantImage, lineY);
           if (isGrandServant) {
+            //grandKitsunaItem == -1時不檢查絆禮裝
             if (grandKitsunaItem >= 0 && !checkGrandKitsunaItem(screenshot, grandKitsunaItem, lineY)) {
               isSameGrandKitsunaItem = false;
             }

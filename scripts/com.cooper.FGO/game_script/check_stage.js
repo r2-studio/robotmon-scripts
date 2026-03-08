@@ -365,6 +365,9 @@ icon["rabbitSkill2"] = [1245, 600, 370, 60];
 icon["kishinamiSkill"] = [660, 600, 260, 60];
 icon["kishinamiSkill2"] = [1000, 600, 260, 60];
 icon["kishinamiSkill3"] = [1360, 600, 260, 60];
+icon["soujyuroSkill"] = [660, 600, 260, 60];
+icon["soujyuroSkill2"] = [1000, 600, 260, 60];
+icon["soujyuroSkill3"] = [1360, 600, 260, 60];
 icon["ultFailed"] = [900, 637, 123, 60];
 icon["skillFailed"] = [870, 802, 180, 60];
 icon["settingDialog"] = [750, 140, 350, 60];
@@ -469,6 +472,18 @@ function isBattleSkillKishinamiDialog(screenshot) {
   }
   return checkIconListInScreen(
     ["kishinamiSkill", "kishinamiSkill2", "kishinamiSkill3"],
+    true,
+    0.85,
+    screenshot
+  );
+}
+
+function isBattleSkillSoujyuroDialog(screenshot) {
+  if (server == "TW") {
+    return false;
+  }
+  return checkIconListInScreen(
+    ["soujyuroSkill", "soujyuroSkill2", "soujyuroSkill3"],
     true,
     0.85,
     screenshot
