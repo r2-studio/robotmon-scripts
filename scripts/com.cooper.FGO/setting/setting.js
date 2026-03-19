@@ -130,6 +130,13 @@ function initButton() {
       "savePreferenceConfirm"
     );
   });
+  $("#savePreferenceButton3").click(function () {
+    var preference = getPreferenceValue();
+    JavaScriptInterface.runScriptCallback(
+      "savePreference([" + preference + "])",
+      "savePreferenceConfirm"
+    );
+  });
 
   //set add default script btn
   $("#addAllFlow").click(function () {
@@ -493,6 +500,7 @@ function initButton() {
     if (display == "none") {
       $("#getServantBlock").css("display", "");
       $("#preferenceBlock").css("display", "none");
+      $("#servantSkillBlock").css("display", "none");
     } else {
       $("#getServantBlock").css("display", "none");
     }
@@ -502,8 +510,19 @@ function initButton() {
     if (display == "none") {
       $("#preferenceBlock").css("display", "");
       $("#getServantBlock").css("display", "none");
+      $("#servantSkillBlock").css("display", "none");
     } else {
       $("#preferenceBlock").css("display", "none");
+    }
+  });
+  $("#switchServantSkillBlock").click(function () {
+    var display = $("#servantSkillBlock").css("display");
+    if (display == "none") {
+      $("#servantSkillBlock").css("display", "");
+      $("#preferenceBlock").css("display", "none");
+      $("#getServantBlock").css("display", "none");
+    } else {
+      $("#servantSkillBlock").css("display", "none");
     }
   });
   $("#switchCommandBlock").click(function () {

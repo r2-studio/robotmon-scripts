@@ -240,6 +240,7 @@ icon["apple"] = [795, 67, 300, 75];
 icon["selectStageItemFull"] = [487, 225, 900, 187];
 icon["selectStageServantFull"] = [487, 225, 900, 187];
 icon["whiteConfirm"] = [450, 700, 500, 200];
+icon["whiteConfirm2"] = [450, 700, 500, 200];
 icon["whiteFinish"] = [550, 550, 800, 350];
 icon["whiteStartFailed"] = [550, 400, 800, 500];
 
@@ -267,7 +268,10 @@ function isUseAppleDialog() {
 }
 
 function isWhiteConfirmDialog() {
-  return checkIconInScreen("whiteConfirm");
+  return checkIconListInScreen(
+    ["whiteConfirm", "whiteConfirm2"],
+    false
+  );
 }
 
 function iswhiteStartFailedDialog() {
