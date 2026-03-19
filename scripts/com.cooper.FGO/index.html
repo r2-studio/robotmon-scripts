@@ -100,8 +100,9 @@
       </div>
     </div>
     <div class="blockDiv">
-      <button id="switchPreferenceBlock" class="blockTitle">使用者設定</button>
+      <button id="switchPreferenceBlock" class="blockTitle">黑邊設定</button>
       <button id="switchGetServantBlock" class="blockTitle">好友設定與擷取</button>
+      <button id="switchServantSkillBlock" class="blockTitle">從者技能設定</button>
     </div>
     <div id="preferenceBlock" class="blockDiv" style="display:none">
       <div class="blockDiv">
@@ -126,24 +127,102 @@
           <button id="getBlackEdge" class="cmdButton">偵測黑邊</button>
           <button id="clearBlackEdge" class="cmdButton">清除黑邊數值</button>
         </div>
+      </div>      
+      <div class="blockDiv">
+        <button id="savePreferenceButton" class="cmdButton">儲存設定</button>
+      </div>
+    </div>
+    <div id="getServantBlock" class="blockDiv" style="display:none">
+      <div class="blockDiv">
+        <div class="blockTitle">
+          好友設定
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>選擇好友精確度</div>
+          <select id="friendStrictSelect" class="commandItem">
+            <option value="0">嚴格</option>
+            <option value="1">寬鬆</option>
+          </select>
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>好友偵測演算法</div>
+          <select id="friendAlgorithmSelect" class="commandItem">
+            <option value="0">傳統像素檢測</option>
+            <option value="1" selected>圖片比對</option>
+          </select>
+        </div>
+        <div class="blockDiv">若有誤選或是沒有選到指定從者禮裝，請調整此選項</div>
+        <div class="blockDiv">
+          <button id="savePreferenceButton2" class="cmdButton">儲存設定</button>
+        </div>
       </div>
       <div class="blockDiv">
         <div class="blockTitle">
-          技能設定
+          擷取方式
         </div>
         <div class="commandSelectDiv">
-          <div class='commandItem'>從者順序</div>
+          <select id="captureMethodSelect" class="commandItem">
+            <option value="0">絕對位置</option>
+            <option value="1">傳統像素定位</option>
+            <option value="2" selected>圖片比對定位</option>
+          </select>
+        </div>
+        <div class="blockDiv">使用絕對位置時，僅限擷取好友清單最上面的兩個好友</div>
+      </div>
+      <div class="blockDiv">
+        <div class="blockTitle">
+          擷取圖片
+        </div>
+        <div class="blockDiv">
+          <button id="getServantImage1" class="cmdButton">擷取從者1</button>
+          <button id="getItemImage1" class="cmdButton">擷取禮裝1</button>
+          <button id="getServantImage2" class="cmdButton">擷取從者2</button>
+          <button id="getItemImage2" class="cmdButton">擷取禮裝2</button>
+        </div>
+        <div class="blockDiv">
+          <button id="getGrandNormalItem1" class="cmdButton">擷取冠位普通禮裝1</button>
+          <button id="getGrandRewardItem1" class="cmdButton">擷取冠位報酬禮裝1</button>
+          <button id="getGrandNormalItem2" class="cmdButton">擷取冠位普通禮裝2</button>
+          <button id="getGrandRewardItem2" class="cmdButton">擷取冠位報酬禮裝2</button>
+        </div>
+      </div>
+      <div class="blockDiv">
+        <div class="blockTitle">
+          刪除圖片
+        </div>
+        <div class='commandSelectDiv'>
+          <select id="deleteCropImageSelect">
+            <option></option>
+          </select>
+          <img id="deleteCropImg">
+        </div>
+        <div class="blockDiv">
+          <button id="deleteCropImgButton" class="cmdButton">刪除截圖</button>
+        </div>
+      </div>
+    </div>
+    <div id="servantSkillBlock" class="blockDiv" style="display:none">
+      <div class="blockDiv"><div class="blockDiv">
+        <div class="blockTitle">
+          技能施放順序設定
+        </div>
+        <div class="commandSelectDiv">
+          <div class='commandItem'>選擇從者順序</div>
           <select id="servantDirectionSelect" class="commandItem">
             <option value="0">從左到右</option>
             <option value="1">從右到左</option>
           </select>
         </div>
         <div class="commandSelectDiv">
-          <div class='commandItem'>技能順序</div>
+          <div class='commandItem'>從者使用技能順序</div>
           <select id="skillDirectionSelect" class="commandItem">
             <option value="0">從左到右</option>
             <option value="1">從右到左</option>
           </select>
+        </div>
+      </div>
+        <div class="blockTitle">
+          從者技能設定
         </div>
         <div class="commandSelectDiv">
           <div class='commandItem'>宇宙伊絲塔、紅A切換寶具顏色</div>
@@ -236,76 +315,7 @@
         </div>
       </div>
       <div class="blockDiv">
-        <button id="savePreferenceButton" class="cmdButton">儲存設定</button>
-      </div>
-    </div>
-    <div id="getServantBlock" class="blockDiv" style="display:none">
-      <div class="blockDiv">
-        <div class="blockTitle">
-          好友設定
-        </div>
-        <div class="commandSelectDiv">
-          <div class='commandItem'>選擇好友精確度</div>
-          <select id="friendStrictSelect" class="commandItem">
-            <option value="0">嚴格</option>
-            <option value="1">寬鬆</option>
-          </select>
-        </div>
-        <div class="commandSelectDiv">
-          <div class='commandItem'>好友偵測演算法</div>
-          <select id="friendAlgorithmSelect" class="commandItem">
-            <option value="0">傳統像素檢測</option>
-            <option value="1" selected>圖片比對</option>
-          </select>
-        </div>
-        <div class="blockDiv">若有誤選或是沒有選到指定從者禮裝，請調整此選項</div>
-        <div class="blockDiv">
-          <button id="savePreferenceButton2" class="cmdButton">儲存設定</button>
-        </div>
-      </div>
-      <div class="blockDiv">
-        <div class="blockTitle">
-          擷取方式
-        </div>
-        <div class="commandSelectDiv">
-          <select id="captureMethodSelect" class="commandItem">
-            <option value="0">絕對位置</option>
-            <option value="1">傳統像素定位</option>
-            <option value="2" selected>圖片比對定位</option>
-          </select>
-        </div>
-        <div class="blockDiv">使用絕對位置時，僅限擷取好友清單最上面的兩個好友</div>
-      </div>
-      <div class="blockDiv">
-        <div class="blockTitle">
-          擷取圖片
-        </div>
-        <div class="blockDiv">
-          <button id="getServantImage1" class="cmdButton">擷取從者1</button>
-          <button id="getItemImage1" class="cmdButton">擷取禮裝1</button>
-          <button id="getServantImage2" class="cmdButton">擷取從者2</button>
-          <button id="getItemImage2" class="cmdButton">擷取禮裝2</button>
-        </div>
-        <div class="blockDiv">
-          <button id="getGrandNormalItem1" class="cmdButton">擷取冠位普通禮裝1</button>
-          <button id="getGrandRewardItem1" class="cmdButton">擷取冠位報酬禮裝1</button>
-          <button id="getGrandNormalItem2" class="cmdButton">擷取冠位普通禮裝2</button>
-          <button id="getGrandRewardItem2" class="cmdButton">擷取冠位報酬禮裝2</button>
-        </div>
-      </div>
-      <div class="blockDiv">
-        <div class="blockTitle">
-          刪除圖片
-        </div>
-        <div class='commandSelectDiv'>
-          <select id="deleteCropImageSelect">
-            <option></option>
-          </select>
-          <img id="deleteCropImg">
-        </div>
-        <div class="blockDiv">
-          <button id="deleteCropImgButton" class="cmdButton">刪除截圖</button>
-        </div>
+        <button id="savePreferenceButton3" class="cmdButton">儲存設定</button>
       </div>
     </div>
     <div class="blockDiv">
