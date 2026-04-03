@@ -767,10 +767,20 @@ var Page = {
     back: {x: 576, y: 1325},
     next: {x: 576, y: 1325}
   },
+  SplashPage: {
+    name: 'SplashPage',
+    colors: [
+      {x: 10, y: 10, r: 255, g: 255, b: 255, match: true, threshold: 80},
+      {x: 10, y: 1910, r: 255, g: 255, b: 255, match: true, threshold: 80},
+      {x: 1070, y: 1910, r: 255, g: 255, b: 255, match: true, threshold: 80},
+      {x: 1070, y: 10, r: 255, g: 255, b: 255, match: true, threshold: 80}
+    ],
+    next: Button.outStart,
+  },
   ClosePage: { // including EventPage, MyInfo, SettingPage, others
     name: 'ClosePage', // the close button at center bottom
     colors: [
-      {x: 540, y: 1588, r: 233, g: 180, b: 10, match: true, threshold: 80} // top right of the close button
+      {x: 540, y: 1588, r: 233, g: 180, b: 10, match: true, threshold: 80}, // top right of the close button
     ],
     back: {x: 576, y: 1660},
     next: {x: 576, y: 1660}
@@ -1641,6 +1651,7 @@ Tsum.prototype.goFriendPage = function() {
     var pageObj = this.findPageObject(2, 1000);
     var page = pageObj != null ? pageObj.name : "unknown";
     log(this.logs.currentPage, page, "goFriend");
+
     if (page === 'FriendPage') {
       // check again with 3 seoconds delay (Event notification/page might fly in)
       this.sleep(3000);
@@ -1653,6 +1664,8 @@ Tsum.prototype.goFriendPage = function() {
     } else if (page === "ClosePage") {
       this.tap(pageObj.back);
       this.tap({x: 310, y: 1588 - 140});
+    } else if (page === 'SplashPage') {
+      this.handleSplashPage(pageObj);
     } else if (page === 'unknown') {
       this.exitUnknownPage();
     } else {
@@ -1660,6 +1673,36 @@ Tsum.prototype.goFriendPage = function() {
     }
     this.sleep(1000);
   }
+}
+
+Tsum.prototype.handleSplashPage = function(pageObj) {
+    if (this.isStartupPhase) {
+        log('Splash page on startup');
+    } else {
+        // If we hit the splash page when we expect to see the friend page, the user has
+        // logged in on another device. We want to delay logging in for a while so the user can
+        // play the game on their other device.
+        log('Delaying ' + ts.logoutDelay + ' minutes');
+        for (var delayCount = 0; delayCount < ts.logoutDelay * 60; delayCount++) {
+            this.sleep(1000);
+            if (delayCount % 10 === 0) {
+                log('Logout delay:' + delayCount + '/' + ts.logoutDelay * 60 + ' seconds');
+            }
+        }
+    }
+
+    this.tap(pageObj.next);
+    // it's probably a long login after this. Let's let it load.
+    var startTime = Date.now();
+    for (var checkCount = 0; checkCount < 20; checkCount++) {
+        this.sleep(1000);
+        var newPage = this.findPageObject(2, 1000);
+        if (!!newPage && newPage.name !== 'SplashPage') {
+            break;
+        }
+        var since = Date.now() - startTime;
+        log('Login time: ' + since.toString() + 'ms');
+    }
 }
 
 Tsum.prototype.checkGameItem = function() {
@@ -3074,6 +3117,7 @@ function start(settings) {
     ts.tsumCount = 4;
   }
   ts.autoLaunch = settings['autoLaunchApp'];
+  ts.logoutDelay = settings['logoutDelay'];
   ts.scoreItem = settings['bonusScore'];
   ts.coinItem = settings['bonusCoin'];
   ts.expItem = settings['bonusExp'];
