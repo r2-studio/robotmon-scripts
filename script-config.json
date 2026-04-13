@@ -6,7 +6,8 @@
       "versionCode": 3.77,
       "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>腳本問題回報請搜尋臉書Mobotmon粉絲團!!<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.77 調整介面與部分圖片辨識準確度<br>V3.76 修正草十郎技能3無法使用的問題<br>V3.72 新增自動戰鬥V2指令，可以墊牌了!<br>啟動時自動讀取上次執行的腳本<br>支援玉兔、岸波白野技能<br>V3.71 好友辨識新增辨識方式，可以在黑邊好友技能設定中進行調整! 擷取圖片也提供不同演算法了，可以下拉後再擷取目標從者!<br><br>模擬器推薦使用夜神 Android 64位元 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip"
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGO/index.zip",
+      "maintaining": true
     },
     "com.cooper.FGOTW": {
       "id": "com.cooper.FGOTW",
@@ -14,7 +15,8 @@
       "versionCode": 3.74,
       "description": "<div>需訂閱 FGO無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br><br>腳本問題回報請搜尋臉書Mobotmon粉絲團!!<br><br>!!!瀏海機若遊戲畫面有黑邊，請執行黑邊設定->偵測黑邊並儲存!!!<br><br>V3.74 修正開啟技能確認時無法正常運作的問題<br>V3.72 新增自動戰鬥V2指令，可以墊牌了!<br>啟動時自動讀取上次執行的腳本<br>V3.71 好友辨識新增辨識方式，可以在黑邊好友技能設定中進行調整! 擷取圖片也提供不同演算法了，可以下拉後再擷取目標從者!<br><br>模擬器推薦使用夜神 Android 64位元 解析度1920x1080<br>支援Android手機、模擬器<br>功能包括：自動周回、吃果、辨識好友與禮裝、自動戰鬥施放技能寶具、友抽、抽箱</div>",
       "packageName": "com.xiaomeng.fategrandorder",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip"
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip",
+      "maintaining": true
     },
     "com.r2studio.MonopolyGOFree": {
       "id": "com.r2studio.MonopolyGOFree",
@@ -23,16 +25,18 @@
       "description": "<h3>Monopoly GO Free</h3>",
       "packageName": "com.scopely.monopolygo",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MonopolyGOFree/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": false
     },
     "com.r2studio.MLB9Innings": {
       "id": "com.r2studio.MLB9Innings",
       "title": "*MLB9 Innings Premium*",
-      "versionCode": "15.93",
-      "description": "<h3>MLB9 Innings Premium</h3><ul><li>一鍵自動暢玩聯賽<br><small>play league automatically through one click</small></li><li> 自動解任看廣告領獎勵<br><small> auto complete mission and ad reward</small></li><li> 體力判斷省電速刷模式 <br><small> 體力判斷速刷模式<br><small>better efficiency in power saving mode</small></li></ul><b>* 若欲執行腳本時出現此畫面，請重開robotmon app<br><small>please restart robotmon app if this shows up when trying to execute the script</small></b>",
+      "versionCode": "15.94",
+      "description": "<h3>需訂閱 MLB 9 Innings無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱</h3><br>V15.94 修正喝水無法正常設定的問題<br><ul><li>一鍵自動暢玩聯賽<br><small>play league automatically through one click</small></li><li> 自動解任看廣告領獎勵<br><small> auto complete mission and ad reward</small></li><li> 體力判斷省電速刷模式 <br><small>better efficiency in power saving mode</small></li></ul><b>* 若欲執行腳本時出現此畫面，請重開robotmon app<br><small>please restart robotmon app if this shows up when trying to execute the script</small></b>",
       "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9Innings/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": true
     },
     "com.r2studio.MLB9InningsBasic": {
       "id": "com.r2studio.MLB9InningsBasic",
@@ -41,7 +45,8 @@
       "description": "<h3>MLB9 Innings Basic</h3><ul><li>一鍵自動暢玩聯賽<br><small>play league automatically through one click</small></li><li>體力判斷速刷模式<br><small>better energy controlling and play efficiency</small></li><li>遊玩畫面不中斷<br><small>decrease disruptions caused by power save view</small></li></ul>",
       "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9InningsBasic/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": false
     },
     "app.robotmon.x.rushroyale": {
       "id": "app.robotmon.x.rushroyale",
@@ -50,7 +55,8 @@
       "description": "<h3>Rush Royale</h3><ul><li>Auto Play</li></ul>",
       "packageName": "com.my.defense",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/app.robotmon.x.rushroyale/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": false
     },
     "com.r2studio.SweetDays": {
       "id": "com.r2studio.SweetDays",
@@ -59,7 +65,8 @@
       "description": "<h3>Hello Sweet Days</h3><ul><li>自動散步</li><li>自動加入派對</li><li>自動舉辦派對</li><li>自動完成任務</li><li>自動接新任務</li><li>自動家裡澆花</li></ul>",
       "packageName": "jp.cocone.sweetdays",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.SweetDays/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": false
     },
     "com.r2studio.lgtm2": {
       "id": "com.r2studio.lgtm2",
@@ -68,7 +75,8 @@
       "description": "<h3>Robotmon TsumTsum Stadium</h3><ul><li>**Debug SendHearts Stuck**</li><li>Auto Play</li><li>Receive hearts</li><li>Send hearts</li></ul>",
       "packageName": "com.linecorp.LGTM2",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.lgtm2/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": false
     },
     "com.r2studio.Tsum": {
       "id": "com.r2studio.Tsum",
@@ -77,7 +85,8 @@
       "description": "<b><font color='#2196f3'>🔖 版本 v52</font></b><ul><li>1️⃣ Delete Ad (忽略廣告)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": true
     },
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
@@ -86,7 +95,8 @@
       "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v80</b>\n<ul>\n    <li>\n        修復日版最新扭蛋自動購買\n        <br>\n        JP: Fixed latest pickup capsule auto-purchase.\n    </li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": true
     },
     "com.r2studio.CookieKingdom.Basic": {
       "id": "com.r2studio.CookieKingdom.Basic",
@@ -95,7 +105,8 @@
       "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.basic/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": false
     },
     "com.r2studio.CookieKingdom": {
       "id": "com.r2studio.CookieKingdom",
@@ -104,7 +115,8 @@
       "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FULL Function Cookie run Kingdom production automation script</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": true
     },
     "com.r2studio.DragonBallLegends": {
       "id": "com.r2studio.DragonBallLegends",
@@ -113,7 +125,8 @@
       "description": "<b><font color='#2196f3'>Dragon Ball Legends: story mode helper</font></b><ul><li>Help you progress stories automatically</li></ul>",
       "packageName": "com.bandainamcoent.dblegends_ww",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.DragonBallLegends/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": false
     },
     "com.r2studio.EZRobot": {
       "id": "com.r2studio.EZRobot",
@@ -122,7 +135,8 @@
       "description": "<div>Make your scripts yourself</div><div>⭐⭐⭐Import/Export scripts</div><div>Auto save the script</div>",
       "packageName": "com.r2studio.robotmon",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": true
     },
     "com.r2studio.LineageM": {
       "id": "com.r2studio.LineageM",
@@ -131,7 +145,8 @@
       "description": "<h3>天堂M 無課救星</h3><ul><li>更新按鈕位置</li><li>自動開怪，使用按鈕1，根據按鈕1條件使用</li><li>6秒沒攻擊，自動瞬移，按鈕7</li><li>更改辨識安全區域方法</li><li>⭐⭐⭐大幅提升腳本速度⭐⭐⭐</li><li>支援所有螢幕解析度</li><li>自動買水買銀箭</li><li>HP 與 MP 條件設定使用按鈕</li><li>回到地圖原點</li><li>移動到指定地圖</li><li>安全區域瞬移</li><li>被攻擊瞬移</li><li>使用回卷直到安全區域</li><li>斷線重新連線</li><li>自動攻擊</li><li>自動使用解毒劑</li><li>試煉副本輔助按紐</li></ul>",
       "packageName": "com.gamania.lineagem",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.LineageM/index.zip",
-      "dependencies": []
+      "dependencies": [],
+      "maintaining": false
     },
     "com.donny.StoneOnline": {
       "id": "com.donny.StoneOnline",
@@ -143,7 +158,8 @@
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
-      ]
+      ],
+      "maintaining": false
     },
     "com.donny.dungeonbreakers": {
       "id": "com.donny.dungeonbreakers",
@@ -155,7 +171,8 @@
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.3.js",
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
-      ]
+      ],
+      "maintaining": false
     },
     "com.r2studio.TapTitans2": {
       "id": "com.r2studio.TapTitans2",
@@ -163,7 +180,8 @@
       "versionCode": 11.3,
       "description": "<div>Make the relics rain! / 自動愛心農場!</div>",
       "packageName": "com.gamehivecorp.taptitans2",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TapTitans2/index.zip"
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TapTitans2/index.zip",
+      "maintaining": false
     }
   },
   "libs": {
