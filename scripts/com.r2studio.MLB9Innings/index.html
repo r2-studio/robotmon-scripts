@@ -26,7 +26,7 @@
 </body>
 
 <script>
-  var SCRIPT_VERSION_CODE = "15.93";
+  var SCRIPT_VERSION_CODE = "15.94";
   var UPDATE_PART = {
     zh_TW: "更新年份與畫面",
     en: "renew year and images",
@@ -122,20 +122,36 @@
           { text: "🚫 off", value: false },
         ],
         default: true,
+        value: true,
         key: "isRunPlayBattleGame",
       },
       {
         type: "select",
         titlei18n: {
-          zh_TW: "全球員自動喝飲料",
-          en: "apply condition drinks to all players",
+          zh_TW: "聯賽全球員自動喝飲料",
+          en: "apply condition drinks to all players (league)",
         },
         selections: [
           { text: "🚫 off", value: false },
           { text: "✅ on", value: true },
         ],
         default: false,
-        key: "useDrink",
+        value: false,
+        key: "leagueIsUseDrink",
+      },
+      {
+        type: "select",
+        titlei18n: {
+          zh_TW: "排名賽全球員自動喝飲料",
+          en: "apply condition drinks to all players (ranked battle)",
+        },
+        selections: [
+          { text: "🚫 off", value: false },
+          { text: "✅ on", value: true },
+        ],
+        default: false,
+        value: false,
+        key: "rankBattleIsUseDrink",
       },
       {
         type: "select",
@@ -145,6 +161,7 @@
           { text: "✅ on", value: true },
         ],
         default: false,
+        value: false,
         key: "isRunAdReward",
       },
       {
@@ -158,6 +175,7 @@
           { text: "✅ on", value: true },
         ],
         default: false,
+        value: false,
         key: "isRunWeeklyMission",
       },
     ],
@@ -168,7 +186,8 @@
     leagueYear: MIN_YEAR + 0,
     isLocalPaid: true,
     isCloud: false,
-    useDrink: false,
+    leagueIsUseDrink: false,
+    rankBattleIsUseDrink: false,
     isRunAdReward: false,
     isRunPlayBattleGame: true,
     isRunWeeklyMission: false,
@@ -176,7 +195,8 @@
   simplesettings.render("#app", selections, function (c) {
     config.leagueSeasonMode = c.leagueSeasonMode;
     config.leagueYear = c.leagueYear;
-    config.useDrink = c.useDrink;
+    config.leagueIsUseDrink = c.leagueIsUseDrink;
+    config.rankBattleIsUseDrink = c.rankBattleIsUseDrink;
     config.isRunAdReward = c.isRunAdReward;
     config.isRunPlayBattleGame = c.isRunPlayBattleGame;
     config.isRunWeeklyMission = c.isRunWeeklyMission;
