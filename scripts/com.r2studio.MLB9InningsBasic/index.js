@@ -12434,7 +12434,7 @@ exports.PRODUCTION_VERSION_CODE = exports.GIT_VERSION = void 0;
 exports.GIT_VERSION = (function () {
     try {
         // @ts-ignore - Will be replaced by webpack during build
-        return "260409_5eea39c";
+        return "260424_00b027e";
     }
     catch (e) {
         // In test environment, return a fixed test identifier
