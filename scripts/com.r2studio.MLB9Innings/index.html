@@ -26,12 +26,12 @@
 </body>
 
 <script>
-  var SCRIPT_VERSION_CODE = "15.94";
+  var SCRIPT_VERSION_CODE = "15.95";
   var UPDATE_PART = {
     zh_TW: "更新年份與畫面",
     en: "renew year and images",
   };
-  var MIN_YEAR = 2025;
+  var MIN_YEAR = 2026;
   var GAME_VERSION = "24 9.1.2";
 
   var selections = {
@@ -109,7 +109,7 @@
         titlei18n: { zh_TW: "聯賽年份選擇", en: "League year selection" },
         default: MIN_YEAR,
         min: MIN_YEAR,
-        max: MIN_YEAR + 14,
+        max: MIN_YEAR + 12,
         step: 1,
         key: "leagueYear",
         value: MIN_YEAR,
@@ -202,6 +202,7 @@
     config.isRunWeeklyMission = c.isRunWeeklyMission;
     console.log("config", JSON.stringify(config, null, 2));
   });
+  JavaScriptInterface.showMenu();
 
   function onEvent(eventType) {
     if (eventType == "OnPlayClick") {
