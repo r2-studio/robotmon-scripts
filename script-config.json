@@ -18,6 +18,66 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.FGOTW/index.zip",
       "maintaining": true
     },
+    "com.r2studio.MLB9Innings": {
+      "id": "com.r2studio.MLB9Innings",
+      "title": "*MLB9 Innings Premium*",
+      "versionCode": "15.94",
+      "description": "<h3>需訂閱 MLB 9 Innings無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br>僅支援模擬器Simple manager啟動，解析度640x360 90dpi</h3><br>V15.94 修正喝水無法正常設定的問題<br><ul><li>一鍵自動暢玩聯賽<br><small>play league automatically through one click</small></li><li> 自動解任看廣告領獎勵<br><small> auto complete mission and ad reward</small></li><li> 體力判斷省電速刷模式 <br><small>better efficiency in power saving mode</small></li></ul><b>* 若欲執行腳本時出現此畫面，請重開robotmon app<br><small>please restart robotmon app if this shows up when trying to execute the script</small></b>",
+      "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9Innings/index.zip",
+      "dependencies": [],
+      "maintaining": true
+    },
+    "com.r2studio.TsumBeta": {
+      "id": "com.r2studio.TsumBeta",
+      "title": "Disney Tsum Tsum",
+      "versionCode": 80,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v80</b>\n<ul>\n    <li>\n        修復日版最新扭蛋自動購買\n        <br>\n        JP: Fixed latest pickup capsule auto-purchase.\n    </li>\n</ul>",
+      "packageName": "com.linecorp.LGTMTMG",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
+      "dependencies": [],
+      "maintaining": true
+    },
+    "com.r2studio.CookieKingdom": {
+      "id": "com.r2studio.CookieKingdom",
+      "title": "CookieKingdom: advanced management",
+      "versionCode": 5.72,
+      "description": "<h3>需訂閱 薑餅人王國無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br>僅支援模擬器Simple manager啟動，解析度640x360 120dpi</h3><br>V5.72 啟動時自動移動icon避免影響畫面辨識<br><ul><li>自動生產管理</li><li>收集王國建設素材及餅乾成長材料</li><li>競技場定時挑戰</li></ul>",
+      "packageName": "com.devsisters.ck",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
+      "dependencies": [],
+      "maintaining": true
+    },
+    "com.r2studio.EZRobot": {
+      "id": "com.r2studio.EZRobot",
+      "title": "EZRobot",
+      "versionCode": 8,
+      "description": "<div>Make your scripts yourself</div><div>⭐⭐⭐Import/Export scripts</div><div>Auto save the script</div>",
+      "packageName": "com.r2studio.robotmon",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",
+      "dependencies": [],
+      "maintaining": true
+    },
+    "com.r2studio.Tsum": {
+      "id": "com.r2studio.Tsum",
+      "title": "Disney Tsum Tsum (Old v52)",
+      "versionCode": 52,
+      "description": "<b><font color='#2196f3'>🔖 版本 v52</font></b><ul><li>1️⃣ Delete Ad (忽略廣告)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
+      "packageName": "com.linecorp.LGTMTMG",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
+      "dependencies": [],
+      "maintaining": true
+    },
+    "com.r2studio.CookieKingdom.Basic": {
+      "id": "com.r2studio.CookieKingdom.Basic",
+      "title": "CookieKingdom: basic management",
+      "versionCode": 5.71,
+      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
+      "packageName": "com.devsisters.ck",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.basic/index.zip",
+      "dependencies": [],
+      "maintaining": false
+    },
     "com.r2studio.MonopolyGOFree": {
       "id": "com.r2studio.MonopolyGOFree",
       "title": "*Monopoly GO Free*",
@@ -27,16 +87,6 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MonopolyGOFree/index.zip",
       "dependencies": [],
       "maintaining": false
-    },
-    "com.r2studio.MLB9Innings": {
-      "id": "com.r2studio.MLB9Innings",
-      "title": "*MLB9 Innings Premium*",
-      "versionCode": "15.94",
-      "description": "<h3>需訂閱 MLB 9 Innings無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱</h3><br>V15.94 修正喝水無法正常設定的問題<br><ul><li>一鍵自動暢玩聯賽<br><small>play league automatically through one click</small></li><li> 自動解任看廣告領獎勵<br><small> auto complete mission and ad reward</small></li><li> 體力判斷省電速刷模式 <br><small>better efficiency in power saving mode</small></li></ul><b>* 若欲執行腳本時出現此畫面，請重開robotmon app<br><small>please restart robotmon app if this shows up when trying to execute the script</small></b>",
-      "packageName": "com.com2us.ninepb3d.normal.freefull.google.global.android.common",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.MLB9Innings/index.zip",
-      "dependencies": [],
-      "maintaining": true
     },
     "com.r2studio.MLB9InningsBasic": {
       "id": "com.r2studio.MLB9InningsBasic",
@@ -78,46 +128,6 @@
       "dependencies": [],
       "maintaining": false
     },
-    "com.r2studio.Tsum": {
-      "id": "com.r2studio.Tsum",
-      "title": "Disney Tsum Tsum (Old v52)",
-      "versionCode": 52,
-      "description": "<b><font color='#2196f3'>🔖 版本 v52</font></b><ul><li>1️⃣ Delete Ad (忽略廣告)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
-      "packageName": "com.linecorp.LGTMTMG",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
-      "dependencies": [],
-      "maintaining": true
-    },
-    "com.r2studio.TsumBeta": {
-      "id": "com.r2studio.TsumBeta",
-      "title": "Disney Tsum Tsum",
-      "versionCode": 80,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v80</b>\n<ul>\n    <li>\n        修復日版最新扭蛋自動購買\n        <br>\n        JP: Fixed latest pickup capsule auto-purchase.\n    </li>\n</ul>",
-      "packageName": "com.linecorp.LGTMTMG",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
-      "dependencies": [],
-      "maintaining": true
-    },
-    "com.r2studio.CookieKingdom.Basic": {
-      "id": "com.r2studio.CookieKingdom.Basic",
-      "title": "CookieKingdom: basic management",
-      "versionCode": 5.71,
-      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FREE Cookie run Kingdom production automation script</li></ul>",
-      "packageName": "com.devsisters.ck",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom.basic/index.zip",
-      "dependencies": [],
-      "maintaining": false
-    },
-    "com.r2studio.CookieKingdom": {
-      "id": "com.r2studio.CookieKingdom",
-      "title": "CookieKingdom: advanced management",
-      "versionCode": 5.71,
-      "description": "<b><font color='#2196f3'>CookieRun: Kingdom production agent</font></b><ul><li>The official FULL Function Cookie run Kingdom production automation script</li></ul>",
-      "packageName": "com.devsisters.ck",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
-      "dependencies": [],
-      "maintaining": true
-    },
     "com.r2studio.DragonBallLegends": {
       "id": "com.r2studio.DragonBallLegends",
       "title": "Dragon Ball Legends: story mode reroll master",
@@ -127,16 +137,6 @@
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.DragonBallLegends/index.zip",
       "dependencies": [],
       "maintaining": false
-    },
-    "com.r2studio.EZRobot": {
-      "id": "com.r2studio.EZRobot",
-      "title": "EZRobot",
-      "versionCode": 8,
-      "description": "<div>Make your scripts yourself</div><div>⭐⭐⭐Import/Export scripts</div><div>Auto save the script</div>",
-      "packageName": "com.r2studio.robotmon",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.EZRobot/index.zip",
-      "dependencies": [],
-      "maintaining": true
     },
     "com.r2studio.LineageM": {
       "id": "com.r2studio.LineageM",
