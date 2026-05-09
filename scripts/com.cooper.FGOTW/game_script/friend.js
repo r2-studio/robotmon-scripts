@@ -248,6 +248,7 @@ function selectFriend(filter, servant, item, star, checkIsFriend, scrollTimes, g
 
           var isGrandServant = checkIsGrandServant(screenshot, grandServantImage, lineY);
           if (isGrandServant) {
+            //grandKitsunaItem == -1時不檢查絆禮裝
             if (grandKitsunaItem >= 0 && !checkGrandKitsunaItem(screenshot, grandKitsunaItem, lineY)) {
               isSameGrandKitsunaItem = false;
             }
@@ -881,6 +882,10 @@ function checkGrandKitsunaItem(screenshot, kitsuna, lineY) {
 
   if (isDebug) {
     console.log("checkGrandKitsunaItem" + (kitsuna == result));
+  }
+  // 如果 kitsuna == 0 (絆禮裝不限效果)，則 result 為 1 或 2 都應該返回 true
+  if (kitsuna == 0 && (result == 1 || result == 2)) {
+    return true;
   }
   return kitsuna == result;
 }
