@@ -9,13 +9,11 @@ function setMarginIcon() {
     icon["boxNoPoint"] = [360, 630, 195, 82];
     icon["settingDialog"] = [840, 220, 240, 60];
     icon["stageFailed"] = [900, 154, 140, 60];
-    icon["stageRestart"] = [1140, 810, 240, 75];
     icon["friendPointFree"] = [787, 740, 337, 75];
   } else {
     icon["boxNoPoint"] = [470, 530, 200, 100];
     icon["settingDialog"] = [750, 140, 350, 70];
     icon["stageFailed"] = [750, 160, 300, 60];
-    icon["stageRestart"] = [1140, 836, 240, 75];
     icon["friendPointFree"] = [810, 740, 300, 75];
   }
 
@@ -240,6 +238,7 @@ icon["apple"] = [795, 67, 300, 75];
 icon["selectStageItemFull"] = [487, 225, 900, 187];
 icon["selectStageServantFull"] = [487, 225, 900, 187];
 icon["whiteConfirm"] = [450, 700, 500, 200];
+icon["whiteConfirm2"] = [450, 700, 500, 200];
 icon["whiteFinish"] = [550, 550, 800, 350];
 icon["whiteStartFailed"] = [550, 400, 800, 500];
 
@@ -267,7 +266,10 @@ function isUseAppleDialog() {
 }
 
 function isWhiteConfirmDialog() {
-  return checkIconInScreen("whiteConfirm");
+  return checkIconListInScreen(
+    ["whiteConfirm", "whiteConfirm2"],
+    false
+  );
 }
 
 function iswhiteStartFailedDialog() {
@@ -365,6 +367,9 @@ icon["rabbitSkill2"] = [1245, 600, 370, 60];
 icon["kishinamiSkill"] = [660, 600, 260, 60];
 icon["kishinamiSkill2"] = [1000, 600, 260, 60];
 icon["kishinamiSkill3"] = [1360, 600, 260, 60];
+icon["soujyuroSkill"] = [660, 600, 260, 60];
+icon["soujyuroSkill2"] = [1000, 600, 260, 60];
+icon["soujyuroSkill3"] = [1360, 600, 260, 60];
 icon["ultFailed"] = [900, 637, 123, 60];
 icon["skillFailed"] = [870, 802, 180, 60];
 icon["settingDialog"] = [750, 140, 350, 60];
@@ -475,13 +480,25 @@ function isBattleSkillKishinamiDialog(screenshot) {
   );
 }
 
+function isBattleSkillSoujyuroDialog(screenshot) {
+  if (server == "TW") {
+    return false;
+  }
+  return checkIconListInScreen(
+    ["soujyuroSkill", "soujyuroSkill2", "soujyuroSkill3"],
+    true,
+    0.85,
+    screenshot
+  );
+}
+
 function isBattleSkillTargetDialog() {
   return checkIconInScreen("battleTarget");
 }
 
 //finish-----------------------------------------------
 icon["finishNext"] = [1575, 933, 180, 60];
-icon["stageRestart"] = [1140, 810, 240, 75];
+icon["stageRestart"] = [1140, 836, 240, 75];
 icon["stageRestartEvent"] = [1260, 810, 240, 75];
 icon["stageFailed"] = [750, 160, 300, 60];
 icon["stageFailed2"] = [860, 570, 200, 60];

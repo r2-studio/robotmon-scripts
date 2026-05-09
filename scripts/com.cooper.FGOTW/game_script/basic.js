@@ -184,7 +184,7 @@ function checkPixel(x, y, r, g, b, screenshot, threshold) {
     releaseImage(screenshot);
   }
   if (isDebug) {
-    console.log("get color " + x + "," + y + ":" + color.r + "," + color.g + "," + color.b);
+    // console.log("get color " + x + "," + y + ":" + color.r + "," + color.g + "," + color.b);
   }
   if (isSameColor(color.r, color.g, color.b, r, g, b, threshold)) {
     return true;

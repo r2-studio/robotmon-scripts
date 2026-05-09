@@ -130,6 +130,13 @@ function initButton() {
       "savePreferenceConfirm"
     );
   });
+  $("#savePreferenceButton3").click(function () {
+    var preference = getPreferenceValue();
+    JavaScriptInterface.runScriptCallback(
+      "savePreference([" + preference + "])",
+      "savePreferenceConfirm"
+    );
+  });
 
   //set add default script btn
   $("#addAllFlow").click(function () {
@@ -493,6 +500,7 @@ function initButton() {
     if (display == "none") {
       $("#getServantBlock").css("display", "");
       $("#preferenceBlock").css("display", "none");
+      $("#servantSkillBlock").css("display", "none");
     } else {
       $("#getServantBlock").css("display", "none");
     }
@@ -502,8 +510,19 @@ function initButton() {
     if (display == "none") {
       $("#preferenceBlock").css("display", "");
       $("#getServantBlock").css("display", "none");
+      $("#servantSkillBlock").css("display", "none");
     } else {
       $("#preferenceBlock").css("display", "none");
+    }
+  });
+  $("#switchServantSkillBlock").click(function () {
+    var display = $("#servantSkillBlock").css("display");
+    if (display == "none") {
+      $("#servantSkillBlock").css("display", "");
+      $("#preferenceBlock").css("display", "none");
+      $("#getServantBlock").css("display", "none");
+    } else {
+      $("#servantSkillBlock").css("display", "none");
     }
   });
   $("#switchCommandBlock").click(function () {
@@ -552,6 +571,10 @@ function initButton() {
     width: "120px",
   });
   $("#kishinamiSkillSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
+  $("#soujyuroSkillSelect").select2({
     minimumResultsForSearch: -1,
     width: "120px",
   });
@@ -802,6 +825,12 @@ function initHTMLCallback(result) {
       kishinami = 0;
     }
     $("#kishinamiSkillSelect").val(kishinami).trigger("change");
+
+    var soujyuro = parseInt(result[5][13]);
+    if (soujyuro == undefined || soujyuro == null || isNaN(soujyuro)) {
+      soujyuro = 0;
+    }
+    $("#soujyuroSkillSelect").val(soujyuro).trigger("change");
 
     var friendAlgorithm = parseInt(result[5][10]);
     if (
@@ -1239,6 +1268,7 @@ function getOtherPreferenceValue() {
   preference[6] = parseInt($("#friendAlgorithmSelect").val());
   preference[7] = parseInt($("#rabbitSkillSelect").val());
   preference[8] = parseInt($("#kishinamiSkillSelect").val());
+  preference[9] = parseInt($("#soujyuroSkillSelect").val());
   return preference;
 }
 
@@ -1257,6 +1287,7 @@ function getPreferenceValue() {
   preference[10] = parseInt($("#friendAlgorithmSelect").val());
   preference[11] = parseInt($("#rabbitSkillSelect").val());
   preference[12] = parseInt($("#kishinamiSkillSelect").val());
+  preference[13] = parseInt($("#soujyuroSkillSelect").val());
   return preference;
 }
 

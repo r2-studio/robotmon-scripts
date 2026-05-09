@@ -33,6 +33,7 @@ var dubaiSkillPositionX = [720, 1200];
 var dubaiSkillPositionY = 675;
 var rabbitSkillName = ["全體", "單體"];
 var kishinamiSkillName = ["天", "地", "人"];
+var soujyuroSkillName = ["綠", "藍", "紅"];
 
 
 var useMargin = undefined;
@@ -172,6 +173,24 @@ function useSkill(player, skill, target) {
         break;
       case 2:
         clickIcon("kishinamiSkill3");
+        break;
+    }
+  } else if (isBattleSkillSoujyuroDialog(screenshot)) {
+    if (soujyuroSkill == undefined || soujyuroSkill < 0 || soujyuroSkill > 2) {
+      console.log("未指定模式，設為綠");
+      soujyuroSkill = 0;
+    }
+    console.log("使用技能-草十郎卡片顏色 " + soujyuroSkillName[soujyuroSkill]);
+    switch (soujyuroSkill) {
+      case 0:
+      default:
+        clickIcon("soujyuroSkill");
+        break;
+      case 1:
+        clickIcon("soujyuroSkill2");
+        break;
+      case 2:
+        clickIcon("soujyuroSkill3");
         break;
     }
   } else if (isBattleKklDialog(screenshot)) {
