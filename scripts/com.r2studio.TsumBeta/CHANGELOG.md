@@ -5,6 +5,12 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v81] - 2026-05-13
+
+### Fixed
+- JP: Close "Today missions" if open
+
+
 ## [v80] - 2025-12-19
 
 ### Fixed

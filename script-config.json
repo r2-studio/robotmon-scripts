@@ -31,8 +31,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 80,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v80</b>\n<ul>\n    <li>\n        修復日版最新扭蛋自動購買\n        <br>\n        JP: Fixed latest pickup capsule auto-purchase.\n    </li>\n</ul>",
+      "versionCode": 81,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v80</b>\n<ul>\n    <li>\n        如果「今日任務」有開啟就關閉它\n        <br>\n        Close \"Today missions\" if open.\n    </li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": [],
