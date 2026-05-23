@@ -542,6 +542,7 @@ function isItemPage() {
 
 //friendPoint-----------------------------------------------
 icon["friendPointMain"] = [1130, 20, 100, 90];
+icon["friendPointMain2"] = [1130, 20, 100, 90];
 icon["friendPointFree"] = [810, 740, 300, 75];
 icon["friendPointFreeEvent"] = [787, 740, 337, 75];
 icon["friendPointTen"] = [1125, 740, 240, 75];
@@ -552,7 +553,9 @@ icon["friendPointServantFull"] = [487, 225, 900, 187];
 icon["friendPointItemFull"] = [487, 225, 900, 187];
 
 function isFriendPointMainPage() {
-  return checkIconInScreen("friendPointMain");
+  return checkIconListInScreen(
+    ["friendPointMain","friendPointMain2"],
+    false);
 }
 
 function isFriendPointFree() {

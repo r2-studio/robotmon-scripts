@@ -103,11 +103,7 @@ function getFriendPoint() {
       return;
     }
     if (isFriendPointTen()) {
-      if(server == "JP"){
-        clickIcon("friendPointHundred");
-      }else{
-        clickIcon("friendPointTen");
-      }
+      clickIcon("friendPointHundred");
     } else if (isFriendPointFree()) {
       tapScale(938, 825);
     } else if (isFriendPointContinue()) {
