@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat .gitignore)",
+      "Bash(ls node_modules/.bin/tsc)"
+    ]
+  }
+}

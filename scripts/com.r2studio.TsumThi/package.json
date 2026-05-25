@@ -2,17 +2,20 @@
   "name": "com.r2studio.tsumthi",
   "version": "1.0.0",
   "description": "This is the successor of the script com.r2studio.Tsum.",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "build" : "./build.sh",
-    "buildAndAdb" : "./build.sh -a true",
-    "adb" : "adb push dist/index.* sdcard/Download/Robotmon/scripts/com.r2studio.TsumThi/"
+    "build": "./build.sh",
+    "build:ps": "powershell -ExecutionPolicy Bypass -File ./build.ps1",
+    "buildAndAdb": "./build.sh -a true",
+    "typecheck": "tsc --noEmit",
+    "adb": "adb push dist/index.* sdcard/Download/Robotmon/scripts/com.r2studio.TsumThi/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "html-inline-external": "^1.0.10"
+    "html-inline-external": "^1.0.10",
+    "typescript": "^6.0.3"
   }
 }

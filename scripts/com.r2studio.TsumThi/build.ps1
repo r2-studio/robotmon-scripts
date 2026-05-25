@@ -5,10 +5,26 @@ param (
 
 Write-Host "Parsed ADB: $ADB, Device: $Device"
 
-# Clear and create dist directory
-Write-Host "Removing old dist directory (if it exists) and creating a new one..."
+# Clear and create dist + build directories
+Write-Host "Removing old dist and build directories (if they exist) and creating fresh ones..."
 Remove-Item -Recurse -Force .\dist -ErrorAction SilentlyContinue
-New-Item -ItemType Directory -Path .\dist
+Remove-Item -Recurse -Force .\build -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Path .\dist | Out-Null
+New-Item -ItemType Directory -Path .\build | Out-Null
+
+# Compile TypeScript -> .\build (configured via tsconfig.json)
+Write-Host "Compiling TypeScript..."
+npx tsc
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "TypeScript compilation failed (exit $LASTEXITCODE)."
+    exit $LASTEXITCODE
+}
+
+# Stage the static assets next to the compiled JS so html-inline-external can
+# resolve `<script src="settings.js">` and `<link href="index.css">` references.
+Write-Host "Staging index.html and index.css into .\build..."
+Copy-Item .\src\index.html -Destination .\build\
+Copy-Item .\src\index.css -Destination .\build\
 
 # Set the build date
 Write-Host "Setting build date..."
@@ -17,7 +33,7 @@ Write-Host "Build date: $BuildDate"
 
 # Inline external HTML
 Write-Host "Running html-inline-external..."
-npx html-inline-external --src .\src\index.html --dest .\dist\index.inlined.html
+npx html-inline-external --src .\build\index.html --dest .\dist\index.inlined.html
 
 # Replace build date in HTML file
 Write-Host "Replacing build date in index.html..."
@@ -27,9 +43,9 @@ Write-Host "Replacing build date in index.html..."
 Write-Host "Removing inlined HTML file..."
 Remove-Item .\dist\index.inlined.html
 
-# Copy JavaScript file
-Write-Host "Copying index.js to dist directory..."
-Copy-Item .\src\index.js -Destination .\dist\
+# Copy compiled JavaScript file
+Write-Host "Copying build\index.js to dist directory..."
+Copy-Item .\build\index.js -Destination .\dist\
 
 # Create a ZIP file (use -Force to overwrite if exists)
 Write-Host "Creating a ZIP file for dist directory..."

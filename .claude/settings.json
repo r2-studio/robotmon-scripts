@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --version)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"---exit=$?---\")",
+      "Bash(bash ./build.sh)"
+    ]
+  }
+}

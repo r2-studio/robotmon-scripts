@@ -1,16 +1,25 @@
 #!/usr/bin/env bash
 
-rm -rf ./dist 2>/dev/null
-mkdir ./dist
+rm -rf ./dist ./build 2>/dev/null
+mkdir ./dist ./build
+
+# Compile TypeScript -> ./build (configured via tsconfig.json)
+echo "Compiling TypeScript..."
+npx tsc
+
+# Stage the static assets next to the compiled JS so html-inline-external can
+# resolve `<script src="settings.js">` and `<link href="index.css">` references.
+cp ./src/index.html ./build/
+cp ./src/index.css ./build/
 
 # shellcheck disable=SC2155
 export BUILD_DATE="$(date "+%F %H:%M:%S %:z")" # used by envsubst later
 echo "Build date = $BUILD_DATE"
 
-npx html-inline-external --src ./src/index.html --dest ./dist/index.inlined.html
+npx html-inline-external --src ./build/index.html --dest ./dist/index.inlined.html
 envsubst \$BUILD_DATE < ./dist/index.inlined.html > ./dist/index.html
 rm ./dist/index.inlined.html
-cp ./src/index.js ./dist/
+cp ./build/index.js ./dist/
 
 (
 cd dist || exit
