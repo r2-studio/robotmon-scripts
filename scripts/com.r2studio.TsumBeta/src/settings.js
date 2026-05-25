@@ -87,6 +87,20 @@ var settings = [
     ],
     [
         {
+            key: 'logoutDelay',
+            title: 'Logout delay (min)',
+            title_zh_TW: '登出延遲(分)',
+            default: 0,
+            step: 1,
+            max: 60,
+            min: 0
+        },
+        {
+            title: 'If we detect that you are logged in on another device, we will wait for this many minutes before continuing the script.',
+        },
+    ],
+    [
+        {
             key: 'autoPlayGame',
             title: 'Auto Play Game',
             title_zh_TW: '自動玩遊戲',
