@@ -1097,14 +1097,16 @@ function findTsumComponents(neighbors) {
 }
 
 // Bounded DFS backtracking — searches for the longest simple path inside one
-// connected component. The greedy nearest-neighbor walk used previously could
-// only follow a single linear chain and missed branches; this one explores
-// alternatives. A step budget caps total node visits so calculation time
-// stays bounded even when a component is large.
-function findLongestTsumPath(neighbors, comp, budget) {
+// connected component. Each starting node gets its own step budget so a
+// dead-end branch can't starve the rest of the search. After picking the best
+// chain, a second pass tries to extend it from both endpoints into the
+// remaining unvisited subgraph, which rescues cases where the initial DFS
+// began in the middle of a longer chain and could only walk one direction.
+function findLongestTsumPath(neighbors, comp, budgetPerStart) {
   var n = neighbors.length;
   var visited = new Array(n);
-  for (var i = 0; i < n; i++) { visited[i] = false; }
+  var path = [];
+  var state = { steps: 0, budget: 0, bestLen: 0, best: null };
 
   // Order each adjacency list by ascending degree so the search tries the most
   // constrained branches first — dead ends prune quickly and leaves get
@@ -1116,20 +1118,15 @@ function findLongestTsumPath(neighbors, comp, budget) {
     sortedNbrs[i] = arr;
   }
 
-  var state = { steps: 0, budget: budget, bestLen: 0, best: null };
-  var path = [];
-
   function dfs(idx) {
     state.steps++;
     visited[idx] = true;
     path.push(idx);
-
     if (path.length > state.bestLen) {
       state.bestLen = path.length;
       state.best = path.slice();
     }
-
-    if (path.length < comp.length && state.steps < state.budget) {
+    if (state.steps < state.budget) {
       var nbrs = sortedNbrs[idx];
       for (var k = 0; k < nbrs.length; k++) {
         if (!visited[nbrs[k]]) {
@@ -1138,25 +1135,65 @@ function findLongestTsumPath(neighbors, comp, budget) {
         }
       }
     }
-
     visited[idx] = false;
     path.pop();
   }
 
-  // Start from low-degree nodes — they're the natural endpoints of long paths.
+  function runDfs(startIdx, prefilled) {
+    for (var i = 0; i < n; i++) { visited[i] = prefilled ? prefilled[i] : false; }
+    visited[startIdx] = false;
+    path.length = 0;
+    state.steps = 0;
+    state.budget = budgetPerStart;
+    state.bestLen = 0;
+    state.best = null;
+    dfs(startIdx);
+    return state.best || [];
+  }
+
+  // Sort component nodes by ascending degree — true endpoints (degree 1) lie
+  // on long paths and make the best DFS starts.
   var starts = comp.slice();
   starts.sort(function(a, b) { return neighbors[a].length - neighbors[b].length; });
 
-  for (var s = 0; s < starts.length; s++) {
-    if (state.steps >= state.budget) { break; }
-    if (state.bestLen >= comp.length) { break; }
-    dfs(starts[s]);
+  var globalBest = [];
+  var maxStarts = Math.min(starts.length, 6);
+  for (var s = 0; s < maxStarts; s++) {
+    var candidate = runDfs(starts[s], null);
+    if (candidate.length > globalBest.length) {
+      globalBest = candidate;
+    }
+    if (globalBest.length >= comp.length) { break; }
   }
 
-  return state.best || [];
+  // Bidirectional extension: if the chain doesn't cover the component, try to
+  // extend from each endpoint into the remaining nodes. Recovers chains when
+  // DFS started from a node that wasn't a true endpoint.
+  if (globalBest.length > 0 && globalBest.length < comp.length) {
+    var inChain = new Array(n);
+    for (var i = 0; i < n; i++) { inChain[i] = false; }
+    for (var i = 0; i < globalBest.length; i++) { inChain[globalBest[i]] = true; }
+
+    for (var e = 0; e < 2; e++) {
+      var ep = (e === 0) ? globalBest[0] : globalBest[globalBest.length - 1];
+      var extension = runDfs(ep, inChain);
+      if (extension.length > 1) {
+        var extra = extension.slice(1);
+        if (e === 0) {
+          extra.reverse();
+          globalBest = extra.concat(globalBest);
+        } else {
+          globalBest = globalBest.concat(extra);
+        }
+        for (var i = 0; i < extra.length; i++) { inChain[extra[i]] = true; }
+      }
+    }
+  }
+
+  return globalBest;
 }
 
-function calculatePaths(board, logs) {
+function calculatePaths(board, logs, myTsumIdx) {
   var groups = {};
   for (var t in board) {
     var tsum = board[t];
@@ -1180,20 +1217,25 @@ function calculatePaths(board, logs) {
     for (var c = 0; c < components.length; c++) {
       var comp = components[c];
       if (comp.length < 3) { continue; }
-      // Budget grows with component size but caps so total time stays bounded.
-      var budget = Math.min(4000, 200 + comp.length * comp.length * 10);
-      var bestIndices = findLongestTsumPath(neighbors, comp, budget);
+      // Per-start budget — multiplied across up to 6 starts + 2 extensions.
+      var budgetPerStart = Math.min(1500, 100 + comp.length * comp.length * 6);
+      var bestIndices = findLongestTsumPath(neighbors, comp, budgetPerStart);
       if (bestIndices.length >= 3) {
         var pathPoints = [];
         for (var p = 0; p < bestIndices.length; p++) {
           pathPoints.push(group[bestIndices[p]]);
         }
+        pathPoints.tsumIdx = +tsumIdx;
         paths.push(pathPoints);
       }
     }
   }
 
+  // MyTsum chains play first (longest first), then other colors by length.
   paths.sort(function(a, b) {
+    var aMy = (myTsumIdx >= 0 && a.tsumIdx === myTsumIdx);
+    var bMy = (myTsumIdx >= 0 && b.tsumIdx === myTsumIdx);
+    if (aMy !== bMy) { return aMy ? -1 : 1; }
     if (a.length < b.length) { return 1; }
     return -1;
   });
@@ -1329,6 +1371,8 @@ function Tsum(isJP, detect, logs) {
   this.isStartupPhase = true;
   this.runTimes = 0;
   this.myTsum = '';
+  this.myTsumColor = null;
+  this.myTsumIdx = -1;
   this.storagePath = getStoragePath();
   // screen size config
   /** @type {{width: number, height: number}}  */
@@ -2195,6 +2239,31 @@ Tsum.prototype.useSkill = function(board) {
   return true;
 }
 
+Tsum.prototype.sampleMyTsumColor = function() {
+  // The MyTsum portrait is the circular icon inside the skill button at the
+  // bottom-left of the play area. Sample a small region around its center,
+  // run the same smooth + HSV pipeline as findTsums, and average central
+  // pixels so the result is directly comparable to tsum cluster colors.
+  var center = this.toRealXY(Button.gameSkill1.x, Button.gameSkill1.y);
+  var sampleR = Math.max(4, Math.floor(40 * this.captureGameRatio));
+  var x = Math.max(0, center.x - sampleR);
+  var y = Math.max(0, center.y - sampleR);
+  var img = getScreenshotModify(x, y, sampleR * 2, sampleR * 2, 40, 40, 100);
+  smooth(img, 1, 7);
+  convertColor(img, 40);
+  smooth(img, 1, 22);
+  var sumB = 0, sumG = 0, sumR = 0, count = 0;
+  for (var dy = -3; dy <= 3; dy++) {
+    for (var dx = -3; dx <= 3; dx++) {
+      var c = getImageColor(img, 20 + dx, 20 + dy);
+      sumB += c.b; sumG += c.g; sumR += c.r;
+      count++;
+    }
+  }
+  releaseImage(img);
+  return { b: sumB / count, g: sumG / count, r: sumR / count };
+};
+
 Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
@@ -2210,6 +2279,23 @@ Tsum.prototype.scanBoardQuick = function() {
   debug(this.logs.recognitionStart);
   var tcs = classifyTsums(points);
   tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
+
+  // Identify which color cluster (if any) is the player's MyTsum by matching
+  // the skill-button portrait color against cluster centers.
+  if (!this.myTsumColor) {
+    this.myTsumColor = this.sampleMyTsumColor();
+    if (this.debug) { console.log('MyTsum color', JSON.stringify(this.myTsumColor)); }
+  }
+  this.myTsumIdx = -1;
+  var bestMyDist = 30;
+  for (var ci = 0; ci < tcs.length && ci < this.tsumCount - 1; ci++) {
+    var dMy = distance3D(tcs[ci], this.myTsumColor);
+    if (dMy < bestMyDist) {
+      bestMyDist = dMy;
+      this.myTsumIdx = ci;
+    }
+  }
+
   var board = [];
   for(var i in tcs) {
     if (i >= this.tsumCount - 1) {
@@ -2252,6 +2338,8 @@ Tsum.prototype.taskPlayGameQuick = function() {
     this.sleep(350);
   }
   this.runTimes = 0;
+  this.myTsumColor = null;  // re-sample MyTsum portrait at the start of each game
+  this.myTsumIdx = -1;
   var clearBubbles = 0;
   var zeroPath = 0;
   while(this.isRunning) {
@@ -2260,7 +2348,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
       break;
     }
     debug(this.logs.calculationPathStart);
-    var paths = calculatePaths(board, this.logs);
+    var paths = calculatePaths(board, this.logs, this.myTsumIdx);
     paths = paths.splice(0, 6);
     var isBubble = this.link(paths);
     if (isBubble) {

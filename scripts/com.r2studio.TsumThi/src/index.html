@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TsumBeta settings</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="settings.js"></script>
+  </head>
+  <body>
+    <nav class='navbar navbar-custom' role='navigation'>
+      <a id='version' class='navbar-brand'></a>
+    </nav>
+    <div class='container'>
+      <div id='settings'></div>
+      <p id='restartNowText' style='color: red; font-weight: bold; display: none'></p>
+      <button id='resetSettings' style='float:right;display: none' class='btn btn-danger' onclick="resetSettings()">Reset Settings</button>
+      <br>
+      <div id='senders' style='padding-bottom:5px;'></div>
+      <button id='updateRecordASC' class='btn btn-plus' style='margin-left:0px;'>Update(ASC)</button>
+      <button id='updateRecordDESC' class='btn btn-plus'>Update(DESC)</button>
+      <button id='resetRecord' style='float:right;' class='btn btn-danger'>Reset Record</button>
+      <br />
+      <div style='padding-top:5px;'></div>
+      <button id='exportRecordLegacy' class='btn btn-warning' style='margin-left:0px;'>Export HTML(Legacy)</button>
+      <button id='exportRecordExcel' class='btn btn-warning'>Export HTML(Excel)</button>
+      <div id='exportInfo' style='padding-top:5px;'>Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)</div>
+      <div id="genTableResult" style='padding-top:5px;'></div>
+      <br />
+      <div id='record' style='padding-top:5px;'>
+      </div>
+      <br />
+      <button id='goToTop' class='btn btn-plus'>Go to Top</button>
+      <button id='goToBottom' class='btn btn-plus'>Go to Bottom</button>	  
+      <br />
+      <br />
+      <br />
+    </div>
+  </body>
+</html>
