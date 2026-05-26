@@ -1195,7 +1195,7 @@ function findLongestTsumPath(neighbors, comp, budgetPerStart) {
   return globalBest;
 }
 
-function calculatePaths(board, logs, myTsumIdx) {
+function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
   var groups = {};
   for (var t in board) {
     var tsum = board[t];
@@ -1233,11 +1233,15 @@ function calculatePaths(board, logs, myTsumIdx) {
     }
   }
 
-  // MyTsum chains play first (longest first), then other colors by length.
+  // In 5>4 mode, MyTsum chains play first (longest first), then other colors by
+  // length. Otherwise, just take the longest available chain regardless of color
+  // so anything connectable goes out as soon as possible.
   paths.sort(function(a, b) {
-    var aMy = (myTsumIdx >= 0 && a.tsumIdx === myTsumIdx);
-    var bMy = (myTsumIdx >= 0 && b.tsumIdx === myTsumIdx);
-    if (aMy !== bMy) { return aMy ? -1 : 1; }
+    if (prioritizeMyTsum) {
+      var aMy = (myTsumIdx >= 0 && a.tsumIdx === myTsumIdx);
+      var bMy = (myTsumIdx >= 0 && b.tsumIdx === myTsumIdx);
+      if (aMy !== bMy) { return aMy ? -1 : 1; }
+    }
     if (a.length < b.length) { return 1; }
     return -1;
   });
@@ -1640,6 +1644,7 @@ Tsum.prototype.linkTsums = function(path) {
 
 Tsum.prototype.link = function(paths) {
   var isBubble = false;
+  var burst = this.skillType === 'burst';
   for (var i in paths) {
     var path = paths[i];
     // >= 7 should be correct, but practically the real chain is always shorter
@@ -1648,6 +1653,9 @@ Tsum.prototype.link = function(paths) {
       isBubble = true;
     }
     this.linkTsums(path);
+    if (burst && this.myTsumIdx >= 0 && path.tsumIdx === this.myTsumIdx) {
+      this.pollSkillActivation();
+    }
   }
   return isBubble;
 }
@@ -1982,6 +1990,56 @@ Tsum.prototype.useCinderellaSkill = function() {
   this.sleep(3000);
   this.clearAllBubbles(10, 50, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2, 200);
 }
+
+Tsum.prototype.checkSkillReadiness = function(img, skillButton) {
+  // Tiered version of isSkillActive's color check. Same reference colors, two
+  // thresholds: tight (25) means firmly empty; loose (60) is the original
+  // not-active match. Returns 'active', 'almost', or 'far'.
+  var skillNotActiveColors = [
+    {"a": 0, "b": 157, "g": 112, "r": 85},
+    {"a": 0, "b": 181, "g": 139, "r": 72},
+    {"a": 0, "b": 128, "g": 73, "r": 16},
+    {"a": 0, "b": 178, "g": 153, "r": 3},
+    {"a": 0, "b": 255, "g": 215, "r": 33}
+  ];
+  var c = this.getColor(img, skillButton);
+  var matchesTight = false, matchesLoose = false;
+  for (var i = 0; i < skillNotActiveColors.length; i++) {
+    var nc = skillNotActiveColors[i];
+    if (isSameColor(nc, c, 25)) { matchesTight = true; }
+    if (isSameColor(nc, c, 60)) { matchesLoose = true; }
+  }
+  if (!matchesLoose) { return 'active'; }
+  if (!matchesTight) { return 'almost'; }
+  return 'far';
+};
+
+Tsum.prototype.pollSkillActivation = function() {
+  // Burst-skill optimization: if the gauge is close to topping off, spam the
+  // skill button briefly so the game activates it the moment it fills. Bails
+  // immediately when far from ready so unrelated MyTsum clears don't burn time.
+  var img = this.screenshot();
+  var status = this.checkSkillReadiness(img, Button.gameSkill1);
+  releaseImage(img);
+  if (status === 'far') { return false; }
+  if (status === 'active') {
+    this.tap(Button.gameSkill1, 10);
+    return true;
+  }
+  for (var i = 0; i < 4; i++) {
+    this.tap(Button.gameSkill1, 10);
+    this.sleep(40);
+    img = this.screenshot();
+    status = this.checkSkillReadiness(img, Button.gameSkill1);
+    releaseImage(img);
+    if (status === 'active') {
+      this.tap(Button.gameSkill1, 10);
+      return true;
+    }
+    if (status === 'far') { return false; }
+  }
+  return false;
+};
 
 Tsum.prototype.useSkill = function(board) {
   function isSkillActive(that, img, skillButton) {
@@ -2350,7 +2408,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
       break;
     }
     debug(this.logs.calculationPathStart);
-    var paths = calculatePaths(board, this.logs, this.myTsumIdx);
+    var paths = calculatePaths(board, this.logs, this.myTsumIdx, this.bonus5to4);
     paths = paths.splice(0, 6);
     var isBubble = this.link(paths);
     if (isBubble) {
@@ -2373,8 +2431,15 @@ Tsum.prototype.taskPlayGameQuick = function() {
       this.clearAllBubbles(0, 0, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
     }
     if (this.useFan && this.runTimes % 4 === 3) {
-      this.tap(Button.gameRand, 60);
-      this.tap(Button.gameRand, 60);
+      // Skip the fan when the skill is ready — useSkill() will fire it next,
+      // and the fan would just be wasted on tsums about to be cleared.
+      var fanImg = this.screenshot();
+      var skillReady = this.checkSkillReadiness(fanImg, Button.gameSkill1) === 'active';
+      releaseImage(fanImg);
+      if (!skillReady) {
+        this.tap(Button.gameRand, 60);
+        this.tap(Button.gameRand, 60);
+      }
     }
     if (this.isPause) {
       this.sleep(300);
@@ -3240,7 +3305,8 @@ function start(settings) {
   ts.settings = settings
   log(ts.logs.start);
   ts.debug = settings['debugGame'];
-  if (settings['bonus5to4']) {
+  ts.bonus5to4 = !!settings['bonus5to4'];
+  if (ts.bonus5to4) {
     ts.tsumCount = 4;
   }
   ts.autoLaunch = settings['autoLaunchApp'];
