@@ -95,6 +95,12 @@ var settings = [
             default: true
         },
         {
+            key: 'clickAssist',
+            title: 'Click Assist (connect on tap)',
+            title_zh_TW: '點擊輔助（點選即連線）',
+            default: false
+        },
+        {
             key: 'pauseWhenCalc',
             title: 'Pause When Calculating',
             title_zh_TW: '計算時暫停',

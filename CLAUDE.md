@@ -1,0 +1,1 @@
+Automatically add and commit the changed files along with a succint commit message for all changes.

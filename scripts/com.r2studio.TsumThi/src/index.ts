@@ -1249,6 +1249,72 @@ function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
   return paths;
 }
 
+// Given a touch position in playResize space, find a connectable chain through
+// the tsums of whichever color sits closest to the touch. Returns null when no
+// tsum is close enough to the touch or its color has no chain of length >=3.
+function findChainAtTouch(board, touchX, touchY) {
+  if (!board || board.length === 0) { return null; }
+
+  var nearestAllIdx = -1;
+  var nearestAllDistSq = Infinity;
+  var maxTouchDistSq = (Config.tsumWidth * 1.8) * (Config.tsumWidth * 1.8);
+  for (var i = 0; i < board.length; i++) {
+    var dx = board[i].x - touchX;
+    var dy = board[i].y - touchY;
+    var d = dx * dx + dy * dy;
+    if (d < nearestAllDistSq) {
+      nearestAllDistSq = d;
+      nearestAllIdx = i;
+    }
+  }
+  if (nearestAllIdx === -1 || nearestAllDistSq > maxTouchDistSq) { return null; }
+
+  var tsumIdx = board[nearestAllIdx].tsumIdx;
+  var group = [];
+  var nearestInGroup = -1;
+  for (var i = 0; i < board.length; i++) {
+    if (board[i].tsumIdx === tsumIdx) {
+      if (i === nearestAllIdx) { nearestInGroup = group.length; }
+      group.push(board[i]);
+    }
+  }
+  if (group.length < 3 || nearestInGroup === -1) { return null; }
+
+  var threshold = Config.tsumWidth * 2.8;
+  var maxDistSq = threshold * threshold;
+  var neighbors = buildTsumNeighbors(group, maxDistSq);
+
+  var n = group.length;
+  var seen = new Array(n);
+  for (var i = 0; i < n; i++) { seen[i] = false; }
+  var queue = [nearestInGroup];
+  seen[nearestInGroup] = true;
+  var comp = [];
+  while (queue.length > 0) {
+    var v = queue.shift();
+    comp.push(v);
+    var nbrs = neighbors[v];
+    for (var k = 0; k < nbrs.length; k++) {
+      if (!seen[nbrs[k]]) {
+        seen[nbrs[k]] = true;
+        queue.push(nbrs[k]);
+      }
+    }
+  }
+  if (comp.length < 3) { return null; }
+
+  var budgetPerStart = Math.min(1500, 100 + comp.length * comp.length * 6);
+  var bestIndices = findLongestTsumPath(neighbors, comp, budgetPerStart);
+  if (bestIndices.length < 3) { return null; }
+
+  var pathPoints = [];
+  for (var p = 0; p < bestIndices.length; p++) {
+    pathPoints.push(group[bestIndices[p]]);
+  }
+  pathPoints.tsumIdx = tsumIdx;
+  return pathPoints;
+}
+
 function convertTo2DArray(arr, size) {
   var result = [];
   for (var i = 0; i < arr.length; i = i + size) {
@@ -2464,6 +2530,163 @@ Tsum.prototype.taskPlayGameQuick = function() {
   }
 }
 
+// Locate the touchscreen input device once via `getevent -lp`. We pick the
+// device that advertises ABS_MT_POSITION_X — that's the multi-touch capability
+// every Android touchscreen reports. Also captures the raw X/Y max so we can
+// scale device coordinates to screen pixels for arbitrary hardware.
+Tsum.prototype.findTouchDevice = function() {
+  if (this._touchDevice !== undefined) { return this._touchDevice; }
+
+  var raw = execute('getevent -lp 2>&1') || '';
+  var sections = raw.split(/add device \d+:\s*/);
+  var best = null;
+  for (var s = 1; s < sections.length; s++) {
+    var section = sections[s];
+    var firstLineEnd = section.indexOf('\n');
+    if (firstLineEnd === -1) { continue; }
+    var path = section.substring(0, firstLineEnd).trim();
+    if (path.indexOf('/dev/input/event') !== 0) { continue; }
+    if (section.indexOf('ABS_MT_POSITION_X') === -1) { continue; }
+
+    var xMax = 0, yMax = 0;
+    var xm = section.match(/ABS_MT_POSITION_X[^\n]*max\s+(\d+)/);
+    var ym = section.match(/ABS_MT_POSITION_Y[^\n]*max\s+(\d+)/);
+    if (xm) { xMax = parseInt(xm[1], 10); }
+    if (ym) { yMax = parseInt(ym[1], 10); }
+    best = { path: path, xMax: xMax, yMax: yMax };
+    break;
+  }
+
+  this._touchDevice = best;
+  if (best) {
+    log('Click Assist: input device ' + best.path + ' (max ' + best.xMax + 'x' + best.yMax + ')');
+  } else {
+    log('Click Assist: could not locate touch input device');
+  }
+  return best;
+};
+
+// Block for up to `timeoutSec` seconds waiting for a BTN_TOUCH DOWN with X/Y
+// coordinates. Returns the touch position in screen pixels, or null on timeout.
+// Uses `timeout` from toybox/busybox; falls back to no-timeout (script must rely
+// on the user actually touching the screen) if the timeout command is missing.
+Tsum.prototype.pollTouchDown = function(timeoutSec) {
+  var device = this.findTouchDevice();
+  if (!device) { return null; }
+
+  // `-c N` exits after N events. We want the X/Y/BTN_TOUCH triplet plus a
+  // little headroom for tracking-id/sync events.
+  var cmd = 'timeout ' + timeoutSec + ' getevent -lc 12 ' + device.path + ' 2>/dev/null';
+  var raw = execute(cmd) || '';
+  if (raw.length === 0) { return null; }
+
+  var lines = raw.split('\n');
+  var lastX = null, lastY = null;
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    var m;
+    if ((m = line.match(/ABS_MT_POSITION_X\s+([0-9a-fA-F]+)/))) {
+      lastX = parseInt(m[1], 16);
+    } else if ((m = line.match(/ABS_MT_POSITION_Y\s+([0-9a-fA-F]+)/))) {
+      lastY = parseInt(m[1], 16);
+    }
+  }
+  // Any X/Y in the event burst means the user touched (or moved/released) on
+  // the screen. We don't gate on BTN_TOUCH because protocol B devices and many
+  // emulators omit it. Reacting on the release position is still the position
+  // the user intended.
+  if (lastX === null || lastY === null) { return null; }
+
+  // Scale device coords to screen pixels. If the device reports max==0 or
+  // matches the screen pixel size already, the touch is treated as direct
+  // pixel coordinates.
+  var screenX = lastX;
+  var screenY = lastY;
+  if (device.xMax > 0 && device.xMax !== this.originScreenWidth) {
+    screenX = lastX * this.originScreenWidth / device.xMax;
+  }
+  if (device.yMax > 0 && device.yMax !== this.originScreenHeight) {
+    screenY = lastY * this.originScreenHeight / device.yMax;
+  }
+  return { x: screenX, y: screenY };
+};
+
+// Click Assist: stops auto-linking and waits for the user to tap a tsum. On
+// each tap, finds the connected component containing the touched tsum's color
+// and chains them. The user supplies the "where", the script supplies the
+// draw.
+Tsum.prototype.taskClickAssist = function() {
+  this.requestTsumMonitor();
+  log('Click Assist: ' + this.logs.gameStart);
+  this.goGamePlayingPage();
+  log('Click Assist: tap a tsum to connect its chain');
+  this.runTimes = 0;
+  this.myTsumColor = null;
+  this.myTsumIdx = -1;
+
+  var pageCheckEvery = 5;
+  var sinceLastPageCheck = 0;
+  var lastActTime = 0;
+
+  while (this.isRunning) {
+    var touch = this.pollTouchDown(1);
+    if (touch === null) {
+      sinceLastPageCheck++;
+      if (sinceLastPageCheck >= pageCheckEvery) {
+        sinceLastPageCheck = 0;
+        var page = this.findPage(1, 1500);
+        if (page !== 'GamePlaying' && page !== 'GamePause') {
+          this.sleep(500);
+          page = this.findPage(1, 1500);
+          if (page !== 'GamePlaying' && page !== 'GamePause') {
+            log(this.logs.gameOver);
+            break;
+          }
+        }
+      }
+      continue;
+    }
+    sinceLastPageCheck = 0;
+
+    // Debounce: ignore taps that arrive too soon after we just drew a chain —
+    // those are most likely the trailing events of our own synthetic input.
+    var now = Date.now();
+    if (now - lastActTime < 600) { continue; }
+
+    // Only react to taps inside the play area; taps on UI chrome (skill button,
+    // pause, etc.) should be ignored.
+    var inPlay = touch.x >= this.playOffsetX
+              && touch.x < this.playOffsetX + this.playWidth
+              && touch.y >= this.playOffsetY
+              && touch.y < this.playOffsetY + this.playHeight;
+    if (!inPlay) {
+      debug('Click Assist: tap outside play area at (' + touch.x + ',' + touch.y + ')');
+      continue;
+    }
+
+    // Map screen-pixel tap to the playResize coordinate space the board uses.
+    var boardX = (touch.x - this.playOffsetX) * this.playResizeWidth / this.playWidth - Config.tsumWidth / 2;
+    var boardY = (touch.y - this.playOffsetY) * this.playResizeHeight / this.playHeight - Config.tsumWidth / 2;
+
+    // Brief pause so the user's finger lifts before we start our own input.
+    this.sleep(120);
+
+    var board = this.scanBoardQuick();
+    if (board == null) { break; }
+
+    var chain = findChainAtTouch(board, boardX, boardY);
+    if (chain && chain.length >= 3) {
+      log('Click Assist: linking ' + chain.length + ' tsums');
+      this.linkTsums(chain);
+      lastActTime = Date.now();
+      this.sleep(400);
+    } else {
+      debug('Click Assist: no chain at tap (' + boardX + ',' + boardY + ')');
+    }
+    this.runTimes++;
+  }
+};
+
 Tsum.prototype.taskReceiveAllItems = function() {
   if (this.findPage() === 'GamePause')
     return;
@@ -3382,7 +3605,9 @@ function start(settings) {
     gTaskController.newTask('taskTsumAppRestart', ts.taskTsumAppRestart.bind(ts), settings['tsumAppRestartFrequency'] * 60 * 60 * 1000, 0, true);
   }
   if (checkFunction(outRange)) {
-    if (settings['autoPlayGame']) {
+    if (settings['clickAssist']) {
+      gTaskController.newTask('taskClickAssist', ts.taskClickAssist.bind(ts), 3 * 1000, 0);
+    } else if (settings['autoPlayGame']) {
       if (settings['unlockLevelHoursWait'] > 0) {
         gTaskController.newTask('autoUnlockLevel', ts.taskAutoUnlockLevel.bind(ts), settings['unlockLevelHoursWait'] * 60 * 60 * 1000, 0);
       }
