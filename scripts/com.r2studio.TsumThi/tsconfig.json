@@ -1,8 +1,14 @@
 {
+  // The game script has no import/export -- every file shares one global scope.
+  // `outFile` concatenates the files listed below (in this order) into a single
+  // build/index.js, which is what Robotmon loads. settings.ts is intentionally
+  // NOT listed here; it compiles separately via tsconfig.settings.json into
+  // build/settings.js, which the settings UI (index.html) loads on its own.
   "compilerOptions": {
     "target": "ES5",
     "lib": ["ES5", "DOM"],
-    "outDir": "./build",
+    "module": "none",
+    "outFile": "./build/index.js",
     "rootDir": "./src",
     "removeComments": false,
     "newLine": "lf",
@@ -13,5 +19,16 @@
     "noEmitOnError": false,
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts"]
+  "files": [
+    "src/globals.d.ts",
+    "src/taskController.ts",
+    "src/state.ts",
+    "src/utils.ts",
+    "src/data.ts",
+    "src/logs.ts",
+    "src/messaging.ts",
+    "src/pathfinding.ts",
+    "src/tsum.ts",
+    "src/index.ts"
+  ]
 }
