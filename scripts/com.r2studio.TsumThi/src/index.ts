@@ -1,15 +1,166 @@
-// @ts-nocheck
-// Converted from index.js - best-effort TypeScript port.
+// Converted from index.js - TypeScript port.
 "use strict";
 
-function TaskController(){this.tasks={},this.isRunning=!1,this.interval=200}TaskController.prototype.getFirstPriorityTaskName=function(){var t=null,n=Date.now();for(var s in this.tasks){var i=this.tasks[s];n-i.lastRunTime<i.interval||(null!==t?i.priority<t.priority?t=i:i.interval>t.interval?t=i:i.lastRunTime<t.lastRunTime&&(t=i):t=i)}return null===t?"":t.name},TaskController.prototype.loop=function(){for(console.log("loop start");this.isRunning;){var t=this.getFirstPriorityTaskName(),n=this.tasks[t];void 0!==n&&(n.run(),n.lastRunTime=Date.now(),n.runTimes--,0===n.runTimes&&delete this.tasks[t]),sleep(this.interval)}this.isRunning=!1,console.log("loop stop")},TaskController.prototype.updateRunInterval=function(t){t<this.interval&&t>=50&&(this.interval=t)},TaskController.prototype.newTaskObject=function(t,n,s,i,o){return{name:t,run:n,interval:s||1e3,runTimes:i||0,priority:o,lastRunTime:0,status:0}},TaskController.prototype.newTask=function(t,n,s,i,o){if(void 0===o&&(o=!1),"function"==typeof n){var e=this.newTaskObject(t,n,s,i,0);o&&(e.lastRunTime=Date.now()),this.updateRunInterval(e.interval);var r="system_newTask_"+t,a=this.newTaskObject(r,function(){this.tasks[t]=e}.bind(this),0,1,-20);return this.tasks[r]=a,e}console.log("Error not a function",t,n)},TaskController.prototype.removeTask=function(t){var n="system_removeTask_"+Date.now().toString(),s=this.newTaskObject(n,function(){delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[n]=s},TaskController.prototype.removeAllTasks=function(){var t="system_removeAllTask_"+Date.now().toString(),n=this.newTaskObject(t,function(){for(var t in this.tasks)delete this.tasks[t]}.bind(this),0,1,-20);this.tasks[t]=n},TaskController.prototype.start=function(){this.isRunning||(this.isRunning=!0,this.loop())},TaskController.prototype.stop=function(){this.isRunning&&(this.isRunning=!1,console.log("wait loop stop..."))};
+// Named `TsumTaskController` rather than `TaskController` to avoid colliding
+// with the DOM lib's built-in `TaskController` (Prioritized Task Scheduling
+// API) that ships in lib.dom.d.ts.
+class TsumTaskController {
+  tasks: { [name: string]: Task };
+  isRunning: boolean;
+  interval: number;
+  isPaused: boolean;
+  private _pauseCheckTime: number;
+
+  constructor() {
+    this.tasks = {};
+    this.isRunning = false;
+    this.interval = 200;
+    this.isPaused = false;
+    this._pauseCheckTime = 0;
+  }
+
+  // Pick the highest-priority task that is due to run again. Among due tasks,
+  // lower `priority` wins; ties break toward the larger interval, then the
+  // least-recently-run task. Returns "" when nothing is due.
+  getFirstPriorityTaskName(): string {
+    let best: Task | null = null;
+    const now = Date.now();
+    for (const name in this.tasks) {
+      const task = this.tasks[name];
+      if (now - task.lastRunTime < task.interval) {
+        continue;
+      }
+      if (best !== null) {
+        if (task.priority < best.priority) {
+          best = task;
+        } else if (task.interval > best.interval) {
+          best = task;
+        } else if (task.lastRunTime < best.lastRunTime) {
+          best = task;
+        }
+      } else {
+        best = task;
+      }
+    }
+    return best === null ? "" : best.name;
+  }
+
+  loop(): void {
+    console.log("loop start");
+    const pausePath = getStoragePath() + "/tsum_pause";
+    try { writeFile(pausePath, "0"); } catch (e) {}  // clear any stale pause flag
+    log("[Pause] keypress-pause watching file: " + pausePath);
+    this.isPaused = false;
+    this._pauseCheckTime = 0;
+    while (this.isRunning) {
+      // Poll the sentinel file (written by adb from a PC hotkey) ~2x/sec so we
+      // don't readFile on every fast loop iteration.
+      const pNow = Date.now();
+      if (pNow - this._pauseCheckTime >= 500) {
+        this._pauseCheckTime = pNow;
+        let pf = "";
+        try { pf = readFile(pausePath); } catch (e) { pf = ""; }
+        const wantPause = (pf !== undefined && ("" + pf).charAt(0) === "1");
+        if (wantPause !== this.isPaused) {
+          this.isPaused = wantPause;
+          log(wantPause ? "=== SCRIPT PAUSED ===" : "=== SCRIPT RESUMED ===");
+        }
+      }
+      if (this.isPaused) { sleep(200); continue; }
+      const name = this.getFirstPriorityTaskName();
+      const task = this.tasks[name];
+      if (task !== undefined) {
+        task.run();
+        task.lastRunTime = Date.now();
+        task.runTimes--;
+        if (task.runTimes === 0) {
+          delete this.tasks[name];
+        }
+      }
+      sleep(this.interval);
+    }
+    this.isPaused = false;
+    this.isRunning = false;
+    console.log("loop stop");
+  }
+
+  updateRunInterval(interval: number): void {
+    if (interval < this.interval && interval >= 50) {
+      this.interval = interval;
+    }
+  }
+
+  newTaskObject(name: string, run: () => void, interval: number | undefined, runTimes: number | undefined, priority: number): Task {
+    return {
+      name: name,
+      run: run,
+      interval: interval || 1000,
+      runTimes: runTimes || 0,
+      priority: priority,
+      lastRunTime: 0,
+      status: 0
+    };
+  }
+
+  newTask(name: string, run: () => void, interval?: number, runTimes?: number, runOnce?: boolean): Task | undefined {
+    if (runOnce === undefined) {
+      runOnce = false;
+    }
+    if (typeof run === "function") {
+      const task = this.newTaskObject(name, run, interval, runTimes, 0);
+      if (runOnce) {
+        task.lastRunTime = Date.now();
+      }
+      this.updateRunInterval(task.interval);
+      const systemName = "system_newTask_" + name;
+      const self = this;
+      const systemTask = this.newTaskObject(systemName, function () { self.tasks[name] = task; }, 0, 1, -20);
+      this.tasks[systemName] = systemTask;
+      return task;
+    }
+    console.log("Error not a function", name, run);
+    return undefined;
+  }
+
+  removeTask(name: string): void {
+    const systemName = "system_removeTask_" + Date.now().toString();
+    const self = this;
+    const systemTask = this.newTaskObject(systemName, function () { delete self.tasks[name]; }, 0, 1, -20);
+    this.tasks[systemName] = systemTask;
+  }
+
+  removeAllTasks(): void {
+    const systemName = "system_removeAllTask_" + Date.now().toString();
+    const self = this;
+    const systemTask = this.newTaskObject(systemName, function () {
+      for (const key in self.tasks) {
+        delete self.tasks[key];
+      }
+    }, 0, 1, -20);
+    this.tasks[systemName] = systemTask;
+  }
+
+  start(): void {
+    if (!this.isRunning) {
+      this.isRunning = true;
+      this.loop();
+    }
+  }
+
+  stop(): void {
+    if (this.isRunning) {
+      this.isRunning = false;
+      console.log("wait loop stop...");
+    }
+  }
+}
 
 
 var ts;
 var gTaskController;
 
 // Utils
-function isSameColor(c1, c2, diff) {
+function isSameColor(c1: ColorLike, c2: ColorLike, diff?: number): boolean {
   if (diff === undefined) {
     diff = 20;
   }
@@ -18,44 +169,44 @@ function isSameColor(c1, c2, diff) {
       && Math.abs(c1.b - c2.b) <= diff;
 }
 
-function absColor(c1, c2) {
+function absColor(c1: ColorLike, c2: ColorLike): number {
   return Math.abs(c1.r - c2.r) + Math.abs(c1.g - c2.g) + Math.abs(c1.b - c2.b);
 }
 
-function nowTime() {
-  var offset = (new Date().getTimezoneOffset()) * 60 * 1000;
+function nowTime(): number {
+  const offset = (new Date().getTimezoneOffset()) * 60 * 1000;
   return Date.now() + offset;
 }
 
 function debug() {
   if (Config.debugLogs) {
-    var argsArray = Array.prototype.slice.call(arguments);
-    var newArgs = ['*DEBUG*'].concat(argsArray);
+    const argsArray = Array.prototype.slice.call(arguments);
+    const newArgs = ['*DEBUG*'].concat(argsArray);
     log.apply(null, newArgs);
   }
 }
 
 function log() {
   sleep(10);
-  var args = [];
+  const args = [];
   if (ts !== undefined && ts.showHeartLog && ts.record && ts.record['hearts_count']) {
-    var msg = "";
+    let msg = "";
     msg += "R:"+ts.record['hearts_count'].receivedCount+" ";
     msg += "S:"+ts.record['hearts_count'].sentCount;
     if (gTaskController !== undefined && gTaskController.tasks !== undefined) {
-      var sendTask = gTaskController.tasks["sendHearts"];
+      const sendTask = gTaskController.tasks["sendHearts"];
       if (sendTask !== undefined) {
         if (sendTask.lastRunTime === 0) {
           msg += "/0";
         } else {
-          var next = (nowTime() - (sendTask.lastRunTime + sendTask.interval)) / 60000;
+          const next = (nowTime() - (sendTask.lastRunTime + sendTask.interval)) / 60000;
           msg += "/" + (+next.toFixed(0));
         }
       }
     }
     args.push("["+msg+"]");
   }
-  for (var i = 0; i < arguments.length; i++) {
+  for (let i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
       arguments[i] = JSON.stringify(arguments[i], null, 2);
     } else if (typeof arguments[i] == 'function') {
@@ -71,7 +222,7 @@ function log() {
 
 // ============================TSUM=============================== //
 
-var Config = {
+var Config: TsumConfig = {
   recordDir: 'tsum_record',
   tsumWidth: 16,
   tsumBoundW: 13, // tsumWidth / 2 + 2
@@ -83,7 +234,7 @@ var Config = {
 };
 
 // Definitions assuming screen resolution of 1080 * 1920
-var Button = {
+var Button: ButtonMap = {
   gameBubblesFrom: {x: 100, y: 632},
   gameBubblesTo: {x: 1000, y: 1532},
   gameQuestionCancel: {x: 400, y: 1352},
@@ -165,7 +316,7 @@ var Button = {
   outTsumCollectionDoUnlock: {x: 111, y: 760, r: 173, g: 109, b: 57}
 };
 
-var Page = {
+var Page: PageMap = {
 
   TodayMissions: {
     name: 'TodayMissions',
@@ -904,7 +1055,7 @@ function switchToStartupMode() {
 
 
 // predefined log messages
-var Logs = {
+var Logs: StringMap = {
   start: '[TsumTsum] Start',
   stop: '[TsumTsum] Stop',
   sendMessage: 'Send Message...',
@@ -960,7 +1111,7 @@ var Logs = {
   endUnlockLevel: 'Finished unlocking Tsum levels'
 }
 
-var LogsTW = {
+var LogsTW: StringMap = {
   start: '[TsumTsum] 啟動',
   stop: '[TsumTsum] 停止',
   sendMessage: '送出訊息中...',
@@ -1017,8 +1168,8 @@ var LogsTW = {
 }
 
 // Utils for sending message
-var _userPlan = -1;
-var _lastSendingTime = 0;
+let _userPlan = -1;
+let _lastSendingTime = 0;
 
 function checkFunction(f) {
   return typeof(f) == 'function'
@@ -1034,7 +1185,7 @@ function canSendMessage() {
   if (_userPlan === -1) {
     return false;
   }
-  var during = Date.now() - _lastSendingTime;
+  const during = Date.now() - _lastSendingTime;
   return _userPlan >= 0 && during > 60 * 60 * 1000;
 }
 function sendMessage(topMsg, msg) {
@@ -1057,12 +1208,12 @@ function getDistance(t1, t2) {
 }
 
 function buildTsumNeighbors(tsums, maxDistSq) {
-  var neighbors = [];
-  for (var i = 0; i < tsums.length; i++) {
+  const neighbors = [];
+  for (let i = 0; i < tsums.length; i++) {
     neighbors.push([]);
   }
-  for (var i = 0; i < tsums.length; i++) {
-    for (var j = i + 1; j < tsums.length; j++) {
+  for (let i = 0; i < tsums.length; i++) {
+    for (let j = i + 1; j < tsums.length; j++) {
       if (getDistance(tsums[i], tsums[j]) <= maxDistSq) {
         neighbors[i].push(j);
         neighbors[j].push(i);
@@ -1073,20 +1224,20 @@ function buildTsumNeighbors(tsums, maxDistSq) {
 }
 
 function findTsumComponents(neighbors) {
-  var n = neighbors.length;
-  var seen = new Array(n);
-  for (var i = 0; i < n; i++) { seen[i] = false; }
-  var components = [];
-  for (var s = 0; s < n; s++) {
+  const n = neighbors.length;
+  const seen = new Array(n);
+  for (let i = 0; i < n; i++) { seen[i] = false; }
+  const components = [];
+  for (let s = 0; s < n; s++) {
     if (seen[s]) { continue; }
-    var comp = [];
-    var stack = [s];
+    const comp = [];
+    const stack = [s];
     seen[s] = true;
     while (stack.length > 0) {
-      var v = stack.pop();
+      const v = stack.pop();
       comp.push(v);
-      var nbrs = neighbors[v];
-      for (var k = 0; k < nbrs.length; k++) {
+      const nbrs = neighbors[v];
+      for (let k = 0; k < nbrs.length; k++) {
         if (!seen[nbrs[k]]) {
           seen[nbrs[k]] = true;
           stack.push(nbrs[k]);
@@ -1105,17 +1256,17 @@ function findTsumComponents(neighbors) {
 // remaining unvisited subgraph, which rescues cases where the initial DFS
 // began in the middle of a longer chain and could only walk one direction.
 function findLongestTsumPath(neighbors, comp, budgetPerStart) {
-  var n = neighbors.length;
-  var visited = new Array(n);
-  var path = [];
-  var state = { steps: 0, budget: 0, bestLen: 0, best: null };
+  const n = neighbors.length;
+  const visited = new Array(n);
+  const path = [];
+  const state = { steps: 0, budget: 0, bestLen: 0, best: null };
 
   // Order each adjacency list by ascending degree so the search tries the most
   // constrained branches first — dead ends prune quickly and leaves get
   // consumed before they become unreachable.
-  var sortedNbrs = new Array(n);
-  for (var i = 0; i < n; i++) {
-    var arr = neighbors[i].slice();
+  const sortedNbrs = new Array(n);
+  for (let i = 0; i < n; i++) {
+    const arr = neighbors[i].slice();
     arr.sort(function(a, b) { return neighbors[a].length - neighbors[b].length; });
     sortedNbrs[i] = arr;
   }
@@ -1129,8 +1280,8 @@ function findLongestTsumPath(neighbors, comp, budgetPerStart) {
       state.best = path.slice();
     }
     if (state.steps < state.budget) {
-      var nbrs = sortedNbrs[idx];
-      for (var k = 0; k < nbrs.length; k++) {
+      const nbrs = sortedNbrs[idx];
+      for (let k = 0; k < nbrs.length; k++) {
         if (!visited[nbrs[k]]) {
           dfs(nbrs[k]);
           if (state.steps >= state.budget) { break; }
@@ -1142,7 +1293,7 @@ function findLongestTsumPath(neighbors, comp, budgetPerStart) {
   }
 
   function runDfs(startIdx, prefilled) {
-    for (var i = 0; i < n; i++) { visited[i] = prefilled ? prefilled[i] : false; }
+    for (let i = 0; i < n; i++) { visited[i] = prefilled ? prefilled[i] : false; }
     visited[startIdx] = false;
     path.length = 0;
     state.steps = 0;
@@ -1155,13 +1306,13 @@ function findLongestTsumPath(neighbors, comp, budgetPerStart) {
 
   // Sort component nodes by ascending degree — true endpoints (degree 1) lie
   // on long paths and make the best DFS starts.
-  var starts = comp.slice();
+  const starts = comp.slice();
   starts.sort(function(a, b) { return neighbors[a].length - neighbors[b].length; });
 
-  var globalBest = [];
-  var maxStarts = Math.min(starts.length, 6);
-  for (var s = 0; s < maxStarts; s++) {
-    var candidate = runDfs(starts[s], null);
+  let globalBest = [];
+  const maxStarts = Math.min(starts.length, 6);
+  for (let s = 0; s < maxStarts; s++) {
+    const candidate = runDfs(starts[s], null);
     if (candidate.length > globalBest.length) {
       globalBest = candidate;
     }
@@ -1172,22 +1323,22 @@ function findLongestTsumPath(neighbors, comp, budgetPerStart) {
   // extend from each endpoint into the remaining nodes. Recovers chains when
   // DFS started from a node that wasn't a true endpoint.
   if (globalBest.length > 0 && globalBest.length < comp.length) {
-    var inChain = new Array(n);
-    for (var i = 0; i < n; i++) { inChain[i] = false; }
-    for (var i = 0; i < globalBest.length; i++) { inChain[globalBest[i]] = true; }
+    const inChain = new Array(n);
+    for (let i = 0; i < n; i++) { inChain[i] = false; }
+    for (let i = 0; i < globalBest.length; i++) { inChain[globalBest[i]] = true; }
 
-    for (var e = 0; e < 2; e++) {
-      var ep = (e === 0) ? globalBest[0] : globalBest[globalBest.length - 1];
-      var extension = runDfs(ep, inChain);
+    for (let e = 0; e < 2; e++) {
+      const ep = (e === 0) ? globalBest[0] : globalBest[globalBest.length - 1];
+      const extension = runDfs(ep, inChain);
       if (extension.length > 1) {
-        var extra = extension.slice(1);
+        const extra = extension.slice(1);
         if (e === 0) {
           extra.reverse();
           globalBest = extra.concat(globalBest);
         } else {
           globalBest = globalBest.concat(extra);
         }
-        for (var i = 0; i < extra.length; i++) { inChain[extra[i]] = true; }
+        for (let i = 0; i < extra.length; i++) { inChain[extra[i]] = true; }
       }
     }
   }
@@ -1196,35 +1347,35 @@ function findLongestTsumPath(neighbors, comp, budgetPerStart) {
 }
 
 function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
-  var groups = {};
-  for (var t in board) {
-    var tsum = board[t];
+  const groups = {};
+  for (const t in board) {
+    const tsum = board[t];
     if (groups[tsum.tsumIdx] === undefined) {
       groups[tsum.tsumIdx] = [];
     }
     groups[tsum.tsumIdx].push(tsum);
   }
 
-  var threshold = Config.tsumWidth * 2.8;
-  var maxDistSq = threshold * threshold;
-  var paths = [];
+  const threshold = Config.tsumWidth * 2.8;
+  const maxDistSq = threshold * threshold;
+  const paths: TsumPath[] = [];
 
-  for (var tsumIdx in groups) {
-    var group = groups[tsumIdx];
+  for (const tsumIdx in groups) {
+    const group = groups[tsumIdx];
     if (group.length < 3) { continue; }
 
-    var neighbors = buildTsumNeighbors(group, maxDistSq);
-    var components = findTsumComponents(neighbors);
+    const neighbors = buildTsumNeighbors(group, maxDistSq);
+    const components = findTsumComponents(neighbors);
 
-    for (var c = 0; c < components.length; c++) {
-      var comp = components[c];
+    for (let c = 0; c < components.length; c++) {
+      const comp = components[c];
       if (comp.length < 3) { continue; }
       // Per-start budget — multiplied across up to 6 starts + 2 extensions.
-      var budgetPerStart = Math.min(1500, 100 + comp.length * comp.length * 6);
-      var bestIndices = findLongestTsumPath(neighbors, comp, budgetPerStart);
+      const budgetPerStart = Math.min(1500, 100 + comp.length * comp.length * 6);
+      const bestIndices = findLongestTsumPath(neighbors, comp, budgetPerStart);
       if (bestIndices.length >= 3) {
-        var pathPoints = [];
-        for (var p = 0; p < bestIndices.length; p++) {
+        const pathPoints: TsumPath = [];
+        for (let p = 0; p < bestIndices.length; p++) {
           pathPoints.push(group[bestIndices[p]]);
         }
         pathPoints.tsumIdx = +tsumIdx;
@@ -1238,8 +1389,8 @@ function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
   // so anything connectable goes out as soon as possible.
   paths.sort(function(a, b) {
     if (prioritizeMyTsum) {
-      var aMy = (myTsumIdx >= 0 && a.tsumIdx === myTsumIdx);
-      var bMy = (myTsumIdx >= 0 && b.tsumIdx === myTsumIdx);
+      const aMy = (myTsumIdx >= 0 && a.tsumIdx === myTsumIdx);
+      const bMy = (myTsumIdx >= 0 && b.tsumIdx === myTsumIdx);
       if (aMy !== bMy) { return aMy ? -1 : 1; }
     }
     if (a.length < b.length) { return 1; }
@@ -1250,39 +1401,39 @@ function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
 }
 
 function convertTo2DArray(arr, size) {
-  var result = [];
-  for (var i = 0; i < arr.length; i = i + size) {
+  const result = [];
+  for (let i = 0; i < arr.length; i = i + size) {
     result.push(arr.slice(i, i + size));
   }
   return result;
 }
 
 function findTsums(img) {
-  var hsvImg = clone(img);
+  const hsvImg = clone(img);
   smooth(hsvImg, 1, 7);
   convertColor(hsvImg, 40);
-  var filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
-  var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
-  var mask = bgrToGray(filter2);
+  const filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
+  const filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
+  const mask = bgrToGray(filter2);
 
   releaseImage(filter1);
   releaseImage(filter2);
 
-  var points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
+  const points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
 
   smooth(hsvImg, 1, 22);
-  var results = [];
-  for (var k in points) {
-    var p = points[k];
-    var hsv1, hsv2, hsv3, hsv4, hsv5;
+  const results = [];
+  for (const k in points) {
+    const p = points[k];
+    let hsv1, hsv2, hsv3, hsv4, hsv5;
     hsv5 = hsv4 = hsv3 = hsv2 = hsv1 = getImageColor(hsvImg, p.x, p.y);
     if (p.x - 1 >= 0) { hsv2 = getImageColor(hsvImg, p.x - 1, p.y); }
     if (p.x + 1 < Config.screenResize) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
     if (p.y - 1 >= 0) { hsv4 = getImageColor(hsvImg, p.x, p.y - 1); }
     if (p.y + 1 < Config.screenResize) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
-    var avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
-    var avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
-    var avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
+    const avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
+    const avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
+    const avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
     results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
   }
 
@@ -1298,7 +1449,7 @@ function findTsums(img) {
 }
 
 function distance3D(p1, p2) {
-  var d = Math.sqrt((p1.b-p2.b)*(p1.b-p2.b) + (p1.g-p2.g)*(p1.g-p2.g) + (p1.r-p2.r)*(p1.r-p2.r));
+  let d = Math.sqrt((p1.b-p2.b)*(p1.b-p2.b) + (p1.g-p2.g)*(p1.g-p2.g) + (p1.r-p2.r)*(p1.r-p2.r));
   if (Math.abs(p1.b - p2.b) < 20) { d -= 10; }
   if (Math.abs(p1.g - p2.g) < 20) { d -= 10; }
   if (p1.r < 120 && p2.r < 120) { d -= 20; }
@@ -1306,20 +1457,20 @@ function distance3D(p1, p2) {
 }
 
 function classifyTsums(points) {
-  var tcs = [];
+  const tcs = [];
   if (points.length === 0) {
     return tcs;
   }
-  var p = points[0];
+  let p = points[0];
   tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p] });
-  for (var i = 1; i < points.length; i++) {
+  for (let i = 1; i < points.length; i++) {
     p = points[i];
-    var isSame = false;
-    for(var j in tcs) {
-      var tc = tcs[j];
-      var d = distance3D(tc, p);
+    let isSame = false;
+    for(const j in tcs) {
+      const tc = tcs[j];
+      const d = distance3D(tc, p);
       if (d < 15) {
-        var count = tc.points.length + 1;
+        const count = tc.points.length + 1;
         isSame = true;
         tc.sumb += p.b; tc.sumg += p.g; tc.sumr += p.r;
         tc.b = tc.sumb/count; tc.g = tc.sumg/count; tc.r = tc.sumr/count;
@@ -1335,37 +1486,42 @@ function classifyTsums(points) {
 }
 
 function detectOffsetYInGame() {
-  var img = getScreenshot();
+  const img = getScreenshot();
   // var img = openImage('/sdcard/img2.jpg');
-  var size = getImageSize(img);
-  console.log('deviceW', size.width, 'deviceH', size.height);
-  var centerY = Math.floor(size.height / 2);
+  try {
+    const size = getImageSize(img);
+    console.log('deviceW', size.width, 'deviceH', size.height);
+    const centerY = Math.floor(size.height / 2);
 
-  // find top black
-  var topBlackY = 0;
-  for (var y = centerY; y >= 0; y--) {
-    var color = getImageColor(img, size.width*0.9, y);
-    if (isSameColor({r: 0, g: 0, b: 0}, color, 6)) {
-      // black color found
-      topBlackY = y;
-      break;
+    // find top black
+    let topBlackY = 0;
+    let y: number;
+    let color: Color;
+    for (y = centerY; y >= 0; y--) {
+      color = getImageColor(img, size.width*0.9, y);
+      if (isSameColor({r: 0, g: 0, b: 0}, color, 6)) {
+        // black color found
+        topBlackY = y;
+        break;
+      }
     }
-  }
-  console.log('topBlackY', topBlackY);
+    console.log('topBlackY', topBlackY);
 
-  var bottomBlackY = size.height;
-  for (y = centerY; y < size.height; y++) {
-    color = getImageColor(img, size.width*0.9, y);
-    if (isSameColor({r: 0, g: 0, b: 0}, color, 6)) {
-      // black color found
-      bottomBlackY = y;
-      break;
+    let bottomBlackY = size.height;
+    for (y = centerY; y < size.height; y++) {
+      color = getImageColor(img, size.width*0.9, y);
+      if (isSameColor({r: 0, g: 0, b: 0}, color, 6)) {
+        // black color found
+        bottomBlackY = y;
+        break;
+      }
     }
+    console.log('bottomBlackY', bottomBlackY);
+    console.log('screenHeight', bottomBlackY - topBlackY + 1);
+    return -topBlackY;
+  } finally {
+    releaseImage(img);
   }
-  console.log('bottomBlackY', bottomBlackY);
-  console.log('screenHeight', bottomBlackY - topBlackY + 1);
-  releaseImage(img);
-  return -topBlackY;
 }
 
 // Tsum struct
@@ -1382,7 +1538,7 @@ function Tsum(isJP, detect, logs) {
   this.storagePath = getStoragePath();
   // screen size config
   /** @type {{width: number, height: number}}  */
-  var size = getScreenSize();
+  const size = getScreenSize();
   this.originScreenWidth = size.width;
   this.originScreenHeight = size.height;
   this.screenHeight = size.height;
@@ -1444,7 +1600,7 @@ function Tsum(isJP, detect, logs) {
 
 Tsum.prototype.init = function(detect) {
   log(this.logs.calculateScreenSize);
-  var isFat = false;
+  let isFat = false;
   if (this.screenHeight / this.screenWidth < 1.5) {
     isFat = true;
     this.gameHeight = this.screenHeight;
@@ -1491,13 +1647,17 @@ Tsum.prototype.sendMoneyInfo = function() {
   if (!canSendMessage()) {
     return;
   }
-  var x = Math.floor(Button.moneyInfoBox.x * this.captureGameRatio - this.gameOffsetX);
-  var y = Math.floor(Button.moneyInfoBox.y * this.captureGameRatio - this.gameOffsetY);
-  var w = Math.floor(Button.moneyInfoBox.w * this.captureGameRatio);
-  var h = Math.floor(Button.moneyInfoBox.h * this.captureGameRatio);
-  var img = getScreenshotModify(x, y, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 80);
-  var base64 = getBase64FromImage(img);
-  releaseImage(img);
+  const x = Math.floor(Button.moneyInfoBox.x * this.captureGameRatio - this.gameOffsetX);
+  const y = Math.floor(Button.moneyInfoBox.y * this.captureGameRatio - this.gameOffsetY);
+  const w = Math.floor(Button.moneyInfoBox.w * this.captureGameRatio);
+  const h = Math.floor(Button.moneyInfoBox.h * this.captureGameRatio);
+  const img = getScreenshotModify(x, y, w, h, Button.moneyInfoBox.w / 2, Button.moneyInfoBox.h / 2, 80);
+  let base64;
+  try {
+    base64 = getBase64FromImage(img);
+  } finally {
+    releaseImage(img);
+  }
   log(this.logs.sendMessage);
   sendMessage("Tsum Tsum", base64);
 }
@@ -1506,7 +1666,7 @@ Tsum.prototype.isAppOn = function() {
   if (!this.autoLaunch) {
     return true;
   }
-  var result = execute('dumpsys window').split('mCurrentFocus');
+  let result = execute('dumpsys window').split('mCurrentFocus');
   if (result.length < 2) {
     return false;
   }
@@ -1518,12 +1678,12 @@ Tsum.prototype.isAppOn = function() {
   if (result.length < 2) {
     return false;
   }
-  var packageName = result[0];
+  const packageName = result[0];
   return packageName.indexOf('LGTMTM') !== -1;
 };
 
 function getPackageName(isJP) {
-    var packageName = 'com.linecorp.LGTMTM';
+    let packageName = 'com.linecorp.LGTMTM';
     if (!isJP) {
         packageName += 'G';
     }
@@ -1531,7 +1691,7 @@ function getPackageName(isJP) {
 }
 
 function startTsumTsumApp(isJP) {
-  var packageName = getPackageName(isJP);
+  const packageName = getPackageName(isJP);
   execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
       ' am start --activity-single-top -n ' + packageName + '/com.linecorp.LGTMTM.TsumTsum');
 }
@@ -1571,8 +1731,8 @@ Tsum.prototype.playScreenshotSquare = function() {
 }
 
 Tsum.prototype.toResizeXY = function(x, y) {
-  var rx = Math.floor((x * this.captureGameRatio - this.gameOffsetX) / this.resizeRatio);
-  var ry = Math.floor((y * this.captureGameRatio - this.gameOffsetY) / this.resizeRatio);
+  const rx = Math.floor((x * this.captureGameRatio - this.gameOffsetX) / this.resizeRatio);
+  const ry = Math.floor((y * this.captureGameRatio - this.gameOffsetY) / this.resizeRatio);
   return {x: rx, y: ry};
 }
 
@@ -1581,13 +1741,13 @@ Tsum.prototype.toResizeXYs = function(xy) {
 }
 
 Tsum.prototype.getColor = function(img, xy) {
-  var rxy = this.toResizeXYs(xy);
+  const rxy = this.toResizeXYs(xy);
   return getImageColor(img, Math.max(rxy.x, 0), Math.max(rxy.y, 0));
 }
 
 Tsum.prototype.toRealXY = function(x, y) {
-  var rx = Math.floor(x * this.captureGameRatio - this.gameOffsetX);
-  var ry = Math.floor(y * this.captureGameRatio - this.gameOffsetY);
+  const rx = Math.floor(x * this.captureGameRatio - this.gameOffsetX);
+  const ry = Math.floor(y * this.captureGameRatio - this.gameOffsetY);
   return {x: rx, y: ry};
 }
 
@@ -1599,7 +1759,7 @@ Tsum.prototype.tap = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var rxy = this.toRealXYs(xy);
+  const rxy = this.toRealXYs(xy);
   tap(rxy.x, rxy.y, during);
 }
 
@@ -1607,7 +1767,7 @@ Tsum.prototype.tapDown = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var rxy = this.toRealXYs(xy);
+  const rxy = this.toRealXYs(xy);
   tapDown(rxy.x, rxy.y, during);
 }
 
@@ -1615,7 +1775,7 @@ Tsum.prototype.moveTo = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var rxy = this.toRealXYs(xy);
+  const rxy = this.toRealXYs(xy);
   moveTo(rxy.x, rxy.y, during);
 }
 
@@ -1623,30 +1783,37 @@ Tsum.prototype.tapUp = function(xy, during) {
   if (during === undefined) {
     during = 50;
   }
-  var rxy = this.toRealXYs(xy);
+  const rxy = this.toRealXYs(xy);
   tapUp(rxy.x, rxy.y, during);
 }
 
 Tsum.prototype.linkTsums = function(path) {
-  for (var j = 0; j < path.length; j++) {
-    var point = path[j];
-    var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth / 2) * this.playWidth / this.playResizeWidth);
-    var y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth / 2) * this.playHeight / this.playResizeHeight);
+  // Drag timings (ms). At 10ms the game often fails to register the initial
+  // press or skips intermediate tsums, so a found 3+ chain never clears. Hold
+  // a bit longer on press-down and give each move enough time to emit touch
+  // samples the game can hit-test. Tune down if it feels sluggish.
+  const grabDuring = 30;
+  const moveDuring = 20;
+  const releaseDuring = 20;
+  for (let j = 0; j < path.length; j++) {
+    const point = path[j];
+    const x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth / 2) * this.playWidth / this.playResizeWidth);
+    const y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth / 2) * this.playHeight / this.playResizeHeight);
     if (j === 0) {
-      tapDown(x, y, 10);
+      tapDown(x, y, grabDuring);
     }
-    moveTo(x, y, 10);
+    moveTo(x, y, moveDuring);
     if (j === path.length - 1) {
-      tapUp(x, y, 10);
+      tapUp(x, y, releaseDuring);
     }
   }
 }
 
 Tsum.prototype.link = function(paths) {
-  var isBubble = false;
-  var burst = this.skillType === 'burst';
-  for (var i in paths) {
-    var path = paths[i];
+  let isBubble = false;
+  const burst = this.skillType === 'burst';
+  for (const i in paths) {
+    const path = paths[i];
     // >= 7 should be correct, but practically the real chain is always shorter
     // so using a bigger value than theoretically correct
     if (path.length >= 12) {
@@ -1663,37 +1830,40 @@ Tsum.prototype.link = function(paths) {
 Tsum.prototype.findPageObject = function(times, timeout) {
   if (times === undefined) {times = 2;}
   if (timeout === undefined) {timeout = 700;}
-  var start = Date.now();
-  var page = null;
+  const start = Date.now();
+  let page = null;
   while(this.isRunning) {
-    var currentPage = null;
-    for (var t = 0; t < times; t++) {
-      var img = this.screenshot();
-      for (var key in Page) {
-        page = Page[key];
-        currentPage = null;
-        var pageColors = page.colors || [];
-        for (var i = 0; i < pageColors.length; i++) {
-          var diff = absColor(pageColors[i], this.getColor(img, pageColors[i]));
-          if ((diff < pageColors[i].threshold) === pageColors[i].match) {
-            currentPage = page;
-          } else {
-            currentPage = null;
+    let currentPage = null;
+    for (let t = 0; t < times; t++) {
+      const img = this.screenshot();
+      try {
+        for (const key in Page) {
+          page = Page[key];
+          currentPage = null;
+          const pageColors = page.colors || [];
+          for (let i = 0; i < pageColors.length; i++) {
+            const diff = absColor(pageColors[i], this.getColor(img, pageColors[i]));
+            if ((diff < pageColors[i].threshold) === pageColors[i].match) {
+              currentPage = page;
+            } else {
+              currentPage = null;
+              break;
+            }
+          }
+          if (currentPage !== null) {
+            debug(this.logs.currentPage, currentPage.name + ' (' + key + ')', 'findPageObject');
             break;
           }
         }
-        if (currentPage !== null) {
-          debug(this.logs.currentPage, currentPage.name + ' (' + key + ')', 'findPageObject');
-          break;
-        }
+      } finally {
+        releaseImage(img);
       }
-      releaseImage(img);
       this.sleep(100);
     } // for times
     if (currentPage !== null) {
       // trigger callback if defined
       if (typeof currentPage.onDetect === "function") {
-        var callback = currentPage.onDetect;
+        const callback = currentPage.onDetect;
         log("Applying fn " + callback.name + "...");
         callback.apply(this);
         log("Applied fn " + callback.name + ".");
@@ -1707,9 +1877,9 @@ Tsum.prototype.findPageObject = function(times, timeout) {
 }
 
 Tsum.prototype.findPage = function(times, timeout) {
-  var page = this.findPageObject(times, timeout);
+  const page = this.findPageObject(times, timeout);
   if (page !== null) {
-    var name = page.name;
+    const name = page.name;
     switch (name) {
         case "GamePause":
         case "GamePlaying":
@@ -1723,30 +1893,33 @@ Tsum.prototype.findPage = function(times, timeout) {
 }
 
 Tsum.prototype.matchesPage = function (pageName) {
-  var found = false;
-  var img = null;
-  for (var pageId in Page) {
-    var page = Page[pageId];
-    if (pageName === page.name) {
-      if (img == null) {
-        // lazy init only if page exists
-        img = this.screenshot();
-      }
-      var colors = page.colors || [];
-      found = false;
-      for (var i = 0; i < colors.length; i++) {
-        var color = colors[i];
-        found = isSameColor(this.getColor(img, color), color, 20);
-        if (!found) {
-          break;  // try next page
+  let found = false;
+  let img = null;
+  try {
+    for (const pageId in Page) {
+      const page = Page[pageId];
+      if (pageName === page.name) {
+        if (img == null) {
+          // lazy init only if page exists
+          img = this.screenshot();
         }
+        const colors = page.colors || [];
+        found = false;
+        for (let i = 0; i < colors.length; i++) {
+          const color = colors[i];
+          found = isSameColor(this.getColor(img, color), color, 20);
+          if (!found) {
+            break;  // try next page
+          }
+        }
+        if (found)
+          break;  // exit search
       }
-      if (found)
-        break;  // exit search
     }
-  }
-  if (img != null) {
-    releaseImage(img);
+  } finally {
+    if (img != null) {
+      releaseImage(img);
+    }
   }
   debug("*** Found", pageName, "=", found);
   return found;
@@ -1772,8 +1945,8 @@ Tsum.prototype.goFriendPage = function() {
       // sleep longer to safely detect new event windows which might initially take longer to load
       this.sleep(5000);
     }
-    var pageObj = this.findPageObject(2, 1000);
-    var page = pageObj != null ? pageObj.name : "unknown";
+    const pageObj = this.findPageObject(2, 1000);
+    let page = pageObj != null ? pageObj.name : "unknown";
     log(this.logs.currentPage, page, "goFriend");
     if (page === 'FriendPage') {
       // check again with 3 seoconds delay (Event notification/page might fly in)
@@ -1797,7 +1970,7 @@ Tsum.prototype.goFriendPage = function() {
 }
 
 Tsum.prototype.checkGameItem = function() {
-  var isItemsOn = [false, false, false, false, false, false, false];
+  const isItemsOn = [false, false, false, false, false, false, false];
   if (this.scoreItem) {
     isItemsOn[0] = true;
   }
@@ -1819,26 +1992,29 @@ Tsum.prototype.checkGameItem = function() {
   if (this.comboItem) {
     isItemsOn[6] = true;
   }
-  for(var t = 0; t < 3; t++) {
-    var img = this.screenshot();
-    var isChange = false;
-    for (var i = 0; i < Button.outGameItems.length; i++) {
-      var c = this.getColor(img, Button.outGameItems[i]);
-      if (c.b > 128) { // off
-        if (isItemsOn[i]) {
-          this.tap(Button.outGameItems[i]);
-          isChange = true;
-          this.sleep(500);
-        }
-      } else { // on
-        if (!isItemsOn[i]) {
-          this.tap(Button.outGameItems[i]);
-          isChange = true;
-          this.sleep(500);
+  for(let t = 0; t < 3; t++) {
+    const img = this.screenshot();
+    let isChange = false;
+    try {
+      for (let i = 0; i < Button.outGameItems.length; i++) {
+        const c = this.getColor(img, Button.outGameItems[i]);
+        if (c.b > 128) { // off
+          if (isItemsOn[i]) {
+            this.tap(Button.outGameItems[i]);
+            isChange = true;
+            this.sleep(500);
+          }
+        } else { // on
+          if (!isItemsOn[i]) {
+            this.tap(Button.outGameItems[i]);
+            isChange = true;
+            this.sleep(500);
+          }
         }
       }
+    } finally {
+      releaseImage(img);
     }
-    releaseImage(img);
     console.log("Bonus items changed = " + isChange);
     if (!isChange) {
       break;
@@ -1853,8 +2029,8 @@ Tsum.prototype.goGamePlayingPage = function() {
     if (!this.isAppOn()) {
       this.startApp();
     }
-    var pageObj = this.findPageObject(2, 2000);
-    var page = pageObj != null ? pageObj.name : "unknown";
+    const pageObj = this.findPageObject(2, 2000);
+    let page = pageObj != null ? pageObj.name : "unknown";
     log(this.logs.currentPage, page, "play");
     if (page === 'FriendPage') {
       this.tap(pageObj.next);
@@ -1897,7 +2073,7 @@ Tsum.prototype.goTsumsPage = function() {
   }
   this.goFriendPage();
   while(this.isRunning) {
-    var page = this.findPageObject(2, 2000);
+    let page = this.findPageObject(2, 2000);
     if (page != null)
       log(this.logs.currentPage, page.name, "goTsumPage");
     if (page === null) {
@@ -1924,17 +2100,22 @@ Tsum.prototype.goTsumTsumStorePage = function() {
       this.startApp();
     }
     this.goTsumsPage();
-    var pageName = "undefined";
-    for (var i = 0; i < 3; i++) {
+    let pageName = "undefined";
+    let page;
+    for (let i = 0; i < 3; i++) {
       this.tap(this.findPageObject().store);
       this.sleep(3000);
-      var page = this.findPageObject(5, 2000);
+      page = this.findPageObject(5, 2000);
       pageName = page != null ? page.name : 'unknown';
       log("Pg: ", pageName);
       if (page !== null && page.name === 'TsumTsumStorePage') {
-        var img = this.screenshot();
-        var nextColor = this.getColor(img, page.next);
-        releaseImage(img);
+        const img = this.screenshot();
+        let nextColor;
+        try {
+          nextColor = this.getColor(img, page.next);
+        } finally {
+          releaseImage(img);
+        }
         return isSameColor(page.next, nextColor, 50);
       }
     }
@@ -1949,13 +2130,13 @@ Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY, delayBetw
     this.sleep(startDelay);
   }
 
-  var fy = Button.gameBubblesFrom.y;
+  let fy = Button.gameBubblesFrom.y;
   if (typeof fromY == 'number') {
     fy = fromY;
   }
 
-  for (var by = fy; by <= Button.gameBubblesTo.y; by += 140) {
-    for (var bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
+  for (let by = fy; by <= Button.gameBubblesTo.y; by += 140) {
+    for (let bx = Button.gameBubblesFrom.x; bx <= Button.gameBubblesTo.x; bx += 140) {
       this.tap({x: bx, y: by}, 10);
     }
     this.sleep(delayBetweenLines);
@@ -1967,8 +2148,8 @@ Tsum.prototype.clearAllBubbles = function(startDelay, endDelay, fromY, delayBetw
 }
 
 Tsum.prototype.useCinderellaSkill = function() {
-  var path, offset, y;
-  for (var i = 0; i < 5; i += 1) {
+  let path, offset, y;
+  for (let i = 0; i < 5; i += 1) {
     for (offset = 0; offset <= 200; offset += 200) {
       path = [];
       for (y = 170; y >= 70; y -= 20)
@@ -1995,17 +2176,17 @@ Tsum.prototype.checkSkillReadiness = function(img, skillButton) {
   // Tiered version of isSkillActive's color check. Same reference colors, two
   // thresholds: tight (25) means firmly empty; loose (60) is the original
   // not-active match. Returns 'active', 'almost', or 'far'.
-  var skillNotActiveColors = [
+  const skillNotActiveColors = [
     {"a": 0, "b": 157, "g": 112, "r": 85},
     {"a": 0, "b": 181, "g": 139, "r": 72},
     {"a": 0, "b": 128, "g": 73, "r": 16},
     {"a": 0, "b": 178, "g": 153, "r": 3},
     {"a": 0, "b": 255, "g": 215, "r": 33}
   ];
-  var c = this.getColor(img, skillButton);
-  var matchesTight = false, matchesLoose = false;
-  for (var i = 0; i < skillNotActiveColors.length; i++) {
-    var nc = skillNotActiveColors[i];
+  const c = this.getColor(img, skillButton);
+  let matchesTight = false, matchesLoose = false;
+  for (let i = 0; i < skillNotActiveColors.length; i++) {
+    const nc = skillNotActiveColors[i];
     if (isSameColor(nc, c, 25)) { matchesTight = true; }
     if (isSameColor(nc, c, 60)) { matchesLoose = true; }
   }
@@ -2018,20 +2199,27 @@ Tsum.prototype.pollSkillActivation = function() {
   // Burst-skill optimization: if the gauge is close to topping off, spam the
   // skill button briefly so the game activates it the moment it fills. Bails
   // immediately when far from ready so unrelated MyTsum clears don't burn time.
-  var img = this.screenshot();
-  var status = this.checkSkillReadiness(img, Button.gameSkill1);
-  releaseImage(img);
+  let img = this.screenshot();
+  let status;
+  try {
+    status = this.checkSkillReadiness(img, Button.gameSkill1);
+  } finally {
+    releaseImage(img);
+  }
   if (status === 'far') { return false; }
   if (status === 'active') {
     this.tap(Button.gameSkill1, 10);
     return true;
   }
-  for (var i = 0; i < 4; i++) {
+  for (let i = 0; i < 4; i++) {
     this.tap(Button.gameSkill1, 10);
     this.sleep(40);
     img = this.screenshot();
-    status = this.checkSkillReadiness(img, Button.gameSkill1);
-    releaseImage(img);
+    try {
+      status = this.checkSkillReadiness(img, Button.gameSkill1);
+    } finally {
+      releaseImage(img);
+    }
     if (status === 'active') {
       this.tap(Button.gameSkill1, 10);
       return true;
@@ -2044,18 +2232,18 @@ Tsum.prototype.pollSkillActivation = function() {
 Tsum.prototype.useSkill = function(board) {
   function isSkillActive(that, img, skillButton) {
     // Don't know the reason why these are checked instead the "active skill" colors, but hopefully for a good reason
-    var skillNotActiveColors = [
+    const skillNotActiveColors = [
       {"a": 0, "b": 157, "g": 112, "r": 85},
       {"a": 0, "b": 181, "g": 139, "r": 72},
       {"a": 0, "b": 128, "g": 73, "r": 16},
       {"a": 0, "b": 178, "g": 153, "r": 3},
       {"a": 0, "b": 255, "g": 215, "r": 33}
     ];
-    var currentButtonColor = that.getColor(img, skillButton);
-    var skillActive = true;
-    for (var colorIdx in skillNotActiveColors) {
-      var color = skillNotActiveColors[colorIdx];
-      var matchesSkillNotActiveColor = isSameColor(color, currentButtonColor, 60);
+    const currentButtonColor = that.getColor(img, skillButton);
+    let skillActive = true;
+    for (const colorIdx in skillNotActiveColors) {
+      const color = skillNotActiveColors[colorIdx];
+      const matchesSkillNotActiveColor = isSameColor(color, currentButtonColor, 60);
       // console.log(JSON.stringify(skillButton) + " - " + JSON.stringify(color) + " matches actual color " + JSON.stringify(currentButtonColor) + " = " + matchesSkillNotActiveColor);
       skillActive = skillActive && !matchesSkillNotActiveColor;
     }
@@ -2066,16 +2254,24 @@ Tsum.prototype.useSkill = function(board) {
     return false;
   }
 
-  var page = this.findPage(1, 500);
+  const page = this.findPage(1, 500);
   if (page !== 'GamePlaying' && page !== 'GamePause') {
     return false;
   }
 
-  for (var i = 0; i < 2; i++) {
-    var img = this.screenshot();
-    var skillActive1 = isSkillActive(this, img, Button.gameSkill1);
-    var skillActive2 = this.skillType === 'block_pair_tsum' && isSkillActive(this, img, Button.gameSkill2);
-    releaseImage(img);
+  // Hoisted to function scope: these are reused with cross-block assignment by
+  // the skill-specific branches further down (formerly relied on var hoisting).
+  let img: any, color: any, i: number;
+  let skillActive2;
+  for (i = 0; i < 2; i++) {
+    img = this.screenshot();
+    let skillActive1;
+    try {
+      skillActive1 = isSkillActive(this, img, Button.gameSkill1);
+      skillActive2 = this.skillType === 'block_pair_tsum' && isSkillActive(this, img, Button.gameSkill2);
+    } finally {
+      releaseImage(img);
+    }
     if (skillActive1 || skillActive2) {
       if (i === 0) {
         this.sleep(200);
@@ -2087,31 +2283,34 @@ Tsum.prototype.useSkill = function(board) {
   }
   this.lastVisitedPages.gameSkillActive = true;
   if (this.noSkillLastFeverSec > 0) {
-    var feverAlmostOver = null;
+    let feverAlmostOver = null;
     do {
       if (feverAlmostOver) {
         this.sleep(100);
       }
       feverAlmostOver = (function (tsum) {
         // skip skill activation if fever and fever almost over and enough seconds remaining
-        var img = tsum.screenshot();
-        var fever1 = isSameColor(tsum.getColor(img, {x: 340, y: 310}), {r: 0, g: 40, b: 49}, 80);
-        var feverRingLeft = rgb2hsv(tsum.getColor(img, {x: 332, y: 1666}));
-        var feverRingRight = rgb2hsv(tsum.getColor(img, {x: 746, y: 1666}));
-        var hueDifference = Math.min(
-            Math.abs(feverRingLeft.h - feverRingRight.h),
-            360 - Math.abs(feverRingLeft.h - feverRingRight.h));
-        var fever2 = hueDifference > 20;
-        var feverStartColorHsv = rgb2hsv(tsum.getColor(img, {x: 345, y: 1670}));
-        var offsetX = Math.floor((733 - 345) * tsum.noSkillLastFeverSec / 10);
-        var feverEndColorHsv = rgb2hsv(tsum.getColor(img, {x: 345 + offsetX, y: 1670}));
-        var feverAlmostOver = feverEndColorHsv.v < 90 || Math.abs(feverStartColorHsv.v - feverEndColorHsv.v) > 10;
-        var remainingTimeColor = tsum.getColor(img, {x: 155, y: 190});
-        var fewSecondsLeftColor = tsum.getColor(img, {x: 144, y: 195});
-        var enoughSecondsRemaining = isSameColor(remainingTimeColor, fewSecondsLeftColor, 60);
-        releaseImage(img);
-        // debug({fever1: fever1, fever2: fever2, almostOver: feverAlmostOver, enoughTime: enoughSecondsRemaining});
-        return fever1 && fever2 && feverAlmostOver && enoughSecondsRemaining;
+        const img = tsum.screenshot();
+        try {
+          const fever1 = isSameColor(tsum.getColor(img, {x: 340, y: 310}), {r: 0, g: 40, b: 49}, 80);
+          const feverRingLeft = rgb2hsv(tsum.getColor(img, {x: 332, y: 1666}));
+          const feverRingRight = rgb2hsv(tsum.getColor(img, {x: 746, y: 1666}));
+          const hueDifference = Math.min(
+              Math.abs(feverRingLeft.h - feverRingRight.h),
+              360 - Math.abs(feverRingLeft.h - feverRingRight.h));
+          const fever2 = hueDifference > 20;
+          const feverStartColorHsv = rgb2hsv(tsum.getColor(img, {x: 345, y: 1670}));
+          const offsetX = Math.floor((733 - 345) * tsum.noSkillLastFeverSec / 10);
+          const feverEndColorHsv = rgb2hsv(tsum.getColor(img, {x: 345 + offsetX, y: 1670}));
+          const feverAlmostOver = feverEndColorHsv.v < 90 || Math.abs(feverStartColorHsv.v - feverEndColorHsv.v) > 10;
+          const remainingTimeColor = tsum.getColor(img, {x: 155, y: 190});
+          const fewSecondsLeftColor = tsum.getColor(img, {x: 144, y: 195});
+          const enoughSecondsRemaining = isSameColor(remainingTimeColor, fewSecondsLeftColor, 60);
+          // debug({fever1: fever1, fever2: fever2, almostOver: feverAlmostOver, enoughTime: enoughSecondsRemaining});
+          return fever1 && fever2 && feverAlmostOver && enoughSecondsRemaining;
+        } finally {
+          releaseImage(img);
+        }
       })(this);
     } while (feverAlmostOver);
   }
@@ -2131,7 +2330,7 @@ Tsum.prototype.useSkill = function(board) {
     this.sleep(30);
   }
   if (this.skillType === 'block_lukej_s') {
-    for (var i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       this.tapDown({x: 820, y: 1200}, 20);
       this.moveTo({x: 820, y: 1150}, 20);
       if (i === 0) {
@@ -2155,9 +2354,9 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillLuke4, 30);
     this.sleep(400);
   } else if (this.skillType === 'block_donald_s' || this.skillType === 'block_donaldx_s') {
-    for (var i1 = 0; i1 < 3; i1++) {
-      for (var bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
-        for (var by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 150) {
+    for (let i1 = 0; i1 < 3; i1++) {
+      for (let bx = Button.gameBubblesFrom.x - 40; bx <= Button.gameBubblesTo.x + 40; bx += 150) {
+        for (let by = Button.gameBubblesFrom.y; by <= Button.gameBubblesTo.y + 100; by += 150) {
           this.tap({x: bx, y: by}, 10);
         }
       }
@@ -2179,7 +2378,7 @@ Tsum.prototype.useSkill = function(board) {
     this.tapDown({x: 540, y: 960}, 20);
     this.moveTo({x: 980, y: 960}, 20);
     this.sleep(50);
-    for (var i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       this.moveTo({x: 100, y: 960}, 20);
       this.sleep(420);
       this.moveTo({x: 980, y: 960}, 20);
@@ -2190,62 +2389,65 @@ Tsum.prototype.useSkill = function(board) {
     // wait for all cabbages being placed
     this.sleep(3300);
     // find mickey in cabbage
-    var colorMickeyFace = {r: 245, g: 225, b: 210};
-    var startTime = Date.now();
-    var foundMickey = false;
-    var maybeMickey = null;
-    var color = null;
-    var maxTries = 5;
-    for (var tries = 1; tries <= maxTries && !foundMickey; tries++) {
+    const colorMickeyFace = {r: 245, g: 225, b: 210};
+    const startTime = Date.now();
+    let foundMickey = false;
+    let maybeMickey = null;
+    color = null;
+    const maxTries = 5;
+    for (let tries = 1; tries <= maxTries && !foundMickey; tries++) {
       this.sleep(100);
       img = this.screenshot();
-      smooth(img, 2, 5);
-      for (var y = 720; y < 1380 && !foundMickey; y += 25) {
-        for (var x = 120; x < 1000 && !foundMickey; x +=60) {
-          maybeMickey = {x: x, y: y};
-          color = this.getColor(img, maybeMickey);
-          // if (color.r >= 140)
-          //   color.r = 255;
-          foundMickey |= isSameColor(colorMickeyFace, color, 20);
-          if (foundMickey) {
-            var up, down, left, right;
-            up = down = left = right = maybeMickey;
-            up.y -= 10;
-            down.y += 10;
-            left.x -= 10;
-            right.x += 10;
-            foundMickey = (
-                    isSameColor(colorMickeyFace, this.getColor(img, up), 20)
-                    || isSameColor(colorMickeyFace, this.getColor(img, down), 20))
-                && (
-                    isSameColor(colorMickeyFace, this.getColor(img, left), 20)
-                    || isSameColor(colorMickeyFace, this.getColor(img, right), 20));
+      try {
+        smooth(img, 2, 5);
+        for (let y = 720; y < 1380 && !foundMickey; y += 25) {
+          for (let x = 120; x < 1000 && !foundMickey; x +=60) {
+            maybeMickey = {x: x, y: y};
+            color = this.getColor(img, maybeMickey);
+            // if (color.r >= 140)
+            //   color.r = 255;
+            foundMickey = foundMickey || isSameColor(colorMickeyFace, color, 20);
+            if (foundMickey) {
+              let up, down, left, right;
+              up = down = left = right = maybeMickey;
+              up.y -= 10;
+              down.y += 10;
+              left.x -= 10;
+              right.x += 10;
+              foundMickey = (
+                      isSameColor(colorMickeyFace, this.getColor(img, up), 20)
+                      || isSameColor(colorMickeyFace, this.getColor(img, down), 20))
+                  && (
+                      isSameColor(colorMickeyFace, this.getColor(img, left), 20)
+                      || isSameColor(colorMickeyFace, this.getColor(img, right), 20));
+            }
+            if (this.debug) {
+              // logical width is 1080, screenshot usually 360, so reduce xy by factor 3
+              drawCircle(img, x / 3, y / 3, 4, foundMickey ? 0 : 255, foundMickey ? 255 : 0, 0, 0);
+            }
           }
+        }
+        if (!foundMickey) {
+          debug("*** Didn't find Mickey! ***", function () {
+            if (ts.debug) {
+              saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey_not_found-" + ts.runTimes + "-" + tries + ".jpg");
+              return "Saved screenshot";
+            } else {
+              return "";
+            }
+          });
+        } else {
           if (this.debug) {
-            // logical width is 1080, screenshot usually 360, so reduce xy by factor 3
-            drawCircle(img, x / 3, y / 3, 4, foundMickey ? 0 : 255, foundMickey ? 255 : 0, 0, 0);
+            saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey-" + ts.runTimes + "-" + tries + ".jpg");
           }
         }
+      } finally {
+        releaseImage(img);
       }
-      if (!foundMickey) {
-        debug("*** Didn't find Mickey! ***", function () {
-          if (ts.debug) {
-            saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey_not_found-" + ts.runTimes + "-" + tries + ".jpg");
-            return "Saved screenshot";
-          } else {
-            return "";
-          }
-        });
-      } else {
-        if (this.debug) {
-          saveImage(img, getStoragePath() + "/tmp/boardImg-cabbageMickey-" + ts.runTimes + "-" + tries + ".jpg");
-        }
-      }
-      releaseImage(img);
     }
     if (foundMickey && maybeMickey != null) {
       debug("Found mickey at position", maybeMickey, "with color", color, "in", Date.now() - startTime, "ms.");
-      var tapXY = {x: maybeMickey.x + 15, y: maybeMickey.y + 15};
+      const tapXY = {x: maybeMickey.x + 15, y: maybeMickey.y + 15};
       for (i = 0; i < 10; i++)
         this.tap(tapXY);
       this.sleep(1000);
@@ -2279,13 +2481,16 @@ Tsum.prototype.useSkill = function(board) {
     for (i = 1; i <= 20; i+=1) {
       this.sleep(50);
       img = this.playScreenshotSquare();
-      color = getImageColor(img, 120, 184);
-      if (isSameColor({r: 245, g: 0, b: 0}, color, 10)) {
-        // max speed detected
-        this.tap({x: 670, y: 1050}, 10);  // tap somewhere into the game
-        i = 20;
+      try {
+        color = getImageColor(img, 120, 184);
+        if (isSameColor({r: 245, g: 0, b: 0}, color, 10)) {
+          // max speed detected
+          this.tap({x: 670, y: 1050}, 10);  // tap somewhere into the game
+          i = 20;
+        }
+      } finally {
+        releaseImage(img);
       }
-      releaseImage(img);
     }
     this.sleep(2500);
     // this.clearAllBubbles(600, 0, 1000, 300);
@@ -2304,76 +2509,81 @@ Tsum.prototype.sampleMyTsumColor = function() {
   // bottom-left of the play area. Sample a small region around its center,
   // run the same smooth + HSV pipeline as findTsums, and average central
   // pixels so the result is directly comparable to tsum cluster colors.
-  var center = this.toRealXY(Button.gameSkill1.x, Button.gameSkill1.y);
-  var sampleR = Math.max(4, Math.floor(40 * this.captureGameRatio));
-  var x = Math.max(0, center.x - sampleR);
-  var y = Math.max(0, center.y - sampleR);
-  var img = getScreenshotModify(x, y, sampleR * 2, sampleR * 2, 40, 40, 100);
-  smooth(img, 1, 7);
-  convertColor(img, 40);
-  smooth(img, 1, 22);
-  var sumB = 0, sumG = 0, sumR = 0, count = 0;
-  for (var dy = -3; dy <= 3; dy++) {
-    for (var dx = -3; dx <= 3; dx++) {
-      var c = getImageColor(img, 20 + dx, 20 + dy);
-      sumB += c.b; sumG += c.g; sumR += c.r;
-      count++;
+  const center = this.toRealXY(Button.gameSkill1.x, Button.gameSkill1.y);
+  const sampleR = Math.max(4, Math.floor(40 * this.captureGameRatio));
+  const x = Math.max(0, center.x - sampleR);
+  const y = Math.max(0, center.y - sampleR);
+  const img = getScreenshotModify(x, y, sampleR * 2, sampleR * 2, 40, 40, 100);
+  try {
+    smooth(img, 1, 7);
+    convertColor(img, 40);
+    smooth(img, 1, 22);
+    let sumB = 0, sumG = 0, sumR = 0, count = 0;
+    for (let dy = -3; dy <= 3; dy++) {
+      for (let dx = -3; dx <= 3; dx++) {
+        const c = getImageColor(img, 20 + dx, 20 + dy);
+        sumB += c.b; sumG += c.g; sumR += c.r;
+        count++;
+      }
     }
+    return { b: sumB / count, g: sumG / count, r: sumR / count };
+  } finally {
+    releaseImage(img);
   }
-  releaseImage(img);
-  return { b: sumB / count, g: sumG / count, r: sumR / count };
 };
 
 Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
-  var startTime = Date.now();
-  var srcImg = this.playScreenshotSquare();
-
-  if (this.isPause) {
-    this.tap(Button.gamePause);
-    this.sleep(20);
-    this.tap(Button.gamePause);
-  }
-
-  var points = findTsums(srcImg);
-  debug(this.logs.recognitionStart);
-  var tcs = classifyTsums(points);
-  tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
-
-  // Identify which color cluster (if any) is the player's MyTsum by matching
-  // the skill-button portrait color against cluster centers.
-  if (!this.myTsumColor) {
-    this.myTsumColor = this.sampleMyTsumColor();
-    if (this.debug) { console.log('MyTsum color', JSON.stringify(this.myTsumColor)); }
-  }
-  this.myTsumIdx = -1;
-  var bestMyDist = 30;
-  for (var ci = 0; ci < tcs.length && ci < this.tsumCount - 1; ci++) {
-    var dMy = distance3D(tcs[ci], this.myTsumColor);
-    if (dMy < bestMyDist) {
-      bestMyDist = dMy;
-      this.myTsumIdx = ci;
+  const startTime = Date.now();
+  const srcImg = this.playScreenshotSquare();
+  const board = [];
+  try {
+    if (this.isPause) {
+      this.tap(Button.gamePause);
+      this.sleep(20);
+      this.tap(Button.gamePause);
     }
-  }
 
-  var board = [];
-  for(var i in tcs) {
-    if (i >= this.tsumCount - 1) {
-      break;
+    const points = findTsums(srcImg);
+    debug(this.logs.recognitionStart);
+    const tcs = classifyTsums(points);
+    tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
+
+    // Identify which color cluster (if any) is the player's MyTsum by matching
+    // the skill-button portrait color against cluster centers.
+    if (!this.myTsumColor) {
+      this.myTsumColor = this.sampleMyTsumColor();
+      if (this.debug) { console.log('MyTsum color', JSON.stringify(this.myTsumColor)); }
     }
-    var tc = tcs[i];
-    for (var j in tc.points) {
-      var p = tc.points[j];
-      board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
-      if (this.debug) {
-        drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);
+    this.myTsumIdx = -1;
+    let bestMyDist = 30;
+    for (let ci = 0; ci < tcs.length && ci < this.tsumCount - 1; ci++) {
+      const dMy = distance3D(tcs[ci], this.myTsumColor);
+      if (dMy < bestMyDist) {
+        bestMyDist = dMy;
+        this.myTsumIdx = ci;
       }
     }
+
+    for(const i in tcs) {
+      if (+i >= this.tsumCount - 1) {
+        break;
+      }
+      const tc = tcs[i];
+      for (const j in tc.points) {
+        const p = tc.points[j];
+        board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
+        if (this.debug) {
+          drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);
+        }
+      }
+    }
+    if (this.debug) {
+      saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
+    }
+  } finally {
+    releaseImage(srcImg);
   }
-  if (this.debug) {
-    saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
-  }
-  releaseImage(srcImg);
   debug(this.logs.recognizedTsums, board.length);
   sleep(30);
   debug(this.logs.recognitionTime, usingTimeString(startTime));
@@ -2400,17 +2610,17 @@ Tsum.prototype.taskPlayGameQuick = function() {
   this.runTimes = 0;
   this.myTsumColor = null;  // re-sample MyTsum portrait at the start of each game
   this.myTsumIdx = -1;
-  var clearBubbles = 0;
-  var zeroPath = 0;
+  let clearBubbles = 0;
+  let zeroPath = 0;
   while(this.isRunning) {
-    var board = this.scanBoardQuick();
+    const board = this.scanBoardQuick();
     if (board == null) {
       break;
     }
     debug(this.logs.calculationPathStart);
-    var paths = calculatePaths(board, this.logs, this.myTsumIdx, this.bonus5to4);
+    let paths = calculatePaths(board, this.logs, this.myTsumIdx, this.bonus5to4);
     paths = paths.splice(0, 6);
-    var isBubble = this.link(paths);
+    const isBubble = this.link(paths);
     if (isBubble) {
       debug(this.logs.bubbleGenerated);
       clearBubbles++;
@@ -2431,12 +2641,17 @@ Tsum.prototype.taskPlayGameQuick = function() {
       this.clearAllBubbles(0, 0, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
     }
     if (this.useFan && this.runTimes % 4 === 3) {
-      // Skip the fan when the skill is ready — useSkill() will fire it next,
-      // and the fan would just be wasted on tsums about to be cleared.
-      var fanImg = this.screenshot();
-      var skillReady = this.checkSkillReadiness(fanImg, Button.gameSkill1) === 'active';
-      releaseImage(fanImg);
-      if (!skillReady) {
+      // Skip the fan when the skill is ready or about to be — useSkill() will
+      // fire it next (or the next clear will fill the gauge), so the fan would
+      // just be wasted on tsums about to be cleared.
+      const fanImg = this.screenshot();
+      let skillStatus;
+      try {
+        skillStatus = this.checkSkillReadiness(fanImg, Button.gameSkill1);
+      } finally {
+        releaseImage(fanImg);
+      }
+      if (skillStatus === 'far') {
         this.tap(Button.gameRand, 60);
         this.tap(Button.gameRand, 60);
       }
@@ -2451,7 +2666,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
 
     // double check
-    var page = this.findPage(1, 2500);
+    let page = this.findPage(1, 2500);
     if (page !== 'GamePlaying' && page !== 'GamePause') {
       this.sleep(500);
       page = this.findPage(1, 2500);
@@ -2486,41 +2701,43 @@ Tsum.prototype.taskReceiveAllItems = function() {
 }
 
 Tsum.prototype.fetchAllMails = function() {
-  var intlOkButton = Button.outReceiveOk;
-  var jpOkButton = Button.outReceiveAllOkJP;
+  const intlOkButton = Button.outReceiveOk;
+  const jpOkButton = Button.outReceiveAllOkJP;
 
-  var img = this.screenshot();
+  const img = this.screenshot();
 
-  if (this.isOnScreenshot(img, intlOkButton, 35)) {
-    this.tap(intlOkButton);
-  } else if (this.isOnScreenshot(img, jpOkButton, 35)) {
-    // check important previous buttons before pressing OK
-    if (this.keepRuby && this.isOnScreenshot(img, Button.outReceiveAllRubiesEnabledJP)) {
-      this.tap(Button.outReceiveAllRubiesEnabledJP);
-      this.sleep(500);
+  try {
+    if (this.isOnScreenshot(img, intlOkButton, 35)) {
+      this.tap(intlOkButton);
+    } else if (this.isOnScreenshot(img, jpOkButton, 35)) {
+      // check important previous buttons before pressing OK
+      if (this.keepRuby && this.isOnScreenshot(img, Button.outReceiveAllRubiesEnabledJP)) {
+        this.tap(Button.outReceiveAllRubiesEnabledJP);
+        this.sleep(500);
+      }
+      if (this.isOnScreenshot(img, Button.outReceiveAllHeartsDisabledJP)) {
+        this.tap(Button.outReceiveAllHeartsDisabledJP);
+        this.sleep(500);
+      }
+      this.tap(jpOkButton);
+    } else {
+      log("ERROR! No OK button found!");
+      this.exitUnknownPage();
     }
-    if (this.isOnScreenshot(img, Button.outReceiveAllHeartsDisabledJP)) {
-      this.tap(Button.outReceiveAllHeartsDisabledJP);
-      this.sleep(500);
-    }
-    this.tap(jpOkButton);
-  } else {
-    log("ERROR! No OK button found!");
-    this.exitUnknownPage();
+  } finally {
+    releaseImage(img);
   }
-
-  releaseImage(img);
 }
 
 Tsum.prototype.readRecord = function() {
   log(this.logs.readRecords);
-  var recordDir = this.storagePath + '/' + Config.recordDir;
-  var recordFile = recordDir + '/record.txt';
-  var txt = readFile(recordFile);
+  const recordDir = this.storagePath + '/' + Config.recordDir;
+  const recordFile = recordDir + '/record.txt';
+  const txt = readFile(recordFile);
   if (txt !== undefined && txt !== "") {
     this.record = JSON.parse(txt);
   }
-  for (var filename in this.record) {
+  for (const filename in this.record) {
     if (filename !== "hearts_count") {
       this.recordImages[filename] = openImage(recordDir + '/' + filename);
     }
@@ -2529,13 +2746,13 @@ Tsum.prototype.readRecord = function() {
 
 Tsum.prototype.recognizeSender = function(img) {
   log(this.logs.recognizingHeartSender);
-  var recordDir = this.storagePath + '/' + Config.recordDir;
-  var from = this.toResizeXYs(Button.outReceiveNameFrom);
-  var to = this.toResizeXYs(Button.outReceiveNameTo);
-  var nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
-  var score = 0;
-  var existFilename = '';
-  for(var key in this.recordImages) {
+  const recordDir = this.storagePath + '/' + Config.recordDir;
+  const from = this.toResizeXYs(Button.outReceiveNameFrom);
+  const to = this.toResizeXYs(Button.outReceiveNameTo);
+  const nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
+  let score = 0;
+  let existFilename = '';
+  for(const key in this.recordImages) {
     if (this.recordImages[key] !== 0) {
       score = getIdentityScore(nameImg, this.recordImages[key]);
       if (score >= 0.98) {
@@ -2547,21 +2764,21 @@ Tsum.prototype.recognizeSender = function(img) {
   }
   // console.log("Score: " + score);
   if (existFilename === '') {
-    var now = nowTime();
-    var dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
+    const now = nowTime();
+    const dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
     // not found, new friend
-    var filename = 'f_' + now + '.png';
+    const filename = 'f_' + now + '.png';
     this.record[filename] = {
       receiveCounts: {},
       lastReceiveTime: now
     };
     this.record[filename].receiveCounts[dayTime] = 1;
     this.recordImages[filename] = nameImg;
-    var path = recordDir + '/' + filename;
+    const path = recordDir + '/' + filename;
     log(this.logs.saveNewFriend, path);
     saveImage(nameImg, path);
     this.sleep(80);
-    var check = execute("ls " + path);
+    const check = execute("ls " + path);
     if (check.indexOf(filename) === -1) {
       log(this.logs.saveNewFriendAgain);
       saveImage(nameImg, path);
@@ -2577,8 +2794,8 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
     return;
   }
   log(this.logs.calculatingHeartSender);
-  var now = nowTime();
-  var dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
+  const now = nowTime();
+  const dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
   // found
   if (this.record[existFilename].receiveCounts[dayTime] === undefined) {
     this.record[existFilename].receiveCounts[dayTime] = 0;
@@ -2590,12 +2807,12 @@ Tsum.prototype.countReceiveHeart = function(existFilename) {
 
 Tsum.prototype.saveRecord = function() {
   log(this.logs.saveRecords);
-  var recordFile = this.storagePath + '/' + Config.recordDir + '/record.txt';
+  const recordFile = this.storagePath + '/' + Config.recordDir + '/record.txt';
   writeFile(recordFile, JSON.stringify(this.record));
 }
 
 Tsum.prototype.releaseRecord = function() {
-  for(var filename in this.recordImages) {
+  for(const filename in this.recordImages) {
     releaseImage(this.recordImages[filename]);
   }
   this.record = {};
@@ -2603,7 +2820,7 @@ Tsum.prototype.releaseRecord = function() {
 }
 
 Tsum.prototype.clear = function() {
-  var recordDir = getStoragePath() + '/' + Config.recordDir;
+  const recordDir = getStoragePath() + '/' + Config.recordDir;
   execute('rm -r ' + recordDir);
 }
 
@@ -2618,9 +2835,12 @@ Tsum.prototype.skipAd = function () {
   } else {
     log("Ignore Ad");
     if (Config.debugLogs) {
-      var img = this.screenshot();
-      saveImage(img, this.storagePath + "/tmp/" + this.runTimes + "-detectedAd.jpg");
-      releaseImage(img);
+      const img = this.screenshot();
+      try {
+        saveImage(img, this.storagePath + "/tmp/" + this.runTimes + "-detectedAd.jpg");
+      } finally {
+        releaseImage(img);
+      }
     }
     this.sleep(4000);
     // delete ad
@@ -2642,30 +2862,37 @@ Tsum.prototype.taskReceiveOneItem = function() {
   log(this.logs.receiveGiftsOneByOne);
   this.sleep(1000);
 
-  var receivedCount = 0;
-  var receiveCheckLimit = 1;
+  let receivedCount = 0;
+  let receiveCheckLimit = 1;
 
-  var sender = undefined;
-  var receiveTime = Date.now();
-  var timeoutCounter = 0;
-  var maxTimeoutCount = 100;
-  var receivedHeartWithoutCoins = 0;
+  let sender = undefined;
+  let receiveTime = Date.now();
+  let timeoutCounter = 0;
+  const maxTimeoutCount = 100;
+  let receivedHeartWithoutCoins = 0;
   while (this.isRunning && timeoutCounter < maxTimeoutCount) {
     this.requestTsumMonitor();
-    var img = this.screenshot();
-    var isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
-    var isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
-    var isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
-    var isAd = isSameColor(Button.outReceiveOneAd.color, this.getColor(img, Button.outReceiveOneAd), 35);
-    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
-    var isOk2 = isSameColor(Button.outReceiveItemSetOk.color, this.getColor(img, Button.outReceiveItemSetOk), 35);
-    var isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
-    var isHeartWithoutCoins = this.matchesPage('ReceiveHeartWithoutCoins');
-    debug({
-      isItem: isItem, isRuby: isRuby, isNonItem: isNonItem, isAd: isAd, isOk: isOk,
-      isTimeout: isTimeout, timeoutCounter: timeoutCounter
-    });
-    releaseImage(img);
+    let img = this.screenshot();
+    // Declared outside the try so the if-chain below (and the later
+    // `isNonItem = true`) can read them after the screenshot is released.
+    let isItem: boolean, isRuby: boolean, isNonItem: boolean, isAd: boolean,
+        isOk: boolean, isOk2: boolean, isTimeout: boolean, isHeartWithoutCoins: boolean;
+    try {
+      isItem = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 35);
+      isRuby = isSameColor(Button.outReceiveOneRuby.color, this.getColor(img, Button.outReceiveOneRuby), 35);
+      isNonItem = isSameColor(Button.outReceiveOne.color2, this.getColor(img, Button.outReceiveOne), 35);
+      isAd = isSameColor(Button.outReceiveOneAd.color, this.getColor(img, Button.outReceiveOneAd), 35);
+      isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 35);
+      isOk2 = isSameColor(Button.outReceiveItemSetOk.color, this.getColor(img, Button.outReceiveItemSetOk), 35);
+      isTimeout = isSameColor(Button.outReceiveTimeout.color, this.getColor(img, Button.outReceiveTimeout), 35);
+      isHeartWithoutCoins = this.matchesPage('ReceiveHeartWithoutCoins');
+      debug({
+        isItem: isItem, isRuby: isRuby, isNonItem: isNonItem, isAd: isAd, isOk: isOk,
+        isTimeout: isTimeout, timeoutCounter: timeoutCounter
+      });
+    } finally {
+      releaseImage(img);
+    }
     if (isItem) {
       if (isAd) {
         debug("handle ad");
@@ -2699,12 +2926,15 @@ Tsum.prototype.taskReceiveOneItem = function() {
         this.lastVisitedPages.receiveOneItemReceiving = true;
         if (this.recordReceive) {
           img = this.screenshot();
-          var isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
-          if (isItem2) {
-            this.tap(Button.outReceiveOne);
-            sender = this.recognizeSender(img);
+          try {
+            const isItem2 = isSameColor(Button.outReceiveOne.color, this.getColor(img, Button.outReceiveOne), 30);
+            if (isItem2) {
+              this.tap(Button.outReceiveOne);
+              sender = this.recognizeSender(img);
+            }
+          } finally {
+            releaseImage(img);
           }
-          releaseImage(img);
         } else {
           sender = "";
         }
@@ -2803,12 +3033,12 @@ Tsum.prototype.friendPageGoToSelf = function() {
 }
 
 Tsum.prototype.doHeartSending = function(startTime) {
-  var retry = 0;
-  var times = 0;
-  var hfx = Button.outSendHeartFrom.x;
-  var hfy = Button.outSendHeartFrom.y - 40; // hearts from y
-  var hty = Button.outSendHeartTo.y + 30;   // hearts to y
-  var finished;
+  let retry = 0;
+  let times = 0;
+  const hfx = Button.outSendHeartFrom.x;
+  const hfy = Button.outSendHeartFrom.y - 40; // hearts from y
+  const hty = Button.outSendHeartTo.y + 30;   // hearts to y
+  let finished;
 
   function scrollToNextHearts() {
     if (this.sendHeartsDownwards) {
@@ -2839,36 +3069,43 @@ Tsum.prototype.doHeartSending = function(startTime) {
       this.lastVisitedPages.friends = true;
       debug("Ensured friends page");
     }
-    var heartsPos = [];
+    const heartsPos = [];
 
-    var img = this.screenshot();
-    var isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
-    for (var y = hfy; y <= hty; y += 8) {
-      var isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}), 40);
-      if (isHs) {
-        heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
-        y += 140;
+    const img = this.screenshot();
+    // Declared outside the try so the end/zero/top checks below can read them
+    // after the screenshot is released.
+    let isOk: boolean, isZero: boolean, isNotEnd: boolean, isEnd1: boolean,
+        isEnd2: boolean, isEnd3: boolean, isTop: boolean;
+    try {
+      isOk = isSameColor(Button.outReceiveOk.color, this.getColor(img, Button.outReceiveOk), 40);
+      for (let y = hfy; y <= hty; y += 8) {
+        const isHs = isSameColor(Button.outSendHeart0.color, this.getColor(img, {x: hfx, y: y}), 40);
+        if (isHs) {
+          heartsPos.push({x: hfx, y: y, color: Button.outSendHeart0.color, color2: Button.outSendHeart0.color2});
+          y += 140;
+        }
       }
-    }
-    debug("Found " + heartsPos.length + " hearts on current page");
-    var isZero = true;
-    var fx = Button.outFriendScoreFrom.x;
-    var tx = Button.outFriendScoreTo.x;
-    var sy = heartsPos.length === 0 ? Button.outFriendScoreFrom.y : (heartsPos[0].y + 35);
-    for (var px = fx; px <= tx; px += 20) {
-      isZero = isSameColor(Button.outFriendScoreFrom.color, this.getColor(img, {x: px, y: sy}), 40);
-      if (!isZero) {
-        break;
+      debug("Found " + heartsPos.length + " hearts on current page");
+      isZero = true;
+      const fx = Button.outFriendScoreFrom.x;
+      const tx = Button.outFriendScoreTo.x;
+      const sy = heartsPos.length === 0 ? Button.outFriendScoreFrom.y : (heartsPos[0].y + 35);
+      for (let px = fx; px <= tx; px += 20) {
+        isZero = isSameColor(Button.outFriendScoreFrom.color, this.getColor(img, {x: px, y: sy}), 40);
+        if (!isZero) {
+          break;
+        }
       }
+      isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, {x: 225, y: 1056}), 40);
+      isEnd1 = isSameColor({r: 162, g: 84, b: 53}, this.getColor(img, {x: 225, y: 1056}), 40);
+      isEnd2 = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
+      isEnd3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, {x: 315, y: 1020}), 40);
+      isTop = isSameColor({r: 255, g: 227, b: 115}, this.getColor(img, {x: 200, y: 670}));
+    } finally {
+      releaseImage(img);
     }
-    var isNotEnd = isSameColor(Button.outSendHeartEnd2.color, this.getColor(img, {x: 225, y: 1056}), 40);
-    var isEnd1 = isSameColor({r: 162, g: 84, b: 53}, this.getColor(img, {x: 225, y: 1056}), 40);
-    var isEnd2 = isSameColor(Button.outSendHeartEnd.color, this.getColor(img, Button.outSendHeartEnd), 40);
-    var isEnd3 = isSameColor(Button.outSendHeartEnd3.color, this.getColor(img, {x: 315, y: 1020}), 40);
-    var isTop = isSameColor({r: 255, g: 227, b: 115}, this.getColor(img, {x: 200, y: 670}));
-    releaseImage(img);
 
-    var isEnd = !isNotEnd && isEnd1 && isEnd2 && isEnd3;
+    const isEnd = !isNotEnd && isEnd1 && isEnd2 && isEnd3;
     debug('isNotEnd', isNotEnd, 'isEnd1', isEnd1, 'isEnd2', isEnd2, 'isEnd3', isEnd3, 'isEnd', isEnd, 'retry', retry, 'heartsLength', heartsPos.length, 'isZero', isZero);
 
     if (isOk && heartsPos.length === 0) {
@@ -2893,10 +3130,10 @@ Tsum.prototype.doHeartSending = function(startTime) {
         finished = this.sendHeartsDownwards;
       }
     } else {
-      var rTimes = 0;
-      for (var h in heartsPos) {
+      let rTimes = 0;
+      for (const h in heartsPos) {
         debug("Try sending heart to", h);
-        var success = this.sendHeart(heartsPos[h]);
+        let success = this.sendHeart(heartsPos[h]);
         debug("Tried sending heart to", h, "with success=" + success);
         if (!success) {
           debug("Try again sending heart to", h);
@@ -2955,8 +3192,8 @@ Tsum.prototype.taskSendHearts = function() {
     tap(0, 0, 20); // Avoid overlap between zero score and pointer location
   }
 
-  var startTime = Date.now();
-  var finished;
+  const startTime = Date.now();
+  let finished;
   do {
     finished = this.doHeartSending(startTime);
     debug("Finished doHeartSending with result " + finished);
@@ -2973,13 +3210,13 @@ Tsum.prototype.taskSendHearts = function() {
 Tsum.prototype.taskAutoUnlockLevel = function() {
   if (this.findPage() === 'GamePause')
     return;
-  var btn;
-  var i;
-  var img;
-  var formerOrderButton = null;
-  var orderButtons;
-  var buttonCloseTsumCollectionOrder;
-  var buttonOrderByLevelLock;
+  let btn;
+  let i;
+  let img;
+  let formerOrderButton = null;
+  let orderButtons;
+  let buttonCloseTsumCollectionOrder;
+  let buttonOrderByLevelLock;
   log(this.logs.tsumsPage);
   this.goTsumsPage();
   this.lastVisitedPages.autoUnlockLevelTsum = true;
@@ -2989,36 +3226,39 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
   this.tap(Button.outOpenTsumCollectionOrder);
   this.sleep(1000);
   img = this.screenshot();
-  // detect old or new ordering view
-  if (isSameColor(Button.outCloseTsumCollectionOrderNew, this.getColor(img, Button.outCloseTsumCollectionOrderNew))) {
-    orderButtons = [
-      Button.outTsumCollectionOrderByReleaseDateNew,
-      Button.outTsumCollectionOrderByLevelLockNew,
-      Button.outTsumCollectionOrderBySkillNew,
-      Button.outTsumCollectionOrderFavoritesNew,
-      Button.outTsumCollectionOrderByEntryDateNew
-    ];
-    buttonCloseTsumCollectionOrder = Button.outCloseTsumCollectionOrderNew;
-    buttonOrderByLevelLock = Button.outTsumCollectionOrderByLevelLockNew;
-  } else {
-    orderButtons = [
-      Button.outTsumCollectionOrderByReleaseDateOld,
-      Button.outTsumCollectionOrderByLevelLockOld,
-      Button.outTsumCollectionOrderBySkillOld,
-      Button.outTsumCollectionOrderFavoritesOld
-    ];
-    buttonCloseTsumCollectionOrder = Button.outCloseTsumCollectionOrderOld;
-    buttonOrderByLevelLock = Button.outTsumCollectionOrderByLevelLockOld;
-  }
-  for (i = 0; i < orderButtons.length; i++) {
-    btn = orderButtons[i];
-    if (isSameColor(btn, this.getColor(img, btn))) {
-      formerOrderButton = btn;
-      debug("Found active button: " + btn.name);
-      break;
+  try {
+    // detect old or new ordering view
+    if (isSameColor(Button.outCloseTsumCollectionOrderNew, this.getColor(img, Button.outCloseTsumCollectionOrderNew))) {
+      orderButtons = [
+        Button.outTsumCollectionOrderByReleaseDateNew,
+        Button.outTsumCollectionOrderByLevelLockNew,
+        Button.outTsumCollectionOrderBySkillNew,
+        Button.outTsumCollectionOrderFavoritesNew,
+        Button.outTsumCollectionOrderByEntryDateNew
+      ];
+      buttonCloseTsumCollectionOrder = Button.outCloseTsumCollectionOrderNew;
+      buttonOrderByLevelLock = Button.outTsumCollectionOrderByLevelLockNew;
+    } else {
+      orderButtons = [
+        Button.outTsumCollectionOrderByReleaseDateOld,
+        Button.outTsumCollectionOrderByLevelLockOld,
+        Button.outTsumCollectionOrderBySkillOld,
+        Button.outTsumCollectionOrderFavoritesOld
+      ];
+      buttonCloseTsumCollectionOrder = Button.outCloseTsumCollectionOrderOld;
+      buttonOrderByLevelLock = Button.outTsumCollectionOrderByLevelLockOld;
     }
+    for (i = 0; i < orderButtons.length; i++) {
+      btn = orderButtons[i];
+      if (isSameColor(btn, this.getColor(img, btn))) {
+        formerOrderButton = btn;
+        debug("Found active button: " + btn.name);
+        break;
+      }
+    }
+  } finally {
+    releaseImage(img);
   }
-  releaseImage(img);
 
   this.tap(buttonOrderByLevelLock);
   this.sleep();
@@ -3030,36 +3270,41 @@ Tsum.prototype.taskAutoUnlockLevel = function() {
   this.sleep(3000);
 
   // check all
+  // Declared outside the do/while so the loop condition can read it.
+  let allLocked = true;
   do {
     this.requestTsumMonitor();
-    var allLocked = true;
-    var lockIcons = Page.TsumsPage.lockIcons;
+    allLocked = true;
+    const lockIcons = Page.TsumsPage.lockIcons;
     img = this.screenshot();
-    for (i = 0; i < lockIcons.length; i++) {
-      var lockIcon = lockIcons[i];
-      debug("Checking for lock on i=" + i);
-      var realColor = this.getColor(img, lockIcon);
-      debug("For i=" + i + " I found color " + JSON.stringify(realColor));
-      if (isSameColor(lockIcon, realColor)) {
-        debug("Unlocking i=" + i);
-        this.lastVisitedPages.autoUnlockLevelUnlock = true;
-        var tsumButton = {x: lockIcon.x, y: lockIcon.y - 100};
-        this.tap(tsumButton);
-        this.sleep(1000);
-        this.tap(Button.outTsumCollectionDoUnlock);
-        this.sleep(1000);
-        this.tap({x: 814, y: 1071, r: 247, g: 174, b: 8}); // OK button
-        this.sleep(5000);
-        this.tap({x: 600, y: 600}); // just tap anywhere to close the confirmation dialog
-        this.sleep(1000);
-        debug("Unlocked i=" + i);
-      } else {
-        debug("No lock found for i=" + i);
-        allLocked = false;
-        break;
+    try {
+      for (i = 0; i < lockIcons.length; i++) {
+        const lockIcon = lockIcons[i];
+        debug("Checking for lock on i=" + i);
+        const realColor = this.getColor(img, lockIcon);
+        debug("For i=" + i + " I found color " + JSON.stringify(realColor));
+        if (isSameColor(lockIcon, realColor)) {
+          debug("Unlocking i=" + i);
+          this.lastVisitedPages.autoUnlockLevelUnlock = true;
+          const tsumButton = {x: lockIcon.x, y: lockIcon.y - 100};
+          this.tap(tsumButton);
+          this.sleep(1000);
+          this.tap(Button.outTsumCollectionDoUnlock);
+          this.sleep(1000);
+          this.tap({x: 814, y: 1071, r: 247, g: 174, b: 8}); // OK button
+          this.sleep(5000);
+          this.tap({x: 600, y: 600}); // just tap anywhere to close the confirmation dialog
+          this.sleep(1000);
+          debug("Unlocked i=" + i);
+        } else {
+          debug("No lock found for i=" + i);
+          allLocked = false;
+          break;
+        }
       }
+    } finally {
+      releaseImage(img);
     }
-    releaseImage(img);
 
     // scroll to next page if all Tsums were locked
     if (allLocked) {
@@ -3094,8 +3339,8 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
     log("Nothing to do", "taskAutoBuyBoxes");
     return;
   }
-  var storeHasOpened = this.goTsumTsumStorePage();
-  var lastPage = this.findPageObject(1, 200);
+  const storeHasOpened = this.goTsumTsumStorePage();
+  let lastPage = this.findPageObject(1, 200);
   if (!storeHasOpened) {
     log("Leaving AutoBuy Boxes.");
     this.autobuyBoxes = 0;
@@ -3103,10 +3348,10 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
   }
   this.lastVisitedPages.autoBuyBoxesStore = true;
   log("Start buying ", this.autobuyBoxes, "boxes - taskAutoBuyBoxes");
-  var countUnknownPages = 0, countSamePage = 0;
+  let countUnknownPages = 0, countSamePage = 0;
   while (this.isRunning && storeHasOpened && this.autobuyBoxes > 0 && countSamePage < 60) {
     this.requestTsumMonitor();
-    var page = this.findPageObject(1, 200);
+    let page = this.findPageObject(1, 200);
     if (page != null) {
       countUnknownPages = 0;
       this.lastVisitedPages['autoBuyBoxes' + page.name] = true;
@@ -3121,9 +3366,13 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
           log("Bought box.", this.autobuyBoxes, "left");
         }
 
-        var img = this.screenshot();
-        var nextColor = this.getColor(img, page.next);
-        releaseImage(img);
+        const img = this.screenshot();
+        let nextColor;
+        try {
+          nextColor = this.getColor(img, page.next);
+        } finally {
+          releaseImage(img);
+        }
         if (this.autobuyBoxes === 0) {
           log("Buying finished");
           break;
@@ -3194,12 +3443,12 @@ Tsum.prototype.taskRequestTsumMonitor = function() {
 }
 
 Tsum.prototype.requestTsumMonitor = function(force) {
-  var url = this.tsumMonitorUrl;
+  const url = this.tsumMonitorUrl;
   if (url.length === 0)
     return;
   if (this.nextMonitorExecution <= Date.now() && Object.keys(this.lastVisitedPages).length >= 2) {
     log("TsumMonitor - GET", url);
-    var response = httpClient('GET', url, '', {});
+    const response = httpClient('GET', url, '', {});
     log("TsumMonitor - Response:", response.trim());
     this.nextMonitorExecution = Date.now() + 60 * 1000;
     this.lastVisitedPages = {};
@@ -3216,7 +3465,7 @@ Tsum.prototype.taskTsumAppRestart = function () {
     this.goFriendPage();
 
     log("Restarting TsumApp");
-    var packageName = getPackageName(ts.isJP);
+    const packageName = getPackageName(ts.isJP);
     execute("am force-stop " + packageName);
 
     ts.sleep(10000);
@@ -3228,18 +3477,22 @@ Tsum.prototype.taskTsumAppRestart = function () {
 }
 
 Tsum.prototype.sendHeart = function(btn) {
-  var unknownCount = 0;
-  var isGift = false;
-  var isSent = false;
+  let unknownCount = 0;
+  let isGift = false;
+  let isSent = false;
   // log("sendHeart");
   while (this.isRunning) {
-    var page = this.findPage(1, 300);
+    const page = this.findPage(1, 300);
     if (page === "FriendPage") {
       // log("sendHeart A", Date.now() / 1000);
-      var img = this.screenshot();
-      var isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
-      var isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 40);
-      releaseImage(img);
+      const img = this.screenshot();
+      let isSendBtn, isSentBtn;
+      try {
+        isSendBtn = isSameColor(btn.color, this.getColor(img, btn), 40);
+        isSentBtn = isSameColor(btn.color2, this.getColor(img, btn), 40);
+      } finally {
+        releaseImage(img);
+      }
       if ((isSendBtn || !isSentBtn) && !isGift && !isSent) {
         debug("sendHeart A-A", Date.now() / 1000);
         this.tap(btn);
@@ -3283,7 +3536,7 @@ Tsum.prototype.sleep = function(t) {
   if (typeof t !== 'number') {
     t = 1000;
   }
-  var waitTime = t;
+  let waitTime = t;
   while (this.isRunning && waitTime > 0) {
     if (waitTime <= 500) {
       sleep(waitTime);
@@ -3335,7 +3588,7 @@ function start(settings) {
   if (settings['recordSenderEnlarge']) {
     ts.resizeRatio = 1;
   }
-  var yOffset = ts.receiveSecondItem ? 202 : 0;
+  const yOffset = ts.receiveSecondItem ? 202 : 0;
   Button.outReceiveOne.y = Button.outReceiveOneBase.y + yOffset;
   Button.outReceiveOneRuby.y = Button.outReceiveOneRubyBase.y + yOffset;
   Button.outReceiveOneAd.y = Button.outReceiveOneAdBase.y + yOffset;
@@ -3359,12 +3612,12 @@ function start(settings) {
   ts.tsumMonitorUrl = settings['tsumMonitorUrl'] || "";
   ts.tsumAppRestartFrequency = settings['tsumAppRestartFrequency'];
 
-  if (!checkFunction(TaskController)) {
+  if (!checkFunction(TsumTaskController)) {
     console.log("File lose...");
     return;
   }
 
-  gTaskController = new TaskController();
+  gTaskController = new TsumTaskController();
   if (ts.tsumMonitorUrl.length > 0) {
     gTaskController.newTask('requestTsumMonitor', ts.taskRequestTsumMonitor.bind(ts), 30 * 1000, 0);
   }
@@ -3412,9 +3665,9 @@ function stop() {
 
 function genRecordTable() {
   console.log("Generate Record...");
-  var recordFile = getStoragePath() + "/tsum_record/record.txt";
-  var txt = readFile(recordFile);
-  var record = {};
+  const recordFile = getStoragePath() + "/tsum_record/record.txt";
+  const txt = readFile(recordFile);
+  let record = {};
   if (txt !== undefined && txt !== "") {
     try {
       record = JSON.parse(txt);
@@ -3426,16 +3679,18 @@ function genRecordTable() {
   }
 
   // enhance records with total and average hearts per filename
-  var dayMapCount = {};
-  var renderRecords = [];
-  for (var filename in record) {
+  const dayMapCount = {};
+  const renderRecords = [];
+  // Reused across the sibling loops below (previously function-scoped vars).
+  let filename: string, dayTime: string, j: number;
+  for (filename in record) {
     (function (filename) {
       if (filename !== "hearts_count") {
-        var totalDay = 0;
-        var totalCount = 0;
-        var recordElement = record[filename];
-        for (var dayTime in recordElement.receiveCounts) {
-          var dayCount = recordElement.receiveCounts[dayTime];
+        let totalDay = 0;
+        let totalCount = 0;
+        const recordElement = record[filename];
+        for (const dayTime in recordElement.receiveCounts) {
+          const dayCount = recordElement.receiveCounts[dayTime];
 
           if (dayMapCount[+dayTime] === undefined) {
             dayMapCount[+dayTime] = 0;
@@ -3445,7 +3700,7 @@ function genRecordTable() {
           totalDay++;
           totalCount += dayCount;
         }
-        var avg = 0;
+        let avg: string | number = 0;
         if (totalDay !== 0) {
           avg = (totalCount / totalDay).toFixed(1);
         }
@@ -3454,7 +3709,7 @@ function genRecordTable() {
         recordElement.filename = filename;
         renderRecords.push(recordElement);
       }
-    })(filename, dayMapCount, renderRecords);
+    })(filename);
   }
 
   // sort records descending by total
@@ -3463,8 +3718,8 @@ function genRecordTable() {
   });
 
   // create sorted dayTime array
-  var dayTimesSorted = [];
-  for (var dayTime in dayMapCount) {
+  const dayTimesSorted = [];
+  for (dayTime in dayMapCount) {
     if (dayMapCount.hasOwnProperty(dayTime)) {
       dayTimesSorted.push(dayTime);
     }
@@ -3474,37 +3729,37 @@ function genRecordTable() {
   });
 
   // render records
-  var html = "<html><body><style>table { border-collapse: collapse; } th, td { border: solid 1px black; text-align: right; padding: 4px 10px 4px 10px; } .records td:nth-child(2n+5), .records th:nth-child(2n+5) { background-color: lightgray; } .all { background-color: darkseagreen; } .avg { background-color: lightsteelblue; border-right-width: 5px; }</style>";
+  let html = "<html><body><style>table { border-collapse: collapse; } th, td { border: solid 1px black; text-align: right; padding: 4px 10px 4px 10px; } .records td:nth-child(2n+5), .records th:nth-child(2n+5) { background-color: lightgray; } .all { background-color: darkseagreen; } .avg { background-color: lightsteelblue; border-right-width: 5px; }</style>";
   html += "<table class='records'>";
   html += "<tr><th>UserImage</th><th class='all'>All</th><th class='avg'>Avg</th>";
-  for (var j = 0; j < dayTimesSorted.length ; j++) {
+  for (j = 0; j < dayTimesSorted.length ; j++) {
     dayTime = dayTimesSorted[j];
-    html += '<th>' + getDayTimeString(new Date(dayTime * (24 * 60 * 60 * 1000))) + '</th>';
+    html += '<th>' + getDayTimeString(new Date(+dayTime * (24 * 60 * 60 * 1000))) + '</th>';
   }
   html += "</tr>";
-  for (var i = 0; i < renderRecords.length; i += 1) {
-    var renderRecord = renderRecords[i];
+  for (let i = 0; i < renderRecords.length; i += 1) {
+    const renderRecord = renderRecords[i];
     filename = renderRecord.filename;
     html += "<tr>";
     // user image
-    var filePath = getStoragePath()+"/tsum_record/" + filename;
-    var tmpImg = openImage(filePath);
-    var base64 = getBase64FromImage(tmpImg);
+    const filePath = getStoragePath()+"/tsum_record/" + filename;
+    const tmpImg = openImage(filePath);
+    const base64 = getBase64FromImage(tmpImg);
     releaseImage(tmpImg);
     html += "<td><img src='data:image/png;base64," + base64 + "' /></td>";
 
-    var totalDay = 0;
-    var totalCount = 0;
-    var tmpHtml = "";
+    let totalDay = 0;
+    let totalCount = 0;
+    let tmpHtml = "";
     for (j = 0; j < dayTimesSorted.length ; j++) {
       dayTime = dayTimesSorted[j];
-      var dayCount = parseInt(renderRecord.receiveCounts[dayTime]) || 0;
+      const dayCount = parseInt(renderRecord.receiveCounts[dayTime]) || 0;
       tmpHtml += '<td>' + dayCount + '</td>';
 
       totalDay++;
       totalCount += dayCount;
     }
-    var avg = 0;
+    let avg: string | number = 0;
     if (totalDay !== 0) {
       avg = (totalCount/totalDay).toFixed(1);
     }
@@ -3520,7 +3775,7 @@ function genRecordTable() {
   html += "<tr><th>Date</th><th>Hearts</th></tr>";
   for (j = 0; j < dayTimesSorted.length ; j++) {
     dayTime = dayTimesSorted[j];
-    var date = new Date(+dayTime * (24 * 60 * 60 * 1000));
+    const date = new Date(+dayTime * (24 * 60 * 60 * 1000));
     html += "<tr>";
     html += "<td>" + getDayTimeString(date) + "</td>";
     html += "<td>" + dayMapCount[dayTime] + "</td>";
@@ -3528,8 +3783,8 @@ function genRecordTable() {
   }
   html += "</table>";
   html += "</body></html>";
-  var recordName = getRecordFilename();
-  var oPath = getStoragePath() + "/tsum_record/" + recordName;
+  const recordName = getRecordFilename();
+  const oPath = getStoragePath() + "/tsum_record/" + recordName;
   writeFile(oPath, html);
   return "Download: " + getStoragePath()+"/tsum_record to PC" + "<br />Open: " + recordName;
 }
@@ -3539,16 +3794,16 @@ function getDayTimeString(d) {
 }
 
 function getRecordFilename() {
-  var d = new Date();
+  const d = new Date();
   return 'recordTable_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
 }
 
 // input: rgb in [0,255], out: h in [0,360) and s,v in [0,100]
 function rgb2hsv(rgb) {
-  var r = rgb.r / 255;
-  var g = rgb.g / 255;
-  var b = rgb.b / 255;
-  var v = Math.max(r, g, b), c = v - Math.min(r, g, b);
-  var h = c && ((v === r) ? (g - b) / c : ((v === g) ? 2 + (b - r) / c : 4 + (r - g) / c));
+  const r = rgb.r / 255;
+  const g = rgb.g / 255;
+  const b = rgb.b / 255;
+  const v = Math.max(r, g, b), c = v - Math.min(r, g, b);
+  const h = c && ((v === r) ? (g - b) / c : ((v === g) ? 2 + (b - r) / c : 4 + (r - g) / c));
   return {h: 60 * (h < 0 ? h + 6 : h), s: Math.round(v && c / v * 100), v: Math.round(v * 100)};
 }
