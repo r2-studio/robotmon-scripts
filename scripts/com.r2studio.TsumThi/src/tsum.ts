@@ -995,7 +995,7 @@ Tsum.prototype.sampleMyTsumColor = function() {
   try {
     smooth(img, 1, 7);
     convertColor(img, 40);
-    smooth(img, 1, 22);
+    smooth(img, 1, Config.colorSampleSmooth);
     let sumB = 0, sumG = 0, sumR = 0, count = 0;
     for (let dy = -3; dy <= 3; dy++) {
       for (let dx = -3; dx <= 3; dx++) {
@@ -1026,6 +1026,18 @@ Tsum.prototype.scanBoardQuick = function() {
     debug(this.logs.recognitionStart);
     const tcs = classifyTsums(points);
     tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
+    if (this.debug) {
+      // HSV cluster centers — compare these (and the inter-cluster distance3D)
+      // against the boardImg circles when tuning the color-clustering settings.
+      for (let ci = 0; ci < tcs.length; ci++) {
+        let line = 'cluster ' + ci + ': n=' + tcs[ci].points.length
+          + ' hsv=(' + Math.round(tcs[ci].b) + ',' + Math.round(tcs[ci].g) + ',' + Math.round(tcs[ci].r) + ')';
+        for (let cj = 0; cj < ci; cj++) {
+          line += ' d' + cj + '=' + Math.round(distance3D(tcs[ci], tcs[cj]));
+        }
+        console.log(line);
+      }
+    }
 
     // Identify which color cluster (if any) is the player's MyTsum by matching
     // the skill-button portrait color against cluster centers.
@@ -1942,19 +1954,19 @@ Tsum.prototype.requestTsumMonitor = function(force) {
 // either way a change means something happened). Runs between tasks, so it
 // recovers from a stuck game screen, not from a task wedged in its own loop.
 Tsum.prototype.taskWatchdog = function () {
-  const count = Object.keys(this.lastVisitedPages).length;
-  if (count !== this._lastSeenCount) {
-    this._lastSeenCount = count;
-    this._lastProgress = Date.now();
-    return;
-  }
-  const stalledMs = Date.now() - this._lastProgress;
-  if (stalledMs >= this.stuckTimeoutMs) {
-    log("[Watchdog] no progress for " + Math.round(stalledMs / 1000) + "s, restarting Tsum app");
-    try { this.taskTsumAppRestart(); } catch (e) { log("[Watchdog] restart failed: " + e); }
-    this._lastProgress = Date.now();
-    this._lastSeenCount = Object.keys(this.lastVisitedPages).length;
-  }
+  // const count = Object.keys(this.lastVisitedPages).length;
+  // if (count !== this._lastSeenCount) {
+  //   this._lastSeenCount = count;
+  //   this._lastProgress = Date.now();
+  //   return;
+  // }
+  // const stalledMs = Date.now() - this._lastProgress;
+  // if (stalledMs >= this.stuckTimeoutMs) {
+  //   log("[Watchdog] no progress for " + Math.round(stalledMs / 1000) + "s, restarting Tsum app");
+  //   try { this.taskTsumAppRestart(); } catch (e) { log("[Watchdog] restart failed: " + e); }
+  //   this._lastProgress = Date.now();
+  //   this._lastSeenCount = Object.keys(this.lastVisitedPages).length;
+  // }
 }
 
 Tsum.prototype.taskTsumAppRestart = function () {

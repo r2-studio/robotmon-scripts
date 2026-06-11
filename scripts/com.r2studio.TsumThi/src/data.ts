@@ -8,7 +8,20 @@ var Config: TsumConfig = {
   screenResize: 200,
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
-  debugLogs: false
+  debugLogs: false,
+  // Color-clustering tuning (see distance3D / classifyTsums / findTsums).
+  // Hue separates tsum types far better than saturation/value, so it gets
+  // extra weight: 20 means hue differences count 2x. 10 disables the boost.
+  colorHueWeightX10: 20,
+  // Discounts applied when hue/saturation are close (merge shade variations
+  // of the same tsum across the board's uneven lighting).
+  colorHueBonus: 10,
+  colorSatBonus: 10,
+  // Two sampled tsum colors closer than this belong to the same cluster.
+  colorMergeDist: 15,
+  // Blur kernel applied before sampling tsum colors. Larger evens out face
+  // details but bleeds neighboring tsums' colors into the sample.
+  colorSampleSmooth: 22
 };
 
 // Definitions assuming screen resolution of 1080 * 1920

@@ -5,6 +5,16 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [v82] - 2026-06-10
+
+### Fixed
+- Tsums with neighboring hues but matching saturation/brightness (e.g. green alien + orange car) could be clustered as the same tsum type, producing mixed-color chains the game rejects. Hue differences are now weighted 2x in the color distance.
+
+### Added
+- "Tsum color recognition tuning" settings group (hue weight, hue/saturation similarity bonuses, color merge distance, color sample blur) to fine-tune color clustering.
+- With "Debug game" enabled, each board scan logs the HSV center, point count, and pairwise distances of every color cluster.
+
+
 ## [v81] - 2026-05-13
 
 ### Fixed

@@ -2,7 +2,7 @@
 // Converted from settings.js - best-effort TypeScript port.
 "use strict";
 
-var VERSION = '81';
+var VERSION = '82';
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -343,6 +343,57 @@ var settings = [
             max: 120,
             step: 6,
             default: 0
+        }
+    ],
+    [
+        {
+            title: '<b>Tsum color recognition tuning</b><br>Controls how tsums are grouped by color. If two similar-colored tsums (e.g. green alien + orange car) get linked as one chain, raise hue weight or lower the bonuses/merge distance. Enable "Debug game" to log cluster colors and distances.',
+            title_zh_TW: '<b>Tsum顏色辨識調整</b><br>控制Tsum的顏色分組。若兩種顏色相近的Tsum（如綠色三眼怪+橘色汽車）被誤連成一條鏈，請提高色相權重或降低折扣/合併距離。開啟「调试游戏」可記錄分組顏色與距離。'
+        },
+        {
+            key: 'colorHueWeightX10',
+            title: 'Hue weight x10 (10 = unweighted; higher separates similar-hue tsums)',
+            title_zh_TW: '色相權重 x10（10 = 不加權；越高越能區分相近色相）',
+            default: 20,
+            step: 5,
+            max: 50,
+            min: 5
+        },
+        {
+            key: 'colorHueBonus',
+            title: 'Similar hue bonus (distance discount when hues are close)',
+            title_zh_TW: '相近色相折扣（色相接近時的距離折扣）',
+            default: 10,
+            step: 5,
+            max: 20,
+            min: 0
+        },
+        {
+            key: 'colorSatBonus',
+            title: 'Similar saturation bonus (distance discount when saturations are close)',
+            title_zh_TW: '相近飽和度折扣（飽和度接近時的距離折扣）',
+            default: 10,
+            step: 5,
+            max: 20,
+            min: 0
+        },
+        {
+            key: 'colorMergeDist',
+            title: 'Color merge distance (lower = stricter same-tsum grouping)',
+            title_zh_TW: '顏色合併距離（越低分組越嚴格）',
+            default: 15,
+            step: 5,
+            max: 30,
+            min: 5
+        },
+        {
+            key: 'colorSampleSmooth',
+            title: 'Color sample blur (lower = less color bleed from neighbor tsums)',
+            title_zh_TW: '顏色取樣模糊（越低越不受鄰近Tsum顏色影響）',
+            default: 22,
+            step: 4,
+            max: 30,
+            min: 6
         }
     ]
 ];

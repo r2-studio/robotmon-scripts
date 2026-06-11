@@ -223,7 +223,7 @@ function findTsums(img) {
 
   const points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
 
-  smooth(hsvImg, 1, 22);
+  smooth(hsvImg, 1, Config.colorSampleSmooth);
   const results = [];
   for (const k in points) {
     const p = points[k];
@@ -250,10 +250,16 @@ function findTsums(img) {
   return results;
 }
 
+// Distance between two sampled tsum colors. The image is HSV at this point,
+// so b/g/r hold H/S/V. Hue is the discriminator between tsum types — two
+// fully-saturated tsums a hue-step apart (e.g. green alien vs orange car) are
+// different tsums even though their S/V nearly match — so the hue diff is
+// weighted up before the similarity discounts apply.
 function distance3D(p1, p2) {
-  let d = Math.sqrt((p1.b-p2.b)*(p1.b-p2.b) + (p1.g-p2.g)*(p1.g-p2.g) + (p1.r-p2.r)*(p1.r-p2.r));
-  if (Math.abs(p1.b - p2.b) < 20) { d -= 10; }
-  if (Math.abs(p1.g - p2.g) < 20) { d -= 10; }
+  const dh = (p1.b - p2.b) * (Config.colorHueWeightX10 / 10);
+  let d = Math.sqrt(dh*dh + (p1.g-p2.g)*(p1.g-p2.g) + (p1.r-p2.r)*(p1.r-p2.r));
+  if (Math.abs(p1.b - p2.b) < 20) { d -= Config.colorHueBonus; }
+  if (Math.abs(p1.g - p2.g) < 20) { d -= Config.colorSatBonus; }
   if (p1.r < 120 && p2.r < 120) { d -= 20; }
   return d;
 }
@@ -271,7 +277,7 @@ function classifyTsums(points) {
     for(const j in tcs) {
       const tc = tcs[j];
       const d = distance3D(tc, p);
-      if (d < 15) {
+      if (d < Config.colorMergeDist) {
         const count = tc.points.length + 1;
         isSame = true;
         tc.sumb += p.b; tc.sumg += p.g; tc.sumr += p.r;

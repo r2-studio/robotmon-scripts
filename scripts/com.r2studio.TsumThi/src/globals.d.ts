@@ -100,6 +100,12 @@ interface TsumConfig {
   gameContinueDelay: number;
   colors: number[][];
   debugLogs: boolean;
+  // Color-clustering tuning, overridable from the settings page.
+  colorHueWeightX10: number;
+  colorHueBonus: number;
+  colorSatBonus: number;
+  colorMergeDist: number;
+  colorSampleSmooth: number;
 }
 
 type PageMap = { [name: string]: PageDef };

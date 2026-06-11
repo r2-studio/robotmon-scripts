@@ -51,6 +51,14 @@ function start(settings) {
   }
 
   Config.debugLogs = settings['debugLogs'];
+  // Color-clustering tuning. Keep the data.ts defaults when launched from an
+  // older settings page that doesn't send these keys (0 is a valid value, so
+  // check the type rather than truthiness).
+  if (typeof settings['colorHueWeightX10'] === 'number') { Config.colorHueWeightX10 = settings['colorHueWeightX10']; }
+  if (typeof settings['colorHueBonus'] === 'number') { Config.colorHueBonus = settings['colorHueBonus']; }
+  if (typeof settings['colorSatBonus'] === 'number') { Config.colorSatBonus = settings['colorSatBonus']; }
+  if (typeof settings['colorMergeDist'] === 'number') { Config.colorMergeDist = settings['colorMergeDist']; }
+  if (typeof settings['colorSampleSmooth'] === 'number') { Config.colorSampleSmooth = settings['colorSampleSmooth']; }
   ts.autobuyBoxes = settings['autobuyBoxes'];
   ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
   ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];
@@ -80,7 +88,7 @@ function start(settings) {
     gTaskController.newTask('taskTsumAppRestart', ts.taskTsumAppRestart.bind(ts), settings['tsumAppRestartFrequency'] * 60 * 60 * 1000, 0, true);
   }
   // Layer 2: stuck watchdog. Restarts the game app if no progress for stuckTimeoutMs.
-  gTaskController.newTask('taskWatchdog', ts.taskWatchdog.bind(ts), 10 * 1000, 0);
+  // gTaskController.newTask('taskWatchdog', ts.taskWatchdog.bind(ts), 10 * 1000, 0);
   if (checkFunction(outRange)) {
     if (settings['autoPlayGame']) {
       if (settings['unlockLevelHoursWait'] > 0) {
