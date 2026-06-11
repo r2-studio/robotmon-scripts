@@ -30,6 +30,7 @@ function Tsum(isJP, detect, logs) {
   this.playResizeHeight = Config.screenResize;
 
   this.tsumCount = 5;
+  this.maxChainsPerScan = 6;
   this.isJP = isJP;
   this.logs = logs;
   this.scoreItem = false;
@@ -995,6 +996,18 @@ Tsum.prototype.sampleMyTsumColor = function() {
   try {
     smooth(img, 1, 7);
     convertColor(img, 40);
+    if (!Config.experimentalConnections) {
+      smooth(img, 1, 22);
+      let sumB = 0, sumG = 0, sumR = 0, count = 0;
+      for (let dy = -3; dy <= 3; dy++) {
+        for (let dx = -3; dx <= 3; dx++) {
+          const c = getImageColor(img, 20 + dx, 20 + dy);
+          sumB += c.b; sumG += c.g; sumR += c.r;
+          count++;
+        }
+      }
+      return { b: sumB / count, g: sumG / count, r: sumR / count };
+    }
     smooth(img, 1, Config.colorSampleSmooth);
     const hs = [], ss = [], vs = [];
     for (let dy = -3; dy <= 3; dy++) {
@@ -1028,7 +1041,9 @@ Tsum.prototype.scanBoardQuick = function() {
     if (this.debug) {
       // HSV cluster centers — compare these (and the inter-cluster distance3D)
       // against the boardImg circles when tuning the color-clustering settings.
+      let classified = 0;
       for (let ci = 0; ci < tcs.length; ci++) {
+        classified += tcs[ci].points.length;
         let line = 'cluster ' + ci + ': n=' + tcs[ci].points.length
           + ' hsv=(' + Math.round(tcs[ci].b) + ',' + Math.round(tcs[ci].g) + ',' + Math.round(tcs[ci].r) + ')';
         for (let cj = 0; cj < ci; cj++) {
@@ -1036,6 +1051,9 @@ Tsum.prototype.scanBoardQuick = function() {
         }
         console.log(line);
       }
+      // If "dropped" is regularly high, the noise cutoff (colorMergeDist) is
+      // eating real tsums — raise it.
+      console.log('detected ' + points.length + ' tsums, dropped ' + (points.length - classified) + ' as color noise');
     }
 
     // Identify which color cluster (if any) is the player's MyTsum by matching
@@ -1109,7 +1127,11 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
     debug(this.logs.calculationPathStart);
     let paths = calculatePaths(board, this.logs, this.myTsumIdx, this.bonus5to4);
-    paths = paths.splice(0, 6);
+    // Each linked chain is a clear that refreshes the combo timer; the combo
+    // is only at risk during the scan gap between batches. More chains per
+    // scan means fewer gaps, but chains linked late in a batch can miss
+    // because earlier clears already reshuffled the board.
+    paths = paths.splice(0, this.maxChainsPerScan);
     const isBubble = this.link(paths);
     if (isBubble) {
       debug(this.logs.bubbleGenerated);

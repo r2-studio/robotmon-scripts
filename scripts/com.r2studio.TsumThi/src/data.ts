@@ -9,7 +9,11 @@ var Config: TsumConfig = {
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
   debugLogs: false,
+  // Gates the reworked color recognition below. Off = original pipeline
+  // (plain color distance, greedy clustering, blurred 5-pixel sampling).
+  experimentalConnections: false,
   // Color-clustering tuning (see distance3D / classifyTsums / findTsums).
+  // Only used when experimentalConnections is on.
   // Hue separates tsum types far better than saturation/value, so it gets
   // extra weight: 20 means hue differences count 2x. 10 disables the boost.
   colorHueWeightX10: 20,

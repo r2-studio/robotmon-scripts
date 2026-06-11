@@ -100,7 +100,12 @@ interface TsumConfig {
   gameContinueDelay: number;
   colors: number[][];
   debugLogs: boolean;
-  // Color-clustering tuning, overridable from the settings page.
+  // "Experimental Tsum Connections": gates the reworked color recognition
+  // (circular/sat-weighted hue, k-means refinement, ring-median sampling).
+  // Off = original pipeline.
+  experimentalConnections: boolean;
+  // Color-clustering tuning, overridable from the settings page. Only used
+  // when experimentalConnections is on.
   colorHueWeightX10: number;
   colorHueBonus: number;
   colorSatBonus: number;

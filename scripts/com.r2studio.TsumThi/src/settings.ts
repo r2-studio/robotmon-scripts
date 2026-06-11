@@ -113,6 +113,15 @@ var settings = [
             default: false
         },
         {
+            key: 'maxChainsPerScan',
+            title: 'Chains per board scan (higher keeps combos alive longer, but late chains may miss as the board shifts)',
+            title_zh_TW: '每次掃描連線數（越高越能維持combo，但盤面變動後較後的連線可能失誤）',
+            default: 6,
+            step: 1,
+            max: 12,
+            min: 1
+        },
+        {
             key: 'bonusScore',
             title: '+Score',
             title_zh_TW: '道具Score',
@@ -347,8 +356,14 @@ var settings = [
     ],
     [
         {
-            title: '<b>Tsum color recognition tuning</b><br>Controls how tsums are grouped by color. If two similar-colored tsums (e.g. green alien + orange car) get linked as one chain, raise hue weight or lower the bonuses/merge distance. Enable "Debug game" to log cluster colors and distances.',
-            title_zh_TW: '<b>Tsum顏色辨識調整</b><br>控制Tsum的顏色分組。若兩種顏色相近的Tsum（如綠色三眼怪+橘色汽車）被誤連成一條鏈，請提高色相權重或降低折扣/合併距離。開啟「调试游戏」可記錄分組顏色與距離。'
+            title: '<b>Experimental Tsum Connections</b><br>Reworked color recognition: hue-weighted color matching, k-means clustering, ring-median sampling. Off = original behavior; the tuning values below only apply when enabled. If two similar-colored tsums (e.g. green alien + orange car) get linked as one chain, raise hue weight or lower the bonuses/match distance. Enable "Debug game" to log cluster colors and distances.',
+            title_zh_TW: '<b>實驗性Tsum連線</b><br>重做的顏色辨識：色相加權比對、k-means分組、環狀中位數取樣。關閉 = 原始行為；以下調整值僅在開啟時生效。若兩種顏色相近的Tsum（如綠色三眼怪+橘色汽車）被誤連成一條鏈，請提高色相權重或降低折扣/匹配距離。開啟「调试游戏」可記錄分組顏色與距離。'
+        },
+        {
+            key: 'experimentalTsumConnections',
+            title: 'Experimental Tsum Connections',
+            title_zh_TW: '實驗性Tsum連線',
+            default: false
         },
         {
             key: 'colorHueWeightX10',

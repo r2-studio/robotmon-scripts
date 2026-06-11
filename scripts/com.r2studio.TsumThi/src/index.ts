@@ -30,6 +30,9 @@ function start(settings) {
   ts.keepRuby = settings['receiveHeartsSkipRuby'];
   ts.sendHeartMaxDuring = settings['sendHeartsMaxRuntime'] * 60 * 1000;
   ts.useFan = settings['useFan'];
+  if (typeof settings['maxChainsPerScan'] === 'number' && settings['maxChainsPerScan'] >= 1) {
+    ts.maxChainsPerScan = settings['maxChainsPerScan'];
+  }
   if (settings['recordSenderEnlarge']) {
     ts.resizeRatio = 1;
   }
@@ -51,6 +54,9 @@ function start(settings) {
   }
 
   Config.debugLogs = settings['debugLogs'];
+  // "Experimental Tsum Connections": reworked color recognition, off by
+  // default. The tuning values below only take effect when it is on.
+  Config.experimentalConnections = !!settings['experimentalTsumConnections'];
   // Color-clustering tuning. Keep the data.ts defaults when launched from an
   // older settings page that doesn't send these keys (0 is a valid value, so
   // check the type rather than truthiness).

@@ -149,6 +149,7 @@ function findLongestTsumPath(neighbors, comp, budgetPerStart) {
 }
 
 function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
+  const startTime = Date.now();
   const groups = {};
   for (const t in board) {
     const tsum = board[t];
@@ -198,7 +199,7 @@ function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
     if (a.length < b.length) { return 1; }
     return -1;
   });
-  debug(logs.calculatedPath, paths.length);
+  debug(logs.calculatedPath, paths.length, '(' + (Date.now() - startTime) + 'ms)');
   return paths;
 }
 
@@ -228,29 +229,55 @@ function findTsums(img) {
 
   const points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
 
-  // Light blur only — the ring-median sampling below is what rejects face
-  // features and overlap contamination now. The old 22px smear covered more
-  // than a whole tsum (~16px here) and bled neighboring tsums' colors into
-  // every center sample.
-  smooth(hsvImg, 1, Config.colorSampleSmooth);
-  // Sample the center plus a ring inside the tsum body: per-channel medians
-  // ignore eyes/highlights and stray neighbor pixels as long as most samples
-  // land on body color.
-  const ringR = Math.max(2, Math.round(Config.tsumWidth * 0.3));
   const results = [];
-  for (const k in points) {
-    const p = points[k];
-    const hs = [], ss = [], vs = [];
-    const c0 = getImageColor(hsvImg, p.x, p.y);
-    hs.push(c0.b); ss.push(c0.g); vs.push(c0.r);
-    for (let a = 0; a < 12; a++) {
-      const ang = a * Math.PI / 6;
-      const sx = Math.min(Math.max(Math.round(p.x + ringR * Math.cos(ang)), 0), Config.screenResize - 1);
-      const sy = Math.min(Math.max(Math.round(p.y + ringR * Math.sin(ang)), 0), Config.screenResize - 1);
-      const c = getImageColor(hsvImg, sx, sy);
-      hs.push(c.b); ss.push(c.g); vs.push(c.r);
+  if (!Config.experimentalConnections) {
+    // Original sampling: heavy blur to smear out face features, then a
+    // 5-pixel cross average at the circle center.
+    smooth(hsvImg, 1, 22);
+    for (const k in points) {
+      const p = points[k];
+      let hsv1, hsv2, hsv3, hsv4, hsv5;
+      hsv5 = hsv4 = hsv3 = hsv2 = hsv1 = getImageColor(hsvImg, p.x, p.y);
+      if (p.x - 1 >= 0) { hsv2 = getImageColor(hsvImg, p.x - 1, p.y); }
+      if (p.x + 1 < Config.screenResize) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
+      if (p.y - 1 >= 0) { hsv4 = getImageColor(hsvImg, p.x, p.y - 1); }
+      if (p.y + 1 < Config.screenResize) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
+      const avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
+      const avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
+      const avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
+      results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
     }
-    results.push({x: p.x, y: p.y, z: p.r, b: median(hs), g: median(ss), r: median(vs)});
+  } else {
+    // Experimental sampling: light blur only — the ring-median below is what
+    // rejects face features and overlap contamination. The 22px smear above
+    // covers more than a whole tsum (~16px here) and bleeds neighboring
+    // tsums' colors into every center sample.
+    smooth(hsvImg, 1, Config.colorSampleSmooth);
+    // Sample the center plus an 8-point ring inside the tsum body:
+    // per-channel medians ignore eyes/highlights and stray neighbor pixels as
+    // long as most samples land on body color. Each getImageColor is a
+    // JS<->native bridge call on the scan's critical path (combo timer is
+    // running), so the ring is kept as small as the median can afford — 9
+    // samples tolerate 4 outliers.
+    const ringR = Math.max(2, Math.round(Config.tsumWidth * 0.3));
+    const ringDiag = Math.max(1, Math.round(ringR * 0.7071));
+    const ringOffsets = [
+      [ringR, 0], [ringDiag, ringDiag], [0, ringR], [-ringDiag, ringDiag],
+      [-ringR, 0], [-ringDiag, -ringDiag], [0, -ringR], [ringDiag, -ringDiag]
+    ];
+    for (const k in points) {
+      const p = points[k];
+      const hs = [], ss = [], vs = [];
+      const c0 = getImageColor(hsvImg, p.x, p.y);
+      hs.push(c0.b); ss.push(c0.g); vs.push(c0.r);
+      for (let a = 0; a < ringOffsets.length; a++) {
+        const sx = Math.min(Math.max(p.x + ringOffsets[a][0], 0), Config.screenResize - 1);
+        const sy = Math.min(Math.max(p.y + ringOffsets[a][1], 0), Config.screenResize - 1);
+        const c = getImageColor(hsvImg, sx, sy);
+        hs.push(c.b); ss.push(c.g); vs.push(c.r);
+      }
+      results.push({x: p.x, y: p.y, z: p.r, b: median(hs), g: median(ss), r: median(vs)});
+    }
   }
 
   if (ts.debug) {
@@ -265,14 +292,23 @@ function findTsums(img) {
 }
 
 // Distance between two sampled tsum colors. The image is HSV at this point,
-// so b/g/r hold H/S/V. Hue is the discriminator between tsum types — two
-// fully-saturated tsums a hue-step apart (e.g. green alien vs orange car) are
-// different tsums even though their S/V nearly match — so the hue diff is
-// weighted up before the similarity discounts apply. Two caveats handled
-// below: OpenCV hue is circular (0 and 180 are both red), and the hue of a
-// desaturated color (white/gray/black tsums) is noise, so the hue term is
-// scaled by saturation.
+// so b/g/r hold H/S/V.
+//
+// The experimental variant treats hue as the discriminator between tsum
+// types — two fully-saturated tsums a hue-step apart (e.g. green alien vs
+// orange car) are different tsums even though their S/V nearly match — so the
+// hue diff is weighted up before the similarity discounts apply. It also
+// handles OpenCV hue being circular (0 and 180 are both red) and scales the
+// hue term by saturation, since the hue of a desaturated color (white/gray/
+// black tsums) is noise.
 function distance3D(p1, p2) {
+  if (!Config.experimentalConnections) {
+    let d0 = Math.sqrt((p1.b-p2.b)*(p1.b-p2.b) + (p1.g-p2.g)*(p1.g-p2.g) + (p1.r-p2.r)*(p1.r-p2.r));
+    if (Math.abs(p1.b - p2.b) < 20) { d0 -= 10; }
+    if (Math.abs(p1.g - p2.g) < 20) { d0 -= 10; }
+    if (p1.r < 120 && p2.r < 120) { d0 -= 20; }
+    return d0;
+  }
   let dhRaw = Math.abs(p1.b - p2.b);
   if (dhRaw > 90) { dhRaw = 180 - dhRaw; }
   const dh = dhRaw * (Config.colorHueWeightX10 / 10) * (Math.min(p1.g, p2.g) / 255);
@@ -283,44 +319,100 @@ function distance3D(p1, p2) {
   return d;
 }
 
-// Cluster sampled tsum colors into exactly k groups — the board always holds
-// a known number of tsum types, which is a far stronger prior than any
-// distance threshold. k-means with farthest-point seeding replaces the old
-// greedy single-pass clustering, which was order-dependent (drifting running
-// mean) and needed a hand-tuned merge distance to decide the cluster count.
-// Config.colorMergeDist survives as a noise cutoff: points farther than it
-// from every final center (bubbles, coins, glow effects) are dropped instead
-// of being forced into a real cluster.
-function classifyTsums(points, k) {
-  if (points.length === 0) { return []; }
-  k = Math.min(Math.max(k || 5, 1), points.length);
+// Circular mean of OpenCV hue values accumulated as unit vectors (hue h maps
+// to angle h * 2 degrees, so 0 and 180 are both red).
+function hueFromVec(sumSin, sumCos) {
+  let h = Math.atan2(sumSin, sumCos) * 90 / Math.PI;
+  if (h < 0) { h += 180; }
+  return h;
+}
 
-  // Farthest-point seeding. The first seed is the point farthest from
-  // points[0] (so the result doesn't depend on detection order), each later
-  // seed the point farthest from its nearest existing seed.
-  const centers = [];
-  let far = points[0], farD = -Infinity;
-  for (let i = 0; i < points.length; i++) {
-    const d = distance3D(points[0], points[i]);
-    if (d > farD) { farD = d; far = points[i]; }
+// Original clustering: greedy single pass against a drifting running mean,
+// fixed merge threshold, unbounded cluster count.
+function classifyTsumsLegacy(points) {
+  const tcs = [];
+  if (points.length === 0) {
+    return tcs;
   }
-  centers.push({ b: far.b, g: far.g, r: far.r });
-  while (centers.length < k) {
-    far = null; farD = -Infinity;
-    for (let i = 0; i < points.length; i++) {
-      let nearest = Infinity;
-      for (let c = 0; c < centers.length; c++) {
-        const d = distance3D(centers[c], points[i]);
-        if (d < nearest) { nearest = d; }
+  let p = points[0];
+  tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p] });
+  for (let i = 1; i < points.length; i++) {
+    p = points[i];
+    let isSame = false;
+    for(const j in tcs) {
+      const tc = tcs[j];
+      const d = distance3D(tc, p);
+      if (d < 15) {
+        const count = tc.points.length + 1;
+        isSame = true;
+        tc.sumb += p.b; tc.sumg += p.g; tc.sumr += p.r;
+        tc.b = tc.sumb/count; tc.g = tc.sumg/count; tc.r = tc.sumr/count;
+        tc.points.push(p);
+        break;
       }
-      if (nearest > farD) { farD = nearest; far = points[i]; }
     }
-    centers.push({ b: far.b, g: far.g, r: far.r });
+    if(!isSame) {
+      tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p]});
+    }
+  }
+  return tcs;
+}
+
+// Experimental clustering ("Experimental Tsum Connections" setting): cluster
+// sampled tsum colors into at most k groups (the number of tsum types known
+// to be on the board). Two passes:
+//
+// 1. Greedy threshold clustering discovers candidate centers by mass: real
+//    tsum types collect many points while noise detections (coins, score
+//    bubbles, glow effects — Hough finds them all as circles) end up in tiny
+//    clusters. The k largest greedy clusters become the seeds, making seeding
+//    robust to outliers. (Farthest-point seeding was tried and latched onto
+//    exactly those outliers, starving real types of cluster slots.)
+// 2. A few k-means iterations undo the greedy pass's order dependence — its
+//    running means drift with detection order — and settle the centers.
+//
+// If the greedy pass finds fewer than k groups, fewer clusters are returned;
+// forcing k would only split a real type. Points farther than
+// Config.colorMergeDist from every final center are dropped as noise.
+function classifyTsums(points, k) {
+  if (!Config.experimentalConnections) { return classifyTsumsLegacy(points); }
+  if (points.length === 0) { return []; }
+  k = Math.max(k || 5, 1);
+
+  // Pass 1: greedy clustering by mass (circular-hue running mean).
+  const greedy = [];
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i];
+    const ang = p.b * Math.PI / 90;
+    let joined = false;
+    for (let j = 0; j < greedy.length; j++) {
+      const gc = greedy[j];
+      if (distance3D(gc, p) < Config.colorMergeDist) {
+        gc.sumSin += Math.sin(ang); gc.sumCos += Math.cos(ang);
+        gc.sumG += p.g; gc.sumR += p.r;
+        gc.n++;
+        gc.b = hueFromVec(gc.sumSin, gc.sumCos);
+        gc.g = gc.sumG / gc.n; gc.r = gc.sumR / gc.n;
+        joined = true;
+        break;
+      }
+    }
+    if (!joined) {
+      greedy.push({
+        b: p.b, g: p.g, r: p.r,
+        sumSin: Math.sin(ang), sumCos: Math.cos(ang), sumG: p.g, sumR: p.r, n: 1
+      });
+    }
+  }
+  greedy.sort(function(a, b) { return b.n - a.n; });
+  const centers = [];
+  for (let c = 0; c < greedy.length && c < k; c++) {
+    centers.push({ b: greedy[c].b, g: greedy[c].g, r: greedy[c].r });
   }
 
+  // Pass 2: k-means refinement from the mass-based seeds.
   const assign = new Array(points.length);
-  for (let iter = 0; iter < 8; iter++) {
-    // Assignment pass.
+  for (let iter = 0; iter < 4; iter++) {
     let changed = false;
     for (let i = 0; i < points.length; i++) {
       let best = 0, bestD = Infinity;
@@ -332,37 +424,26 @@ function classifyTsums(points, k) {
     }
     if (!changed) { break; }
 
-    // Update pass. Hue is circular, so it is averaged as a unit vector
-    // (OpenCV hue h maps to angle h * 2 degrees); S and V as plain means.
     for (let c = 0; c < centers.length; c++) {
       let sumSin = 0, sumCos = 0, sumG = 0, sumR = 0, n = 0;
-      let farIdx = -1; farD = -Infinity;
       for (let i = 0; i < points.length; i++) {
-        if (assign[i] !== c) {
-          const d = distance3D(centers[assign[i]], points[i]);
-          if (d > farD) { farD = d; farIdx = i; }
-          continue;
-        }
+        if (assign[i] !== c) { continue; }
         const ang = points[i].b * Math.PI / 90;
         sumSin += Math.sin(ang); sumCos += Math.cos(ang);
         sumG += points[i].g; sumR += points[i].r;
         n++;
       }
-      if (n === 0) {
-        // Empty cluster: re-seed at the point that fits its current cluster
-        // worst, so a real type can't silently vanish.
-        if (farIdx >= 0) {
-          centers[c] = { b: points[farIdx].b, g: points[farIdx].g, r: points[farIdx].r };
-        }
-        continue;
+      if (n > 0) {
+        centers[c] = { b: hueFromVec(sumSin, sumCos), g: sumG / n, r: sumR / n };
       }
-      let h = Math.atan2(sumSin, sumCos) * 90 / Math.PI;
-      if (h < 0) { h += 180; }
-      centers[c] = { b: h, g: sumG / n, r: sumR / n };
     }
   }
 
-  // Build clusters from the final centers, discarding noise points.
+  // Build clusters from the final centers, discarding noise points. The
+  // membership cutoff is looser than the formation threshold: a marginal but
+  // real tsum is a lost chain candidate if dropped, while true noise sits far
+  // from every center.
+  const noiseCutoff = Config.colorMergeDist * 1.5;
   const tcs = [];
   for (let c = 0; c < centers.length; c++) {
     tcs.push({ b: centers[c].b, g: centers[c].g, r: centers[c].r, points: [] });
@@ -373,7 +454,7 @@ function classifyTsums(points, k) {
       const d = distance3D(centers[c], points[i]);
       if (d < bestD) { bestD = d; best = c; }
     }
-    if (bestD <= Config.colorMergeDist) {
+    if (bestD <= noiseCutoff) {
       tcs[best].points.push(points[i]);
     }
   }
