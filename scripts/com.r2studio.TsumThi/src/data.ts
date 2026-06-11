@@ -17,11 +17,13 @@ var Config: TsumConfig = {
   // of the same tsum across the board's uneven lighting).
   colorHueBonus: 10,
   colorSatBonus: 10,
-  // Two sampled tsum colors closer than this belong to the same cluster.
+  // Noise cutoff: sampled colors farther than this from every cluster center
+  // (bubbles, coins, glow effects) are dropped instead of joining a cluster.
   colorMergeDist: 15,
-  // Blur kernel applied before sampling tsum colors. Larger evens out face
-  // details but bleeds neighboring tsums' colors into the sample.
-  colorSampleSmooth: 22
+  // Blur kernel applied before sampling tsum colors. Keep small — the
+  // ring-median sampling rejects face details, so a heavy blur only bleeds
+  // neighboring tsums' colors into the sample.
+  colorSampleSmooth: 7
 };
 
 // Definitions assuming screen resolution of 1080 * 1920

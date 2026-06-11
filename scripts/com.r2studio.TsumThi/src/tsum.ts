@@ -996,15 +996,14 @@ Tsum.prototype.sampleMyTsumColor = function() {
     smooth(img, 1, 7);
     convertColor(img, 40);
     smooth(img, 1, Config.colorSampleSmooth);
-    let sumB = 0, sumG = 0, sumR = 0, count = 0;
+    const hs = [], ss = [], vs = [];
     for (let dy = -3; dy <= 3; dy++) {
       for (let dx = -3; dx <= 3; dx++) {
         const c = getImageColor(img, 20 + dx, 20 + dy);
-        sumB += c.b; sumG += c.g; sumR += c.r;
-        count++;
+        hs.push(c.b); ss.push(c.g); vs.push(c.r);
       }
     }
-    return { b: sumB / count, g: sumG / count, r: sumR / count };
+    return { b: median(hs), g: median(ss), r: median(vs) };
   } finally {
     releaseImage(img);
   }
@@ -1024,7 +1023,7 @@ Tsum.prototype.scanBoardQuick = function() {
 
     const points = findTsums(srcImg);
     debug(this.logs.recognitionStart);
-    const tcs = classifyTsums(points);
+    const tcs = classifyTsums(points, this.tsumCount);
     tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
     if (this.debug) {
       // HSV cluster centers — compare these (and the inter-cluster distance3D)

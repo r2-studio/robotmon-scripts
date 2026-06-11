@@ -379,8 +379,8 @@ var settings = [
         },
         {
             key: 'colorMergeDist',
-            title: 'Color merge distance (lower = stricter same-tsum grouping)',
-            title_zh_TW: '顏色合併距離（越低分組越嚴格）',
+            title: 'Color match distance (colors farther than this from every cluster are ignored as noise)',
+            title_zh_TW: '顏色匹配距離（與所有分組距離超過此值的顏色視為雜訊忽略）',
             default: 15,
             step: 5,
             max: 30,
@@ -390,10 +390,10 @@ var settings = [
             key: 'colorSampleSmooth',
             title: 'Color sample blur (lower = less color bleed from neighbor tsums)',
             title_zh_TW: '顏色取樣模糊（越低越不受鄰近Tsum顏色影響）',
-            default: 22,
+            default: 7,
             step: 4,
             max: 30,
-            min: 6
+            min: 3
         }
     ]
 ];

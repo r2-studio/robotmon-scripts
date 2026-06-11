@@ -9,9 +9,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - Tsums with neighboring hues but matching saturation/brightness (e.g. green alien + orange car) could be clustered as the same tsum type, producing mixed-color chains the game rejects. Hue differences are now weighted 2x in the color distance.
+- Hue is treated as circular (red tsums no longer compare as maximally different depending on which side of the red boundary they sample on) and its weight scales with saturation, so white/gray/black tsums are no longer classified on hue noise.
+
+### Changed
+- Color clustering now uses k-means with k = the known number of tsum types on the board (5, or 4 with the 5>4 item), replacing the order-dependent greedy threshold clustering. The "color match distance" now only rejects noise points (bubbles, coins, glows) instead of deciding the cluster count.
+- Tsum colors are sampled as the median of a 13-point ring inside the tsum body instead of a 5-pixel average under a 22px blur. Face features and neighboring tsums no longer contaminate the sampled color; the sample blur default drops from 22 to 7.
 
 ### Added
-- "Tsum color recognition tuning" settings group (hue weight, hue/saturation similarity bonuses, color merge distance, color sample blur) to fine-tune color clustering.
+- "Tsum color recognition tuning" settings group (hue weight, hue/saturation similarity bonuses, color match distance, color sample blur) to fine-tune color clustering.
 - With "Debug game" enabled, each board scan logs the HSV center, point count, and pairwise distances of every color cluster.
 
 
