@@ -9,13 +9,11 @@ function setMarginIcon() {
     icon["boxNoPoint"] = [360, 630, 195, 82];
     icon["settingDialog"] = [840, 220, 240, 60];
     icon["stageFailed"] = [900, 154, 140, 60];
-    icon["stageRestart"] = [1140, 810, 240, 75];
     icon["friendPointFree"] = [787, 740, 337, 75];
   } else {
     icon["boxNoPoint"] = [470, 530, 200, 100];
     icon["settingDialog"] = [750, 140, 350, 70];
     icon["stageFailed"] = [750, 160, 300, 60];
-    icon["stageRestart"] = [1140, 836, 240, 75];
     icon["friendPointFree"] = [810, 740, 300, 75];
   }
 
@@ -446,9 +444,6 @@ function isBattleSkillEmiyaDialog(screenshot) {
 }
 
 function isBattleSkillDubaiDialog(screenshot) {
-  if (server == "TW") {
-    return false;
-  }
   return checkIconListInScreen(
     ["dubaiSkill", "dubaiSkill2", "dubaiSkill3"],
     false,
@@ -500,7 +495,7 @@ function isBattleSkillTargetDialog() {
 
 //finish-----------------------------------------------
 icon["finishNext"] = [1575, 933, 180, 60];
-icon["stageRestart"] = [1140, 810, 240, 75];
+icon["stageRestart"] = [1140, 836, 240, 75];
 icon["stageRestartEvent"] = [1260, 810, 240, 75];
 icon["stageFailed"] = [750, 160, 300, 60];
 icon["stageFailed2"] = [860, 570, 200, 60];
@@ -544,6 +539,7 @@ function isItemPage() {
 
 //friendPoint-----------------------------------------------
 icon["friendPointMain"] = [1130, 20, 100, 90];
+icon["friendPointMain2"] = [1130, 20, 100, 90];
 icon["friendPointFree"] = [810, 740, 300, 75];
 icon["friendPointFreeEvent"] = [787, 740, 337, 75];
 icon["friendPointTen"] = [1125, 740, 240, 75];
@@ -554,7 +550,9 @@ icon["friendPointServantFull"] = [487, 225, 900, 187];
 icon["friendPointItemFull"] = [487, 225, 900, 187];
 
 function isFriendPointMainPage() {
-  return checkIconInScreen("friendPointMain");
+  return checkIconListInScreen(
+    ["friendPointMain","friendPointMain2"],
+    false);
 }
 
 function isFriendPointFree() {
