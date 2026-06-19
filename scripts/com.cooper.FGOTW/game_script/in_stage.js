@@ -143,58 +143,67 @@ function useSkill(player, skill, target) {
   }
   screenshot = getScreenshotResize();
   if (isBattleSkillRabbitDialog(screenshot)) {
-    if (rabbitSkill == undefined || rabbitSkill < 0 || rabbitSkill > 1) {
-      console.log("未指定模式，設為全體");
-      rabbitSkill = 0;
-    }
-    console.log("使用技能-玉兔技能模式 " + rabbitSkillName[rabbitSkill]);
-    switch (rabbitSkill) {
-      case 0:
-      default:
-        clickIcon("rabbitSkill");
-        break;
-      case 1:
-        clickIcon("rabbitSkill2");
-        break;
+    sleep(2000);
+    if (isBattleSkillRabbitDialog()) {
+      if (rabbitSkill == undefined || rabbitSkill < 0 || rabbitSkill > 1) {
+        console.log("未指定模式，設為全體");
+        rabbitSkill = 0;
+      }
+      console.log("使用技能-玉兔技能模式 " + rabbitSkillName[rabbitSkill]);
+      switch (rabbitSkill) {
+        case 0:
+        default:
+          clickIcon("rabbitSkill");
+          break;
+        case 1:
+          clickIcon("rabbitSkill2");
+          break;
+      }
     }
   } else if (isBattleSkillKishinamiDialog(screenshot)) {
-    if (kishinamiSkill == undefined || kishinamiSkill < 0 || kishinamiSkill > 2) {
-      console.log("未指定模式，設為天");
-      kishinamiSkill = 0;
-    }
-    console.log("使用技能-岸波白野特攻模式 " + kishinamiSkillName[kishinamiSkill]);
-    switch (kishinamiSkill) {
-      case 0:
-      default:
-        clickIcon("kishinamiSkill");
-        break;
-      case 1:
-        clickIcon("kishinamiSkill2");
-        break;
-      case 2:
-        clickIcon("kishinamiSkill3");
-        break;
+    sleep(2000);
+    if (isBattleSkillKishinamiDialog()) {
+      if (kishinamiSkill == undefined || kishinamiSkill < 0 || kishinamiSkill > 2) {
+        console.log("未指定模式，設為天");
+        kishinamiSkill = 0;
+      }
+      console.log("使用技能-岸波白野特攻模式 " + kishinamiSkillName[kishinamiSkill]);
+      switch (kishinamiSkill) {
+        case 0:
+        default:
+          clickIcon("kishinamiSkill");
+          break;
+        case 1:
+          clickIcon("kishinamiSkill2");
+          break;
+        case 2:
+          clickIcon("kishinamiSkill3");
+          break;
+      }
     }
   } else if (isBattleSkillSoujyuroDialog(screenshot)) {
-    if (soujyuroSkill == undefined || soujyuroSkill < 0 || soujyuroSkill > 2) {
-      console.log("未指定模式，設為綠");
-      soujyuroSkill = 0;
-    }
-    console.log("使用技能-草十郎卡片顏色 " + soujyuroSkillName[soujyuroSkill]);
-    switch (soujyuroSkill) {
-      case 0:
-      default:
-        clickIcon("soujyuroSkill");
-        break;
-      case 1:
-        clickIcon("soujyuroSkill2");
-        break;
-      case 2:
-        clickIcon("soujyuroSkill3");
-        break;
+    sleep(2000);
+    if (isBattleSkillSoujyuroDialog()) {
+      if (soujyuroSkill == undefined || soujyuroSkill < 0 || soujyuroSkill > 2) {
+        console.log("未指定模式，設為綠");
+        soujyuroSkill = 0;
+      }
+      console.log("使用技能-草十郎卡片顏色 " + soujyuroSkillName[soujyuroSkill]);
+      switch (soujyuroSkill) {
+        case 0:
+        default:
+          clickIcon("soujyuroSkill");
+          break;
+        case 1:
+          clickIcon("soujyuroSkill2");
+          break;
+        case 2:
+          clickIcon("soujyuroSkill3");
+          break;
+      }
     }
   } else if (isBattleKklDialog(screenshot)) {
-    sleep(1000);
+    sleep(2000);
     if (isBattleKklDialog()) {
       var kkl = getKKLArray()[skill];
       if (kkl != 0) {
@@ -212,27 +221,36 @@ function useSkill(player, skill, target) {
       sleep(2000);
     }
   }else if (isBattleSkillEmiyaDialog(screenshot)) {
-    if (spaceUltColor == undefined || spaceUltColor < 0 || spaceUltColor >= 2) {
-      console.log("未指定顏色，設為藍色");
-      spaceUltColor = 1;
+    sleep(2000);
+    if (isBattleSkillEmiyaDialog()) {
+      if (spaceUltColor == undefined || spaceUltColor < 0 || spaceUltColor >= 2) {
+        console.log("未指定顏色，設為藍色");
+        spaceUltColor = 1;
+      }
+      console.log("使用技能-紅A寶具顏色 " + colorName[spaceUltColor]);
+      tapScale(emiyaUltPositionX[spaceUltColor], spaceUltPositionY);
     }
-    console.log("使用技能-紅A寶具顏色 " + colorName[spaceUltColor]);
-    tapScale(emiyaUltPositionX[spaceUltColor], spaceUltPositionY);
   } else if (isBattleSkillSpaceDialog(screenshot)) {
-    if (spaceUltColor == undefined || spaceUltColor < 0 || spaceUltColor > 2) {
-      console.log("未指定顏色，設為綠色");
-      spaceUltColor = 2;
+    sleep(2000);
+    if (isBattleSkillSpaceDialog()) {
+      if (spaceUltColor == undefined || spaceUltColor < 0 || spaceUltColor > 2) {
+        console.log("未指定顏色，設為綠色");
+        spaceUltColor = 2;
+      }
+      console.log("使用技能-宇宙伊斯塔寶具顏色 " + colorName[spaceUltColor]);
+      tapScale(spaceUltPositionX[spaceUltColor], spaceUltPositionY);
     }
-    console.log("使用技能-宇宙伊斯塔寶具顏色 " + colorName[spaceUltColor]);
-    tapScale(spaceUltPositionX[spaceUltColor], spaceUltPositionY);
   } else if (isBattleSkillDubaiDialog(screenshot)) {
-    if (dubaiSkill == undefined || dubaiSkill < 0 || dubaiSkill > 2) {
-      console.log("未指定模式，設為攻擊模式");
-      dubaiSkill = 0;
+    sleep(2000);
+    if (isBattleSkillDubaiDialog()) {
+      if (dubaiSkill == undefined || dubaiSkill < 0 || dubaiSkill > 2) {
+        console.log("未指定模式，設為攻擊模式");
+        dubaiSkill = 0;
+      }
+      console.log("使用技能-杜拜BB技能模式 " + dubaiSkillName[dubaiSkill]);
+      tapScale(dubaiSkillPositionX[dubaiSkill], dubaiSkillPositionY);
     }
-    console.log("使用技能-杜拜BB技能模式 " + dubaiSkillName[dubaiSkill]);
-    tapScale(dubaiSkillPositionX[dubaiSkill], dubaiSkillPositionY);
-  }  
+  }
   releaseImage(screenshot);
 
   if (isBattleSkillTargetDialog()) {
