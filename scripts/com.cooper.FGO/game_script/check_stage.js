@@ -1,5 +1,5 @@
 var icon = [];
-var iconMargin = [];
+var iconMargin = []; //true: icon x座標使用絕對值
 
 function setMarginIcon() {
   if (isDebug) {
@@ -501,9 +501,18 @@ icon["stageFailed"] = [750, 160, 300, 60];
 icon["stageFailed2"] = [860, 570, 200, 60];
 icon["addFriend"] = [1710, 135, 120, 37];
 icon["itemPage"] = [32, 35, 66, 45];
+icon["finishEvent1"] = [763, 798, 394, 93];
+icon["finishEvent2"] = [700, 138, 520, 100];
 
 function isBattleStageFailedDialog() {
   return checkIconListInScreen(["stageFailed", "stageFailed2"], true);
+}
+
+function isFinishEventDialog() {
+  if(server == "TW"){
+    return false;
+  }
+  return checkIconListInScreen(["finishEvent1", "finishEvent2"], true);
 }
 
 function isFinishBondPage() {
