@@ -497,6 +497,9 @@ function getCurrentStage() {
 function finishQuest() {
   while (isScriptRunning) {
     if (isMainPage()) {
+      if (isFinishEventDialog()) {
+        clickIcon("finishEvent1");
+      }
       sleep(3000);
       return;
     } else if (isStageRestart() || isStageRestartEvent()) {
@@ -507,6 +510,9 @@ function finishQuest() {
     sleep(1500);
     if (isFinishDropDialoge() || isFinishNext()) {
       tapScale(1650, 990);
+      sleep(1500);
+    } else if (isFinishEventDialog()) {
+      clickIcon("finishEvent1");
       sleep(1500);
     } else if (isAddFriendPage()) {
       tapScale(487, 900);
