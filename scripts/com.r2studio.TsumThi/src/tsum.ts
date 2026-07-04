@@ -46,6 +46,11 @@ function Tsum(isJP, detect, logs) {
   this.skillInterval = 3000;
   this.skillLevel = 3;
   this.skillType = '';
+  // Optional safety poll: fire the skill the instant it's ready, even mid-link,
+  // rather than only at the end of each board-scan cycle (see maybeAutoTapSkill).
+  this.skillAutoTap = false;
+  this.skillAutoTapInterval = 500;
+  this._lastSkillAutoTap = 0;
   this.unlockLevelHoursWait = 0;
   this.sendHearts = false;
   this.keepRuby = false;
@@ -288,9 +293,28 @@ Tsum.prototype.linkTsums = function(path) {
   }
 }
 
-Tsum.prototype.link = function(paths) {
+// When skillAutoTap is on, fire the skill the moment it's ready instead of
+// waiting for the next useSkill at the end of the board-scan cycle. The gauge
+// can fill and sit ready for seconds while we scan, calculate and link; this is
+// called often (e.g. between chains) but only does a real screenshot/check once
+// per skillAutoTapInterval ms, so the timestamp guard keeps frequent calls cheap.
+// Routes through useSkill so every skill type's activation (and choreography) is
+// handled exactly as the normal end-of-cycle path.
+Tsum.prototype.maybeAutoTapSkill = function(board) {
+  if (!this.skillAutoTap) { return; }
+  const now = Date.now();
+  if (now - this._lastSkillAutoTap < this.skillAutoTapInterval) { return; }
+  this._lastSkillAutoTap = now;
+  this.useSkill(board);
+};
+
+Tsum.prototype.link = function(paths, board) {
   let isBubble = false;
-  const burst = this.skillType === 'burst';
+  let skillFires = 0;
+  let myTsumLinked = 0;
+  // Erase-type ("burst") skills charge off MyTsum chains and benefit from
+  // overload priming the moment the gauge tops off (see pollSkillActivation).
+  const eraseSkill = this.skillType === 'burst' || this.skillType === 'burst_bubbles' || this.skillType === 'block_cpt_ly_s';
   for (const i in paths) {
     const path = paths[i];
     // >= 7 should be correct, but practically the real chain is always shorter
@@ -299,11 +323,21 @@ Tsum.prototype.link = function(paths) {
       isBubble = true;
     }
     this.linkTsums(path);
-    if (burst && this.myTsumIdx >= 0 && path.tsumIdx === this.myTsumIdx) {
-      this.pollSkillActivation();
+    if (eraseSkill && this.myTsumIdx >= 0 && path.tsumIdx === this.myTsumIdx) {
+      myTsumLinked += path.length;
     }
+    // Linking a full batch of chains can take several seconds; check between
+    // chains so a gauge that fills mid-batch fires right away.
+    this.maybeAutoTapSkill(board);
   }
-  return isBubble;
+  // Prime once for the whole batch, sized by the total MyTsums erased. Several
+  // short MyTsum chains then add up to a window long enough to catch the
+  // overload -- priming each short chain alone missed it, because no single
+  // chain topped the gauge off and the count-in lags behind each drag.
+  if (myTsumLinked > 0) {
+    skillFires = this.pollSkillActivation(myTsumLinked);
+  }
+  return { isBubble: isBubble, skillFires: skillFires };
 }
 
 Tsum.prototype.findPageObject = function(times, timeout) {
@@ -674,38 +708,144 @@ Tsum.prototype.checkSkillReadiness = function(img, skillButton) {
   return 'far';
 };
 
-Tsum.prototype.pollSkillActivation = function() {
-  // Burst-skill optimization: if the gauge is close to topping off, spam the
-  // skill button briefly so the game activates it the moment it fills. Bails
-  // immediately when far from ready so unrelated MyTsum clears don't burn time.
-  let img = this.screenshot();
-  let status;
-  try {
-    status = this.checkSkillReadiness(img, Button.gameSkill1);
-  } finally {
-    releaseImage(img);
+Tsum.prototype.isFeverActive = function(img: any) {
+  // Same probes useSkill's fever hold uses: the fever banner colour plus the two
+  // spinning ring lights at the bottom corners, which differ in hue only while
+  // fever is running.
+  const fever1 = isSameColor(this.getColor(img, {x: 340, y: 310}), {r: 0, g: 40, b: 49}, 80);
+  const ringLeft = rgb2hsv(this.getColor(img, {x: 332, y: 1666}));
+  const ringRight = rgb2hsv(this.getColor(img, {x: 746, y: 1666}));
+  const hueDiff = Math.min(
+      Math.abs(ringLeft.h - ringRight.h),
+      360 - Math.abs(ringLeft.h - ringRight.h));
+  return fever1 && hueDiff > 20;
+};
+
+Tsum.prototype.hammerSkillButton = function(deadline: number) {
+  // Fever Time path. During fever the count-in is so fast that the gauge tops
+  // off and finishes counting between our screenshots, so screenshot-paced
+  // priming taps a button whose overflow is already gone. Instead tap
+  // continuously with no idle gap -- the game fires the skill the instant the
+  // gauge crosses full, and a fast refill fires again a few taps later, so the
+  // overflow carries. Screenshot only occasionally, purely to stop once the
+  // gauge has stopped refilling (the batch is done counting in).
+  let active = 0;   // checks where the gauge was busy -- rough fire count for bubbles
+  let farRuns = 0;
+  let nextCheck = Date.now() + 250;
+  while (Date.now() < deadline) {
+    this.tap(Button.gameSkill1, 8);
+    this.sleep(10);
+    if (Date.now() >= nextCheck) {
+      nextCheck = Date.now() + 250;
+      const img = this.screenshot();
+      let far: boolean;
+      try {
+        far = this.checkSkillReadiness(img, Button.gameSkill1) === 'far';
+      } finally {
+        releaseImage(img);
+      }
+      if (far) {
+        if (++farRuns >= 2) { break; }  // gauge idle two checks running -- done
+      } else {
+        farRuns = 0;
+        active++;
+      }
+    }
   }
-  if (status === 'far') { return false; }
-  if (status === 'active') {
-    this.tap(Button.gameSkill1, 10);
-    return true;
-  }
-  for (let i = 0; i < 4; i++) {
-    this.tap(Button.gameSkill1, 10);
-    this.sleep(40);
-    img = this.screenshot();
+  return active;
+};
+
+Tsum.prototype.pollSkillActivation = function(chainLength: number) {
+  // Overloading: erased MyTsums count into the skill gauge over a short window
+  // rather than all at once. Firing the skill the instant the gauge tops off —
+  // while tsums are still counting in — lets the remaining count overflow into
+  // the next gauge instead of being wasted against the 100% cap. A long chain
+  // can top the gauge off more than once.
+  //
+  // We don't try to detect the exact fill instant (screenshot latency loses the
+  // overflow). Instead we keep the skill button primed across the whole
+  // count-in window: tapping a not-yet-full button is harmless, and the game
+  // fires the skill itself the moment the gauge crosses full. After each fire
+  // we keep priming so a second overload from the same batch is also caught.
+  //
+  // chainLength is the *total* MyTsums erased this batch, so several short
+  // chains widen the window together. The count-in lags the drag, so a 'far'
+  // reading right after linking can just mean the tsums haven't registered yet
+  // -- we tolerate 'far' for a short grace before giving up. That's what lets
+  // multiple short chains get fired: the old instant far-bail read the gauge
+  // before the count caught up and quit, so only a self-sufficient long chain
+  // ever topped it off in time.
+  const deadline = Date.now() + Math.min(1600, 300 + (chainLength || 0) * 45);
+  let fires = 0;
+  let farSince = Date.now();
+  while (Date.now() < deadline) {
+    let img = this.screenshot();
+    let status: string;
+    let fever: boolean;
     try {
       status = this.checkSkillReadiness(img, Button.gameSkill1);
+      // Burst skills switch to blind hammering during Fever Time, where the
+      // count-in is too fast for screenshot-paced priming to catch the overflow.
+      // cpt_ly is excluded: it fires once and needs its aiming choreography.
+      fever = this.skillType !== 'block_cpt_ly_s' && this.isFeverActive(img);
     } finally {
       releaseImage(img);
     }
-    if (status === 'active') {
-      this.tap(Button.gameSkill1, 10);
-      return true;
+    if (fever) {
+      return fires + this.hammerSkillButton(deadline);
     }
-    if (status === 'far') { return false; }
+    if (status === 'active') {
+      this.tap(Button.gameSkill1, 10);  // fire it
+      fires++;
+      if (this.skillType === 'block_cpt_ly_s') {
+        // cpt_ly is a block skill: the button tap only activates it -- it still
+        // needs its aiming choreography to actually score. Run it, then stop
+        // (unlike burst, it doesn't repeat-overload within a batch).
+        this.useCptLySkill();
+        return fires;
+      }
+      this.sleep(150);  // let the gauge consume before re-priming, avoid double-fire
+      farSince = Date.now();
+      continue;
+    }
+    this.tap(Button.gameSkill1, 10);  // prime (no-op while the gauge isn't full)
+    if (status === 'far') {
+      // Give the count-in time to land; if the gauge stays far past the grace
+      // the batch simply isn't topping it off, so stop to avoid stalling.
+      if (Date.now() - farSince > 350) { break; }
+    } else {
+      farSince = Date.now();  // 'almost' -- fill is imminent, keep priming
+    }
+    this.sleep(35);
   }
-  return false;
+  return fires;
+};
+
+// cpt_ly post-activation choreography: randomize, then the timed aiming taps
+// (count scales with skill level), then a bubble sweep. Assumes the skill has
+// already been activated (gauge consumed) -- callers tap gameSkill1 first.
+Tsum.prototype.useCptLySkill = function() {
+  this.tap(Button.gameRand, 100);
+  this.sleep(2100);
+  this.tap(Button.skillCptLy1, 10);
+  this.sleep(50);
+  this.tap(Button.skillCptLy2, 10);
+  if (this.skillLevel >= 2) {
+    // 3rd tap
+    this.sleep(500);
+    this.tap(Button.skillCptLy3, 10);
+  }
+  if (this.skillLevel >= 4) {
+    // 4th tap
+    this.sleep(500);
+    this.tap(Button.skillCptLy3, 10);
+  }
+  if (this.skillLevel === 6) {
+    // 5th tap
+    this.sleep(550);
+    this.tap(Button.skillCptLy3, 10);
+  }
+  this.clearAllBubbles(600, 0, 1000, 300);
 };
 
 Tsum.prototype.useSkill = function(board) {
@@ -934,27 +1074,7 @@ Tsum.prototype.useSkill = function(board) {
       this.clearAllBubbles();
     }
   } else if (this.skillType === 'block_cpt_ly_s'){
-    this.tap(Button.gameRand, 100);
-    this.sleep(2100);
-    this.tap(Button.skillCptLy1, 10);
-    this.sleep(50);
-    this.tap(Button.skillCptLy2, 10);
-    if (this.skillLevel >= 2) {
-      // 3rd tap
-      this.sleep(500);
-      this.tap(Button.skillCptLy3, 10);
-    }
-    if (this.skillLevel >= 4) {
-      // 4th tap
-      this.sleep(500);
-      this.tap(Button.skillCptLy3, 10);
-    }
-    if (this.skillLevel === 6) {
-      // 5th tap
-      this.sleep(550);
-      this.tap(Button.skillCptLy3, 10);
-    }
-    this.clearAllBubbles(600, 0, 1000, 300);
+    this.useCptLySkill();
   } else if (this.skillType === 'block_lightning_mcqueen_plus_s'){
     this.sleep(2000);
     for (i = 1; i <= 20; i+=1) {
@@ -1009,12 +1129,16 @@ Tsum.prototype.sampleMyTsumColor = function() {
       return { b: sumB / count, g: sumG / count, r: sumR / count };
     }
     smooth(img, 1, Config.colorSampleSmooth);
-    const hs = [], ss = [], vs = [];
+    const pts = [];
     for (let dy = -3; dy <= 3; dy++) {
       for (let dx = -3; dx <= 3; dx++) {
-        const c = getImageColor(img, 20 + dx, 20 + dy);
-        hs.push(c.b); ss.push(c.g); vs.push(c.r);
+        pts.push({x: 20 + dx, y: 20 + dy});
       }
+    }
+    const cs = getPixelColors(img, pts);
+    const hs = [], ss = [], vs = [];
+    for (let i = 0; i < cs.length; i++) {
+      hs.push(cs[i].b); ss.push(cs[i].g); vs.push(cs[i].r);
     }
     return { b: median(hs), g: median(ss), r: median(vs) };
   } finally {
@@ -1132,10 +1256,18 @@ Tsum.prototype.taskPlayGameQuick = function() {
     // scan means fewer gaps, but chains linked late in a batch can miss
     // because earlier clears already reshuffled the board.
     paths = paths.splice(0, this.maxChainsPerScan);
-    const isBubble = this.link(paths);
-    if (isBubble) {
+    // Catch a gauge that filled during the scan/calculation above before linking.
+    this.maybeAutoTapSkill(board);
+    const linkResult = this.link(paths, board);
+    if (linkResult.isBubble) {
       debug(this.logs.bubbleGenerated);
       clearBubbles++;
+    }
+    // Overload priming may have fired the skill mid-link (outside the useSkill
+    // loop below). For burst_bubbles each fire spawns bubbles, so count them
+    // toward the clear cadence just like the useSkill loop does.
+    if (this.skillType === 'burst_bubbles' || this.skillType === 'block_cpt_ly_s') {
+      clearBubbles += linkResult.skillFires;
     }
     if (paths.length < 3) {
       zeroPath++;

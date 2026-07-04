@@ -139,6 +139,8 @@ declare function clone(img: any): any;
 declare function cropImage(img: any, x: number, y: number, w: number, h: number): any;
 declare function getBase64FromImage(img: any): string;
 declare function getImageColor(img: any, x: number, y: number): Color;
+// Not available in every runtime (MuMuPlayer 2026-06: ReferenceError) — call
+// only through the runtime-probing getPixelColors() in pathfinding.ts.
 declare function getImageColors(img: any, points: any): any;
 declare function getImageWidth(img: any): number;
 declare function getImageHeight(img: any): number;

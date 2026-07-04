@@ -24,6 +24,7 @@ function start(settings) {
   ts.skillInterval = settings['skillWaitingTime'] * 1000;
   ts.skillLevel = settings['skillLevel'];
   ts.skillType = settings['skillType'];
+  ts.skillAutoTap = !!settings['skillAutoTap'];
   ts.unlockLevelHoursWait = settings["unlockLevelHoursWait"];
   ts.sendHearts = settings['sendHeartsAuto'];
   ts.showHeartLog = true;

@@ -173,6 +173,12 @@ var settings = [
             min: 1
         },
         {
+            key: 'skillAutoTap',
+            title: 'Auto-tap skill when ready (checks every 0.5s, even mid-link)',
+            title_zh_TW: '技能就緒時自動點擊（每0.5秒檢查，連線中也會）',
+            default: false
+        },
+        {
             key: 'skillLevel',
             title: 'Skill Level',
             title_zh_TW: '技能等級',

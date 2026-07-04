@@ -5,6 +5,12 @@ All notable changes to the TsumBeta script will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [Unreleased]
+
+### Added
+- "Auto-tap skill when ready" setting (off by default): polls the skill button every 0.5s — including between chains while linking — and fires the skill the moment the gauge is ready, instead of only checking at the end of each board-scan cycle. Fixes skills sitting ready for several seconds before being tapped. Uses the normal activation path, so every skill type's choreography is handled as usual.
+
+
 ## [v82] - 2026-06-10
 
 ### Added
@@ -12,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Hue differences are weighted 2x in the color distance, treated as circular (red boundary), and scaled by saturation so white/gray/black tsums aren't classified on hue noise.
   - Greedy clusters are refined with a k-means pass capped at the known number of tsum types on the board (5, or 4 with the 5>4 item); detections too far from every cluster (coins, score bubbles, glows) are rejected as noise.
   - Tsum colors are sampled as the median of 9 points (center + ring) inside the tsum body under a light 7px blur, instead of a 5-pixel average under a 22px blur.
+  - Color sampling probes for the fastest pixel-read path the runtime supports and logs the result on the first scan: a native median filter (one center read per tsum), batched `getImageColors` reads (one native call per board), or per-pixel reads as the universal fallback.
   - A "Tsum color recognition tuning" group (hue weight, hue/saturation similarity bonuses, color match distance, color sample blur) fine-tunes the above.
 - "Chains per board scan" setting (default 6, as before): each linked chain refreshes the combo timer, so linking more chains per scan leaves fewer scan gaps where the combo can drop — at the risk of late chains missing after the board shifts.
 - With "Debug game" enabled, each board scan logs the HSV center, point count, and pairwise distances of every color cluster, plus the path calculation time.

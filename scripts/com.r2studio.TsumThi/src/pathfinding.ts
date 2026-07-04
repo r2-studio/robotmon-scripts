@@ -208,6 +208,50 @@ function median(arr) {
   return arr[Math.floor(arr.length / 2)];
 }
 
+// Whether the runtime's batched getImageColors works: undefined until the
+// first probe, then true/false. Robotmon declares the API but its return
+// shape is undocumented, so the first call validates the result and falls
+// back permanently if it doesn't look like an array of colors.
+// (Confirmed missing on MuMuPlayer runtime, 2026-06: ReferenceError.)
+let gBatchReadUsable;
+
+// Whether smooth() accepts type 3 (cvSmooth CV_MEDIAN): undefined until the
+// first probe, then true/false. With a native median filter, one center read
+// per tsum replaces the JS-side 9-point ring sampling entirely.
+let gMedianBlurUsable;
+
+// Read many pixels with one JS<->native bridge call where possible. Bridge
+// crossings dominate the experimental sampler's cost (hundreds of reads per
+// scan on the combo timer's critical path), so batching them beats any
+// JS-side optimization. Falls back to per-pixel getImageColor when the batch
+// API is missing or returns an unknown shape.
+function getPixelColors(img, pts) {
+  if (pts.length === 0) { return []; }
+  if (gBatchReadUsable !== false) {
+    try {
+      let res = getImageColors(img, pts);
+      if (typeof res === 'string') { res = JSON.parse(res); }
+      if (res && res.length === pts.length
+          && typeof res[0].r === 'number' && typeof res[0].g === 'number' && typeof res[0].b === 'number') {
+        if (gBatchReadUsable === undefined) {
+          gBatchReadUsable = true;
+          console.log('getImageColors: batched pixel reads available');
+        }
+        return res;
+      }
+      throw new Error('unexpected result shape: ' + JSON.stringify(res).slice(0, 120));
+    } catch (e) {
+      gBatchReadUsable = false;
+      console.log('getImageColors unusable, falling back to per-pixel reads: ' + e);
+    }
+  }
+  const colors = [];
+  for (let i = 0; i < pts.length; i++) {
+    colors.push(getImageColor(img, pts[i].x, pts[i].y));
+  }
+  return colors;
+}
+
 function convertTo2DArray(arr, size) {
   const result = [];
   for (let i = 0; i < arr.length; i = i + size) {
@@ -248,35 +292,73 @@ function findTsums(img) {
       results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
     }
   } else {
-    // Experimental sampling: light blur only — the ring-median below is what
+    // Experimental sampling: light blur only — median filtering below is what
     // rejects face features and overlap contamination. The 22px smear above
     // covers more than a whole tsum (~16px here) and bleeds neighboring
     // tsums' colors into every center sample.
     smooth(hsvImg, 1, Config.colorSampleSmooth);
-    // Sample the center plus an 8-point ring inside the tsum body:
-    // per-channel medians ignore eyes/highlights and stray neighbor pixels as
-    // long as most samples land on body color. Each getImageColor is a
-    // JS<->native bridge call on the scan's critical path (combo timer is
-    // running), so the ring is kept as small as the median can afford — 9
-    // samples tolerate 4 outliers.
-    const ringR = Math.max(2, Math.round(Config.tsumWidth * 0.3));
-    const ringDiag = Math.max(1, Math.round(ringR * 0.7071));
-    const ringOffsets = [
-      [ringR, 0], [ringDiag, ringDiag], [0, ringR], [-ringDiag, ringDiag],
-      [-ringR, 0], [-ringDiag, -ringDiag], [0, -ringR], [ringDiag, -ringDiag]
-    ];
-    for (const k in points) {
-      const p = points[k];
-      const hs = [], ss = [], vs = [];
-      const c0 = getImageColor(hsvImg, p.x, p.y);
-      hs.push(c0.b); ss.push(c0.g); vs.push(c0.r);
-      for (let a = 0; a < ringOffsets.length; a++) {
-        const sx = Math.min(Math.max(p.x + ringOffsets[a][0], 0), Config.screenResize - 1);
-        const sy = Math.min(Math.max(p.y + ringOffsets[a][1], 0), Config.screenResize - 1);
-        const c = getImageColor(hsvImg, sx, sy);
-        hs.push(c.b); ss.push(c.g); vs.push(c.r);
+    // Preferred path: a native median filter (cvSmooth type 3, probed once —
+    // not every runtime supports it) makes every pixel the per-channel median
+    // of its 9x9 neighborhood, so a single center read per tsum replaces the
+    // JS-side ring sampling. Bridge calls sit on the scan's critical path
+    // while the combo timer is running, so fewer reads matter.
+    if (gMedianBlurUsable !== false) {
+      try {
+        smooth(hsvImg, 3, 9);
+        if (gMedianBlurUsable === undefined) {
+          gMedianBlurUsable = true;
+          console.log('smooth: native median filter available, sampling tsum centers only');
+        }
+      } catch (e) {
+        gMedianBlurUsable = false;
+        console.log('smooth: native median filter unavailable, using ring sampling: ' + e);
       }
-      results.push({x: p.x, y: p.y, z: p.r, b: median(hs), g: median(ss), r: median(vs)});
+    }
+    if (gMedianBlurUsable) {
+      const centerPts = [];
+      for (const k in points) {
+        centerPts.push({x: points[k].x, y: points[k].y});
+      }
+      const centerColors = getPixelColors(hsvImg, centerPts);
+      let ci = 0;
+      for (const k in points) {
+        const p = points[k];
+        const c = centerColors[ci++];
+        results.push({x: p.x, y: p.y, z: p.r, b: c.b, g: c.g, r: c.r});
+      }
+    } else {
+      // Fallback: sample the center plus an 8-point ring inside the tsum
+      // body — per-channel medians ignore eyes/highlights and stray neighbor
+      // pixels as long as most samples land on body color. 9 samples
+      // tolerate 4 outliers.
+      const ringR = Math.max(2, Math.round(Config.tsumWidth * 0.3));
+      const ringDiag = Math.max(1, Math.round(ringR * 0.7071));
+      const ringOffsets = [
+        [ringR, 0], [ringDiag, ringDiag], [0, ringR], [-ringDiag, ringDiag],
+        [-ringR, 0], [-ringDiag, -ringDiag], [0, -ringR], [ringDiag, -ringDiag]
+      ];
+      const samplePts = [];
+      for (const k in points) {
+        const p = points[k];
+        samplePts.push({x: p.x, y: p.y});
+        for (let a = 0; a < ringOffsets.length; a++) {
+          samplePts.push({
+            x: Math.min(Math.max(p.x + ringOffsets[a][0], 0), Config.screenResize - 1),
+            y: Math.min(Math.max(p.y + ringOffsets[a][1], 0), Config.screenResize - 1)
+          });
+        }
+      }
+      const sampleColors = getPixelColors(hsvImg, samplePts);
+      let si = 0;
+      for (const k in points) {
+        const p = points[k];
+        const hs = [], ss = [], vs = [];
+        for (let s = 0; s <= ringOffsets.length; s++) {
+          const c = sampleColors[si++];
+          hs.push(c.b); ss.push(c.g); vs.push(c.r);
+        }
+        results.push({x: p.x, y: p.y, z: p.r, b: median(hs), g: median(ss), r: median(vs)});
+      }
     }
   }
 

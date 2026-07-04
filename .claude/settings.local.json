@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(cat .gitignore)",
-      "Bash(ls node_modules/.bin/tsc)"
+      "Bash(ls node_modules/.bin/tsc)",
+      "PowerShell(Get-ChildItem -Recurse \"d:\\\\Projects\\\\robotmon-scripts\\\\scripts\\\\com.r2studio.TsumThi\" -Exclude node_modules | Where-Object { $_.FullName -notmatch 'node_modules' } | Select-Object FullName)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" devices)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" shell dumpsys sensorservice)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" shell getprop ro.build.type)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" shell getprop ro.debuggable)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" shell getprop ro.product.model)",
+      "PowerShell($adb=\"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\"; $out=\"$env:TEMP\\\\accel_samples.txt\"; \"=== sampling start $\\(Get-Date -Format HH:mm:ss\\) \\(HOLD your MuMu tilt key now\\) ===\" | Set-Content $out; $end=\\(Get-Date\\).AddSeconds\\(35\\); while\\(\\(Get-Date\\) -lt $end\\){ $lines=\\(& $adb shell dumpsys sensorservice\\) -split \"`n\"; $acc=$null; $started=$false; foreach\\($ln in $lines\\){ if\\($ln -match '3-axis Accelerometer: last'\\){ $started=$true; continue }; if\\($started\\){ if\\($ln -match 'wall='\\){ $acc=$ln.Trim\\(\\) } elseif\\($acc\\){ break } } }; \"$\\(Get-Date -Format HH:mm:ss.fff\\)  $acc\" | Add-Content $out }; \"=== sampling end ===\" | Add-Content $out)",
+      "Read(//c/Users/thima/AppData/Local/Temp/**)",
+      "Read(//d/d/Projects/robotmon-scripts/scripts/com.r2studio.TsumThi/**)",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }
