@@ -65,6 +65,10 @@ function Tsum(isJP, detect, logs) {
     }
   };
   this.recordImages = {};
+  // Cap on sender portraits kept in native memory for matching (the on-disk
+  // PNGs and record.txt stats are unaffected). Unbounded retention grew with
+  // every recorded friend and dragged emulator FPS down over long sessions.
+  this.maxRecordImages = 200;
   this.receiveCheckLimit = 5;
   this.clearBubbles = true;
   this.autobuyBoxes = 0;
@@ -1381,10 +1385,21 @@ Tsum.prototype.readRecord = function() {
   if (txt !== undefined && txt !== "") {
     this.record = JSON.parse(txt);
   }
+  // Only load the most recently seen senders as match candidates; the full
+  // history stays in record.txt and on disk. Opening every portrait pinned
+  // native memory for the whole session, growing with each recorded friend.
+  const names = [];
   for (const filename in this.record) {
     if (filename !== "hearts_count") {
-      this.recordImages[filename] = openImage(recordDir + '/' + filename);
+      names.push(filename);
     }
+  }
+  const record = this.record;
+  names.sort(function(a, b) {
+    return (record[b].lastReceiveTime || 0) - (record[a].lastReceiveTime || 0);
+  });
+  for (let i = 0; i < names.length && i < this.maxRecordImages; i++) {
+    this.recordImages[names[i]] = openImage(recordDir + '/' + names[i]);
   }
 }
 
@@ -1394,43 +1409,53 @@ Tsum.prototype.recognizeSender = function(img) {
   const from = this.toResizeXYs(Button.outReceiveNameFrom);
   const to = this.toResizeXYs(Button.outReceiveNameTo);
   const nameImg = cropImage(img, Math.floor(from.x), Math.floor(from.y), Math.floor(to.x - from.x), Math.floor(to.y - from.y));
-  let score = 0;
-  let existFilename = '';
-  for(const key in this.recordImages) {
-    if (this.recordImages[key] !== 0) {
-      score = getIdentityScore(nameImg, this.recordImages[key]);
-      if (score >= 0.98) {
-        existFilename = key;
-        log(this.logs.recognitionScore + " > 0.98", key, score);
-        break;
+  // nameImg is only kept (in recordImages) when the sender is new; every
+  // other path out of this function — match found or getIdentityScore
+  // throwing — must release it.
+  let retained = false;
+  try {
+    let score = 0;
+    let existFilename = '';
+    for(const key in this.recordImages) {
+      if (this.recordImages[key] !== 0) {
+        score = getIdentityScore(nameImg, this.recordImages[key]);
+        if (score >= 0.98) {
+          existFilename = key;
+          log(this.logs.recognitionScore + " > 0.98", key, score);
+          break;
+        }
       }
     }
-  }
-  // console.log("Score: " + score);
-  if (existFilename === '') {
-    const now = nowTime();
-    const dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
-    // not found, new friend
-    const filename = 'f_' + now + '.png';
-    this.record[filename] = {
-      receiveCounts: {},
-      lastReceiveTime: now
-    };
-    this.record[filename].receiveCounts[dayTime] = 1;
-    this.recordImages[filename] = nameImg;
-    const path = recordDir + '/' + filename;
-    log(this.logs.saveNewFriend, path);
-    saveImage(nameImg, path);
-    this.sleep(80);
-    const check = execute("ls " + path);
-    if (check.indexOf(filename) === -1) {
-      log(this.logs.saveNewFriendAgain);
+    // console.log("Score: " + score);
+    if (existFilename === '') {
+      const now = nowTime();
+      const dayTime = Math.floor(now / (24 * 60 * 60 * 1000));
+      // not found, new friend
+      const filename = 'f_' + now + '.png';
+      this.record[filename] = {
+        receiveCounts: {},
+        lastReceiveTime: now
+      };
+      this.record[filename].receiveCounts[dayTime] = 1;
+      this.recordImages[filename] = nameImg;
+      retained = true;
+      const path = recordDir + '/' + filename;
+      log(this.logs.saveNewFriend, path);
       saveImage(nameImg, path);
+      this.sleep(80);
+      const check = execute("ls " + path);
+      if (check.indexOf(filename) === -1) {
+        log(this.logs.saveNewFriendAgain);
+        saveImage(nameImg, path);
+      }
+      this.evictOldRecordImages();
     }
-  } else {
-    releaseImage(nameImg);
+    return existFilename;
+  } finally {
+    if (!retained) {
+      releaseImage(nameImg);
+    }
   }
-  return existFilename;
 }
 
 Tsum.prototype.countReceiveHeart = function(existFilename) {
@@ -1455,9 +1480,38 @@ Tsum.prototype.saveRecord = function() {
   writeFile(recordFile, JSON.stringify(this.record));
 }
 
+// Drop the oldest in-memory sender portraits once the cap is exceeded. Only
+// the match candidates are released — the on-disk PNGs and record.txt stats
+// are untouched. An evicted sender who shows up again is recorded under a
+// fresh image, the same outcome as a failed match.
+Tsum.prototype.evictOldRecordImages = function() {
+  const names = [];
+  for (const key in this.recordImages) {
+    names.push(key);
+  }
+  if (names.length <= this.maxRecordImages) {
+    return;
+  }
+  const record = this.record;
+  names.sort(function(a, b) {
+    const ta = record[a] ? (record[a].lastReceiveTime || 0) : 0;
+    const tb = record[b] ? (record[b].lastReceiveTime || 0) : 0;
+    return tb - ta;  // newest first
+  });
+  for (let i = this.maxRecordImages; i < names.length; i++) {
+    if (this.recordImages[names[i]] !== 0) {
+      releaseImage(this.recordImages[names[i]]);
+    }
+    delete this.recordImages[names[i]];
+  }
+  debug("Released", names.length - this.maxRecordImages, "old sender images (cap", this.maxRecordImages, ")");
+}
+
 Tsum.prototype.releaseRecord = function() {
   for(const filename in this.recordImages) {
-    releaseImage(this.recordImages[filename]);
+    if (this.recordImages[filename] !== 0) {
+      releaseImage(this.recordImages[filename]);
+    }
   }
   this.record = {};
   this.recordImages = {};

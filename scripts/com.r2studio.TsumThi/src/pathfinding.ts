@@ -261,116 +261,128 @@ function convertTo2DArray(arr, size) {
 }
 
 function findTsums(img) {
+  // Every native image allocated here must be released even when a native
+  // call throws mid-scan: the task controller swallows task errors and
+  // retries, so a leak on this hot path would silently recur on every scan.
   const hsvImg = clone(img);
-  smooth(hsvImg, 1, 7);
-  convertColor(hsvImg, 40);
-  const filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
-  const filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
-  const mask = bgrToGray(filter2);
+  let filter1 = null;
+  let filter2 = null;
+  let mask = null;
+  try {
+    smooth(hsvImg, 1, 7);
+    convertColor(hsvImg, 40);
+    filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
+    filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
+    mask = bgrToGray(filter2);
 
-  releaseImage(filter1);
-  releaseImage(filter2);
+    releaseImage(filter1);
+    filter1 = null;
+    releaseImage(filter2);
+    filter2 = null;
 
-  const points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
+    const points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
 
-  const results = [];
-  if (!Config.experimentalConnections) {
-    // Original sampling: heavy blur to smear out face features, then a
-    // 5-pixel cross average at the circle center.
-    smooth(hsvImg, 1, 22);
-    for (const k in points) {
-      const p = points[k];
-      let hsv1, hsv2, hsv3, hsv4, hsv5;
-      hsv5 = hsv4 = hsv3 = hsv2 = hsv1 = getImageColor(hsvImg, p.x, p.y);
-      if (p.x - 1 >= 0) { hsv2 = getImageColor(hsvImg, p.x - 1, p.y); }
-      if (p.x + 1 < Config.screenResize) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
-      if (p.y - 1 >= 0) { hsv4 = getImageColor(hsvImg, p.x, p.y - 1); }
-      if (p.y + 1 < Config.screenResize) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
-      const avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
-      const avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
-      const avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
-      results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
-    }
-  } else {
-    // Experimental sampling: light blur only — median filtering below is what
-    // rejects face features and overlap contamination. The 22px smear above
-    // covers more than a whole tsum (~16px here) and bleeds neighboring
-    // tsums' colors into every center sample.
-    smooth(hsvImg, 1, Config.colorSampleSmooth);
-    // Preferred path: a native median filter (cvSmooth type 3, probed once —
-    // not every runtime supports it) makes every pixel the per-channel median
-    // of its 9x9 neighborhood, so a single center read per tsum replaces the
-    // JS-side ring sampling. Bridge calls sit on the scan's critical path
-    // while the combo timer is running, so fewer reads matter.
-    if (gMedianBlurUsable !== false) {
-      try {
-        smooth(hsvImg, 3, 9);
-        if (gMedianBlurUsable === undefined) {
-          gMedianBlurUsable = true;
-          console.log('smooth: native median filter available, sampling tsum centers only');
-        }
-      } catch (e) {
-        gMedianBlurUsable = false;
-        console.log('smooth: native median filter unavailable, using ring sampling: ' + e);
-      }
-    }
-    if (gMedianBlurUsable) {
-      const centerPts = [];
-      for (const k in points) {
-        centerPts.push({x: points[k].x, y: points[k].y});
-      }
-      const centerColors = getPixelColors(hsvImg, centerPts);
-      let ci = 0;
+    const results = [];
+    if (!Config.experimentalConnections) {
+      // Original sampling: heavy blur to smear out face features, then a
+      // 5-pixel cross average at the circle center.
+      smooth(hsvImg, 1, 22);
       for (const k in points) {
         const p = points[k];
-        const c = centerColors[ci++];
-        results.push({x: p.x, y: p.y, z: p.r, b: c.b, g: c.g, r: c.r});
+        let hsv1, hsv2, hsv3, hsv4, hsv5;
+        hsv5 = hsv4 = hsv3 = hsv2 = hsv1 = getImageColor(hsvImg, p.x, p.y);
+        if (p.x - 1 >= 0) { hsv2 = getImageColor(hsvImg, p.x - 1, p.y); }
+        if (p.x + 1 < Config.screenResize) { hsv3 = getImageColor(hsvImg, p.x + 1, p.y); }
+        if (p.y - 1 >= 0) { hsv4 = getImageColor(hsvImg, p.x, p.y - 1); }
+        if (p.y + 1 < Config.screenResize) { hsv5 = getImageColor(hsvImg, p.x, p.y + 1); }
+        const avgb = (hsv1.b + hsv2.b + hsv3.b + hsv4.b + hsv5.b) / 5;
+        const avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
+        const avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
+        results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
       }
     } else {
-      // Fallback: sample the center plus an 8-point ring inside the tsum
-      // body — per-channel medians ignore eyes/highlights and stray neighbor
-      // pixels as long as most samples land on body color. 9 samples
-      // tolerate 4 outliers.
-      const ringR = Math.max(2, Math.round(Config.tsumWidth * 0.3));
-      const ringDiag = Math.max(1, Math.round(ringR * 0.7071));
-      const ringOffsets = [
-        [ringR, 0], [ringDiag, ringDiag], [0, ringR], [-ringDiag, ringDiag],
-        [-ringR, 0], [-ringDiag, -ringDiag], [0, -ringR], [ringDiag, -ringDiag]
-      ];
-      const samplePts = [];
-      for (const k in points) {
-        const p = points[k];
-        samplePts.push({x: p.x, y: p.y});
-        for (let a = 0; a < ringOffsets.length; a++) {
-          samplePts.push({
-            x: Math.min(Math.max(p.x + ringOffsets[a][0], 0), Config.screenResize - 1),
-            y: Math.min(Math.max(p.y + ringOffsets[a][1], 0), Config.screenResize - 1)
-          });
+      // Experimental sampling: light blur only — median filtering below is what
+      // rejects face features and overlap contamination. The 22px smear above
+      // covers more than a whole tsum (~16px here) and bleeds neighboring
+      // tsums' colors into every center sample.
+      smooth(hsvImg, 1, Config.colorSampleSmooth);
+      // Preferred path: a native median filter (cvSmooth type 3, probed once —
+      // not every runtime supports it) makes every pixel the per-channel median
+      // of its 9x9 neighborhood, so a single center read per tsum replaces the
+      // JS-side ring sampling. Bridge calls sit on the scan's critical path
+      // while the combo timer is running, so fewer reads matter.
+      if (gMedianBlurUsable !== false) {
+        try {
+          smooth(hsvImg, 3, 9);
+          if (gMedianBlurUsable === undefined) {
+            gMedianBlurUsable = true;
+            console.log('smooth: native median filter available, sampling tsum centers only');
+          }
+        } catch (e) {
+          gMedianBlurUsable = false;
+          console.log('smooth: native median filter unavailable, using ring sampling: ' + e);
         }
       }
-      const sampleColors = getPixelColors(hsvImg, samplePts);
-      let si = 0;
-      for (const k in points) {
-        const p = points[k];
-        const hs = [], ss = [], vs = [];
-        for (let s = 0; s <= ringOffsets.length; s++) {
-          const c = sampleColors[si++];
-          hs.push(c.b); ss.push(c.g); vs.push(c.r);
+      if (gMedianBlurUsable) {
+        const centerPts = [];
+        for (const k in points) {
+          centerPts.push({x: points[k].x, y: points[k].y});
         }
-        results.push({x: p.x, y: p.y, z: p.r, b: median(hs), g: median(ss), r: median(vs)});
+        const centerColors = getPixelColors(hsvImg, centerPts);
+        let ci = 0;
+        for (const k in points) {
+          const p = points[k];
+          const c = centerColors[ci++];
+          results.push({x: p.x, y: p.y, z: p.r, b: c.b, g: c.g, r: c.r});
+        }
+      } else {
+        // Fallback: sample the center plus an 8-point ring inside the tsum
+        // body — per-channel medians ignore eyes/highlights and stray neighbor
+        // pixels as long as most samples land on body color. 9 samples
+        // tolerate 4 outliers.
+        const ringR = Math.max(2, Math.round(Config.tsumWidth * 0.3));
+        const ringDiag = Math.max(1, Math.round(ringR * 0.7071));
+        const ringOffsets = [
+          [ringR, 0], [ringDiag, ringDiag], [0, ringR], [-ringDiag, ringDiag],
+          [-ringR, 0], [-ringDiag, -ringDiag], [0, -ringR], [ringDiag, -ringDiag]
+        ];
+        const samplePts = [];
+        for (const k in points) {
+          const p = points[k];
+          samplePts.push({x: p.x, y: p.y});
+          for (let a = 0; a < ringOffsets.length; a++) {
+            samplePts.push({
+              x: Math.min(Math.max(p.x + ringOffsets[a][0], 0), Config.screenResize - 1),
+              y: Math.min(Math.max(p.y + ringOffsets[a][1], 0), Config.screenResize - 1)
+            });
+          }
+        }
+        const sampleColors = getPixelColors(hsvImg, samplePts);
+        let si = 0;
+        for (const k in points) {
+          const p = points[k];
+          const hs = [], ss = [], vs = [];
+          for (let s = 0; s <= ringOffsets.length; s++) {
+            const c = sampleColors[si++];
+            hs.push(c.b); ss.push(c.g); vs.push(c.r);
+          }
+          results.push({x: p.x, y: p.y, z: p.r, b: median(hs), g: median(ss), r: median(vs)});
+        }
       }
     }
+
+    if (ts.debug) {
+      saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
+      saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
+    }
+
+    return results;
+  } finally {
+    if (filter1 != null) { releaseImage(filter1); }
+    if (filter2 != null) { releaseImage(filter2); }
+    if (mask != null) { releaseImage(mask); }
+    releaseImage(hsvImg);
   }
-
-  if (ts.debug) {
-    saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
-    saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
-  }
-
-  releaseImage(mask);
-  releaseImage(hsvImg);
-
-  return results;
 }
 
 // Distance between two sampled tsum colors. The image is HSV at this point,

@@ -10,6 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - "Auto-tap skill when ready" setting (off by default): polls the skill button every 0.5s — including between chains while linking — and fires the skill the moment the gauge is ready, instead of only checking at the end of each board-scan cycle. Fixes skills sitting ready for several seconds before being tapped. Uses the normal activation path, so every skill type's choreography is handled as usual.
 
+### Fixed
+- Native-memory leaks that degraded emulator FPS over long sessions:
+  - Sender portraits recorded by "Record sender" were all held in native memory for the whole session and reloaded in full on every start, growing without bound with each new friend on record. Now only the 200 most recently seen senders are kept in memory as match candidates (on-disk PNGs and record.txt stats are unaffected).
+  - The board scan (`findTsums`) released its four working images without exception protection; because the task controller swallows task errors and retries, any recurring native error silently leaked two full board images per scan. All scan images are now released in `finally`.
+  - `recognizeSender` and the record-table generator leaked their working image if a native call threw mid-recognition.
+
 
 ## [v82] - 2026-06-10
 

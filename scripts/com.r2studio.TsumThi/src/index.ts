@@ -206,8 +206,12 @@ function genRecordTable() {
     // user image
     const filePath = getStoragePath()+"/tsum_record/" + filename;
     const tmpImg = openImage(filePath);
-    const base64 = getBase64FromImage(tmpImg);
-    releaseImage(tmpImg);
+    let base64;
+    try {
+      base64 = getBase64FromImage(tmpImg);
+    } finally {
+      releaseImage(tmpImg);
+    }
     html += "<td><img src='data:image/png;base64," + base64 + "' /></td>";
 
     let totalDay = 0;
