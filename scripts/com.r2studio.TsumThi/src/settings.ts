@@ -356,7 +356,7 @@ var settings = [
             title_zh_TW: '定時重啟Tsum app（時）',
             min: 0,
             max: 120,
-            step: 6,
+            step: 1,
             default: 0
         }
     ],

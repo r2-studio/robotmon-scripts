@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - "Auto-tap skill when ready" setting (off by default): polls the skill button every 0.5s — including between chains while linking — and fires the skill the moment the gauge is ready, instead of only checking at the end of each board-scan cycle. Fixes skills sitting ready for several seconds before being tapped. Uses the normal activation path, so every skill type's choreography is handled as usual.
 
+### Changed
+- "Tsum app restart frequency (hours)" now adjustable in 1-hour steps (was 6). The Tsum Tsum app itself leaks over long sessions — FPS sinks as skills are used and only an app restart restores it — so restarting every 1-2 hours is the effective mitigation, which the 6-hour granularity couldn't express.
+
 ### Fixed
 - Native-memory leaks that degraded emulator FPS over long sessions:
   - Sender portraits recorded by "Record sender" were all held in native memory for the whole session and reloaded in full on every start, growing without bound with each new friend on record. Now only the 200 most recently seen senders are kept in memory as match candidates (on-disk PNGs and record.txt stats are unaffected).
