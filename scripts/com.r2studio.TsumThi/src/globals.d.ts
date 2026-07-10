@@ -100,17 +100,6 @@ interface TsumConfig {
   gameContinueDelay: number;
   colors: number[][];
   debugLogs: boolean;
-  // "Experimental Tsum Connections": gates the reworked color recognition
-  // (circular/sat-weighted hue, k-means refinement, ring-median sampling).
-  // Off = original pipeline.
-  experimentalConnections: boolean;
-  // Color-clustering tuning, overridable from the settings page. Only used
-  // when experimentalConnections is on.
-  colorHueWeightX10: number;
-  colorHueBonus: number;
-  colorSatBonus: number;
-  colorMergeDist: number;
-  colorSampleSmooth: number;
 }
 
 type PageMap = { [name: string]: PageDef };
@@ -139,9 +128,6 @@ declare function clone(img: any): any;
 declare function cropImage(img: any, x: number, y: number, w: number, h: number): any;
 declare function getBase64FromImage(img: any): string;
 declare function getImageColor(img: any, x: number, y: number): Color;
-// Not available in every runtime (MuMuPlayer 2026-06: ReferenceError) — call
-// only through the runtime-probing getPixelColors() in pathfinding.ts.
-declare function getImageColors(img: any, points: any): any;
 declare function getImageWidth(img: any): number;
 declare function getImageHeight(img: any): number;
 declare function getImageSize(img: any): { width: number; height: number };

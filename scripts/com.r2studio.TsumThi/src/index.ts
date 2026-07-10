@@ -55,17 +55,6 @@ function start(settings) {
   }
 
   Config.debugLogs = settings['debugLogs'];
-  // "Experimental Tsum Connections": reworked color recognition, off by
-  // default. The tuning values below only take effect when it is on.
-  Config.experimentalConnections = !!settings['experimentalTsumConnections'];
-  // Color-clustering tuning. Keep the data.ts defaults when launched from an
-  // older settings page that doesn't send these keys (0 is a valid value, so
-  // check the type rather than truthiness).
-  if (typeof settings['colorHueWeightX10'] === 'number') { Config.colorHueWeightX10 = settings['colorHueWeightX10']; }
-  if (typeof settings['colorHueBonus'] === 'number') { Config.colorHueBonus = settings['colorHueBonus']; }
-  if (typeof settings['colorSatBonus'] === 'number') { Config.colorSatBonus = settings['colorSatBonus']; }
-  if (typeof settings['colorMergeDist'] === 'number') { Config.colorMergeDist = settings['colorMergeDist']; }
-  if (typeof settings['colorSampleSmooth'] === 'number') { Config.colorSampleSmooth = settings['colorSampleSmooth']; }
   ts.autobuyBoxes = settings['autobuyBoxes'];
   ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
   ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];

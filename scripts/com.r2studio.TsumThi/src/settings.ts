@@ -359,63 +359,6 @@ var settings = [
             step: 1,
             default: 0
         }
-    ],
-    [
-        {
-            title: '<b>Experimental Tsum Connections</b><br>Reworked color recognition: hue-weighted color matching, k-means clustering, ring-median sampling. Off = original behavior; the tuning values below only apply when enabled. If two similar-colored tsums (e.g. green alien + orange car) get linked as one chain, raise hue weight or lower the bonuses/match distance. Enable "Debug game" to log cluster colors and distances.',
-            title_zh_TW: '<b>實驗性Tsum連線</b><br>重做的顏色辨識：色相加權比對、k-means分組、環狀中位數取樣。關閉 = 原始行為；以下調整值僅在開啟時生效。若兩種顏色相近的Tsum（如綠色三眼怪+橘色汽車）被誤連成一條鏈，請提高色相權重或降低折扣/匹配距離。開啟「调试游戏」可記錄分組顏色與距離。'
-        },
-        {
-            key: 'experimentalTsumConnections',
-            title: 'Experimental Tsum Connections',
-            title_zh_TW: '實驗性Tsum連線',
-            default: false
-        },
-        {
-            key: 'colorHueWeightX10',
-            title: 'Hue weight x10 (10 = unweighted; higher separates similar-hue tsums)',
-            title_zh_TW: '色相權重 x10（10 = 不加權；越高越能區分相近色相）',
-            default: 20,
-            step: 5,
-            max: 50,
-            min: 5
-        },
-        {
-            key: 'colorHueBonus',
-            title: 'Similar hue bonus (distance discount when hues are close)',
-            title_zh_TW: '相近色相折扣（色相接近時的距離折扣）',
-            default: 10,
-            step: 5,
-            max: 20,
-            min: 0
-        },
-        {
-            key: 'colorSatBonus',
-            title: 'Similar saturation bonus (distance discount when saturations are close)',
-            title_zh_TW: '相近飽和度折扣（飽和度接近時的距離折扣）',
-            default: 10,
-            step: 5,
-            max: 20,
-            min: 0
-        },
-        {
-            key: 'colorMergeDist',
-            title: 'Color match distance (colors farther than this from every cluster are ignored as noise)',
-            title_zh_TW: '顏色匹配距離（與所有分組距離超過此值的顏色視為雜訊忽略）',
-            default: 15,
-            step: 5,
-            max: 30,
-            min: 5
-        },
-        {
-            key: 'colorSampleSmooth',
-            title: 'Color sample blur (lower = less color bleed from neighbor tsums)',
-            title_zh_TW: '顏色取樣模糊（越低越不受鄰近Tsum顏色影響）',
-            default: 7,
-            step: 4,
-            max: 30,
-            min: 3
-        }
     ]
 ];
 

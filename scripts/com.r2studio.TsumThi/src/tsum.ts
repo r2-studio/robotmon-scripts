@@ -85,6 +85,10 @@ function Tsum(isJP, detect, logs) {
   this._lastProgress = Date.now();
   this._lastSeenCount = 3;  // matches the 3 init keys above
   this.stuckTimeoutMs = 180 * 1000;
+  // How long the play loop tolerates an unrecognized screen before accepting
+  // game over (see confirmGameOver). Must outlast the longest burst-skill
+  // animation; a real game over exits earlier via ScorePage detection.
+  this.gameOverGraceMs = 20 * 1000;
   this.sendHeartsDownwards = true;
   this.init(detect);
 }
@@ -1036,31 +1040,16 @@ Tsum.prototype.sampleMyTsumColor = function() {
   try {
     smooth(img, 1, 7);
     convertColor(img, 40);
-    if (!Config.experimentalConnections) {
-      smooth(img, 1, 22);
-      let sumB = 0, sumG = 0, sumR = 0, count = 0;
-      for (let dy = -3; dy <= 3; dy++) {
-        for (let dx = -3; dx <= 3; dx++) {
-          const c = getImageColor(img, 20 + dx, 20 + dy);
-          sumB += c.b; sumG += c.g; sumR += c.r;
-          count++;
-        }
-      }
-      return { b: sumB / count, g: sumG / count, r: sumR / count };
-    }
-    smooth(img, 1, Config.colorSampleSmooth);
-    const pts = [];
+    smooth(img, 1, 22);
+    let sumB = 0, sumG = 0, sumR = 0, count = 0;
     for (let dy = -3; dy <= 3; dy++) {
       for (let dx = -3; dx <= 3; dx++) {
-        pts.push({x: 20 + dx, y: 20 + dy});
+        const c = getImageColor(img, 20 + dx, 20 + dy);
+        sumB += c.b; sumG += c.g; sumR += c.r;
+        count++;
       }
     }
-    const cs = getPixelColors(img, pts);
-    const hs = [], ss = [], vs = [];
-    for (let i = 0; i < cs.length; i++) {
-      hs.push(cs[i].b); ss.push(cs[i].g); vs.push(cs[i].r);
-    }
-    return { b: median(hs), g: median(ss), r: median(vs) };
+    return { b: sumB / count, g: sumG / count, r: sumR / count };
   } finally {
     releaseImage(img);
   }
@@ -1089,14 +1078,12 @@ Tsum.prototype.scanBoardQuick = function() {
 
     const points = findTsums(srcImg);
     debug(this.logs.recognitionStart);
-    const tcs = classifyTsums(points, this.tsumCount);
+    const tcs = classifyTsums(points);
     tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
     if (this.debug) {
       // HSV cluster centers — compare these (and the inter-cluster distance3D)
       // against the boardImg circles when tuning the color-clustering settings.
-      let classified = 0;
       for (let ci = 0; ci < tcs.length; ci++) {
-        classified += tcs[ci].points.length;
         let line = 'cluster ' + ci + ': n=' + tcs[ci].points.length
           + ' hsv=(' + Math.round(tcs[ci].b) + ',' + Math.round(tcs[ci].g) + ',' + Math.round(tcs[ci].r) + ')';
         for (let cj = 0; cj < ci; cj++) {
@@ -1104,9 +1091,6 @@ Tsum.prototype.scanBoardQuick = function() {
         }
         console.log(line);
       }
-      // If "dropped" is regularly high, the noise cutoff (colorMergeDist) is
-      // eating real tsums — raise it.
-      console.log('detected ' + points.length + ' tsums, dropped ' + (points.length - classified) + ' as color noise');
     }
 
     // Identify which color cluster (if any) is the player's MyTsum by matching
@@ -1157,6 +1141,34 @@ Tsum.prototype.scanBoardQuick = function() {
   }
 
   return board;
+}
+
+// GamePlaying is recognized by HUD pixels on the pause/fan buttons, and a
+// long burst-skill animation (e.g. Dapper Hat Mickey) covers them for longer
+// than the old two-check window (~5s) while the game is still running — the
+// play loop would bail mid-game and stall on the "unknown" screen. So an
+// unrecognized screen alone is not proof of game over; require positive
+// confirmation instead: a game that really ends always reaches a known
+// out-of-game page (the score tally lands on ScorePage). Poll until the HUD
+// comes back (still playing), a known page shows up (game over), or the
+// grace window runs out (assume over — the old behavior, just later).
+Tsum.prototype.confirmGameOver = function() {
+  log(this.logs.confirmingGameOver);
+  const deadline = Date.now() + this.gameOverGraceMs;
+  while (this.isRunning) {
+    const page = this.findPage(1, 1500);
+    if (page === 'GamePlaying' || page === 'GamePause') {
+      return false;
+    }
+    if (page !== 'unknown') {
+      return true;
+    }
+    if (Date.now() > deadline) {
+      return true;
+    }
+    this.sleep(250);
+  }
+  return true;
 }
 
 Tsum.prototype.taskPlayGameQuick = function() {
@@ -1234,11 +1246,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
     }
 
     // double check
-    let page = this.findPage(1, 2500);
+    const page = this.findPage(1, 2500);
     if (page !== 'GamePlaying' && page !== 'GamePause') {
-      this.sleep(500);
-      page = this.findPage(1, 2500);
-      if (page !== 'GamePlaying' && page !== 'GamePause') {
+      if (this.confirmGameOver()) {
         log(this.logs.gameOver);
         break;
       }
