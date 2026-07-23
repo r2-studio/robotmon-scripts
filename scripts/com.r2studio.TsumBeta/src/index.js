@@ -1361,19 +1361,18 @@ function Tsum(isJP, detect, logs) {
   this.gameOffsetY = 0;
   this.gameHeight = 0;
   this.gameWidth = 0;
-  // this.resizeRatio = Math.max(1, this.screenWidth / 360); // normalize page screenshots to 360px width
-  this.resizeRatio = 1;
+  this.resizeRatio = Math.max(1, this.screenWidth / 360); // normalize page screenshots to 360px width
+
   this.captureGameRatio = 0;
   // playing game screen size config
   this.playOffsetX = 0;
   this.playOffsetY = 0;
   this.playHeight = 0;
   this.playWidth = 0;
-  //upscale test
+  
   this.playResizeWidth = Config.screenResize;
   this.playResizeHeight = Config.screenResize;
-  //this.playResizeWidth = this.playWidth;
-  //this.playResizeHeight = this.playHeight;
+
 
   this.tsumCount = 5;
   this.isJP = isJP;
@@ -2243,12 +2242,12 @@ Tsum.prototype.scanBoardQuick = function() {
     for (var j in tc.points) {
       var p = tc.points[j];
       board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
-      if (false) {
+      if (this.debug) {
         drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);
       }
     }
   }
-  if (false) { // forced debug on
+  if (this.debug) { 
     saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
   }
   releaseImage(srcImg);
