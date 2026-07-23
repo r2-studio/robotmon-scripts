@@ -1,0 +1,18 @@
+{
+  "name": "com.r2studio.tsumbeta",
+  "version": "1.0.0",
+  "description": "This is the successor of the script com.r2studio.Tsum.",
+  "main": "src/index.js",
+  "scripts": {
+    "build" : "./build.sh",
+    "buildAndAdb" : "./build.sh -a true",
+    "adb" : "adb push dist/index.* sdcard/Download/Robotmon/scripts/com.r2studio.TsumBeta/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "html-inline-external": "^1.0.10"
+  }
+}

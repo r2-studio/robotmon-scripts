@@ -1,0 +1,203 @@
+.navbar-custom {
+    border-radius: 0 !important;
+    background-color: #2196F3;
+    color: #FFFFFF;
+}
+
+.navbar-custom > a {
+    width: 100%;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.navbar-custom > a:hover {
+    color: #FFFFFF;
+}
+
+.list-group-item {
+    padding: 6px 10px !important;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0px;
+    width: 52px;
+    height: 28px;
+}
+
+ul {
+    padding-left: 5px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    display: none;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 2px;
+    bottom: 4px;
+    top: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(24px);
+    -ms-transform: translateX(24px);
+    transform: translateX(24px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 28px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.btn {
+    padding: 3px 5px !important;
+    font-size: 12px;
+    margin: 1.5px;
+    height: 26px;
+}
+
+.btn-plus {
+    color: #FFFFFF;
+    background-color: #2196F3;
+    border-color: #2196F3;
+}
+
+.btn-plus:hover,
+.btn-plus:focus,
+.btn-plus:active,
+.btn-plus.active {
+    color: #FFFFFF !important;
+    background-color: #0d8aee;
+    border-color: #0c7cd5;
+}
+
+.btn-plus.disabled:hover,
+.btn-plus.disabled:focus,
+.btn-plus.disabled:active,
+.btn-plus.disabled.active,
+.btn-plus[disabled]:hover,
+.btn-plus[disabled]:focus,
+.btn-plus[disabled]:active,
+.btn-plus[disabled].active,
+fieldset[disabled] .btn-plus:hover,
+fieldset[disabled] .btn-plus:focus,
+fieldset[disabled] .btn-plus:active,
+fieldset[disabled] .btn-plus.active {
+    color: #FFFFFF;
+    background-color: #2196F3;
+    border-color: #2196F3;
+}
+
+.btn-plus,
+.btn-danger,
+.btn-warning {
+    min-width: 35px;
+    padding: 3px 0px 3px 0px !important;
+}
+
+.setting_input_value {
+    width: 35px;
+    font-size: 12px;
+    height: 26px;
+    margin: 1.5px;
+    text-align: center;
+}
+
+.setting_input_value[type=text] {
+    width: 80%;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+}
+
+#goToTop {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+#goToBottom {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+}
+
+.dropbtn {
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 0.5px solid rgba(0, 0, 0, 0.2);
+    background-color: white;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 150px;
+    max-width: 200px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    left: auto;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {
+    background-color: #f1f1f1;
+}
+
+.show {
+    display: block;
+}
