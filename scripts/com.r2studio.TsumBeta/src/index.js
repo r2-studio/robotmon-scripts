@@ -1231,7 +1231,6 @@ function findTsums(img) {
   }
 
   if (ts.debug) {
-    saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
     saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
   }
 
