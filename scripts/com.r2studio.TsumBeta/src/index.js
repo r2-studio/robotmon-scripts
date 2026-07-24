@@ -1188,16 +1188,11 @@ function findTsums(img) {
   //var scale = imgSize.width / Config.screenResize;
   var scale =  1 ; // Assuming original base size is 200px
   var hsvImg = clone(img);
-  var grayImg = clone(img);
-  grayImg = bgrToGray(grayImg);
+  var tmpImg = clone(img);
+  var grayImg = bgrToGray(tmpImg);
+  releaseImage(tmpImg);
   smooth(grayImg, 2, 9);
   convertColor(hsvImg, 40);
-  var filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
-  var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
-  var mask = bgrToGray(filter2);
-
-  releaseImage(filter1);
-  releaseImage(filter2);
 
   var dp = 1;                             // Lower dp (1 or 2) gives better resolution accuracy at larger sizes
   var minDist = Math.round(22 * scale);    // Min distance between circle centers
@@ -1207,17 +1202,18 @@ function findTsums(img) {
   var maxRadius = Math.round(14 * scale); // Scaled maximum circle radius
 
   var points = houghCircles(grayImg,3, dp, minDist, param1, param2, minRadius, maxRadius); 
-  
   releaseImage(grayImg);
+
   if (ts.debug) {
   var debugImg = clone(img); 
   for (var k in points) {
     var p = points[k];
     drawCircle(debugImg, p.x, p.y, minRadius, 255, 0, 0, 1);
   }
-  saveImage(debugImg, ts.storagePath + "/tmp/" + ts.runTimes + "-detectedHoughCircles.jpg");
-  releaseImage(debugImg);
+    saveImage(debugImg, ts.storagePath + "/tmp/" + ts.runTimes + "-detectedHoughCircles.jpg");
+    releaseImage(debugImg);
   }
+  
   smooth(hsvImg, 1, 22);
   var results = [];
   for (var k in points) {
@@ -1235,11 +1231,10 @@ function findTsums(img) {
   }
 
   if (ts.debug) {
-  saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
+    saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
     saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
   }
 
-  releaseImage(mask);
   releaseImage(hsvImg);
 
   return results;
