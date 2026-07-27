@@ -31,8 +31,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 82,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v82</b>\n<ul>\n    <li>\n        修正找藍色Tsum方法\n        <br>\n        Fix blue tsum detection.\n    </li>\n</ul>",
+      "versionCode": 83,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v83</b>\n<ul>\n    <li>\n        修正找藍色Tsum方法\n        <br>\n        Fix blue tsum detection.\n    </li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": [],
