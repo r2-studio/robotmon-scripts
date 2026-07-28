@@ -1049,25 +1049,40 @@ function usingTimeString(startTime) {
   return Date.now() - startTime;
 }
 
+
 function getDistance(t1, t2) {
-  //return Math.sqrt((t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y));
-  return (t1.x - t2.x) * (t1.x - t2.x) + (t1.y - t2.y) * (t1.y - t2.y);
+  var dx = t1.x - t2.x;
+  var dy = t1.y - t2.y;
+  return dx * dx + dy * dy;
 }
 
-function buildTsumNeighbors(tsums, maxDistSq) {
-  var neighbors = [];
-  for (var i = 0; i < tsums.length; i++) {
-    neighbors.push([]);
+function findNearTsum(tsum, tsums) {
+  var minDis = Infinity;
+  var minTsum = null;
+  var idx = -1;
+
+  if (!tsum || !Array.isArray(tsums) || tsums.length === 0) {
+    return { dis: Infinity, tsum: null, idx: -1 };
   }
+
   for (var i = 0; i < tsums.length; i++) {
-    for (var j = i + 1; j < tsums.length; j++) {
-      if (getDistance(tsums[i], tsums[j]) <= maxDistSq) {
-        neighbors[i].push(j);
-        neighbors[j].push(i);
-      }
+    var candidate = tsums[i];
+
+    // Skip self-comparison (by reference or unique identifier/position)
+    if (candidate === tsum || (candidate.x === tsum.x && candidate.y === tsum.y)) {
+      continue;
+    }
+
+    var dis = getDistance(tsum, candidate);
+    if (dis < minDis) {
+      minDis = dis;
+      minTsum = candidate;
+      idx = i;
     }
   }
-  return neighbors;
+
+  var finalDistance = minDis === Infinity ? Infinity : Math.sqrt(minDis);
+  return { dis: finalDistance, tsum: minTsum, idx: idx };
 }
 
 function findTsumComponents(neighbors) {
@@ -1156,49 +1171,65 @@ function findLongestTsumPath(neighbors, comp, budget) {
   return state.best || [];
 }
 
+
 function calculatePaths(board, logs) {
-  var groups = {};
-  for (var t in board) {
-    var tsum = board[t];
-    if (groups[tsum.tsumIdx] === undefined) {
-      groups[tsum.tsumIdx] = [];
-    }
-    groups[tsum.tsumIdx].push(tsum);
+  var tsumsGrouped = {};
+  var tsumList = Array.isArray(board) ? board : Object.keys(board).map(function(k) { return board[k]; });
+
+  // 1. Group pieces by type (tsumIdx)
+  for (var i = 0; i < tsumList.length; i++) {
+    var tsum = tsumList[i];
+    if (!tsum) continue;
+    var idx = tsum.tsumIdx;
+    (tsumsGrouped[idx] = tsumsGrouped[idx] || []).push(tsum);
   }
 
-  var threshold = Config.tsumWidth * 2.8;
-  var maxDistSq = threshold * threshold;
   var paths = [];
+  var seenPathKeys = {};
 
-  for (var tsumIdx in groups) {
-    var group = groups[tsumIdx];
-    if (group.length < 3) { continue; }
+  // 2. Search paths for each group
+  for (var tsumIdx in tsumsGrouped) {
+    if (!Object.prototype.hasOwnProperty.call(tsumsGrouped, tsumIdx)) continue;
+    var group = tsumsGrouped[tsumIdx];
 
-    var neighbors = buildTsumNeighbors(group, maxDistSq);
-    var components = findTsumComponents(neighbors);
+    if (group.length < 3) continue;
 
-    for (var c = 0; c < components.length; c++) {
-      var comp = components[c];
-      if (comp.length < 3) { continue; }
-      // Budget grows with component size but caps so total time stays bounded.
-      var budget = Math.min(4000, 200 + comp.length * comp.length * 10);
-      var bestIndices = findLongestTsumPath(neighbors, comp, budget);
-      if (bestIndices.length >= 3) {
-        var pathPoints = [];
-        for (var p = 0; p < bestIndices.length; p++) {
-          pathPoints.push(group[bestIndices[p]]);
+    for (var j = 0; j < group.length; j++) {
+      var item = group[j];
+      var path = calculateNearTsumPaths(item, group);
+
+      if (path && path.length > 2) {
+        var pathKey = getCanonicalPathKey(path);
+
+        if (!seenPathKeys[pathKey]) {
+          seenPathKeys[pathKey] = true;
+          paths.push(path);
         }
-        paths.push(pathPoints);
       }
     }
   }
 
+  // 3. Sort paths descending by length
   paths.sort(function(a, b) {
-    if (a.length < b.length) { return 1; }
-    return -1;
+    return b.length - a.length;
   });
-  debug(logs.calculatedPath, paths.length);
+
+  if (typeof debug === 'function' && logs && logs.calculatedPath) {
+    debug(logs.calculatedPath, paths.length);
+  }
+
   return paths;
+}
+
+function getCanonicalPathKey(path) {
+  var ids = path.map(function(p) {
+    return (p.id !== undefined ? p.id : (p.x + ',' + p.y));
+  });
+
+  var forwardKey = ids.join('-');
+  var reverseKey = ids.slice().reverse().join('-');
+
+  return forwardKey < reverseKey ? forwardKey : reverseKey;
 }
 
 function convertTo2DArray(arr, size) {
@@ -1210,17 +1241,36 @@ function convertTo2DArray(arr, size) {
 }
 
 function findTsums(img) {
+  //var imgSize = getImageSize(img);
+  // Calculate scale factor relative to original base size of 200px
+  //var scale = imgSize.width / Config.screenResize;
+  var scale =  1 ; // Assuming original base size is 200px
   var hsvImg = clone(img);
-  smooth(hsvImg, 1, 7);
+  var tmpImg = clone(img);
+  var grayImg = bgrToGray(tmpImg);
+  releaseImage(tmpImg);
+  smooth(grayImg, 2, 9);
   convertColor(hsvImg, 40);
-  var filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
-  var filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
-  var mask = bgrToGray(filter2);
 
-  releaseImage(filter1);
-  releaseImage(filter2);
+  var dp = 1;                             // Lower dp (1 or 2) gives better resolution accuracy at larger sizes
+  var minDist = Math.round(22 * scale);    // Min distance between circle centers
+  var param1 = 20;                        // Canny high threshold (remains unchanged)
+  var param2 = Math.round(10 * scale);     // Accumulator threshold (scales with circle perimeter size)
+  var minRadius = Math.round(8 * scale);  // Scaled minimum circle radius
+  var maxRadius = Math.round(14 * scale); // Scaled maximum circle radius
 
-  var points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
+  var points = houghCircles(grayImg,3, dp, minDist, param1, param2, minRadius, maxRadius);
+  releaseImage(grayImg);
+
+  if (ts.debug) {
+  var debugImg = clone(img);
+  for (var k in points) {
+    var p = points[k];
+    drawCircle(debugImg, p.x, p.y, minRadius, 255, 0, 0, 1);
+  }
+    saveImage(debugImg, ts.storagePath + "/tmp/" + ts.runTimes + "-detectedHoughCircles.jpg");
+    releaseImage(debugImg);
+  }
 
   smooth(hsvImg, 1, 22);
   var results = [];
@@ -1239,11 +1289,9 @@ function findTsums(img) {
   }
 
   if (ts.debug) {
-    saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
     saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
   }
 
-  releaseImage(mask);
   releaseImage(hsvImg);
 
   return results;
@@ -1257,33 +1305,57 @@ function distance3D(p1, p2) {
   return d;
 }
 
+
 function classifyTsums(points) {
-  var tcs = [];
-  if (points.length === 0) {
-    return tcs;
+
+  var  threshold = 15;
+  if (!Array.isArray(points) || points.length === 0) {
+    return [];
   }
-  var p = points[0];
-  tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p] });
-  for (var i = 1; i < points.length; i++) {
-    p = points[i];
-    var isSame = false;
-    for(var j in tcs) {
-      var tc = tcs[j];
-      var d = distance3D(tc, p);
-      if (d < 15) {
-        var count = tc.points.length + 1;
-        isSame = true;
-        tc.sumb += p.b; tc.sumg += p.g; tc.sumr += p.r;
-        tc.b = tc.sumb/count; tc.g = tc.sumg/count; tc.r = tc.sumr/count;
-        tc.points.push(p);
-        break;
+
+  var clusters = [];
+
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    var bestCluster = null;
+    var minDistance = Infinity;
+
+    // Find the CLOSEST existing cluster within threshold
+    for (var j = 0; j < clusters.length; j++) {
+      var cluster = clusters[j];
+      var d = distance3D(cluster, p);
+
+      if (d < threshold && d < minDistance) {
+        minDistance = d;
+        bestCluster = cluster;
       }
     }
-    if(!isSame) {
-      tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p]});
+
+    if (bestCluster) {
+      // Add point to closest cluster & update running average color
+      bestCluster.points.push(p);
+      var count = bestCluster.points.length;
+      bestCluster.sumb += p.b;
+      bestCluster.sumg += p.g;
+      bestCluster.sumr += p.r;
+      bestCluster.b = bestCluster.sumb / count;
+      bestCluster.g = bestCluster.sumg / count;
+      bestCluster.r = bestCluster.sumr / count;
+    } else {
+      // Start a new cluster
+      clusters.push({
+        sumb: p.b,
+        sumg: p.g,
+        sumr: p.r,
+        b: p.b,
+        g: p.g,
+        r: p.r,
+        points: [p]
+      });
     }
   }
-  return tcs;
+
+  return clusters;
 }
 
 function detectOffsetYInGame() {
@@ -1342,14 +1414,17 @@ function Tsum(isJP, detect, logs) {
   this.gameHeight = 0;
   this.gameWidth = 0;
   this.resizeRatio = Math.max(1, this.screenWidth / 360); // normalize page screenshots to 360px width
+
   this.captureGameRatio = 0;
   // playing game screen size config
   this.playOffsetX = 0;
   this.playOffsetY = 0;
   this.playHeight = 0;
   this.playWidth = 0;
+
   this.playResizeWidth = Config.screenResize;
   this.playResizeHeight = Config.screenResize;
+
 
   this.tsumCount = 5;
   this.isJP = isJP;
