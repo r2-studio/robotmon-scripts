@@ -11,6 +11,172 @@ var Config: TsumConfig = {
   debugLogs: false
 };
 
+// Top of the square play area in logical coordinates. The board occupies the
+// 1080x1080 square below this line; everything above is score/timer chrome.
+var PlayAreaTopY = 465;
+
+// --- Tiara Minnie+ ------------------------------------------------------
+//
+// Her skill shows Minnie with a thought bubble containing one present, then a
+// screen of presents to pick the matching one from. The bubble appears once per
+// activation and is not shown again, so an activation is exactly one pick. A
+// correct one adds a present to the next activation's screen (2 up to 6); a
+// wrong one resets it to 2 -- which is why every layout has to be handled, but
+// also why the count never needs to be tracked between activations.
+//
+// The presents always land on the same centres for a given count, so there is
+// nothing to search for: crop each known centre, crop the bubble, and compare
+// the pictures directly. Centres are logical 1080x1920 and were read off
+// doc/screenshots/TiaraMinnie/2..6.png (blob centres agreed within ~20px).
+var TiaraLayouts: { [n: number]: Point[] } = {
+  2: [{x: 292, y: 973},  {x: 781, y: 1059}],
+  3: [{x: 781, y: 829},  {x: 666, y: 1275}, {x: 306, y: 987}],
+  4: [{x: 292, y: 1232}, {x: 263, y: 829},  {x: 796, y: 757},  {x: 796, y: 1117}],
+  5: [{x: 234, y: 1117}, {x: 882, y: 1102}, {x: 292, y: 771},  {x: 839, y: 742},
+      {x: 551, y: 1304}],
+  6: [{x: 752, y: 757},  {x: 378, y: 728},  {x: 176, y: 973},  {x: 896, y: 1001},
+      {x: 349, y: 1232}, {x: 680, y: 1261}]
+};
+
+// Presents shrink as more of them appear; these are the crop sides that put the
+// present in the same fraction of the frame at every count (measured widths ran
+// 270/275/252/237/237 for counts 2..6).
+var TiaraSlotSide: { [n: number]: number } = {
+  2: 300, 3: 295, 4: 280, 5: 265, 6: 260
+};
+
+var TiaraMinnieConfig = {
+  // Resolution the play square is captured at for matching. 270 through 720 all
+  // scored identically offline, so this is chosen for speed, not accuracy.
+  captureSize: 420,
+
+  // The thought bubble is drawn at a fixed spot, so the template is a fixed
+  // crop -- no searching. Verified at (250..255, 870..875) on every dream frame
+  // where the present could be isolated, and +/-16px of error still ranked the
+  // right present first.
+  bubbleX: 252,
+  bubbleY: 872,
+  bubbleSide: 240,
+
+  // Cloud test, used to tell "bubble is up" from "presents are up" and from
+  // "the skill is over". Measured 0.484-0.503 on bubble frames vs 0.019-0.060
+  // on present frames, so the threshold sits in a very wide gap.
+  cloudBox: {x0: 60, y0: 690, x1: 450, y1: 1050},
+  cloudSatMax: 70,
+  cloudValMin: 180,
+  cloudStep: 24,
+  cloudMinFrac: 0.25,
+  // This test is polled in a loop, and it is only asking whether a big pale
+  // blob is present, so it gets its own small capture with no blur. At the
+  // matching resolution each check cost a 420x420 grab plus a 7px blur, which
+  // made the poll slower than the interval it was polling on.
+  cloudCaptureSize: 120,
+
+  // Comparison grid. Each crop is reduced to grid x grid cells; cells are
+  // compared only where the template says the present is, which drops the board
+  // background (dark tsums) and the bubble background (white cloud) alike.
+  // 10 through 20 all scored the same offline, so this is the cheap end of the
+  // range that still held up: 12x12 cells over 20 candidates is 2880 reads.
+  grid: 12,
+  satMin: 70,
+  valMin: 170,
+
+  // Per-cell differences are divided by this and clipped at 1, so the score
+  // counts clearly-disagreeing cells instead of averaging away small ones.
+  // Raised the worst-case margin from 0.095 to 0.264 against the same frames.
+  cellSpread: 0.30,
+
+  // A tap needs both of these. The score alone cannot say whether the presents
+  // are up yet: a green template scores 0.461 against ordinary green tsums, so
+  // a board with no presents on it would clear any floor low enough to keep the
+  // real matches (which fall to ~0.44 if the presents are 10px off the table).
+  //
+  // The margin does separate the two, because bare board has no standout winner
+  // -- it reached 0.096 at best, where a real choice screen never scored under
+  // 0.278. So the floor rejects noise and the margin proves a present is there.
+  confidenceFloor: 0.42,
+  marginFloor: 0.12,
+
+  // Tapping a present detonates an area of the board, so the blast wants a full,
+  // still board under it. The play loop clears a chain immediately before the
+  // skill fires (and may have just used the fan), so at activation the tsums are
+  // almost always mid-fall and a blast then catches very few of them.
+  //
+  // How long that takes varies with how much was cleared, so it is measured
+  // rather than guessed: take a coarse brightness fingerprint of the board twice
+  // and watch how much it changes. Falling tsums move it a lot, a settled board
+  // barely at all (only sparkles and the fever glow).
+  //
+  // For scale, that measure is 0 between identical frames, ~0.06 between two
+  // frames of a similar scene, and 0.20-0.30 between wholly different screens.
+  // settleMaxDiff is the one number here not pinned down by measurement -- there
+  // were no consecutive-frame pairs to calibrate falling tsums against -- so it
+  // is set loose rather than tight: too strict just means every activation waits
+  // out settleWaitMs, which is the delay this was added to avoid. The timeout
+  // logs the diff it actually saw, which is what to tune from.
+  settleWaitMs: 300,
+  settleMinMs: 60,
+  settlePollMs: 30,
+  settleCapture: 64,
+  settleGrid: 16,
+  settleMaxDiff: 0.03,
+  settleQuietScans: 2,
+
+  // Timings. The bubble is shown once, ~2s after the skill fires, and the
+  // presents ~1s after that. The game timer is stopped while the presents are
+  // up, so the checks made there are free; everything before them costs real
+  // game time, which is what these two are sized against.
+  //
+  // Nothing can happen until the skill animation has played, so sit that out
+  // rather than spending ~15 screenshots polling for something that cannot have
+  // happened yet.
+  dreamLeadMs: 1500,
+  // Covers the lead plus a bubble arriving late. Only ever spent in full when
+  // the skill did not actually fire.
+  dreamWaitMs: 3000,
+  dreamSettleMs: 250,
+  // After the bubble clears, the presents take about a second to arrive. Waiting
+  // most of that out first means the matcher never sees the hand-over frames.
+  choiceLeadMs: 500,
+  choiceWaitMs: 6000,
+  pollMs: 100,
+  agreeScans: 2,
+  pickTaps: 2,
+  pickTapDuring: 60,
+  pickTapGapMs: 50
+};
+
+// --- Game bubbles -------------------------------------------------------
+//
+// Tiara Minnie+ makes a bubble popped as a chain goes off clear a bigger area,
+// so bubbles are worth tapping the instant a long chain lands rather than on
+// the play loop's periodic sweep (which is ~50 blind taps and far too slow to
+// land inside a chain).
+//
+// A bubble is a circle like a tsum, only much bigger, so it falls out of the
+// same grayscale Hough pass findTsums already runs -- on the capture the scan
+// already took, which is what makes locating them cost nothing extra.
+var GameBubbleConfig = {
+  // Circle geometry in the 200px play-square space findTsums works in, where a
+  // tsum is radius 8-14.
+  //
+  // NOT YET CALIBRATED: there is no saved frame with a bubble on the board to
+  // measure against, so this range is reasoned from a bubble being noticeably
+  // larger than a tsum, not measured. Getting it wrong costs stray taps on bare
+  // board, which the game ignores -- a tap is not a drag, so nothing links.
+  minRadius: 16,
+  maxRadius: 30,
+  minDist: 30,
+  param1: 20,
+  param2: 26,
+
+  // Chain length that earns a pop, and a cap so a frame full of false circles
+  // cannot turn into a long burst of taps mid-chain.
+  minChainForPop: 4,
+  maxTaps: 3,
+  tapDuring: 10
+};
+
 // Definitions assuming screen resolution of 1080 * 1920
 var Button: ButtonMap = {
   gameBubblesFrom: {x: 100, y: 632},

@@ -46,6 +46,8 @@ function Tsum(isJP, detect, logs) {
   this.skillInterval = 3000;
   this.skillLevel = 3;
   this.skillType = '';
+  // Bubble positions from the last board scan, tapped after a long chain.
+  this.gameBubbles = [];
   // Optional safety poll: fire the skill the instant it's ready, even mid-link,
   // rather than only at the end of each board-scan cycle (see maybeAutoTapSkill).
   this.skillAutoTap = false;
@@ -128,7 +130,7 @@ Tsum.prototype.init = function(detect) {
   }
   // noinspection JSSuspiciousNameCombination
   this.playHeight = this.playWidth; // game has square dimension
-  this.playOffsetY = 465 * this.captureGameRatio - this.gameOffsetY;
+  this.playOffsetY = PlayAreaTopY * this.captureGameRatio - this.gameOffsetY;
 
   this.sleep(200);
   log(this.logs.offset, this.gameOffsetX, this.gameOffsetY, this.screenHeight, this.screenWidth);
@@ -356,6 +358,26 @@ Tsum.prototype.maybeAutoTapSkill = function(board) {
   }
 };
 
+// Tap the bubbles the last board scan found. Taps only -- the positions were
+// worked out at scan time -- so this stays inside the window where the chain is
+// still clearing. A tap that misses costs nothing: it is not a drag, so it
+// links nothing and the game ignores it.
+Tsum.prototype.popGameBubbles = function() {
+  const bubbles = this.gameBubbles;
+  if (!bubbles || bubbles.length === 0) { return; }
+  const cfg = GameBubbleConfig;
+  const count = Math.min(bubbles.length, cfg.maxTaps);
+  for (let i = 0; i < count; i++) {
+    const b = bubbles[i];
+    const x = Math.floor(this.playOffsetX + b.x * this.playWidth / this.playResizeWidth);
+    const y = Math.floor(this.playOffsetY + b.y * this.playHeight / this.playResizeHeight);
+    tap(x, y, cfg.tapDuring);
+  }
+  if (this.debug) { console.log('[Bubbles] popped ' + count); }
+  // A bubble only pops once; forget them until the next scan finds them again.
+  this.gameBubbles = [];
+};
+
 Tsum.prototype.link = function(paths, board) {
   let isBubble = false;
   // Overloading (burst skills): erased MyTsums keep counting into the gauge
@@ -378,6 +400,11 @@ Tsum.prototype.link = function(paths, board) {
       isBubble = true;
     }
     this.linkTsums(path);
+    // Pop whatever the last scan saw the moment a long chain lands: with Tiara
+    // Minnie+ a bubble popped as a chain goes off clears a bigger area.
+    if (path.length >= GameBubbleConfig.minChainForPop) {
+      this.popGameBubbles();
+    }
     if (blindTap) {
       this.tap(Button.gameSkill1, 10);
     } else {
@@ -765,6 +792,20 @@ Tsum.prototype.useCinderellaSkill = function() {
   this.clearAllBubbles(10, 50, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2, 200);
 }
 
+// Whether firing the fan now would be a waste: the tsums it shuffles are about
+// to be cleared by a skill that is ready or nearly so. It also leaves the board
+// churning right as the skill activates, which matters for skills that read the
+// board on activation (Tiara Minnie+ blows up whatever is under her pick).
+// Costs one screenshot, so only call it where a fan tap is actually pending.
+Tsum.prototype.fanWouldBeWasted = function() {
+  const img = this.screenshot();
+  try {
+    return this.checkSkillReadiness(img, Button.gameSkill1) !== 'far';
+  } finally {
+    releaseImage(img);
+  }
+};
+
 Tsum.prototype.checkSkillReadiness = function(img, skillButton) {
   // Tiered version of isSkillActive's color check. Same reference colors, two
   // thresholds: tight (25) means firmly empty; loose (60) is the original
@@ -908,6 +949,9 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillLuke4, 30);
   } else if (this.skillType === 'block_lightning_mcqueen_plus_s') {
     this.sleep(200);  // let tsums settle
+  } else if (this.skillType === 'block_tiara_minnie_plus_s') {
+    // Her picks detonate the board, so wait for it to stop moving first.
+    this.tiaraWaitForSettledBoard();
   }
   this.tap(Button.gameSkill1);
   this.sleep(30);
@@ -1042,6 +1086,17 @@ Tsum.prototype.useSkill = function(board) {
     }
   } else if (this.skillType === 'block_cpt_ly_s'){
     this.useCptLySkill();
+  } else if (this.skillType === 'block_tiara_minnie_plus_s'){
+    this.useTiaraMinniePlusSkill();
+    // Always report "did not fire", whatever happened. The caller runs
+    // `while (useSkill())`, and for a skill that takes seconds of choreography
+    // an immediate second go is never right: the gauge still reads active
+    // through the outro, so a `true` here buys another settle wait, lead-in and
+    // bubble wait -- about six seconds of standing still -- before the missing
+    // bubble finally ends it. If the gauge really is full again, the next
+    // board-scan cycle picks it up one cycle later, which costs nothing like
+    // as much.
+    return false;
   } else if (this.skillType === 'block_lightning_mcqueen_plus_s'){
     this.sleep(2000);
     for (i = 1; i <= 20; i+=1) {
@@ -1069,6 +1124,381 @@ Tsum.prototype.useSkill = function(board) {
   }
   return true;
 }
+
+// ---------------------------------------------------------------------------
+// Tiara Minnie+
+//
+// The skill shows Minnie with a thought bubble holding one present, then a
+// screen of presents to pick the match from; a fresh bubble comes with every
+// pick. Both halves are read by cropping fixed boxes and comparing the pictures
+// directly: the bubble is always drawn in the same place, and the presents
+// always land on the centres in TiaraLayouts.
+//
+// Nothing here works out how many presents are on screen. Every centre from
+// every layout is scored against the bubble and the best-matching one is
+// tapped, so a miscounted screen cannot send the tap to the wrong place -- and
+// two centres from different layouts that sit on the same present are both
+// right answers. Offline this picked the correct present on all 20 frame/design
+// pairs, and kept doing so with every centre shifted by up to 25px.
+// ---------------------------------------------------------------------------
+
+// Hue names for the debug line, over OpenCV's 0..179 hue range.
+var TiaraHueNames = [
+  {to: 8, name: 'red'},     {to: 20, name: 'orange'},  {to: 32, name: 'yellow'},
+  {to: 44, name: 'lime'},   {to: 75, name: 'green'},   {to: 95, name: 'teal'},
+  {to: 125, name: 'blue'},  {to: 145, name: 'purple'}, {to: 165, name: 'pink'},
+  {to: 180, name: 'red'}
+];
+
+function tiaraHueName(h: number): string {
+  for (let i = 0; i < TiaraHueNames.length; i++) {
+    if (h < TiaraHueNames[i].to) { return TiaraHueNames[i].name; }
+  }
+  return '?';
+}
+
+// A readable "bow/body" summary of a sampled present, so the log says what the
+// script thinks it is looking at rather than just a score.
+function tiaraDescribe(t: number[], grid: number): string {
+  const split = Math.max(1, Math.floor(grid * 0.35));
+  const part = function(r0: number, r1: number): string {
+    let sx = 0, sy = 0, w = 0;
+    for (let r = r0; r < r1; r++) {
+      for (let c = 0; c < grid; c++) {
+        const k = (r * grid + c) * 5;
+        if (t[k + 4] <= 0) { continue; }
+        sx += t[k]; sy += t[k + 1]; w += t[k + 2];
+      }
+    }
+    if (w <= 0) { return 'white'; }
+    let h = Math.atan2(sy, sx) * 90 / Math.PI;
+    if (h < 0) { h += 180; }
+    return tiaraHueName(h);
+  };
+  return part(0, split) + ' bow / ' + part(split, grid) + ' body';
+}
+
+// Similarity of a candidate crop to the bubble template, 0..1.
+//
+// Only cells the template marks as present are compared, so neither the dark
+// tsums behind a board present nor the white cloud behind the bubble one can
+// influence the result. Each cell's difference is divided by cellSpread and
+// clipped, which makes the score count clearly-wrong cells instead of averaging
+// away small ones -- worth roughly triple the margin of a plain mean.
+function tiaraScore(t: number[], c: number[], grid: number, spread: number): number {
+  let d = 0, w = 0;
+  const cells = grid * grid;
+  for (let i = 0; i < cells; i++) {
+    const k = i * 5;
+    const m = t[k + 4];
+    if (m <= 0) { continue; }
+    let cell = (Math.abs(t[k] - c[k]) + Math.abs(t[k + 1] - c[k + 1])
+              + Math.abs(t[k + 2] - c[k + 2]) + Math.abs(t[k + 3] - c[k + 3])) / 4 / spread;
+    if (cell > 1) { cell = 1; }
+    d += m * cell;
+    w += m;
+  }
+  if (w <= 0) { return 0; }
+  return 1 - d / w;
+}
+
+// A coarse brightness fingerprint of the play area, cheap enough to take over
+// and over. Used only to tell whether anything on the board is still moving.
+Tsum.prototype.tiaraBoardSignature = function() {
+  const cfg = TiaraMinnieConfig;
+  const n = cfg.settleCapture;
+  const img = getScreenshotModify(
+    this.playOffsetX, this.playOffsetY, this.playWidth, this.playHeight, n, n, 100);
+  const out = [];
+  try {
+    const step = n / cfg.settleGrid;
+    for (let gy = 0; gy < cfg.settleGrid; gy++) {
+      for (let gx = 0; gx < cfg.settleGrid; gx++) {
+        const c = getImageColor(img, Math.floor((gx + 0.5) * step), Math.floor((gy + 0.5) * step));
+        out.push((c.r + c.g + c.b) / 3);
+      }
+    }
+  } finally {
+    releaseImage(img);
+  }
+  return out;
+};
+
+function tiaraSignatureDiff(a: number[], b: number[]): number {
+  let d = 0;
+  for (let i = 0; i < a.length; i++) { d += Math.abs(a[i] - b[i]); }
+  return d / a.length / 255;
+}
+
+// Hold off activating until the board stops moving.
+//
+// Tapping a present blows up an area of the board, so it pays to fire when the
+// board is full and settled. The play loop clears a chain (and sometimes works
+// the fan) immediately before the skill goes off, and a blast that lands while
+// the tsums are still falling hits far fewer of them.
+Tsum.prototype.tiaraWaitForSettledBoard = function() {
+  const cfg = TiaraMinnieConfig;
+  const start = Date.now();
+  const deadline = start + cfg.settleWaitMs;
+  let prev = this.tiaraBoardSignature();
+  let quiet = 0;
+  let diff = 1;
+  while (Date.now() < deadline) {
+    this.sleep(cfg.settlePollMs);
+    const now = this.tiaraBoardSignature();
+    diff = tiaraSignatureDiff(prev, now);
+    prev = now;
+    // Two quiet readings, not one, so a momentary lull mid-cascade doesn't pass.
+    quiet = diff <= cfg.settleMaxDiff ? quiet + 1 : 0;
+    if (quiet >= cfg.settleQuietScans && Date.now() - start >= cfg.settleMinMs) {
+      if (this.debug) {
+        console.log('[Tiara] board settled in ' + (Date.now() - start) + 'ms, diff ' + diff.toFixed(3));
+      }
+      return true;
+    }
+  }
+  // Fire anyway: a late skill is worth more than a skipped one.
+  log(this.logs.tiaraBusy, diff.toFixed(3));
+  return false;
+};
+
+// Play square at matching resolution, blurred so one pixel read stands in for
+// the average of its cell, then HSV -- where getImageColor gives b=hue 0..179,
+// g=saturation, r=value.
+Tsum.prototype.tiaraCapture = function() {
+  const cfg = TiaraMinnieConfig;
+  const img = getScreenshotModify(
+    this.playOffsetX, this.playOffsetY, this.playWidth, this.playHeight,
+    cfg.captureSize, cfg.captureSize, 100);
+  smooth(img, 1, 7);
+  convertColor(img, 40);
+  return img;
+};
+
+// Reduce the logical square (lcx, lcy, side) to grid x grid cells. Each cell
+// carries a saturation-weighted hue vector, saturation, value, and whether it
+// looks like part of a present. Hue goes in as a vector so the 179->0 wrap
+// cannot average a red into a cyan.
+Tsum.prototype.tiaraSample = function(img, lcx, lcy, side) {
+  const cfg = TiaraMinnieConfig;
+  const g = cfg.grid;
+  const scale = cfg.captureSize / 1080;
+  const step = side / g;
+  const left = lcx - side / 2;
+  const top = lcy - side / 2;
+  const out = [];
+  for (let cy = 0; cy < g; cy++) {
+    for (let cx = 0; cx < g; cx++) {
+      const px = Math.round((left + (cx + 0.5) * step) * scale);
+      const py = Math.round((top + (cy + 0.5) * step - PlayAreaTopY) * scale);
+      let h = 0, s = 0, v = 0;
+      if (px >= 0 && py >= 0 && px < cfg.captureSize && py < cfg.captureSize) {
+        const col = getImageColor(img, px, py);
+        h = col.b; s = col.g; v = col.r;
+      }
+      const rad = h * Math.PI / 90;
+      out.push(s * Math.cos(rad) / 255);
+      out.push(s * Math.sin(rad) / 255);
+      out.push(s / 255);
+      out.push(v / 255);
+      out.push((s >= cfg.satMin && v >= cfg.valMin) ? 1 : 0);
+    }
+  }
+  return out;
+};
+
+// Small, unblurred capture for the cloud test only. That test is polled in a
+// loop and only asks whether a big pale blob is on screen, which survives heavy
+// downsampling -- the margin it works with is 0.49 against 0.09.
+Tsum.prototype.tiaraCloudCapture = function() {
+  const n = TiaraMinnieConfig.cloudCaptureSize;
+  const img = getScreenshotModify(
+    this.playOffsetX, this.playOffsetY, this.playWidth, this.playHeight, n, n, 100);
+  convertColor(img, 40);
+  return img;
+};
+
+// How much of the area around the bubble is pale cloud. Separates "bubble is
+// up" from "presents are up" and from ordinary play by a wide margin: the
+// sample frames read 0.48-0.50 with a bubble and 0.02-0.06 without one.
+// Takes a capture from tiaraCloudCapture, not the matching one.
+Tsum.prototype.tiaraCloudFrac = function(img) {
+  const cfg = TiaraMinnieConfig;
+  const box = cfg.cloudBox;
+  const size = cfg.cloudCaptureSize;
+  const scale = size / 1080;
+  const half = cfg.bubbleSide / 2;
+  const ex0 = cfg.bubbleX - half, ex1 = cfg.bubbleX + half;
+  const ey0 = cfg.bubbleY - half, ey1 = cfg.bubbleY + half;
+  let hit = 0, total = 0;
+  for (let ly = box.y0; ly <= box.y1; ly += cfg.cloudStep) {
+    for (let lx = box.x0; lx <= box.x1; lx += cfg.cloudStep) {
+      // Skip the present itself: only the cloud around it should count.
+      if (lx >= ex0 && lx <= ex1 && ly >= ey0 && ly <= ey1) { continue; }
+      const px = Math.round(lx * scale);
+      const py = Math.round((ly - PlayAreaTopY) * scale);
+      if (px < 0 || py < 0 || px >= size || py >= size) { continue; }
+      const col = getImageColor(img, px, py);
+      total++;
+      if (col.g <= cfg.cloudSatMax && col.r >= cfg.cloudValMin) { hit++; }
+    }
+  }
+  return total > 0 ? hit / total : 0;
+};
+
+// Every present centre from every layout, each with the crop size that suits
+// its count. Scored together; the count is never decided.
+Tsum.prototype.tiaraCandidates = function() {
+  const out = [];
+  for (let n = 2; n <= 6; n++) {
+    const slots = TiaraLayouts[n];
+    for (let i = 0; i < slots.length; i++) {
+      out.push({x: slots[i].x, y: slots[i].y, side: TiaraSlotSide[n], count: n});
+    }
+  }
+  return out;
+};
+
+Tsum.prototype.tiaraBestMatch = function(img, template) {
+  const cfg = TiaraMinnieConfig;
+  const cands = this.tiaraCandidates();
+  const scored = [];
+  for (let i = 0; i < cands.length; i++) {
+    const c = cands[i];
+    scored.push({
+      x: c.x, y: c.y, count: c.count,
+      score: tiaraScore(template, this.tiaraSample(img, c.x, c.y, c.side), cfg.grid, cfg.cellSpread)
+    });
+  }
+  let best = scored[0];
+  for (let i = 1; i < scored.length; i++) {
+    if (scored[i].score > best.score) { best = scored[i]; }
+  }
+  // Centres from different layouts can land on the same present, and tapping
+  // either is correct, so the margin is measured against the best candidate
+  // that is somewhere else entirely.
+  let rival = null;
+  for (let i = 0; i < scored.length; i++) {
+    const dx = scored[i].x - best.x, dy = scored[i].y - best.y;
+    if (dx * dx + dy * dy < 100 * 100) { continue; }
+    if (rival == null || scored[i].score > rival.score) { rival = scored[i]; }
+  }
+  best.margin = rival == null ? best.score : best.score - rival.score;
+  return best;
+};
+
+// Wait for the thought bubble, then read the present inside it.
+Tsum.prototype.tiaraWaitForDream = function(timeoutMs) {
+  const cfg = TiaraMinnieConfig;
+  const deadline = Date.now() + timeoutMs;
+  let seen = false;
+  while (Date.now() < deadline) {
+    const img = this.tiaraCloudCapture();
+    try {
+      seen = this.tiaraCloudFrac(img) >= cfg.cloudMinFrac;
+    } finally {
+      releaseImage(img);
+    }
+    if (seen) { break; }
+    this.sleep(cfg.pollMs);
+  }
+  if (!seen) { return null; }
+  // The bubble scales in; reading it mid-animation gives a shrunken present.
+  this.sleep(cfg.dreamSettleMs);
+  const img2 = this.tiaraCapture();
+  try {
+    return this.tiaraSample(img2, cfg.bubbleX, cfg.bubbleY, cfg.bubbleSide);
+  } finally {
+    releaseImage(img2);
+  }
+};
+
+// Wait for the presents to land, then tap the one matching the template. The
+// game timer is stopped for this whole stretch, so every check here is free.
+//
+// Three things must agree before a tap goes out: the score clears the floor,
+// the winner beats everything elsewhere by the margin (which is what actually
+// proves a present is there rather than a lucky patch of board), and the same
+// centre wins twice running.
+Tsum.prototype.tiaraPick = function(template) {
+  const cfg = TiaraMinnieConfig;
+  const deadline = Date.now() + cfg.choiceWaitMs;
+
+  // The presents only exist once the bubble has gone.
+  while (Date.now() < deadline) {
+    const img = this.tiaraCloudCapture();
+    let gone;
+    try {
+      gone = this.tiaraCloudFrac(img) < cfg.cloudMinFrac;
+    } finally {
+      releaseImage(img);
+    }
+    if (gone) { break; }
+    this.sleep(cfg.pollMs);
+  }
+  this.sleep(cfg.choiceLeadMs);
+
+  let agree = 0;
+  let last = null;
+  while (Date.now() < deadline) {
+    const img = this.tiaraCapture();
+    let m;
+    try {
+      m = this.tiaraBestMatch(img, template);
+    } finally {
+      releaseImage(img);
+    }
+    if (m.score >= cfg.confidenceFloor && m.margin >= cfg.marginFloor) {
+      agree = (last != null && last.x === m.x && last.y === m.y) ? agree + 1 : 1;
+      last = m;
+      if (agree >= cfg.agreeScans) {
+        for (let i = 0; i < cfg.pickTaps; i++) {
+          this.tap({x: m.x, y: m.y}, cfg.pickTapDuring);
+          if (i + 1 < cfg.pickTaps) { this.sleep(cfg.pickTapGapMs); }
+        }
+        return m;
+      }
+    } else {
+      agree = 0;
+      last = null;
+      if (this.debug) {
+        console.log('[Tiara] waiting: best ' + m.score.toFixed(2)
+          + ' margin ' + m.margin.toFixed(2) + ' at ' + m.x + ',' + m.y);
+      }
+    }
+    this.sleep(cfg.pollMs);
+  }
+  return null;
+};
+
+// One bubble, one pick, per activation.
+//
+// The thought bubble is only shown once, straight after the skill fires -- it
+// does not come back between picks -- so once the present is tapped there is
+// nothing left to wait for and this returns straight away. (The 2-to-6
+// progression happens across activations, not inside one.)
+Tsum.prototype.useTiaraMinniePlusSkill = function() {
+  const cfg = TiaraMinnieConfig;
+  const started = Date.now();
+  this.sleep(cfg.dreamLeadMs);
+  const armed = Date.now();
+  const template = this.tiaraWaitForDream(cfg.dreamWaitMs);
+  if (template == null) {
+    log(this.logs.tiaraNoDream);
+    return 0;
+  }
+  log(this.logs.tiaraDream, tiaraDescribe(template, cfg.grid),
+      'after ' + (Date.now() - armed) + 'ms');
+  const pick = this.tiaraPick(template);
+  if (pick == null) {
+    log(this.logs.tiaraUnsure);
+    return 0;
+  }
+  log(this.logs.tiaraPicked, pick.x + ',' + pick.y,
+      'score ' + pick.score.toFixed(2), 'margin ' + pick.margin.toFixed(2),
+      'layout ' + pick.count, 'total ' + (Date.now() - started) + 'ms');
+  return 1;
+};
 
 Tsum.prototype.sampleMyTsumColor = function() {
   // The MyTsum portrait is the circular icon inside the skill button at the
@@ -1120,6 +1550,15 @@ Tsum.prototype.scanBoardQuick = function() {
     }
 
     const points = findTsums(srcImg);
+    // Read bubble positions off this same capture and remember them, so popping
+    // one after a chain is taps only -- no screenshot in the middle of a batch,
+    // which would stall the link cadence and the combo timer with it. Bubbles
+    // are big and drift slowly, so a position a second old still lands.
+    this.gameBubbles = this.skillType === 'block_tiara_minnie_plus_s'
+      ? findGameBubbles(srcImg) : [];
+    if (this.debug && this.gameBubbles.length > 0) {
+      console.log('[Bubbles] found ' + this.gameBubbles.length);
+    }
     debug(this.logs.recognitionStart);
     const tcs = classifyTsums(points);
     tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
@@ -1251,10 +1690,22 @@ Tsum.prototype.taskPlayGameQuick = function() {
     if (paths.length < 3) {
       zeroPath++;
       if (zeroPath === 6) {
-        this.tap(Button.gameRand, 60);
-        this.tap(Button.gameRand, 60);
+        // Same guard as the periodic fan below. Without it this fires the fan
+        // with the skill already full, and useSkill() runs immediately after --
+        // so the skill activates onto a board that is still being tossed about.
+        // It also self-sustains: a churning board scans as few paths, which is
+        // what increments this counter in the first place.
+        if (!this.fanWouldBeWasted()) {
+          this.tap(Button.gameRand, 60);
+          this.tap(Button.gameRand, 60);
+        }
         zeroPath = 0;
       }
+    } else {
+      // Counts *consecutive* barren scans: a board that is producing chains is
+      // not stuck, and letting the count carry over between them fires the fan
+      // on a board that never needed shuffling.
+      zeroPath = 0;
     }
     // click bubbles
     if (this.clearBubbles && clearBubbles >= 2) {
@@ -1267,14 +1718,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
       // Skip the fan when the skill is ready or about to be — useSkill() will
       // fire it next (or the next clear will fill the gauge), so the fan would
       // just be wasted on tsums about to be cleared.
-      const fanImg = this.screenshot();
-      let skillStatus;
-      try {
-        skillStatus = this.checkSkillReadiness(fanImg, Button.gameSkill1);
-      } finally {
-        releaseImage(fanImg);
-      }
-      if (skillStatus === 'far') {
+      if (!this.fanWouldBeWasted()) {
         this.tap(Button.gameRand, 60);
         this.tap(Button.gameRand, 60);
       }

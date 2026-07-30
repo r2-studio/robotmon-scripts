@@ -211,6 +211,32 @@ function convertTo2DArray(arr, size) {
   return result;
 }
 
+// Game bubbles are circles too, just a good deal bigger than a tsum, so they
+// come out of the same grayscale Hough pass at a larger radius. Runs on the
+// board capture the scan already holds, so locating them costs no screenshot --
+// which is the point: the taps have to land while the chain is still going off.
+function findGameBubbles(img) {
+  const cfg = GameBubbleConfig;
+  let grayImg = null;
+  try {
+    const tmpImg = clone(img);
+    grayImg = bgrToGray(tmpImg);
+    releaseImage(tmpImg);
+    smooth(grayImg, 2, 9);
+    // houghCircles returns centres, unlike the board points findTsums feeds the
+    // pathfinder (those are shifted to a tsum's top-left corner).
+    const found = houghCircles(grayImg, 3, 1, cfg.minDist, cfg.param1, cfg.param2,
+                               cfg.minRadius, cfg.maxRadius);
+    const out = [];
+    for (const k in found) {
+      out.push({x: found[k].x, y: found[k].y, r: found[k].r});
+    }
+    return out;
+  } finally {
+    if (grayImg != null) { releaseImage(grayImg); }
+  }
+}
+
 function findTsums(img) {
   // Every native image allocated here must be released even when a native
   // call throws mid-scan: the task controller swallows task errors and
