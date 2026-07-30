@@ -185,9 +185,13 @@ function getPackageName(isJP) {
     return packageName;
 }
 
+// Robotmon's shell starts without a BOOTCLASSPATH, so java-backed commands
+// (`am`, `uiautomator`) cannot boot their VM without this prefix.
+const ShellBootClassPath = 'BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar';
+
 function startTsumTsumApp(isJP) {
   const packageName = getPackageName(isJP);
-  execute('BOOTCLASSPATH=/system/framework/core.jar:/system/framework/conscrypt.jar:/system/framework/okhttp.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/framework2.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/webviewchromium.jar' +
+  execute(ShellBootClassPath +
       ' am start --activity-single-top -n ' + packageName + '/com.linecorp.LGTMTM.TsumTsum');
 }
 
@@ -199,6 +203,21 @@ Tsum.prototype.startApp = function() {
   startTsumTsumApp(this.isJP);
   this.sleep(10000);
   log("TsumTsum app starting.");
+}
+
+// Bounce the game app. Deliberately does not navigate anywhere afterwards (that
+// is taskTsumAppRestart's job) so the recovery paths inside the navigation loops
+// can call it without recursing back into themselves.
+Tsum.prototype.forceRestartApp = function() {
+  if (!this.autoLaunch) {
+    log("Not restarting the game app: 'Auto launch app' is off.");
+    return false;
+  }
+  execute("am force-stop " + getPackageName(this.isJP));
+  this.sleep(3000);
+  this.isStartupPhase = true;
+  this.startApp();
+  return true;
 }
 
 Tsum.prototype.screenshot = function() {
@@ -476,6 +495,12 @@ Tsum.prototype.matchesPage = function (pageName) {
 }
 
 Tsum.prototype.exitUnknownPage = function() {
+  // A native dialog (root warning, permission prompt) is not a game screen, and
+  // the blind keycodes below can activate its *negative* button -- "REFUSE" on
+  // the root warning quits the game. Handle it properly and leave.
+  if (this.dismissSystemDialog()) {
+    return;
+  }
   keycode('KEYCODE_DPAD_DOWN', 50);
   this.sleep(500);
   keycode('KEYCODE_ENTER', 50);
@@ -487,6 +512,7 @@ Tsum.prototype.exitUnknownPage = function() {
 }
 
 Tsum.prototype.goFriendPage = function() {
+  const guard = this.newStallGuard('goFriendPage');
   while(this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
@@ -507,6 +533,10 @@ Tsum.prototype.goFriendPage = function() {
         this.isStartupPhase = false;
         return;
       }
+    } else if (page === 'RootDetection') {
+      // Never tap the recorded coordinates blind: they belong to whichever
+      // emulator/dpi variant matched, which is not necessarily this device.
+      this.dismissSystemDialog(pageObj.next);
     } else if (page === "ClosePage") {
       this.tap(pageObj.back);
       this.tap({x: 310, y: 1588 - 140});
@@ -515,6 +545,7 @@ Tsum.prototype.goFriendPage = function() {
     } else {
       this.tap(pageObj.back);
     }
+    this.checkStall(guard, page);
     this.sleep(1000);
   }
 }
@@ -575,6 +606,7 @@ Tsum.prototype.checkGameItem = function() {
 }
 
 Tsum.prototype.goGamePlayingPage = function() {
+  const guard = this.newStallGuard('goGamePlayingPage');
   while(this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
@@ -582,7 +614,12 @@ Tsum.prototype.goGamePlayingPage = function() {
     const pageObj = this.findPageObject(2, 2000);
     let page = pageObj != null ? pageObj.name : "unknown";
     log(this.logs.currentPage, page, "play");
-    if (page === 'FriendPage') {
+    if (page === 'RootDetection') {
+      // See goFriendPage: locate the real button instead of trusting the
+      // coordinates of whichever variant matched.
+      this.dismissSystemDialog(pageObj.next);
+      this.sleep(1000);
+    } else if (page === 'FriendPage') {
       this.tap(pageObj.next);
       this.sleep(3000);
       this.lastVisitedPages.gameFriend = true;
@@ -614,6 +651,7 @@ Tsum.prototype.goGamePlayingPage = function() {
       this.tap(pageObj.back);
       this.sleep(1000);
     }
+    this.checkStall(guard, page);
   }
 }
 
@@ -622,6 +660,7 @@ Tsum.prototype.goTsumsPage = function() {
     this.startApp();
   }
   this.goFriendPage();
+  const guard = this.newStallGuard('goTsumsPage');
   while(this.isRunning) {
     let page = this.findPageObject(2, 2000);
     if (page != null)
@@ -634,6 +673,9 @@ Tsum.prototype.goTsumsPage = function() {
       if (page != null && page.name === 'TsumsPage') {
         return;
       }
+    } else if (page.name === 'RootDetection') {
+      this.dismissSystemDialog(page.next);
+      this.sleep(1000);
     } else if (page.hasOwnProperty('tsums')) {
       this.tap(page.tsums);
       this.sleep(3000);
@@ -641,6 +683,7 @@ Tsum.prototype.goTsumsPage = function() {
       this.tap(page.back);
       this.sleep(1000);
     }
+    this.checkStall(guard, page === null ? 'unknown' : page.name);
   }
 }
 
@@ -2114,13 +2157,7 @@ Tsum.prototype.taskTsumAppRestart = function () {
     this.goFriendPage();
 
     log("Restarting TsumApp");
-    const packageName = getPackageName(ts.isJP);
-    execute("am force-stop " + packageName);
-
-    ts.sleep(10000);
-    if (!this.isAppOn()) {
-        this.startApp();
-    }
+    this.forceRestartApp();
     this.goFriendPage();
     log("TsumTsumApp restarted");
 }

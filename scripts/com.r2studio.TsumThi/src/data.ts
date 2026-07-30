@@ -551,8 +551,15 @@ var Page: PageMap = {
     back: {x: 986, y: 273},
     next: {x: 986, y: 273}
   },
+  // Root-detection warning (a native Android AlertDialog) as it looks on a
+  // handful of emulators. All variants share the page name so the navigation
+  // loops handle them the same way: hand the screen to dismissSystemDialog(),
+  // which finds the real "PERMIT" button in device pixels. The back/next
+  // coordinates below belong to one specific emulator and dpi each, so they are
+  // only a last-resort hint -- see dialogs.ts for why they cannot be trusted.
+  // The matched variant's key is still logged, so detection stays diagnosable.
   RootDetectionLdp1080p480dpiEn: {
-    name: 'RootDetectionLdp1080p480dpiEn',
+    name: 'RootDetection',
     colors: [
       {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
       {x: 70, y: 680,  r: 255 , g: 255, b: 255, match: false, threshold: 25},
@@ -564,7 +571,7 @@ var Page: PageMap = {
     onDetect: switchToStartupMode
   },
   RootDetectionLdp1080p480dpiJp: {
-    name: 'RootDetectionLdp1080p480dpiJp',
+    name: 'RootDetection',
     colors: [
       {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
       {x: 70, y: 625, r: 255 , g: 255, b: 255, match: false, threshold: 25},
@@ -576,7 +583,7 @@ var Page: PageMap = {
     onDetect: switchToStartupMode
   },
   RootDetectionLdp480x800x160dpiEn: {
-    name: 'RootDetectionLdp480x800x160dpiEn',
+    name: 'RootDetection',
     colors: [
       {x: 90, y: 780, r: 253 , g: 253, b: 253, match: true, threshold: 25},
       {x: 65, y: 745, r: 255 , g: 255, b: 255, match: false, threshold: 25},
@@ -588,7 +595,7 @@ var Page: PageMap = {
     onDetect: switchToStartupMode
   },
   RootDetectionNox1080p360dpiEn: {
-    name: 'RootDetectionNox1080p360dpiEn',
+    name: 'RootDetection',
     colors: [
       {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
       {x: 125, y: 785, r: 255 , g: 255, b: 255, match: false, threshold: 25},
@@ -600,7 +607,7 @@ var Page: PageMap = {
     onDetect: switchToStartupMode
   },
   RootDetectionNox480x800x160dpiJp: {
-    name: 'RootDetectionNox480x800x160dpiJp',
+    name: 'RootDetection',
     colors: [
       {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
       {x: 75, y: 725, r: 255 , g: 255, b: 255, match: false, threshold: 25},
@@ -612,7 +619,7 @@ var Page: PageMap = {
     onDetect: switchToStartupMode
   },
   RootDetectionNox480x800x160dpiEn: {
-    name: 'RootDetectionNox480x800x160dpiEn',
+    name: 'RootDetection',
     colors: [
       {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
       {x: 75, y: 750, r: 255 , g: 255, b: 255, match: false, threshold: 25},
@@ -624,7 +631,7 @@ var Page: PageMap = {
     onDetect: switchToStartupMode
   },
   RootDetectionSamsungA20En: {
-    name: 'RootDetectionSamsungA20En',
+    name: 'RootDetection',
     colors: [
       {x: 60, y: 440, r: 255 , g: 255, b: 255, match: true, threshold: 25},
       {x: 50, y: 440, r: 255 , g: 255, b: 255, match: false, threshold: 25},
@@ -639,21 +646,22 @@ var Page: PageMap = {
   },
   // White AlertDialog variant on 1080x1920 portrait: a white popup box over a
   // dimmed grey background, with blue "REFUSE" / "PERMIT" link-style buttons
-  // bottom-right. Tapping the right-hand button (PERMIT) dismisses it.
-  // NOTE: coordinates are estimated from a 1080x1920 screenshot and may need
-  // on-device calibration if detection misses.
+  // bottom-right.
+  // Only the panel/scrim probes are kept: probes on the button text itself never
+  // matched, because findPageObject reads a screenshot downscaled to 360px wide
+  // and JPEG-compressed, which leaves nothing of a thin blue glyph at a guessed
+  // position. The panel/scrim shape is coarse on purpose -- the tap that follows
+  // is located and verified by dismissSystemDialog(), not by these coordinates.
   RootDetection1080pEn: {
-    name: 'RootDetection1080pEn',
+    name: 'RootDetection',
     colors: [
       {x: 950, y:  868, r: 255, g: 255, b: 255, match: true,  threshold: 25}, // white dialog interior (top-right)
       {x: 540, y: 1100, r: 255, g: 255, b: 255, match: true,  threshold: 25}, // white dialog interior (below buttons)
       {x: 540, y:  300, r: 255, g: 255, b: 255, match: false, threshold: 25}, // dimmed grey overlay above dialog
-      {x: 540, y: 1500, r: 255, g: 255, b: 255, match: false, threshold: 25}, // dimmed grey overlay below dialog
-      {x: 801, y: 1059, r:  41, g: 182, b: 246, match: true,  threshold: 100}, // blue "REFUSE" text
-      {x: 932, y: 1059, r:  41, g: 182, b: 246, match: true,  threshold: 100}  // blue "PERMIT" text
+      {x: 540, y: 1500, r: 255, g: 255, b: 255, match: false, threshold: 25}  // dimmed grey overlay below dialog
     ],
-    back: {x: 932, y: 1059}, // PERMIT
-    next: {x: 932, y: 1059}, // PERMIT
+    back: {x: 932, y: 1059}, // estimated PERMIT position, hint only
+    next: {x: 932, y: 1059},
     onDetect: switchToStartupMode
   },
   MagicalTime: {

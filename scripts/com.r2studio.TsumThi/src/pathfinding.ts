@@ -216,22 +216,44 @@ function findTsums(img) {
   // call throws mid-scan: the task controller swallows task errors and
   // retries, so a leak on this hot path would silently recur on every scan.
   const hsvImg = clone(img);
-  let filter1 = null;
-  let filter2 = null;
-  let mask = null;
+  let grayImg = null;
+  let debugImg = null;
   try {
-    smooth(hsvImg, 1, 7);
+    // Circle detection runs on a plain grayscale copy, NOT a colour mask. The
+    // old HSV outRange masks filtered blue tsums out before detection, so their
+    // circles were never found and blue chains went unplayed. Grayscale is
+    // colour-agnostic: it detects every tsum, and colour is then sampled from
+    // the HSV image and clustered separately in classifyTsums.
+    const tmpImg = clone(img);
+    grayImg = bgrToGray(tmpImg);
+    releaseImage(tmpImg);
+    smooth(grayImg, 2, 9);
     convertColor(hsvImg, 40);
-    filter1 = outRange(hsvImg, 80, 160, 20, 0, 120, 255, 210, 255);
-    filter2 = outRange(filter1, 80, 100, 90, 0, 130, 170, 190, 255);
-    mask = bgrToGray(filter2);
 
-    releaseImage(filter1);
-    filter1 = null;
-    releaseImage(filter2);
-    filter2 = null;
+    // Circle geometry is expressed against the screenResize base (200px) via a
+    // scale factor so it can be retuned in one place if that base ever changes.
+    const scale = 1;
+    const dp = 1;                            // accumulator resolution (lower = finer)
+    const minDist = Math.round(22 * scale);  // min gap between circle centers
+    const param1 = 20;                       // Canny high threshold
+    const param2 = Math.round(10 * scale);   // accumulator vote threshold
+    const minRadius = Math.round(8 * scale);
+    const maxRadius = Math.round(14 * scale);
 
-    const points = houghCircles(mask, 3, 1, 22, 4, 7, 8, 14);
+    const points = houghCircles(grayImg, 3, dp, minDist, param1, param2, minRadius, maxRadius);
+    releaseImage(grayImg);
+    grayImg = null;
+
+    if (ts.debug) {
+      debugImg = clone(img);
+      for (const dk in points) {
+        const pt = points[dk];
+        drawCircle(debugImg, pt.x, pt.y, minRadius, 255, 0, 0, 1);
+      }
+      saveImage(debugImg, ts.storagePath + "/tmp/" + ts.runTimes + "-detectedHoughCircles.jpg");
+      releaseImage(debugImg);
+      debugImg = null;
+    }
 
     // Heavy blur to smear out face features, then a 5-pixel cross average at
     // the circle center.
@@ -252,15 +274,13 @@ function findTsums(img) {
     }
 
     if (ts.debug) {
-      saveImage(mask, ts.storagePath + "/tmp/" + ts.runTimes + "-mask.jpg");
       saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
     }
 
     return results;
   } finally {
-    if (filter1 != null) { releaseImage(filter1); }
-    if (filter2 != null) { releaseImage(filter2); }
-    if (mask != null) { releaseImage(mask); }
+    if (grayImg != null) { releaseImage(grayImg); }
+    if (debugImg != null) { releaseImage(debugImg); }
     releaseImage(hsvImg);
   }
 }
@@ -276,34 +296,48 @@ function distance3D(p1, p2) {
 }
 
 // Greedy single pass against a drifting running mean, fixed merge threshold,
-// unbounded cluster count.
+// unbounded cluster count. Each point joins the CLOSEST cluster within the
+// threshold rather than the first one found: when two clusters both fall inside
+// the merge distance (common once blue variants are detected), first-match
+// could bleed a point into the wrong colour and drift both means; nearest-match
+// keeps the assignment stable.
 function classifyTsums(points) {
-  const tcs = [];
-  if (points.length === 0) {
-    return tcs;
+  const threshold = 15;
+  if (!Array.isArray(points) || points.length === 0) {
+    return [];
   }
-  let p = points[0];
-  tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p] });
-  for (let i = 1; i < points.length; i++) {
-    p = points[i];
-    let isSame = false;
-    for(const j in tcs) {
-      const tc = tcs[j];
-      const d = distance3D(tc, p);
-      if (d < 15) {
-        const count = tc.points.length + 1;
-        isSame = true;
-        tc.sumb += p.b; tc.sumg += p.g; tc.sumr += p.r;
-        tc.b = tc.sumb/count; tc.g = tc.sumg/count; tc.r = tc.sumr/count;
-        tc.points.push(p);
-        break;
+
+  const clusters = [];
+
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i];
+    let bestCluster = null;
+    let minDistance = Infinity;
+
+    // Find the closest existing cluster within threshold.
+    for (let j = 0; j < clusters.length; j++) {
+      const cluster = clusters[j];
+      const d = distance3D(cluster, p);
+      if (d < threshold && d < minDistance) {
+        minDistance = d;
+        bestCluster = cluster;
       }
     }
-    if(!isSame) {
-      tcs.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p]});
+
+    if (bestCluster) {
+      // Add to the nearest cluster and update its running mean colour.
+      bestCluster.points.push(p);
+      const count = bestCluster.points.length;
+      bestCluster.sumb += p.b; bestCluster.sumg += p.g; bestCluster.sumr += p.r;
+      bestCluster.b = bestCluster.sumb / count;
+      bestCluster.g = bestCluster.sumg / count;
+      bestCluster.r = bestCluster.sumr / count;
+    } else {
+      clusters.push({ sumb: p.b, sumg: p.g, sumr: p.r, b: p.b, g: p.g, r: p.r, points: [p] });
     }
   }
-  return tcs;
+
+  return clusters;
 }
 
 function detectOffsetYInGame() {

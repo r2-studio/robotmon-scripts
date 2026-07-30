@@ -29,6 +29,7 @@
     "src/messaging.ts",
     "src/pathfinding.ts",
     "src/tsum.ts",
+    "src/dialogs.ts",
     "src/index.ts"
   ]
 }
