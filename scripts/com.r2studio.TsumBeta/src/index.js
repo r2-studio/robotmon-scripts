@@ -86,20 +86,6 @@ var Config = {
 // Mirrors the 465 that Tsum.prototype.detectScreenSize uses for playOffsetY.
 var PlayAreaTopY = 465;
 
-// --- Tiara Minnie+ ------------------------------------------------------
-// (Ported from TsumThi)
-//
-// Her skill shows Minnie with a thought bubble containing one present, then a
-// screen of presents to pick the matching one from. The bubble appears once per
-// activation, so an activation is exactly one pick. A correct one adds a present
-// to the next activation's screen (2 up to 6); a wrong one resets it to 2 --
-// which is why every layout has to be handled, but also why the count never
-// needs to be tracked between activations.
-//
-// The presents always land on the same centres for a given count, so there is
-// nothing to search for: crop each known centre, crop the bubble, and compare
-// the pictures directly. Centres are logical 1080x1920 and were read off
-// TsumThi's doc/screenshots/TiaraMinnie (blob centres agreed within ~20px).
 var TiaraLayouts = {
   2: [{x: 292, y: 973},  {x: 781, y: 1059}],
   3: [{x: 781, y: 829},  {x: 666, y: 1275}, {x: 306, y: 987}],
@@ -241,25 +227,7 @@ var TiaraMinnieConfig = {
   pickTapGapMs: 50
 };
 
-// --- Game bubbles -------------------------------------------------------
-// (Ported from TsumThi)
-//
-// Tiara Minnie+ makes a bubble popped as a chain goes off clear a bigger area,
-// so bubbles are worth tapping the instant a long chain lands rather than on
-// the play loop's periodic sweep (which is ~50 blind taps and far too slow to
-// land inside a chain).
-//
-// A bubble is a circle like a tsum, only much bigger, so it falls out of the
-// same grayscale Hough pass findTsums already runs -- on the capture the scan
-// already took, which is what makes locating them cost nothing extra.
 var GameBubbleConfig = {
-  // Circle geometry in the 200px play-square space findTsums works in, where a
-  // tsum is radius 8-14.
-  //
-  // NOT YET CALIBRATED: there is no saved frame with a bubble on the board to
-  // measure against, so this range is reasoned from a bubble being noticeably
-  // larger than a tsum, not measured. Getting it wrong costs stray taps on bare
-  // board, which the game ignores -- a tap is not a drag, so nothing links.
   minRadius: 16,
   maxRadius: 30,
   minDist: 30,
@@ -1294,7 +1262,7 @@ function findNearTsum(tsum, tsums) {
 
 function calculateNearTsumPaths(tsum, ts) {
   // 1. Include the starting tsum in the path
-  var path = [tsum]; 
+  var path = [tsum];
   var tsums = ts.slice(); // copy array
 
   // 2. Remove the starting tsum from candidate list so it isn't matched again
@@ -1418,11 +1386,6 @@ function convertTo2DArray(arr, size) {
   return result;
 }
 
-// Game bubbles are circles too, just a good deal bigger than a tsum, so they
-// come out of the same grayscale Hough pass at a larger radius. Runs on the
-// board capture the scan already holds, so locating them costs no screenshot --
-// which is the point: the taps have to land while the chain is still going off.
-// (Ported from TsumThi.)
 function findGameBubbles(img) {
   var cfg = GameBubbleConfig;
   var tmpImg = clone(img);
@@ -1884,7 +1847,7 @@ Tsum.prototype.linkTsums = function(path) {
 // Tap the bubbles the last board scan found. Taps only -- the positions were
 // worked out at scan time -- so this stays inside the window where the chain is
 // still clearing. A tap that misses costs nothing: it is not a drag, so it
-// links nothing and the game ignores it. (Ported from TsumThi.)
+// links nothing and the game ignores it.
 Tsum.prototype.popGameBubbles = function() {
   var bubbles = this.gameBubbles;
   if (!bubbles || bubbles.length === 0) { return; }
@@ -1907,7 +1870,7 @@ Tsum.prototype.popGameBubbles = function() {
 // called often (e.g. between chains) but only does a real screenshot/check once
 // per skillAutoTapInterval ms, so the timestamp guard keeps frequent calls cheap.
 // Routes through useSkill so every skill type's activation (and choreography) is
-// handled exactly as the normal end-of-cycle path. (Ported from TsumThi.)
+// handled exactly as the normal end-of-cycle path.
 Tsum.prototype.maybeAutoTapSkill = function(board) {
   if (!this.skillAutoTap) { return; }
   var now = Date.now();
@@ -2564,7 +2527,6 @@ Tsum.prototype.useSkill = function(board) {
 // churning right as the skill activates, which matters for skills that read the
 // board on activation (Tiara Minnie+ blows up whatever is under her pick).
 // Costs one screenshot, so only call it where a fan tap is actually pending.
-// (Ported from TsumThi.)
 Tsum.prototype.fanWouldBeWasted = function() {
   var img = this.screenshot();
   try {
@@ -2597,22 +2559,6 @@ Tsum.prototype.checkSkillReadiness = function(img, skillButton) {
   return 'far';
 };
 
-// ---------------------------------------------------------------------------
-// Tiara Minnie+ (ported from TsumThi)
-//
-// The skill shows Minnie with a thought bubble holding one present, then a
-// screen of presents to pick the match from. Both halves are read by cropping
-// fixed boxes and comparing the pictures directly: the bubble is always drawn
-// in the same place, and the presents always land on the centres in
-// TiaraLayouts.
-//
-// Nothing here works out how many presents are on screen. Every centre from
-// every layout is scored against the bubble and the best-matching one is
-// tapped, so a miscounted screen cannot send the tap to the wrong place -- and
-// two centres from different layouts that sit on the same present are both
-// right answers. Offline this picked the correct present on all 20 frame/design
-// pairs, and kept doing so with every centre shifted by up to 25px.
-// ---------------------------------------------------------------------------
 
 // Hue names for the debug line, over OpenCV's 0..179 hue range.
 var TiaraHueNames = [

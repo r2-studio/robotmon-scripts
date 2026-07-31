@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = '84';
+var VERSION = '85';
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -618,8 +618,8 @@ function genSettings(jContainer, settings) {
                     jBtns.push(jBtnP1); // Add new +1 button if needed
                     jBtns.push(jBtnM1); // Add new -1 button if needed
                 }
-            
-                
+
+
                 jInput.on('change', function () {
                     saveSettings(settings);
                 });
