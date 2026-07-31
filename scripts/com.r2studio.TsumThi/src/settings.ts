@@ -114,8 +114,8 @@ var settings = [
         },
         {
             key: 'maxChainsPerScan',
-            title: 'Chains per board scan (higher keeps combos alive longer, but late chains may miss as the board shifts)',
-            title_zh_TW: '每次掃描連線數（越高越能維持combo，但盤面變動後較後的連線可能失誤）',
+            title: 'Chains per board scan',
+            title_zh_TW: '每次掃描連線數',
             default: 6,
             step: 1,
             max: 12,
@@ -614,8 +614,8 @@ function genSettings(jContainer, settings) {
                     jBtns.push(jBtnP1); // Add new +1 button if needed
                     jBtns.push(jBtnM1); // Add new -1 button if needed
                 }
-            
-                
+
+
                 jInput.on('change', function () {
                     saveSettings(settings);
                 });

@@ -46,9 +46,18 @@ var TiaraSlotSide: { [n: number]: number } = {
 };
 
 var TiaraMinnieConfig = {
-  // Resolution the play square is captured at for matching. 270 through 720 all
-  // scored identically offline, so this is chosen for speed, not accuracy.
+  // Resolution the play square is captured at for matching.
+  //
+  // Was briefly dropped to 300 for speed on the strength of the offline sweep
+  // finding 270-720 all scoring 20/20 -- and wrong taps appeared on the device.
+  // Do not lower it again without re-running the harness: the sweep varied this
+  // alone against static frames, which is not the same claim as "300 is safe",
+  // and a cell is only ~5.6 capture pixels wide there, so cell centres snap to
+  // the grid with a tenth of a cell of error and the blur has less to work with.
   captureSize: 420,
+  // Blur radius, in capture pixels, that makes one pixel read stand in for the
+  // average of its cell -- so it has to stay in proportion to captureSize.
+  captureBlur: 7,
 
   // The thought bubble is drawn at a fixed spot, so the template is a fixed
   // crop -- no searching. Verified at (250..255, 870..875) on every dream frame
@@ -64,12 +73,25 @@ var TiaraMinnieConfig = {
   cloudBox: {x0: 60, y0: 690, x1: 450, y1: 1050},
   cloudSatMax: 70,
   cloudValMin: 180,
+  // Sample spacing inside the box, leaving 162 samples.
+  //
+  // Was briefly 40 (64 samples). The gap between a bubble frame and a present
+  // frame is wide enough for that, but the fraction is also read *during* the
+  // bubble's fade, where the true value passes through the threshold: at 64
+  // samples the standard error there is 0.06, so a mid-fade reading can call
+  // the cloud gone early, and matching then starts on the hand-over frames.
+  // The sample count is not really buying precision at the extremes, it is
+  // buying it in the middle.
   cloudStep: 24,
   cloudMinFrac: 0.25,
   // This test is polled in a loop, and it is only asking whether a big pale
   // blob is present, so it gets its own small capture with no blur. At the
   // matching resolution each check cost a 420x420 grab plus a 7px blur, which
   // made the poll slower than the interval it was polling on.
+  //
+  // This is the resolution the whole play square would be captured at; only
+  // cloudBox is actually grabbed, scaled to match. Nothing outside the box is
+  // ever read, so capturing the rest of the board was pure overhead.
   cloudCaptureSize: 120,
 
   // Comparison grid. Each crop is reduced to grid x grid cells; cells are
@@ -114,7 +136,7 @@ var TiaraMinnieConfig = {
   // is set loose rather than tight: too strict just means every activation waits
   // out settleWaitMs, which is the delay this was added to avoid. The timeout
   // logs the diff it actually saw, which is what to tune from.
-  settleWaitMs: 300,
+  settleWaitMs: 320,
   settleMinMs: 60,
   settlePollMs: 30,
   settleCapture: 64,
@@ -137,9 +159,22 @@ var TiaraMinnieConfig = {
   dreamSettleMs: 250,
   // After the bubble clears, the presents take about a second to arrive. Waiting
   // most of that out first means the matcher never sees the hand-over frames.
+  //
+  // This lead and pollMs have to be read together: matching starts at (however
+  // late the poll noticed the cloud go) + this. Trading one against the other
+  // by their averages is what caused wrong taps -- pollMs 100->200 raises the
+  // mean lag by 50ms but the *minimum* stays 0, so taking 100ms off this lead
+  // moved the earliest possible start from 500ms to 400ms after the bubble
+  // cleared. It is the earliest start that decides whether the matcher can see
+  // a present still sliding into place, and a present caught in transit can sit
+  // convincingly on a centre belonging to another layout.
   choiceLeadMs: 500,
   choiceWaitMs: 6000,
   pollMs: 100,
+  // The matching loop keeps its own interval: it is not waiting on a known
+  // animation but on the presents becoming readable, and it leaves the moment
+  // two scans agree, so a slower cadence here would just delay the tap.
+  matchPollMs: 100,
   agreeScans: 2,
   pickTaps: 2,
   pickTapDuring: 60,
@@ -496,11 +531,10 @@ var Page: PageMap = {
   TsumsPage: {
     name: 'TsumsPage',
     colors: [
-      {x: 27, y: 901, r: 198, g: 239, b: 247, match: true, threshold: 80},    // left of "Tsum Tsum Collection" title bar
-      {x: 577, y: 906, r: 255, g: 251, b: 255, match: true, threshold: 80},   // middle of "Tsum Tsum Collection" title bar
-      {x: 741, y: 899, r: 132, g: 190, b: 214, match: true, threshold: 80},   // right of "Tsum Tsum Collection" title bar (short before "Level Lock")
-      {x: 1012, y: 899, r: 247, g: 186, b: 16, match: true, threshold: 80}    // yellow "order" button
-
+      {x: 27,   y: 901, r: 197, g: 243, b: 254, match: true, threshold: 80},   // light header bar, far left (sort-independent)
+      {x: 436,  y: 902, r: 247, g: 247, b: 247, match: true, threshold: 80},   // white header gap between "Collection" and the dropdowns (sort-independent)
+      {x: 713,  y: 900, r: 247, g: 187, b: 16,  match: true, threshold: 80},   // "All Tsums" (left) dropdown gold fill
+      {x: 1030, y: 900, r: 249, g: 190, b: 19,  match: true, threshold: 80}    // right (sort) dropdown gold beside the arrow -- right-anchored, survives every sort label
     ],
     lockIcons: [
       {x: 196, y: 1195, r: 236, g: 245, b: 254},
