@@ -153,6 +153,15 @@ var settings = [
             default: false
         },
         {
+            key: 'maxChain',
+            title: 'Maximum Chain Number',
+            title_zh_TW: '最大連鎖數',
+            default: 3,
+            step: 1,
+            max: 15,
+            min: 3
+        },
+        {
             key: 'skillWaitingTime',
             title: 'Skill Waiting time (sec)',
             title_zh_TW: '技能等待時間(秒)',
