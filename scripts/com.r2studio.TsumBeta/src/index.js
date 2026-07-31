@@ -80,6 +80,198 @@ var Config = {
   debugLogs: false
 };
 
+// Top of the square play area in logical coordinates. The board occupies the
+// 1080x1080 square below this line; everything above is score/timer chrome.
+// Mirrors the 465 that Tsum.prototype.detectScreenSize uses for playOffsetY.
+var PlayAreaTopY = 465;
+
+// --- Tiara Minnie+ ------------------------------------------------------
+// (Ported from TsumThi)
+//
+// Her skill shows Minnie with a thought bubble containing one present, then a
+// screen of presents to pick the matching one from. The bubble appears once per
+// activation, so an activation is exactly one pick. A correct one adds a present
+// to the next activation's screen (2 up to 6); a wrong one resets it to 2 --
+// which is why every layout has to be handled, but also why the count never
+// needs to be tracked between activations.
+//
+// The presents always land on the same centres for a given count, so there is
+// nothing to search for: crop each known centre, crop the bubble, and compare
+// the pictures directly. Centres are logical 1080x1920 and were read off
+// TsumThi's doc/screenshots/TiaraMinnie (blob centres agreed within ~20px).
+var TiaraLayouts = {
+  2: [{x: 292, y: 973},  {x: 781, y: 1059}],
+  3: [{x: 781, y: 829},  {x: 666, y: 1275}, {x: 306, y: 987}],
+  4: [{x: 292, y: 1232}, {x: 263, y: 829},  {x: 796, y: 757},  {x: 796, y: 1117}],
+  5: [{x: 234, y: 1117}, {x: 882, y: 1102}, {x: 292, y: 771},  {x: 839, y: 742},
+      {x: 551, y: 1304}],
+  6: [{x: 752, y: 757},  {x: 378, y: 728},  {x: 176, y: 973},  {x: 896, y: 1001},
+      {x: 349, y: 1232}, {x: 680, y: 1261}]
+};
+
+// Presents shrink as more of them appear; these are the crop sides that put the
+// present in the same fraction of the frame at every count (measured widths ran
+// 270/275/252/237/237 for counts 2..6).
+var TiaraSlotSide = {
+  2: 300, 3: 295, 4: 280, 5: 265, 6: 260
+};
+
+var TiaraMinnieConfig = {
+  // Resolution the play square is captured at for matching.
+  //
+  // Was briefly dropped to 300 for speed on the strength of the offline sweep
+  // finding 270-720 all scoring 20/20 -- and wrong taps appeared on the device.
+  // Do not lower it again without re-running the harness: the sweep varied this
+  // alone against static frames, which is not the same claim as "300 is safe",
+  // and a cell is only ~5.6 capture pixels wide there, so cell centres snap to
+  // the grid with a tenth of a cell of error and the blur has less to work with.
+  captureSize: 420,
+  // Blur radius, in capture pixels, that makes one pixel read stand in for the
+  // average of its cell -- so it has to stay in proportion to captureSize.
+  captureBlur: 7,
+
+  // The thought bubble is drawn at a fixed spot, so the template is a fixed
+  // crop -- no searching. Verified at (250..255, 870..875) on every dream frame
+  // where the present could be isolated, and +/-16px of error still ranked the
+  // right present first.
+  bubbleX: 252,
+  bubbleY: 872,
+  bubbleSide: 240,
+
+  // Cloud test, used to tell "bubble is up" from "presents are up" and from
+  // "the skill is over". Measured 0.484-0.503 on bubble frames vs 0.019-0.060
+  // on present frames, so the threshold sits in a very wide gap.
+  cloudBox: {x0: 60, y0: 690, x1: 450, y1: 1050},
+  cloudSatMax: 70,
+  cloudValMin: 180,
+  // Sample spacing inside the box, leaving 162 samples. Was briefly 40 (64
+  // samples): the gap between a bubble frame and a present frame is wide enough
+  // for that, but the fraction is also read *during* the bubble's fade, where
+  // the true value passes through the threshold and 64 samples leave a standard
+  // error of 0.06 -- enough to call the cloud gone early.
+  cloudStep: 24,
+  cloudMinFrac: 0.25,
+  // This test is polled in a loop, and it is only asking whether a big pale
+  // blob is present, so it gets its own small capture with no blur. At the
+  // matching resolution each check cost a 420x420 grab plus a 7px blur, which
+  // made the poll slower than the interval it was polling on.
+  cloudCaptureSize: 120,
+
+  // Comparison grid. Each crop is reduced to grid x grid cells; cells are
+  // compared only where the template says the present is, which drops the board
+  // background (dark tsums) and the bubble background (white cloud) alike.
+  // 10 through 20 all scored the same offline, so this is the cheap end of the
+  // range that still held up.
+  grid: 12,
+  satMin: 70,
+  valMin: 170,
+
+  // Per-cell differences are divided by this and clipped at 1, so the score
+  // counts clearly-disagreeing cells instead of averaging away small ones.
+  // Raised the worst-case margin from 0.095 to 0.264 against the same frames.
+  cellSpread: 0.30,
+
+  // A tap needs both of these. The score alone cannot say whether the presents
+  // are up yet: a green template scores 0.461 against ordinary green tsums, so
+  // a board with no presents on it would clear any floor low enough to keep the
+  // real matches (which fall to ~0.44 if the presents are 10px off the table).
+  //
+  // The margin does separate the two, because bare board has no standout winner
+  // -- it reached 0.096 at best, where a real choice screen never scored under
+  // 0.278. So the floor rejects noise and the margin proves a present is there.
+  confidenceFloor: 0.42,
+  marginFloor: 0.12,
+
+  // Tapping a present detonates an area of the board, so the blast wants a full,
+  // still board under it. The play loop clears a chain immediately before the
+  // skill fires (and may have just used the fan), so at activation the tsums are
+  // almost always mid-fall and a blast then catches very few of them.
+  //
+  // How long that takes varies with how much was cleared, so it is measured
+  // rather than guessed: take a coarse brightness fingerprint of the board twice
+  // and watch how much it changes. Falling tsums move it a lot, a settled board
+  // barely at all (only sparkles and the fever glow).
+  //
+  // For scale, that measure is 0 between identical frames, ~0.06 between two
+  // frames of a similar scene, and 0.20-0.30 between wholly different screens.
+  // settleMaxDiff is the one number here not pinned down by measurement, so it
+  // is set loose rather than tight: too strict just means every activation waits
+  // out settleWaitMs, which is the delay this was added to avoid. The timeout
+  // logs the diff it actually saw, which is what to tune from.
+  settleWaitMs: 320,
+  settleMinMs: 60,
+  settlePollMs: 30,
+  settleCapture: 64,
+  settleGrid: 16,
+  settleMaxDiff: 0.03,
+  settleQuietScans: 2,
+
+  // Timings. The bubble is shown once, ~2s after the skill fires, and the
+  // presents ~1s after that. The game timer is stopped while the presents are
+  // up, so the checks made there are free; everything before them costs real
+  // game time, which is what these are sized against.
+  //
+  // Nothing can happen until the skill animation has played, so sit that out
+  // rather than spending ~15 screenshots polling for something that cannot have
+  // happened yet.
+  dreamLeadMs: 1500,
+  // Covers the lead plus a bubble arriving late. Only ever spent in full when
+  // the skill did not actually fire.
+  dreamWaitMs: 3000,
+  dreamSettleMs: 250,
+  // After the bubble clears, the presents take about a second to arrive. Waiting
+  // most of that out first means the matcher never sees the hand-over frames.
+  //
+  // This lead and pollMs have to be read together: matching starts at (however
+  // late the poll noticed the cloud go) + this. Trading one against the other by
+  // their averages caused wrong taps -- doubling pollMs raises the mean lag by
+  // 50ms but the *minimum* stays 0, so shortening this lead to compensate moves
+  // the earliest possible start earlier, and the earliest start is what decides
+  // whether the matcher can catch a present still sliding into place.
+  choiceLeadMs: 500,
+  choiceWaitMs: 6000,
+  pollMs: 100,
+  // The matching loop's own interval: it is not waiting on a known animation but
+  // on the presents becoming readable, and it leaves the moment two scans agree.
+  matchPollMs: 100,
+  agreeScans: 2,
+  pickTaps: 2,
+  pickTapDuring: 60,
+  pickTapGapMs: 50
+};
+
+// --- Game bubbles -------------------------------------------------------
+// (Ported from TsumThi)
+//
+// Tiara Minnie+ makes a bubble popped as a chain goes off clear a bigger area,
+// so bubbles are worth tapping the instant a long chain lands rather than on
+// the play loop's periodic sweep (which is ~50 blind taps and far too slow to
+// land inside a chain).
+//
+// A bubble is a circle like a tsum, only much bigger, so it falls out of the
+// same grayscale Hough pass findTsums already runs -- on the capture the scan
+// already took, which is what makes locating them cost nothing extra.
+var GameBubbleConfig = {
+  // Circle geometry in the 200px play-square space findTsums works in, where a
+  // tsum is radius 8-14.
+  //
+  // NOT YET CALIBRATED: there is no saved frame with a bubble on the board to
+  // measure against, so this range is reasoned from a bubble being noticeably
+  // larger than a tsum, not measured. Getting it wrong costs stray taps on bare
+  // board, which the game ignores -- a tap is not a drag, so nothing links.
+  minRadius: 16,
+  maxRadius: 30,
+  minDist: 30,
+  param1: 20,
+  param2: 26,
+
+  // Chain length that earns a pop, and a cap so a frame full of false circles
+  // cannot turn into a long burst of taps mid-chain.
+  minChainForPop: 4,
+  maxTaps: 3,
+  tapDuring: 10
+};
+
 // Definitions assuming screen resolution of 1080 * 1920
 var Button = {
   gameBubblesFrom: {x: 100, y: 632},
@@ -922,10 +1114,16 @@ var Logs = {
   calculatedPath: 'Calculated path',
   recalculatingPath: 'Connections 0, Recalculating path',
   useSkill: 'Use skill',
+  tiaraNoDream: '[Tiara] No thought bubble appeared',
+  tiaraBusy: '[Tiara] Board still moving, firing anyway; diff',
+  tiaraDream: '[Tiara] Bubble shows',
+  tiaraPicked: '[Tiara] Tapped',
+  tiaraUnsure: '[Tiara] No present matched confidently, stopping',
   gameStart: 'Game Start',
   gaming: 'Gaming (Slow version)',
   fastGaming: 'Gaming (Fast version)',
   gameOver: 'Game Over',
+  confirmingGameOver: 'Screen not recognized, confirming game over (skill animation?)',
   detectScreen: 'Detecting screen (top and bosttom)',
   calculateScreenSize: 'Calculating screen size',
   offset: 'Offset (X, Y, H, W)',
@@ -978,10 +1176,16 @@ var LogsTW = {
   calculatedPath: '成功計算路徑',
   recalculatingPath: '路徑數量為 0, 重新辨識',
   useSkill: '使用技能',
+  tiaraNoDream: '[皇冠米妮] 沒有出現想像泡泡',
+  tiaraBusy: '[皇冠米妮] 畫面仍在變動，仍然發動；差異',
+  tiaraDream: '[皇冠米妮] 泡泡顯示',
+  tiaraPicked: '[皇冠米妮] 點擊',
+  tiaraUnsure: '[皇冠米妮] 沒有禮物符合，停止',
   gameStart: '遊戲開始',
   gaming: '遊戲中 (慢速版)',
   fastGaming: '遊戲中 (快速版)',
   gameOver: '遊戲結束',
+  confirmingGameOver: '無法辨識畫面，確認遊戲是否結束（技能動畫中？）',
   detectScreen: '偵測畫面 (頂部與底部)',
   calculateScreenSize: '計算螢幕大小',
   offset: '位移 (X, Y, H, W)',
@@ -1167,7 +1371,7 @@ function getCanonicalPathKey(path) {
   var ids = path.map(function(p) {
     return (p.id !== undefined ? p.id : (p.x + ',' + p.y));
   });
-  
+
   var forwardKey = ids.join('-');
   var reverseKey = ids.slice().reverse().join('-');
 
@@ -1180,6 +1384,29 @@ function convertTo2DArray(arr, size) {
     result.push(arr.slice(i, i + size));
   }
   return result;
+}
+
+// Game bubbles are circles too, just a good deal bigger than a tsum, so they
+// come out of the same grayscale Hough pass at a larger radius. Runs on the
+// board capture the scan already holds, so locating them costs no screenshot --
+// which is the point: the taps have to land while the chain is still going off.
+// (Ported from TsumThi.)
+function findGameBubbles(img) {
+  var cfg = GameBubbleConfig;
+  var tmpImg = clone(img);
+  var grayImg = bgrToGray(tmpImg);
+  releaseImage(tmpImg);
+  smooth(grayImg, 2, 9);
+  // houghCircles returns centres, unlike the board points findTsums feeds the
+  // pathfinder (those are shifted to a tsum's top-left corner).
+  var found = houghCircles(grayImg, 3, 1, cfg.minDist, cfg.param1, cfg.param2,
+                           cfg.minRadius, cfg.maxRadius);
+  releaseImage(grayImg);
+  var out = [];
+  for (var k in found) {
+    out.push({x: found[k].x, y: found[k].y, r: found[k].r});
+  }
+  return out;
 }
 
 function findTsums(img) {
@@ -1201,11 +1428,11 @@ function findTsums(img) {
   var minRadius = Math.round(8 * scale);  // Scaled minimum circle radius
   var maxRadius = Math.round(14 * scale); // Scaled maximum circle radius
 
-  var points = houghCircles(grayImg,3, dp, minDist, param1, param2, minRadius, maxRadius); 
+  var points = houghCircles(grayImg,3, dp, minDist, param1, param2, minRadius, maxRadius);
   releaseImage(grayImg);
 
   if (ts.debug) {
-  var debugImg = clone(img); 
+  var debugImg = clone(img);
   for (var k in points) {
     var p = points[k];
     drawCircle(debugImg, p.x, p.y, minRadius, 255, 0, 0, 1);
@@ -1213,7 +1440,7 @@ function findTsums(img) {
     saveImage(debugImg, ts.storagePath + "/tmp/" + ts.runTimes + "-detectedHoughCircles.jpg");
     releaseImage(debugImg);
   }
-  
+
   smooth(hsvImg, 1, 22);
   var results = [];
   for (var k in points) {
@@ -1363,7 +1590,7 @@ function Tsum(isJP, detect, logs) {
   this.playOffsetY = 0;
   this.playHeight = 0;
   this.playWidth = 0;
-  
+
   this.playResizeWidth = Config.screenResize;
   this.playResizeHeight = Config.screenResize;
 
@@ -1384,12 +1611,19 @@ function Tsum(isJP, detect, logs) {
   this.skillInterval = 3000;
   this.skillLevel = 3;
   this.skillType = '';
+  // Optional safety poll: fire the skill the instant it's ready, even mid-link,
+  // rather than only at the end of each board-scan cycle (see maybeAutoTapSkill).
+  this.skillAutoTap = false;
+  this.skillAutoTapInterval = 500;
+  this._lastSkillAutoTap = 0;
   this.unlockLevelHoursWait = 0;
   this.sendHearts = false;
   this.keepRuby = false;
   this.showHeartLog = true;
   this.sendHeartMaxDuring = 0;
   this.useFan = true;
+  // Bubble positions from the last board scan, for popGameBubbles.
+  this.gameBubbles = [];
   // record
   this.record = {
     hearts_count: {
@@ -1405,6 +1639,11 @@ function Tsum(isJP, detect, logs) {
   this.claimAllWithoutCoins = false;
   this.nextMonitorExecution = 0;
   this.lastVisitedPages = {init1: true, init2: true, init3: true};  // trigger initial monitor call on script startup
+  this.handleLongSkillAnimations = false;
+  // How long the play loop tolerates an unrecognized screen before accepting
+  // game over (see confirmGameOver). Must outlast the longest burst-skill
+  // animation; a real game over exits earlier via ScorePage detection.
+  this.gameOverGraceMs = 20 * 1000;
   this.sendHeartsDownwards = true;
   this.init(detect);
 }
@@ -1608,8 +1847,61 @@ Tsum.prototype.linkTsums = function(path) {
     }
   }
 }
- 
-Tsum.prototype.link = function(paths) {
+
+// Tap the bubbles the last board scan found. Taps only -- the positions were
+// worked out at scan time -- so this stays inside the window where the chain is
+// still clearing. A tap that misses costs nothing: it is not a drag, so it
+// links nothing and the game ignores it. (Ported from TsumThi.)
+Tsum.prototype.popGameBubbles = function() {
+  var bubbles = this.gameBubbles;
+  if (!bubbles || bubbles.length === 0) { return; }
+  var cfg = GameBubbleConfig;
+  var count = Math.min(bubbles.length, cfg.maxTaps);
+  for (var i = 0; i < count; i++) {
+    var b = bubbles[i];
+    var x = Math.floor(this.playOffsetX + b.x * this.playWidth / this.playResizeWidth);
+    var y = Math.floor(this.playOffsetY + b.y * this.playHeight / this.playResizeHeight);
+    tap(x, y, cfg.tapDuring);
+  }
+  if (this.debug) { console.log('[Bubbles] popped ' + count); }
+  // A bubble only pops once; forget them until the next scan finds them again.
+  this.gameBubbles = [];
+};
+
+// When skillAutoTap is on, fire the skill the moment it's ready instead of
+// waiting for the next useSkill at the end of the board-scan cycle. The gauge
+// can fill and sit ready for seconds while we scan, calculate and link; this is
+// called often (e.g. between chains) but only does a real screenshot/check once
+// per skillAutoTapInterval ms, so the timestamp guard keeps frequent calls cheap.
+// Routes through useSkill so every skill type's activation (and choreography) is
+// handled exactly as the normal end-of-cycle path. (Ported from TsumThi.)
+Tsum.prototype.maybeAutoTapSkill = function(board) {
+  if (!this.skillAutoTap) { return; }
+  var now = Date.now();
+  if (now - this._lastSkillAutoTap < this.skillAutoTapInterval) { return; }
+  this._lastSkillAutoTap = now;
+  if (this.skillType === 'burst' || this.skillType === 'burst_bubbles') {
+    // A bare tap is a complete activation for burst skills, and it's a no-op
+    // while the gauge isn't full -- skip the screenshots entirely.
+    this.tap(Button.gameSkill1, 10);
+    return;
+  }
+  // One readiness read before the full useSkill probe (findPage plus a double
+  // gauge check, several screenshots) so the recurring cost while the gauge is
+  // still filling stays at a single screenshot.
+  var img = this.screenshot();
+  var status;
+  try {
+    status = this.checkSkillReadiness(img, Button.gameSkill1);
+  } finally {
+    releaseImage(img);
+  }
+  if (status === 'active') {
+    this.useSkill(board);
+  }
+};
+
+Tsum.prototype.link = function(paths, board) {
   var isBubble = false;
   for (var i in paths) {
     var path = paths[i];
@@ -1619,6 +1911,14 @@ Tsum.prototype.link = function(paths) {
       isBubble = true;
     }
     this.linkTsums(path);
+    // Pop whatever the last scan saw the moment a long chain lands: with Tiara
+    // Minnie+ a bubble popped as a chain goes off clears a bigger area.
+    if (path.length >= GameBubbleConfig.minChainForPop) {
+      this.popGameBubbles();
+    }
+    // Linking a full batch of chains can take several seconds; check between
+    // chains so a gauge that fills mid-batch fires right away.
+    this.maybeAutoTapSkill(board);
   }
   return isBubble;
 }
@@ -2036,6 +2336,9 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillLuke4, 30);
   } else if (this.skillType === 'block_lightning_mcqueen_plus_s') {
     this.sleep(200);  // let tsums settle
+  } else if (this.skillType === 'block_tiara_minnie_plus_s') {
+    // Her picks detonate the board, so wait for it to stop moving first.
+    this.tiaraWaitForSettledBoard();
   }
   this.tap(Button.gameSkill1);
   this.sleep(30);
@@ -2187,6 +2490,17 @@ Tsum.prototype.useSkill = function(board) {
       this.tap(Button.skillCptLy3, 10);
     }
     this.clearAllBubbles(600, 0, 1000, 300);
+  } else if (this.skillType === 'block_tiara_minnie_plus_s'){
+    this.useTiaraMinniePlusSkill();
+    // Always report "did not fire", whatever happened. The caller runs
+    // `while (useSkill())`, and for a skill that takes seconds of choreography
+    // an immediate second go is never right: the gauge still reads active
+    // through the outro, so a `true` here buys another settle wait, lead-in and
+    // bubble wait -- about six seconds of standing still -- before the missing
+    // bubble finally ends it. If the gauge really is full again, the next
+    // board-scan cycle picks it up one cycle later, which costs nothing like
+    // as much.
+    return false;
   } else if (this.skillType === 'block_lightning_mcqueen_plus_s'){
     this.sleep(2000);
     for (i = 1; i <= 20; i+=1) {
@@ -2212,6 +2526,532 @@ Tsum.prototype.useSkill = function(board) {
   return true;
 }
 
+// Whether firing the fan now would be a waste: the tsums it shuffles are about
+// to be cleared by a skill that is ready or nearly so. It also leaves the board
+// churning right as the skill activates, which matters for skills that read the
+// board on activation (Tiara Minnie+ blows up whatever is under her pick).
+// Costs one screenshot, so only call it where a fan tap is actually pending.
+// (Ported from TsumThi.)
+Tsum.prototype.fanWouldBeWasted = function() {
+  var img = this.screenshot();
+  try {
+    return this.checkSkillReadiness(img, Button.gameSkill1) !== 'far';
+  } finally {
+    releaseImage(img);
+  }
+};
+
+Tsum.prototype.checkSkillReadiness = function(img, skillButton) {
+  // Tiered version of isSkillActive's color check. Same reference colors, two
+  // thresholds: tight (25) means firmly empty; loose (60) is the original
+  // not-active match. Returns 'active', 'almost', or 'far'.
+  var skillNotActiveColors = [
+    {"a": 0, "b": 157, "g": 112, "r": 85},
+    {"a": 0, "b": 181, "g": 139, "r": 72},
+    {"a": 0, "b": 128, "g": 73, "r": 16},
+    {"a": 0, "b": 178, "g": 153, "r": 3},
+    {"a": 0, "b": 255, "g": 215, "r": 33}
+  ];
+  var c = this.getColor(img, skillButton);
+  var matchesTight = false, matchesLoose = false;
+  for (var i = 0; i < skillNotActiveColors.length; i++) {
+    var nc = skillNotActiveColors[i];
+    if (isSameColor(nc, c, 25)) { matchesTight = true; }
+    if (isSameColor(nc, c, 60)) { matchesLoose = true; }
+  }
+  if (!matchesLoose) { return 'active'; }
+  if (!matchesTight) { return 'almost'; }
+  return 'far';
+};
+
+// ---------------------------------------------------------------------------
+// Tiara Minnie+ (ported from TsumThi)
+//
+// The skill shows Minnie with a thought bubble holding one present, then a
+// screen of presents to pick the match from. Both halves are read by cropping
+// fixed boxes and comparing the pictures directly: the bubble is always drawn
+// in the same place, and the presents always land on the centres in
+// TiaraLayouts.
+//
+// Nothing here works out how many presents are on screen. Every centre from
+// every layout is scored against the bubble and the best-matching one is
+// tapped, so a miscounted screen cannot send the tap to the wrong place -- and
+// two centres from different layouts that sit on the same present are both
+// right answers. Offline this picked the correct present on all 20 frame/design
+// pairs, and kept doing so with every centre shifted by up to 25px.
+// ---------------------------------------------------------------------------
+
+// Hue names for the debug line, over OpenCV's 0..179 hue range.
+var TiaraHueNames = [
+  {to: 8, name: 'red'},     {to: 20, name: 'orange'},  {to: 32, name: 'yellow'},
+  {to: 44, name: 'lime'},   {to: 75, name: 'green'},   {to: 95, name: 'teal'},
+  {to: 125, name: 'blue'},  {to: 145, name: 'purple'}, {to: 165, name: 'pink'},
+  {to: 180, name: 'red'}
+];
+
+function tiaraHueName(h) {
+  for (var i = 0; i < TiaraHueNames.length; i++) {
+    if (h < TiaraHueNames[i].to) { return TiaraHueNames[i].name; }
+  }
+  return '?';
+}
+
+// A readable "bow/body" summary of a sampled present, so the log says what the
+// script thinks it is looking at rather than just a score.
+function tiaraDescribe(t, grid) {
+  var split = Math.max(1, Math.floor(grid * 0.35));
+  var part = function(r0, r1) {
+    var sx = 0, sy = 0, w = 0;
+    for (var r = r0; r < r1; r++) {
+      for (var c = 0; c < grid; c++) {
+        var k = (r * grid + c) * 5;
+        if (t[k + 4] <= 0) { continue; }
+        sx += t[k]; sy += t[k + 1]; w += t[k + 2];
+      }
+    }
+    if (w <= 0) { return 'white'; }
+    var h = Math.atan2(sy, sx) * 90 / Math.PI;
+    if (h < 0) { h += 180; }
+    return tiaraHueName(h);
+  };
+  return part(0, split) + ' bow / ' + part(split, grid) + ' body';
+}
+
+// Hue vector lookup. Every sampled cell turns its hue into a unit vector; there
+// are a few thousand of those per match, and the hue is a byte.
+//
+// Filled for all 256 values, not just OpenCV's 0..179 hue range, so the table
+// is a total function of the byte and cannot hand back undefined -- an
+// out-of-range hue would otherwise turn the whole score into NaN, which fails
+// every gate silently. The extra entries are the same wrap Math.cos would give.
+var TiaraHueCos = [];
+var TiaraHueSin = [];
+(function() {
+  for (var h = 0; h < 256; h++) {
+    TiaraHueCos.push(Math.cos(h * Math.PI / 90));
+    TiaraHueSin.push(Math.sin(h * Math.PI / 90));
+  }
+})();
+
+// Reduce a template sampled by tiaraSample to just the cells it marks as
+// present, laid out flat.
+//
+// Scoring only ever looks at those cells -- so neither the dark tsums behind a
+// board present nor the white cloud behind the bubble one can influence the
+// result -- which means the other cells of a candidate crop never need to be
+// read at all. On the reference bubbles the mask keeps between 8% and 58% of
+// the 144 cells, around 38% on average, and that is the factor it takes off
+// every candidate.
+function tiaraCompileTemplate(t, grid) {
+  var idx = [], hx = [], hy = [], sat = [], val = [];
+  var cells = grid * grid;
+  for (var i = 0; i < cells; i++) {
+    var k = i * 5;
+    if (t[k + 4] <= 0) { continue; }
+    idx.push(i);
+    hx.push(t[k]); hy.push(t[k + 1]); sat.push(t[k + 2]); val.push(t[k + 3]);
+  }
+  return {idx: idx, hx: hx, hy: hy, sat: sat, val: val, n: idx.length};
+}
+
+// A coarse brightness fingerprint of the play area, cheap enough to take over
+// and over. Used only to tell whether anything on the board is still moving.
+Tsum.prototype.tiaraBoardSignature = function() {
+  var cfg = TiaraMinnieConfig;
+  var n = cfg.settleCapture;
+  var img = getScreenshotModify(
+    this.playOffsetX, this.playOffsetY, this.playWidth, this.playHeight, n, n, 100);
+  var out = [];
+  try {
+    var step = n / cfg.settleGrid;
+    for (var gy = 0; gy < cfg.settleGrid; gy++) {
+      for (var gx = 0; gx < cfg.settleGrid; gx++) {
+        var c = getImageColor(img, Math.floor((gx + 0.5) * step), Math.floor((gy + 0.5) * step));
+        out.push((c.r + c.g + c.b) / 3);
+      }
+    }
+  } finally {
+    releaseImage(img);
+  }
+  return out;
+};
+
+function tiaraSignatureDiff(a, b) {
+  var d = 0;
+  for (var i = 0; i < a.length; i++) { d += Math.abs(a[i] - b[i]); }
+  return d / a.length / 255;
+}
+
+// Hold off activating until the board stops moving.
+//
+// Tapping a present blows up an area of the board, so it pays to fire when the
+// board is full and settled. The play loop clears a chain (and sometimes works
+// the fan) immediately before the skill goes off, and a blast that lands while
+// the tsums are still falling hits far fewer of them.
+Tsum.prototype.tiaraWaitForSettledBoard = function() {
+  var cfg = TiaraMinnieConfig;
+  var start = Date.now();
+  var deadline = start + cfg.settleWaitMs;
+  var prev = this.tiaraBoardSignature();
+  var quiet = 0;
+  var diff = 1;
+  while (Date.now() < deadline) {
+    this.sleep(cfg.settlePollMs);
+    var now = this.tiaraBoardSignature();
+    diff = tiaraSignatureDiff(prev, now);
+    prev = now;
+    // Two quiet readings, not one, so a momentary lull mid-cascade doesn't pass.
+    quiet = diff <= cfg.settleMaxDiff ? quiet + 1 : 0;
+    if (quiet >= cfg.settleQuietScans && Date.now() - start >= cfg.settleMinMs) {
+      if (this.debug) {
+        console.log('[Tiara] board settled in ' + (Date.now() - start) + 'ms, diff ' + diff.toFixed(3));
+      }
+      return true;
+    }
+  }
+  // Fire anyway: a late skill is worth more than a skipped one.
+  log(this.logs.tiaraBusy, diff.toFixed(3));
+  return false;
+};
+
+// Play square at matching resolution, blurred so one pixel read stands in for
+// the average of its cell, then HSV -- where getImageColor gives b=hue 0..179,
+// g=saturation, r=value.
+Tsum.prototype.tiaraCapture = function() {
+  var cfg = TiaraMinnieConfig;
+  var img = getScreenshotModify(
+    this.playOffsetX, this.playOffsetY, this.playWidth, this.playHeight,
+    cfg.captureSize, cfg.captureSize, 100);
+  smooth(img, 1, cfg.captureBlur);
+  convertColor(img, 40);
+  return img;
+};
+
+// The capture pixel each of the grid x grid cells of the logical square
+// (lcx, lcy, side) reads from, flat and in row order. Cells falling outside the
+// capture are marked -1 and read as black.
+//
+// These depend only on the layout tables and the capture size, so every table
+// is worked out once and kept -- the match loop would otherwise redo a few
+// thousand of these multiplies per scan for coordinates that never change.
+function tiaraCellPixels(lcx, lcy, side) {
+  var cfg = TiaraMinnieConfig;
+  var g = cfg.grid;
+  var scale = cfg.captureSize / 1080;
+  var step = side / g;
+  var left = lcx - side / 2;
+  var top = lcy - side / 2;
+  var px = [], py = [];
+  for (var cy = 0; cy < g; cy++) {
+    for (var cx = 0; cx < g; cx++) {
+      var x = Math.round((left + (cx + 0.5) * step) * scale);
+      var y = Math.round((top + (cy + 0.5) * step - PlayAreaTopY) * scale);
+      var inside = x >= 0 && y >= 0 && x < cfg.captureSize && y < cfg.captureSize;
+      px.push(inside ? x : -1);
+      py.push(inside ? y : -1);
+    }
+  }
+  return {px: px, py: py};
+}
+
+var TiaraBubbleCells = null;
+
+function tiaraBubbleCells() {
+  if (TiaraBubbleCells == null) {
+    var cfg = TiaraMinnieConfig;
+    TiaraBubbleCells = tiaraCellPixels(cfg.bubbleX, cfg.bubbleY, cfg.bubbleSide);
+  }
+  return TiaraBubbleCells;
+}
+
+// Read a cell table into grid x grid cells. Each cell carries a
+// saturation-weighted hue vector, saturation, value, and whether it looks like
+// part of a present. Hue goes in as a vector so the 179->0 wrap cannot average
+// a red into a cyan.
+//
+// Only the bubble goes through here; candidates are read and compared in one
+// pass by tiaraScoreCandidate, which never materialises this array.
+Tsum.prototype.tiaraSample = function(img, cells) {
+  var cfg = TiaraMinnieConfig;
+  var n = cfg.grid * cfg.grid;
+  var out = [];
+  for (var i = 0; i < n; i++) {
+    var px = cells.px[i];
+    var h = 0, s = 0, v = 0;
+    if (px >= 0) {
+      var col = getImageColor(img, px, cells.py[i]);
+      h = col.b; s = col.g; v = col.r;
+    }
+    out.push(s * TiaraHueCos[h] / 255);
+    out.push(s * TiaraHueSin[h] / 255);
+    out.push(s / 255);
+    out.push(v / 255);
+    out.push((s >= cfg.satMin && v >= cfg.valMin) ? 1 : 0);
+  }
+  return out;
+};
+
+// Small, unblurred capture for the cloud test only. That test is polled in a
+// loop and only asks whether a big pale blob is on screen, which survives heavy
+// downsampling -- the margin it works with is 0.49 against 0.09.
+Tsum.prototype.tiaraCloudCapture = function() {
+  var n = TiaraMinnieConfig.cloudCaptureSize;
+  return getScreenshotModify(
+    this.playOffsetX, this.playOffsetY, this.playWidth, this.playHeight, n, n, 100);
+};
+
+var TiaraCloudPoints = null;
+
+// The capture pixels the cloud test reads, worked out once instead of on every
+// poll, with the present dropped here rather than tested each time round.
+function tiaraCloudPoints() {
+  if (TiaraCloudPoints != null) { return TiaraCloudPoints; }
+  var cfg = TiaraMinnieConfig;
+  var box = cfg.cloudBox;
+  var size = cfg.cloudCaptureSize;
+  var scale = size / 1080;
+  var half = cfg.bubbleSide / 2;
+  var ex0 = cfg.bubbleX - half, ex1 = cfg.bubbleX + half;
+  var ey0 = cfg.bubbleY - half, ey1 = cfg.bubbleY + half;
+  var xs = [], ys = [];
+  for (var ly = box.y0; ly <= box.y1; ly += cfg.cloudStep) {
+    for (var lx = box.x0; lx <= box.x1; lx += cfg.cloudStep) {
+      // Skip the present itself: only the cloud around it should count.
+      if (lx >= ex0 && lx <= ex1 && ly >= ey0 && ly <= ey1) { continue; }
+      var px = Math.round(lx * scale);
+      var py = Math.round((ly - PlayAreaTopY) * scale);
+      if (px < 0 || py < 0 || px >= size || py >= size) { continue; }
+      xs.push(px); ys.push(py);
+    }
+  }
+  TiaraCloudPoints = {xs: xs, ys: ys, n: xs.length};
+  return TiaraCloudPoints;
+}
+
+// How much of the area around the bubble is pale cloud. Separates "bubble is
+// up" from "presents are up" and from ordinary play by a wide margin: the
+// sample frames read 0.48-0.50 with a bubble and 0.02-0.06 without one.
+// Takes a capture from tiaraCloudCapture, not the matching one.
+//
+// Reads the raw BGR pixel: OpenCV's HSV value is max(b,g,r) and its saturation
+// is 255*(max-min)/max, so the pale test can be made straight from the pixel
+// and the whole-image colour conversion this poll would otherwise run dropped.
+// The saturation is rounded the way OpenCV rounds it, so pixels sitting exactly
+// on the threshold fall the same side of it.
+Tsum.prototype.tiaraCloudFrac = function(img) {
+  var cfg = TiaraMinnieConfig;
+  var pts = tiaraCloudPoints();
+  if (pts.n === 0) { return 0; }
+  var hit = 0;
+  for (var i = 0; i < pts.n; i++) {
+    var col = getImageColor(img, pts.xs[i], pts.ys[i]);
+    var mx = col.r > col.g
+      ? (col.r > col.b ? col.r : col.b)
+      : (col.g > col.b ? col.g : col.b);
+    if (mx < cfg.cloudValMin) { continue; }
+    var mn = col.r < col.g
+      ? (col.r < col.b ? col.r : col.b)
+      : (col.g < col.b ? col.g : col.b);
+    if (Math.round(255 * (mx - mn) / mx) <= cfg.cloudSatMax) { hit++; }
+  }
+  return hit / pts.n;
+};
+
+var TiaraCandidates = null;
+
+// Every present centre from every layout, each with the cell table for the crop
+// size that suits its count. Scored together; the count is never decided.
+function tiaraCandidates() {
+  if (TiaraCandidates != null) { return TiaraCandidates; }
+  var out = [];
+  for (var n = 2; n <= 6; n++) {
+    var slots = TiaraLayouts[n];
+    var side = TiaraSlotSide[n];
+    for (var i = 0; i < slots.length; i++) {
+      var cells = tiaraCellPixels(slots[i].x, slots[i].y, side);
+      out.push({x: slots[i].x, y: slots[i].y, count: n, px: cells.px, py: cells.py});
+    }
+  }
+  TiaraCandidates = out;
+  return out;
+}
+
+// Similarity of one candidate crop to the compiled bubble template, 0..1.
+//
+// Reading the pixel and comparing it happen in the same pass, over the
+// template's cells only, so a candidate costs as many pixel reads as the mask
+// has cells rather than a full grid. Each cell's difference is divided by
+// cellSpread and clipped, which makes the score count clearly-wrong cells
+// instead of averaging away small ones -- worth roughly triple the margin of a
+// plain mean.
+Tsum.prototype.tiaraScoreCandidate = function(img, cand, tpl) {
+  var spread = TiaraMinnieConfig.cellSpread;
+  if (tpl.n <= 0) { return 0; }
+  var d = 0;
+  for (var j = 0; j < tpl.n; j++) {
+    var i = tpl.idx[j];
+    var px = cand.px[i];
+    var chx = 0, chy = 0, cs = 0, cv = 0;
+    if (px >= 0) {
+      var col = getImageColor(img, px, cand.py[i]);
+      cs = col.g / 255;
+      cv = col.r / 255;
+      chx = cs * TiaraHueCos[col.b];
+      chy = cs * TiaraHueSin[col.b];
+    }
+    var cell = (Math.abs(tpl.hx[j] - chx) + Math.abs(tpl.hy[j] - chy)
+              + Math.abs(tpl.sat[j] - cs) + Math.abs(tpl.val[j] - cv)) / 4 / spread;
+    if (cell > 1) { cell = 1; }
+    d += cell;
+  }
+  return 1 - d / tpl.n;
+};
+
+Tsum.prototype.tiaraBestMatch = function(img, tpl) {
+  var cands = tiaraCandidates();
+  var n = cands.length;
+  var scores = [];
+  var bi = 0;
+  var i;
+  for (i = 0; i < n; i++) {
+    scores.push(this.tiaraScoreCandidate(img, cands[i], tpl));
+    if (scores[i] > scores[bi]) { bi = i; }
+  }
+  var best = cands[bi];
+  // Centres from different layouts can land on the same present, and tapping
+  // either is correct, so the margin is measured against the best candidate
+  // that is somewhere else entirely.
+  var rival = -1;
+  for (i = 0; i < n; i++) {
+    var dx = cands[i].x - best.x, dy = cands[i].y - best.y;
+    if (dx * dx + dy * dy < 100 * 100) { continue; }
+    if (rival < 0 || scores[i] > scores[rival]) { rival = i; }
+  }
+  return {
+    x: best.x, y: best.y, count: best.count, score: scores[bi],
+    margin: rival < 0 ? scores[bi] : scores[bi] - scores[rival]
+  };
+};
+
+// Wait for the thought bubble, then read the present inside it.
+Tsum.prototype.tiaraWaitForDream = function(timeoutMs) {
+  var cfg = TiaraMinnieConfig;
+  var deadline = Date.now() + timeoutMs;
+  var seen = false;
+  while (Date.now() < deadline) {
+    var img = this.tiaraCloudCapture();
+    try {
+      seen = this.tiaraCloudFrac(img) >= cfg.cloudMinFrac;
+    } finally {
+      releaseImage(img);
+    }
+    if (seen) { break; }
+    this.sleep(cfg.pollMs);
+  }
+  if (!seen) { return null; }
+  // The bubble scales in; reading it mid-animation gives a shrunken present.
+  this.sleep(cfg.dreamSettleMs);
+  var img2 = this.tiaraCapture();
+  try {
+    return this.tiaraSample(img2, tiaraBubbleCells());
+  } finally {
+    releaseImage(img2);
+  }
+};
+
+// Wait for the presents to land, then tap the one matching the template. The
+// game timer is stopped for this whole stretch, so every check here is free.
+//
+// Three things must agree before a tap goes out: the score clears the floor,
+// the winner beats everything elsewhere by the margin (which is what actually
+// proves a present is there rather than a lucky patch of board), and the same
+// centre wins twice running.
+Tsum.prototype.tiaraPick = function(tpl) {
+  var cfg = TiaraMinnieConfig;
+  var deadline = Date.now() + cfg.choiceWaitMs;
+  var img;
+  // A template with no cells scores every candidate 0, so no tap can ever clear
+  // the floor. Leave now rather than spend choiceWaitMs of full-resolution
+  // captures proving it.
+  if (tpl.n <= 0) { return null; }
+
+  // The presents only exist once the bubble has gone.
+  while (Date.now() < deadline) {
+    img = this.tiaraCloudCapture();
+    var gone;
+    try {
+      gone = this.tiaraCloudFrac(img) < cfg.cloudMinFrac;
+    } finally {
+      releaseImage(img);
+    }
+    if (gone) { break; }
+    this.sleep(cfg.pollMs);
+  }
+  this.sleep(cfg.choiceLeadMs);
+
+  var agree = 0;
+  var last = null;
+  while (Date.now() < deadline) {
+    img = this.tiaraCapture();
+    var m;
+    try {
+      m = this.tiaraBestMatch(img, tpl);
+    } finally {
+      releaseImage(img);
+    }
+    if (m.score >= cfg.confidenceFloor && m.margin >= cfg.marginFloor) {
+      agree = (last != null && last.x === m.x && last.y === m.y) ? agree + 1 : 1;
+      last = m;
+      if (agree >= cfg.agreeScans) {
+        for (var i = 0; i < cfg.pickTaps; i++) {
+          this.tap({x: m.x, y: m.y}, cfg.pickTapDuring);
+          if (i + 1 < cfg.pickTaps) { this.sleep(cfg.pickTapGapMs); }
+        }
+        return m;
+      }
+    } else {
+      agree = 0;
+      last = null;
+      if (this.debug) {
+        console.log('[Tiara] waiting: best ' + m.score.toFixed(2)
+          + ' margin ' + m.margin.toFixed(2) + ' at ' + m.x + ',' + m.y);
+      }
+    }
+    this.sleep(cfg.matchPollMs);
+  }
+  return null;
+};
+
+// One bubble, one pick, per activation.
+//
+// The thought bubble is only shown once, straight after the skill fires -- it
+// does not come back between picks -- so once the present is tapped there is
+// nothing left to wait for and this returns straight away. (The 2-to-6
+// progression happens across activations, not inside one.)
+Tsum.prototype.useTiaraMinniePlusSkill = function() {
+  var cfg = TiaraMinnieConfig;
+  var started = Date.now();
+  this.sleep(cfg.dreamLeadMs);
+  var armed = Date.now();
+  var template = this.tiaraWaitForDream(cfg.dreamWaitMs);
+  if (template == null) {
+    log(this.logs.tiaraNoDream);
+    return 0;
+  }
+  log(this.logs.tiaraDream, tiaraDescribe(template, cfg.grid),
+      'after ' + (Date.now() - armed) + 'ms');
+  // Compiled once and reused by every candidate of every scan.
+  var pick = this.tiaraPick(tiaraCompileTemplate(template, cfg.grid));
+  if (pick == null) {
+    log(this.logs.tiaraUnsure);
+    return 0;
+  }
+  log(this.logs.tiaraPicked, pick.x + ',' + pick.y,
+      'score ' + pick.score.toFixed(2), 'margin ' + pick.margin.toFixed(2),
+      'layout ' + pick.count, 'total ' + (Date.now() - started) + 'ms');
+  return 1;
+};
+
 Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
@@ -2224,6 +3064,15 @@ Tsum.prototype.scanBoardQuick = function() {
   }
 
   var points = findTsums(srcImg);
+  // Read bubble positions off this same capture and remember them, so popping
+  // one after a chain is taps only -- no screenshot in the middle of a batch,
+  // which would stall the link cadence and the combo timer with it. Bubbles
+  // are big and drift slowly, so a position a second old still lands.
+  this.gameBubbles = this.skillType === 'block_tiara_minnie_plus_s'
+    ? findGameBubbles(srcImg) : [];
+  if (this.debug && this.gameBubbles.length > 0) {
+    console.log('[Bubbles] found ' + this.gameBubbles.length);
+  }
   debug(this.logs.recognitionStart);
   var tcs = classifyTsums(points);
   tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
@@ -2241,7 +3090,7 @@ Tsum.prototype.scanBoardQuick = function() {
       }
     }
   }
-  if (this.debug) { 
+  if (this.debug) {
     saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
   }
   releaseImage(srcImg);
@@ -2258,6 +3107,34 @@ Tsum.prototype.scanBoardQuick = function() {
   }
 
   return board;
+}
+
+// GamePlaying is recognized by HUD pixels on the pause/fan buttons, and a
+// long burst-skill animation (e.g. Dapper Hat Mickey) covers them for longer
+// than the old two-check window (~5s) while the game is still running, so the
+// play loop would bail mid-game and stall on the "unknown" screen. Thus, an
+// unrecognized screen alone is not proof of game over; require positive
+// confirmation instead: a game that really ends always reaches a known
+// out-of-game page (the score tally lands on ScorePage). Poll until the HUD
+// comes back (still playing), a known page shows up (game over), or the
+// grace window runs out (the old behavior, just later).
+Tsum.prototype.confirmGameOver = function() {
+  log(this.logs.confirmingGameOver);
+  var deadline = Date.now() + this.gameOverGraceMs;
+  while (this.isRunning) {
+    var page = this.findPage(1, 1500);
+    if (page === 'GamePlaying' || page === 'GamePause') {
+      return false;
+    }
+    if (page !== 'unknown') {
+      return true;
+    }
+    if (Date.now() > deadline) {
+      return true;
+    }
+    this.sleep(250);
+  }
+  return true;
 }
 
 Tsum.prototype.taskPlayGameQuick = function() {
@@ -2279,7 +3156,9 @@ Tsum.prototype.taskPlayGameQuick = function() {
     debug(this.logs.calculationPathStart);
     var paths = calculatePaths(board, this.logs);
     paths = paths.splice(0, 6);
-    var isBubble = this.link(paths);
+    // Catch a gauge that filled during the scan/calculation above before linking.
+    this.maybeAutoTapSkill(board);
+    var isBubble = this.link(paths, board);
     if (isBubble) {
       debug(this.logs.bubbleGenerated);
       clearBubbles++;
@@ -2287,10 +3166,22 @@ Tsum.prototype.taskPlayGameQuick = function() {
     if (paths.length < 3) {
       zeroPath++;
       if (zeroPath === 6) {
-        this.tap(Button.gameRand, 60);
-        this.tap(Button.gameRand, 60);
+        // Same guard as the periodic fan below. Without it this fires the fan
+        // with the skill already full, and useSkill() runs immediately after --
+        // so the skill activates onto a board that is still being tossed about.
+        // It also self-sustains: a churning board scans as few paths, which is
+        // what increments this counter in the first place.
+        if (!this.fanWouldBeWasted()) {
+          this.tap(Button.gameRand, 60);
+          this.tap(Button.gameRand, 60);
+        }
         zeroPath = 0;
       }
+    } else {
+      // Counts *consecutive* barren scans: a board that is producing chains is
+      // not stuck, and letting the count carry over between them fires the fan
+      // on a board that never needed shuffling.
+      zeroPath = 0;
     }
     // click bubbles
     if (this.clearBubbles && clearBubbles >= 2) {
@@ -2300,8 +3191,13 @@ Tsum.prototype.taskPlayGameQuick = function() {
       this.clearAllBubbles(0, 0, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
     }
     if (this.useFan && this.runTimes % 4 === 3) {
-      this.tap(Button.gameRand, 60);
-      this.tap(Button.gameRand, 60);
+      // Skip the fan when the skill is ready or about to be — useSkill() will
+      // fire it next (or the next clear will fill the gauge), so the fan would
+      // just be wasted on tsums about to be cleared.
+      if (!this.fanWouldBeWasted()) {
+        this.tap(Button.gameRand, 60);
+        this.tap(Button.gameRand, 60);
+      }
     }
     if (this.isPause) {
       this.sleep(300);
@@ -2315,11 +3211,18 @@ Tsum.prototype.taskPlayGameQuick = function() {
     // double check
     var page = this.findPage(1, 2500);
     if (page !== 'GamePlaying' && page !== 'GamePause') {
-      this.sleep(500);
-      page = this.findPage(1, 2500);
-      if (page !== 'GamePlaying' && page !== 'GamePause') {
-        log(this.logs.gameOver);
-        break;
+      if (this.handleLongSkillAnimations) {
+        if (this.confirmGameOver()) {
+          log(this.logs.gameOver);
+          break;
+        }
+      } else {
+        this.sleep(500);
+        page = this.findPage(1, 2500);
+        if (page !== 'GamePlaying' && page !== 'GamePause') {
+          log(this.logs.gameOver);
+          break;
+        }
       }
     }
     this.runTimes++;
@@ -3184,9 +4087,11 @@ function start(settings) {
   ts.sentToZero = settings['sendHeartsToZeroScore'];
   ts.receiveCheckLimit = settings['mailOpenMax'];
   ts.clearBubbles = settings['clearBubbles'];
+  ts.handleLongSkillAnimations = settings['handleLongSkillAnimations'] || false;
   ts.skillInterval = settings['skillWaitingTime'] * 1000;
   ts.skillLevel = settings['skillLevel'];
   ts.skillType = settings['skillType'];
+  ts.skillAutoTap = !!settings['skillAutoTap'];
   ts.unlockLevelHoursWait = settings["unlockLevelHoursWait"];
   ts.sendHearts = settings['sendHeartsAuto'];
   ts.showHeartLog = true;

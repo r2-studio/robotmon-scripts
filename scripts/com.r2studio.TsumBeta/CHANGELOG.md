@@ -4,11 +4,19 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v84] - 2026-07-31
+
+### Added
+- New Tiara Minnie+ skill that taps the correct presents during her skill. Her skill type will also try to optimize the usage of the game bubbles by tapping them mid chain to activate her bonus. A slight delay of about 300ms is added to allow the board to settle before the script activates her skill to try to maximize the number of Tsums the skill affects.
+- New "Handle Long Skill Animations" option to settings to allow the script to gracefully handle skill animations that can take a long time (like Dapper Hat Mickey). Leaving this always on shouldn't negatively affect any other Tsum mechanic.
+- New experimental "Auto-tap skill when ready..." setting that basically spams the skill button every 500ms to activate the skill as quickly as possible. This works great for basic burst Tsums and overloading. It's experimental at the moment since it hasn't been tested with other Tsum mechanics like duo Tsums.
+
+
 ## [v83] - 2026-07-27
 - Fix deployment issue
 
 ## [v82] - 2026-07-23
-- Rewrite find tsum 
+- Rewrite find tsum
 - Fixed detect blue tsum logic
 
 ## [v81] - 2026-05-13
@@ -26,7 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [v79] - 2025-12-10
 
 ### Fixed
-- Additional -1 and +1 buttons had effect on following settings. 
+- Additional -1 and +1 buttons had effect on following settings.
 - JP auto buy did not work correctly with high fps settings.
 
 ### Changed
@@ -62,7 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - New "Lightning McQueen+" skill.
 
 ### Changed
-- "Auto buy" now uses the box selected by default. There might be an option to make it pre-select "the middle" box in a later version, but that logic already causes problems in the JP version when there were 4 (!) boxes to draw from. 
+- "Auto buy" now uses the box selected by default. There might be an option to make it pre-select "the middle" box in a later version, but that logic already causes problems in the JP version when there were 4 (!) boxes to draw from.
 
 
 ## [v75] - 2025-03-01
@@ -78,7 +86,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [v74] - 2025-01-23
 
 ### Fixed
-- JP Tsum Tsum update broke "Receive All Hearts". As there are now more features, "Receive All Hearts" now respects the "Skip Ruby" option. 
+- JP Tsum Tsum update broke "Receive All Hearts". As there are now more features, "Receive All Hearts" now respects the "Skip Ruby" option.
 - JP Tsum Tsum update broke "Auto buy Tsums".
 - "Auto buy Tsums" sometimes missed some buys when counting down.
 
@@ -155,9 +163,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Highscore page detection was incorrectly detected on new JP startup popup.
 
 ### Added
-- Allow script to defer skill activation if fever is active and ends within X seconds 
+- Allow script to defer skill activation if fever is active and ends within X seconds
   (X can be defined in the settings).
-- "Claim All" when retrieved hearts do not contain coins anymore. When 3 hearts without coins were collected, the 
+- "Claim All" when retrieved hearts do not contain coins anymore. When 3 hearts without coins were collected, the
   mailbox will be refreshed and new mails will be retrieved until 3 hearts without coins were collected again.
   This will be repeated until 5 or fewer mails were opened before hearts without coins were received. Then "Claim All"
   will be pressed. Intended for when script did not run for more than an hour.
@@ -168,7 +176,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Robotmon control panel opens automatically when script is loaded.
 - Opening the Robotmon script settings now stops script execution.
 - Changed minimal screenshot resolution of pages to a width of 360px in order to make page navigation more safe.
-- If script gets started while a game is already open in "pause" mode, the script will continue playing the game instead 
+- If script gets started while a game is already open in "pause" mode, the script will continue playing the game instead
   of leaving it.
 
 
@@ -186,7 +194,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - New skill "Cabbage Mickey".
-- New skill "No Skill" which just ignores any active skill buttons. Useful for Fever missions where no fever tsum 
+- New skill "No Skill" which just ignores any active skill buttons. Useful for Fever missions where no fever tsum
   is allowed, so that skill activation can be timed exactly after fever time to immediately start a new fever time.
 
 
@@ -194,7 +202,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
-- Auto game play didn't work with screen resolution of 480x800px anymore (introduced with TsumBeta v62). 
+- Auto game play didn't work with screen resolution of 480x800px anymore (introduced with TsumBeta v62).
   This _might_ reintroduce the bug that the game gets stopped short before the end.
 
 
@@ -208,7 +216,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Too early game end on last seconds (v62 didn't fix it completely, maybe this one)
 - "Send hearts" sometimes broke after initial scroll up to the top
-- Improved root detection screen on auto game start 
+- Improved root detection screen on auto game start
 
 
 ## [v62] - 2024-01-03
@@ -220,14 +228,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 - Tsum levels are auto unlocked only if autoplay is active, and then directly before the game starts.
-- Added some more wait times while receiving hearts. These should not be notable, but make the script less aggressive. 
+- Added some more wait times while receiving hearts. These should not be notable, but make the script less aggressive.
 
 ### Fixed
 
-- Script can now start the Int'l version, not just the JP one. 
+- Script can now start the Int'l version, not just the JP one.
   Which version is started is based on the setting "Japan version?".
-- Game start with Robotmon sometimes made the game stuck (permanent "loading" screen on 
-  event notifications), so pauses between taps now take longer on startup to better handle daily event 
+- Game start with Robotmon sometimes made the game stuck (permanent "loading" screen on
+  event notifications), so pauses between taps now take longer on startup to better handle daily event
   notifications.
 - Game was sometimes canceled in the last five seconds due to the "blue'ish" flickering.
 - Most event cards now won't block script progress anymore.
