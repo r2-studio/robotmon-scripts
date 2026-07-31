@@ -4,6 +4,10 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v84] - 2026-07-31
+- fix auto unlock , thanks DRP to provided the new cooridinate and color.
+- add max chain for Roxas , Maleficient type Tsum that runs better at higher fps.
+
 ## [v83] - 2026-07-27
 - Fix deployment issue
 
