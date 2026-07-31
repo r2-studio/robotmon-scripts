@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = '83';
+var VERSION = '84';
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -151,6 +151,15 @@ var settings = [
             title: '+Combo',
             title_zh_TW: '道具Combo',
             default: false
+        },
+        {
+            key: 'maxChain',
+            title: 'Maximum Chain Number',
+            title_zh_TW: '最大連鎖數',
+            default: 3,
+            step: 1,
+            max: 15,
+            min: 3
         },
         {
             key: 'skillWaitingTime',

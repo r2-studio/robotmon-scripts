@@ -77,6 +77,7 @@ var Config = {
   screenResize: 200,
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
+  maxChain:3,
   debugLogs: false
 };
 
@@ -399,21 +400,21 @@ var Page = {
   TsumsPage: {
     name: 'TsumsPage',
     colors: [
-      {x: 27, y: 901, r: 198, g: 239, b: 247, match: true, threshold: 80},    // left of "Tsum Tsum Collection" title bar
-      {x: 577, y: 906, r: 255, g: 251, b: 255, match: true, threshold: 80},   // middle of "Tsum Tsum Collection" title bar
-      {x: 741, y: 899, r: 132, g: 190, b: 214, match: true, threshold: 80},   // right of "Tsum Tsum Collection" title bar (short before "Level Lock")
-      {x: 1012, y: 899, r: 247, g: 186, b: 16, match: true, threshold: 80}    // yellow "order" button
+      {x: 27, y: 901, r: 197, g: 243, b: 254, match: true, threshold: 80},    // left of "Tsum Tsum Collection" title bar
+      {x: 436, y: 902, r: 247, g: 247, b: 247, match: true, threshold: 80},   // middle of "Tsum Tsum Collection" title bar
+      {x: 713, y: 900, r: 247, g: 187, b: 16, match: true, threshold: 80},   // right of "Tsum Tsum Collection" title bar (short before "Level Lock")
+      {x: 1030, y: 900, r: 249, g: 190, b: 19, match: true, threshold: 80}    // yellow "order" button
 
     ],
     lockIcons: [
-      {x: 196, y: 1195, r: 236, g: 245, b: 254},
-      {x: 430, y: 1195, r: 234, g: 244, b: 253},
-      {x: 665, y: 1195, r: 237, g: 246, b: 253},
-      {x: 900, y: 1195, r: 236, g: 246, b: 254},
-      {x: 196, y: 1450, r: 236, g: 245, b: 254},
-      {x: 430, y: 1450, r: 235, g: 244, b: 253},
-      {x: 665, y: 1450, r: 237, g: 246, b: 254},
-      {x: 900, y: 1450, r: 236, g: 246, b: 254}
+      {x: 196, y: 1195, r: 239, g: 247, b: 255},
+      {x: 430, y: 1195, r: 239, g: 247, b: 255},
+      {x: 665, y: 1195, r: 239, g: 247, b: 255},
+      {x: 900, y: 1195, r: 239, g: 247, b: 255},
+      {x: 196, y: 1450, r: 239, g: 247, b: 255},
+      {x: 430, y: 1450, r: 239, g: 247, b: 255},
+      {x: 665, y: 1450, r: 239, g: 247, b: 255},
+      {x: 900, y: 1450, r: 239, g: 247, b: 255}
     ],
     back: {x: 176, y: 1592},
     next: {x: 176, y: 1592},
@@ -1085,10 +1086,25 @@ function findNearTsum(tsum, tsums) {
   return { dis: finalDistance, tsum: minTsum, idx: idx };
 }
 
+
+
 function calculateNearTsumPaths(tsum, ts) {
-  var path = [];
+  // 1. Include the starting tsum in the path
+  var path = [tsum]; 
   var tsums = ts.slice(); // copy array
+
+  // 2. Remove the starting tsum from candidate list so it isn't matched again
+  var initialIdx = tsums.indexOf(tsum);
+  if (initialIdx !== -1) {
+    tsums.splice(initialIdx, 1);
+  }
+
   while(true) {
+    // Stop if we have reached the maximum path length limit
+    if (path.length >= Config.maxChain) {
+      break;
+    }
+
     var result = findNearTsum(tsum, tsums);
     var minDis = result.dis;
     var minTsum = result.tsum;
@@ -1156,10 +1172,26 @@ function calculatePaths(board, logs) {
     return b.length - a.length;
   });
 
-  if (typeof debug === 'function' && logs && logs.calculatedPath) {
-    debug(logs.calculatedPath, paths.length);
-  }
 
+  if (ts.debug) {
+    if (typeof debug === 'function' && logs && logs.calculatedPath) {
+      debug(logs.calculatedPath, paths.length);
+    }
+
+    // Log detailed breakdown of each path
+    for (var p = 0; p < paths.length; p++) {
+      var currentPath = paths[p];
+      var pathDetails = currentPath.map(function(node) {
+        // Map coordinates or identifiers depending on the object shape
+        if (node && node.x !== undefined && node.y !== undefined) {
+          return "(" + node.x + "," + node.y + ")";
+        }
+        return node.tsumIdx !== undefined ? "idx:" + node.tsumIdx : JSON.stringify(node);
+      }).join(" -> ");
+
+      log("Path #" + (p + 1) + " (Length " + currentPath.length + "): " + pathDetails);
+    }
+  }
   return paths;
 }
 
@@ -1383,6 +1415,7 @@ function Tsum(isJP, detect, logs) {
   this.recordReceive = true;
   this.skillInterval = 3000;
   this.skillLevel = 3;
+  this.maxChain = 3;
   this.skillType = '';
   this.unlockLevelHoursWait = 0;
   this.sendHearts = false;
@@ -3214,6 +3247,7 @@ function start(settings) {
   }
 
   Config.debugLogs = settings['debugLogs'];
+  Config.maxChain = settings['maxChain'];
   ts.autobuyBoxes = settings['autobuyBoxes'];
   ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
   ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];
