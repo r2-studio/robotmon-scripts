@@ -31,8 +31,8 @@
     "com.r2studio.TsumBeta": {
       "id": "com.r2studio.TsumBeta",
       "title": "Disney Tsum Tsum",
-      "versionCode": 83,
-      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v83</b>\n<ul>\n    <li>\n        修正找藍色Tsum方法\n        <br>\n        Fix blue tsum detection.\n    </li>\n</ul>",
+      "versionCode": 84,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v84</b>\n<ul>\n    <li>\n        新增選項「處理長技能動畫」，修正長技能動畫時誤判遊戲結束\n        <br>\n        New optional setting \"Handle Long Skill Animations\": fixes a false game over during long skill animations.\n    </li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.TsumBeta/index.zip",
       "dependencies": [],

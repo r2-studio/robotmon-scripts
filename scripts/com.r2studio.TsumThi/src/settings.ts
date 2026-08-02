@@ -122,6 +122,12 @@ var settings = [
             min: 1
         },
         {
+            key: 'prioritizeMyTsum',
+            title: 'Link MyTsum first (fills the skill gauge faster)',
+            title_zh_TW: '優先連結我的Tsum（技能集氣較快）',
+            default: false
+        },
+        {
             key: 'bonusScore',
             title: '+Score',
             title_zh_TW: '道具Score',
@@ -171,12 +177,6 @@ var settings = [
             step: 1,
             max: 15,
             min: 1
-        },
-        {
-            key: 'skillAutoTap',
-            title: 'Auto-tap skill when ready (checks every 0.5s, even mid-link)',
-            title_zh_TW: '技能就緒時自動點擊（每0.5秒檢查，連線中也會）',
-            default: false
         },
         {
             key: 'skillLevel',
@@ -359,6 +359,12 @@ var settings = [
             max: 120,
             step: 1,
             default: 0
+        },
+        {
+            key: 'skillAutoTap',
+            title: 'Auto-tap skill when ready (checks every 0.5s, even mid-link)',
+            title_zh_TW: '技能就緒時自動點擊（每0.5秒檢查，連線中也會）',
+            default: false
         }
     ]
 ];

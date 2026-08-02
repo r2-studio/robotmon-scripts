@@ -187,9 +187,9 @@ function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
     }
   }
 
-  // In 5>4 mode, MyTsum chains play first (longest first), then other colors by
-  // length. Otherwise, just take the longest available chain regardless of color
-  // so anything connectable goes out as soon as possible.
+  // With "Link MyTsum first" on, MyTsum chains play first (longest first), then
+  // other colors by length. Otherwise, just take the longest available chain
+  // regardless of color so anything connectable goes out as soon as possible.
   paths.sort(function(a, b) {
     if (prioritizeMyTsum) {
       const aMy = (myTsumIdx >= 0 && a.tsumIdx === myTsumIdx);

@@ -7,6 +7,7 @@ function start(settings) {
   if (ts.bonus5to4) {
     ts.tsumCount = 4;
   }
+  ts.prioritizeMyTsum = !!settings['prioritizeMyTsum'];
   ts.autoLaunch = settings['autoLaunchApp'];
   ts.scoreItem = settings['bonusScore'];
   ts.coinItem = settings['bonusCoin'];

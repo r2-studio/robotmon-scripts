@@ -31,6 +31,10 @@ function Tsum(isJP, detect, logs) {
 
   this.tsumCount = 5;
   this.maxChainsPerScan = 6;
+  // Link MyTsum chains ahead of longer ones of other colors, so the skill gauge
+  // fills faster (see calculatePaths). Off by default: it costs raw chain
+  // length, and only pays off when the skill is worth more than the tsums.
+  this.prioritizeMyTsum = false;
   this.isJP = isJP;
   this.logs = logs;
   this.scoreItem = false;
@@ -1352,7 +1356,6 @@ Tsum.prototype.tiaraSample = function(img, cells) {
   return out;
 };
 
-// The size cloudBox is captured at, holding the sampling density that
 // Small, unblurred capture for the cloud test only. That test is polled in a
 // loop and only asks whether a big pale blob is on screen, which survives heavy
 // downsampling -- the margin it works with is 0.49 against 0.09.
@@ -1694,18 +1697,22 @@ Tsum.prototype.scanBoardQuick = function() {
     }
 
     // Identify which color cluster (if any) is the player's MyTsum by matching
-    // the skill-button portrait color against cluster centers.
-    if (!this.myTsumColor) {
-      this.myTsumColor = this.sampleMyTsumColor();
-      if (this.debug) { console.log('MyTsum color', JSON.stringify(this.myTsumColor)); }
-    }
+    // the skill-button portrait color against cluster centers. Only the
+    // "Link MyTsum first" setting reads myTsumIdx, so with it off the whole
+    // thing is skipped -- the portrait sample is a screenshot per game.
     this.myTsumIdx = -1;
-    let bestMyDist = 30;
-    for (let ci = 0; ci < tcs.length && ci < this.tsumCount - 1; ci++) {
-      const dMy = distance3D(tcs[ci], this.myTsumColor);
-      if (dMy < bestMyDist) {
-        bestMyDist = dMy;
-        this.myTsumIdx = ci;
+    if (this.prioritizeMyTsum) {
+      if (!this.myTsumColor) {
+        this.myTsumColor = this.sampleMyTsumColor();
+        if (this.debug) { console.log('MyTsum color', JSON.stringify(this.myTsumColor)); }
+      }
+      let bestMyDist = 30;
+      for (let ci = 0; ci < tcs.length && ci < this.tsumCount - 1; ci++) {
+        const dMy = distance3D(tcs[ci], this.myTsumColor);
+        if (dMy < bestMyDist) {
+          bestMyDist = dMy;
+          this.myTsumIdx = ci;
+        }
       }
     }
 
@@ -1792,7 +1799,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
       break;
     }
     debug(this.logs.calculationPathStart);
-    let paths = calculatePaths(board, this.logs, this.myTsumIdx, this.bonus5to4);
+    let paths = calculatePaths(board, this.logs, this.myTsumIdx, this.prioritizeMyTsum);
     // Each linked chain is a clear that refreshes the combo timer; the combo
     // is only at risk during the scan gap between batches. More chains per
     // scan means fewer gaps, but chains linked late in a batch can miss
