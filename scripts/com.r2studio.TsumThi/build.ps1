@@ -12,9 +12,17 @@ Remove-Item -Recurse -Force .\build -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path .\dist | Out-Null
 New-Item -ItemType Directory -Path .\build | Out-Null
 
-# Compile TypeScript -> .\build (configured via tsconfig.json)
-Write-Host "Compiling TypeScript..."
+# Compile the game script (split files bundled via outFile -> .\build\index.js)
+Write-Host "Compiling TypeScript (game bundle)..."
 npx tsc
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "TypeScript compilation failed (exit $LASTEXITCODE)."
+    exit $LASTEXITCODE
+}
+
+# Compile the settings UI script separately -> .\build\settings.js
+Write-Host "Compiling TypeScript (settings UI)..."
+npx tsc -p tsconfig.settings.json
 if ($LASTEXITCODE -ne 0) {
     Write-Host "TypeScript compilation failed (exit $LASTEXITCODE)."
     exit $LASTEXITCODE

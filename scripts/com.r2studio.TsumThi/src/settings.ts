@@ -2,7 +2,7 @@
 // Converted from settings.js - best-effort TypeScript port.
 "use strict";
 
-var VERSION = '81';
+var VERSION = '82';
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -119,6 +119,21 @@ var settings = [
             default: false
         },
         {
+            key: 'maxChainsPerScan',
+            title: 'Chains per board scan',
+            title_zh_TW: '每次掃描連線數',
+            default: 6,
+            step: 1,
+            max: 12,
+            min: 1
+        },
+        {
+            key: 'prioritizeMyTsum',
+            title: 'Link MyTsum first (fills the skill gauge faster)',
+            title_zh_TW: '優先連結我的Tsum（技能集氣較快）',
+            default: false
+        },
+        {
             key: 'bonusScore',
             title: '+Score',
             title_zh_TW: '道具Score',
@@ -200,6 +215,7 @@ var settings = [
                 {key: 'block_cabbage_mickey_s', title: 'Cabbage Mickey', title_zh_TW: '高麗菜米奇'},
                 {key: 'block_cpt_ly_s', title: 'Cpt. Lightyear', title_zh_TW: '光年隊長'},
                 {key: 'block_lightning_mcqueen_plus_s', title: 'Lightning McQueen+', title_zh_TW: '閃電麥坤+'},
+                {key: 'block_tiara_minnie_plus_s', title: 'Tiara Minnie+', title_zh_TW: '皇冠米妮+'},
                 {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '搭檔Tsum'},
                 {key: 'no_skill', title: 'No Skill', title_zh_TW: '没有技能'}
             ]
@@ -347,8 +363,14 @@ var settings = [
             title_zh_TW: '定時重啟Tsum app（時）',
             min: 0,
             max: 120,
-            step: 6,
+            step: 1,
             default: 0
+        },
+        {
+            key: 'skillAutoTap',
+            title: 'Auto-tap skill when ready (checks every 0.5s, even mid-link)',
+            title_zh_TW: '技能就緒時自動點擊（每0.5秒檢查，連線中也會）',
+            default: false
         }
     ]
 ];
@@ -604,8 +626,8 @@ function genSettings(jContainer, settings) {
                     jBtns.push(jBtnP1); // Add new +1 button if needed
                     jBtns.push(jBtnM1); // Add new -1 button if needed
                 }
-            
-                
+
+
                 jInput.on('change', function () {
                     saveSettings(settings);
                 });

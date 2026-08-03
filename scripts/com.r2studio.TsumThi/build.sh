@@ -3,9 +3,13 @@
 rm -rf ./dist ./build 2>/dev/null
 mkdir ./dist ./build
 
-# Compile TypeScript -> ./build (configured via tsconfig.json)
-echo "Compiling TypeScript..."
+# Compile the game script (split files bundled via outFile -> ./build/index.js)
+echo "Compiling TypeScript (game bundle)..."
 npx tsc
+
+# Compile the settings UI script separately -> ./build/settings.js
+echo "Compiling TypeScript (settings UI)..."
+npx tsc -p tsconfig.settings.json
 
 # Stage the static assets next to the compiled JS so html-inline-external can
 # resolve `<script src="settings.js">` and `<link href="index.css">` references.

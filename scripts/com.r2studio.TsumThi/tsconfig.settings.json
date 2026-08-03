@@ -1,0 +1,24 @@
+{
+  // settings.ts is the configuration UI script. It is loaded directly by
+  // index.html (<script src="settings.js">) and must stay a standalone file --
+  // it is NOT part of the bundled game script (see tsconfig.json). This config
+  // emits build/settings.js on its own, one input -> one output.
+  "compilerOptions": {
+    "target": "ES5",
+    "lib": ["ES5", "DOM"],
+    "module": "none",
+    "outDir": "./build",
+    "rootDir": "./src",
+    "removeComments": false,
+    "newLine": "lf",
+    "strict": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "ignoreDeprecations": "6.0"
+  },
+  "files": [
+    "src/settings.ts"
+  ]
+}

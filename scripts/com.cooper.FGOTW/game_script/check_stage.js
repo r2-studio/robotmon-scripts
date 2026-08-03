@@ -444,9 +444,6 @@ function isBattleSkillEmiyaDialog(screenshot) {
 }
 
 function isBattleSkillDubaiDialog(screenshot) {
-  if (server == "TW") {
-    return false;
-  }
   return checkIconListInScreen(
     ["dubaiSkill", "dubaiSkill2", "dubaiSkill3"],
     false,

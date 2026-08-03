@@ -1,7 +1,219 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TsumBeta settings</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>.navbar-custom {
+    border-radius: 0 !important;
+    background-color: #2196F3;
+    color: #FFFFFF;
+}
+
+.navbar-custom > a {
+    width: 100%;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.navbar-custom > a:hover {
+    color: #FFFFFF;
+}
+
+.list-group-item {
+    padding: 6px 10px !important;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0px;
+    width: 52px;
+    height: 28px;
+}
+
+ul {
+    padding-left: 5px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    display: none;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 2px;
+    bottom: 4px;
+    top: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(24px);
+    -ms-transform: translateX(24px);
+    transform: translateX(24px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 28px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.btn {
+    padding: 3px 5px !important;
+    font-size: 12px;
+    margin: 1.5px;
+    height: 26px;
+}
+
+.btn-plus {
+    color: #FFFFFF;
+    background-color: #2196F3;
+    border-color: #2196F3;
+}
+
+.btn-plus:hover,
+.btn-plus:focus,
+.btn-plus:active,
+.btn-plus.active {
+    color: #FFFFFF !important;
+    background-color: #0d8aee;
+    border-color: #0c7cd5;
+}
+
+.btn-plus.disabled:hover,
+.btn-plus.disabled:focus,
+.btn-plus.disabled:active,
+.btn-plus.disabled.active,
+.btn-plus[disabled]:hover,
+.btn-plus[disabled]:focus,
+.btn-plus[disabled]:active,
+.btn-plus[disabled].active,
+fieldset[disabled] .btn-plus:hover,
+fieldset[disabled] .btn-plus:focus,
+fieldset[disabled] .btn-plus:active,
+fieldset[disabled] .btn-plus.active {
+    color: #FFFFFF;
+    background-color: #2196F3;
+    border-color: #2196F3;
+}
+
+.btn-plus,
+.btn-danger,
+.btn-warning {
+    min-width: 35px;
+    padding: 3px 0px 3px 0px !important;
+}
+
+.setting_input_value {
+    width: 35px;
+    font-size: 12px;
+    height: 26px;
+    margin: 1.5px;
+    text-align: center;
+}
+
+.setting_input_value[type=text] {
+    width: 80%;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+}
+
+#goToTop {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+#goToBottom {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+}
+
+.dropbtn {
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 0.5px solid rgba(0, 0, 0, 0.2);
+    background-color: white;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 150px;
+    max-width: 200px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    left: auto;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {
+    background-color: #f1f1f1;
+}
+
+.show {
+    display: block;
+}
+</style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>// @ts-nocheck
+// Converted from settings.js - best-effort TypeScript port.
 "use strict";
-
-var VERSION = '83';
-
+var VERSION = '81';
 /**
  * Returns the language parameter for the currently active locale.
  * @param msgZhTW {string} the message in zh-TW
@@ -14,7 +226,6 @@ function i18n(msgZhTW, msgEn) {
     }
     return msgEn;
 }
-
 var settings = [
     [
         {
@@ -27,8 +238,8 @@ var settings = [
         },
         {
             key: 'buildDate',
-            title: 'Build date: $BUILD_DATE',
-            title_zh_TW: '建造日期: $BUILD_DATE'
+            title: 'Build date: 2026-05-28 15:33:40 -07:00',
+            title_zh_TW: '建造日期: 2026-05-28 15:33:40 -07:00'
         },
         {
             key: 'debugLogs',
@@ -50,8 +261,8 @@ var settings = [
             title: 'Language',
             title_zh_TW: '語言',
             buttons: [
-                {title: 'En', onclick: 'saveLocale("en-US")'},
-                {title: '中文', onclick: 'saveLocale("zh-TW")'}
+                { title: 'En', onclick: 'saveLocale("en-US")' },
+                { title: '中文', onclick: 'saveLocale("zh-TW")' }
             ]
         },
         {
@@ -176,24 +387,24 @@ var settings = [
             title_zh_TW: '技能類型',
             default: 'burst',
             dropdown: [
-                {key: 'burst', title: 'Burst', title_zh_TW: '消除系'},
-                {key: 'burst_bubbles', title: 'Burst bubbles', title_zh_TW: '消除系2'},
-                {key: 'block_donald_s', title: 'Donald', title_zh_TW: '唐老鴨'},
-                {key: 'block_donaldx_s', title: 'Holiday Donald', title_zh_TW: '假日唐老鴨'},
-                {key: 'block_lukej_s', title: 'Jedi Luke', title_zh_TW: '絕地路克'},
-                {key: 'block_moana_s', title: 'Moana', title_zh_TW: '莫娜'},
-                {key: 'block_marie_s', title: 'Marie', title_zh_TW: '瑪麗'},
-                {key: 'block_missbunny_s', title: 'Miss Bunny', title_zh_TW: '小兔子'},
-                {key: 'block_rabbit_s', title: 'Rabbit', title_zh_TW: '兔子'},
-                {key: 'block_mickeyh2015_s', title: 'Horn Hat Mickey', title_zh_TW: '角帽米奇'},
-                {key: 'block_snowwhite_s', title: 'Snow White', title_zh_TW: '白雪公主'},
-                {key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉'},
-                {key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪'},
-                {key: 'block_cabbage_mickey_s', title: 'Cabbage Mickey', title_zh_TW: '高麗菜米奇'},
-                {key: 'block_cpt_ly_s', title: 'Cpt. Lightyear', title_zh_TW: '光年隊長'},
-                {key: 'block_lightning_mcqueen_plus_s', title: 'Lightning McQueen+', title_zh_TW: '閃電麥坤+'},
-                {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '搭檔Tsum'},
-                {key: 'no_skill', title: 'No Skill', title_zh_TW: '没有技能'}
+                { key: 'burst', title: 'Burst', title_zh_TW: '消除系' },
+                { key: 'burst_bubbles', title: 'Burst bubbles', title_zh_TW: '消除系2' },
+                { key: 'block_donald_s', title: 'Donald', title_zh_TW: '唐老鴨' },
+                { key: 'block_donaldx_s', title: 'Holiday Donald', title_zh_TW: '假日唐老鴨' },
+                { key: 'block_lukej_s', title: 'Jedi Luke', title_zh_TW: '絕地路克' },
+                { key: 'block_moana_s', title: 'Moana', title_zh_TW: '莫娜' },
+                { key: 'block_marie_s', title: 'Marie', title_zh_TW: '瑪麗' },
+                { key: 'block_missbunny_s', title: 'Miss Bunny', title_zh_TW: '小兔子' },
+                { key: 'block_rabbit_s', title: 'Rabbit', title_zh_TW: '兔子' },
+                { key: 'block_mickeyh2015_s', title: 'Horn Hat Mickey', title_zh_TW: '角帽米奇' },
+                { key: 'block_snowwhite_s', title: 'Snow White', title_zh_TW: '白雪公主' },
+                { key: 'block_cinderella_s', title: 'Cinderella', title_zh_TW: '仙度瑞拉' },
+                { key: 'block_woody2_s', title: 'Sheriff Woody', title_zh_TW: '警長胡迪' },
+                { key: 'block_cabbage_mickey_s', title: 'Cabbage Mickey', title_zh_TW: '高麗菜米奇' },
+                { key: 'block_cpt_ly_s', title: 'Cpt. Lightyear', title_zh_TW: '光年隊長' },
+                { key: 'block_lightning_mcqueen_plus_s', title: 'Lightning McQueen+', title_zh_TW: '閃電麥坤+' },
+                { key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '搭檔Tsum' },
+                { key: 'no_skill', title: 'No Skill', title_zh_TW: '没有技能' }
             ]
         },
         {
@@ -344,7 +555,6 @@ var settings = [
         }
     ]
 ];
-
 // noinspection JSUnusedGlobalSymbols
 function saveLocale(locale) {
     if (localStorage !== undefined) {
@@ -352,7 +562,6 @@ function saveLocale(locale) {
         location.reload();
     }
 }
-
 function loadSettings(settings) {
     if (localStorage === undefined) {
         return;
@@ -380,13 +589,13 @@ function loadSettings(settings) {
                 }
             }
         })();
-    } else {
+    }
+    else {
         log(i18n('没有找到设置，使用默认设置', 'No settings found, using default ones'));
         return;
     }
     log(i18n('讀取設定', 'Load settings'));
 }
-
 function saveSettings(settings) {
     if (localStorage !== undefined) {
         var recordSettings = {};
@@ -400,28 +609,28 @@ function saveSettings(settings) {
                 var selector = '.' + key;
                 if (typeof setting.default === 'boolean') {
                     recordSettings[key] = $(selector).is(':checked');
-                } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
-                    recordSettings[key] = setting.default;  // why here no retieval via jQuery?
-                } else if (typeof setting.default === 'number') {
+                }
+                else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
+                    recordSettings[key] = setting.default; // why here no retieval via jQuery?
+                }
+                else if (typeof setting.default === 'number') {
                     recordSettings[key] = +$(selector).val();
-                } else if (typeof setting.default === 'string') {
+                }
+                else if (typeof setting.default === 'string') {
                     recordSettings[key] = $(selector).val();
                 }
             }
         }
         localStorage.setItem('tsumtsumsettings2', JSON.stringify(recordSettings));
-
         log(i18n('儲存設定', 'Save settings'));
     }
 }
-
 function resetSettings() {
     localStorage.removeItem('tsumtsumsettings2');
     $("#restartNowText")
-      .text(i18n('立即重启TsumTsum脚本', 'Restart TsumTsum script now'))
-      .show();
+        .text(i18n('立即重启TsumTsum脚本', 'Restart TsumTsum script now'))
+        .show();
 }
-
 function genStartCommand(settings) {
     var commandSettings = {};
     for (var i in settings) {
@@ -431,16 +640,18 @@ function genStartCommand(settings) {
             var selector = "." + key;
             if (typeof setting.default === 'boolean') {
                 commandSettings[key] = $(selector).is(':checked');
-            } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
+            }
+            else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
                 commandSettings[key] = setting.default; // why here no retieval via jQuery?
-            } else if (typeof setting.default === 'number') {
+            }
+            else if (typeof setting.default === 'number') {
                 commandSettings[key] = +$(selector).val();
-            } else if (typeof setting.default === 'string') {
+            }
+            else if (typeof setting.default === 'string') {
                 commandSettings[key] = $(selector).val();
             }
         }
     }
-
     // Additionally send Taiwan locale information to the start function
     var lang = localStorage.getItem('tsumtsumlanguage');
     commandSettings.langTaiwan = lang === 'zh-TW';
@@ -449,18 +660,15 @@ function genStartCommand(settings) {
     log(i18n('啟動命令: ', 'Start command: ') + command);
     return command;
 }
-
 /**
  * @returns {string}
  */
 function getTitle(setting) {
     return i18n(setting.title_zh_TW, setting.title);
 }
-
 function appendTitle(jSetting, title) {
     jSetting.append('<div class="col-xs-4">' + title + '</div>');
 }
-
 function appendCol(jSetting, jContent) {
     var jDiv = $('<div class="pull-right"></div>');
     var jCol = $('<div class="col-xs-8"></div>');
@@ -468,13 +676,13 @@ function appendCol(jSetting, jContent) {
         for (var j in jContent) {
             jDiv.append(jContent[j]);
         }
-    } else {
+    }
+    else {
         jDiv.append(jContent);
     }
     jCol.append(jDiv);
     jSetting.append(jCol);
 }
-
 function getSwitchButton(key, checked) {
     var jLabel = $('<label class="switch pull-right"></label>');
     var jInput = $('<input id="setting_value_' + key + '" class="setting_input_value" type="checkbox" ' + (checked ? 'checked' : '') + '/>').addClass(key);
@@ -485,7 +693,6 @@ function getSwitchButton(key, checked) {
     jLabel.append('<a class="slider round"></a>');
     return jLabel;
 }
-
 function genSettings(jContainer, settings) {
     for (var i in settings) {
         var jGroup = $('<div class="list-group"></div>');
@@ -502,14 +709,15 @@ function genSettings(jContainer, settings) {
             if (typeof setting.default === 'boolean') {
                 appendTitle(jSetting, title);
                 appendCol(jSetting, getSwitchButton(key, setting.default));
-            } else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
+            }
+            else if (typeof setting.default === 'string' && setting.dropdown !== undefined) {
                 var jDiv = $('<div class="dropdown"></div>');
                 var jDropdownBtn = $('<button id="setting_value_' + key + '" class="dropbtn"></button>').addClass(key);
                 var jDropdown = $('<div class="dropdown-content"></div>');
                 jDropdownBtn.on('click', (function (jDropdown) {
                     return function () {
                         jDropdown.addClass('show');
-                    }
+                    };
                 })(jDropdown));
                 var items = setting.dropdown;
                 for (var index = 0; index < items.length; index++) {
@@ -525,52 +733,49 @@ function genSettings(jContainer, settings) {
                             jDropdownBtn.text(itemTitle);
                             jDropdown.removeClass('show');
                             saveSettings(settings);
-                        }
+                        };
                     })(jDropdown, jDropdownBtn, itemTitle, setting, item.key));
                     jDropdown.append(jItem);
                 }
                 jDiv.append(jDropdownBtn).append(jDropdown);
                 appendTitle(jSetting, title);
                 appendCol(jSetting, jDiv);
-            } else if (typeof setting.default === 'number') {
+            }
+            else if (typeof setting.default === 'number') {
                 var step = setting.step || 1;
                 var max = setting.max;
                 var min = setting.min;
-
                 // Check if the current step is already 1
                 var hasIncrementBy1 = (step === 1);
-
                 var jBtns = [];
                 var jInput = $('<input id="setting_value_' + key + '" class="setting_input_value" type="number" value="' + setting.default + '" readonly/>').addClass(key);
                 var jBtnP = $('<button id="setting_value_p_' + key + '" class="btn btn-danger">+' + step + '</button>');
                 var jBtnM = $('<button id="setting_value_m_' + key + '" class="btn btn-danger">-' + step + '</button>');
-
                 // Only create additional increment-by-1 buttons if step isn't already 1
                 var jBtnP1, jBtnM1;
                 if (!hasIncrementBy1) {
                     jBtnP1 = $('<button id="setting_value_p1_' + key + '" class="btn btn-danger">+1</button>');
                     jBtnM1 = $('<button id="setting_value_m1_' + key + '" class="btn btn-danger">-1</button>');
-                } else {
+                }
+                else {
                     // remove the assignment, or the following inputs will be changed, too
                     jBtnP1 = $([]);
                     jBtnM1 = $([]);
                 }
-
                 jBtnP.on('click', (function (jInput, min, max, step) {
                     return function () {
                         var newValue = (+jInput.val()) + step;
                         jInput.val(Math.min(newValue, max));
                         saveSettings(settings);
-                    }
+                    };
                 })(jInput, min, max, step));
                 jBtnM.on('click', (function (jInput, min, max, step) {
                     return function () {
                         var newValue = (+jInput.val()) - step;
                         jInput.val(Math.max(newValue, min));
                         saveSettings(settings);
-                    }
+                    };
                 })(jInput, min, max, step));
-
                 // Event handlers for single-step adjustment
                 jBtnP1.on('click', (function (jInput, min, max) {
                     return function () {
@@ -579,7 +784,6 @@ function genSettings(jContainer, settings) {
                         saveSettings(settings);
                     };
                 })(jInput, min, max));
-
                 jBtnM1.on('click', (function (jInput, min, max) {
                     return function () {
                         var newValue = (+jInput.val()) - 1;
@@ -587,30 +791,28 @@ function genSettings(jContainer, settings) {
                         saveSettings(settings);
                     };
                 })(jInput, min, max));
-
                 jBtns.push(jInput);
                 jBtns.push(jBtnP);
                 jBtns.push(jBtnM);
-
                 if (!hasIncrementBy1) {
                     jBtns.push(jBtnP1); // Add new +1 button if needed
                     jBtns.push(jBtnM1); // Add new -1 button if needed
                 }
-            
-                
                 jInput.on('change', function () {
                     saveSettings(settings);
                 });
                 appendTitle(jSetting, title);
                 appendCol(jSetting, jBtns);
-            } else if (typeof setting.default === 'string') {
+            }
+            else if (typeof setting.default === 'string') {
                 var jInput = $('<input id="setting_value_' + key + '" class="setting_input_value" type="text" value="' + setting.default + '"/>').addClass(key);
                 jInput.on('change', function () {
                     saveSettings(settings);
                 });
                 appendTitle(jSetting, title);
                 appendCol(jSetting, jInput);
-            } else if (setting.buttons !== undefined) {
+            }
+            else if (setting.buttons !== undefined) {
                 var jBtns = [];
                 for (var j in setting.buttons) {
                     var jBtn = $('<button id="setting_value_b_' + key + '" onclick=' + setting.buttons[j].onclick + '>' + setting.buttons[j].title + '</button>').addClass('btn btn-plus');
@@ -618,16 +820,16 @@ function genSettings(jContainer, settings) {
                 }
                 appendTitle(jSetting, title);
                 appendCol(jSetting, jBtns);
-            } else if (title !== undefined) {
+            }
+            else if (title !== undefined) {
                 jSetting.append('<div class="col-xs-12">' + title + '</div>');
             }
             jGroupItem.append(jSetting);
             jGroup.append(jGroupItem);
         }
-        jContainer.append(jGroup)
+        jContainer.append(jGroup);
     }
 }
-
 // entry function called by Robotmon
 // noinspection JSUnusedGlobalSymbols
 function onEvent(eventType) {
@@ -637,20 +839,20 @@ function onEvent(eventType) {
         JavaScriptInterface.showMenu();
         var startCommand = genStartCommand(settings);
         JavaScriptInterface.runScript(startCommand);
-    } else if (eventType === 'OnPauseClick') {
+    }
+    else if (eventType === 'OnPauseClick') {
         JavaScriptInterface.runScript('stop();');
-    } else if (eventType === 'OnSettingClick') {
+    }
+    else if (eventType === 'OnSettingClick') {
         // stop script as it would now tap on the settings page
         JavaScriptInterface.runScript('stop();');
     }
 }
-
 // function called by Robotmon when writing logs
 // noinspection JSUnusedGlobalSymbols
 function onLog(message) {
     console.log(message);
 }
-
 function log() {
     var params = '[Settings] ';
     if (typeof arguments === 'object') {
@@ -661,19 +863,16 @@ function log() {
     }
     if (typeof JavaScriptInterface !== "undefined" && typeof JavaScriptInterface.runScript === "function") {
         JavaScriptInterface.runScript('console.log(\'' + params + '\')');
-    } else {
+    }
+    else {
         console.log(params);
     }
-
 }
-
 function refreshRecord() {
     JavaScriptInterface.runScriptCallback('readFile(getStoragePath() + "/tsum_record/record.txt")', 'genRecord');
 }
-
 var imageQueue = [];
 var isRunning = false;
-
 function getBase64(id, filename) {
     var script = 'var __img_=openImage(getStoragePath()+"/tsum_record/' + filename + '");if(__img_ != 0){var __' + id + '_base64_="' + id + ',"+getBase64FromImage(__img_);releaseImage(__img_);};__' + id + '_base64_;';
     imageQueue.push(script);
@@ -682,7 +881,6 @@ function getBase64(id, filename) {
         JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
     }
 }
-
 function assignImage(results) {
     var rs = results.split(',');
     if (rs.length === 2) {
@@ -690,30 +888,25 @@ function assignImage(results) {
     }
     if (imageQueue.length === 0) {
         isRunning = false;
-    } else {
+    }
+    else {
         JavaScriptInterface.runScriptCallback(imageQueue.shift(), 'assignImage');
     }
 }
-
 function getTimeString(d) {
     return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
 }
-
 function getDayTimeString(d) {
     return (d.getMonth() + 1) + '/' + d.getDate();
 }
-
 function getRecordFilename() {
     var d = new Date();
     return 'record_' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '_' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds() + '.html';
 }
-
 function genRecordTable(path) {
     $("#genTableResult").html(path);
 }
-
 var ASC = true;
-
 function genRecord(record) {
     if (record === undefined || record === 'undefined' || record === '') {
         return;
@@ -738,18 +931,18 @@ function genRecord(record) {
         record.sort(function (a, b) {
             return a.totalCount < b.totalCount ? -1 : 1;
         });
-    } else {
+    }
+    else {
         record.sort(function (a, b) {
             return a.totalCount >= b.totalCount ? -1 : 1;
         });
     }
-
     var html = '<ul>';
     for (var idx in record) {
         filename = record[idx].filename;
         var imgId = filename.split('.')[0];
         var lastTime = new Date(record[idx].lastReceiveTime);
-        html += '<li>'
+        html += '<li>';
         html += '<div><img id="' + imgId + '" />' + getTimeString(lastTime) + '</div>';
         html += '<ul>';
         for (var day in record[idx].receiveCounts) {
@@ -765,7 +958,6 @@ function genRecord(record) {
     html += '</ul>';
     $('#record').html(html);
 }
-
 var $exportRecordLegacy = $('#exportRecordLegacy').on('click', function () {
     $(this).text(i18n('輸出中', 'Exporting'));
     var html = $('#record').html();
@@ -773,19 +965,15 @@ var $exportRecordLegacy = $('#exportRecordLegacy').on('click', function () {
     var script = 'writeFile(getStoragePath() + "/tsum_record/' + getRecordFilename() + '", \'<body>' + html + '</body>\');';
     JavaScriptInterface.runScriptCallback(script, 'exportSuccess');
 });
-
 function exportSuccess() {
     $exportRecordLegacy.text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
 }
-
 var buildDateClicks = 0;
 // render settings page
 $(function ($) {
     $('#version').html('Tsum Tsum v' + VERSION);
-
     loadSettings(settings);
     genSettings($('#settings'), settings);
-
     $("#setting_buildDate").on("click", function () {
         buildDateClicks++;
         log("Increased build date clicks to " + buildDateClicks);
@@ -794,7 +982,6 @@ $(function ($) {
             $('.dev_mode').show();
         }
     });
-
     $('#senders').text(i18n('誰送你心', 'List of Heart Counts'));
     $('#updateRecordASC').text(i18n('更新(遞增)', 'Update(ASC)')).on('click', function () {
         ASC = true;
@@ -808,7 +995,8 @@ $(function ($) {
     $('#resetRecord').text(i18n('清除紀錄', 'Reset Record')).on('click', function () {
         if (protect) {
             $(this).text(i18n('確定要清除紀錄嗎？', 'Are you sure?'));
-        } else {
+        }
+        else {
             $(this).text(i18n('清除紀錄', 'Reset Record'));
             JavaScriptInterface.runScript('execute("rm -r " + getStoragePath() + "/tsum_record");');
             $('#record').html('');
@@ -821,15 +1009,46 @@ $(function ($) {
     $('#goToBottom').text(i18n('回頁面底端', 'Go to Bottom')).on('click', function () {
         window.scrollTo(0, document.body.scrollHeight);
     });
-    $('#exportInfo').text(i18n(
-        '輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)',
-        'Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)'));
+    $('#exportInfo').text(i18n('輸出 HTML(舊版) 請先點選更新後等待圖片的讀取，完成後再點選輸出 HTML(舊版)', 'Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)'));
     $exportRecordLegacy.text(i18n('輸出 HTML(舊版)', 'Export HTML(Legacy)'));
     $('#exportRecordExcel').text(i18n('輸出 HTML(Excel)', 'Export HTML(Excel)')).on('click', function () {
         $("#genTableResult").html(i18n("请稍等...", "Please wait..."));
         JavaScriptInterface.runScriptCallback('genRecordTable();', 'genRecordTable');
     });
-
     // convenience preparations of Robotmon control panel
     JavaScriptInterface.showMenu();
 });
+</script>
+  </head>
+  <body>
+    <nav class="navbar navbar-custom" role="navigation">
+      <a id="version" class="navbar-brand"></a>
+    </nav>
+    <div class="container">
+      <div id="settings"></div>
+      <p id="restartNowText" style="color: red; font-weight: bold; display: none"></p>
+      <button id="resetSettings" style="float:right;display: none" class="btn btn-danger" onclick="resetSettings()">Reset Settings</button>
+      <br>
+      <div id="senders" style="padding-bottom:5px;"></div>
+      <button id="updateRecordASC" class="btn btn-plus" style="margin-left:0px;">Update(ASC)</button>
+      <button id="updateRecordDESC" class="btn btn-plus">Update(DESC)</button>
+      <button id="resetRecord" style="float:right;" class="btn btn-danger">Reset Record</button>
+      <br>
+      <div style="padding-top:5px;"></div>
+      <button id="exportRecordLegacy" class="btn btn-warning" style="margin-left:0px;">Export HTML(Legacy)</button>
+      <button id="exportRecordExcel" class="btn btn-warning">Export HTML(Excel)</button>
+      <div id="exportInfo" style="padding-top:5px;">Legacy exporting has to click Update and wait for loading all images first before click Export HTML(Legacy)</div>
+      <div id="genTableResult" style="padding-top:5px;"></div>
+      <br>
+      <div id="record" style="padding-top:5px;">
+      </div>
+      <br>
+      <button id="goToTop" class="btn btn-plus">Go to Top</button>
+      <button id="goToBottom" class="btn btn-plus">Go to Bottom</button>	  
+      <br>
+      <br>
+      <br>
+    </div>
+  
+
+</body></html>

@@ -171,14 +171,6 @@ function selectTeam(team, useTeamAutoBuild) {
   }
   var teamMaxCnt = 15;
   var teamOffset = 2;
-  if (server == "TW") {
-    teamMaxCnt = 10;
-    teamOffset = 0;
-  }
-  if (team < 0 || team >= teamMaxCnt) {
-    console.log("隊伍編號超出上限，請確認遊戲與小幫手版本");
-    return;
-  }
   if (isReplay) {
     console.log("連續戰鬥，選擇隊伍省略");
     return;
