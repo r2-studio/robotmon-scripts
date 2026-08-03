@@ -1,4 +1,4 @@
-`var window = window || {};
+var window = window || {};
 
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -14723,4 +14723,3 @@ window.stop = stop;
 function start(jsonConfig){window.start(jsonConfig);}
 function stop(){window.stop();}
 
-`
