@@ -26,12 +26,12 @@
 </body>
 
 <script>
-  var SCRIPT_VERSION_CODE = "15.95";
+  var SCRIPT_VERSION_CODE = "16.35";
   var UPDATE_PART = {
     zh_TW: "更新年份與畫面",
     en: "renew year and images",
   };
-  var MIN_YEAR = 2026;
+  var MIN_YEAR = 2025;
   var GAME_VERSION = "24 9.1.2";
 
   var selections = {
@@ -109,7 +109,7 @@
         titlei18n: { zh_TW: "聯賽年份選擇", en: "League year selection" },
         default: MIN_YEAR,
         min: MIN_YEAR,
-        max: MIN_YEAR + 12,
+        max: MIN_YEAR + 14,
         step: 1,
         key: "leagueYear",
         value: MIN_YEAR,
@@ -122,36 +122,20 @@
           { text: "🚫 off", value: false },
         ],
         default: true,
-        value: true,
         key: "isRunPlayBattleGame",
       },
       {
         type: "select",
         titlei18n: {
-          zh_TW: "聯賽全球員自動喝飲料",
-          en: "apply condition drinks to all players (league)",
+          zh_TW: "全球員自動喝飲料",
+          en: "apply condition drinks to all players",
         },
         selections: [
           { text: "🚫 off", value: false },
           { text: "✅ on", value: true },
         ],
         default: false,
-        value: false,
-        key: "leagueIsUseDrink",
-      },
-      {
-        type: "select",
-        titlei18n: {
-          zh_TW: "排名賽全球員自動喝飲料",
-          en: "apply condition drinks to all players (ranked battle)",
-        },
-        selections: [
-          { text: "🚫 off", value: false },
-          { text: "✅ on", value: true },
-        ],
-        default: false,
-        value: false,
-        key: "rankBattleIsUseDrink",
+        key: "useDrink",
       },
       {
         type: "select",
@@ -161,7 +145,6 @@
           { text: "✅ on", value: true },
         ],
         default: false,
-        value: false,
         key: "isRunAdReward",
       },
       {
@@ -175,7 +158,6 @@
           { text: "✅ on", value: true },
         ],
         default: false,
-        value: false,
         key: "isRunWeeklyMission",
       },
     ],
@@ -186,8 +168,7 @@
     leagueYear: MIN_YEAR + 0,
     isLocalPaid: true,
     isCloud: false,
-    leagueIsUseDrink: false,
-    rankBattleIsUseDrink: false,
+    useDrink: false,
     isRunAdReward: false,
     isRunPlayBattleGame: true,
     isRunWeeklyMission: false,
@@ -195,14 +176,12 @@
   simplesettings.render("#app", selections, function (c) {
     config.leagueSeasonMode = c.leagueSeasonMode;
     config.leagueYear = c.leagueYear;
-    config.leagueIsUseDrink = c.leagueIsUseDrink;
-    config.rankBattleIsUseDrink = c.rankBattleIsUseDrink;
+    config.useDrink = c.useDrink;
     config.isRunAdReward = c.isRunAdReward;
     config.isRunPlayBattleGame = c.isRunPlayBattleGame;
     config.isRunWeeklyMission = c.isRunWeeklyMission;
     console.log("config", JSON.stringify(config, null, 2));
   });
-  JavaScriptInterface.showMenu();
 
   function onEvent(eventType) {
     if (eventType == "OnPlayClick") {
