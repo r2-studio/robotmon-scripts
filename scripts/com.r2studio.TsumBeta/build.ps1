@@ -27,9 +27,11 @@ Write-Host "Replacing build date in index.html..."
 Write-Host "Removing inlined HTML file..."
 Remove-Item .\dist\index.inlined.html
 
-# Copy JavaScript file
-Write-Host "Copying index.js to dist directory..."
-Copy-Item .\src\index.js -Destination .\dist\
+# Build a single JavaScript file from the source files
+Write-Host "Building bundled JavaScript..."
+$indexSource = Get-Content .\src\index.js | Where-Object { $_ -ne '"use strict";' }
+$bundleContent = @('"use strict";') + (Get-Content .\src\game-bubble-config.js) + (Get-Content .\src\page-config.js) + (Get-Content .\src\tiara-minnie.js) + $indexSource
+$bundleContent | Set-Content .\dist\index.js
 
 # Create a ZIP file (use -Force to overwrite if exists)
 Write-Host "Creating a ZIP file for dist directory..."
