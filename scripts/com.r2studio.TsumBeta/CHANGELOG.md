@@ -4,6 +4,13 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v85] - 2026-07-31
+
+### Added
+- New Tiara Minnie+ skill that taps the correct presents during her skill. Her skill type will also try to optimize the usage of the game bubbles by tapping them mid chain to activate her bonus. A slight delay of about 300ms is added to allow the board to settle before the script activates her skill to try to maximize the number of Tsums the skill affects.
+- New "Handle Long Skill Animations" option to settings to allow the script to gracefully handle skill animations that can take a long time (like Dapper Hat Mickey). Leaving this always on shouldn't negatively affect any other Tsum mechanic.
+- New experimental "Auto-tap skill when ready..." setting that basically spams the skill button every 500ms to activate the skill as quickly as possible. This works great for basic burst Tsums and overloading. It's experimental at the moment since it hasn't been tested with other Tsum mechanics like duo Tsums.
+
 ## [v84] - 2026-07-31
 - fix auto unlock , thanks DRP to provided the new cooridinate and color.
 - add max chain for Roxas , Maleficient type Tsum that runs better at higher fps.
