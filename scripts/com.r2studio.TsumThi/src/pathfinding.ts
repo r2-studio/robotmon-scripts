@@ -203,6 +203,75 @@ function calculatePaths(board, logs, myTsumIdx, prioritizeMyTsum) {
   return paths;
 }
 
+// The longest chain reachable from the tsum nearest to a touch point, in the
+// same shape calculatePaths returns. Used by Click Assist: the user points at a
+// tsum, this works out which of its color-mates are connected to it and in what
+// order to draw them.
+function findChainAtTouch(board, touchX, touchY) {
+  if (!board || board.length === 0) { return null; }
+
+  let nearestAllIdx = -1;
+  let nearestAllDistSq = Infinity;
+  const maxTouchDistSq = (Config.tsumWidth * 1.8) * (Config.tsumWidth * 1.8);
+  for (let i = 0; i < board.length; i++) {
+    const dx = board[i].x - touchX;
+    const dy = board[i].y - touchY;
+    const d = dx * dx + dy * dy;
+    if (d < nearestAllDistSq) {
+      nearestAllDistSq = d;
+      nearestAllIdx = i;
+    }
+  }
+  if (nearestAllIdx === -1 || nearestAllDistSq > maxTouchDistSq) { return null; }
+
+  const tsumIdx = board[nearestAllIdx].tsumIdx;
+  const group = [];
+  let nearestInGroup = -1;
+  for (let i = 0; i < board.length; i++) {
+    if (board[i].tsumIdx === tsumIdx) {
+      if (i === nearestAllIdx) { nearestInGroup = group.length; }
+      group.push(board[i]);
+    }
+  }
+  if (group.length < 3 || nearestInGroup === -1) { return null; }
+
+  const threshold = Config.tsumWidth * 2.8;
+  const maxDistSq = threshold * threshold;
+  const neighbors = buildTsumNeighbors(group, maxDistSq);
+
+  // Flood fill from the touched tsum: only the component it actually belongs to
+  // can be linked, however many same-colored tsums sit elsewhere on the board.
+  const n = group.length;
+  const seen = new Array(n);
+  for (let i = 0; i < n; i++) { seen[i] = false; }
+  const queue = [nearestInGroup];
+  seen[nearestInGroup] = true;
+  const comp = [];
+  while (queue.length > 0) {
+    const v = queue.shift();
+    comp.push(v);
+    const nbrs = neighbors[v];
+    for (let k = 0; k < nbrs.length; k++) {
+      if (!seen[nbrs[k]]) {
+        seen[nbrs[k]] = true;
+        queue.push(nbrs[k]);
+      }
+    }
+  }
+  if (comp.length < 3) { return null; }
+
+  const budgetPerStart = Math.min(1500, 100 + comp.length * comp.length * 6);
+  const bestIndices = findLongestTsumPath(neighbors, comp, budgetPerStart);
+  if (bestIndices.length < 3) { return null; }
+
+  const pathPoints: TsumPath = [];
+  for (let p = 0; p < bestIndices.length; p++) {
+    pathPoints.push(group[bestIndices[p]]);
+  }
+  pathPoints.tsumIdx = +tsumIdx;
+  return pathPoints;
+}
+
 function convertTo2DArray(arr, size) {
   const result = [];
   for (let i = 0; i < arr.length; i = i + size) {
