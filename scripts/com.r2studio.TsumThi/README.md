@@ -1,6 +1,9 @@
 # TsumTsum script
 This is the successor of the script [`com.r2studio.Tsum`](https://github.com/r2-studio/robotmon-scripts/tree/master/scripts/com.r2studio.Tsum).  
 
+Working on the code? See [DEVELOPMENT.md](DEVELOPMENT.md) for how the source is
+laid out, how the files fit together, and how to build.
+
 ## Script description
 
 This script automates the following tasks:
