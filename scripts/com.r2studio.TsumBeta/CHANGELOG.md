@@ -22,6 +22,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Rewrite find tsum 
 - Fixed detect blue tsum logic
 
+## [Unreleased]
+
+### Fixed
+- False "Game Over" during long burst-skill animations (e.g. Dapper Hat Mickey): the play loop declared game over after ~5s of unrecognized screen, but the GamePlaying check reads HUD pixels on the pause/fan buttons, which a long skill animation covers while the game is still running — the script then stalled navigating an "unknown" screen mid-game. Game over now requires positive confirmation: the loop keeps polling until the HUD returns (resume playing) or a known out-of-game page appears (the score tally always lands on the results page), falling back to the old assumption only after a 20s grace window of unrecognized screen. (Ported from TsumThi.)
+
+
 ## [v81] - 2026-05-13
 
 ### Fixed

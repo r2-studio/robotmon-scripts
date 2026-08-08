@@ -1,0 +1,53 @@
+{
+  // The game script has no import/export -- every file shares one global scope.
+  // `outFile` concatenates the files listed below (in this order) into a single
+  // build/index.js, which is what Robotmon loads. settings.ts is intentionally
+  // NOT listed here; it compiles separately via tsconfig.settings.json into
+  // build/settings.js, which the settings UI (index.html) loads on its own.
+  "compilerOptions": {
+    "target": "ES5",
+    "lib": ["ES5", "DOM"],
+    "module": "none",
+    "outFile": "./build/index.js",
+    "rootDir": "./src",
+    "removeComments": false,
+    "newLine": "lf",
+    "strict": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "ignoreDeprecations": "6.0"
+  },
+  "files": [
+    "src/globals.d.ts",
+    "src/taskController.ts",
+    "src/state.ts",
+    "src/utils.ts",
+    "src/data.ts",
+    "src/logs.ts",
+    "src/messaging.ts",
+    "src/pathfinding.ts",
+    "src/tsum.ts",
+    // skillCore.ts declares the registry the skill files register into at load
+    // time, so it has to be concatenated ahead of them.
+    "src/skills/skillCore.ts",
+    "src/skills/burst.ts",
+    "src/skills/pairTsum.ts",
+    "src/skills/donald.ts",
+    "src/skills/lukeJ.ts",
+    "src/skills/marie.ts",
+    "src/skills/moana.ts",
+    "src/skills/mickeyH2015.ts",
+    "src/skills/snowWhite.ts",
+    "src/skills/cinderella.ts",
+    "src/skills/woody2.ts",
+    "src/skills/cabbageMickey.ts",
+    "src/skills/cptLy.ts",
+    "src/skills/lightningMcQueenPlus.ts",
+    "src/skills/tiaraMinniePlus.ts",
+    "src/clickAssist.ts",
+    "src/dialogs.ts",
+    "src/index.ts"
+  ]
+}

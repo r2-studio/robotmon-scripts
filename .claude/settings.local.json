@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat .gitignore)",
+      "Bash(ls node_modules/.bin/tsc)",
+      "PowerShell(Get-ChildItem -Recurse \"d:\\\\Projects\\\\robotmon-scripts\\\\scripts\\\\com.r2studio.TsumThi\" -Exclude node_modules | Where-Object { $_.FullName -notmatch 'node_modules' } | Select-Object FullName)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" devices)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" shell dumpsys sensorservice)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" shell getprop ro.build.type)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" shell getprop ro.debuggable)",
+      "PowerShell(& \"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\" shell getprop ro.product.model)",
+      "PowerShell($adb=\"C:\\\\Users\\\\thima\\\\Downloads\\\\android\\\\adb.exe\"; $out=\"$env:TEMP\\\\accel_samples.txt\"; \"=== sampling start $\\(Get-Date -Format HH:mm:ss\\) \\(HOLD your MuMu tilt key now\\) ===\" | Set-Content $out; $end=\\(Get-Date\\).AddSeconds\\(35\\); while\\(\\(Get-Date\\) -lt $end\\){ $lines=\\(& $adb shell dumpsys sensorservice\\) -split \"`n\"; $acc=$null; $started=$false; foreach\\($ln in $lines\\){ if\\($ln -match '3-axis Accelerometer: last'\\){ $started=$true; continue }; if\\($started\\){ if\\($ln -match 'wall='\\){ $acc=$ln.Trim\\(\\) } elseif\\($acc\\){ break } } }; \"$\\(Get-Date -Format HH:mm:ss.fff\\)  $acc\" | Add-Content $out }; \"=== sampling end ===\" | Add-Content $out)",
+      "Read(//c/Users/thima/AppData/Local/Temp/**)",
+      "Read(//d/d/Projects/robotmon-scripts/scripts/com.r2studio.TsumThi/**)",
+      "Bash(echo \"exit: $?\")",
+      "PowerShell(npm run typecheck)",
+      "PowerShell(npm run build:ps)",
+      "PowerShell(adb devices)",
+      "PowerShell(adb reconnect offline)",
+      "PowerShell(adb connect 127.0.0.1:7555)",
+      "PowerShell(adb connect 127.0.0.1:16384)",
+      "PowerShell(adb -s 127.0.0.1:16384 shell \"ls -la /sdcard/Download/Robotmon/scripts/com.r2studio.TsumThi/ 2>/dev/null; grep -c evictOldRecordImages /sdcard/Download/Robotmon/scripts/com.r2studio.TsumThi/index.js 2>/dev/null; echo ---; ls /sdcard/Download/Robotmon/scripts/com.r2studio.TsumThi/tsum_record 2>/dev/null | wc -l; ls /sdcard/tsum_record 2>/dev/null | wc -l\")"
+    ]
+  }
+}

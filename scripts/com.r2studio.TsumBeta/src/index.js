@@ -368,11 +368,9 @@ function findNearTsum(tsum, tsums) {
   return { dis: finalDistance, tsum: minTsum, idx: idx };
 }
 
-
-
 function calculateNearTsumPaths(tsum, ts) {
   // 1. Include the starting tsum in the path
-  var path = [tsum]; 
+  var path = [tsum];
   var tsums = ts.slice(); // copy array
 
   // 2. Remove the starting tsum from candidate list so it isn't matched again
@@ -394,21 +392,69 @@ function calculateNearTsumPaths(tsum, ts) {
     if (minIdx === -1 || minDis > Config.tsumWidth * 2.8) {
       break;
     }
-    tsum = minTsum;
-    tsums.splice(minIdx, 1);
-    path.push(tsum);
+    components.push(comp);
   }
-  return path;
+  return components;
 }
 
-function calculatePathCenter(path) {
-  var cx = 0;
-  var cy = 0;
-  for (var i in path) {
-    cx += path[i].x;
-    cy += path[i].y;
+// Bounded DFS backtracking — searches for the longest simple path inside one
+// connected component. The greedy nearest-neighbor walk used previously could
+// only follow a single linear chain and missed branches; this one explores
+// alternatives. A step budget caps total node visits so calculation time
+// stays bounded even when a component is large.
+function findLongestTsumPath(neighbors, comp, budget) {
+  var n = neighbors.length;
+  var visited = new Array(n);
+  for (var i = 0; i < n; i++) { visited[i] = false; }
+
+  // Order each adjacency list by ascending degree so the search tries the most
+  // constrained branches first — dead ends prune quickly and leaves get
+  // consumed before they become unreachable.
+  var sortedNbrs = new Array(n);
+  for (var i = 0; i < n; i++) {
+    var arr = neighbors[i].slice();
+    arr.sort(function(a, b) { return neighbors[a].length - neighbors[b].length; });
+    sortedNbrs[i] = arr;
   }
-  return {x: Math.floor(cx / path.length), y: Math.floor(cy / path.length)};
+
+  var state = { steps: 0, budget: budget, bestLen: 0, best: null };
+  var path = [];
+
+  function dfs(idx) {
+    state.steps++;
+    visited[idx] = true;
+    path.push(idx);
+
+    if (path.length > state.bestLen) {
+      state.bestLen = path.length;
+      state.best = path.slice();
+    }
+
+    if (path.length < comp.length && state.steps < state.budget) {
+      var nbrs = sortedNbrs[idx];
+      for (var k = 0; k < nbrs.length; k++) {
+        if (!visited[nbrs[k]]) {
+          dfs(nbrs[k]);
+          if (state.steps >= state.budget) { break; }
+        }
+      }
+    }
+
+    visited[idx] = false;
+    path.pop();
+  }
+
+  // Start from low-degree nodes — they're the natural endpoints of long paths.
+  var starts = comp.slice();
+  starts.sort(function(a, b) { return neighbors[a].length - neighbors[b].length; });
+
+  for (var s = 0; s < starts.length; s++) {
+    if (state.steps >= state.budget) { break; }
+    if (state.bestLen >= comp.length) { break; }
+    dfs(starts[s]);
+  }
+
+  return state.best || [];
 }
 
 
@@ -481,7 +527,7 @@ function getCanonicalPathKey(path) {
   var ids = path.map(function(p) {
     return (p.id !== undefined ? p.id : (p.x + ',' + p.y));
   });
-  
+
   var forwardKey = ids.join('-');
   var reverseKey = ids.slice().reverse().join('-');
 
@@ -533,11 +579,11 @@ function findTsums(img) {
   var minRadius = Math.round(8 * scale);  // Scaled minimum circle radius
   var maxRadius = Math.round(14 * scale); // Scaled maximum circle radius
 
-  var points = houghCircles(grayImg,3, dp, minDist, param1, param2, minRadius, maxRadius); 
+  var points = houghCircles(grayImg,3, dp, minDist, param1, param2, minRadius, maxRadius);
   releaseImage(grayImg);
 
   if (ts.debug) {
-  var debugImg = clone(img); 
+  var debugImg = clone(img);
   for (var k in points) {
     var p = points[k];
     drawCircle(debugImg, p.x, p.y, minRadius, 255, 0, 0, 1);
@@ -545,7 +591,7 @@ function findTsums(img) {
     saveImage(debugImg, ts.storagePath + "/tmp/" + ts.runTimes + "-detectedHoughCircles.jpg");
     releaseImage(debugImg);
   }
-  
+
   smooth(hsvImg, 1, 22);
   var results = [];
   for (var k in points) {
@@ -695,7 +741,7 @@ function Tsum(isJP, detect, logs) {
   this.playOffsetY = 0;
   this.playHeight = 0;
   this.playWidth = 0;
-  
+
   this.playResizeWidth = Config.screenResize;
   this.playResizeHeight = Config.screenResize;
 
@@ -953,7 +999,7 @@ Tsum.prototype.linkTsums = function(path) {
     }
   }
 }
- 
+
 // Tap the bubbles the last board scan found. Taps only -- the positions were
 // worked out at scan time -- so this stays inside the window where the chain is
 // still clearing. A tap that misses costs nothing: it is not a drag, so it
@@ -1707,7 +1753,7 @@ Tsum.prototype.scanBoardQuick = function() {
       }
     }
   }
-  if (this.debug) { 
+  if (this.debug) {
     saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
   }
   releaseImage(srcImg);
@@ -1809,7 +1855,7 @@ Tsum.prototype.taskPlayGameQuick = function() {
       this.clearAllBubbles(0, 0, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
     }
     if (this.useFan && this.runTimes % 4 === 3) {
-      
+
       // Skip the fan when the skill is ready or about to be — useSkill() will
       // fire it next (or the next clear will fill the gauge), so the fan would
       // just be wasted on tsums about to be cleared.

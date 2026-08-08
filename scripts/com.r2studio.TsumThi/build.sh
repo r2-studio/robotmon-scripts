@@ -52,6 +52,6 @@ if [[ -v ADB ]] && [[ $ADB = true ]]; then
   if [[ -v DEVICE ]]; then
     EXTRA_ARG="-s $DEVICE"
   fi
-  adb $EXTRA_ARG push dist/index.js sdcard/Download/Robotmon/scripts/com.r2studio.Tsum/
-  adb $EXTRA_ARG push dist/index.html sdcard/Download/Robotmon/scripts/com.r2studio.Tsum/
+  adb $EXTRA_ARG push dist/index.js sdcard/Download/Robotmon/scripts/com.r2studio.TsumThi/
+  adb $EXTRA_ARG push dist/index.html sdcard/Download/Robotmon/scripts/com.r2studio.TsumThi/
 fi
