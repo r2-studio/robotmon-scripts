@@ -196,8 +196,6 @@ with tsc reduced to type checking) — a build-system migration, not a config ed
 - `ts.debug` (the "Debug game" setting) additionally saves annotated screenshots
   to `<storage>/tmp/`.
 - `adb logcat | grep Robotmon:` shows script output on the host.
-- `tools/fps-memlog.ps1` samples emulator FPS and memory over time — the tool
-  for investigating long-session slowdowns.
 - Detector thresholds are best tuned offline against saved screenshots on the
   PC (turn on "Debug game" to collect them) rather than by trial and error on
   the device.

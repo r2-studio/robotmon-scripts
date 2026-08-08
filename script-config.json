@@ -59,10 +59,10 @@
       "maintaining": true
     },
     "com.r2studio.Tsum": {
-      "id": "com.r2studio.Tsum",
-      "title": "Disney Tsum Tsum (Old v52)",
-      "versionCode": 52,
-      "description": "<b><font color='#2196f3'>🔖 版本 v52</font></b><ul><li>1️⃣ Delete Ad (忽略廣告)</li></ul><b><font color='#2196f3'>🔖 腳本說明</font></b><ul><li>1️⃣ 支援國際版/日版</li><li>2️⃣ 支援自動玩遊戲</li><li>3️⃣ 支援自動收愛心(全部/單顆)</li><li>4️⃣ 支援自動送愛心</li><li>5️⃣ 支援記錄送心者</li><li>6️⃣ 支援使用紅利道具</li></ul>",
+      "id": "com.r2studio.TsumBeta",
+      "title": "Disney Tsum Tsum",
+      "versionCode": 85,
+      "description": "<b style='color: #2196f3;'>\uD83D\uDD16 版本 v84</b>\n<ul>\n    <li>\n        新增選項「處理長技能動畫」，修正長技能動畫時誤判遊戲結束\n        <br>\n        New optional setting \"Handle Long Skill Animations\": fixes a false game over during long skill animations.\n    </li>\n</ul>",
       "packageName": "com.linecorp.LGTMTMG",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.Tsum/index.zip",
       "dependencies": [],

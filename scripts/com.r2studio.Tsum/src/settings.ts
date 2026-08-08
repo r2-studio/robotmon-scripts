@@ -2,7 +2,7 @@
 // Converted from settings.js - best-effort TypeScript port.
 "use strict";
 
-var VERSION = '82';
+var VERSION = '85';
 
 /**
  * Returns the language parameter for the currently active locale.
