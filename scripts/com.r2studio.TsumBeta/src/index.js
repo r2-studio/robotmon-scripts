@@ -77,6 +77,7 @@ var Config = {
   screenResize: 200,
   gameContinueDelay: 400,
   colors: [[255,0,0], [0,255,0], [0,0,255], [0,255,255], [255,0,255]],
+  maxChain:3,
   debugLogs: false
 };
 
@@ -163,737 +164,7 @@ var Button = {
   outTsumCollectionDoUnlock: {x: 111, y: 760, r: 173, g: 109, b: 57}
 };
 
-var Page = {
 
-  TodayMissions: {
-    name: 'TodayMissions',
-    colors: [
-      {x: 764, y: 445, r: 248, g: 190, b: 15, match: true, threshold: 80},
-      {x: 781, y: 436, r: 165, g: 92, b: 63, match: true, threshold: 80},
-      {x: 823, y: 445, r: 248, g: 249, b: 249, match: true, threshold: 80},
-      {x: 554, y: 444, r: 45, g: 111, b: 142, match: true, threshold: 80},
-      {x: 550, y: 1421, r: 33, g: 196, b: 231, match: true, threshold: 80},
-      {x: 593, y: 1423, r: 240, g: 175, b: 8, match: true, threshold: 80},
-      {x: 176, y: 1658, r: 238, g: 172, b: 8, match: true, threshold: 80},
-      {x: 55, y: 1649, r: 238, g: 172, b: 8, match: true, threshold: 80},
-      {x: 25, y: 1655, r: 8, g: 16, b: 26, match: true, threshold: 80}
-    ],
-    back: {x: 176, y: 1662},
-    next: {x: 176, y: 1662}
-  },
-  TodayMission: {
-    name: 'TodayMission',
-    colors: [
-      {x: 540, y: 1480, r: 238, g: 181, b: 12 , match: true, threshold: 80},
-      {x: 975, y: 500, r: 161, g: 224, b: 231, match: true, threshold: 80},
-      {x: 554, y: 1332, r: 24 , g: 189, b: 219, match: true, threshold: 80}
-    ],
-    back: {x: 558, y: 1473},
-    next: {x: 558, y: 1473}
-  },
-  ScorePage: {
-    name: 'ScorePage',
-    colors: [
-      {x: 302, y: 1581, r: 235, g: 184, b: 7  , match: true, threshold: 80},
-      {x: 777, y: 1588, r: 248, g: 142, b: 20 , match: true, threshold: 80},
-      {x: 774, y: 500, r: 243, g: 248, b: 242, match: true, threshold: 80}
-    ],
-    back: {x: 309, y: 1653},
-    next: {x: 784, y: 1653}
-  },
-  ProfilePageJp: {
-    name: 'ProfilePage',
-    colors: [
-      {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
-      {x: 187, y: 1599, r: 240, g: 218, b:  72, match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y:  464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // above the ranking title
-      {x:  34, y: 1004, r: 247, g: 178, b:   8, match: true, threshold: 80}, // left home tab button
-      {x:  6, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
-      {x:  6, y: 1270, r:  44, g: 134, b: 233, match: true, threshold: 80}  // left square tab button
-    ],
-    back: {x: 31, y: 1126},
-    next: {x: 31, y: 1126},
-    tsums: {x: 900, y: 1653}
-  },
-  ProfilePageIntl: {
-    name: 'ProfilePage',
-    colors: [
-      {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
-      {x: 187, y: 1599, r: 240, g: 218, b:  72, match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y:  464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // above the ranking title
-      {x:  34, y: 1004, r: 247, g: 178, b:   8, match: true, threshold: 80}, // left home tab button
-      {x:   6, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
-      {x:   6, y: 1270, r:  52, g:  98, b: 143, match: true, threshold: 80}  // left border where in JP left square tab button is
-    ],
-    back: {x: 31, y: 1126},
-    next: {x: 31, y: 1126},
-    tsums: {x: 900, y: 1653}
-  },
-  SquarePage: {
-    name: 'SquarePage',
-    colors: [
-      {x: 540, y: 1592, r: 246, g: 135, b:  17, match: true, threshold: 80}, // top of the start button
-      {x: 187, y: 1599, r: 240, g: 218, b:  72, match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1653, r: 232, g: 170, b:   7, match: true, threshold: 80}, // left of the myTsum button
-      {x:  18, y:  994, r:  46, g: 135, b: 234, match: true, threshold: 80}, // left home tab button
-      {x:  16, y: 1120, r:  46, g: 135, b: 232, match: true, threshold: 80}, // left ranking tab button
-      {x:  34, y: 1270, r: 247, g: 175, b:   8, match: true, threshold: 80}  // left square tab button
-    ],
-    back: {x: 31, y: 1126},
-    next: {x: 31, y: 1126}
-  },
-  FriendPage: {
-    name: 'FriendPage',
-    colors: [
-      {x: 540, y: 1592, r: 246, g: 135, b: 17 , match: true, threshold: 80}, // top of the start button
-      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
-      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
-    ],
-    back: {x: 547, y: 1653},
-    next: {x: 547, y: 1653},
-    tsums: {x: 900, y: 1653}
-  },
-  FriendPage2: {
-    name: 'FriendPage',
-    colors: [
-      {x: 540, y: 1649, r: 175, g: 188, b: 197, match: true, threshold: 80}, // center of the Tsum Hades
-      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
-      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
-    ],
-    back: {x: 547, y: 1653},
-    next: {x: 547, y: 1653},
-    tsums: {x: 900, y: 1653}
-  },
-  FriendPage3: {
-    name: 'FriendPage',
-    colors: [
-      {x: 540, y: 1649, r: 203, g: 192, b: 237, match: true, threshold: 80}, // center of the Tsum Ursula
-      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
-      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
-    ],
-    back: {x: 547, y: 1653},
-    next: {x: 547, y: 1653},
-    tsums: {x: 900, y: 1653}
-  },
-  FriendPage4: {
-    name: 'FriendPage',
-    colors: [
-      {x: 540, y: 1649, r: 79 , g: 89 , b: 94 , match: true, threshold: 80}, // center of the Tsum Maleficentd
-      {x: 187, y: 1599, r: 240, g: 218, b: 72 , match: true, threshold: 80}, // top of the card button
-      {x: 799, y: 1653, r: 232, g: 170, b: 7  , match: true, threshold: 80}, // left of the myTsum button
-      {x: 698, y: 464, r: 244, g: 249, b: 243, match: true, threshold: 80}, // left top of the ranking time
-      {x: 960, y: 430, r: 24, g: 192, b: 231, match: true, threshold: 80}           // right bottom next to the mailbox icon
-    ],
-    back: {x: 547, y: 1653},
-    next: {x: 547, y: 1653},
-    tsums: {x: 900, y: 1653}
-  },
-  GiftHeart: {
-    name: 'GiftHeart',
-    colors: [
-      {x: 216, y: 1084, r: 233, g: 172, b: 6  , match: true, threshold: 80},
-      {x: 673, y: 1080, r: 235, g: 174, b: 8  , match: true, threshold: 80},
-      {x: 468, y: 803, r: 214, g: 61 , b: 143, match: true, threshold: 100},
-      {x: 572, y: 561, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 583, y: 1195, r: 28 , g: 186, b: 221, match: true, threshold: 80}
-    ],
-    back: {x: 774, y: 1095},
-    next: {x: 320, y: 1091}
-  },
-  MailBox: {
-    name: 'MailBox',
-    colors: [
-      {x: 738, y: 414, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1581, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 604, y: 1419, r: 234, g: 171, b: 6  , match: true, threshold: 80}
-    ],
-    back: {x: 561, y: 1653},
-    next: {x: 561, y: 1653}
-  },
-  MailBox2: {
-    name: 'MailBox',
-    colors: [
-      {x: 738, y: 414, r: 240, g: 245, b: 239, match: true, threshold: 80},
-      {x: 550, y: 1581, r: 238, g: 187, b: 10 , match: true, threshold: 80},
-      {x: 619, y: 1426, r: 19 , g: 137, b: 175, match: true, threshold: 80}
-    ],
-    back: {x: 561, y: 1653},
-    next: {x: 561, y: 1653}
-  },
-  ReceiveHeart: {
-    name: 'ReceiveHeart',
-    colors: [
-      {x: 208, y: 1080, r: 233, g: 172, b: 6  , match: true, threshold: 80},
-      {x: 662, y: 1080, r: 232, g: 171, b: 5  , match: true, threshold: 80},
-      {x: 561, y: 554, r: 28 , g: 191, b: 222, match: true, threshold: 80},
-      {x: 565, y: 1210, r: 30 , g: 195, b: 225, match: true, threshold: 80},
-      {x: 334, y: 817, r: 213, g: 62 , b: 143, match: true, threshold: 90},
-      {x: 586, y: 821, r: 248, g: 249, b: 51 , match: true, threshold: 100}
-    ],
-    back: {x: 774, y: 1095},
-    next: {x: 320, y: 1091}
-  },
-  Received: {
-    name: 'Received',
-    colors: [
-      {x: 799, y: 716, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 806, y: 889, r: 45, g: 80 , b: 122, match: true, threshold: 80},
-      {x: 799, y: 1048, r: 27, g: 188, b: 217, match: true, threshold: 80}
-    ],
-    back: {x: 774, y: 1095},
-    next: {x: 320, y: 1091}
-  },
-  Received2: {
-    name: 'Received',
-    colors: [
-      {x: 799, y: 716, r: 30, g: 188, b: 223, match: true, threshold: 80},
-      {x: 889, y: 824, r: 40, g: 72 , b: 111, match: true, threshold: 80},
-      {x: 799, y: 1048, r: 27, g: 188, b: 217, match: true, threshold: 80}
-    ],
-    back: {x: 774, y: 1095},
-    next: {x: 320, y: 1091}
-  },
-  StartPage: {
-    name: 'StartPage',
-    colors: [
-      {x: 752, y: 471, r: 244, g: 249, b: 243, match: true, threshold: 80},
-      {x: 856, y: 1430, r: 30 , g: 193, b: 224, match: true, threshold: 80},
-      {x: 169, y: 1581, r: 239, g: 188, b: 11 , match: true, threshold: 80},
-      {x: 547, y: 1581, r: 235, g: 118, b: 134, match: true, threshold: 80},
-      {x: 792, y: 1660, r: 234, g: 171, b: 8  , match: true, threshold: 100}
-    ],
-    back: {x: 190, y: 1646},
-    next: {x: 558, y: 1635},
-    tsums: {x: 900, y: 1653}
-  },
-  StartPage2: {
-    name: 'StartPage',
-    colors: [
-      {x: 820,  y: 515, r: 245, g: 250, b: 244, match: true, threshold: 80},
-      {x: 954,  y: 1426, r: 31 , g: 190, b: 220, match: true, threshold: 80},
-      {x: 180,  y: 1584, r: 235, g: 182, b: 8  , match: true, threshold: 80},
-      {x: 540,  y: 1584, r: 238, g: 115, b: 133, match: true, threshold: 80},
-      {x: 1011, y: 1675, r: 229, g: 166, b: 11 , match: true, threshold: 100}
-    ],
-    back: {x: 190, y: 1646},
-    next: {x: 558, y: 1635}
-  },
-  StartPage3: {
-    name: 'StartPage',
-    colors: [
-      {x: 400,  y: 1672, r: 245, g: 85, b: 115, match: true, threshold: 80},
-      {x: 680,  y: 1672, r: 245, g: 85, b: 115, match: true, threshold: 80},
-      {x: 540,  y: 1722, r: 235, g: 70, b: 90 , match: true, threshold: 80}
-    ],
-    back: {x: 190, y: 1646},
-    next: {x: 558, y: 1635}
-  },
-  TsumsPage: {
-    name: 'TsumsPage',
-    colors: [
-      {x: 27, y: 901, r: 198, g: 239, b: 247, match: true, threshold: 80},    // left of "Tsum Tsum Collection" title bar
-      {x: 577, y: 906, r: 255, g: 251, b: 255, match: true, threshold: 80},   // middle of "Tsum Tsum Collection" title bar
-      {x: 741, y: 899, r: 132, g: 190, b: 214, match: true, threshold: 80},   // right of "Tsum Tsum Collection" title bar (short before "Level Lock")
-      {x: 1012, y: 899, r: 247, g: 186, b: 16, match: true, threshold: 80}    // yellow "order" button
-
-    ],
-    lockIcons: [
-      {x: 196, y: 1195, r: 236, g: 245, b: 254},
-      {x: 430, y: 1195, r: 234, g: 244, b: 253},
-      {x: 665, y: 1195, r: 237, g: 246, b: 253},
-      {x: 900, y: 1195, r: 236, g: 246, b: 254},
-      {x: 196, y: 1450, r: 236, g: 245, b: 254},
-      {x: 430, y: 1450, r: 235, g: 244, b: 253},
-      {x: 665, y: 1450, r: 237, g: 246, b: 254},
-      {x: 900, y: 1450, r: 236, g: 246, b: 254}
-    ],
-    back: {x: 176, y: 1592},
-    next: {x: 176, y: 1592},
-    store: {x: 910, y: 1592}
-  },
-  TsumTsum2025StorePage: {
-    name: 'TsumTsumStorePage',
-    colors: [
-      {x: 30, y: 910, r: 16, g: 53, b: 93, match: true, threshold: 30},
-      {x: 60, y: 910, r: 233, g: 171, b: 8, match: true, threshold: 30},
-      {x: 520, y: 910, r: 237, g: 174, b: 8, match: true, threshold: 30},
-      {x: 545, y: 840, r: 22, g: 65, b: 107, match: true, threshold: 30},
-      {x: 570, y: 910, r: 29, g: 85, b: 159, match: true, threshold: 30},
-      {x: 10, y: 955, r: 37, g: 71, b: 115, match: true, threshold: 30},
-      {x: 170, y: 1490, r: 48, g: 81, b: 130, match: true, threshold: 30},
-      {x: 170, y: 1515, r: 8, g: 164, b: 213, match: true, threshold: 30},
-      {x: 170, y: 1570, r: 247, g: 194, b: 16, match: true, threshold: 30}
-    ],
-    back: {x: 190, y: 1650},
-    next: {x: 1000, y: 690, r: 238, g: 172, b: 8}
-  },
-  ConfirmPurchaseBoxPage: {
-    name: 'ConfirmPurchasePage',
-    colors: [
-      {x: 208, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // left of Cancel button
-      {x: 420, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // right of Cancel button
-      {x: 540, y: 1070, r: 54, g: 93, b: 146, match: true, threshold: 30},  // between buttons
-      {x: 650, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // left of OK button
-      {x: 880, y: 1070, r: 247, g: 176, b: 8, match: true, threshold: 30},  // right of OK button
-      {x: 948, y: 1066, r: 33, g: 69, b: 107, match: true, threshold: 30},  // right next to OK button
-      {x: 805, y: 1265, r: 239, g: 167, b: 8, match: true, threshold: 50}   // left of List button
-    ],
-    back: {x: 310, y: 1070},  // Cancel button
-    next: {x: 760, y: 1070}   // OK button
-  },
-  Confirm2025PurchaseBoxPage: {
-    name: 'ConfirmPurchasePage',
-    colors: [
-      {x: 208, y: 1070, r: 247, g: 186, b:   8, match: true, threshold: 30},  // left of Cancel button
-      {x: 420, y: 1070, r: 247, g: 184, b:   8, match: true, threshold: 30},  // right of Cancel button
-      {x: 540, y: 1070, r:  54, g:  90, b: 141, match: true, threshold: 30},  // between buttons
-      {x: 650, y: 1070, r: 247, g: 190, b:   8, match: true, threshold: 30},  // left of OK button
-      {x: 880, y: 1070, r: 247, g: 191, b:  14, match: true, threshold: 30},  // right of OK button
-      {x: 948, y: 1066, r:  40, g:  70, b: 113, match: true, threshold: 30},  // right next to OK button
-      {x: 785, y: 1320, r: 238, g: 171, b:   8, match: true, threshold: 50}   // left of List button
-    ],
-    back: {x: 310, y: 1070},  // Cancel button
-    next: {x: 760, y: 1070}   // OK button
-  },
-  ConfirmPurchaseCapsulePage: {
-    name: 'ConfirmPurchasePage',
-    colors: [
-      {x: 200, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // left of Cancel button
-      {x: 426, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of Cancel button
-      {x: 540, y: 1444, r: 54, g: 93, b: 146, match: true, threshold: 30},  // between buttons
-      {x: 660, y: 1444, r: 247, g: 174, b: 8, match: true, threshold: 30},  // left of OK button
-      {x: 860, y: 1444, r: 247, g: 178, b: 8, match: true, threshold: 30},  // right of OK button
-      {x: 940, y: 1444, r: 33, g: 65, b: 107, match: true, threshold: 30},  // right next to OK button
-      {x: 416, y: 790, r: 239, g: 28, b: 49, match: true, threshold: 30}    // red top of big pickup capsule image
-    ],
-    back: {x: 320, y: 1444},  // Cancel button
-    next: {x: 766, y: 1444}   // OK button
-  },
-  Confirm2025PurchaseCapsulePage: {
-    name: 'ConfirmPurchasePage',
-    colors: [
-      {x: 200, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},      // left of Cancel button
-      {x: 426, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},      // right of Cancel button
-      {x: 540, y: 1464, r: 54, g: 93, b: 146, match: true, threshold: 30},      // between buttons
-      {x: 660, y: 1464, r: 247, g: 174, b: 8, match: true, threshold: 30},      // left of OK button
-      {x: 860, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},      // right of OK button
-      {x: 940, y: 1464, r: 33, g: 65, b: 107, match: true, threshold: 30},      // right next to OK button
-      {x: 836, y: 1152, r: 255, g: 255, b: 255, match: true, threshold: 30},    // lower left of slash in "15/15"
-      {x: 860, y: 1081, r: 255, g: 255, b: 255, match: true, threshold: 30},    // upper right of slash in "15/15"
-      {x: 860, y: 1152, r: 48, g: 81, b: 127, match: true, threshold: 30}       // blue area under slash in "15/15"
-    ],
-    back: {x: 320, y: 1464},  // Cancel button
-    next: {x: 766, y: 1464}   // OK button
-  },
-  TapOpenPageBox: {
-    name: 'TapOpenPage',
-    colors: [
-      {x: 641, y: 328, r: 255, g: 255, b: 231, match: true, threshold: 30},
-      {x: 641, y: 243, r: 255, g: 255, b: 247, match: true, threshold: 30},
-      {x: 180, y: 520, r: 247, g: 182, b: 189, match: true, threshold: 30},
-      {x: 899, y: 777, r: 140, g: 121, b: 156, match: true, threshold: 30},
-      {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
-      {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
-      {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
-    ],
-    back: {x: 500, y: 1600},
-    next: {x: 500, y: 1600}
-  },
-  TapOpenPageCapsule: {
-    name: 'TapOpenPage',
-    colors: [
-      {x: 70, y: 560, r: 24, g: 85, b: 132, match: true, threshold: 30},
-      {x: 899, y: 777, r: 137, g: 117, b: 148, match: true, threshold: 30},
-      {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
-      {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
-      {x: 405, y: 1397, r: 255, g: 255, b: 255, match: true, threshold: 30}, // T from "TAP!"
-      {x: 546, y: 1429, r: 255, g: 255, b: 255, match: true, threshold: 30}, // A from "TAP!"
-      {x: 664, y: 1407, r: 255, g: 255, b: 255, match: true, threshold: 30}, // P from "TAP!"
-      {x: 709, y: 1381, r: 255, g: 255, b: 255, match: true, threshold: 30} // ! from "TAP!"
-    ],
-    back: {x: 500, y: 1600},
-    next: {x: 500, y: 1600}
-  },
-  TapOpenPageCapsuleDeprecated: {
-    name: 'TapOpenPageDeprecated',
-    colors: [
-      {x: 620, y: 328, r: 205, g: 13, b: 34, match: true, threshold: 30},
-      {x: 641, y: 243, r: 146, g: 0, b: 0, match: true, threshold: 30},
-      {x: 70, y: 560, r: 24, g: 85, b: 132, match: true, threshold: 30},
-      {x: 899, y: 777, r: 137, g: 117, b: 148, match: true, threshold: 30},
-      {x: 68, y: 1265, r: 33, g: 73, b: 107, match: true, threshold: 30},
-      {x: 964, y: 1265, r: 33, g: 73, b: 115, match: true, threshold: 30},
-      {x: 534, y: 1840, r: 33, g: 190, b: 231, match: true, threshold: 30}
-    ],
-    back: {x: 500, y: 1600},
-    next: {x: 500, y: 1600}
-  },
-  BoxPurchasedPage: {
-    name: 'BoxPurchasedPage',
-    colors: [
-      {x: 156, y: 1077, r: 33, g: 195, b: 231, match: true, threshold: 30},
-      {x: 48, y: 998, r: 24, g: 52, b: 82, match: true, threshold: 30},
-      {x: 131, y: 1134, r: 33, g: 65, b: 107, match: true, threshold: 30},
-      {x: 928, y: 1077, r: 33, g: 203, b: 239, match: true, threshold: 30},
-      {x: 923, y: 1183, r: 33, g: 65, b: 107, match: true, threshold: 30},
-      {x: 904, y: 1396, r: 33, g: 199, b: 239, match: true, threshold: 30},
-      {x: 389, y: 1634, r: 247, g: 174, b: 8, match: true, threshold: 30},
-      {x: 279, y: 1627, r: 41, g: 77, b: 115, match: true, threshold: 30},
-      {x: 525, y: 1823, r: 24, g: 158, b: 189, match: true, threshold: 30}
-    ],
-    back: {x: 550, y: 1630},  // Close button
-    next: {x: 550, y: 1630}   // Close button
-  },
-  PremiumPlusBoxPurchasedPage: {
-    name: 'BoxPurchasedPage',
-    colors: [
-      {x: 156, y: 1077, r: 33, g: 195, b: 231, match: true, threshold: 30},
-      {x: 48, y: 998, r: 33, g: 66, b: 99, match: true, threshold: 30},
-      {x: 131, y: 1137, r: 33, g: 62, b: 101, match: true, threshold: 30},
-      {x: 928, y: 1075, r: 33, g: 203, b: 236, match: true, threshold: 30},
-      {x: 922, y: 1184, r: 33, g: 65, b: 107, match: true, threshold: 30},
-      {x: 904, y: 1396, r: 33, g: 199, b: 239, match: true, threshold: 30},
-      {x: 389, y: 1634, r: 238, g: 174, b: 8, match: true, threshold: 30},
-      {x: 280, y: 1626, r: 63, g: 103, b: 147, match: true, threshold: 30},
-      {x: 525, y: 1823, r: 40, g: 210, b: 247, match: true, threshold: 30}
-    ],
-    back: {x: 550, y: 1630},  // Close button
-    next: {x: 550, y: 1630}   // Close button
-  },
-  GamePause: {
-    name: 'GamePause',
-    colors: [
-      {x: 165, y: 1077, r: 234, g: 173, b:   7, match: true, threshold: 80},
-      {x: 586, y: 1080, r: 239, g: 174, b:   7, match: true, threshold: 80},
-      {x: 367, y:  774, r:  24, g: 191, b: 225, match: true, threshold: 80},
-      {x: 738, y:  612, r: 248, g: 244, b: 245, match: true, threshold: 80},
-      {x: 550, y: 1336, r: 247, g: 185, b:   8, match: true, threshold: 80}
-    ],
-    back: {x: 331, y: 1080},
-    next: {x: 561, y: 1422}
-  },
-  GamePlaying480x800: {
-    name: 'GamePlaying',
-    colors: [
-      {x: 916, y: 198, r: 253, g: 216, b: 0, match: true, threshold: 80}, // above pause
-      {x: 916, y: 318, r: 241, g: 161, b: 8, match: true, threshold: 80}, // below pause
-      {x: 916, y: 1688, r: 242, g: 161, b: 8, match: true, threshold: 80} // below fan
-    ],
-    back: {x: 986, y: 273},
-    next: {x: 986, y: 273}
-  },
-  GamePlayingLastSeconds: {
-    name: 'GamePlaying',
-    colors: [
-      {x: 916, y: 198, r: 181, g: 207, b: 74, match: true, threshold: 80}, // above pause
-      {x: 916, y: 318, r: 190, g: 174, b: 57, match: true, threshold: 80}, // below pause
-      {x: 916, y: 1688, r: 181, g: 178, b: 74, match: true, threshold: 80} // below fan
-    ],
-    back: {x: 986, y: 273},
-    next: {x: 986, y: 273}
-  },
-  GamePlaying: {
-    name: 'GamePlaying',
-    colors: [
-      {x: 916, y: 198, r: 230, g: 200, b: 20, match: true, threshold: 80}, // above pause
-      {x: 916, y: 318, r: 214, g: 191, b: 28, match: true, threshold: 80}, // below pause
-      {x: 916, y: 1688, r: 214, g: 191, b: 28, match: true, threshold: 80} // below fan
-    ],
-    back: {x: 986, y: 273},
-    next: {x: 986, y: 273}
-  },
-  GamePlaying2: {
-    name: 'GamePlaying',
-    colors: [
-      {x: 980, y: 258, r: 190, g: 244, b: 70, match: true, threshold: 80}, // right of pause
-      {x: 852, y: 258, r: 244, g: 197, b: 20, match: true, threshold: 80}, // left of pause
-      {x: 916, y: 1688, r: 230, g: 150, b: 25, match: true, threshold: 80} // below fan
-    ],
-    back: {x: 986, y: 273},
-    next: {x: 986, y: 273}
-  },
-  RootDetectionLdp1080p480dpiEn: {
-    name: 'RootDetectionLdp1080p480dpiEn',
-    colors: [
-      {x: 80, y: 690, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 70, y: 680,  r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 1000, y: 1300, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1010, y: 1310, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 855, y: 1224},
-    next: {x: 855, y: 1224},
-    onDetect: switchToStartupMode
-  },
-  RootDetectionLdp1080p480dpiJp: {
-    name: 'RootDetectionLdp1080p480dpiJp',
-    colors: [
-      {x: 80, y: 635, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 70, y: 625, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 1000, y: 1360, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1010, y: 1370, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 850, y: 1280},
-    next: {x: 850, y: 1280},
-    onDetect: switchToStartupMode
-  },
-  RootDetectionLdp480x800x160dpiEn: {
-    name: 'RootDetectionLdp480x800x160dpiEn',
-    colors: [
-      {x: 90, y: 780, r: 253 , g: 253, b: 253, match: true, threshold: 25},
-      {x: 65, y: 745, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 990, y: 1190, r: 252 , g: 252, b: 252, match: true, threshold: 25},
-      {x: 1015, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 885, y: 1135},
-    next: {x: 885, y: 1135},
-    onDetect: switchToStartupMode
-  },
-  RootDetectionNox1080p360dpiEn: {
-    name: 'RootDetectionNox1080p360dpiEn',
-    colors: [
-      {x: 135, y: 795, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 125, y: 785, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 945, y: 1170, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 955, y: 1180, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 850, y: 1115},
-    next: {x: 850, y: 1115},
-    onDetect: switchToStartupMode
-  },
-  RootDetectionNox480x800x160dpiJp: {
-    name: 'RootDetectionNox480x800x160dpiJp',
-    colors: [
-      {x: 85, y: 735, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 75, y: 725, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 995, y: 1240, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1005, y: 1250, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 885, y: 1170},
-    next: {x: 885, y: 1170},
-    onDetect: switchToStartupMode
-  },
-  RootDetectionNox480x800x160dpiEn: {
-    name: 'RootDetectionNox480x800x160dpiEn',
-    colors: [
-      {x: 85, y: 760, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 75, y: 750, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 995, y: 1215, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1005, y: 1225, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 885, y: 1150},
-    next: {x: 885, y: 1150},
-    onDetect: switchToStartupMode
-  },
-  RootDetectionSamsungA20En: {
-    name: 'RootDetectionSamsungA20En',
-    colors: [
-      {x: 60, y: 440, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 50, y: 440, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 60, y: 430, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 1020, y: 1310, r: 255 , g: 255, b: 255, match: true, threshold: 25},
-      {x: 1020, y: 1320, r: 255 , g: 255, b: 255, match: false, threshold: 25},
-      {x: 1010, y: 1325, r: 255 , g: 255, b: 255, match: false, threshold: 25}
-    ],
-    back: {x: 850, y: 1230},
-    next: {x: 850, y: 1230},
-    onDetect: switchToStartupMode
-  },
-  MagicalTime: {
-    name: 'MagicalTime',
-    colors: [
-      {x: 817, y: 507, r: 244, g: 249, b: 243, match: true, threshold:  80},
-      {x: 594, y: 857, r: 248, g: 102, b: 121, match: true, threshold: 100},
-      {x: 208, y: 1217, r: 236, g: 175, b:   9, match: true, threshold:  80},
-      {x: 662, y: 1213, r: 232, g: 171, b:   5, match: true, threshold:  80}
-    ],
-    back: {x: 381, y: 1221},
-    next: {x: 856, y: 1221}
-  },
-  OutOfMedals: {
-    name: 'OutOfMedals',
-    colors: [
-      {x: 127, y:  873, r:  74, g:  74, b:  74, match: true, threshold: 80},  // mickey left-side ear
-      {x: 186, y:  898, r: 255, g: 213, b: 188, match: true, threshold: 80},  // mickey face
-      {x: 865, y:  879, r: 247, g: 251, b: 255, match: true, threshold: 80},  // donald face
-      {x: 474, y: 1065, r: 238, g: 174, b:   8, match: true, threshold: 80},  // left button
-      {x: 540, y: 1070, r:  56, g:  91, b: 140, match: true, threshold: 80},  // blue between both buttons
-      {x: 595, y: 1066, r: 238, g: 171, b:   8, match: true, threshold: 80}   // right button
-    ],
-    back: {x: 300, y: 1080},
-    next: {x: 300, y: 1080}
-  },
-  NetworkDisable: {
-    name: 'NetworkDisable',
-    colors: [
-      {x: 478, y: 1080, r: 236, g:  94, b: 116, match: true, threshold: 80},
-      {x: 932, y: 1077, r: 232, g: 171, b:   5, match: true, threshold: 80}
-    ],
-    back: {x: 885, y: 1080},
-    next: {x: 885, y: 1084}
-  },
-  NetworkTimeout: {
-    name: 'NetworkTimeout',
-    colors: [
-      {x: 530, y: 590, r: 33, g: 197, b: 234, match: true, threshold: 80},
-      {x: 530, y: 620, r: 59, g: 94, b: 148, match: true, threshold: 80},
-      {x: 478, y: 1080, r: 232, g: 171, b: 5, match: true, threshold: 80},
-      {x: 932, y: 1077, r: 232, g: 171, b: 5, match: true, threshold: 80},
-      {x: 530, y: 1150, r: 59, g: 94, b: 148, match: true, threshold: 80},
-      {x: 530, y: 1170, r: 33, g: 197, b: 234, match: true, threshold: 80}
-    ],
-    back: {x: 885, y: 1084},
-    next: {x: 885, y: 1084}
-  },
-  FriendInfo: { // FriendInfo of Friend Page, SocailAccount of Setting Page
-    name: 'FriendInfo',
-    colors: [
-      {x: 565, y: 576, r:  31, g: 190, b: 220, match: true, threshold: 80},
-      {x: 547, y: 1195, r:  27, g: 192, b: 222, match: true, threshold: 80},
-      {x: 554, y: 1332, r: 238, g: 186, b:  12, match: true, threshold: 80}
-    ],
-    back: {x: 576, y: 1408},
-    next: {x: 576, y: 1408}
-  },
-  LevelUp: { // LevelUp and RankUp
-    name: 'LevelUp',
-    colors: [
-      {x: 140, y: 1656, r: 233, g: 175, b: 6, match: true, threshold: 80}, // left of the close button
-      {x: 450, y: 1656, r: 233, g: 175, b: 6, match: true, threshold: 80}, // right of the close button
-      {x: 620, y: 1656, r: 233, g: 175, b: 6, match: true, threshold: 80}, // left of the share button
-      {x: 930, y: 1656, r: 233, g: 175, b: 6, match: true, threshold: 80} // right of the share button
-    ],
-    back: {x: 300, y: 1660},
-    next: {x: 300, y: 1660}
-  },
-  HighScore: {
-    name: 'HighScore',
-    colors: [
-      {x: 576, y: 1325, r: 238, g: 187, b:  10, match: true, threshold: 80}, // top yellow of close button
-      {x: 576, y: 1082, r:  33, g: 194, b: 231, match: true, threshold: 80}, // bottom light blue of highscore cell
-      {x: 576, y:  762, r:  33, g: 194, b: 231, match: true, threshold: 80}, // top light blue of highscore cell
-      {x: 576, y:  820, r:  64, g: 109, b: 171, match: true, threshold: 80}  // inner dark blue of highscore cell
-    ],
-    back: {x: 576, y: 1325},
-    next: {x: 576, y: 1325}
-  },
-  ClosePage: { // including EventPage, MyInfo, SettingPage, others
-    name: 'ClosePage', // the close button at center bottom
-    colors: [
-      {x: 540, y: 1588, r: 233, g: 180, b: 10, match: true, threshold: 80} // top right of the close button
-    ],
-    back: {x: 576, y: 1660},
-    next: {x: 576, y: 1660}
-  },
-  // *** Following commented out because detection is way too unspecific and I don't know what it should detect.
-  // InvitePage: {
-  //   name: 'InvitePage', // the close button at left bottom
-  //   colors: [
-  //     {x: 180, y: 1592, r: 238, g: 180, b: 11, match: true, threshold: 80}
-  //   ],
-  //   back: {x: 176, y: 1592},
-  //   next: {x: 176, y: 1592}
-  // },
-  ReceiveSkillTicket: {
-    name: 'ReceiveSkillTicket',
-    colors: [
-      {x: 405, y: 806, r: 240, g: 155, b: 20, match: true, threshold: 80},
-      {x: 488, y: 839, r: 244, g: 164, b: 23, match: true, threshold: 80},
-      {x: 502, y: 821, r: 255, g: 255, b: 255, match: true, threshold: 40},
-      {x: 390, y: 824, r: 58, g: 92, b: 142, match: true, threshold: 80},
-      {x: 522, y: 812, r: 60, g: 95, b: 147, match: true, threshold: 80},
-      {x: 874, y: 1098, r: 238, g: 174, b: 8, match: true, threshold: 80},
-      {x: 198, y: 1095, r: 239, g: 174, b: 8, match: true, threshold: 80},
-      {x: 160, y: 1545, r: 0, g: 4, b: 8, match: true, threshold: 80},
-      {x: 526, y: 553, r: 33, g: 195, b: 231, match: true, threshold: 80}
-    ],
-    back: {x: 198, y: 1095},
-    next: {x: 874, y: 1098}
-  },
-  ReceivePremiumTicket: {
-    name: 'ReceivePremiumTicket',
-    colors: [
-      {x: 405, y: 806, r: 216, g: 20, b: 25, match: true, threshold: 80},
-      {x: 488, y: 839, r: 208, g: 20, b: 23, match: true, threshold: 80},
-      {x: 502, y: 821, r: 255, g: 247, b: 181, match: true, threshold: 40},
-      {x: 390, y: 824, r: 58, g: 92, b: 142, match: true, threshold: 80},
-      {x: 522, y: 812, r: 60, g: 95, b: 147, match: true, threshold: 80},
-      {x: 874, y: 1098, r: 238, g: 174, b: 8, match: true, threshold: 80},
-      {x: 198, y: 1095, r: 239, g: 174, b: 8, match: true, threshold: 80},
-      {x: 160, y: 1545, r: 0, g: 4, b: 8, match: true, threshold: 80},
-      {x: 526, y: 553, r: 33, g: 195, b: 231, match: true, threshold: 80}
-    ],
-    back: {x: 198, y: 1095},
-    next: {x: 874, y: 1098}
-  },
-  ReceiveHeartWithoutCoins: {
-    name: 'ReceiveHeartWithoutCoins',
-    colors: [
-      {x: 360, y: 570, r: 33, g: 198, b: 233, match: true, threshold: 30},
-      {x: 400, y: 620, r: 61, g: 94, b: 147, match: true, threshold: 30},
-      {x: 460, y: 820, r: 222, g: 61, b: 148, match: true, threshold: 30},
-      {x: 420, y: 1100, r: 238, g: 174, b: 8, match: true, threshold: 30},
-      {x: 860, y: 1100, r: 238, g: 174, b: 8, match: true, threshold: 30},
-      {x: 540, y: 1100, r: 58, g: 94, b: 146, match: true, threshold: 30},
-      {x: 550, y: 1600, r: 49, g: 36, b: 0, match: true, threshold: 30}
-    ],
-    back: {x: 420, y: 1100},
-    next: {x: 860, y: 1100}
-  },
-  ExtraUpdateJp: {
-    name: 'ExtraUpdate',
-    colors: [
-      {x: 104, y:  556, r:  36, g: 204, b: 239, match: true, threshold: 80},  // light blue top left
-      {x: 104, y: 1194, r:  36, g: 204, b: 239, match: true, threshold: 80},  // light blue bottom left
-      {x: 700, y: 1100, r: 238, g: 174, b:   8, match: true, threshold: 80},  // OK button
-      {x: 200, y: 1100, r: 238, g: 174, b:   8, match: true, threshold: 80},  // Cancel button
-      {x: 644, y:  676, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Left of big white "o" letter
-      {x: 694, y:  676, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Right of big white "o" letter
-      {x: 668, y:  676, r:  58, g:  93, b: 148, match: true, threshold: 80},  // Middle of big white "o" letter
-      {x: 422, y:  998, r:  48, g:  93, b: 148, match: true, threshold: 80},  // Middle of small white "o" letter
-      {x: 406, y:  998, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Left of small white "o" letter
-      {x: 434, y:  998, r: 248, g: 248, b: 248, match: true, threshold: 80}   // Right of small white "o" letter
-    ],
-    back: {x: 770, y: 1100},
-    next: {x: 770, y: 1100}
-  },
-  ExtraUpdateEn: {
-    name: 'ExtraUpdate',
-    colors: [
-      {x: 104, y:  556, r:  36, g: 204, b: 239, match: true, threshold: 80},  // light blue top left
-      {x: 104, y: 1194, r:  36, g: 204, b: 239, match: true, threshold: 80},  // light blue bottom left
-      {x: 700, y: 1100, r: 238, g: 174, b:   8, match: true, threshold: 80},  // OK button
-      {x: 200, y: 1100, r: 238, g: 174, b:   8, match: true, threshold: 80},  // Cancel button
-      {x: 520, y:  680, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Left of big white "o" letter
-      {x: 558, y:  680, r: 248, g: 248, b: 248, match: true, threshold: 80},  // Right of big white "o" letter
-      {x: 538, y:  680, r:  55, g:  94, b: 148, match: true, threshold: 80},  // Middle of big white "o" letter
-      {x: 674, y: 1002, r:  60, g: 100, b: 150, match: true, threshold: 80},  // Middle of small white "o" letter
-      {x: 662, y: 1002, r: 240, g: 240, b: 240, match: true, threshold: 80},  // Left of small white "o" letter
-      {x: 686, y: 1002, r: 240, g: 240, b: 240, match: true, threshold: 80}   // Right of small white "o" letter
-    ],
-    back: {x: 770, y: 1100},
-    next: {x: 770, y: 1100}
-  },
-  RubyResetDifficulty: {
-    name: 'RubyResetDifficulty',
-    colors: [
-      {x: 594, y:  972, r: 247, g:  81, b:  82, match: true, threshold: 80},  // red arrow between numbers
-      {x: 610, y: 1166, r: 189, g:   0, b:  41, match: true, threshold: 80},  // ruby next to "10"
-      {x: 588, y: 1096, r:  25, g: 174, b: 214, match: true, threshold: 80},  // light blue next to above ruby
-      {x: 867, y: 1270, r: 238, g: 174, b:   8, match: true, threshold: 80},  // OK button
-      {x: 425, y: 1275, r: 238, g: 174, b:   8, match: true, threshold: 80}   // Cancel button
-    ],
-    back: {x: 425, y: 1275},
-    next: {x: 867, y: 1270}
-  }
-};
 
 // page callbacks (this = actual Tsum instance)
 function switchToStartupMode() {
@@ -922,10 +193,16 @@ var Logs = {
   calculatedPath: 'Calculated path',
   recalculatingPath: 'Connections 0, Recalculating path',
   useSkill: 'Use skill',
+  tiaraNoDream: '[Tiara] No thought bubble appeared',
+  tiaraBusy: '[Tiara] Board still moving, firing anyway; diff',
+  tiaraDream: '[Tiara] Bubble shows',
+  tiaraPicked: '[Tiara] Tapped',
+  tiaraUnsure: '[Tiara] No present matched confidently, stopping',
   gameStart: 'Game Start',
   gaming: 'Gaming (Slow version)',
   fastGaming: 'Gaming (Fast version)',
   gameOver: 'Game Over',
+  confirmingGameOver: 'Screen not recognized, confirming game over (skill animation?)',
   detectScreen: 'Detecting screen (top and bosttom)',
   calculateScreenSize: 'Calculating screen size',
   offset: 'Offset (X, Y, H, W)',
@@ -978,10 +255,16 @@ var LogsTW = {
   calculatedPath: '成功計算路徑',
   recalculatingPath: '路徑數量為 0, 重新辨識',
   useSkill: '使用技能',
+  tiaraNoDream: '[皇冠米妮] 沒有出現想像泡泡',
+  tiaraBusy: '[皇冠米妮] 畫面仍在變動，仍然發動；差異',
+  tiaraDream: '[皇冠米妮] 泡泡顯示',
+  tiaraPicked: '[皇冠米妮] 點擊',
+  tiaraUnsure: '[皇冠米妮] 沒有禮物符合，停止',
   gameStart: '遊戲開始',
   gaming: '遊戲中 (慢速版)',
   fastGaming: '遊戲中 (快速版)',
   gameOver: '遊戲結束',
+  confirmingGameOver: '畫面未辨識，確認遊戲結束 (技能動畫?)',
   detectScreen: '偵測畫面 (頂部與底部)',
   calculateScreenSize: '計算螢幕大小',
   offset: '位移 (X, Y, H, W)',
@@ -1085,26 +368,29 @@ function findNearTsum(tsum, tsums) {
   return { dis: finalDistance, tsum: minTsum, idx: idx };
 }
 
-function findTsumComponents(neighbors) {
-  var n = neighbors.length;
-  var seen = new Array(n);
-  for (var i = 0; i < n; i++) { seen[i] = false; }
-  var components = [];
-  for (var s = 0; s < n; s++) {
-    if (seen[s]) { continue; }
-    var comp = [];
-    var stack = [s];
-    seen[s] = true;
-    while (stack.length > 0) {
-      var v = stack.pop();
-      comp.push(v);
-      var nbrs = neighbors[v];
-      for (var k = 0; k < nbrs.length; k++) {
-        if (!seen[nbrs[k]]) {
-          seen[nbrs[k]] = true;
-          stack.push(nbrs[k]);
-        }
-      }
+function calculateNearTsumPaths(tsum, ts) {
+  // 1. Include the starting tsum in the path
+  var path = [tsum];
+  var tsums = ts.slice(); // copy array
+
+  // 2. Remove the starting tsum from candidate list so it isn't matched again
+  var initialIdx = tsums.indexOf(tsum);
+  if (initialIdx !== -1) {
+    tsums.splice(initialIdx, 1);
+  }
+
+  while(true) {
+    // Stop if we have reached the maximum path length limit
+    if (path.length >= Config.maxChain) {
+      break;
+    }
+
+    var result = findNearTsum(tsum, tsums);
+    var minDis = result.dis;
+    var minTsum = result.tsum;
+    var minIdx = result.idx;
+    if (minIdx === -1 || minDis > Config.tsumWidth * 2.8) {
+      break;
     }
     components.push(comp);
   }
@@ -1214,10 +500,26 @@ function calculatePaths(board, logs) {
     return b.length - a.length;
   });
 
-  if (typeof debug === 'function' && logs && logs.calculatedPath) {
-    debug(logs.calculatedPath, paths.length);
-  }
 
+  if (ts.debug) {
+    if (typeof debug === 'function' && logs && logs.calculatedPath) {
+      debug(logs.calculatedPath, paths.length);
+    }
+
+    // Log detailed breakdown of each path
+    for (var p = 0; p < paths.length; p++) {
+      var currentPath = paths[p];
+      var pathDetails = currentPath.map(function(node) {
+        // Map coordinates or identifiers depending on the object shape
+        if (node && node.x !== undefined && node.y !== undefined) {
+          return "(" + node.x + "," + node.y + ")";
+        }
+        return node.tsumIdx !== undefined ? "idx:" + node.tsumIdx : JSON.stringify(node);
+      }).join(" -> ");
+
+      log("Path #" + (p + 1) + " (Length " + currentPath.length + "): " + pathDetails);
+    }
+  }
   return paths;
 }
 
@@ -1238,6 +540,24 @@ function convertTo2DArray(arr, size) {
     result.push(arr.slice(i, i + size));
   }
   return result;
+}
+
+function findGameBubbles(img) {
+  var cfg = GameBubbleConfig;
+  var tmpImg = clone(img);
+  var grayImg = bgrToGray(tmpImg);
+  releaseImage(tmpImg);
+  smooth(grayImg, 2, 9);
+  // houghCircles returns centres, unlike the board points findTsums feeds the
+  // pathfinder (those are shifted to a tsum's top-left corner).
+  var found = houghCircles(grayImg, 3, 1, cfg.minDist, cfg.param1, cfg.param2,
+                           cfg.minRadius, cfg.maxRadius);
+  releaseImage(grayImg);
+  var out = [];
+  for (var k in found) {
+    out.push({x: found[k].x, y: found[k].y, r: found[k].r});
+  }
+  return out;
 }
 
 function findTsums(img) {
@@ -1441,13 +761,21 @@ function Tsum(isJP, detect, logs) {
   this.recordReceive = true;
   this.skillInterval = 3000;
   this.skillLevel = 3;
+  this.maxChain = 3;
   this.skillType = '';
+  // Optional safety poll: fire the skill the instant it's ready, even mid-link,
+  // rather than only at the end of each board-scan cycle (see maybeAutoTapSkill).
+  this.skillAutoTap = false;
+  this.skillAutoTapInterval = 500;
+  this._lastSkillAutoTap = 0;
   this.unlockLevelHoursWait = 0;
   this.sendHearts = false;
   this.keepRuby = false;
   this.showHeartLog = true;
   this.sendHeartMaxDuring = 0;
   this.useFan = true;
+  // Bubble positions from the last board scan, for popGameBubbles.
+  this.gameBubbles = [];
   // record
   this.record = {
     hearts_count: {
@@ -1463,6 +791,11 @@ function Tsum(isJP, detect, logs) {
   this.claimAllWithoutCoins = false;
   this.nextMonitorExecution = 0;
   this.lastVisitedPages = {init1: true, init2: true, init3: true};  // trigger initial monitor call on script startup
+  this.handleLongSkillAnimations = false;
+  // How long the play loop tolerates an unrecognized screen before accepting
+  // game over (see confirmGameOver). Must outlast the longest burst-skill
+  // animation; a real game over exits earlier via ScorePage detection.
+  this.gameOverGraceMs = 20 * 1000;
   this.sendHeartsDownwards = true;
   this.init(detect);
 }
@@ -1667,7 +1000,60 @@ Tsum.prototype.linkTsums = function(path) {
   }
 }
 
-Tsum.prototype.link = function(paths) {
+// Tap the bubbles the last board scan found. Taps only -- the positions were
+// worked out at scan time -- so this stays inside the window where the chain is
+// still clearing. A tap that misses costs nothing: it is not a drag, so it
+// links nothing and the game ignores it.
+Tsum.prototype.popGameBubbles = function() {
+  var bubbles = this.gameBubbles;
+  if (!bubbles || bubbles.length === 0) { return; }
+  var cfg = GameBubbleConfig;
+  var count = Math.min(bubbles.length, cfg.maxTaps);
+  for (var i = 0; i < count; i++) {
+    var b = bubbles[i];
+    var x = Math.floor(this.playOffsetX + b.x * this.playWidth / this.playResizeWidth);
+    var y = Math.floor(this.playOffsetY + b.y * this.playHeight / this.playResizeHeight);
+    tap(x, y, cfg.tapDuring);
+  }
+  if (this.debug) { console.log('[Bubbles] popped ' + count); }
+  // A bubble only pops once; forget them until the next scan finds them again.
+  this.gameBubbles = [];
+};
+
+// When skillAutoTap is on, fire the skill the moment it's ready instead of
+// waiting for the next useSkill at the end of the board-scan cycle. The gauge
+// can fill and sit ready for seconds while we scan, calculate and link; this is
+// called often (e.g. between chains) but only does a real screenshot/check once
+// per skillAutoTapInterval ms, so the timestamp guard keeps frequent calls cheap.
+// Routes through useSkill so every skill type's activation (and choreography) is
+// handled exactly as the normal end-of-cycle path.
+Tsum.prototype.maybeAutoTapSkill = function(board) {
+  if (!this.skillAutoTap) { return; }
+  var now = Date.now();
+  if (now - this._lastSkillAutoTap < this.skillAutoTapInterval) { return; }
+  this._lastSkillAutoTap = now;
+  if (this.skillType === 'burst' || this.skillType === 'burst_bubbles') {
+    // A bare tap is a complete activation for burst skills, and it's a no-op
+    // while the gauge isn't full -- skip the screenshots entirely.
+    this.tap(Button.gameSkill1, 10);
+    return;
+  }
+  // One readiness read before the full useSkill probe (findPage plus a double
+  // gauge check, several screenshots) so the recurring cost while the gauge is
+  // still filling stays at a single screenshot.
+  var img = this.screenshot();
+  var status;
+  try {
+    status = this.checkSkillReadiness(img, Button.gameSkill1);
+  } finally {
+    releaseImage(img);
+  }
+  if (status === 'active') {
+    this.useSkill(board);
+  }
+};
+
+Tsum.prototype.link = function(paths, board) {
   var isBubble = false;
   for (var i in paths) {
     var path = paths[i];
@@ -1677,6 +1063,13 @@ Tsum.prototype.link = function(paths) {
       isBubble = true;
     }
     this.linkTsums(path);
+    // Pop whatever the last scan saw the moment a long chain lands
+    if (path.length >= GameBubbleConfig.minChainForPop) {
+      this.popGameBubbles();
+    }
+    // Linking a full batch of chains can take several seconds; check between
+    // chains so a gauge that fills mid-batch fires right away.
+    this.maybeAutoTapSkill(board);
   }
   return isBubble;
 }
@@ -2094,6 +1487,9 @@ Tsum.prototype.useSkill = function(board) {
     this.tap(Button.skillLuke4, 30);
   } else if (this.skillType === 'block_lightning_mcqueen_plus_s') {
     this.sleep(200);  // let tsums settle
+  } else if (this.skillType === 'block_tiara_minnie_plus_s') {
+    // Her picks detonate the board, so wait for it to stop moving first.
+    this.tiaraWaitForSettledBoard();
   }
   this.tap(Button.gameSkill1);
   this.sleep(30);
@@ -2245,6 +1641,17 @@ Tsum.prototype.useSkill = function(board) {
       this.tap(Button.skillCptLy3, 10);
     }
     this.clearAllBubbles(600, 0, 1000, 300);
+  } else if (this.skillType === 'block_tiara_minnie_plus_s'){
+    this.useTiaraMinniePlusSkill();
+    // Always report "did not fire", whatever happened. The caller runs
+    // `while (useSkill())`, and for a skill that takes seconds of choreography
+    // an immediate second go is never right: the gauge still reads active
+    // through the outro, so a `true` here buys another settle wait, lead-in and
+    // bubble wait -- about six seconds of standing still -- before the missing
+    // bubble finally ends it. If the gauge really is full again, the next
+    // board-scan cycle picks it up one cycle later, which costs nothing like
+    // as much.
+    return false;
   } else if (this.skillType === 'block_lightning_mcqueen_plus_s'){
     this.sleep(2000);
     for (i = 1; i <= 20; i+=1) {
@@ -2270,6 +1677,43 @@ Tsum.prototype.useSkill = function(board) {
   return true;
 }
 
+// Whether firing the fan now would be a waste: the tsums it shuffles are about
+// to be cleared by a skill that is ready or nearly so. It also leaves the board
+// churning right as the skill activates, which matters for skills that read the
+// board on activation (Tiara Minnie+ blows up whatever is under her pick).
+// Costs one screenshot, so only call it where a fan tap is actually pending.
+Tsum.prototype.fanWouldBeWasted = function() {
+  var img = this.screenshot();
+  try {
+    return this.checkSkillReadiness(img, Button.gameSkill1) !== 'far';
+  } finally {
+    releaseImage(img);
+  }
+};
+
+Tsum.prototype.checkSkillReadiness = function(img, skillButton) {
+  // Tiered version of isSkillActive's color check. Same reference colors, two
+  // thresholds: tight (25) means firmly empty; loose (60) is the original
+  // not-active match. Returns 'active', 'almost', or 'far'.
+  var skillNotActiveColors = [
+    {"a": 0, "b": 157, "g": 112, "r": 85},
+    {"a": 0, "b": 181, "g": 139, "r": 72},
+    {"a": 0, "b": 128, "g": 73, "r": 16},
+    {"a": 0, "b": 178, "g": 153, "r": 3},
+    {"a": 0, "b": 255, "g": 215, "r": 33}
+  ];
+  var c = this.getColor(img, skillButton);
+  var matchesTight = false, matchesLoose = false;
+  for (var i = 0; i < skillNotActiveColors.length; i++) {
+    var nc = skillNotActiveColors[i];
+    if (isSameColor(nc, c, 25)) { matchesTight = true; }
+    if (isSameColor(nc, c, 60)) { matchesLoose = true; }
+  }
+  if (!matchesLoose) { return 'active'; }
+  if (!matchesTight) { return 'almost'; }
+  return 'far';
+};
+
 Tsum.prototype.scanBoardQuick = function() {
   // load game tsums
   var startTime = Date.now();
@@ -2282,6 +1726,16 @@ Tsum.prototype.scanBoardQuick = function() {
   }
 
   var points = findTsums(srcImg);
+  // Read bubble positions off this same capture and remember them, so popping
+  // one after a chain is taps only -- no screenshot in the middle of a batch,
+  // which would stall the link cadence and the combo timer with it. Bubbles
+  // are big and drift slowly, so a position a second old still lands.
+  //this.gameBubbles = this.skillType === 'block_tiara_minnie_plus_s'
+  //  ? findGameBubbles(srcImg) : [];
+  this.gameBubbles = findGameBubbles(srcImg);
+  if (this.debug && this.gameBubbles.length > 0) {
+    console.log('[Bubbles] found ' + this.gameBubbles.length);
+  }
   debug(this.logs.recognitionStart);
   var tcs = classifyTsums(points);
   tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
@@ -2318,6 +1772,34 @@ Tsum.prototype.scanBoardQuick = function() {
   return board;
 }
 
+// GamePlaying is recognized by HUD pixels on the pause/fan buttons, and a
+// long burst-skill animation (e.g. Dapper Hat Mickey) covers them for longer
+// than the old two-check window (~5s) while the game is still running, so the
+// play loop would bail mid-game and stall on the "unknown" screen. Thus, an
+// unrecognized screen alone is not proof of game over; require positive
+// confirmation instead: a game that really ends always reaches a known
+// out-of-game page (the score tally lands on ScorePage). Poll until the HUD
+// comes back (still playing), a known page shows up (game over), or the
+// grace window runs out (the old behavior, just later).
+Tsum.prototype.confirmGameOver = function() {
+  log(this.logs.confirmingGameOver);
+  var deadline = Date.now() + this.gameOverGraceMs;
+  while (this.isRunning) {
+    var page = this.findPage(1, 1500);
+    if (page === 'GamePlaying' || page === 'GamePause') {
+      return false;
+    }
+    if (page !== 'unknown') {
+      return true;
+    }
+    if (Date.now() > deadline) {
+      return true;
+    }
+    this.sleep(250);
+  }
+  return true;
+}
+
 Tsum.prototype.taskPlayGameQuick = function() {
   this.requestTsumMonitor();
   log(this.logs.gameStart);
@@ -2337,7 +1819,10 @@ Tsum.prototype.taskPlayGameQuick = function() {
     debug(this.logs.calculationPathStart);
     var paths = calculatePaths(board, this.logs);
     paths = paths.splice(0, 6);
-    var isBubble = this.link(paths);
+    //var isBubble = this.link(paths);
+    // Catch a gauge that filled during the scan/calculation above before linking.
+    this.maybeAutoTapSkill(board);
+    var isBubble = this.link(paths, board);
     if (isBubble) {
       debug(this.logs.bubbleGenerated);
       clearBubbles++;
@@ -2345,10 +1830,22 @@ Tsum.prototype.taskPlayGameQuick = function() {
     if (paths.length < 3) {
       zeroPath++;
       if (zeroPath === 6) {
-        this.tap(Button.gameRand, 60);
-        this.tap(Button.gameRand, 60);
+        // Same guard as the periodic fan below. Without it this fires the fan
+        // with the skill already full, and useSkill() runs immediately after --
+        // so the skill activates onto a board that is still being tossed about.
+        // It also self-sustains: a churning board scans as few paths, which is
+        // what increments this counter in the first place.
+        if (!this.fanWouldBeWasted()) {
+          this.tap(Button.gameRand, 60);
+          this.tap(Button.gameRand, 60);
+        }
         zeroPath = 0;
       }
+    } else {
+      // Counts *consecutive* barren scans: a board that is producing chains is
+      // not stuck, and letting the count carry over between them fires the fan
+      // on a board that never needed shuffling.
+      zeroPath = 0;
     }
     // click bubbles
     if (this.clearBubbles && clearBubbles >= 2) {
@@ -2358,8 +1855,14 @@ Tsum.prototype.taskPlayGameQuick = function() {
       this.clearAllBubbles(0, 0, (Button.gameBubblesFrom.y + Button.gameBubblesTo.y) / 2);
     }
     if (this.useFan && this.runTimes % 4 === 3) {
-      this.tap(Button.gameRand, 60);
-      this.tap(Button.gameRand, 60);
+
+      // Skip the fan when the skill is ready or about to be — useSkill() will
+      // fire it next (or the next clear will fill the gauge), so the fan would
+      // just be wasted on tsums about to be cleared.
+      if (!this.fanWouldBeWasted()) {
+        this.tap(Button.gameRand, 60);
+        this.tap(Button.gameRand, 60);
+      }
     }
     if (this.isPause) {
       this.sleep(300);
@@ -2373,11 +1876,18 @@ Tsum.prototype.taskPlayGameQuick = function() {
     // double check
     var page = this.findPage(1, 2500);
     if (page !== 'GamePlaying' && page !== 'GamePause') {
-      this.sleep(500);
-      page = this.findPage(1, 2500);
-      if (page !== 'GamePlaying' && page !== 'GamePause') {
-        log(this.logs.gameOver);
-        break;
+      if (this.handleLongSkillAnimations) {
+        if (this.confirmGameOver()) {
+          log(this.logs.gameOver);
+          break;
+        }
+      } else {
+        this.sleep(500);
+        page = this.findPage(1, 2500);
+        if (page !== 'GamePlaying' && page !== 'GamePause') {
+          log(this.logs.gameOver);
+          break;
+        }
       }
     }
     this.runTimes++;
@@ -3242,9 +2752,11 @@ function start(settings) {
   ts.sentToZero = settings['sendHeartsToZeroScore'];
   ts.receiveCheckLimit = settings['mailOpenMax'];
   ts.clearBubbles = settings['clearBubbles'];
+  ts.handleLongSkillAnimations = settings['handleLongSkillAnimations'] || false;
   ts.skillInterval = settings['skillWaitingTime'] * 1000;
   ts.skillLevel = settings['skillLevel'];
   ts.skillType = settings['skillType'];
+  ts.skillAutoTap = !!settings['skillAutoTap'];
   ts.unlockLevelHoursWait = settings["unlockLevelHoursWait"];
   ts.sendHearts = settings['sendHeartsAuto'];
   ts.showHeartLog = true;
@@ -3272,6 +2784,7 @@ function start(settings) {
   }
 
   Config.debugLogs = settings['debugLogs'];
+  Config.maxChain = settings['maxChain'];
   ts.autobuyBoxes = settings['autobuyBoxes'];
   ts.noSkillLastFeverSec = settings['noSkillLastFeverSec'];
   ts.claimAllWithoutCoins = settings['claimAllWithoutCoins'];

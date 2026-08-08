@@ -10,7 +10,7 @@ echo "Build date = $BUILD_DATE"
 npx html-inline-external --src ./src/index.html --dest ./dist/index.inlined.html
 envsubst \$BUILD_DATE < ./dist/index.inlined.html > ./dist/index.html
 rm ./dist/index.inlined.html
-cp ./src/index.js ./dist/
+{ echo '"use strict";'; cat ./src/game-bubble-config.js ./src/page-config.js ./src/tiara-minnie.js; sed '1{/^"use strict";$/d;}' ./src/index.js; } > ./dist/index.js
 
 (
 cd dist || exit
