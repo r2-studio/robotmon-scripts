@@ -523,13 +523,13 @@ function findTsums(img) {
   var tmpImg = clone(img);
   var grayImg = bgrToGray(tmpImg);
   releaseImage(tmpImg);
-  smooth(grayImg, 2, 9);
+  smooth(grayImg, 1, 7);
   convertColor(hsvImg, 40);
 
   var dp = 1;                             // Lower dp (1 or 2) gives better resolution accuracy at larger sizes
-  var minDist = Math.round(22 * scale);    // Min distance between circle centers
+  var minDist = Math.round(20.3 * scale);    // Min distance between circle centers
   var param1 = 20;                        // Canny high threshold (remains unchanged)
-  var param2 = Math.round(10 * scale);     // Accumulator threshold (scales with circle perimeter size)
+  var param2 = Math.round(8.88 * scale);     // Accumulator threshold (scales with circle perimeter size)
   var minRadius = Math.round(8 * scale);  // Scaled minimum circle radius
   var maxRadius = Math.round(14 * scale); // Scaled maximum circle radius
 
@@ -947,13 +947,28 @@ Tsum.prototype.linkTsums = function(path) {
     if (j === 0) {
       tapDown(x, y, 10);
     }
-    moveTo(x, y, 10);
+    moveTo(x, y, 12);
     if (j === path.length - 1) {
       tapUp(x, y, 10);
     }
   }
 }
  
+Tsum.prototype.linkLongTsums = function(path) {
+  for (var j = 0; j < path.length; j++) {
+    var point = path[j];
+    var x = Math.floor(this.playOffsetX + (point.x + Config.tsumWidth / 2) * this.playWidth / this.playResizeWidth);
+    var y = Math.floor(this.playOffsetY + (point.y + Config.tsumWidth / 2) * this.playHeight / this.playResizeHeight);
+    if (j === 0) {
+      tapDown(x, y, 10);
+    }
+    moveTo(x, y, 25);
+    if (j === path.length - 1) {
+      tapUp(x, y, 10);
+    }
+  }
+}
+
 // Tap the bubbles the last board scan found. Taps only -- the positions were
 // worked out at scan time -- so this stays inside the window where the chain is
 // still clearing. A tap that misses costs nothing: it is not a drag, so it
@@ -1018,9 +1033,9 @@ Tsum.prototype.link = function(paths, board) {
     }
     this.linkTsums(path);
     // Pop whatever the last scan saw the moment a long chain lands
-    if (path.length >= GameBubbleConfig.minChainForPop) {
-      this.popGameBubbles();
-    }
+    //if (path.length >= GameBubbleConfig.minChainForPop) {
+    this.popGameBubbles();
+    //}
     // Linking a full batch of chains can take several seconds; check between
     // chains so a gauge that fills mid-batch fires right away.
     this.maybeAutoTapSkill(board);
@@ -1573,6 +1588,9 @@ Tsum.prototype.useSkill = function(board) {
     } else {
       this.clearAllBubbles();
     }
+  } else if (this.skillType === 'block_rapunzel_plus_s') {
+    this.sleep(1000);
+    this.useRapunzelPlusSkill();  
   } else if (this.skillType === 'block_cpt_ly_s'){
     this.tap(Button.gameRand, 100);
     this.sleep(2100);
@@ -1594,7 +1612,12 @@ Tsum.prototype.useSkill = function(board) {
       this.sleep(550);
       this.tap(Button.skillCptLy3, 10);
     }
-    this.clearAllBubbles(600, 0, 1000, 300);
+
+    var bubbleImg = this.playScreenshotSquare();
+    this.gameBubbles = findGameBubbles(bubbleImg);
+    releaseImage(bubbleImg);
+    this.popGameBubbles();
+    // this.clearAllBubbles(600, 0, 1000, 300);
   } else if (this.skillType === 'block_tiara_minnie_plus_s'){
     this.useTiaraMinniePlusSkill();
     // Always report "did not fire", whatever happened. The caller runs
@@ -2937,4 +2960,58 @@ function rgb2hsv(rgb) {
   var v = Math.max(r, g, b), c = v - Math.min(r, g, b);
   var h = c && ((v === r) ? (g - b) / c : ((v === g) ? 2 + (b - r) / c : 4 + (r - g) / c));
   return {h: 60 * (h < 0 ? h + 6 : h), s: Math.round(v && c / v * 100), v: Math.round(v * 100)};
+}
+
+
+Tsum.prototype.useRapunzelPlusSkill = function () {
+    var path = [];
+
+    function addVertical(x, reverse) {
+        if (!reverse) {
+            for (var y = 170; y >= 60; y -= 10) {
+                path.push({x: x, y: y});
+            }
+        } else {
+            for (var y = 60; y <= 170; y += 10) {
+                path.push({x: x, y: y});
+            }
+        }
+    }
+
+    function addHorizontal(y, x1, x2) {
+        if (x1 < x2) {
+            for (var x = x1; x <= x2; x += 10) {
+                path.push({x: x, y: y});
+            }
+        } else {
+            for (var x = x1; x >= x2; x -= 10) {
+                path.push({x: x, y: y});
+            }
+        }
+    }
+
+    addVertical(30, false);
+    addHorizontal(60, 30, 70);
+    addVertical(70, true);
+    addHorizontal(170, 70, 110);
+    addVertical(110, false);
+    addHorizontal(60, 110, 150);
+    addVertical(150, true);
+
+    if (this.debug) {
+      if (typeof debug === 'function' && this.logs && this.logs.calculatedPath) {
+        debug(this.logs.calculatedPath, path.length);
+      }
+
+      var pathDetails = path.map(function(node) {
+        if (node && node.x !== undefined && node.y !== undefined) {
+          return "(" + node.x + "," + node.y + ")";
+        }
+        return JSON.stringify(node);
+      }).join(" -> ");
+
+      log("Rapunzel+ Path (Length " + path.length + "): " + pathDetails);
+    }
+
+    this.linkLongTsums(path);
 }

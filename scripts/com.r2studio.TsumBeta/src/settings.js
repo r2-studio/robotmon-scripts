@@ -1,6 +1,6 @@
 "use strict";
 
-var VERSION = '85';
+var VERSION = '86';
 
 /**
  * Returns the language parameter for the currently active locale.
@@ -201,6 +201,7 @@ var settings = [
                 {key: 'block_cabbage_mickey_s', title: 'Cabbage Mickey', title_zh_TW: '高麗菜米奇'},
                 {key: 'block_cpt_ly_s', title: 'Cpt. Lightyear', title_zh_TW: '光年隊長'},
                 {key: 'block_lightning_mcqueen_plus_s', title: 'Lightning McQueen+', title_zh_TW: '閃電麥坤+'},
+                {key: 'block_rapunzel_plus_s', title: 'Rapunzel+', title_zh_TW: '樂佩+'},
                 {key: 'block_tiara_minnie_plus_s', title: 'Tiara Minnie+', title_zh_TW: '皇冠米妮+'},
                 {key: 'block_pair_tsum', title: 'Pair Tsum', title_zh_TW: '搭檔Tsum'},
                 {key: 'no_skill', title: 'No Skill', title_zh_TW: '没有技能'}

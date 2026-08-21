@@ -8,6 +8,6 @@ var GameBubbleConfig = {
   // Chain length that earns a pop, and a cap so a frame full of false circles
   // cannot turn into a long burst of taps mid-chain.
   minChainForPop: 4,
-  maxTaps: 3,
+  maxTaps: 4,
   tapDuring: 10
 };

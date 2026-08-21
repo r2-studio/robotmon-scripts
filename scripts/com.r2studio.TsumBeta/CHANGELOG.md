@@ -4,6 +4,11 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v86] - 2026-08-21
+- Add Rapunzel+
+- Improve Captain Light Year clear bubble
+- improvement for alien , mcqueen, etc
+
 ## [v85] - 2026-07-31
 
 ### Added
