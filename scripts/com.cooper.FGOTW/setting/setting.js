@@ -578,6 +578,10 @@ function initButton() {
     minimumResultsForSearch: -1,
     width: "120px",
   });
+  $("#lilithSkillSelect").select2({
+    minimumResultsForSearch: -1,
+    width: "120px",
+  });
   $("#friendAlgorithmSelect").select2({
     minimumResultsForSearch: -1,
     width: "120px",
@@ -831,6 +835,12 @@ function initHTMLCallback(result) {
       soujyuro = 0;
     }
     $("#soujyuroSkillSelect").val(soujyuro).trigger("change");
+
+    var lilith = parseInt(result[5][14]);
+    if (lilith == undefined || lilith == null || isNaN(lilith)) {
+      lilith = 0;
+    }
+    $("#lilithSkillSelect").val(lilith).trigger("change");
 
     var friendAlgorithm = parseInt(result[5][10]);
     if (
@@ -1269,6 +1279,7 @@ function getOtherPreferenceValue() {
   preference[7] = parseInt($("#rabbitSkillSelect").val());
   preference[8] = parseInt($("#kishinamiSkillSelect").val());
   preference[9] = parseInt($("#soujyuroSkillSelect").val());
+  preference[10] = parseInt($("#lilithSkillSelect").val());
   return preference;
 }
 
@@ -1288,6 +1299,7 @@ function getPreferenceValue() {
   preference[11] = parseInt($("#rabbitSkillSelect").val());
   preference[12] = parseInt($("#kishinamiSkillSelect").val());
   preference[13] = parseInt($("#soujyuroSkillSelect").val());
+  preference[14] = parseInt($("#lilithSkillSelect").val());
   return preference;
 }
 

@@ -9,7 +9,8 @@ var friendAlgorithm = 0; //0 pixel detection 1 image matching
 var rabbitSkill = 0;
 var kishinamiSkill = 0;
 var soujyuroSkill = 0;
-var PREFERENCE_DEFAULT_VALUE = "0,0,0,0,0,0,0,1,7,0,0,0,0,0"
+var lilithSkill = 0;
+var PREFERENCE_DEFAULT_VALUE = "0,0,0,0,0,0,0,1,7,0,0,0,0,0,0"
 
 function loadPreference() {
   console.log("讀取偏好設定");
@@ -53,6 +54,7 @@ function loadPreference() {
   rabbitSkill = split[11];
   kishinamiSkill = split[12];
   soujyuroSkill = split[13];
+  lilithSkill = split[14];
   if (valueMissing) {
     console.log("偏好設定缺損，重新建立");
     var lastScript = "";
@@ -82,6 +84,7 @@ function savePreference(pref) {
   rabbitSkill = pref[11];
   kishinamiSkill = pref[12];
   soujyuroSkill = pref[13];
+  lilithSkill = pref[14];
   var lastScript = getLastScriptName();
   var content = getPreferenceString() + "\n" + lastScript;
   return writeFile(itemPath + fileName, content);
@@ -98,6 +101,7 @@ function setOtherPreference(pref) {
   rabbitSkill = pref[7];
   kishinamiSkill = pref[8];
   soujyuroSkill = pref[9];
+  lilithSkill = pref[10];
 }
 
 function getPreferenceString() {
@@ -125,6 +129,8 @@ function getPreferenceString() {
   p += kishinamiSkill;
   p += ",";
   p += soujyuroSkill;
+  p += ",";
+  p += lilithSkill;
 
   return p;
 }

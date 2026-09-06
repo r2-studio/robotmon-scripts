@@ -34,6 +34,7 @@ var dubaiSkillPositionY = 675;
 var rabbitSkillName = ["全體", "單體"];
 var kishinamiSkillName = ["天", "地", "人"];
 var soujyuroSkillName = ["綠", "藍", "紅"];
+var lilithSkillName = ["付與", "不付與"];
 
 
 var useMargin = undefined;
@@ -142,7 +143,25 @@ function useSkill(player, skill, target) {
     return;
   }
   screenshot = getScreenshotResize();
-  if (isBattleSkillRabbitDialog(screenshot)) {
+  if (isBattleSkillLilithDialog(screenshot)) {
+    sleep(2000);
+    if (isBattleSkillLilithDialog()) {
+      if (lilithSkill == undefined || lilithSkill < 0 || lilithSkill > 1) {
+        console.log("未指定模式，設為付與");
+        lilithSkill = 0;
+      }
+      console.log("使用技能-泳裝莉莉絲即死付與 " + lilithSkillName[lilithSkill]);
+      switch (lilithSkill) {
+        case 0:
+        default:
+          clickIcon("lilithSkill4");
+          break;
+        case 1:
+          clickIcon("lilithSkill3");
+          break;
+      }
+    }
+  } else if (isBattleSkillRabbitDialog(screenshot)) {
     sleep(2000);
     if (isBattleSkillRabbitDialog()) {
       if (rabbitSkill == undefined || rabbitSkill < 0 || rabbitSkill > 1) {
@@ -497,6 +516,9 @@ function getCurrentStage() {
 function finishQuest() {
   while (isScriptRunning) {
     if (isMainPage()) {
+      if (isFinishEventDialog()) {
+        clickIcon("finishEvent1");
+      }
       sleep(3000);
       return;
     } else if (isStageRestart() || isStageRestartEvent()) {
@@ -507,6 +529,9 @@ function finishQuest() {
     sleep(1500);
     if (isFinishDropDialoge() || isFinishNext()) {
       tapScale(1650, 990);
+      sleep(1500);
+    } else if (isFinishEventDialog()) {
+      clickIcon("finishEvent1");
       sleep(1500);
     } else if (isAddFriendPage()) {
       tapScale(487, 900);
