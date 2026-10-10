@@ -268,7 +268,11 @@ var Page = {
       {x: 170, y: 1570, r: 247, g: 194, b: 16, match: true, threshold: 30}
     ],
     back: {x: 190, y: 1650},
-    next: {x: 1000, y: 690, r: 238, g: 172, b: 8}
+    next: {x: 1000, y: 690, r: 238, g: 172, b: 8},
+
+    // New Store UI
+    buyOne: {x: 620, y: 605},
+    buyOneOnly: {x: 755, y: 605}
   },
   ConfirmPurchaseBoxPage: {
     name: 'ConfirmPurchasePage',
@@ -321,9 +325,7 @@ var Page = {
       {x: 660, y: 1464, r: 247, g: 174, b: 8, match: true, threshold: 30},      // left of OK button
       {x: 860, y: 1464, r: 247, g: 178, b: 8, match: true, threshold: 30},      // right of OK button
       {x: 940, y: 1464, r: 33, g: 65, b: 107, match: true, threshold: 30},      // right next to OK button
-      {x: 836, y: 1152, r: 255, g: 255, b: 255, match: true, threshold: 30},    // lower left of slash in "15/15"
-      {x: 860, y: 1081, r: 255, g: 255, b: 255, match: true, threshold: 30},    // upper right of slash in "15/15"
-      {x: 860, y: 1152, r: 48, g: 81, b: 127, match: true, threshold: 30}       // blue area under slash in "15/15"
+      {x: 416, y: 790, r: 206, g: 24, b: 49, match: true, threshold: 40}        // red top of Pickup capsule
     ],
     back: {x: 320, y: 1464},  // Cancel button
     next: {x: 766, y: 1464}   // OK button

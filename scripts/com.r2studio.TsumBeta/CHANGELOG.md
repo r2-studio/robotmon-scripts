@@ -4,6 +4,10 @@ All notable changes to the TsumBeta script will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [V87] - 2026-10-10
+- Fixed auto buy box by Cang
+- remove debug log for performance improvement
+
 ## [v86] - 2026-08-21
 - Add Rapunzel+
 - Improve Captain Light Year clear bubble
