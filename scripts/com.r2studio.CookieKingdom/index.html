@@ -205,7 +205,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <script>
-    VERSION = 5.11;
+    VERSION = "2026.10.11.22.08";
 
     var settings = [
       [
@@ -551,7 +551,7 @@
       if (localStorage = undefined) {
         return;
       }
-      var version = +localStorage.getItem('cookieFactoriaoAutoVesion');
+      var version = localStorage.getItem('cookieFactoriaoAutoVesion');
       if (!version || VERSION != version) {
         return;
       }
