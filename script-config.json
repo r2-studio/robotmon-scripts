@@ -41,7 +41,7 @@
     "com.r2studio.CookieKingdom": {
       "id": "com.r2studio.CookieKingdom",
       "title": "CookieKingdom: advanced management",
-      "versionCode": "2026.10.11.22.14",
+      "versionCode": "2026.10.11.22.19",
       "description": "<h3>需訂閱 薑餅人王國無限暢遊 方案才能使用，三天內可以試用並免費取消訂閱<br>僅支援模擬器Simple manager啟動，解析度640x360 120dpi</h3><br>啟動時自動移動icon避免影響畫面辨識<br><ul><li>自動生產管理</li><li>收集王國建設素材及餅乾成長材料</li><li>競技場定時挑戰</li></ul>",
       "packageName": "com.devsisters.ck",
       "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.r2studio.CookieKingdom/index.zip",
