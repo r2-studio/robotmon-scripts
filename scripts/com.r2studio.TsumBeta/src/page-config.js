@@ -439,7 +439,7 @@ var Page = {
     name: 'GamePlaying',
     colors: [
       {x: 916, y: 198, r: 230, g: 200, b: 20, match: true, threshold: 80}, // above pause
-      {x: 916, y: 318, r: 214, g: 191, b: 28, match: true, threshold: 80}, // below pause
+      {x: 916, y: 318, r: 214, g: 191, b: 28, match: true, threshold: 90}, // below pause
       {x: 916, y: 1688, r: 214, g: 191, b: 28, match: true, threshold: 80} // below fan
     ],
     back: {x: 986, y: 273},
