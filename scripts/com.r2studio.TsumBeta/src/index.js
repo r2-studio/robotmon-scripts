@@ -534,18 +534,7 @@ function findTsums(img) {
   var maxRadius = Math.round(14 * scale); // Scaled maximum circle radius
 
   var points = houghCircles(grayImg,3, dp, minDist, param1, param2, minRadius, maxRadius); 
-  releaseImage(grayImg);
-
-  if (ts.debug) {
-  var debugImg = clone(img); 
-  for (var k in points) {
-    var p = points[k];
-    drawCircle(debugImg, p.x, p.y, minRadius, 255, 0, 0, 1);
-  }
-    saveImage(debugImg, ts.storagePath + "/tmp/" + ts.runTimes + "-detectedHoughCircles.jpg");
-    releaseImage(debugImg);
-  }
-  
+  releaseImage(grayImg);  
   smooth(hsvImg, 1, 22);
   var results = [];
   for (var k in points) {
@@ -560,10 +549,6 @@ function findTsums(img) {
     var avgg = (hsv1.g + hsv2.g + hsv3.g + hsv4.g + hsv5.g) / 5;
     var avgr = (hsv1.r + hsv2.r + hsv3.r + hsv4.r + hsv5.r) / 5;
     results.push({x: p.x, y: p.y, z: p.r, b: avgb, g: avgg, r: avgr});
-  }
-
-  if (ts.debug) {
-    saveImage(hsvImg, ts.storagePath + "/tmp/" + ts.runTimes + "-hsvImg.jpg");
   }
 
   releaseImage(hsvImg);
@@ -1301,26 +1286,99 @@ Tsum.prototype.goTsumsPage = function() {
   }
 }
 
+Tsum.prototype.getStoreBuyOneButton = function(page) {
+  if (page == null || page.name !== 'TsumTsumStorePage') {
+    return null;
+  }
+
+  var img = this.screenshot();
+
+  // Sample four points horizontally across each possible button.
+  var probeDx = [-70, -25, 25, 70];
+  var probeY = 540;
+
+  var availableColor = {r: 255, g: 204, b: 10};
+  var colorDiff = 45;
+  var requiredVotes = 3;
+
+  function buttonMatches(tsum, centerX) {
+    var votes = 0;
+
+    for (var i = 0; i < probeDx.length; i++) {
+      var point = {
+        x: centerX + probeDx[i],
+        y: probeY,
+        r: availableColor.r,
+        g: availableColor.g,
+        b: availableColor.b
+      };
+
+      var color = tsum.getColor(img, point);
+
+      if (isSameColor(point, color, colorDiff)) {
+        votes++;
+      }
+    }
+
+    return votes >= requiredVotes;
+  }
+
+  // Two-button layout:
+  // Only the 1x button matters. The 10x button is never tapped.
+  var hasBuyOne = buttonMatches(this, page.buyOne.x);
+
+  if (hasBuyOne) {
+    releaseImage(img);
+    return page.buyOne;
+  }
+
+  // Single-button layout:
+  var hasBuyOneOnly = buttonMatches(this, page.buyOneOnly.x);
+
+  releaseImage(img);
+
+  if (hasBuyOneOnly) {
+    return page.buyOneOnly;
+  }
+
+  return null;
+};
+
+
 Tsum.prototype.goTsumTsumStorePage = function() {
   if (this.isRunning) {
     if (!this.isAppOn()) {
       this.startApp();
     }
+
     this.goTsumsPage();
     var pageName = "undefined";
+
     for (var i = 0; i < 3; i++) {
       this.tap(this.findPageObject().store);
       this.sleep(3000);
+
       var page = this.findPageObject(5, 2000);
       pageName = page != null ? page.name : 'unknown';
       log("Pg: ", pageName);
+
       if (page !== null && page.name === 'TsumTsumStorePage') {
-        var img = this.screenshot();
-        var nextColor = this.getColor(img, page.next);
-        releaseImage(img);
-        return isSameColor(page.next, nextColor, 50);
+        var buyOneButton = this.getStoreBuyOneButton(page);
+
+        if (buyOneButton !== null) {
+          log(
+            "Store 1x purchase button found at",
+            buyOneButton.x,
+            buyOneButton.y
+          );
+          return true;
+        }
+
+        log("Store found, but 1x purchase button not available.");
+        return false;
       }
     }
+
     log('Unexpected page found:', page, 'goTsumTsumStorePage');
     return false;
   }
@@ -1710,10 +1768,7 @@ Tsum.prototype.scanBoardQuick = function() {
   //this.gameBubbles = this.skillType === 'block_tiara_minnie_plus_s'
   //  ? findGameBubbles(srcImg) : [];
   this.gameBubbles = findGameBubbles(srcImg);
-  if (this.debug && this.gameBubbles.length > 0) {
-    console.log('[Bubbles] found ' + this.gameBubbles.length);
-  }
-  debug(this.logs.recognitionStart);
+  
   var tcs = classifyTsums(points);
   tcs.sort(function(a, b) { return a.points.length > b.points.length ? -1: 1; });
   var board = [];
@@ -1725,18 +1780,10 @@ Tsum.prototype.scanBoardQuick = function() {
     for (var j in tc.points) {
       var p = tc.points[j];
       board.push({tsumIdx: i, x: p.x - (Config.tsumWidth / 2), y: p.y - (Config.tsumWidth / 2)});
-      if (this.debug) {
-        drawCircle(srcImg, p.x, p.y, 4, Config.colors[i][0], Config.colors[i][1], Config.colors[i][2], 0);
-      }
     }
   }
-  if (this.debug) { 
-    saveImage(srcImg, this.storagePath + "/tmp/" + ts.runTimes + "-boardImg.jpg");
-  }
+
   releaseImage(srcImg);
-  debug(this.logs.recognizedTsums, board.length);
-  sleep(30);
-  debug(this.logs.recognitionTime, usingTimeString(startTime));
 
   if (this.isPause) {
     this.sleep(Config.gameContinueDelay);
@@ -2528,24 +2575,38 @@ Tsum.prototype.taskAutoBuyBoxes = function() {
           log("Bought box.", this.autobuyBoxes, "left");
         }
 
-        var img = this.screenshot();
-        var nextColor = this.getColor(img, page.next);
-        releaseImage(img);
         if (this.autobuyBoxes === 0) {
           log("Buying finished");
           break;
         }
-        if (!isSameColor(page.next, nextColor, 50)) {
-          // wait and test again
+
+        var buyOneButton = this.getStoreBuyOneButton(page);
+        if (buyOneButton === null) {
+          // Wait once and check the Store again.
+          
           this.sleep(500);
-          page = this.findPageObject(1, 200);
-          if (page.name === "TsumTsumStorePage" && !isSameColor(page.next, nextColor, 50)) {
-            log("Finish with", this.autobuyBoxes, "boxes zu buy due to empty box");
+          var retryPage = this.findPageObject(1, 200);
+
+          if (retryPage === null || retryPage.name !== "TsumTsumStorePage") {
+            log("Store page changed while checking 1x purchase button.");
+            break;
+          }
+
+          buyOneButton = this.getStoreBuyOneButton(retryPage);
+
+          if (buyOneButton === null) {
+            log("Finish with", this.autobuyBoxes, "boxes to buy due to unavailable 1x box");
             break;
           }
         }
-      }
+
+      this.tap(buyOneButton);  
+    }
+  
+    if (page.name !== "TsumTsumStorePage") {
       this.tap(page.next);
+    }
+
       if (page === lastPage) {
         countSamePage++;
         debug("countSamePage =", countSamePage);
