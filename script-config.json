@@ -1,5 +1,14 @@
 {
   "scripts": {
+    "com.cooper.fgoai": {
+      "id": "com.cooper.fgoai",
+      "title": "Fate/Grand Order AI 工具包",
+      "versionCode": "0.1.0",
+      "description": "<div>需搭配電腦上的 fgoai-app 使用。AI 不由開發者提供，請在電腦上裝好 Claude CLI 或 Gemini（AGY）CLI 並登入；AI 的用量算在你的帳號額度裡，請注意用量!<br><br>問題回報請用 fgoai-app 的「回報問題」<br><br>V0.1.0 beta測試版<br><br>支援日服、台服，僅限模擬器、解析度 1920x1080<br>功能包括：AI 自行組隊並判斷戰鬥、強化從者並刷缺少的素材、推主線劇情、打活動劇情並解任務、幕間挖礦、自動周回</div>",
+      "packageName": "com.aniplex.fategrandorder",
+      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.cooper.fgoai/index.zip",
+      "maintaining": true
+    },
     "com.cooper.FGO": {
       "id": "com.cooper.FGO",
       "title": "Fate/Grand Order 日服",
