@@ -677,6 +677,24 @@ function isAddFriendPage() {
   return checkIconInScreen("addFriend");
 }
 
+// 「…的從者資料更新！」 關閉／確認簡介 after a story battle (TW 2026-11-13 1.5-2 前進の火 進度 6: tapping the top
+// edge does nothing there, 2 minutes later the watchdog restarted the game and the win was not counted). TW only:
+// its 確認簡介 picture; not fgoautoscript's table
+function isServantProfileDialog() {
+  if (server != "TW" || !isScriptRunning) {
+    return false;
+  }
+  var screenshot = getScreenshotResize();
+  if (screenshot == null) {
+    return false;
+  }
+  var image = openImage(imagePath + "servantProfile.png");
+  var found = checkImage(screenshot, image, 1140, 815, 240, 65);
+  releaseImage(screenshot);
+  releaseImage(image);
+  return found;
+}
+
 // a Craft Essence's detail: a servant's bond CE, an event's drop (JP only: its picture; not fgoautoscript's table)
 function isCeDetailPage() {
   if (server != "JP" || !isScriptRunning) {
@@ -1703,6 +1721,9 @@ function finishQuest() {
     } else if (isAddFriendPage()) {
       tapScale(487, 900);
       sleep(1500);
+    } else if (isServantProfileDialog()) {
+      tapScale(660, 845); // 關閉
+      sleep(1500);
     } else if (isItemPage()) {
       sleep(1000);
       if (isMainPage()) {
@@ -2705,7 +2726,8 @@ function selectCardsV2(cardOrder, ult, currentStage) {
 // call's `while (isScriptRunning)` loops once the time is up. After the call the deadline is cleared, so
 // the old run.js path (which redefines the same modules) is not affected.
 
-var FGOAI_KIT_VERSION = "c5ded2452ec16587";
+var FGOAI_KIT_VERSION = "e9f967ba3a6f2437";
+var FGOAI_KIT_NUMBER = "0.1.5"; // kit/VERSION: the number the user is shown (user 2026-11-08)
 var fgoaiDeadline = 0;
 var fgoaiTimedOut = false;
 var fgoaiImagesLoaded = false;
@@ -2804,7 +2826,7 @@ function fgoaiStartApp(packageName) {
 
 var fgoai = {
   version: function () {
-    return JSON.stringify({ name: "fgoai-kit", version: FGOAI_KIT_VERSION, ready: fgoaiSettings != null, intact: fgoaiIntact() });
+    return JSON.stringify({ name: "fgoai-kit", version: FGOAI_KIT_VERSION, number: FGOAI_KIT_NUMBER, ready: fgoaiSettings != null, intact: fgoaiIntact() });
   },
   setup: function (settings) {
     var ok = fgoaiInit(settings);
@@ -2864,7 +2886,8 @@ var fgoai = {
         lines = getFriendLineByIcon(screenshot);
       }
       releaseImage(screenshot);
-      return { x: friendX, lines: lines };
+      // end: the scroll bar at the bottom of the list (fgoautoscript isSelectFriendEnd, user 2026-11-09)
+      return { x: friendX, lines: lines, end: isSelectFriendEnd() };
     });
   },
   // 更新 the support list once (friend.js reloadFriend: waits out the 「しばらく時間をおいて」 dialog)

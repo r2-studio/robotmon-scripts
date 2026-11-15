@@ -5,16 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>fgoai 工具包</title>
 <style>
-  body { margin: 0; padding: 16px; font-family: sans-serif; color: #eee; background: rgba(0, 0, 0, 0.75); }
-  h1 { margin: 0 0 8px; font-size: 18px; }
+  body { margin: 0; padding: 14px 16px 20px; font-family: sans-serif; color: #eee; background: rgba(0, 0, 0, 0.8); line-height: 1.5; }
+  h1 { margin: 0; font-size: 18px; }
+  h2 { margin: 16px 0 6px; padding-bottom: 4px; font-size: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
   p { margin: 4px 0; font-size: 14px; }
-  .version { color: #aaa; font-size: 12px; word-break: break-all; }
+  .ok { margin: 8px 0 4px; padding: 8px 10px; border-radius: 6px; background: rgba(60, 160, 90, 0.35); border-left: 4px solid #4c9; font-size: 14px; }
+  .ok b { color: #8f8; }
+  ol, ul { margin: 4px 0; padding-left: 22px; font-size: 14px; }
+  li { margin: 3px 0; }
+  .warn { color: #fc6; }
+  .url a { color: #9cf; }
+  .url { margin: 6px 0; padding: 6px 10px; border-radius: 6px; background: rgba(80, 140, 255, 0.25); font-size: 15px; font-weight: bold; color: #9cf; word-break: break-all; }
+  .key { display: inline-block; padding: 0 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.15); }
+  .wide img { width: 100%; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.25); }
+  .narrow { width: 60%; max-width: 320px; margin: 6px 0; font-size: 12px; color: #bbb; }
+  .narrow img { width: 100%; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.25); }
+  .wide { margin: 8px 0; font-size: 12px; color: #bbb; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  td { padding: 4px 6px; border-top: 1px solid rgba(255, 255, 255, 0.12); vertical-align: top; }
+  td:first-child { white-space: nowrap; color: #fc6; }
+  .version { margin-top: 14px; color: #999; font-size: 12px; word-break: break-all; }
 </style>
 </head>
 <body>
   <h1>fgoai 工具包</h1>
-  <p>工具包已經載入，接著回到電腦上的 fgoai 操作。</p>
-  <p>這裡不用按開始。開過別的腳本之後，要再點一次這個腳本。</p>
-  <p class="version">版本 c5ded2452ec16587</p>
+  <div class="ok"><b>✔ 工具包已經載入。</b>這裡不用按開始，接著回到電腦上的 fgoai-app 操作。</div>
+
+  <h2>① 在電腦上安裝 AI（Claude CLI 或 Gemini CLI）</h2>
+  <p>fgoai 用 AI 判斷戰鬥和組隊，要先在電腦上裝好其中一種並登入：</p>
+  <ul>
+    <li><b>Claude CLI</b>：裝好後開命令提示字元執行 <span class="key">claude auth login</span> 登入。</li>
+    <li><b>Gemini（AGY）CLI</b>：裝好後照它的說明登入。</li>
+  </ul>
+  <p class="warn">AI 不由開發者提供，用量算在你自己的帳號額度裡，請注意用量。</p>
+
+  <h2>② 在電腦上安裝 fgoai-app</h2>
+  <p>這個工具包要搭配 Windows 電腦上的 fgoai-app 使用。在電腦的瀏覽器打開：</p>
+  <p class="url"><a href="https://github.com/Mobotmon/fgoai-release/releases/latest">https://github.com/Mobotmon/fgoai-release/releases/latest</a></p>
+  <ol>
+    <li>下載最新版的 <span class="key">fgoai-app.zip</span>。</li>
+    <li>解壓縮前先在 zip 上按右鍵 →「內容」，勾 ①「解除封鎖」，按 ②「確定」（沒有這個選項就不用做）。沒解除就解壓縮，Windows 可能會擋下裡面的程式。
+      <div class="narrow"><img src="help/0_unblock.png" alt="解除封鎖">zip 的「內容」：① 解除封鎖、② 確定</div></li>
+    <li>解壓縮到任何資料夾，點兩下裡面的 <span class="key">fgoai-app.exe</span>。</li>
+    <li>第一次開啟會下載遊戲圖片（約 180 MB），等它下載完。</li>
+    <li>詳細步驟看同一個資料夾裡的「fgoai使用教學.pdf」。</li>
+  </ol>
+
+  <h2>③ 第一次使用</h2>
+  <ol>
+    <li>模擬器解析度設 <span class="key">1920×1080</span> 橫向，打開 ADB。</li>
+    <li>開 FGO（日服或台服），停在主畫面。</li>
+    <li>電腦上開 fgoai-app，在上方選 ① 伺服器、② 模擬器、③ AI。</li>
+    <li>看 ④「Robotmon 狀態」，顯示「kit 已啟動」就準備好了。</li>
+    <li>按「玩家資料庫 → 從遊戲掃描資訊」，第一次建議全部勾。</li>
+  </ol>
+  <div class="wide"><img src="help/1_titlebar.png" alt="fgoai-app 標題列">fgoai-app 上方：①～④ 選好、確認 kit 已啟動</div>
+
+  <h2>④ 每次使用前</h2>
+  <ul>
+    <li>模擬器、Robotmon 重開過，要回到 Mobotmon「已下載」再點一次這個工具包。</li>
+    <li>fgoai-app 顯示「有 service，沒有 kit」：一樣回來點一次這個工具包。</li>
+    <li>fgoai-app 提示工具包版本不對：到「腳本商店」重新下載，再點一次。</li>
+  </ul>
+
+  <h2>⑤ 執行時請注意</h2>
+  <ul>
+    <li class="warn">載入後不要再開別的 FGO 腳本，會把這個工具包蓋掉。</li>
+    <li class="warn">任務執行中不要操作模擬器。</li>
+    <li>聖晶石一律不吃；吃哪種果實照 fgoai-app 的「AP 不足」設定。</li>
+  </ul>
+
+  <h2>⑥ 遇到問題</h2>
+  <table>
+    <tr><td>fgoai-app 連不到裝置</td><td>確認模擬器開著、ADB 有打開，在 fgoai-app 重新選模擬器。</td></tr>
+    <tr><td>有 service，沒有 kit</td><td>回 Mobotmon 點一次這個工具包。</td></tr>
+    <tr><td>工具包版本不對</td><td>腳本商店重新下載，再點一次。</td></tr>
+    <tr><td>卡住或出錯</td><td>在 fgoai-app 按「問題回報」送給開發者。</td></tr>
+  </table>
+
+  <p class="version">版本 V0.1.5</p>
 </body>
 </html>
